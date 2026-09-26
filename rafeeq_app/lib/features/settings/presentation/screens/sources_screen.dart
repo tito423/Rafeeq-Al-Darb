@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../data/sources_catalog.dart';
 import '../../../../core/utils/external_link.dart';
+import '../../../../core/widgets/readable_insets.dart';
 
 /// Where every piece of content in the app actually comes from.
 ///
@@ -23,7 +24,7 @@ class SourcesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('settings.credits'.tr())),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+        padding: readableInsets(context, const EdgeInsets.fromLTRB(16, 12, 16, 28)),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 16),

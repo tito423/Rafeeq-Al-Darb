@@ -27,6 +27,7 @@ import 'sources_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../widgets/permissions_section.dart';
 import '../../../more/presentation/widgets/more_group.dart';
+import '../../../../core/widgets/readable_insets.dart';
 
 /// Every actual setting, as a `Column` with no scroll view and no `Scaffold`
 /// of its own.
@@ -510,7 +511,7 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
           body: MoreGroupAccent(
             accent: accent,
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+              padding: readableInsets(context, const EdgeInsets.fromLTRB(16, 12, 16, 28)),
               children: widget.children,
             ),
           ),

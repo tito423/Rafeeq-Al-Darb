@@ -1,6 +1,7 @@
 /// «الحديث» — the nine collections, downloaded on demand, with their books,
 /// chapters and the search across them.
 library;
+import '../../../../core/widgets/paired_list_view.dart';
 import 'dart:async';
 
 import '../../../../core/widgets/accordion.dart';
@@ -301,19 +302,23 @@ class _BookListState extends State<_BookList> {
                     open: open,
                     onTap: toggle,
                   ),
+                  // Sideways two books a row (`PairedColumn`).
                   if (open)
-                    for (final b in books) ...[
-                      _HadithBookTile(
-                        book: b,
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) =>
-                                HadithBookScreen(book: b, repo: widget.repo),
+                    PairedColumn(
+                      gap: 8,
+                      children: [
+                        for (final b in books)
+                          _HadithBookTile(
+                            book: b,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => HadithBookScreen(
+                                    book: b, repo: widget.repo),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -331,16 +336,19 @@ class _BookListState extends State<_BookList> {
                       onTap: toggle,
                     ),
                     if (open)
-                      for (final b in _hadithTexts)
-                        if (!HiddenBooks.instance.isHidden(b.id)) ...[
-                        BookCard(
-                          book: b,
-                          paths: _paths,
-                          onDownload: () => _download(b),
-                          onOpen: () => _open(b),
-                        ),
-                        const SizedBox(height: 10),
-                      ],
+                      PairedColumn(
+                        gap: 10,
+                        children: [
+                          for (final b in _hadithTexts)
+                            if (!HiddenBooks.instance.isHidden(b.id))
+                              BookCard(
+                                book: b,
+                                paths: _paths,
+                                onDownload: () => _download(b),
+                                onOpen: () => _open(b),
+                              ),
+                        ],
+                      ),
                   ],
                 ),
               ),

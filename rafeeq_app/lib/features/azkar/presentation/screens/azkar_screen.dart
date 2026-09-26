@@ -295,6 +295,16 @@ class _CategorySectionsListScreen extends StatelessWidget {
         title: Text(categoryInfo.titleKey.tr()),
         backgroundColor: categoryInfo.gradient.first,
         foregroundColor: Colors.white,
+        // `foregroundColor` alone loses to the theme: AppBarTheme sets its own
+        // iconTheme and titleTextStyle (onSurface), and those win. Found on
+        // the splash preview (emulator-5554, 2026-09-26), where the same bar
+        // drew dark icons on the dark clip. So white is given outright.
+        iconTheme: const IconThemeData(color: Colors.white),
+        actionsIconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: Theme.of(context)
+            .appBarTheme
+            .titleTextStyle
+            ?.copyWith(color: Colors.white),
       ),
       // The owner found these lists bare next to the rest of the app — «فيه
       // في الأذكار شاشات مالهاش خلفيات زي مثلا أذكار السفر» — and asked

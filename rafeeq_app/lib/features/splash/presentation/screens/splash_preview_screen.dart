@@ -108,6 +108,16 @@ class _SplashPreviewScreenState extends ConsumerState<SplashPreviewScreen>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        // `foregroundColor` alone loses to the theme: AppBarTheme sets its own
+        // iconTheme and titleTextStyle (onSurface), and those win - the
+        // icons and title were drawn dark on this dark ground (seen on
+        // emulator-5554, 2026-09-26). So white is given to both outright.
+        iconTheme: const IconThemeData(color: Colors.white),
+        actionsIconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: Theme.of(context)
+            .appBarTheme
+            .titleTextStyle
+            ?.copyWith(color: Colors.white),
         title: Text('settings.splash_preview'.tr()),
         actions: [
           IconButton(

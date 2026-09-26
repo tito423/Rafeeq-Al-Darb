@@ -14,6 +14,7 @@ import '../../../downloads/data/reciters_provider.dart';
 import '../../../library/data/book_catalog.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../../quran/data/quran_translation_catalog.dart';
+import '../../../../core/widgets/readable_insets.dart';
 
 /// The "about" page: who built the app, what version this is, and what it can
 /// actually do.
@@ -109,7 +110,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
     return Scaffold(
       appBar: AppBar(title: Text('settings.about'.tr())),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: readableInsets(context, const EdgeInsets.fromLTRB(20, 8, 20, 32)),
         children: [
           _staggered(index: 0, child: _hero(theme, scheme)),
           const SizedBox(height: 22),

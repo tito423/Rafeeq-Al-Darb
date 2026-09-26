@@ -1,3 +1,4 @@
+import '../../../../core/widgets/paired_list_view.dart';
 import 'dart:async';
 import '../../../../core/utils/digits.dart';
 
@@ -121,14 +122,19 @@ class _Categories extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         final cats = snap.data!;
-        return ListView.separated(
+        // Sideways two categories a row (`PairedListView`), each with its
+        // own rule; the credit stays full width under them.
+        return PairedListView.builder(
           padding: const EdgeInsets.only(bottom: 16),
-          itemCount: cats.length + 1,
-          separatorBuilder: (_, _) => const Divider(height: 1),
+          gap: 0,
+          itemCount: cats.length,
+          footer: _Credit(catalog: catalog),
           itemBuilder: (context, i) {
-            if (i == cats.length) return _Credit(catalog: catalog);
             final c = cats[i];
-            return ListTile(
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+            ListTile(
               leading: const Icon(Icons.folder_outlined),
               title: Text(c.title),
               // `library.hadiths_count`, not a second counting key of its
@@ -149,6 +155,9 @@ class _Categories extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+                const Divider(height: 1),
+              ],
             );
           },
         );

@@ -28,6 +28,8 @@ import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/presentation/screens/sciences_pack_screen.dart';
 import '../widgets/initial_downloads_entry.dart';
+import '../widgets/storage_auto_refresh.dart';
+import '../../../../core/widgets/two_pane_scroll.dart';
 
 String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.
@@ -184,10 +186,14 @@ class _OverviewTab extends ConsumerWidget {
           ErrorRetry(onRetry: () => ref.invalidate(storageSummaryProvider)),
       data: (summary) => RefreshIndicator(
         onRefresh: () async => ref.invalidate(storageSummaryProvider),
-        child: ListView(
+        // Sideways, two columns (`TwoPaneScroll`): the storage and what is
+        // moving now on the start side, the kinds and the files on the other.
+        child: TwoPaneScroll(
           padding: const EdgeInsets.fromLTRB(14, 14, 14, kRepairButtonClearance),
-          children: [
-            const _StorageAutoRefresh(),
+          gap: 0,
+          columnGap: 14,
+          start: [
+            const StorageAutoRefresh(),
             _StorageHero(
               summary: summary,
               onFreeAll: summary.totalBytes > 0
@@ -196,6 +202,8 @@ class _OverviewTab extends ConsumerWidget {
             ),
             const _ActiveDownloadsPanel(),
             const InitialDownloadsEntry(),
+          ],
+          end: [
             Padding(
               padding: const EdgeInsetsDirectional.only(start: 6, bottom: 8),
               child: Text(
@@ -234,52 +242,6 @@ class _OverviewTab extends ConsumerWidget {
       ),
     );
   }
-}
-
-/// Re-reads the totals while downloads move, so the overview is never a
-/// snapshot of when the screen opened — «الـ UI بتاع التنزيلات يتحدث تلقائيًا
-/// لكل تحميل». At most every two seconds: the totals walk six page folders.
-class _StorageAutoRefresh extends ConsumerStatefulWidget {
-  const _StorageAutoRefresh();
-
-  @override
-  ConsumerState<_StorageAutoRefresh> createState() => _StorageAutoRefreshState();
-}
-
-class _StorageAutoRefreshState extends ConsumerState<_StorageAutoRefresh> {
-  StreamSubscription<List<DownloadTask>>? _sub;
-  Timer? _timer;
-  DateTime _last = DateTime.fromMillisecondsSinceEpoch(0);
-
-  @override
-  void initState() {
-    super.initState();
-    _sub = DownloadManager.instance.stream.listen((_) => _poke());
-    QuranAudioLibrary.instance.addListener(_poke);
-    MushafPageService.instance.changes.addListener(_poke);
-  }
-
-  void _poke() {
-    if (_timer != null) return;
-    final wait = const Duration(seconds: 2) - DateTime.now().difference(_last);
-    _timer = Timer(wait.isNegative ? Duration.zero : wait, () {
-      _timer = null;
-      _last = DateTime.now();
-      if (mounted) ref.invalidate(storageSummaryProvider);
-    });
-  }
-
-  @override
-  void dispose() {
-    _sub?.cancel();
-    _timer?.cancel();
-    QuranAudioLibrary.instance.removeListener(_poke);
-    MushafPageService.instance.changes.removeListener(_poke);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
 }
 
 /// «كارت التحميل الرئيسي في التنزيلات … يتكتب فيه بيتم تحميل إيه وكام في

@@ -4,6 +4,7 @@
 /// choose where they open (`link_list_manage_screen.dart`).
 library;
 
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../../../core/widgets/mirrored_network_image.dart';
 import '../../../../core/widgets/arabic_text.dart';
 
@@ -89,12 +90,11 @@ class ChannelsTab extends ConsumerWidget {
         if (!state.hidden.contains(id)) entries[id]!,
     ];
 
-    return ListView.builder(
+    // Sideways two a row (`PairedListView`); the manage button stays
+    // full width above them.
+    return PairedListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-      itemCount: visible.length + 1,
-      itemBuilder: (context, i) {
-        if (i == 0) {
-          return ManageLinksButton(
+      header: ManageLinksButton(
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => LinkListManageScreen(
@@ -106,9 +106,10 @@ class ChannelsTab extends ConsumerWidget {
                 ),
               ),
             ),
-          );
-        }
-        final (ch, link) = visible[i - 1];
+          ),
+      itemCount: visible.length,
+      itemBuilder: (context, i) {
+        final (ch, link) = visible[i];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           clipBehavior: Clip.antiAlias,

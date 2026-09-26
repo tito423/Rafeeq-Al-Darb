@@ -25,6 +25,7 @@ import '../widgets/adhan_preview_card.dart';
 import '../widgets/alarm_volume_tile.dart';
 import '../../data/prayer_status_enabled_provider.dart';
 import 'azan_player_screen.dart';
+import '../../../../core/widgets/readable_insets.dart';
 
 const _prayerLabels = {
   'fajr': 'prayer.fajr',
@@ -320,7 +321,7 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
             });
           }
           return ListView(
-          padding: const EdgeInsets.all(16),
+          padding: readableInsets(context, const EdgeInsets.all(16)),
           children: [
             if (_exactAlarmOk == false)
               _PermissionCard(

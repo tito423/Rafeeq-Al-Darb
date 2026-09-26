@@ -9,6 +9,7 @@ import '../../../../core/services/city_catalog.dart';
 import '../../../../core/services/manual_location.dart';
 import '../../../../core/utils/user_error.dart';
 import '../../../home/data/prayer_controller.dart';
+import '../../../../core/widgets/readable_insets.dart';
 
 /// The row in Adhan settings: where the prayer times are calculated for, and
 /// the way into [PrayerLocationScreen].
@@ -210,7 +211,7 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('location.title'.tr())),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
+        padding: readableInsets(context, const EdgeInsets.fromLTRB(12, 8, 12, 24)),
         children: [
           Card(
             child: Column(children: [

@@ -553,9 +553,15 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                         child: Row(
                           children: [
                             Expanded(child: counter),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: footer,
+                            // Off the screen's edge: «عدد الجولات: ٠» sat
+                            // 5 px from it (emulator-5554, 2026-09-26).
+                            Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                  end: 16),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: footer,
+                              ),
                             ),
                           ],
                         ),

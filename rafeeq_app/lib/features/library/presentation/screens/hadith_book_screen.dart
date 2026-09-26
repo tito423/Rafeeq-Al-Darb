@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/future_view.dart';
+import '../../../../core/widgets/paired_list_view.dart';
+import '../../../../core/utils/digits.dart' show localizeDigits;
 
 import '../../../../core/db/hadith_repository.dart';
 import 'hadith_chapter_screen.dart';
@@ -49,15 +51,27 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
                 isEmpty: (chapters) => chapters.isEmpty,
                 empty: Center(child: Text('errors.empty'.tr())),
                 builder: (chapters) {
-                return ListView.separated(
+                // Sideways two chapters a row (`PairedListView`); each keeps
+                // its own rule underneath, as the separated list drew.
+                return PairedListView.builder(
                   itemCount: chapters.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  gap: 0,
                   itemBuilder: (context, i) {
                     final c = chapters[i];
-                    return ListTile(
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
                       leading: CircleAvatar(
                         radius: 14,
-                        child: Text(c.chapterLabel,
+                        // The book's own digits in the reader's language:
+                        // «1، 2، 3» in an Arabic list that writes ١، ٢، ٣
+                        // everywhere else (emulator-5554, 2026-09-26). A
+                        // label, not an int - trap #42 - and localizeDigits
+                        // leaves anything that is not a digit as it is.
+                        child: Text(
+                            localizeDigits(
+                                c.chapterLabel, context.locale.languageCode),
                             style: const TextStyle(fontSize: 11)),
                       ),
                       title: ArabicText(c.nameAr),
@@ -80,6 +94,9 @@ class _HadithBookScreenState extends State<HadithBookScreen> {
                           ),
                         ),
                       ),
+                        ),
+                        const Divider(height: 1),
+                      ],
                     );
                   },
                 );

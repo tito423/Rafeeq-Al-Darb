@@ -59,6 +59,11 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
       // The sheet draws its own handle (and hides it when expanded); the
       // theme's default one put a second bar above it.
       showDragHandle: false,
+      // Sideways, wider than Material's 640 dp so its two columns (see
+      // `build`) each have room.
+      constraints: MediaQuery.orientationOf(context) == Orientation.landscape
+          ? BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.94)
+          : null,
       builder: (_) => AyahSciencesSheet(
         ayah: ayah,
         surahNameAr: surahNameAr,
@@ -146,6 +151,59 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     final repo = ref.watch(sciencesRepositoryProvider).valueOrNull;
     if (repo != null) _bindRepo(repo);
     final ready = _tafseer != null;
+    // SIDEWAYS, TWO COLUMNS: the ayah and its controls on one side, the
+    // tafsir / translation / i'rab on the other at the sheet's full height.
+    // Stacked, on emulator-5554 held sideways (2026-09-26), the header, the
+    // ayah and the tab row left the i'rab about 150 dp.
+    final sideways =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final head = <Widget>[
+      SciencesHeader(
+        surahNameAr: widget.surahNameAr,
+        ayah: widget.ayah,
+        quranRepo: widget.quranRepo,
+        translationsFuture: _translations ??
+            Future<Map<String, AyahTranslation>>.value(const {}),
+        expanded: _expanded,
+        onToggleExpand: () => setState(() => _expanded = !_expanded),
+      ),
+      AyahPanel(ayah: widget.ayah),
+    ];
+    final Widget content = !widget.sciencesAvailable
+        ? SciencesNotice(
+            icon: Icons.info_outline,
+            message: 'quran.sciences_unavailable_here'.tr(),
+          )
+        : !ready
+            ? _SciencesPackGate(onDownload: _startDownload)
+            : Column(
+                children: [
+                  TabBar(
+                    controller: _tabs,
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.center,
+                    indicatorColor: gold,
+                    labelColor: gold,
+                    dividerColor: gold.withValues(alpha: 0.18),
+                    tabs: [
+                      Tab(text: 'quran.tafseer'.tr()),
+                      Tab(text: 'quran.translation'.tr()),
+                      Tab(text: 'quran.irab'.tr()),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabs,
+                      children: [
+                        TafseerTab(future: _tafseer!),
+                        TranslationTab(
+                            ayah: widget.ayah, future: _translations!),
+                        IrabTab(ayah: widget.ayah, future: _irab!),
+                      ],
+                    ),
+                  ),
+                ],
+              );
 
     return SafeArea(
       top: _expanded,
@@ -165,52 +223,25 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
           child: Column(
             children: [
               if (!_expanded) const _DragHandle(),
-              SciencesHeader(
-                surahNameAr: widget.surahNameAr,
-                ayah: widget.ayah,
-                quranRepo: widget.quranRepo,
-                translationsFuture: _translations ??
-                    Future<Map<String, AyahTranslation>>.value(const {}),
-                expanded: _expanded,
-                onToggleExpand: () => setState(() => _expanded = !_expanded),
-              ),
-              AyahPanel(ayah: widget.ayah),
-              if (!widget.sciencesAvailable)
+              if (sideways)
                 Expanded(
-                  child: SciencesNotice(
-                    icon: Icons.info_outline,
-                    message: 'quran.sciences_unavailable_here'.tr(),
-                  ),
-                )
-              else if (!ready)
-                Expanded(
-                  child: _SciencesPackGate(onDownload: _startDownload),
-                )
-              else ...[
-                TabBar(
-                  controller: _tabs,
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.center,
-                  indicatorColor: gold,
-                  labelColor: gold,
-                  dividerColor: gold.withValues(alpha: 0.18),
-                  tabs: [
-                    Tab(text: 'quran.tafseer'.tr()),
-                    Tab(text: 'quran.translation'.tr()),
-                    Tab(text: 'quran.irab'.tr()),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabs,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TafseerTab(future: _tafseer!),
-                      TranslationTab(
-                          ayah: widget.ayah, future: _translations!),
-                      IrabTab(ayah: widget.ayah, future: _irab!),
+                      Expanded(
+                        flex: 2,
+                        child: SingleChildScrollView(
+                          child: Column(children: head),
+                        ),
+                      ),
+                      const VerticalDivider(width: 1),
+                      Expanded(flex: 3, child: content),
                     ],
                   ),
-                ),
+                )
+              else ...[
+                ...head,
+                Expanded(child: content),
               ],
             ],
           ),

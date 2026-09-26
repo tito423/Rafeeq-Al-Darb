@@ -14,6 +14,7 @@ import '../../data/adhan_settings_provider.dart';
 import '../../data/prayer_calculation_methods.dart';
 import '../../data/prayer_adjustments_provider.dart';
 import 'prayer_location_screen.dart';
+import '../../../../core/widgets/readable_insets.dart';
 
 /// Manual corrections for the Hijri date and each prayer time, plus the
 /// calculation method that decides those times in the first place.
@@ -44,7 +45,7 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: readableInsets(context, const EdgeInsets.all(16)),
         children: [
           // ── Where: the place the times are calculated for ──
           //

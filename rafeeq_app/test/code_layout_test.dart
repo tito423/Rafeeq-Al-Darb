@@ -51,7 +51,7 @@ void main() {
     // when its create sheet moved to its own file). The sleep-timer menu read
     // «15 دقيقة» in Latin digits; it goes through `trn()` now.
     'lib/features/quran_audio/presentation/player_screen.dart': 950,
-    'lib/features/downloads/presentation/screens/downloads_screen.dart': 870,
+    'lib/features/downloads/presentation/screens/downloads_screen.dart': 829,
     'lib/features/home/presentation/widgets/analog_clock_faces.dart': 828,
     'lib/core/services/ayah_audio_service.dart': 810,
   };
