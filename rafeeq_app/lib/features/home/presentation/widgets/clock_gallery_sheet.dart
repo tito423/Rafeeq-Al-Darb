@@ -63,20 +63,26 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
         ? (DateTime.now().hour < 12 ? 'home.am'.tr() : 'home.pm'.tr())
         : null;
 
+    // Sideways the card is ~220 dp tall inside: the 150 dp preview left the
+    // tabs and the faces no room at all, and the clock was painted over the
+    // switches (owner's photo, Xiaomi, 2026-09-26). So sideways the preview
+    // stands BESIDE the tabs and the grids instead of above them.
+    final sideways =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
     return CardScreen(
       title: 'home.clock_gallery_title'.tr(),
       subtitle: 'home.clock_gallery_subtitle'.tr(),
       icon: Icons.schedule_rounded,
       accent: const Color(0xFF15C7B0),
-      maxWidth: 520,
+      maxWidth: sideways ? 860 : 520,
       maxHeightFraction: 0.9,
       // The grids scroll themselves inside a TabBarView, so the card must not
       // wrap them in a scroll view of its own.
       scrollable: false,
       footer: _bothFamiliesOptions(cs, notifier),
-      child: Column(
-          children: [
-            // ── The live hero: whatever is selected right now ──
+      child: Builder(
+        builder: (context) {
+          final Widget hero = // ── The live hero: whatever is selected right now ──
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 420),
               switchInCurve: Curves.easeOutBack,
@@ -113,8 +119,9 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
                         ),
                 ),
               ),
-            ),
-
+            );
+          final Widget faces = Column(
+            children: [
             // Every colour below comes from the card's own surface. These were
             // white — right on the dark card, and invisible on the light one:
             // the owner's photo shows «عقارب», «رقمية», every face name and
@@ -174,9 +181,28 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
                 ],
               ),
             ),
-
-          ],
-        ),
+            ],
+          );
+          if (!sideways) {
+            return Column(
+              children: [
+                hero,
+                Expanded(child: faces),
+              ],
+            );
+          }
+          return Row(
+            children: [
+              // The live face sized to the height it has, not a fixed 150.
+              Expanded(
+                flex: 2,
+                child: FittedBox(fit: BoxFit.scaleDown, child: hero),
+              ),
+              Expanded(flex: 3, child: faces),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -234,7 +260,9 @@ class _FaceGrid extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        // Three a row sideways: the grid has the width, not the height.
+        crossAxisCount:
+            MediaQuery.orientationOf(context) == Orientation.landscape ? 3 : 2,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
         childAspectRatio: aspectRatio,

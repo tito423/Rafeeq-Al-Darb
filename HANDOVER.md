@@ -2504,9 +2504,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 12:22 — IN PROGRESS — resume here**
+**2026-09-26 13:07 — IN PROGRESS — resume here**
 
-Released v3.64.0 (tag = HEAD 79194bbf), handover row + next step
+Clock gallery sideways: live face beside tabs and faces, 3 a row (not built)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
