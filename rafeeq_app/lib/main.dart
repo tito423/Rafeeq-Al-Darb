@@ -103,7 +103,10 @@ Future<void> main() async {
   // Preload translations (required by easy_localization).
   await EasyLocalization.ensureInitialized();
   // Imported Shamela books must be known before «مكتبتي» or the reader asks.
-  if (kShamelaEnabled) unawaited(ShamelaLibrary.instance.load());
+  if (kShamelaEnabled) {
+    unawaited(ShamelaLibrary.instance.load());
+    unawaited(ShamelaImportService.instance.resumePending());
+  }
   StartupTrace.step('EasyLocalization.ensureInitialized');
   try {
     // EVERY language the app speaks, not just Arabic.

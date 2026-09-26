@@ -112,8 +112,11 @@ class ShamelaCatalog {
     // A pasted Shamela link («shamela.ws/book/9632/15») or a bare book id
     // finds that book - copying a link from the site is the quickest way
     // to name a book exactly.
-    final link =
-        RegExp(r'shamela\.ws/book/(\d+)').firstMatch(query) ??
+    // Spaces are ignored inside a link: the Xiaomi keyboard turned a typed
+    // «shamela.ws» into «shamela. ws» and the book was not found (seen on
+    // the phone, 2026-09-27).
+    final link = RegExp(r'shamela\.ws/book/(\d+)')
+            .firstMatch(query.replaceAll(RegExp(r'\s+'), '')) ??
         RegExp(r'^\s*(\d{1,7})\s*$').firstMatch(query);
     if (books != null && link != null) {
       final id = int.parse(link.group(1)!);

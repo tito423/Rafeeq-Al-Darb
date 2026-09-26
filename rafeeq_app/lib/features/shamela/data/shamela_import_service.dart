@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../core/services/download_notifications.dart';
 import '../../../core/utils/digits.dart';
@@ -43,12 +48,58 @@ class ShamelaImportService {
     if (isRunning(shamelaId)) return _queue;
     final job = ShamelaImportJob(shamelaId, card.title);
     jobs.value = {...jobs.value, shamelaId: job};
+    unawaited(_savePending());
     return _queue = _queue.then((_) => _run(job, card));
+  }
+
+  // Unfinished imports survive the app being closed. Seen on the Xiaomi
+  // (2026-09-27): an import force-stopped at page 63 did not come back on
+  // its own; importing again did continue from the pages already fetched
+  // (68 three seconds later), so only the «ask again» part was missing.
+  // The ids of every import not yet finished are kept in app support
+  // `shamela/pending.json` and [resumePending] restarts them at launch.
+  Future<File> _pendingFile() async {
+    final dir = await getApplicationSupportDirectory();
+    return File('${dir.path}/shamela/pending.json');
+  }
+
+  Future<void> _savePending() async {
+    try {
+      final f = await _pendingFile();
+      await f.parent.create(recursive: true);
+      await f.writeAsString(jsonEncode(jobs.value.keys.toList()));
+    } catch (e) {
+      debugPrint('shamela pending save failed: $e');
+    }
+  }
+
+  /// Restarts every import that was running when the app last closed.
+  /// Called once at launch (GitHub build). An id whose card cannot be
+  /// fetched now (offline) stays in the file for the next launch.
+  Future<void> resumePending() async {
+    List<int> ids;
+    try {
+      final f = await _pendingFile();
+      if (!f.existsSync()) return;
+      ids = [for (final v in jsonDecode(await f.readAsString()) as List) v as int];
+    } catch (_) {
+      return;
+    }
+    for (final id in ids) {
+      if (isRunning(id)) continue;
+      try {
+        final card = await ShamelaBookBuilder(id).fetchCard();
+        unawaited(start(id, card));
+      } catch (e) {
+        debugPrint('shamela resume $id failed: $e');
+      }
+    }
   }
 
   void cancel(int shamelaId) {
     _builders[shamelaId]?.cancel();
     jobs.value = Map.of(jobs.value)..remove(shamelaId);
+    unawaited(_savePending());
     DownloadNotifications.instance.clear('shamela_$shamelaId');
   }
 
@@ -100,6 +151,7 @@ class ShamelaImportService {
         payload: 'dl:files',
       );
       jobs.value = Map.of(jobs.value)..remove(job.shamelaId);
+      unawaited(_savePending());
     } catch (e) {
       debugPrint('shamela import ${job.shamelaId} failed: $e');
       DownloadNotifications.instance.clear(nid);
@@ -113,6 +165,8 @@ class ShamelaImportService {
   }
 
   /// Takes a finished error off the list.
-  void dismiss(int shamelaId) =>
-      jobs.value = Map.of(jobs.value)..remove(shamelaId);
+  void dismiss(int shamelaId) {
+    jobs.value = Map.of(jobs.value)..remove(shamelaId);
+    unawaited(_savePending());
+  }
 }

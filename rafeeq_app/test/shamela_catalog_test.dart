@@ -25,6 +25,8 @@ void main() {
 
   test('a pasted link or a bare id finds that book', () {
     expect(cat.search('https://shamela.ws/book/9632/2').single.id, 9632);
+    // A phone keyboard adds a space after the dot (Xiaomi, 2026-09-27).
+    expect(cat.search('https://shamela. ws/book/9632').single.id, 9632);
     expect(cat.search('12028').single.id, 12028);
     expect(cat.search('999999999'), isEmpty);
   });

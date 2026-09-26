@@ -586,6 +586,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 02:57 - Shamela: link with spaces (Xiaomi keyboard) + unfinished imports resume at launch; NOT yet seen
 - 2026-09-27 02:02 - Dorar check: hadeethenc + offline cache seen on the Xiaomi
 - 2026-09-27 01:49 - Dorar check seen on the Xiaomi: adhkar + daily hadith (Bukhari 5696)
 - 2026-09-27 01:41 - Emulator window works after reboot; laptop fix script ready for owner
