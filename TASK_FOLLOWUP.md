@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+19:30 OWNER wants a full «الدرر السنية» hub (all encyclopedias: العقدية 1,469 sections, الفقهية 5,419, + qfiqhia/osolfeqh/tafseer/history/adyan/frq/akhlaq/aadab/arabia/azkar/fake-hadith/gsearch), not only hadith grading. Design + measurements in DORAR_ISLAMQA_NOTES.md (HTML only except hadith API; «جميع الحقوق محفوظة» -> live read + per-section cache, no bulk copy). ORDER: (1) build + see DorarScreen (hadith grading, in code); (2) hub + encyclopedia TOC + section reader (read 3+ real pages first); (3) IslamQA live search/read; (4) release 3.66.0 and give BOTH links (release page + direct APK). Context of this session ~90% -> next session continues.
+
 OWNER: «ابدأ في الاتنين … ابدأ بالدرر … لما تخلص الاتنين ارفع ريليز»; do wide research. Dorar map: encyclopedias hadith, aqeeda, adyan, frq, alakhlaq, feqhia, qfiqhia, osolfeqh, tafseer, history, arabia, azkar, fake-hadith, gsearch; JSON only for hadith (dorar_api.json?skey=&page=, 15/page, paging works). DONE IN CODE (not built): lib/features/dorar/data/dorar_service.dart (+parseDorar, drops entries without a named grader) + test on real fixture; DorarScreen (search, cards: text/rawi/muhaddith/source/page/grade, «المزيد» paging, credit); Library bar icon (kShamelaEnabled gate). NEXT: build+see Dorar; then IslamQA (no API: answers HTML, sitemap index 39 files; «جميع الحقوق محفوظة» -> live read on demand, no bulk import); then release with links.
 
 19:00 Dorar + IslamQA researched live -> DORAR_ISLAMQA_NOTES.md (Dorar public JSON API dorar_api.json?skey= with named grader; IslamQA no API, HTML answers, sitemap of all answers, «جميع الحقوق محفوظة»). Waiting for owner's choice. Context 85%+ -> offer handover.
@@ -555,6 +557,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 19:10 - Dorar hub design: all encyclopedias measured (aqeeda 1,469, feqhia 5,419 sections)
 - 2026-09-26 19:09 - Dorar hadith gradings in the app: service, parser (tested on a real response), screen (not built)
 - 2026-09-26 18:56 - Dorar and IslamQA: live research notes
 - 2026-09-26 18:55 - Released v3.65.1 after the interrupted publish

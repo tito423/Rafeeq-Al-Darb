@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 19:09 — IN PROGRESS — resume here**
+**2026-09-26 19:10 — IN PROGRESS — resume here**
 
-Dorar hadith gradings in the app: service, parser (tested on a real response), screen (not built)
+Dorar hub design: all encyclopedias measured (aqeeda 1,469, feqhia 5,419 sections)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
