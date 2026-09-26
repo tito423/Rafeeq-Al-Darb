@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~15:08 Build 15:05 (stage A) installed on emulator; SEEN only: tablet 1600x2560/320 upright = two columns + bottom bar (800 dp < 840), no break. FOUND for stage C: tall start column -> analog clock beside the countdown comes out ~100 dp (FittedBox in half a column); when the column is tall put clock ABOVE countdown. NOT seen yet: stage A on phone both ways, smart screen, tablet sideways rail, adhan sideways. wm reset done. Quota 5h 87% at 15:05 -> stopped here. NEXT SESSION: continue stage A checks, then stage B (remote). Owner to answer: OK to download the Android TV emulator image (~1 GB, Google sdkmanager) for stage D?
+
 ~15:15 STAGE A IN CODE (NOT built): core/utils/screen_class.dart (twoColumns w>=600, shortHeight h<480, wide w>h); lists/two panes/settings/azkar grid/tour/paired -> twoColumns (tablet upright now 2 columns); azkar section/library/book reader -> wide; adhan backgrounds count = width/200 (2..6); side rail when wide OR width>=840, tiles capped at 88 dp; TV manifest: LEANBACK_LAUNCHER + banner (owner icon unchanged on #9BC4B3, 320x180, NO text - PIL here cannot shape Arabic) + touchscreen/leanback/mic/location required=false; AdhanActivity portrait lock REMOVED - its sideways layout NOT yet seen (must check). Still orientation-based on purpose: quran_screen (lock + toolbar), mushaf pages, card_route, tasbeeh, clock gallery, sciences sheet, makharij, qibla. NEXT: build; see phone/tablet/smart sizes both orientations; adhan preview sideways; then stage B (remote).
 
 ~15:05 Research done + measured; plan in ADAPTIVE_PLAN.md (stages A foundation, B remote, C sweep, D real TV - D needs owner OK to download an Android TV system image). NEXT: stage A - core/utils/screen_class.dart (Android breakpoints), move the 33 orientation checks to size, TV manifest + banner, unlock AdhanActivity.
@@ -513,6 +515,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 15:06 - Stage A built and partly seen (tablet upright); paused for quota
 - 2026-09-26 15:01 - Stage A: layout by window size (ScreenClass), TV launcher + banner, adhan not locked (not built)
 - 2026-09-26 14:55 - Adaptive + TV remote plan from live research and code measurement
 - 2026-09-26 14:53 - Released v3.64.1; next: all-devices layout + TV remote (owner hard requirement)
