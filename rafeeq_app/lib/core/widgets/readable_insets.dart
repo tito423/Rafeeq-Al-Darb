@@ -5,7 +5,8 @@ import 'package:flutter/widgets.dart';
 /// stretched to the edges.
 ///
 /// Sideways (emulator-5554, 2026-09-26) a settings row put its label at one
-/// edge of a ~750 dp line and its switch or its − / + minutes at the other.
+/// edge of a line ~1,170 dp long (1200 dp screen, density 320) and its
+/// switch or its − / + minutes at the other.
 /// Upright the screen is narrower than [maxWidth] and [base] is returned as
 /// it is. Padding rather than a centred box so the whole width still
 /// scrolls.

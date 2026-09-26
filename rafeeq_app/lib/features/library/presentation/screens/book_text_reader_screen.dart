@@ -522,7 +522,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           // that icon honestly) / the existing فهرس drawer / the
           // existing bookmark toggle.
           // SIDEWAYS THE ACTIONS MOVE TO A SIDE COLUMN (see `build`'s body):
-          // under the title they cost 60 of a phone-on-its-side's ~340 dp,
+          // under the title they cost 60 of the 540 dp a sideways emulator-5554 has,
           // and the page was left about 40 % of the screen on
           // emulator-5554 (2026-09-26).
           bottom: doc == null || sideways

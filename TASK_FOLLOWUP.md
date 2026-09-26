@@ -470,6 +470,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 10:05 - Link manage at reading width; three dp figures in comments corrected (emulator is 2 px/dp, not 3)
 - 2026-09-26 07:11 - Seen: makharij fixed both ways, backgrounds, duas sections, support page
 - 2026-09-26 07:02 - Makharij diagram kept its shape (Center), adhan backgrounds 4 across, adhkar sections paired, support readable (not built)
 - 2026-09-26 05:32 - Seen sideways: settings, tasbeeh, hadith lists, library tabs, sciences sheet with i'rab

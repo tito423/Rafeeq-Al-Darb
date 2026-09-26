@@ -76,7 +76,8 @@ class _MakharijScreenState extends State<MakharijScreen>
           // is just decoration you scroll past.
           ConstrainedBox(
             constraints: BoxConstraints(
-              // Sideways two fifths of ~340 dp is a drawing 135 dp high;
+              // Sideways two fifths of the height is a small drawing (216 dp
+              // of emulator-5554's 540, 163 of the owner's Xiaomi's 407);
               // 62 % still leaves the letter strip in view under it.
               maxHeight: MediaQuery.sizeOf(context).height *
                   (MediaQuery.orientationOf(context) == Orientation.landscape

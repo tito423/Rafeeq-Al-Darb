@@ -3,6 +3,7 @@
 /// إسلامية» so the two can never drift into two different editors.
 library;
 
+import '../../../../core/widgets/readable_insets.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,7 +71,9 @@ class LinkListManageScreen extends ConsumerWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            // Sideways at a reading width: the drag handle and the eye sat
+            // 1,092 dp from the name they act on (emulator-5554, 2026-09-26).
+            padding: readableInsets(context, const EdgeInsets.fromLTRB(16, 12, 16, 4)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -107,7 +110,7 @@ class LinkListManageScreen extends ConsumerWidget {
           Expanded(
             child: ReorderableListView.builder(
               buildDefaultDragHandles: false,
-              padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
+              padding: readableInsets(context, const EdgeInsets.fromLTRB(12, 4, 12, 24)),
               itemCount: ids.length,
               onReorder: (from, to) {
                 final next = [...ids];

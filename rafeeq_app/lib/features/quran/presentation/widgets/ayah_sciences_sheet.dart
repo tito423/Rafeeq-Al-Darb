@@ -154,7 +154,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     // SIDEWAYS, TWO COLUMNS: the ayah and its controls on one side, the
     // tafsir / translation / i'rab on the other at the sheet's full height.
     // Stacked, on emulator-5554 held sideways (2026-09-26), the header, the
-    // ayah and the tab row left the i'rab about 150 dp.
+    // ayah and the tab row left the i'rab about 225 dp of 540.
     final sideways =
         MediaQuery.orientationOf(context) == Orientation.landscape;
     final head = <Widget>[
