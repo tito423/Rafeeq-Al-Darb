@@ -103,7 +103,7 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
     var names = [
       for (final e in byAuthor.entries)
         if (nameMatchesExact(e.key, t) ||
-            e.value.first.authorEn.toLowerCase() == lower)
+            nameMatchesExact(e.value.first.authorEn, t))
           e.key,
     ];
     if (names.isEmpty) {

@@ -47,4 +47,13 @@ void main() {
     expect(exact, isNotEmpty);
     expect(exact.any((a) => a.contains('قيّم')), isFalse);
   });
+
+  test('whole words in Latin too: «ibn al-jawzi» is not al-Jawziyya', () {
+    final en = {
+      for (final b in libraryBookCatalog)
+        if (nameMatchesExact(b.authorEn, 'ibn al-jawzi')) b.authorEn,
+    };
+    expect(en, isNotEmpty);
+    expect(en.any((a) => a.toLowerCase().contains('jawziyy')), isFalse);
+  });
 }
