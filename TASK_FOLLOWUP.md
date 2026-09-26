@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+12:21 RELEASED v3.64.0 (tag 79194bbf = HEAD, asset 275,531,265 B, 206). v3.63.7 + tag deleted. About v3.64.0 + support seen on emulator. Arabic report given to the owner. NEXT (nothing pending from him): owner installs v3.64.0 on the Xiaomi and looks sideways (rail by the notch, Home, tasbeeh); then the old list: the 222 i'rab refs to chase (tafsir.app aljadwal/darweesh/muyassar), Shamela mid-sentence line breaks, listening across rotation (diacritised book), Avast flag on the Xiaomi (Detection ID 3d1dc328d456) not investigated.
+
 ~12:15 SEEN build 12:11:28 (emulator, Xiaomi size 1220x2712/480 + emulated hole cutout): English, rail LEFT beside the notch (owner's case) - rail right after the strip, content 20 dp after the rail (was 60); Home card whole incl. bottom edge; tasbeeh everything fits, no title bar; Prayer/More fine. Emulator back to Arabic, wm reset. Owner's three requests DONE. Version -> 3.64.0+73 (pubspec + About). NEXT: build_github_release.bat, install, see About 3.64.0 + Support «ادعم التطبيق», delete v3.63.7 + tag, publish v3.64.0 --target master, verify tag = HEAD, Arabic report.
 
 ~12:10 SEEN build 12:02:26 (emulator, installed 12:02:55): Home sideways at emulator/Xiaomi/tablet/smart sizes - whole prayer card on screen, clock beside countdown; tablet UPRIGHT two panes; phone upright unchanged; tasbeeh circle fills height. FIXES after it (595 pass, NOT built): Xiaomi size card bottom under viewport -> clock budget margin 8->26; tasbeeh sideways as tab has no title bar (controls were cut at 480 dpi). NEXT: rebuild, then app in ENGLISH at Xiaomi size orientation 1 (hole on left = owner's case) to see rail beside notch; reset wm size/density after.
@@ -487,6 +489,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 12:22 - Released v3.64.0 (tag = HEAD 79194bbf), handover row + next step
 - 2026-09-26 12:08 - Home clock budget margin; tasbeeh sideways tab drops its title bar (not built)
 - 2026-09-26 11:59 - Home: prayer card alone and clock sized to height in two panes; two panes on any screen 700dp wide (not built)
 - 2026-09-26 11:43 - Tasbeeh sideways fills height; side tabs hug the notch; no double inset beside the rail (not built)
