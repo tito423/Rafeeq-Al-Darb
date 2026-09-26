@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~13:55 SEEN build 13:49:40: paper recitation upright (button «التلاوة المستمرة» in paper, 2:35 exact) then rotated sideways -> view goes to 2:35 by itself. Continuous recitation in paper + text, both orientations: DONE and seen. NOW: owner's four download items. Cause of (1)+(2) found: AyahRecitationLibrary.availableEditions is a hard-coded 19 reciters; onboarding offers all 35 in RecitationSource._everyAyahFolders (Banna is not in the 19) -> his download has no page.
+
 ~14:00 SEEN build 13:40: paper recitation sideways follows 2:30->2:31 (scrolls itself), rotate upright mid-recitation keeps PLAYING with 2:32 highlighted, page 6->7 turns by itself (2:39 exact); text sideways 2:44->2:46 exact. FAULT: turning sideways AFTER the verse changed left the view at the top (2:40 cut) -> reveal also when the stage height changes. 595 pass, NOT built. NEXT: build, see that; then the owner's four download items.
 
 ~13:45 SEEN build 13:32: PAPER recitation sideways starts, 2:30 highlighted exactly; BUT 2:31 highlighted below the edge, view did not follow -> mushaf_page_view sideways scroll follows the highlight (_revealHighlight). 595 pass, NOT built. OWNER NEW (13:40, 4 phone photos) queued AFTER recitation check: (1) ayah-by-ayah progress only on the initial-downloads page, not in the notification nor on «تنزيل تلاوات آية بآية»; (2) that page shows a 0% ring on every reciter -> looks like all downloading; (3) Downloads says «صوت قارئ الكتب: لا يوجد محتوى منزّل» though the voice IS downloaded (initial page shows it done); (4) notification «جارٍ التنزيل / التقدم الدقيق داخل التطبيق» unwanted -> a nicer notification WITH progress that does not slow the download; tapping it must open the ayah-by-ayah page directly.
@@ -497,6 +499,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 13:52 - Paper recitation seen following after rotation; download items next
 - 2026-09-26 13:46 - Paper recitation seen following both ways; reveal after rotation too (not built)
 - 2026-09-26 13:37 - Paper mushaf sideways scrolls to the recited ayah (not built); owner four download items queued
 - 2026-09-26 13:29 - Paper mushaf: the image-mode guard stopped every recitation; now only non-Madinah printings (not built)
