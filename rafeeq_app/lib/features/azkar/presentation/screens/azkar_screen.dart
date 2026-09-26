@@ -1,3 +1,4 @@
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../../../core/widgets/mirrored_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -314,7 +315,8 @@ class _CategorySectionsListScreen extends StatelessWidget {
       // Nothing fetched, nothing bundled, and it costs no bytes.
       body: _CategoryGround(
         colors: categoryInfo.gradient,
-        child: ListView.builder(
+        // Sideways two a row (`PairedListView`).
+        child: PairedListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: sections.length,
         itemBuilder: (context, i) {

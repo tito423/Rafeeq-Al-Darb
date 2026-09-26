@@ -51,8 +51,16 @@ class _AdhanBackgroundScreenState extends ConsumerState<AdhanBackgroundScreen>
         animation: _clock,
         builder: (context, _) => GridView.builder(
           padding: const EdgeInsets.all(14),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+          // Sideways four across: two across made each portrait tile taller
+          // than the screen, and only its top half was ever in view
+          // (emulator-5554, 2026-09-26). The tiles keep the adhan screen's
+          // own portrait shape: the real alert (AdhanActivity) is locked
+          // to portrait in the manifest.
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount:
+                MediaQuery.orientationOf(context) == Orientation.landscape
+                    ? 4
+                    : 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
             childAspectRatio: 0.72,

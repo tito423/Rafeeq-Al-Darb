@@ -1,3 +1,4 @@
+import '../../../../core/widgets/readable_insets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,7 +41,7 @@ class SupportScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text('support.title'.tr())),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: readableInsets(context, const EdgeInsets.fromLTRB(20, 8, 20, 32)),
         children: [
           Icon(Icons.volunteer_activism_outlined, size: 56, color: gold),
           const SizedBox(height: 18),

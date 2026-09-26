@@ -2502,9 +2502,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 05:32 — IN PROGRESS — resume here**
+**2026-09-26 07:02 — IN PROGRESS — resume here**
 
-Seen sideways: settings, tasbeeh, hadith lists, library tabs, sciences sheet with i'rab
+Makharij diagram kept its shape (Center), adhan backgrounds 4 across, adhkar sections paired, support readable (not built)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

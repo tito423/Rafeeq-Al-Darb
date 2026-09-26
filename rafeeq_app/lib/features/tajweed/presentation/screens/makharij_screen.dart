@@ -76,7 +76,12 @@ class _MakharijScreenState extends State<MakharijScreen>
           // is just decoration you scroll past.
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.sizeOf(context).height * 0.40,
+              // Sideways two fifths of ~340 dp is a drawing 135 dp high;
+              // 62 % still leaves the letter strip in view under it.
+              maxHeight: MediaQuery.sizeOf(context).height *
+                  (MediaQuery.orientationOf(context) == Orientation.landscape
+                      ? 0.62
+                      : 0.40),
             ),
             child: Card(
               elevation: 0,
@@ -86,14 +91,22 @@ class _MakharijScreenState extends State<MakharijScreen>
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8),
-                child: MakharijDiagram(
-                  selected: selected,
-                  onPick: _pick,
-                  articulation: CurvedAnimation(
-                    parent: _articulation,
-                    curve: Curves.easeOutCubic,
+                // CENTRED, so the drawing keeps its own shape. The list hands
+                // this card a tight width; capped in height, AspectRatio could
+                // not narrow itself and came out wide and short, the SVG drawn
+                // small in its middle (BoxFit.contain) while the markers were
+                // placed across the whole stretched box - off the drawing.
+                // Seen sideways on emulator-5554, 2026-09-26.
+                child: Center(
+                  child: MakharijDiagram(
+                    selected: selected,
+                    onPick: _pick,
+                    articulation: CurvedAnimation(
+                      parent: _articulation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                    flow: _flow,
                   ),
-                  flow: _flow,
                 ),
               ),
             ),
