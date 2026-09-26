@@ -76,9 +76,11 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
     if (book == null) return;
     final path = await LibraryApiService.instance.bookFilePath(bookId);
     if (!mounted) return;
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (_) => BookTextReaderScreen(book: book, path: path),
-    ));
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => BookTextReaderScreen(book: book, path: path),
+      ),
+    );
   }
 
   Future<void> _delete(String bookId) async {
@@ -104,101 +106,124 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
     final query = _controller.text.trim();
     return Scaffold(
       appBar: AppBar(title: Text('shamela.title'.tr())),
-      body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
-          child: TextField(
-            controller: _controller,
-            enabled: !_loading && !_failed,
-            textInputAction: TextInputAction.search,
-            onChanged: _onQuery,
-            decoration: InputDecoration(
-              hintText: 'shamela.search_hint'.tr(),
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14)),
-            ),
-          ),
-        ),
-        if (_loading)
+      body: Column(
+        children: [
           Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 12),
-              Text('shamela.loading_catalog'.tr()),
-            ]),
-          )
-        else if (_failed)
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(children: [
-              Text('shamela.catalog_failed'.tr(), textAlign: TextAlign.center),
-              const SizedBox(height: 10),
-              FilledButton.tonal(
-                  onPressed: _loadCatalog, child: Text('common.retry'.tr())),
-            ]),
-          )
-        else
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                localizeDigits(
-                    'shamela.count'.tr(args: ['${_catalog.count}']), lang),
-                style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+            child: TextField(
+              controller: _controller,
+              enabled: !_loading && !_failed,
+              textInputAction: TextInputAction.search,
+              onChanged: _onQuery,
+              decoration: InputDecoration(
+                hintText: 'shamela.search_hint'.tr(),
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
-            children: [
-              for (final j in jobs.values)
-                _JobTile(job: j, lang: lang),
-              if (query.isEmpty && imported.isNotEmpty) ...[
-                _Header('shamela.imported_section'.tr()),
-                for (final b in imported)
+          if (_loading)
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 12),
+                  Text('shamela.loading_catalog'.tr()),
+                ],
+              ),
+            )
+          else if (_failed)
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  Text(
+                    'shamela.catalog_failed'.tr(),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  FilledButton.tonal(
+                    onPressed: _loadCatalog,
+                    child: Text('common.retry'.tr()),
+                  ),
+                ],
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  localizeDigits(
+                    'shamela.count'.tr(args: ['${_catalog.count}']),
+                    lang,
+                  ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
+              children: [
+                for (final j in jobs.values) _JobTile(job: j, lang: lang),
+                if (query.isEmpty && imported.isNotEmpty) ...[
+                  _Header('shamela.imported_section'.tr()),
+                  for (final b in imported)
+                    Card(
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.menu_book_rounded,
+                          color: goldText(context),
+                        ),
+                        title: Text(b.titleAr),
+                        subtitle: Text(
+                          b.authorAr,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onTap: () => _open(b.id),
+                        trailing: IconButton(
+                          tooltip: 'shamela.delete'.tr(),
+                          icon: Icon(Icons.delete_outline, color: scheme.error),
+                          onPressed: () => _delete(b.id),
+                        ),
+                      ),
+                    ),
+                ],
+                if (query.isNotEmpty && _results.isEmpty && !_loading)
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Center(child: Text('shamela.no_results'.tr())),
+                  ),
+                for (final r in _results)
                   Card(
                     child: ListTile(
-                      leading: Icon(Icons.menu_book_rounded,
-                          color: goldText(context)),
-                      title: Text(b.titleAr),
-                      subtitle: Text(b.authorAr,
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
-                      onTap: () => _open(b.id),
-                      trailing: IconButton(
-                        tooltip: 'shamela.delete'.tr(),
-                        icon: Icon(Icons.delete_outline, color: scheme.error),
-                        onPressed: () => _delete(b.id),
-                      ),
+                      title: Text(r.title),
+                      subtitle: ShamelaLibrary.instance.isImported(r.id)
+                          ? Text(
+                              'shamela.in_library'.tr(),
+                              style: TextStyle(color: scheme.primary),
+                            )
+                          : null,
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: ShamelaLibrary.instance.isImported(r.id)
+                          ? () => _open(ShamelaLibrary.idFor(r.id))
+                          : () => _showCard(r),
                     ),
                   ),
               ],
-              if (query.isNotEmpty && _results.isEmpty && !_loading)
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Center(child: Text('shamela.no_results'.tr())),
-                ),
-              for (final r in _results)
-                Card(
-                  child: ListTile(
-                    title: Text(r.title),
-                    subtitle: ShamelaLibrary.instance.isImported(r.id)
-                        ? Text('shamela.in_library'.tr(),
-                            style: TextStyle(color: scheme.primary))
-                        : null,
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: ShamelaLibrary.instance.isImported(r.id)
-                        ? () => _open(ShamelaLibrary.idFor(r.id))
-                        : () => _showCard(r),
-                  ),
-                ),
-            ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
@@ -208,10 +233,9 @@ class _Header extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(4, 10, 4, 6),
-        child: Text(text,
-            style: const TextStyle(fontWeight: FontWeight.w800)),
-      );
+    padding: const EdgeInsets.fromLTRB(4, 10, 4, 6),
+    child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800)),
+  );
 }
 
 class _JobTile extends StatelessWidget {
@@ -230,12 +254,17 @@ class _JobTile extends StatelessWidget {
             : const SizedBox(
                 width: 22,
                 height: 22,
-                child: CircularProgressIndicator(strokeWidth: 2)),
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
         title: Text(job.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: Text(failed
-            ? 'shamela.failed'.tr()
-            : localizeDigits(
-                'shamela.importing'.tr(args: ['${job.pages}']), lang)),
+        subtitle: Text(
+          failed
+              ? 'shamela.failed'.tr()
+              : localizeDigits(
+                  'shamela.importing'.tr(args: ['${job.pages}']),
+                  lang,
+                ),
+        ),
         trailing: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => failed
@@ -257,8 +286,9 @@ class _BookCardSheet extends StatefulWidget {
 }
 
 class _BookCardSheetState extends State<_BookCardSheet> {
-  late final Future<ShamelaCard> _card =
-      ShamelaBookBuilder(widget.ref.id).fetchCard();
+  late final Future<ShamelaCard> _card = ShamelaBookBuilder(
+    widget.ref.id,
+  ).fetchCard();
 
   @override
   Widget build(BuildContext context) {
@@ -266,7 +296,8 @@ class _BookCardSheetState extends State<_BookCardSheet> {
     return SafeArea(
       child: ConstrainedBox(
         constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * 0.8),
+          maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+        ),
         child: FutureBuilder<ShamelaCard>(
           future: _card,
           builder: (context, snap) {
@@ -283,47 +314,49 @@ class _BookCardSheetState extends State<_BookCardSheet> {
               );
             }
             final card = snap.data!;
-            final excluded = ShamelaBookBuilder.isExcluded(card.author);
             return ListView(
               shrinkWrap: true,
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               children: [
-                Text(card.title.isEmpty ? widget.ref.title : card.title,
-                    style: Theme.of(context).textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w800)),
+                Text(
+                  card.title.isEmpty ? widget.ref.title : card.title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(card.author,
-                    style: TextStyle(color: goldText(context))),
+                Text(card.author, style: TextStyle(color: goldText(context))),
                 const SizedBox(height: 12),
-                Text(card.card,
-                    style: const TextStyle(fontSize: 13, height: 1.6)),
+                Text(
+                  card.card,
+                  style: const TextStyle(fontSize: 13, height: 1.6),
+                ),
                 const SizedBox(height: 16),
-                if (excluded)
-                  Text('shamela.excluded'.tr(),
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.error))
-                else
-                  ValueListenableBuilder(
-                    valueListenable: service.jobs,
-                    builder: (context, _, _) => FilledButton.icon(
-                      onPressed: service.isRunning(widget.ref.id)
-                          ? null
-                          : () {
-                              service.start(widget.ref.id, card);
-                              Navigator.of(context).pop();
-                            },
-                      icon: const Icon(Icons.download_for_offline_rounded),
-                      label: Text(service.isRunning(widget.ref.id)
+                ValueListenableBuilder(
+                  valueListenable: service.jobs,
+                  builder: (context, _, _) => FilledButton.icon(
+                    onPressed: service.isRunning(widget.ref.id)
+                        ? null
+                        : () {
+                            service.start(widget.ref.id, card);
+                            Navigator.of(context).pop();
+                          },
+                    icon: const Icon(Icons.download_for_offline_rounded),
+                    label: Text(
+                      service.isRunning(widget.ref.id)
                           ? 'shamela.importing_short'.tr()
-                          : 'shamela.import'.tr()),
+                          : 'shamela.import'.tr(),
                     ),
                   ),
+                ),
                 const SizedBox(height: 8),
-                Text('shamela.source'.tr(),
-                    style: TextStyle(
-                        fontSize: 11.5,
-                        color:
-                            Theme.of(context).colorScheme.onSurfaceVariant)),
+                Text(
+                  'shamela.source'.tr(),
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ],
             );
           },

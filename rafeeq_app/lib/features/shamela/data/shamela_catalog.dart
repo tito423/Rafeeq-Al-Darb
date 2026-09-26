@@ -51,7 +51,8 @@ class ShamelaCatalog {
 
   Future<void> _load(bool refresh) async {
     final file = await _file();
-    final fresh = file.existsSync() &&
+    final fresh =
+        file.existsSync() &&
         DateTime.now().difference(file.lastModifiedSync()) < _maxAge;
     if (!fresh || refresh || _books == null && !file.existsSync()) {
       try {
@@ -95,7 +96,10 @@ class ShamelaCatalog {
       if (id <= 0) continue; // «جميع الكتب», the select2 placeholder
       final title = '${m['text']}'.trim();
       if (title.isEmpty) continue;
-      out.add((ShamelaBookRef(id, title), normalizeArabicLoose(normalizeArabic(title))));
+      out.add((
+        ShamelaBookRef(id, title),
+        normalizeArabicLoose(normalizeArabic(title)),
+      ));
     }
     return out;
   }
@@ -108,7 +112,8 @@ class ShamelaCatalog {
     // A pasted Shamela link («shamela.ws/book/9632/15») or a bare book id
     // finds that book - copying a link from the site is the quickest way
     // to name a book exactly.
-    final link = RegExp(r'shamela\.ws/book/(\d+)').firstMatch(query) ??
+    final link =
+        RegExp(r'shamela\.ws/book/(\d+)').firstMatch(query) ??
         RegExp(r'^\s*(\d{1,7})\s*$').firstMatch(query);
     if (books != null && link != null) {
       final id = int.parse(link.group(1)!);

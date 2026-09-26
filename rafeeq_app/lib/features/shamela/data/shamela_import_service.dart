@@ -60,19 +60,25 @@ class ShamelaImportService {
     await DownloadNotifications.instance.ensureInitialized();
     try {
       final bookId = ShamelaLibrary.idFor(job.shamelaId);
-      final bytes = await builder.build(card, bookId: bookId, onPage: (n) {
-        job.pages = n;
-        _touch();
-        DownloadNotifications.instance.showProgress(
-          id: nid,
-          title: job.title,
-          done: 0,
-          total: 0, // Shamela gives no page total up front
-          detail: localizeDigits(
-              'shamela.importing'.tr(args: ['$n']), uiLanguageCode),
-          payload: 'dl:files',
-        );
-      });
+      final bytes = await builder.build(
+        card,
+        bookId: bookId,
+        onPage: (n) {
+          job.pages = n;
+          _touch();
+          DownloadNotifications.instance.showProgress(
+            id: nid,
+            title: job.title,
+            done: 0,
+            total: 0, // Shamela gives no page total up front
+            detail: localizeDigits(
+              'shamela.importing'.tr(args: ['$n']),
+              uiLanguageCode,
+            ),
+            payload: 'dl:files',
+          );
+        },
+      );
       // Recorded first, so when the install announces itself the library
       // tabs already know the book (they list the registry on that event).
       await ShamelaLibrary.instance.add(
@@ -88,8 +94,11 @@ class ShamelaImportService {
         await ShamelaLibrary.instance.remove(bookId);
         rethrow;
       }
-      await DownloadNotifications.instance
-          .showComplete(id: nid, title: job.title, payload: 'dl:files');
+      await DownloadNotifications.instance.showComplete(
+        id: nid,
+        title: job.title,
+        payload: 'dl:files',
+      );
       jobs.value = Map.of(jobs.value)..remove(job.shamelaId);
     } catch (e) {
       debugPrint('shamela import ${job.shamelaId} failed: $e');

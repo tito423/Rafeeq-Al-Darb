@@ -52,20 +52,20 @@ class ShamelaLibrary extends ChangeNotifier {
   }
 
   static LibraryBook _toBook(Map<String, dynamic> m) => LibraryBook(
-        id: '${m['id']}',
-        titleAr: '${m['titleAr']}',
-        titleEn: '${m['titleAr']}',
-        authorAr: '${m['authorAr']}',
-        authorEn: '${m['authorAr']}',
-        pages: (m['pageCount'] as num?)?.toInt() ?? 0,
-        category: BookCategory.shamela,
-        sourceUrl: 'https://shamela.ws/book/${m['shamelaId']}',
-        textEdition: TextEdition(
-          url: 'https://shamela.ws/book/${m['shamelaId']}',
-          sourceLabel: 'المكتبة الشاملة',
-          sizeBytes: (m['sizeBytes'] as num?)?.toInt() ?? 0,
-        ),
-      );
+    id: '${m['id']}',
+    titleAr: '${m['titleAr']}',
+    titleEn: '${m['titleAr']}',
+    authorAr: '${m['authorAr']}',
+    authorEn: '${m['authorAr']}',
+    pages: (m['pageCount'] as num?)?.toInt() ?? 0,
+    category: BookCategory.shamela,
+    sourceUrl: 'https://shamela.ws/book/${m['shamelaId']}',
+    textEdition: TextEdition(
+      url: 'https://shamela.ws/book/${m['shamelaId']}',
+      sourceLabel: 'المكتبة الشاملة',
+      sizeBytes: (m['sizeBytes'] as num?)?.toInt() ?? 0,
+    ),
+  );
 
   Future<void> add({
     required int shamelaId,

@@ -18,14 +18,22 @@ final _hamesh = RegExp(
   r'<(?<tag>div|p)\b[^>]*class="[^"]*\bhamesh\b[^"]*"[^>]*>.*?</\k<tag>>',
   dotAll: true,
 );
-final _btnTag =
-    RegExp(r'<a[^>]*class="[^"]*btn_tag[^"]*"[^>]*>.*?</a>', dotAll: true);
-final _anchor =
-    RegExp(r'<span[^>]*class="[^"]*anchor[^"]*"[^>]*>.*?</span>', dotAll: true);
-final _c3 = RegExp(r'<span[^>]*class="[^"]*\bc3\b[^"]*"[^>]*>(.*?)</span>',
-    dotAll: true);
-final _c4 = RegExp(r'<span[^>]*class="[^"]*\bc4\b[^"]*"[^>]*>(.*?)</span>',
-    dotAll: true);
+final _btnTag = RegExp(
+  r'<a[^>]*class="[^"]*btn_tag[^"]*"[^>]*>.*?</a>',
+  dotAll: true,
+);
+final _anchor = RegExp(
+  r'<span[^>]*class="[^"]*anchor[^"]*"[^>]*>.*?</span>',
+  dotAll: true,
+);
+final _c3 = RegExp(
+  r'<span[^>]*class="[^"]*\bc3\b[^"]*"[^>]*>(.*?)</span>',
+  dotAll: true,
+);
+final _c4 = RegExp(
+  r'<span[^>]*class="[^"]*\bc4\b[^"]*"[^>]*>(.*?)</span>',
+  dotAll: true,
+);
 final _tag = RegExp(r'<[^>]+>');
 // Space, tab and NO-BREAK SPACE (U+00A0) - the Python pattern's third
 // character, checked byte by byte.
@@ -33,24 +41,30 @@ final _ws = RegExp('[ \t ]+');
 
 final _entity = RegExp(r'&(#x[0-9a-fA-F]+|#[0-9]+|[a-zA-Z]+);');
 const _named = {
-  'amp': '&', 'lt': '<', 'gt': '>', 'quot': '"', 'apos': "'",
-  'nbsp': ' ', 'zwnj': '‌', 'zwj': '‍',
+  'amp': '&',
+  'lt': '<',
+  'gt': '>',
+  'quot': '"',
+  'apos': "'",
+  'nbsp': ' ',
+  'zwnj': '‌',
+  'zwj': '‍',
 };
 
 /// The entities that can occur. None did in 15,933 real pages from 30 books
 /// (measured 2026-09-26), so this is a safeguard, not a hot path.
 String _unescape(String s) => s.replaceAllMapped(_entity, (m) {
-      final e = m.group(1)!;
-      if (e.startsWith('#x')) {
-        final v = int.tryParse(e.substring(2), radix: 16);
-        return v == null ? m.group(0)! : String.fromCharCode(v);
-      }
-      if (e.startsWith('#')) {
-        final v = int.tryParse(e.substring(1));
-        return v == null ? m.group(0)! : String.fromCharCode(v);
-      }
-      return _named[e] ?? m.group(0)!;
-    });
+  final e = m.group(1)!;
+  if (e.startsWith('#x')) {
+    final v = int.tryParse(e.substring(2), radix: 16);
+    return v == null ? m.group(0)! : String.fromCharCode(v);
+  }
+  if (e.startsWith('#')) {
+    final v = int.tryParse(e.substring(1));
+    return v == null ? m.group(0)! : String.fromCharCode(v);
+  }
+  return _named[e] ?? m.group(0)!;
+});
 
 String _cleanText(String fragment) {
   var t = fragment.replaceAll(_tag, '');
@@ -77,7 +91,10 @@ List<Map<String, String>> parseNass(String nass) {
     if (stripped.length <= 120 &&
         stripped.startsWith('[') &&
         stripped.endsWith(']')) {
-      out.add({'t': stripped.substring(1, stripped.length - 1).trim(), 'k': 'head'});
+      out.add({
+        't': stripped.substring(1, stripped.length - 1).trim(),
+        'k': 'head',
+      });
       continue;
     }
 
@@ -86,8 +103,9 @@ List<Map<String, String>> parseNass(String nass) {
     final c3Len = c3.fold<int>(0, (a, x) => a + x.length);
     if (c3.isNotEmpty && c3Len >= 0.6 * plain.length) {
       final aya = c3.where((x) => x.isNotEmpty).join(' ');
-      final ref = [for (final x in _c4.allMatches(p)) _cleanText(x.group(1)!)]
-          .firstWhere((x) => x.isNotEmpty, orElse: () => '');
+      final ref = [
+        for (final x in _c4.allMatches(p)) _cleanText(x.group(1)!),
+      ].firstWhere((x) => x.isNotEmpty, orElse: () => '');
       out.add({'t': aya, 'k': 'aya', if (ref.isNotEmpty) 'r': ref});
       continue;
     }

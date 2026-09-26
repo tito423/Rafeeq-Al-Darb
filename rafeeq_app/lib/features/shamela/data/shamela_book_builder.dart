@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../../../core/utils/arabic_normalize.dart';
 import 'shamela_nass.dart';
 
 /// The book card on `https://shamela.ws/book/{id}`.
@@ -20,12 +19,6 @@ class ShamelaCard {
   final String title;
   final String author;
   final bool printMatches;
-}
-
-/// Thrown when the owner's standing exclusion covers the book's author.
-class ShamelaExcludedAuthor implements Exception {
-  const ShamelaExcludedAuthor(this.author);
-  final String author;
 }
 
 /// Builds one Shamela book in the app's own format, on the phone.
@@ -53,20 +46,9 @@ class ShamelaBookBuilder {
       'Chrome/126.0 Mobile Safari/537.36 RafeeqAlDarb';
   static const _delay = Duration(milliseconds: 150);
 
-  /// The owner's standing exclusion (memory «library-content-policy»,
-  /// 2026-09-23): «اللي ذكرتهم دول لا سيبهم مستبعدين».
-  static const excludedAuthors = [
-    'ابن باز',
-    'ابن عثيمين',
-    'ابن جبرين',
-    'محمد بن عبد الوهاب',
-    'الألباني',
-  ];
-
-  static bool isExcluded(String author) {
-    final a = normalizeArabic(author);
-    return excludedAuthors.any((n) => a.contains(normalizeArabic(n)));
-  }
+  // No author or book is excluded from IMPORT (owner, 2026-09-26: «مش
+  // تستبعد في استيراد المكتبة أي كتاب»). His exclusion of five authors
+  // governs the curated catalogue only; what he imports himself is his.
 
   void cancel() => _cancelled = true;
 
@@ -101,9 +83,10 @@ class ShamelaBookBuilder {
   /// The «بطاقة الكتاب» block (pipeline: `fetch_meta_card`).
   Future<ShamelaCard> fetchCard() async {
     final h = await _get('/book/$shamelaId');
-    final m = RegExp(r'<div style="line-height: 1\.8;">(.*?)</div>',
-            dotAll: true)
-        .firstMatch(h);
+    final m = RegExp(
+      r'<div style="line-height: 1\.8;">(.*?)</div>',
+      dotAll: true,
+    ).firstMatch(h);
     var card = '';
     if (m != null) {
       card = m.group(1)!.replaceAll(RegExp(r'<br\s*/?>'), '\n');
@@ -115,11 +98,16 @@ class ShamelaBookBuilder {
     final author =
         RegExp(r'المؤلف\s*:\s*(.+)').firstMatch(card)?.group(1)?.trim() ?? '';
     // «غير موافق للمطبوع» CONTAINS «موافق للمطبوع» - the negation first.
-    final printMatches = card.contains('موافق للمطبوع') &&
+    final printMatches =
+        card.contains('موافق للمطبوع') &&
         !card.contains('غير موافق للمطبوع') &&
         !card.contains('مرقم آليا');
     return ShamelaCard(
-        card: card, title: title, author: author, printMatches: printMatches);
+      card: card,
+      title: title,
+      author: author,
+      printMatches: printMatches,
+    );
   }
 
   static Future<File> _partFile(int id) async {
@@ -135,7 +123,6 @@ class ShamelaBookBuilder {
     required String bookId,
     void Function(int pages)? onPage,
   }) async {
-    if (isExcluded(card.author)) throw ShamelaExcludedAuthor(card.author);
     final part = await _partFile(shamelaId);
     await part.parent.create(recursive: true);
 
@@ -164,8 +151,10 @@ class ShamelaBookBuilder {
         }
         var data = cache[pageId];
         if (data == null) {
-          final raw = await _get('/ajax/pageContent/$shamelaId/$pageId',
-              ajax: true);
+          final raw = await _get(
+            '/ajax/pageContent/$shamelaId/$pageId',
+            ajax: true,
+          );
           data = jsonDecode(raw) as Map<String, dynamic>;
           data['pageId'] = pageId;
           sink.writeln(jsonEncode(data));
@@ -177,8 +166,9 @@ class ShamelaBookBuilder {
         // Shamela repeats the nearest heading on every page of a section;
         // one فهرس entry per section, at the page it starts on.
         if (title.isNotEmpty && title != lastTitle) {
-          final level =
-              RegExp(r'^(كتاب |مقدمة|خطبة|تمهيد)').hasMatch(title) ? 0 : 1;
+          final level = RegExp(r'^(كتاب |مقدمة|خطبة|تمهيد)').hasMatch(title)
+              ? 0
+              : 1;
           toc.add({
             'title': title,
             'page': printed,
