@@ -60,3 +60,13 @@ encyclopedia's bibliography).
    (checks a widespread saying).
 4. Before building each parser: fetch 3+ real section pages and read them
    (CLAUDE.md §1.4); verify against pages read by hand.
+
+## IslamQA - DROPPED (owner, 2026-09-26 ~23:30)
+Measured before dropping: 32,425 Arabic answers in the official sitemap
+(`/sitemaps/ar/answers/1|2/sitemap.xml`, URLs only, no titles). The site's
+search is Google CSE (`cse.google.com ... cx=006594192989126685964`); its own
+`archive-1446.islamqa.info/api/type-ahead` answers a plain request with
+`401 invalid signature` (it proxies a signed GraphQL call). No answer JSON
+endpoint found (`/api/v1/answers/<id>` = 404). Owner: «لو هيقرفنا فكك منه
+هو كدة كدة منضاف في المواقع الاسلامية» - it stays a link in the Islamic
+websites list only.

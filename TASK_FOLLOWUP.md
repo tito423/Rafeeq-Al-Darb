@@ -576,6 +576,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 23:42 - 3.66.0: version bump; IslamQA dropped (owner); tests before release build
 - 2026-09-26 23:03 - Dorar check seen on emulator (hadith, adhkar, book selection); menu item moved first
 - 2026-09-26 22:52 - Dorar check everywhere IN CODE: hadith books, daily hadith, hadeethenc, adhkar, book text selection; 615 pass, analyze clean; NOT built
 - 2026-09-26 22:46 - Dorar check data: matn extraction + match score + cache, tested on 10 real hadiths vs live Dorar
