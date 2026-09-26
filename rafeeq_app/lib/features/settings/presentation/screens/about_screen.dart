@@ -46,7 +46,7 @@ import '../../../../core/widgets/readable_insets.dart';
 class AboutScreen extends ConsumerStatefulWidget {
   /// From `pubspec.yaml`'s `version:` — kept equal to it by
   /// `test/about_version_test.dart`.
-  static const appVersion = '3.64.0';
+  static const appVersion = '3.64.1';
 
   const AboutScreen({super.key});
 
