@@ -173,8 +173,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// الشاشة أو خروج منه، نصي أو مصوّر، وضغطة تانية تظهر الأيقونات».
   ///
   /// One tap, anywhere on the page, in either mode. The verse card is a long
-  /// press. In landscape the page stays full screen — «الخيارات تظهر بس في
-  /// الوضع العمودي» — so a tap there does nothing.
+  /// press. Sideways too since 2026-09-26 («اظهرهم لما اضغط»): the page stays
+  /// full screen and the tap shows or hides the floating controls.
   ///
   /// A selected ayah is cleared first; otherwise the tap toggles full screen.
   void _onPageTap() {
@@ -183,7 +183,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       setState(() { _highlightSurah = null; _highlightAyah = null; });
       return;
     }
-    if (MediaQuery.orientationOf(context) == Orientation.landscape) return;
     // In full screen the tap shows/hides the floating controls instead of
     // leaving the mode — the same gesture, deliberately; see MushafChrome.
     if (_pageFillScreen) {
@@ -283,6 +282,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (orientation == Orientation.landscape) {
+        if (_chromeVisible) setState(() => _chromeVisible = false); // start clean
         _fillBeforePortrait = _pageFillScreen;
         if (!_pageFillScreen) _setPageFillScreen(true, persist: false);
       } else {
@@ -817,7 +817,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // Only label the page with a surah/juz when this printing
                 // actually shares the Hafs pagination those labels come from
                 // — otherwise they would name a surah this page doesn't hold.
-                if (!_pageFillScreen || isLandscape)
+                if (!_pageFillScreen || (isLandscape && !_chromeVisible)) // chrome carries it
                   PersistentPageOverlay(
                   // Image mode only. The text page already carries its own
                   // pinned header and a banner for every surah it opens, so a
@@ -844,7 +844,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // THE FLOATING CONTROLS, replacing a black-and-white «exit
                 // immersive» circle. They take no layout space, so the
                 // mushaf keeps the whole screen — «مش تاكل اي حاجة من الشاشة».
-                if (_pageFillScreen && !isLandscape)
+                if (_pageFillScreen)
                   MushafChrome(
                     visible: _chromeVisible || ref.watch(tutorialRunningProvider),
                     mt: resolveMushafTheme(ref.watch(mushafThemeProvider),
