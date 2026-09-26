@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 00:00 — IN PROGRESS — resume here**
+**2026-09-27 01:34 — IN PROGRESS — resume here**
 
-Released v3.66.0 (Dorar in app); emulator trap 57 updated
+Owner new list logged (C drive, crash settings, emulator window, EaseUS, self-lock)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
