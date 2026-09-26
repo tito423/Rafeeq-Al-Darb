@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+18:15 RELEASED v3.65.0 (tag 9fdfcc52 = HEAD, 275,998,265 B, 206; v3.64.1 deleted). Owner: no exclusion in Shamela import (removed; memory updated). NEXT: owner tries it on his phone; then stage C sweep + Google TV walk (ADAPTIVE_PLAN.md), Shamela open items (long book, resume, notification, shelf).
+
 17:53 (PC clock; the «~18:10»/«~18:40» log lines above were guesses - wrong) SHAMELA SEEN END TO END on emulator (build 17:49:58, GitHub build with RAFEEQ_SHAMELA): Library bar shows the Shamela icon; screen loads the live catalogue «٨٥٩٨ كتاب في الشاملة»; pasting https://shamela.ws/book/9632 finds تحفة الأطفال; card sheet from shamela.ws (author, commentator, «عدد الصفحات: ٨», «ترقيم موافق للمطبوع»); import: «جارٍ الاستيراد… ٥ صفحة» -> «في مكتبتك»; reader opens it (1/8, TOC, «المكتبة الشاملة» label). Shamela already credited in sources_catalog.dart. NOT SEEN: «من الشاملة» category shelf (code: visibleBookCatalog includes imports), the import notification, delete, a big book (thousands of pages), resume after kill, Arabic title typed (adb cannot type Arabic). NEXT: owner's review; then remaining stage C sweep + TV walk (ADAPTIVE_PLAN.md).
 
 ~18:40 SHAMELA integration IN CODE (604 pass, NOT built): ShamelaLibrary (imported registry, app support shamela/imported.json, LibraryBook category BookCategory.shamela «من الشاملة», bookById falls back via extraBookLookup, visibleBookCatalog + books_tab include imports), ShamelaImportService (queue, jobs ValueNotifier, notification «جارٍ الاستيراد… n صفحة», install via installBookBytes), ShamelaScreen (catalogue search, book card sheet with named-five block, imported list open/delete, job tiles), Library app bar icon only when kShamelaEnabled (--dart-define=RAFEEQ_SHAMELA=true added to build_github_release.bat), Downloads panel row. NEXT: build; emulator: Library -> Shamela icon -> catalogue loads (8,598) -> search «صيد الخاطر» (Latin not possible; try «tuhfa»? titles are Arabic - type via the search? adb cannot type Arabic: use a short book reachable by scrolling imported/results or add a debug-free approach) -> import small book 9632 تحفة الأطفال -> appears in مكتبتي + opens in reader.
@@ -545,6 +547,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 18:16 - Released v3.65.0 (tag = HEAD 9fdfcc52)
 - 2026-09-26 17:54 - Shamela import seen end to end on the emulator
 - 2026-09-26 17:47 - Shamela search takes a pasted link or book id
 - 2026-09-26 17:41 - Shamela import wired into the app: registry, service, screen, GitHub-only gate (not built)
