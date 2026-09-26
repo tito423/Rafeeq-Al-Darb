@@ -117,9 +117,39 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     ref.read(quranPageZoomedProvider.notifier).state = zoomed;
   }
 
+  /// Sideways the page is taller than the screen and scrolls; this follows
+  /// the highlighted verse. Without it a recitation on madinah_qc highlighted
+  /// 2:31 below the edge while the view stayed on 2:30 (emulator-5554,
+  /// 2026-09-26) - the reader had to chase the reciter by hand.
+  final ScrollController _sideScroll = ScrollController();
+  double _stageHeight = 0;
+
+  void _revealHighlight() {
+    final region = widget.highlight;
+    if (!mounted || region == null || _zoomed) return;
+    if (!_sideScroll.hasClients || _stageHeight <= 0) return;
+    final f = widget.edition.fitForPage(widget.page);
+    Offset at(Offset p) => f == null ? p : f.apply(p);
+    var top = double.infinity, bottom = -double.infinity;
+    for (final r in region.highlightRects) {
+      top = math.min(top, at(r.topLeft).dy);
+      bottom = math.max(bottom, at(r.bottomRight).dy);
+    }
+    if (!top.isFinite || !bottom.isFinite) return;
+    final y0 = top * _stageHeight, y1 = bottom * _stageHeight;
+    final pos = _sideScroll.position;
+    if (y0 >= pos.pixels && y1 <= pos.pixels + pos.viewportDimension) return;
+    _sideScroll.animateTo(
+      (y0 - 24).clamp(pos.minScrollExtent, pos.maxScrollExtent),
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _revealHighlight());
     _transform.addListener(_onTransform);
     if (widget.edition.isRaster) {
       _rasterReady = _loadRaster();
@@ -131,6 +161,9 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   @override
   void didUpdateWidget(covariant MushafPageView old) {
     super.didUpdateWidget(old);
+    if (old.highlight != widget.highlight) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _revealHighlight());
+    }
     if (old.page != widget.page || old.edition.id != widget.edition.id) {
       _transform.value = Matrix4.identity();
       _zoomed = false;
@@ -164,6 +197,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
       });
     }
     _transform.dispose();
+    _sideScroll.dispose();
     super.dispose();
   }
 
@@ -205,6 +239,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         builder: (context, constraints) {
           final w = constraints.maxWidth;
           final h = w / aspect;
+          _stageHeight = h;
           return GestureDetector(
             onDoubleTapDown: (d) => _doubleTapAt = d.localPosition,
             onDoubleTap: _toggleZoom,
@@ -214,6 +249,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
               minScale: 1,
               maxScale: 4,
               child: SingleChildScrollView(
+                controller: _sideScroll,
                 physics: _zoomed
                     ? const NeverScrollableScrollPhysics()
                     : null,

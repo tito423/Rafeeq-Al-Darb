@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~13:45 SEEN build 13:32: PAPER recitation sideways starts, 2:30 highlighted exactly; BUT 2:31 highlighted below the edge, view did not follow -> mushaf_page_view sideways scroll follows the highlight (_revealHighlight). 595 pass, NOT built. OWNER NEW (13:40, 4 phone photos) queued AFTER recitation check: (1) ayah-by-ayah progress only on the initial-downloads page, not in the notification nor on «تنزيل تلاوات آية بآية»; (2) that page shows a 0% ring on every reciter -> looks like all downloading; (3) Downloads says «صوت قارئ الكتب: لا يوجد محتوى منزّل» though the voice IS downloaded (initial page shows it done); (4) notification «جارٍ التنزيل / التقدم الدقيق داخل التطبيق» unwanted -> a nicer notification WITH progress that does not slow the download; tapping it must open the ayah-by-ayah page directly.
+
 ~13:35 SEEN build 13:20 (emulator, Xiaomi size): clock gallery sideways correct (face + switches beside a 4-a-row grid). Paper recitation did NOTHING: a build-time guard in quran_screen stopped every image-mode recitation -> now only for non-Madinah printings; button hidden on those. Text recitation seen working (2:30 wash). 595 pass, NOT built. NEXT: build; paper recitation upright + sideways (highlight right ayah, page turn, rotate mid-recitation), text same.
 
 ~13:30 OWNER (after v3.64.0): (a) photo: clock gallery sideways broken (face drawn over the switches) -> DONE IN CODE: face beside tabs+grid, switches under the face, 4 a row, CardScreen sideways pads only its own inset. Build 13:11 showed the half-fix (card too short). (b) «حط خيار التلاوة المستمرة في المصحف الورقي» + «اتأكد انها شغالة في الاورينتيشن في الورقي والنصي بامتياز» -> recite button now in both modes (paper highlight + page-follow already wired). 595 pass, NOT built. NEXT: build, emulator: gallery sideways (Xiaomi size); continuous recitation in PAPER upright + sideways (highlight on the right ayah, page turns at page end, rotate mid-recitation), then TEXT same; then ask owner about releasing 3.64.1.
@@ -493,6 +495,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 13:37 - Paper mushaf sideways scrolls to the recited ayah (not built); owner four download items queued
 - 2026-09-26 13:29 - Paper mushaf: the image-mode guard stopped every recitation; now only non-Madinah printings (not built)
 - 2026-09-26 13:17 - Continuous recitation offered in the paper mushaf too (not built)
 - 2026-09-26 13:14 - Clock gallery sideways: taller card, switches under the face, 4 a row (not built)
