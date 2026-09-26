@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+17:53 (PC clock; the «~18:10»/«~18:40» log lines above were guesses - wrong) SHAMELA SEEN END TO END on emulator (build 17:49:58, GitHub build with RAFEEQ_SHAMELA): Library bar shows the Shamela icon; screen loads the live catalogue «٨٥٩٨ كتاب في الشاملة»; pasting https://shamela.ws/book/9632 finds تحفة الأطفال; card sheet from shamela.ws (author, commentator, «عدد الصفحات: ٨», «ترقيم موافق للمطبوع»); import: «جارٍ الاستيراد… ٥ صفحة» -> «في مكتبتك»; reader opens it (1/8, TOC, «المكتبة الشاملة» label). Shamela already credited in sources_catalog.dart. NOT SEEN: «من الشاملة» category shelf (code: visibleBookCatalog includes imports), the import notification, delete, a big book (thousands of pages), resume after kill, Arabic title typed (adb cannot type Arabic). NEXT: owner's review; then remaining stage C sweep + TV walk (ADAPTIVE_PLAN.md).
+
 ~18:40 SHAMELA integration IN CODE (604 pass, NOT built): ShamelaLibrary (imported registry, app support shamela/imported.json, LibraryBook category BookCategory.shamela «من الشاملة», bookById falls back via extraBookLookup, visibleBookCatalog + books_tab include imports), ShamelaImportService (queue, jobs ValueNotifier, notification «جارٍ الاستيراد… n صفحة», install via installBookBytes), ShamelaScreen (catalogue search, book card sheet with named-five block, imported list open/delete, job tiles), Library app bar icon only when kShamelaEnabled (--dart-define=RAFEEQ_SHAMELA=true added to build_github_release.bat), Downloads panel row. NEXT: build; emulator: Library -> Shamela icon -> catalogue loads (8,598) -> search «صيد الخاطر» (Latin not possible; try «tuhfa»? titles are Arabic - type via the search? adb cannot type Arabic: use a short book reachable by scrolling imported/results or add a debug-free approach) -> import small book 9632 تحفة الأطفال -> appears in مكتبتي + opens in reader.
 
 ~18:10 SHAMELA builder DONE + verified LIVE: lib/features/shamela/data/shamela_book_builder.dart (card, nextId walk with 0.15 s delay, resume cache in app support shamela/parts, toc, printReliable, named-five exclusion, gzip doc for installBookBytes). test/shamela_builder_live_test.dart (tag live, skipped by default): urid_an_atahaddath (1387) 11/11 pages identical to the pipeline; tuhfat_al_atfal (9632) title/author/pages/TOC equal, pages differ only by the old copy's editor footnotes (built 09-12 before the hamesh-<p> fix; today's Python = app). NEXT: imported-books registry (LibraryBook built from meta, id 'shamela_<id>'), ShamelaImportService (progress ValueNotifier -> Downloads panel + notification), UI: search screen + book card + import button, library shelf «من الشاملة», dart-define gate RAFEEQ_SHAMELA in build_github_release.bat, Sources credit. Then build + device check.
@@ -543,6 +545,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 17:54 - Shamela import seen end to end on the emulator
 - 2026-09-26 17:47 - Shamela search takes a pasted link or book id
 - 2026-09-26 17:41 - Shamela import wired into the app: registry, service, screen, GitHub-only gate (not built)
 - 2026-09-26 17:22 - Shamela book builder in Dart, verified live against the pipeline
