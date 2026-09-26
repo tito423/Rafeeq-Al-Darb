@@ -12,6 +12,11 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+HANDOVER 2026-09-26 ~11:30 (owner: «جهز الدنيا لسيشن تانية»). The ordered list is NEXT_PROMPT.md:
+(0) install build 11:24 (HEAD 1bc93dc8) on emulator-5554 and SEE More 3-a-row + no pinned surah header in the full-screen text mushaf, upright and sideways;
+(1) tasbeeh sideways fill the height; (2) SideTabs closer to the notch edge + margins on every page; (3) Home analog clock + prayer card fit any tablet/smart screen (test with wm size/density, reset after);
+(4) report + publish 3.64.0 (owner asked, conditional on finishing). Unverified: recitation wash sideways, listening across rotation. Xiaomi has only build 03:50:45.
+
 SESSION 2026-09-26 ~02:10-02:40 (quota 5h 0%, weekly 68%). OWNER: landscape is
 DELIBERATE - «عاوز التطبيق مناسب جدا لجميع انواع الشاشات ... في وضع الاورينتيشن».
 Do NOT lock portrait (tried, reverted). Findings (Xiaomi video, frames seen):
@@ -473,6 +478,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 11:28 - Handover 2026-09-26 11:30: landscape/tablet session state, verified and measured; next = owner's three new requests then 3.64.0
 - 2026-09-26 11:18 - More three a row in one scroll; no pinned surah header in full-screen text mushaf (not built)
 - 2026-09-26 11:09 - Test pins the new rule: the sideways page tap shows the controls
 - 2026-09-26 11:04 - Mushaf sideways: a tap shows the floating controls (owner reversed the portrait-only rule)
