@@ -21,6 +21,24 @@ Samples found in the catalogue: صيد الخاطر = 12028, الفقه المن
 Shamela's own `/search` searches INSIDE books, not titles (trap #17) - the
 catalogue list above is the title search.
 
+## Shamela's official MCP service (found 2026-09-26)
+
+`POST https://mcp.shamela.ws` (JSON-RPC, MCP protocol 2025-06-18; `GET`
+answers `{"error":"method_not_allowed"}`; `https://shamela.ws/mcp` is a 404
+for POST). Terms: https://shamela.ws/page/terms («شروط استخدام خدمة الشاملة
+MCP», updated 19 Sep 2026) - read-only; allowed: search, reading, lawful
+documentation; forbidden: getting around request limits, rebuilding the whole
+index, harming availability; rights stay with the rights holders.
+Four tools: `shamela_find` (2-6 query variants, whole library),
+`shamela_find_scoped` (book_ids / book_names / author / category / pages,
+field body|footnotes|both), `shamela_open` (one page, max 16,000 chars,
+citable=false), `shamela_open_many` (up to 8 pages, 64,000 chars).
+
+Use: it is for bounded reading, so it is NOT the import path (a whole book
+through it is what the terms forbid). It IS the right engine for a later
+feature: «ابحث في الشاملة كلها» - full-text search across the whole library
+from inside the app, results opened page by page. Stage E below.
+
 ## Design
 
 1. **Catalogue on the phone.** Download `ajax/books/` once (195 KB gzip),
@@ -58,6 +76,8 @@ A. Catalogue service + search screen (Dart, tests on a saved copy of the
    against the pipeline's output for 2 books (byte-compare the paragraphs).
 C. Import flow + registry + library shelf + progress/notification.
 D. dart-define gate, Sources credit, device verification (phone + TV).
+E. (after A-D) Full-text search across all of Shamela through its official
+   MCP service, results opened with `shamela_open`, within its limits.
 
 ## Open, to verify before relying on it
 - Shamela's terms page (`/page/terms`) - read before shipping (the owner has

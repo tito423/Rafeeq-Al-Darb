@@ -535,6 +535,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 17:11 - Shamela plan: official MCP service found and measured (search/open only; import stays on pageContent)
 - 2026-09-26 17:09 - Shamela in-app import: live research and design
 - 2026-09-26 17:06 - Seen: author search card and download-all; Shamela integration next
 - 2026-09-26 17:02 - Author search whole-word in Latin names too; log times corrected to the PC clock
