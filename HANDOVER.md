@@ -2503,9 +2503,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 11:43 — IN PROGRESS — resume here**
+**2026-09-26 11:59 — IN PROGRESS — resume here**
 
-Tasbeeh sideways fills height; side tabs hug the notch; no double inset beside the rail (not built)
+Home: prayer card alone and clock sized to height in two panes; two panes on any screen 700dp wide (not built)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

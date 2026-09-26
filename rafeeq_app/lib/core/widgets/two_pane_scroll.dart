@@ -39,6 +39,14 @@ class TwoPaneScroll extends StatelessWidget {
   static bool isSideways(BuildContext context) =>
       MediaQuery.orientationOf(context) == Orientation.landscape;
 
+  /// Two columns sideways, and ALSO upright on a screen wide enough for two
+  /// phone-width cards - a tablet or a smart screen held tall («لازم التطبيق
+  /// … يشتغل في جميع الأوضاع وعلى جميع مقاسات التابات والسمارت اسكرين»,
+  /// 2026-09-26). Seen before this on emulator-5554 at 1600x2560 / 320 dpi
+  /// (800 dp wide, upright): one column of cards each stretched to 760 dp.
+  static bool isTwoPane(BuildContext context) =>
+      isSideways(context) || MediaQuery.sizeOf(context).width >= 700;
+
   List<Widget> _spaced(List<Widget> items) => [
     for (var i = 0; i < items.length; i++) ...[
       if (i > 0) SizedBox(height: gap),
@@ -48,7 +56,7 @@ class TwoPaneScroll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isSideways(context)) {
+    if (!isTwoPane(context)) {
       return ListView(padding: padding, children: _spaced([...start, ...end]));
     }
     return Row(

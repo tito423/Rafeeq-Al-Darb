@@ -40,6 +40,8 @@ import '../../../sunan_suwar/presentation/selected_surahs_card.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../data/prayer_controller.dart';
 
+part 'home_prayer_card.dart';
+
 /// Home tab — real prayer times (once location is granted) + quick access.
 class HomeScreen extends ConsumerStatefulWidget {
   /// [onNavigate] is the shell tab index — see `AppTab`
@@ -51,6 +53,10 @@ class HomeScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
+
+/// The home list's top + bottom padding (24 + 32), which the clock's size
+/// budget subtracts.
+const double _homeListVertical = 56;
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   Timer? _clock;
@@ -95,6 +101,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final prayerState = ref.watch(prayerControllerProvider);
+    final twoPane = TwoPaneScroll.isTwoPane(context);
 
     return HomeNavigate(
       onNavigate: widget.onNavigate,
@@ -113,7 +120,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: TwoPaneScroll(
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
               start: [
-                const _HeaderCard(),
+                // In two columns the prayer card has the start column to
+                // itself so it fits the height whole; the header card opens
+                // the other column instead.
+                if (!twoPane) const _HeaderCard(),
                 // The four cards the guided tour stops on, each wrapped so it
                 // can say where it is rather than describing it from a
                 // distance. TutorialAnchor costs one GlobalKey and nothing
@@ -124,7 +134,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: _PrayerCard(state: prayerState),
                 ),
               ],
-              end: const [
+              end: [
+                if (twoPane) const _HeaderCard(),
                 // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
                 // the reference shows a "متابعة القراءة" bookmark-style card
                 // ("where you left off") as its own thing, separate from the
@@ -132,26 +143,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // there's no real last-read page yet (see its own doc).
                 TutorialAnchor(
                   id: TourAnchor.continueReading,
-                  child: ContinueReadingCard(),
+                  child: const ContinueReadingCard(),
                 ),
                 TutorialAnchor(
                   id: TourAnchor.khatmaCard,
-                  child: KhatmaCard(),
+                  child: const KhatmaCard(),
                 ),
                 TutorialAnchor(
                   id: TourAnchor.sunanCard,
-                  child: SunanSuwarCard(),
+                  child: const SunanSuwarCard(),
                 ),
-                SelectedSurahsCard(),
+                const SelectedSurahsCard(),
                 // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
                 // اليوم». It draws nothing at all when the setting is off.
                 TutorialAnchor(
                   id: TourAnchor.quoteCard,
-                  child: HomeQuoteCard(),
+                  child: const HomeQuoteCard(),
                 ),
                 TutorialAnchor(
                   id: TourAnchor.hadithCard,
-                  child: DailyHadithCard(),
+                  child: const DailyHadithCard(),
                 ),
               ],
             ),
@@ -527,266 +538,6 @@ class _MessageCard extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// P3‑4/P3‑22: the animated, interactive prayer card — rebuilt to match a
-/// video the owner sent of an earlier working build of this same app
-/// (`design_refs/old_app_video.mp4`, frames in `old_app_frames/`), which
-/// turned out to be a much more precise target than the static
-/// `ref_home.jpg` mock: a live ticking clock, a "next prayer + countdown"
-/// pill, a real location line, and coloured per-prayer slides with a badge
-/// on the next one.
-///
-/// The clock itself is a tap target: it opens the twenty-face gallery
-/// (`ClockGallerySheet`) and re-renders with the chosen face the moment one
-/// is picked. The six timings below it are `PrayerSlides` — a focus-scaled
-/// carousel whose centred slide expands into a full editor for that prayer.
-class _PrayerTimesTable extends ConsumerStatefulWidget {
-  final PrayerTimes times;
-  const _PrayerTimesTable({required this.times});
-
-  @override
-  ConsumerState<_PrayerTimesTable> createState() => _PrayerTimesTableState();
-}
-
-class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
-  /// «عايز لما أضغط على عدّاد الصلاة القادمة التنازلي يغيّر ويعرض إيه على
-  /// الصلاة السابقة، أنيميتد برضه وبشكل روعة». One tap on the counter box
-  /// turns it over: the same box, the previous prayer's name and colour, and
-  /// the same three units counting **up** from when it came in. Tapping again
-  /// turns it back. Nothing else on the card moves.
-  bool _showPrevious = false;
-
-  /// AM/PM in the app's own language — never shown in 24-hour mode.
-  String? _meridiem(ClockSettings cs) {
-    if (!cs.use12Hour) return null;
-    return DateTime.now().hour < 12 ? 'home.am'.tr() : 'home.pm'.tr();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final service = PrayerTimesService();
-    final now = DateTime.now();
-    final next = service.nextPrayer(widget.times, now);
-    final previous = service.previousPrayer(widget.times, now);
-    // The flipped side needs a previous prayer to show. On a phone whose
-    // times have not arrived yet there is none, and the box stays on the
-    // countdown rather than offering a face with nothing on it.
-    final shown = _showPrevious && previous != null ? previous : next;
-    final showingPrevious = _showPrevious && previous != null;
-    final clock = ref.watch(clockSettingsProvider);
-    final arabic = context.locale.languageCode == 'ar';
-    final location = [
-      widget.times.cityName,
-      widget.times.countryName,
-    ].where((s) => s.isNotEmpty).join('، ');
-
-    // P3‑4 pinned this card to one fixed dark gradient in every theme. The
-    // owner has since asked for it to follow the theme instead, so the
-    // gradient, the border, the glow and every text tone now come from
-    // [HeroSurface] — which keeps the dark and RGB themes exactly as they
-    // were and adds a light member of the same family.
-    final hero = HeroSurface.of(context);
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.easeInOut,
-      clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: hero.gradient,
-        ),
-        border: Border.all(color: hero.border),
-        // A cast under the card so it lifts off the page instead of sitting
-        // flat on it — the clock is the first thing on the screen and should
-        // read as the hero it is.
-        boxShadow: [
-          BoxShadow(
-            color: hero.glow,
-            blurRadius: 26,
-            spreadRadius: -6,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Tapping the clock opens the face gallery. `AnimatedSwitcher`
-          // means swapping between the digital and analogue families is a
-          // cross-fade in place rather than a hard cut.
-          TutorialAnchor(
-            id: TourAnchor.homeClock,
-            child: Builder(
-              builder: (clockContext) => InkWell(
-                borderRadius: BorderRadius.circular(20),
-                // `clockContext` is the tap target, so the gallery grows out of
-                // the clock itself rather than out of nowhere.
-                onTap: () =>
-                    ClockGallerySheet.show(context, origin: clockContext),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 420),
-                    switchInCurve: Curves.easeOutBack,
-                    switchOutCurve: Curves.easeIn,
-                    transitionBuilder: (child, anim) => FadeTransition(
-                      opacity: anim,
-                      child: ScaleTransition(scale: anim, child: child),
-                    ),
-                    child: KeyedSubtree(
-                      key: ValueKey(
-                        '${clock.style}-${clock.digitalFace}-${clock.analogFace}-'
-                        '${clock.use12Hour}-${clock.showSeconds}',
-                      ),
-                      child: clock.style == ClockStyle.digital
-                          ? DigitalClockFaceView(
-                              face: clock.digitalFace,
-                              use12Hour: clock.use12Hour,
-                              showSeconds: clock.showSeconds,
-                              arabicDigits: arabic,
-                              meridiem: _meridiem(clock),
-                              height: 78,
-                              // The face is drawn ON this card, so it takes the
-                              // card own ink — white numerals were invisible on
-                              // the light theme.
-                              ink: hero.onSurface,
-                            )
-                          : AnalogClockFaceView(
-                              face: clock.analogFace,
-                              size: 176,
-                              meridiem: _meridiem(clock),
-                              arabicDigits: arabic,
-                              ink: hero.onSurface,
-                            ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          if (shown != null) ...[
-            const SizedBox(height: 12),
-            TutorialAnchor(
-              id: TourAnchor.homeCountdown,
-              child: GestureDetector(
-                onTap: previous == null
-                    ? null
-                    : () => setState(() => _showPrevious = !_showPrevious),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 7),
-                  decoration: BoxDecoration(
-                    color: hero.scrim,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: showingPrevious
-                          ? hero
-                                .accent(prayerSlideColors[shown.$1]!)
-                                .withValues(alpha: 0.55)
-                          : hero.hairline,
-                    ),
-                  ),
-                  // The two faces swap on a half-turn about the vertical axis,
-                  // so the box reads as one thing turning over rather than two
-                  // things cross-fading. `AnimatedSwitcher` drives both halves
-                  // of the turn; the outgoing face is held at the far side
-                  // (`0.5 → 1`) while the incoming one comes back to flat.
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 420),
-                    switchInCurve: Curves.easeOutCubic,
-                    switchOutCurve: Curves.easeInCubic,
-                    transitionBuilder: (child, animation) {
-                      final incoming =
-                          (child.key as ValueKey<bool>).value ==
-                          showingPrevious;
-                      return AnimatedBuilder(
-                        animation: animation,
-                        builder: (context, _) {
-                          final t = incoming
-                              ? (1 - animation.value) * -0.5
-                              : (1 - animation.value) * 0.5;
-                          return Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.identity()
-                              ..setEntry(3, 2, 0.0012)
-                              ..rotateY(t * math.pi),
-                            child: Opacity(
-                              opacity: animation.value.clamp(0.0, 1.0),
-                              child: child,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Column(
-                      key: ValueKey<bool>(showingPrevious),
-                      children: [
-                        Text.rich(
-                          TextSpan(
-                            text: showingPrevious
-                                ? '${'home.previous_prayer'.tr()}: '
-                                : '${'home.next_prayer'.tr()}: ',
-                            style: TextStyle(color: hero.onSurfaceMuted),
-                            children: [
-                              TextSpan(
-                                text: prayerSlideLabelKeys[shown.$1]!.tr(),
-                                style: TextStyle(
-                                  // Toned for this ground: the raw violet
-                                  // measured 2.43 : 1 on the dark card
-                                  // (CLAUDE.md #15).
-                                  color: hero.accent(
-                                    prayerSlideColors[shown.$1]!,
-                                  ),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        PrayerCountdown(
-                          target: shown.$2,
-                          accent: prayerSlideColors[shown.$1]!,
-                          arabicDigits: arabic,
-                          elapsed: showingPrevious,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-          if (location.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            TutorialAnchor(
-              id: TourAnchor.homeLocation,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.location_on, size: 14, color: hero.onSurfaceFaint),
-                  const SizedBox(width: 4),
-                  Text(
-                    location,
-                    style: TextStyle(color: hero.onSurfaceFaint, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          const SizedBox(height: 12),
-          TutorialAnchor(
-            id: TourAnchor.homeSlides,
-            child: PrayerSlides(times: widget.times, nextKey: next?.$1),
-          ),
-        ],
       ),
     );
   }

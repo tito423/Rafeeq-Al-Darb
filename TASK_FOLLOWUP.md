@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~12:05 DONE IN CODE (analyze clean, 595 pass, NOT built): Home two panes -> prayer card alone in the start column, clock BESIDE countdown, analog size from height (clamp 96-240; was fixed 176, below the edge on Xiaomi-size sideways); header card opens the end column. TwoPaneScroll.isTwoPane = sideways OR width>=700 (tablet/smart screen upright: was one column of 760dp cards). Prayer card split to home_prayer_card.dart (part; 800-line rule). Emulator analog face set. NEXT: build_github_release.bat (kills emulator), restart emulator, install, see: Home phone/tablet/smart sizes (wm size+density, RESET after), tasbeeh sideways, side tabs (emulated hole cutout: cmd overlay enable com.android.internal.display.cutout.emulation.hole).
+
 SESSION 2026-09-26 11:30- (quota 5h 2%, weekly 27%). SEEN on emulator (build 11:24, installed 11:31): More 3-a-row sideways / one column upright; text mushaf full screen no surah header until tap (upright+sideways); recitation wash on 2:30 sideways. Build 11:24 also on the Xiaomi (11:32:55). Xiaomi measured sideways (ROTATION_90): cutout strip 117px=39dp, hole y 580-640; rail icons at 69-93dp; home cards 60dp past rail (39 = notch inset re-applied).
 DONE IN CODE (analyze clean, 595 pass, NOT built): SideTabs 84->64dp wide; content beside rail drops the rail-side inset (app_shell MediaQuery.removePadding); tasbeeh sideways controls top+spaceEvenly, circle grows (BoxFit.contain). NEXT: Home tablet/analog clock (#3), then ONE build, see all on emulator (owner at work, Xiaomi disconnected) with emulated hole cutout.
 
@@ -481,6 +483,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 11:59 - Home: prayer card alone and clock sized to height in two panes; two panes on any screen 700dp wide (not built)
 - 2026-09-26 11:43 - Tasbeeh sideways fills height; side tabs hug the notch; no double inset beside the rail (not built)
 - 2026-09-26 11:28 - Handover 2026-09-26 11:30: landscape/tablet session state, verified and measured; next = owner's three new requests then 3.64.0
 - 2026-09-26 11:18 - More three a row in one scroll; no pinned surah header in full-screen text mushaf (not built)
