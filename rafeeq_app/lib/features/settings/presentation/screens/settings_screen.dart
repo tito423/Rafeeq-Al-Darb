@@ -29,6 +29,7 @@ import '../../../tutorial/data/tutorial_anchors.dart';
 import '../widgets/permissions_section.dart';
 import '../../../more/presentation/widgets/more_group.dart';
 import '../../../../core/widgets/readable_insets.dart';
+import '../../../../core/utils/screen_class.dart';
 
 /// Every actual setting, as a `Column` with no scroll view and no `Scaffold`
 /// of its own.
@@ -432,7 +433,7 @@ class SettingsBody extends ConsumerWidget {
     ];
     // On its own page sideways, two a row like the More tab's groups. Inside
     // the More tab it already sits in one of two columns, and stays single.
-    return paired && MediaQuery.orientationOf(context) == Orientation.landscape
+    return paired && ScreenClass.twoColumns(context)
         ? PairedColumn(gap: 0, equalHeights: false, children: items)
         : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: items);
   }

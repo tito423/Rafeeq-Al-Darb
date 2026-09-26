@@ -50,7 +50,13 @@ class SideTabs extends StatelessWidget {
       child: SafeArea(
         child: SizedBox(
           width: 64,
-          child: Column(
+          // On a tall window (a large tablet upright) seven shares of the
+          // height would be ~180 dp tiles; they stop at 88 and gather in
+          // the middle instead.
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 7 * 88),
+              child: Column(
             children: [
               for (var i = 0; i < tabs.length; i++)
                 Expanded(
@@ -101,6 +107,8 @@ class SideTabs extends StatelessWidget {
                   ),
                 ),
             ],
+              ),
+            ),
           ),
         ),
       ),

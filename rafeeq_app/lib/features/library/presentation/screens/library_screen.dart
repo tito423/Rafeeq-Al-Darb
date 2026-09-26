@@ -11,6 +11,7 @@ import '../tabs/channels_tab.dart';
 import '../tabs/hadith_tab.dart';
 import '../tabs/websites_tab.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../../../core/utils/screen_class.dart';
 
 /// Library — two top tabs:
 ///  • "الكتب المتوفرة" — the books catalog, itself split into
@@ -100,7 +101,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
     // Xiaomi held sideways (2026-09-26), the title bar, this row and the
     // books tab's own row took more than half the height before the first
     // author; one row fewer gives the list 62 dp back.
-    final sideways = MediaQuery.orientationOf(context) == Orientation.landscape;
+    final sideways = ScreenClass.wide(context);
 
     return Scaffold(
       appBar: AppBar(

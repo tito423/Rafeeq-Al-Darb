@@ -38,6 +38,7 @@ import '../../../../core/utils/digits.dart';
 import '../../data/tutorial_anchors.dart';
 import '../../data/tutorial_chapters.dart';
 import '../../data/tutorial_state.dart';
+import '../../../../core/utils/screen_class.dart';
 
 part 'tour_pieces.dart';
 part 'tour_slides.dart';

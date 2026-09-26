@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/screen_class.dart';
 
 /// A screen's cards in one scrolling column upright, and in two side by side
 /// when the phone is on its side.
@@ -36,8 +37,7 @@ class TwoPaneScroll extends StatelessWidget {
   final int startFlex;
   final int endFlex;
 
-  static bool isSideways(BuildContext context) =>
-      MediaQuery.orientationOf(context) == Orientation.landscape;
+  static bool isSideways(BuildContext context) => ScreenClass.wide(context);
 
   /// Two columns sideways, and ALSO upright on a screen wide enough for two
   /// phone-width cards - a tablet or a smart screen held tall («لازم التطبيق
@@ -45,7 +45,7 @@ class TwoPaneScroll extends StatelessWidget {
   /// 2026-09-26). Seen before this on emulator-5554 at 1600x2560 / 320 dpi
   /// (800 dp wide, upright): one column of cards each stretched to 760 dp.
   static bool isTwoPane(BuildContext context) =>
-      isSideways(context) || MediaQuery.sizeOf(context).width >= 700;
+      ScreenClass.twoColumns(context);
 
   List<Widget> _spaced(List<Widget> items) => [
     for (var i = 0; i < items.length; i++) ...[

@@ -18,6 +18,7 @@ import '../../../../core/utils/external_link.dart';
 import '../widgets/book_provenance_strip.dart';
 import '../widgets/book_page_rail.dart';
 import '../../../../core/widgets/fitted_sheet.dart';
+import '../../../../core/utils/screen_class.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
 /// by the "لون الخط" toolbar action. Each entry carries both a light- and a
@@ -488,7 +489,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     final doc = _doc;
     final bookmarked = doc != null && _bookmarks.contains(_pageIndex);
     final sideways =
-        MediaQuery.orientationOf(context) == Orientation.landscape;
+        ScreenClass.wide(context);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(

@@ -57,10 +57,10 @@ class _AdhanBackgroundScreenState extends ConsumerState<AdhanBackgroundScreen>
           // own portrait shape: the real alert (AdhanActivity) is locked
           // to portrait in the manifest.
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            // From the width: 2 on a phone upright, 4 sideways, more on a
+            // tablet or a TV - one tile per ~200 dp.
             crossAxisCount:
-                MediaQuery.orientationOf(context) == Orientation.landscape
-                    ? 4
-                    : 2,
+                (MediaQuery.sizeOf(context).width / 200).floor().clamp(2, 6),
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
             childAspectRatio: 0.72,

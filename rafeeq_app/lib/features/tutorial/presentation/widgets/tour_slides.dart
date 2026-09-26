@@ -98,7 +98,7 @@ class _TourSlidesState extends State<TourSlides>
           // to read - measured on the owner's Xiaomi held sideways
           // (2026-09-26): 480 px = 160 dp tall on a 1220 px-high screen. Beside it,
           // the explanation leaves it the whole height.
-          child: MediaQuery.orientationOf(context) == Orientation.landscape
+          child: ScreenClass.twoColumns(context)
               ? Row(
                   children: [
                     Expanded(flex: 2, child: picture),

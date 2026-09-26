@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/screen_class.dart';
 
 /// A list of cards: one card a row upright, two a row sideways.
 ///
@@ -55,7 +56,7 @@ class PairedListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.orientationOf(context) != Orientation.landscape) {
+    if (!ScreenClass.twoColumns(context)) {
       return ListView.builder(
         controller: controller,
         physics: physics,
@@ -126,7 +127,7 @@ class PairedColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sideways = MediaQuery.orientationOf(context) == Orientation.landscape;
+    final sideways = ScreenClass.twoColumns(context);
     final per = sideways ? columns : 1;
     final rows = <Widget>[];
     for (var i = 0; i < children.length; i += per) {

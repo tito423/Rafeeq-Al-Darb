@@ -11,6 +11,7 @@ import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/services/sync_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/azkar_repeat.dart';
+import '../../../../core/utils/screen_class.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
 ///
@@ -113,7 +114,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
     // its line and the dots took ~210 of the ~300 dp below the app bar and
     // left the dhikr a strip two lines high.
     final sideways =
-        MediaQuery.orientationOf(context) == Orientation.landscape;
+        ScreenClass.wide(context);
     final pages = items == null
         ? null
         : PageView.builder(

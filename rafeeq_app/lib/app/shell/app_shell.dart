@@ -2,6 +2,7 @@ import '../../features/library/data/library_api_service.dart';
 import 'dart:async';
 
 import 'side_tabs.dart';
+import '../../core/utils/screen_class.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -362,8 +363,12 @@ class _AppShellState extends ConsumerState<AppShell>
     // has width to spare and height to none, so the tabs stand at the
     // start edge (`SideTabs`) and every screen gets the full height. The IndexedStack
     // is the same one either way (`_tabsKey`).
-    final sideways =
-        MediaQuery.orientationOf(context) == Orientation.landscape &&
+    // From the window, not the sensor: wider than tall (a phone sideways, a
+    // TV), or an expanded width (a large tablet upright, >= 840 dp). A
+    // medium tablet held upright keeps the bottom bar - its height is not
+    // short. Breakpoints: `ScreenClass`.
+    final sideways = (ScreenClass.wide(context) ||
+            MediaQuery.sizeOf(context).width >= ScreenClass.expandedWidth) &&
         !fullScreen &&
         focus == null;
 

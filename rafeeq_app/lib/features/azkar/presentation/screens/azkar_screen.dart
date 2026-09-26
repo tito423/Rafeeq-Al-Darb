@@ -13,6 +13,7 @@ import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
 import '../../data/azkar_backgrounds.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../../../core/utils/screen_class.dart';
 
 /// Azkar tab — real sections from Hisn al-Muslim (134 real sections, no
 /// duplicates within a section — verified against the bundled DB).
@@ -107,7 +108,7 @@ class _SectionsTab extends ConsumerWidget {
       // (2026-09-26), three sections of nine in view. Sideways the
       // cards are smaller and wider than tall, like a tablet's tiles: four
       // across on that phone (788 dp / 214), two rows and more in view.
-      gridDelegate: MediaQuery.orientationOf(context) == Orientation.landscape
+      gridDelegate: ScreenClass.twoColumns(context)
           ? const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
               mainAxisSpacing: 14,

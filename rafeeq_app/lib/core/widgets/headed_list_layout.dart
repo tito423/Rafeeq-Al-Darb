@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/screen_class.dart';
 
 /// A heading, a scrolling list, and buttons under it - upright or sideways.
 ///
@@ -24,7 +25,7 @@ class HeadedListLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.orientationOf(context) != Orientation.landscape) {
+    if (!ScreenClass.twoColumns(context)) {
       return Column(
         children: [
           header,
