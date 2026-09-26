@@ -534,7 +534,8 @@
     "restore": "Restore",
     "hidden_empty": "No hidden books",
     "search_authors_found": "Matching authors",
-    "author_downloading": "Downloading the author's books: {} of {}"
+    "author_downloading": "Downloading the author's books: {} of {}",
+    "cat_shamela": "From Shamela"
   },
   "azkar": {
     "title": "Adhkar",
@@ -1980,5 +1981,22 @@
     "set_to": "Prayer times now use {}",
     "source": "City list: GeoNames (CC BY 4.0)",
     "sep": ", "
+  },
+  "shamela": {
+    "title": "Shamela Library",
+    "search_hint": "Type a book title",
+    "loading_catalog": "Loading the Shamela catalogue…",
+    "catalog_failed": "Could not reach al-Maktaba al-Shamela. Check your connection.",
+    "count": "{} books on Shamela",
+    "imported_section": "Your books from Shamela",
+    "import": "Import to my library",
+    "importing": "Importing… {} pages",
+    "importing_short": "Importing…",
+    "in_library": "In your library",
+    "delete": "Delete",
+    "excluded": "This author is excluded from this library.",
+    "failed": "Import failed",
+    "source": "Source: al-Maktaba al-Shamela (shamela.ws)",
+    "no_results": "No book by that title"
   }
 }

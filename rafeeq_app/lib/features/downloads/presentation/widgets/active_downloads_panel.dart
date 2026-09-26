@@ -26,6 +26,7 @@ import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../../quran_audio/presentation/reciter_screen.dart';
 import '../../../quran_audio/presentation/widgets/audio_common.dart';
+import '../../../shamela/data/shamela_import_service.dart';
 
 /// «جارٍ التنزيل الآن» on the Downloads hub: every transfer running, each
 /// with what it is and how far it has got. Moved out of downloads_screen.dart
@@ -96,6 +97,15 @@ class ActiveDownloadsPanelState extends ConsumerState<ActiveDownloadsPanel> {
                   )),
             );
           }(),
+      // Shamela imports: pages so far (Shamela gives no total up front).
+      for (final j in ShamelaImportService.instance.jobs.value.values)
+        if (j.error == null)
+          (
+            '${'shamela.title'.tr()} — ${j.title}',
+            localizeDigits('shamela.importing'.tr(args: ['${j.pages}']), locale),
+            null,
+            () {},
+          ),
       if (tasmee != null)
         (
           'onboarding.tasmee_title'.tr(),

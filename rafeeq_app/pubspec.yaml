@@ -112,6 +112,10 @@ dev_dependencies:
   # Named so test/hadith_grade_arabic_test.dart may open the bundled
   # hadith.db directly and put every distinct ruling through the app.
   sqlite3: any
+  # For test/shamela_builder_live_test.dart: a temp app-support directory
+  # under `flutter test` (versions as already locked by path_provider).
+  path_provider_platform_interface: ^2.1.3
+  plugin_platform_interface: ^2.1.8
   integration_test:
     sdk: flutter
   flutter_test:

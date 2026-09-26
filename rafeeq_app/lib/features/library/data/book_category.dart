@@ -27,7 +27,11 @@ enum BookCategory {
   /// Every book on it is a classical one whose author died centuries ago —
   /// deliberately, because the modern manuals of «طلب العلم» are exactly the
   /// literature he asked to keep away from.
-  talibIlm;
+  talibIlm,
+
+  /// Books the reader imported from al-Maktaba al-Shamela inside the app
+  /// (GitHub build only; `ShamelaLibrary`).
+  shamela;
 
   String get labelKey => 'library.cat_$name';
 
@@ -41,5 +45,6 @@ enum BookCategory {
         BookCategory.tazkiyah => Icons.spa_outlined,
         BookCategory.adab => Icons.favorite_outline,
         BookCategory.talibIlm => Icons.school_outlined,
+        BookCategory.shamela => Icons.cloud_download_outlined,
       };
 }

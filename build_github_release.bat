@@ -14,7 +14,9 @@ rem --target-platform android-arm,android-arm64 to save 34 MiB; it
 rem produced an APK that INSTALLED on an x86_64 device and then died on
 rem launch, because the plugins still shipped x86_64 .so files while the
 rem Flutter engine did not. Compatibility first: no --target-platform.
+rem RAFEEQ_SHAMELA=true: the in-app Shamela import, also GitHub-only
+rem («الجزء ده بالذات في تطبيقنا احنا بس مش البلاي ستور», 2026-09-26).
 cd /d "%~dp0rafeeq_app" || exit /b 1
-call flutter build apk --release --dart-define=RAFEEQ_SUPPORT_URL=https://paypal.me/Tito320 || exit /b 1
+call flutter build apk --release --dart-define=RAFEEQ_SUPPORT_URL=https://paypal.me/Tito320 --dart-define=RAFEEQ_SHAMELA=true || exit /b 1
 cd /d "%~dp0" || exit /b 1
 py -3 scripts\sign_release.py || exit /b 1

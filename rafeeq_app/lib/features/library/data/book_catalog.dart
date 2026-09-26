@@ -4816,4 +4816,8 @@ final Map<String, LibraryBook> _byId = {
   for (final b in libraryBookCatalog) b.id: b,
 };
 
-LibraryBook? bookById(String id) => _byId[id];
+LibraryBook? bookById(String id) => _byId[id] ?? extraBookLookup?.call(id);
+
+/// Books outside the const catalogue - the reader's Shamela imports
+/// (`ShamelaLibrary`, which sets this when it loads).
+LibraryBook? Function(String id)? extraBookLookup;

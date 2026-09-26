@@ -25,6 +25,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_category.dart';
 import '../screens/book_text_reader_screen.dart';
+import '../../../shamela/data/shamela_library.dart';
 
 class BooksTab extends StatefulWidget {
   const BooksTab({super.key});
@@ -60,7 +61,7 @@ class _BooksTabState extends State<BooksTab> {
 
   Future<void> _loadRegistry() async {
     final paths = <String, String>{};
-    for (final book in libraryBookCatalog) {
+    for (final book in [...libraryBookCatalog, ...ShamelaLibrary.instance.books]) {
       if (await LibraryApiService.instance.isBookDownloaded(book.id)) {
         paths[book.id] = await LibraryApiService.instance.bookFilePath(book.id);
       }
@@ -605,7 +606,7 @@ class _MyLibraryView extends StatelessWidget {
     // nothing ever writes. So «نصّي» could never render and every downloaded
     // book, all of them text, was listed under a heading that said it was a
     // scan. Found by downloading أحكام الجنائز and reading the screen.
-    final sorted = [...libraryBookCatalog]
+    final sorted = [...libraryBookCatalog, ...ShamelaLibrary.instance.books]
       ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
     final rows = <LibraryBook>[
       for (final b in sorted)

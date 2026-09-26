@@ -12,6 +12,8 @@ import '../tabs/hadith_tab.dart';
 import '../tabs/websites_tab.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../../core/utils/screen_class.dart';
+import '../../../shamela/data/shamela_import_service.dart';
+import '../../../shamela/presentation/shamela_screen.dart';
 
 /// Library — two top tabs:
 ///  • "الكتب المتوفرة" — the books catalog, itself split into
@@ -128,6 +130,17 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
                 ),
               ),
         actions: [
+          // Shamela import: the GitHub build only (`kShamelaEnabled`).
+          if (kShamelaEnabled)
+            IconButton(
+              tooltip: 'shamela.title'.tr(),
+              icon: const Icon(Icons.travel_explore),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const ShamelaScreen(),
+                ),
+              ),
+            ),
           IconButton(
             tooltip: 'library.search_all_books'.tr(),
             icon: const Icon(Icons.manage_search),

@@ -34,6 +34,8 @@ import 'features/quotes/presentation/quote_navigation.dart';
 import 'features/quran_audio/data/quran_audio_player.dart';
 import 'features/quran_audio/presentation/widgets/audio_common.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
+import 'features/shamela/data/shamela_import_service.dart';
+import 'features/shamela/data/shamela_library.dart';
 
 /// The Adhan alert screen's Dart entrypoint, run by `AdhanActivity` (Kotlin)
 /// in its own Flutter engine instead of [main].
@@ -100,6 +102,8 @@ Future<void> main() async {
 
   // Preload translations (required by easy_localization).
   await EasyLocalization.ensureInitialized();
+  // Imported Shamela books must be known before «مكتبتي» or the reader asks.
+  if (kShamelaEnabled) unawaited(ShamelaLibrary.instance.load());
   StartupTrace.step('EasyLocalization.ensureInitialized');
   try {
     // EVERY language the app speaks, not just Arabic.

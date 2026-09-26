@@ -6,10 +6,11 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../data/book_catalog.dart';
 import '../../data/hidden_books.dart';
+import '../../../shamela/data/shamela_library.dart';
 
 /// The catalogue without the books this reader removed from his list.
 List<LibraryBook> visibleBookCatalog() => [
-  for (final b in libraryBookCatalog)
+  for (final b in [...libraryBookCatalog, ...ShamelaLibrary.instance.books])
     if (!HiddenBooks.instance.isHidden(b.id)) b,
 ];
 

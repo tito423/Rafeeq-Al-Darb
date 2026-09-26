@@ -534,7 +534,8 @@
     "restore": "Restaurar",
     "hidden_empty": "No hay libros ocultos",
     "search_authors_found": "Autores que coinciden",
-    "author_downloading": "Descargando los libros del autor: {} de {}"
+    "author_downloading": "Descargando los libros del autor: {} de {}",
+    "cat_shamela": "De Shamela"
   },
   "azkar": {
     "title": "Adhkar",
@@ -1980,5 +1981,22 @@
     "set_to": "Los horarios de oración usan ahora {}",
     "source": "Lista de ciudades: GeoNames (CC BY 4.0)",
     "sep": ", "
+  },
+  "shamela": {
+    "title": "Biblioteca Shamela",
+    "search_hint": "Escribe el título",
+    "loading_catalog": "Cargando el catálogo de Shamela…",
+    "catalog_failed": "No se pudo acceder a Shamela. Comprueba la conexión.",
+    "count": "{} libros en Shamela",
+    "imported_section": "Tus libros de Shamela",
+    "import": "Importar a mi biblioteca",
+    "importing": "Importando… {} páginas",
+    "importing_short": "Importando…",
+    "in_library": "En tu biblioteca",
+    "delete": "Eliminar",
+    "excluded": "Este autor está excluido de esta biblioteca.",
+    "failed": "Error al importar",
+    "source": "Fuente: al-Maktaba al-Shamela (shamela.ws)",
+    "no_results": "Ningún libro con ese título"
   }
 }
