@@ -591,3 +591,11 @@ Do not rediscover these.
     `E:\DevEnv\Android\Sdk\emulator\emulator.exe -avd Medium_Phone_API_36.1 -no-window -no-audio`
     and take screenshots with `adb exec-out screencap -p`. Delete stale
     `*.lock` files in the .avd folder after killing a hung emulator.
+    Update (2026-09-26 23:52): headless with the default host GPU then
+    CRASHED twice (`qemu-system-x86_64-headless.exe` 0xc0000005, right after
+    `ERROR | bad color buffer handle` lines), once 19 s after an `adb
+    install`, leaving the package half-registered (`pm list packages` did
+    not list it, `am start` said the activity does not exist) until it was
+    installed again. `-gpu swiftshader_indirect` has run without a crash
+    since. Launch: `emulator -avd Medium_Phone_API_36.1 -no-window -no-audio
+    -gpu swiftshader_indirect`.

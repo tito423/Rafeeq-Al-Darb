@@ -7,7 +7,7 @@ Cline, or any other).
 | | |
 |---|---|
 | **SECURITY (found 2026-09-24, OWNER ACTION NEEDED)** | The R2 **access key id and secret** that are in `scripts/.env` today are present in this PUBLIC repo's git history — hard-coded in `scripts/upload_quranflash_coords.dart` (3747f715, 2026-08-26), `scripts/phase1_upload.dart` (ecbb820d) and `test_r2*.dart` (eae5036d), since deleted from the tree. Checked by value, not printed. Not in the published v3.59.0 APK (checked byte-wise). CF_API_TOKEN and CF_WORKERS_TOKEN are NOT in history. **Fix: rotate the R2 API token in the Cloudflare dashboard (R2 → Manage API tokens), put the new pair in `scripts/.env`.** Rewriting history does not un-leak it. |
-| **Last updated** | 2026-09-26 |
+| **Last updated** | 2026-09-27 |
 | **RELEASED 2026-09-26 18:15 (v3.65.0)** | tag `v3.65.0` = `9fdfcc52` = HEAD (checked); asset 275,998,265 B, range 206; v3.64.1 + tag deleted; v3.51.0 + content-* kept. Installed on emulator-5554: versionName 3.65.0, Shamela button present. analyze clean, 605 pass. Contents: in-app Shamela import (GitHub build only, RAFEEQ_SHAMELA; SHAMELA_IMPORT_PLAN.md; seen end to end with 9632; NO exclusion on import - owner 2026-09-26), author search cards + download-all, paper highlight covers marks, remote focus ring + focusable taps + mushaf keys, TV launcher/banner, ScreenClass layout. NOT seen: TV walk with this build, «من الشاملة» shelf on screen, import notification, long book, resume after kill. |
 | **RELEASED 2026-09-26 14:53 (v3.64.1)** | tag `v3.64.1` = `1e43ae49` = HEAD (checked); asset 275,682,817 B, range 206; v3.64.0 + tag deleted; v3.51.0 and content-* kept. About v3.64.1 and «ادعم التطبيق» SEEN on emulator-5554. analyze clean, 595 pass. Contents: clock gallery sideways; continuous recitation in the paper mushaf (guard fixed, sideways scroll follows the ayah, also after rotation); ayah downloads - all 35 reciters, honest list, own notification with end notice, tap -> ayah page; Downloads «جارٍ تنزيله الآن» lists every transfer with detail; voice row fixed. NOT seen: book/translation rows in the panel, files-group count; nothing on the Xiaomi. NEXT (owner, hard requirement): every screen upright+sideways on all phones/tablets/smart screens + TV remote (D-pad), step by step, research first. |
 | **RELEASED 2026-09-26 12:21 (v3.64.0)** | tag `v3.64.0` = `79194bbf` = HEAD at publish (checked); asset `RafeeqAlDarb-v3.64.0.apk` 275,531,265 B, range request 206; v3.63.7 + tag deleted; v3.51.0 and the three content-* prereleases kept. `pubspec` `3.64.0+73`, About v3.64.0 SEEN on emulator-5554 with «ادعم التطبيق». analyze clean, **595 pass**. New since 11:30, each SEEN on emulator-5554 (emulated punch-hole cutout; sizes 1220x2712/480, 1600x2560/320, 1080x1920/240, sideways and upright; wm reset after): Home two panes = prayer card alone, clock beside countdown, analog size from height (clamp 96-240; the fixed 176 sat below the edge at the Xiaomi's size); two panes also upright on any screen >= 700 dp; SideTabs 64 dp and the tab beside it drops the rail-side inset (content 60 -> 20 dp past the rail; English, rail beside the notch = the owner's case); tasbeeh sideways: controls from the top, circle fills the height, no title bar as a tab. Also seen: More 3-a-row, full-screen text mushaf without the surah header until tap, recitation wash on 2:30 sideways. **NOT seen:** v3.64.0 on the owner's Xiaomi (it has build 11:24); listening across rotation (needs a diacritised book). |
@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 23:49 — IN PROGRESS — resume here**
+**2026-09-27 00:00 — IN PROGRESS — resume here**
 
-3.66.0: About card version (caught by about_version_test)
+Released v3.66.0 (Dorar in app); emulator trap 57 updated
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

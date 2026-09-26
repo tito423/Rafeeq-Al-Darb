@@ -364,7 +364,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 54. Never run `flutter test` or edit `lib/` while a release build is running.
 55. `cp.bat` commits tracked files only - `git add` every new file (it now warns).
 56. Restarting the emulator resumes an OLD snapshot - reinstall and re-check `lastUpdateTime` every time.
-57. The emulator window hangs the emulator here since 2026-09-26 - launch with `-no-window -no-audio`.
+57. The emulator window hangs the emulator here since 2026-09-26 - launch with `-no-window -no-audio -gpu swiftshader_indirect` (host GPU crashed headless too).
 
 ## 4. Where things live
 
