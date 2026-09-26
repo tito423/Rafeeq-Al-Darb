@@ -549,6 +549,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 18:26 - Shamela mark string in 7 languages
 - 2026-09-26 18:23 - Shamela results mark books the library already has; open our copy instead of importing
 - 2026-09-26 18:16 - Released v3.65.0 (tag = HEAD 9fdfcc52)
 - 2026-09-26 17:54 - Shamela import seen end to end on the emulator

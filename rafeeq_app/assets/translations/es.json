@@ -1996,6 +1996,7 @@
     "delete": "Eliminar",
     "failed": "Error al importar",
     "source": "Fuente: al-Maktaba al-Shamela (shamela.ws)",
-    "no_results": "Ningún libro con ese título"
+    "no_results": "Ningún libro con ese título",
+    "in_app_library": "En la biblioteca de la app"
   }
 }

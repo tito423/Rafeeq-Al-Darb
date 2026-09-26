@@ -1996,6 +1996,7 @@
     "delete": "Delete",
     "failed": "Import failed",
     "source": "Source: al-Maktaba al-Shamela (shamela.ws)",
-    "no_results": "No book by that title"
+    "no_results": "No book by that title",
+    "in_app_library": "In the app library"
   }
 }
