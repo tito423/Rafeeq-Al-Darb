@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 02:57 — IN PROGRESS — resume here**
+**2026-09-27 03:04 — IN PROGRESS — resume here**
 
-Shamela: link with spaces (Xiaomi keyboard) + unfinished imports resume at launch; NOT yet seen
+Shamela on the Xiaomi: link with spaces fixed, import resumes after kill (seen)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

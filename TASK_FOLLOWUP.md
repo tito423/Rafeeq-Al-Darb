@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+03:06 (09-27) XIAOMI, build 03:02: (a) Shamela link typed on the Xiaomi keyboard became «shamela. ws/book/30197» and found nothing on 3.66.0 -> FIXED (spaces removed before matching; test added) and SEEN finding the book. (b) Import notification SEEN («سبيل الرشاد في هدي خير العباد / جارٍ الاستيراد… ٤٧ صفحة»). (c) Kill mid-import: on 3.66.0 it did NOT come back by itself (re-import continued from cache: 63 -> 68) -> ADDED shamela/pending.json + resumePending() at launch; SEEN: 866 pages -> force-stop -> relaunch with no taps -> 891 -> 899. «صيد الخاطر» (12028) shows «موجود في مكتبة التطبيق». NEXT: let 30197 finish, open it (big book reader), see «من الشاملة» shelf; then release 3.66.1 only if owner asks.
+
 02:03 (09-27) XIAOMI: hadeethenc DETAIL screen button SEEN (under «الدرجة»). OFFLINE CACHE SEEN: wifi + data off via adb (verified: «Wi-Fi is disabled», ping dorar.net failed), the same hadith's sheet opened from the saved result (2 gradings, Bukhari 5696). Dorar check now seen in ALL five places (hadith books, adhkar, book selection on emulator; daily hadith, hadeethenc, adhkar on the Xiaomi).
 
 01:50 (09-27) XIAOMI (23078PND5G, 1220x2712) - v3.66.0 installed fresh (streamed install OK), onboarding in Arabic, location resolved «دبي، الإمارات». Dorar check SEEN on the phone: adhkar «الحمد لله الذي أحيانا» -> 15 gradings (الألباني 5049 صحيح، ابن حبان); DAILY HADITH (first time on any device) «عن أنس ... أجر الحجام» -> 2 gradings, first = صحيح البخاري 5696 (البخاري، [صحيح]). Remaining unseen: hadeethenc detail screen button.
@@ -586,6 +588,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 03:04 - Shamela on the Xiaomi: link with spaces fixed, import resumes after kill (seen)
 - 2026-09-27 02:57 - Shamela: link with spaces (Xiaomi keyboard) + unfinished imports resume at launch; NOT yet seen
 - 2026-09-27 02:02 - Dorar check: hadeethenc + offline cache seen on the Xiaomi
 - 2026-09-27 01:49 - Dorar check seen on the Xiaomi: adhkar + daily hadith (Bukhari 5696)
