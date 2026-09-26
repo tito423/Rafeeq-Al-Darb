@@ -150,8 +150,11 @@ class MushafToolbar extends ConsumerWidget {
         // gone, and the one paper printing left (madinah_qc) highlights from
         // its own polygons, which already follow the recitation
         // (`_highlightRegion`). Owner, 2026-09-26: «حط خيار التلاوة المستمرة
-        // في المصحف الورقي».
-        TutorialAnchor(
+        // في المصحف الورقي». Withheld only on a printing that is not the
+        // Madinah layout (`canIndexBySurah`), for the same reason as the
+        // indexes.
+        if (_textOnly || canIndexBySurah)
+          TutorialAnchor(
           id: TourAnchor.quranRecite,
           child: ToolbarAction(
             icon: reciteActive

@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~13:35 SEEN build 13:20 (emulator, Xiaomi size): clock gallery sideways correct (face + switches beside a 4-a-row grid). Paper recitation did NOTHING: a build-time guard in quran_screen stopped every image-mode recitation -> now only for non-Madinah printings; button hidden on those. Text recitation seen working (2:30 wash). 595 pass, NOT built. NEXT: build; paper recitation upright + sideways (highlight right ayah, page turn, rotate mid-recitation), text same.
+
 ~13:30 OWNER (after v3.64.0): (a) photo: clock gallery sideways broken (face drawn over the switches) -> DONE IN CODE: face beside tabs+grid, switches under the face, 4 a row, CardScreen sideways pads only its own inset. Build 13:11 showed the half-fix (card too short). (b) «حط خيار التلاوة المستمرة في المصحف الورقي» + «اتأكد انها شغالة في الاورينتيشن في الورقي والنصي بامتياز» -> recite button now in both modes (paper highlight + page-follow already wired). 595 pass, NOT built. NEXT: build, emulator: gallery sideways (Xiaomi size); continuous recitation in PAPER upright + sideways (highlight on the right ayah, page turns at page end, rotate mid-recitation), then TEXT same; then ask owner about releasing 3.64.1.
 
 12:21 RELEASED v3.64.0 (tag 79194bbf = HEAD, asset 275,531,265 B, 206). v3.63.7 + tag deleted. About v3.64.0 + support seen on emulator. Arabic report given to the owner. NEXT (nothing pending from him): owner installs v3.64.0 on the Xiaomi and looks sideways (rail by the notch, Home, tasbeeh); then the old list: the 222 i'rab refs to chase (tafsir.app aljadwal/darweesh/muyassar), Shamela mid-sentence line breaks, listening across rotation (diacritised book), Avast flag on the Xiaomi (Detection ID 3d1dc328d456) not investigated.
@@ -491,6 +493,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 13:29 - Paper mushaf: the image-mode guard stopped every recitation; now only non-Madinah printings (not built)
 - 2026-09-26 13:17 - Continuous recitation offered in the paper mushaf too (not built)
 - 2026-09-26 13:14 - Clock gallery sideways: taller card, switches under the face, 4 a row (not built)
 - 2026-09-26 13:07 - Clock gallery sideways: live face beside tabs and faces, 3 a row (not built)

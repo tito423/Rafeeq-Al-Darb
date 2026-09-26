@@ -680,10 +680,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // already hidden on them for the same reason; the two indexes that would
     // navigate wrong are withheld here rather than silently missing.
     final canIndexBySurah = edition?.hafsPagination ?? true;
-    // A recitation does not carry on into an image page (see
-    // `_toggleContinuousRecitation`): switching to the image mode, or to a
-    // scanned printing, while it runs ends it.
-    if (_recite.active && _mode == MushafMode.image) {
+    // Recitation stops only on a printing that is not the Madinah layout;
+    // madinah_qc recites (owner 2026-09-26; this used to stop ALL image mode).
+    if (_recite.active && _mode == MushafMode.image && !canIndexBySurah) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => AyahAudioService.instance.stopContinuous(),
       );
