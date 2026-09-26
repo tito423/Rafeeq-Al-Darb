@@ -223,10 +223,21 @@ class CardScreen extends StatelessWidget {
       scopesRoute: true,
       explicitChildNodes: true,
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: media.padding.vertical + 24,
-        ),
+        // Sideways each edge clears only its OWN system inset. Upright is
+        // unchanged; sideways `padding.vertical + 24` on both edges cost
+        // ~140 of the Xiaomi's 407 dp and left the clock gallery a grid one
+        // half-row tall (emulator-5554 at 1220x2712 / 480 dpi, 2026-09-26).
+        padding: media.orientation == Orientation.landscape
+            ? EdgeInsets.fromLTRB(
+                16,
+                media.padding.top + 10,
+                16,
+                media.padding.bottom + 10,
+              )
+            : EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: media.padding.vertical + 24,
+              ),
         child: Material(
           type: MaterialType.transparency,
           child: ConstrainedBox(

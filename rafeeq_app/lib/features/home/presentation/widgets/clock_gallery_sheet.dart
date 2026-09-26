@@ -79,7 +79,9 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
       // The grids scroll themselves inside a TabBarView, so the card must not
       // wrap them in a scroll view of its own.
       scrollable: false,
-      footer: _bothFamiliesOptions(cs, notifier),
+      // Sideways the switches sit under the live face instead, so the
+      // grid keeps the card's height.
+      footer: sideways ? null : _bothFamiliesOptions(cs, notifier),
       child: Builder(
         builder: (context) {
           final Widget hero = // ── The live hero: whatever is selected right now ──
@@ -196,7 +198,14 @@ class _ClockGallerySheetState extends ConsumerState<ClockGallerySheet>
               // The live face sized to the height it has, not a fixed 150.
               Expanded(
                 flex: 2,
-                child: FittedBox(fit: BoxFit.scaleDown, child: hero),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: FittedBox(fit: BoxFit.scaleDown, child: hero),
+                    ),
+                    _bothFamiliesOptions(cs, notifier),
+                  ],
+                ),
               ),
               Expanded(flex: 3, child: faces),
             ],
@@ -260,9 +269,9 @@ class _FaceGrid extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        // Three a row sideways: the grid has the width, not the height.
+        // Four a row sideways: the grid has the width, not the height.
         crossAxisCount:
-            MediaQuery.orientationOf(context) == Orientation.landscape ? 3 : 2,
+            MediaQuery.orientationOf(context) == Orientation.landscape ? 4 : 2,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
         childAspectRatio: aspectRatio,

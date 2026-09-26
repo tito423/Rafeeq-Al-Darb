@@ -489,6 +489,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 13:14 - Clock gallery sideways: taller card, switches under the face, 4 a row (not built)
 - 2026-09-26 13:07 - Clock gallery sideways: live face beside tabs and faces, 3 a row (not built)
 - 2026-09-26 12:22 - Released v3.64.0 (tag = HEAD 79194bbf), handover row + next step
 - 2026-09-26 12:08 - Home clock budget margin; tasbeeh sideways tab drops its title bar (not built)
