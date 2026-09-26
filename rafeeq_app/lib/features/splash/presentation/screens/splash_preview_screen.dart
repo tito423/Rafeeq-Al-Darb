@@ -1,3 +1,4 @@
+import '../widgets/whole_clip.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -137,16 +138,8 @@ class _SplashPreviewScreenState extends ConsumerState<SplashPreviewScreen>
             )
           : !ready
               ? const Center(child: CircularProgressIndicator())
-              : SizedBox.expand(
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: v.value.size.width,
-                      height: v.value.size.height,
-                      child: VideoPlayer(v),
-                    ),
-                  ),
-                ),
+              // The same framing as the real boot, sideways included.
+              : WholeClip(size: v.value.size, child: VideoPlayer(v)),
     );
   }
 }

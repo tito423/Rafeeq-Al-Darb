@@ -465,6 +465,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 04:49 - Splash preview used BoxFit.cover too - both now share WholeClip
 - 2026-09-26 04:09 - Seen on emulator: tab state kept across rotation, reader side column, paired library
 - 2026-09-26 04:03 - Sideways: paired library lists, reader actions in a side column; tab state kept across rotation
 - 2026-09-26 03:55 - Seen sideways on the emulator (Arabic): paired card lists in RTL order
