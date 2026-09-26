@@ -22,6 +22,12 @@ void main() {
     expect(cat.search('صَيْد الخاطِر').first.id, 12028);
   });
 
+  test('a pasted link or a bare id finds that book', () {
+    expect(cat.search('https://shamela.ws/book/9632/2').single.id, 9632);
+    expect(cat.search('12028').single.id, 12028);
+    expect(cat.search('999999999'), isEmpty);
+  });
+
   test('nonsense finds nothing, and results are capped', () {
     expect(cat.search('قثقثقث'), isEmpty);
     expect(cat.search('في', limit: 80).length, lessThanOrEqualTo(80));

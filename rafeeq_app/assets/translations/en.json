@@ -1984,7 +1984,7 @@
   },
   "shamela": {
     "title": "Shamela Library",
-    "search_hint": "Type a book title",
+    "search_hint": "Book title, or its Shamela link",
     "loading_catalog": "Loading the Shamela catalogue…",
     "catalog_failed": "Could not reach al-Maktaba al-Shamela. Check your connection.",
     "count": "{} books on Shamela",

@@ -2505,9 +2505,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 17:41 — IN PROGRESS — resume here**
+**2026-09-26 17:47 — IN PROGRESS — resume here**
 
-Shamela import wired into the app: registry, service, screen, GitHub-only gate (not built)
+Shamela search takes a pasted link or book id
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

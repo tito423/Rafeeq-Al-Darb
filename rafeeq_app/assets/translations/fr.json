@@ -1984,7 +1984,7 @@
   },
   "shamela": {
     "title": "Bibliothèque Shamela",
-    "search_hint": "Saisissez un titre",
+    "search_hint": "Titre ou lien Shamela",
     "loading_catalog": "Chargement du catalogue Shamela…",
     "catalog_failed": "Impossible de joindre Shamela. Vérifiez la connexion.",
     "count": "{} livres sur Shamela",

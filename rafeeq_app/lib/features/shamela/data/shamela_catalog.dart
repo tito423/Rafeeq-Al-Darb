@@ -105,6 +105,18 @@ class ShamelaCatalog {
   /// titles holding them anywhere. At most [limit].
   List<ShamelaBookRef> search(String query, {int limit = 80}) {
     final books = _books;
+    // A pasted Shamela link («shamela.ws/book/9632/15») or a bare book id
+    // finds that book - copying a link from the site is the quickest way
+    // to name a book exactly.
+    final link = RegExp(r'shamela\.ws/book/(\d+)').firstMatch(query) ??
+        RegExp(r'^\s*(\d{1,7})\s*$').firstMatch(query);
+    if (books != null && link != null) {
+      final id = int.parse(link.group(1)!);
+      return [
+        for (final (b, _) in books)
+          if (b.id == id) b,
+      ];
+    }
     final q = normalizeArabicLoose(normalizeArabic(query.trim()));
     if (books == null || q.isEmpty) return const [];
     final words = q.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();

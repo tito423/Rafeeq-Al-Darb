@@ -543,6 +543,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 17:47 - Shamela search takes a pasted link or book id
 - 2026-09-26 17:41 - Shamela import wired into the app: registry, service, screen, GitHub-only gate (not built)
 - 2026-09-26 17:22 - Shamela book builder in Dart, verified live against the pipeline
 - 2026-09-26 17:17 - Shamela page parser ported to Dart; identical to the pipeline on 321 real pages
