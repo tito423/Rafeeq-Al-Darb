@@ -239,7 +239,14 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         builder: (context, constraints) {
           final w = constraints.maxWidth;
           final h = w / aspect;
-          _stageHeight = h;
+          // A new height is a rotation (or a resize): the page starts again
+          // from its top, so bring the recited verse back into view. Seen
+          // before this: turned sideways on 2:40, the view sat on 2:38.
+          if (h != _stageHeight) {
+            _stageHeight = h;
+            WidgetsBinding.instance
+                .addPostFrameCallback((_) => _revealHighlight());
+          }
           return GestureDetector(
             onDoubleTapDown: (d) => _doubleTapAt = d.localPosition,
             onDoubleTap: _toggleZoom,
