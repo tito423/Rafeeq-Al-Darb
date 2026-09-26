@@ -1225,7 +1225,12 @@
     "azkar_sleep_title": "سونے کے اذکار",
     "azkar_sleep_body": "سونے کے اذکار کا وقت ہو گیا",
     "prayer_open": "ایپ کھولیں",
-    "prayer_next": "اگلی نماز"
+    "prayer_next": "اگلی نماز",
+    "dl_ayah_title": "آیت بہ آیت ڈاؤن لوڈ · {}",
+    "dl_ayah_body": "{} از {} آیات · {}٪",
+    "dl_ayah_done_title": "{} کی ڈاؤن لوڈ مکمل",
+    "dl_ayah_reciter": "قاری",
+    "dl_ayah_reciters": "{} قراء"
   },
   "hijri": {
     "m1": "محرم",
@@ -1636,7 +1641,9 @@
     "download_remaining": "باقی ڈاؤن لوڈ کریں",
     "failed": "کچھ آیات ڈاؤن لوڈ نہ ہو سکیں",
     "paused": "ڈاؤن لوڈ رکا ہوا ہے",
-    "none_here": "یہاں کوئی سورت نہیں"
+    "none_here": "یہاں کوئی سورت نہیں",
+    "not_downloaded": "ابھی ڈاؤن لوڈ نہیں ہوا",
+    "ayahs_of": "{} از {} آیات"
   },
   "sync": {
     "status_idle": "ابھی ہم آہنگ نہیں ہوا",

@@ -65,10 +65,17 @@ class _AyahDownloadScreenState extends State<AyahDownloadScreen> {
             data: (all) {
               final reciters =
                   all.where((r) => available.contains(r.identifier)).toList()
-                    // What is already on the phone first.
-                    ..sort((a, b) => lib
-                        .downloadedCount(b.identifier)
-                        .compareTo(lib.downloadedCount(a.identifier)));
+                    // What is downloading now first, then what is already
+                    // on the phone. The owner's Banna download was nowhere
+                    // near the top of a list of 0 % rings (2026-09-26).
+                    ..sort((a, b) {
+                      final act = (lib.isActive(b.identifier) ? 1 : 0)
+                          .compareTo(lib.isActive(a.identifier) ? 1 : 0);
+                      if (act != 0) return act;
+                      return lib
+                          .downloadedCount(b.identifier)
+                          .compareTo(lib.downloadedCount(a.identifier));
+                    });
               if (reciters.isEmpty) {
                 return Center(child: Text('ayah_dl.no_reciters'.tr()));
               }
@@ -124,6 +131,9 @@ class _ReciterTile extends StatelessWidget {
     final lib = AyahRecitationLibrary.instance;
     final scheme = Theme.of(context).colorScheme;
     final downloaded = lib.downloadedCount(reciter.identifier);
+    final active = lib.isActive(reciter.identifier);
+    final paused = !active && lib.remainingCount(reciter.identifier) > 0 &&
+        lib.progressOf(reciter.identifier).paused;
     var complete = 0;
     if (downloaded > 0) {
       for (var s = 1; s <= 114; s++) {
@@ -143,10 +153,21 @@ class _ReciterTile extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           child: Row(
             children: [
-              AyahDlRing(
-                value: downloaded / AyahRecitationLibrary.totalAyahs,
-                locale: locale,
-              ),
+              // A 0 % ring beside every reciter read as «they are all
+              // downloading» (owner, 2026-09-26). Nothing on the phone and
+              // nothing running shows a download mark instead.
+              if (downloaded == 0 && !active)
+                SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Icon(Icons.download_for_offline_outlined,
+                      size: 30, color: scheme.onSurfaceVariant),
+                )
+              else
+                AyahDlRing(
+                  value: downloaded / AyahRecitationLibrary.totalAyahs,
+                  locale: locale,
+                ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -157,10 +178,21 @@ class _ReciterTile extends StatelessWidget {
                             fontSize: 16, fontWeight: FontWeight.w700)),
                     const SizedBox(height: 4),
                     Text(
-                      'ayah_dl.surahs_done'
-                          .tr(args: [localizeDigits('$complete', locale)]),
+                      active
+                          ? '${'ayah_dl.downloading'.tr()} · ${localizeDigits('ayah_dl.ayahs_of'.tr(args: ['$downloaded', '${downloaded + lib.remainingCount(reciter.identifier)}']), locale)}'
+                          : paused
+                              ? 'ayah_dl.paused'.tr()
+                              : downloaded == 0
+                                  ? 'ayah_dl.not_downloaded'.tr()
+                                  : 'ayah_dl.surahs_done'.tr(
+                                      args: [localizeDigits('$complete', locale)]),
                       style: TextStyle(
-                          fontSize: 12.5, color: scheme.onSurfaceVariant),
+                          fontSize: 12.5,
+                          color: active
+                              ? scheme.primary
+                              : scheme.onSurfaceVariant,
+                          fontWeight:
+                              active ? FontWeight.w600 : FontWeight.normal),
                     ),
                   ],
                 ),

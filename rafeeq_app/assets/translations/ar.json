@@ -1225,7 +1225,12 @@
     "azkar_sleep_title": "أذكار النوم",
     "azkar_sleep_body": "حان وقت أذكار النوم",
     "prayer_open": "فتح التطبيق",
-    "prayer_next": "الصلاة القادمة"
+    "prayer_next": "الصلاة القادمة",
+    "dl_ayah_title": "تنزيل تلاوة آية بآية · {}",
+    "dl_ayah_body": "{} من {} آية · {}٪",
+    "dl_ayah_done_title": "اكتمل تنزيل تلاوة {}",
+    "dl_ayah_reciter": "القارئ",
+    "dl_ayah_reciters": "{} قراء"
   },
   "hijri": {
     "m1": "محرم",
@@ -1636,7 +1641,9 @@
     "download_remaining": "تنزيل الباقي",
     "failed": "تعذّر تنزيل بعض الآيات",
     "paused": "التنزيل متوقف مؤقتًا",
-    "none_here": "لا توجد سور هنا"
+    "none_here": "لا توجد سور هنا",
+    "not_downloaded": "لم يُنزَّل بعد",
+    "ayahs_of": "{} من {} آية"
   },
   "sync": {
     "status_idle": "لم تتم المزامنة",

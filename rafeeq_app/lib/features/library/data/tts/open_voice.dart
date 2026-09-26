@@ -230,6 +230,11 @@ class OpenVoice {
   /// Bytes the pack occupies now, partial files included, for the
   /// Downloads hub.
   static Future<int> usageBytes() async {
+    // A pack the background downloader finished while this screen was not
+    // looking still sits in `downloads/`; counted from the voice folder alone
+    // it read «لا يوجد محتوى منزَّل» with the voice on the phone (owner,
+    // 2026-09-26). Move it in first, exactly as `isInstalled` does.
+    await _adoptFinished();
     final d = await _dir();
     if (!d.existsSync()) return 0;
     var n = 0;

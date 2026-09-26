@@ -141,6 +141,9 @@ class RecitationSource {
 
   static String? folderFor(String edition) => _everyAyahFolders[edition];
 
+  /// Every edition with a verified per-ayah host, in the table's order.
+  static Iterable<String> get everyAyahEditions => _everyAyahFolders.keys;
+
   /// Candidate URLs for one ayah, best first. Callers try them in order and
   /// keep the first that yields a real file, so a gap in one host is covered
   /// by the other instead of leaving the ayah silent.

@@ -1225,7 +1225,12 @@
     "azkar_sleep_title": "Adhkar do sono",
     "azkar_sleep_body": "É hora dos adhkar do sono",
     "prayer_open": "Abrir o app",
-    "prayer_next": "Próxima oração"
+    "prayer_next": "Próxima oração",
+    "dl_ayah_title": "Download versículo a versículo · {}",
+    "dl_ayah_body": "{} de {} versículos · {}%",
+    "dl_ayah_done_title": "Download concluído: {}",
+    "dl_ayah_reciter": "o recitador",
+    "dl_ayah_reciters": "{} recitadores"
   },
   "hijri": {
     "m1": "Muharram",
@@ -1636,7 +1641,9 @@
     "download_remaining": "Baixar o restante",
     "failed": "Alguns versículos não puderam ser baixados",
     "paused": "Download pausado",
-    "none_here": "Nenhuma surata aqui"
+    "none_here": "Nenhuma surata aqui",
+    "not_downloaded": "Ainda não baixado",
+    "ayahs_of": "{} de {} versículos"
   },
   "sync": {
     "status_idle": "Ainda não sincronizado",

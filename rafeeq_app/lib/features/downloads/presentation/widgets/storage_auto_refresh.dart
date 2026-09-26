@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/services/mushaf_page_service.dart';
+import '../../../library/data/tts/open_voice.dart';
+import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../data/downloads_controller.dart';
 
@@ -29,6 +31,14 @@ class StorageAutoRefreshState extends ConsumerState<StorageAutoRefresh> {
     _sub = DownloadManager.instance.stream.listen((_) => _poke());
     QuranAudioLibrary.instance.addListener(_poke);
     MushafPageService.instance.changes.addListener(_poke);
+    // The reader voice and the per-ayah library report to neither of the
+    // above, so the overview kept whatever it read first: «صوت قارئ الكتب -
+    // لا يوجد محتوى منزَّل» with the voice installed (owner, 2026-09-26).
+    OpenVoice.installed.addListener(_poke);
+    AyahRecitationLibrary.instance.addListener(_poke);
+    // And the totals are a global provider: opening the screen must not
+    // show the last visit's numbers.
+    _poke();
   }
 
   void _poke() {
@@ -47,6 +57,8 @@ class StorageAutoRefreshState extends ConsumerState<StorageAutoRefresh> {
     _timer?.cancel();
     QuranAudioLibrary.instance.removeListener(_poke);
     MushafPageService.instance.changes.removeListener(_poke);
+    OpenVoice.installed.removeListener(_poke);
+    AyahRecitationLibrary.instance.removeListener(_poke);
     super.dispose();
   }
 

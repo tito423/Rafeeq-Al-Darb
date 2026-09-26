@@ -42,6 +42,13 @@ class DownloadEngine {
   /// الرقية اسمها تحميل ملفات الرقية الصوتية».
   static const String groupRuqyah = 'rafeeq_ruqyah';
 
+  /// Per-ayah recitation files. Same queue as [groupFiles], and deliberately
+  /// NO plugin notification: the plugin only knows the dozen tasks it holds,
+  /// so its entry could say nothing truer than «جارٍ التنزيل» (owner,
+  /// 2026-09-26: «مش عاوزه بصراحة بالشكل ده»). The app posts its own, with
+  /// the real ayah count - `AyahDownloadNotice`.
+  static const String groupAyah = 'rafeeq_ayah';
+
   static const String _notifGroupRuqyah = 'rafeeq_ruqyah_group';
 
   /// The per-ayah downloads that were removed in 3.17.0 — «شيل خيار تحميل
@@ -132,7 +139,7 @@ class DownloadEngine {
   /// queues against that answer. Returns the number of slots recovered.
   static Future<int> unjamQueues() async {
     final live = <String>{};
-    for (final group in [groupFiles, groupRuqyah, groupQuranAudio]) {
+    for (final group in [groupFiles, groupRuqyah, groupQuranAudio, groupAyah]) {
       try {
         final tasks = await FileDownloader().allTasks(group: group);
         live.addAll(tasks.map((t) => t.taskId));

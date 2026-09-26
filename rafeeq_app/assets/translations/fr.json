@@ -1225,7 +1225,12 @@
     "azkar_sleep_title": "Invocations du coucher",
     "azkar_sleep_body": "C'est l'heure des invocations du coucher",
     "prayer_open": "Ouvrir l'app",
-    "prayer_next": "Prière suivante"
+    "prayer_next": "Prière suivante",
+    "dl_ayah_title": "Téléchargement verset par verset · {}",
+    "dl_ayah_body": "{} sur {} versets · {} %",
+    "dl_ayah_done_title": "Téléchargement terminé : {}",
+    "dl_ayah_reciter": "le récitateur",
+    "dl_ayah_reciters": "{} récitateurs"
   },
   "hijri": {
     "m1": "Mouharram",
@@ -1636,7 +1641,9 @@
     "download_remaining": "Télécharger le reste",
     "failed": "Certains versets n'ont pas pu être téléchargés",
     "paused": "Téléchargement en pause",
-    "none_here": "Aucune sourate ici"
+    "none_here": "Aucune sourate ici",
+    "not_downloaded": "Pas encore téléchargé",
+    "ayahs_of": "{} sur {} versets"
   },
   "sync": {
     "status_idle": "Pas encore synchronisé",

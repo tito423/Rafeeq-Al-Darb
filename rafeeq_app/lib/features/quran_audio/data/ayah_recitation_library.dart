@@ -13,6 +13,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/services/download_engine.dart';
 import '../../../core/services/recitation_source.dart';
 import '../../../core/services/ayah_audio_service.dart';
+import 'ayah_download_notice.dart';
 
 /// Progress snapshot for one reciter's per-ayah download.
 class AyahDlProgress {
@@ -185,6 +186,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
     }
     await DownloadEngine.ensureInitialized(askForNotifications: false);
     _sub ??= DownloadEngine.updates.listen(_onUpdate);
+    addListener(AyahDownloadNotice.instance.refresh);
     notifyListeners();
     unawaited(repair());
   }
@@ -323,34 +325,14 @@ class AyahRecitationLibrary extends ChangeNotifier {
 
   /// Editions with verified everyayah mirrors — the only ones this library
   /// can download. The list is [RecitationSource]'s, not duplicated.
-  static List<String> get availableEditions {
-    final out = <String>[];
-    // Walk through the editions that have verified mirrors.
-    for (final edition in [
-      'ar.abdulbasitmurattal',
-      'ar.abdullahbasfar',
-      'ar.abdurrahmaansudais',
-      'ar.shaatree',
-      'ar.ahmedajamy',
-      'ar.alafasy',
-      'ar.faresabbad',
-      'ar.hanirifai',
-      'ar.hudhaify',
-      'ar.husary',
-      'ar.husarymujawwad',
-      'ar.mahermuaiqly',
-      'ar.minshawi',
-      'ar.minshawimujawwad',
-      'ar.mohamedtablawi',
-      'ar.muhammadayyoub',
-      'ar.muhammadjibreel',
-      'ar.nasseralqatami',
-      'ar.saoodshuraym',
-    ]) {
-      if (RecitationSource.hasVerifiedMirror(edition)) out.add(edition);
-    }
-    return out;
-  }
+  /// Every reciter the app can download ayah by ayah.
+  ///
+  /// It was a hand-kept list of 19 while the first-run page offered all 35
+  /// in `RecitationSource`: the owner downloaded Mahmoud Ali al-Banna there
+  /// (70 % on his phone, 2026-09-26) and «تنزيل تلاوات آية بآية» had no row
+  /// for him at all. One table now feeds both.
+  static List<String> get availableEditions =>
+      RecitationSource.everyAyahEditions.toList();
 
   // ── Downloading ──────────────────────────────────────────────────────────
 
@@ -452,7 +434,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
         filename: _fileName(surah, ayah),
         baseDirectory: BaseDirectory.applicationDocuments,
         directory: p.join(_dirName, edition),
-        group: DownloadEngine.groupFiles,
+        group: DownloadEngine.groupAyah,
         // Status only. An ayah is a few KB; its progress bar is invisible
         // and the screens count ayahs, not bytes - but every progress event
         // crossed the platform channel and ran through three listeners on
@@ -482,7 +464,12 @@ class AyahRecitationLibrary extends ChangeNotifier {
   }
 
   void _onUpdate(TaskUpdate u) {
-    if (u.task.group != DownloadEngine.groupFiles) return;
+    // groupFiles too: ayah tasks a 3.64.0 build queued are still running
+    // under it after the update.
+    if (u.task.group != DownloadEngine.groupAyah &&
+        u.task.group != DownloadEngine.groupFiles) {
+      return;
+    }
     final parsed = _parseTaskId(u.task.taskId);
     if (parsed == null) return;
     final (edition, surah, _) = parsed;
@@ -583,9 +570,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
   Future<void> _cancelLiveTasks(String edition) async {
     try {
       final prefix = 'ayah_${edition}_';
-      final live = await FileDownloader()
-          .allTasks(group: DownloadEngine.groupFiles)
-          .timeout(const Duration(seconds: 10));
+      final live = await _allAyahTasks().timeout(const Duration(seconds: 10));
       final ids = [
         for (final t in live)
           if (t.taskId.startsWith(prefix)) t.taskId,
@@ -642,8 +627,7 @@ class AyahRecitationLibrary extends ChangeNotifier {
     final live = <String>{};
     try {
       live.addAll(
-        (await FileDownloader().allTasks(group: DownloadEngine.groupFiles))
-            .map((t) => t.taskId),
+        (await _allAyahTasks()).map((t) => t.taskId),
       );
     } catch (_) {}
     // A task the plugin refused past its retries never reports a status, so
@@ -701,6 +685,35 @@ class AyahRecitationLibrary extends ChangeNotifier {
   }
 
   // ── Notifying ────────────────────────────────────────────────────────────
+
+  /// Tasks the downloader holds for us, in the new group and the old one.
+  static Future<List<Task>> _allAyahTasks() async => [
+        ...await FileDownloader().allTasks(group: DownloadEngine.groupAyah),
+        ...await FileDownloader().allTasks(group: DownloadEngine.groupFiles),
+      ];
+
+  /// Whether [edition] has ayahs asked for and still on their way - in our
+  /// backlog or handed to the downloader - and is not paused.
+  bool isActive(String edition) {
+    final entry = _entries[edition];
+    if (entry == null || entry.paused || entry.pendingSurahs.isEmpty) {
+      return false;
+    }
+    final prefix = 'ayah_${edition}_';
+    return _backlog.any((w) => w.$1 == edition) ||
+        _handed.any((id) => id.startsWith(prefix));
+  }
+
+  /// Ayahs [edition] still has to fetch for the surahs it was asked for.
+  int remainingCount(String edition) {
+    final entry = _entries[edition];
+    if (entry == null) return 0;
+    var n = 0;
+    for (final s in entry.pendingSurahs) {
+      n += ayahCount(s) - surahDownloadedCount(edition, s);
+    }
+    return n;
+  }
 
   void _notifyNow() {
     _notifyTimer?.cancel();

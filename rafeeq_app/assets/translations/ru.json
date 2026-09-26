@@ -1225,7 +1225,12 @@
     "azkar_sleep_title": "Азкары перед сном",
     "azkar_sleep_body": "Время азкаров перед сном",
     "prayer_open": "Открыть",
-    "prayer_next": "Следующая молитва"
+    "prayer_next": "Следующая молитва",
+    "dl_ayah_title": "Загрузка по аятам · {}",
+    "dl_ayah_body": "{} из {} аятов · {}%",
+    "dl_ayah_done_title": "Загрузка завершена: {}",
+    "dl_ayah_reciter": "чтец",
+    "dl_ayah_reciters": "чтецов: {}"
   },
   "hijri": {
     "m1": "Мухаррам",
@@ -1636,7 +1641,9 @@
     "download_remaining": "Загрузить остальное",
     "failed": "Некоторые аяты не удалось загрузить",
     "paused": "Загрузка приостановлена",
-    "none_here": "Здесь нет сур"
+    "none_here": "Здесь нет сур",
+    "not_downloaded": "Ещё не загружено",
+    "ayahs_of": "{} из {} аятов"
   },
   "sync": {
     "status_idle": "Не синхронизировано",

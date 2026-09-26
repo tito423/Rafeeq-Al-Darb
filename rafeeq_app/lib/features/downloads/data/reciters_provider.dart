@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/services/recitation_source.dart';
+import '../../quran_audio/data/ayah_download_notice.dart';
 
 /// A reciter whose recitation is available ayah by ayah.
 class Reciter {
@@ -72,11 +73,14 @@ final recitersProvider = FutureProvider<List<Reciter>>((ref) async {
     if (nameAr == id || nameEn == id) continue;
     // The one gate that matters: no verified source, no entry.
     if (!RecitationSource.hasVerifiedMirror(id)) continue;
-    out.add(Reciter(
+    final r = Reciter(
       identifier: id,
       nameAr: nameAr,
       nameEn: nameEn,
-    ));
+    );
+    out.add(r);
+    // The per-ayah download notification names the reciter from here.
+    AyahDownloadNotice.reciters[id] = r;
   }
   // Sorted by the Latin form: it is the only field every entry really has,
   // and an Arabic-script sort of a list rendered in Latin looked arbitrary.
