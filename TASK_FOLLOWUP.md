@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+03:25 (09-27) XIAOMI: 30197 import FINISHED (notification «تم التنزيل»), shelf «من الشاملة / كتاب واحد» SEEN, card «٢٢٧٧ صفحة، 1.3 MB», reader opens; pages 413, 887, 1139 full text. Pages 1-3 show «صفحة بلا نص»: measured on shamela.ws/book/30197/1-4 (215/208/114/267 words) - ALL of it inside <p class="hamesh"> after <hr> («قالوا عن الكتاب», compiled by the editor). hamesh is dropped BY DESIGN in both parse_nass (Python + Dart) = editor apparatus. Not data loss; the label «صفحة بلا نص» misleads. Asked the owner: keep, relabel, or show hamesh-only pages.
+
 03:06 (09-27) XIAOMI, build 03:02: (a) Shamela link typed on the Xiaomi keyboard became «shamela. ws/book/30197» and found nothing on 3.66.0 -> FIXED (spaces removed before matching; test added) and SEEN finding the book. (b) Import notification SEEN («سبيل الرشاد في هدي خير العباد / جارٍ الاستيراد… ٤٧ صفحة»). (c) Kill mid-import: on 3.66.0 it did NOT come back by itself (re-import continued from cache: 63 -> 68) -> ADDED shamela/pending.json + resumePending() at launch; SEEN: 866 pages -> force-stop -> relaunch with no taps -> 891 -> 899. «صيد الخاطر» (12028) shows «موجود في مكتبة التطبيق». NEXT: let 30197 finish, open it (big book reader), see «من الشاملة» shelf; then release 3.66.1 only if owner asks.
 
 02:03 (09-27) XIAOMI: hadeethenc DETAIL screen button SEEN (under «الدرجة»). OFFLINE CACHE SEEN: wifi + data off via adb (verified: «Wi-Fi is disabled», ping dorar.net failed), the same hadith's sheet opened from the saved result (2 gradings, Bukhari 5696). Dorar check now seen in ALL five places (hadith books, adhkar, book selection on emulator; daily hadith, hadeethenc, adhkar on the Xiaomi).
@@ -588,6 +590,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 03:23 - Shamela big import finished and read on the Xiaomi; hamesh-only pages explained
 - 2026-09-27 03:04 - Shamela on the Xiaomi: link with spaces fixed, import resumes after kill (seen)
 - 2026-09-27 02:57 - Shamela: link with spaces (Xiaomi keyboard) + unfinished imports resume at launch; NOT yet seen
 - 2026-09-27 02:02 - Dorar check: hadeethenc + offline cache seen on the Xiaomi
