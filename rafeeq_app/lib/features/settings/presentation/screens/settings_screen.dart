@@ -1,3 +1,4 @@
+import '../../../../core/widgets/paired_list_view.dart';
 import '../widgets/app_font_picker.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/accordion.dart';
@@ -46,9 +47,16 @@ import '../../../../core/widgets/readable_insets.dart';
 enum SettingsPart { settings, reminders, about }
 
 class SettingsBody extends ConsumerWidget {
-  const SettingsBody({super.key, this.part = SettingsPart.settings});
+  const SettingsBody({
+    super.key,
+    this.part = SettingsPart.settings,
+    this.paired = false,
+  });
 
   final SettingsPart part;
+
+  /// Two sections a row sideways - for the page of its own, not inside More.
+  final bool paired;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,9 +65,7 @@ class SettingsBody extends ConsumerWidget {
     final splashSound = ref.watch(splashVideoSoundProvider);
     final scheme = Theme.of(context).colorScheme;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
+    final items = <Widget>[
         if (part == SettingsPart.settings) ...[
           // Language — each shown in its own script, independent of the
           // current locale (P2‑3 added es / ru / pt).
@@ -423,8 +429,12 @@ class SettingsBody extends ConsumerWidget {
             onTap: () => openLink(AppConfig.privacyPolicyUrl, inApp: true),
           ),
         ],
-      ],
-    );
+    ];
+    // On its own page sideways, two a row like the More tab's groups. Inside
+    // the More tab it already sits in one of two columns, and stays single.
+    return paired && MediaQuery.orientationOf(context) == Orientation.landscape
+        ? PairedColumn(gap: 0, equalHeights: false, children: items)
+        : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: items);
   }
 }
 

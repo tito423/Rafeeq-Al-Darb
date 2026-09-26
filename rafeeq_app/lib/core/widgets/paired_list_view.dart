@@ -101,10 +101,20 @@ class PairedListView extends StatelessWidget {
 /// [PairedListView]'s rule for a run of cards inside a longer list: one a
 /// row upright with [gap] between, two a row sideways.
 class PairedColumn extends StatelessWidget {
-  const PairedColumn({super.key, required this.children, this.gap = 12});
+  const PairedColumn({
+    super.key,
+    required this.children,
+    this.gap = 12,
+    this.equalHeights = true,
+  });
 
   final List<Widget> children;
   final double gap;
+
+  /// Stretch the two cards of a row to the taller one. Off for cards that
+  /// open in place: a closed card stretched to its open neighbour's height
+  /// is a tall empty slab.
+  final bool equalHeights;
 
   @override
   Widget build(BuildContext context) {
@@ -113,27 +123,27 @@ class PairedColumn extends StatelessWidget {
     for (var i = 0; i < children.length; i += sideways ? 2 : 1) {
       if (rows.isNotEmpty) rows.add(SizedBox(height: gap));
       rows.add(
-        sideways
-            ? IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(child: children[i]),
-                    SizedBox(width: gap),
-                    Expanded(
-                      child: i + 1 < children.length
-                          ? children[i + 1]
-                          : const SizedBox(),
-                    ),
-                  ],
-                ),
-              )
-            : children[i],
+        sideways ? _row(i) : children[i],
       );
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: rows,
     );
+  }
+
+  Widget _row(int i) {
+    final row = Row(
+      crossAxisAlignment:
+          equalHeights ? CrossAxisAlignment.stretch : CrossAxisAlignment.start,
+      children: [
+        Expanded(child: children[i]),
+        SizedBox(width: gap),
+        Expanded(
+          child: i + 1 < children.length ? children[i + 1] : const SizedBox(),
+        ),
+      ],
+    );
+    return equalHeights ? IntrinsicHeight(child: row) : row;
   }
 }

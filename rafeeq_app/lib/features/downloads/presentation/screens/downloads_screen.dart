@@ -555,7 +555,7 @@ class _CategoryCard extends StatelessWidget {
                       Text(
                         empty
                             ? 'downloads.nothing_downloaded'.tr()
-                            : '${usage.itemCount} · ${_fmtSize(usage.bytes)}',
+                            : '${localizeDigits('${usage.itemCount}', uiLanguageCode)} · ${_fmtSize(usage.bytes)}',
                         style: TextStyle(
                           color: scheme.onSurfaceVariant,
                           fontSize: 12,

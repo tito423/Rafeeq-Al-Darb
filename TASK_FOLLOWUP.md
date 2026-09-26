@@ -33,6 +33,7 @@ SEEN 03:53-03:55 on emulator-5554 (build 03:50, rotated with adb emu rotate; Ara
 DONE IN CODE ~04:05: library authors/categories/my-library paired; book reader actions in a side column sideways (BookListenAction keyed so rotating does not stop the voice); AppShell tab stack GlobalKey (_tabsKey) - without it rotating rebuilt every tab (lost mushaf page etc.). Building; verify on emulator incl. state kept across rotation.
 SEEN 04:08 on emulator (build 04:07:35): tab state KEPT across rotation (Library > My library stayed selected sideways->upright); my-library books paired sideways, one column upright; book reader actions in a side column. UNVERIFIED ON DEVICE: listening survives rotation (BookListenAction GlobalKey) - the book tried (Arba'in Nawawi) is not read aloud (0% diacritised); needs a diacritised book.
 OWNER 04:50 «لسه فيه حاجة ناقصة» / «انا بسالك انا معرفش» -> full sweep of all 57 screens/sheets. DONE IN CODE ~05:15: splash PREVIEW used BoxFit.cover too (now shared WholeClip, SEEN sideways: whole emblem + wordmark); preview + adhkar category app bars drew DARK icons/title (AppBarTheme iconTheme/titleTextStyle beat foregroundColor) -> white given outright; readableInsets (680dp centred) on settings subpages, about, sources, adhan settings, adjustments, location; ayah sciences sheet 2 columns sideways + wider; nine collections + hadith texts paired; hadith chapter numbers were LATIN in Arabic -> localizeDigits; channels/websites/encyclopedia paired; tasbeeh rounds label 5px from edge -> padding; downloads 2 columns (StorageAutoRefresh extracted, ceiling 870->829). Building.
+SEEN 05:19-05:23 (build 05:18:47): downloads 2 cols; splash preview app bar WHITE now. DONE IN CODE after it: downloads books count was Latin 35 beside Arabic digits -> localizeDigits; standalone Settings page (home header) paired sideways (SettingsBody paired:true, equalHeights:false because sections open in place). Building.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -466,6 +467,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 05:26 - Sideways: settings page paired, Arabic digits in download counts; preview bar seen white
 - 2026-09-26 05:13 - Landscape sweep: splash preview, dark app bars, readable forms, sciences sheet, hadith, library tabs, downloads
 - 2026-09-26 04:49 - Splash preview used BoxFit.cover too - both now share WholeClip
 - 2026-09-26 04:09 - Seen on emulator: tab state kept across rotation, reader side column, paired library

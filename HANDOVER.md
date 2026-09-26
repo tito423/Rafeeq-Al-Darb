@@ -2502,9 +2502,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 05:13 — IN PROGRESS — resume here**
+**2026-09-26 05:26 — IN PROGRESS — resume here**
 
-Landscape sweep: splash preview, dark app bars, readable forms, sciences sheet, hadith, library tabs, downloads
+Sideways: settings page paired, Arabic digits in download counts; preview bar seen white
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

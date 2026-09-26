@@ -108,7 +108,7 @@ class SettingsQuickButton extends StatelessWidget {
           appBar: AppBar(title: Text('more.section_settings'.tr())),
           body: const SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(16, 8, 16, 32),
-            child: SettingsBody(),
+            child: SettingsBody(paired: true),
           ),
         ),
       ),
