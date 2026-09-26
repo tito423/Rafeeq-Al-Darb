@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~15:20 OWNER: standing permission to download any tool («نزل اللي انت عايز تنزله دايما»). TV banner redone WITH the Arabic name: scripts/build_tv_banner.ps1 (Windows GDI+ shapes Arabic; PIL here cannot) - owner icon unchanged + «رفيق الدرب» in Alexandria Bold on #9BC4B3; seen correct. DOWNLOADING in background (sdkmanager): system-images;android-34;google-tv;x86 and android-36;android-tv;x86_64 -> log scratchpad tvdl.log; if the session died, re-run the install (it resumes). NEXT: create AVDs (Google TV 1080p), install the APK, see launcher banner + D-pad walk; continue stage A checks, then stage B.
+
 ~15:08 Build 15:05 (stage A) installed on emulator; SEEN only: tablet 1600x2560/320 upright = two columns + bottom bar (800 dp < 840), no break. FOUND for stage C: tall start column -> analog clock beside the countdown comes out ~100 dp (FittedBox in half a column); when the column is tall put clock ABOVE countdown. NOT seen yet: stage A on phone both ways, smart screen, tablet sideways rail, adhan sideways. wm reset done. Quota 5h 87% at 15:05 -> stopped here. NEXT SESSION: continue stage A checks, then stage B (remote). Owner to answer: OK to download the Android TV emulator image (~1 GB, Google sdkmanager) for stage D?
 
 ~15:15 STAGE A IN CODE (NOT built): core/utils/screen_class.dart (twoColumns w>=600, shortHeight h<480, wide w>h); lists/two panes/settings/azkar grid/tour/paired -> twoColumns (tablet upright now 2 columns); azkar section/library/book reader -> wide; adhan backgrounds count = width/200 (2..6); side rail when wide OR width>=840, tiles capped at 88 dp; TV manifest: LEANBACK_LAUNCHER + banner (owner icon unchanged on #9BC4B3, 320x180, NO text - PIL here cannot shape Arabic) + touchscreen/leanback/mic/location required=false; AdhanActivity portrait lock REMOVED - its sideways layout NOT yet seen (must check). Still orientation-based on purpose: quran_screen (lock + toolbar), mushaf pages, card_route, tasbeeh, clock gallery, sciences sheet, makharij, qibla. NEXT: build; see phone/tablet/smart sizes both orientations; adhan preview sideways; then stage B (remote).
@@ -515,6 +517,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 15:14 - TV banner with the shaped Arabic name; TV system images downloading
 - 2026-09-26 15:06 - Stage A built and partly seen (tablet upright); paused for quota
 - 2026-09-26 15:01 - Stage A: layout by window size (ScreenClass), TV launcher + banner, adhan not locked (not built)
 - 2026-09-26 14:55 - Adaptive + TV remote plan from live research and code measurement

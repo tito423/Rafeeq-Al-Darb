@@ -2505,9 +2505,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 15:06 — IN PROGRESS — resume here**
+**2026-09-26 15:14 — IN PROGRESS — resume here**
 
-Stage A built and partly seen (tablet upright); paused for quota
+TV banner with the shaped Arabic name; TV system images downloading
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
