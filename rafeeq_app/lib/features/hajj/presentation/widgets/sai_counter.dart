@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/remote_tap.dart';
 
 class SaiCounter extends StatefulWidget {
   const SaiCounter({super.key});
@@ -61,7 +62,7 @@ class _SaiCounterState extends State<SaiCounter>
     final complete = _done >= passes;
     return Column(
       children: [
-        GestureDetector(
+        RemoteTap(
           onTap: _tap,
           child: SizedBox(
             height: 150,

@@ -15,6 +15,7 @@ import '../data/quran_audio_favorites.dart';
 import '../data/quran_audio_player.dart';
 import 'widgets/audio_common.dart';
 import '../../../core/widgets/fitted_sheet.dart';
+import '../../../core/widgets/remote_tap.dart';
 
 /// The full player.
 ///
@@ -699,9 +700,8 @@ class _Transport extends StatelessWidget {
               stream: player.stateStream,
               builder: (context, _) {
                 final state = player.stateNow;
-                final busy = player.playing &&
-                    (state == ProcessingState.loading || state == ProcessingState.buffering);
-                return GestureDetector(
+                final busy = player.playing && (state == ProcessingState.loading || state == ProcessingState.buffering);
+                return RemoteTap(
                   onTap: player.togglePlay,
                   child: Container(
                     width: 78,

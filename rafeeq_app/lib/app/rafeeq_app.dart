@@ -24,6 +24,8 @@ import 'app_locale_provider.dart';
 import 'navigation.dart';
 import '../core/services/sync_service.dart';
 import '../core/utils/screen_class.dart';
+import '../core/widgets/focus_ring_overlay.dart';
+import '../core/theme/app_colors.dart';
 
 /// Injected from main() so sync reads are possible anywhere.
 final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
@@ -200,9 +202,11 @@ class RafeeqApp extends ConsumerWidget {
             child: page,
           );
         }
-        return variant == ThemeVariant.rgb
-            ? RgbScaffoldBackground(child: page)
-            : page;
+        if (variant == ThemeVariant.rgb) {
+          page = RgbScaffoldBackground(child: page);
+        }
+        // A remote or keyboard gets a ring on whatever it is on (TV).
+        return FocusRingOverlay(color: AppColors.gold, child: page);
       },
       // P3‑49: the owner asked for his AI-generated splash video (Gemini
       // watermark now removed) put back. `SplashScreen` plays it, then

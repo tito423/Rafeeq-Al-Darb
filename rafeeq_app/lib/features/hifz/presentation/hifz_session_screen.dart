@@ -29,6 +29,7 @@ import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
 import 'widgets/hifz_navigator.dart';
 import 'widgets/tasmee_panel.dart';
 import '../data/hifz_store.dart';
+import '../../../core/widgets/remote_tap.dart';
 
 class HifzSessionScreen extends ConsumerStatefulWidget {
   /// The stretch being worked through, ends included — a whole surah from
@@ -494,7 +495,7 @@ class _Word extends StatelessWidget {
     if (!hidden) {
       return ArabicText(word, style: style);
     }
-    return GestureDetector(
+    return RemoteTap(
       onTap: onTap,
       child: Opacity(
         opacity: 0.25,

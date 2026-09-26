@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/remote_tap.dart';
 
 class TawafCounter extends StatefulWidget {
   const TawafCounter({super.key, this.compact = false});
@@ -98,7 +99,7 @@ class _TawafCounterState extends State<TawafCounter>
     }
     return Column(
       children: [
-        GestureDetector(
+        RemoteTap(
           onTap: _tap,
           child: AspectRatio(
             aspectRatio: 1,

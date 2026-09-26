@@ -68,15 +68,28 @@ class _ToolbarActionState extends State<ToolbarAction>
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final color = widget.active ? AppColors.gold : scheme.onSurface;
-    final child = GestureDetector(
+    // Focusable, and OK on a remote presses it (TV): the mushaf's whole
+    // toolbar is made of these, and a bare GestureDetector takes no focus.
+    void press() {
+      _wiggle.forward(from: 0);
+      widget.onPressed();
+    }
+
+    final child = FocusableActionDetector(
+      actions: <Type, Action<Intent>>{
+        ActivateIntent: CallbackAction<ActivateIntent>(
+          onInvoke: (_) {
+            press();
+            return null;
+          },
+        ),
+      },
+      child: GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
-      onTap: () {
-        _wiggle.forward(from: 0);
-        widget.onPressed();
-      },
+      onTap: press,
       child: AnimatedScale(
         scale: _pressed ? 0.86 : 1.0,
         duration: Duration(milliseconds: _pressed ? 110 : 420),
@@ -154,6 +167,7 @@ class _ToolbarActionState extends State<ToolbarAction>
           ),
         ),
       ),
+    ),
     );
     // The caption is the label in the normal form; in compact form the tooltip
     // is the only place it survives, so it is not optional there.

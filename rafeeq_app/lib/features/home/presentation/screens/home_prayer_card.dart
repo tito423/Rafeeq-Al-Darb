@@ -165,7 +165,7 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
               ? null
               : TutorialAnchor(
               id: TourAnchor.homeCountdown,
-              child: GestureDetector(
+              child: RemoteTap(
                 onTap: previous == null
                     ? null
                     : () => setState(() => _showPrevious = !_showPrevious),

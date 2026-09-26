@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/widgets/error_retry.dart';
+import '../widgets/mushaf/mushaf_remote_keys.dart';
 import '../widgets/mushaf/toolbar_bar.dart';
 import '../../data/mushaf_paper_provider.dart';
 import '../../data/ayah_coords_repository.dart';
@@ -936,7 +937,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // «دايمًا خلّي تقليب الصفحات من اليمين للشمال»: a mushaf turns right to
     // left in every UI language; each page keeps the UI's own direction.
     final ambient = Directionality.of(context);
-    return Directionality(textDirection: TextDirection.rtl, child: PageView.builder(
+    return Directionality(textDirection: TextDirection.rtl, child: MushafRemoteKeys(onTurn: (d) => _goToPage(_current + d), onSelect: _onPageTap, child: PageView.builder(
       controller: _pages,
       // Frozen while the page is pinched in, so a pan moves the page instead
       // of turning it — see `quran_zoom_provider.dart`.
@@ -1029,7 +1030,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
           },
         )));
       },
-    ));
+    )));
   }
 
   void _onImageAyahTap(

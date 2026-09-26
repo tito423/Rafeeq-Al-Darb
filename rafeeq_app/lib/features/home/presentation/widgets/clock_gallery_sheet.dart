@@ -7,6 +7,7 @@ import '../../../../core/widgets/card_route.dart';
 import '../../data/clock_settings_provider.dart';
 import 'analog_clock_faces.dart';
 import 'digital_clock_faces.dart';
+import '../../../../core/widgets/remote_tap.dart';
 
 /// The clock gallery — twenty live faces, ten digital and ten analogue.
 ///
@@ -281,7 +282,7 @@ class _FaceGrid extends StatelessWidget {
         final selected = isSelected(i);
         final surface = HeroSurface.of(context);
         final accent = surface.accent(_accent);
-        return GestureDetector(
+        return RemoteTap(
           onTap: () => onTap(i),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 260),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../../core/widgets/remote_tap.dart';
 import '../../../../core/services/notification_router.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -281,7 +282,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       // lower down with a grey rim (the plate surviving at the oval's
       // tangents), then the intro. Both now draw `app_mark_circle.png`, which
       // is already cut to the emblem's own circle on transparency.
-      body: GestureDetector(
+      body: RemoteTap(
         behavior: HitTestBehavior.opaque,
         onTap: videoReady ? _proceed : null,
         child: videoReady

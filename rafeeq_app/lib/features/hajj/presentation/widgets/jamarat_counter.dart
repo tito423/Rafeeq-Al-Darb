@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/remote_tap.dart';
 
 class JamaratCounter extends StatefulWidget {
   /// True for the Day of Sacrifice (al-Aqabah only).
@@ -85,7 +86,7 @@ class _JamaratCounterState extends State<JamaratCounter>
     final complete = current < 0;
     return Column(
       children: [
-        GestureDetector(
+        RemoteTap(
           onTap: _tap,
           child: SizedBox(
             height: 170,

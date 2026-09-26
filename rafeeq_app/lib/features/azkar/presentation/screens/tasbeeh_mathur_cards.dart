@@ -175,7 +175,7 @@ class _MathurCounterCard extends StatelessWidget {
     final h = MediaQuery.sizeOf(context).height;
     final dhikrSize = (h * 0.0195).clamp(14.0, 19.0);
     final countSize = (h * 0.032).clamp(26.0, 44.0);
-    return GestureDetector(
+    return RemoteTap(
       onTap: onTap,
       child: IslamicPatternPanel(
         padding: EdgeInsets.fromLTRB(18, h * 0.012, 18, h * 0.010),

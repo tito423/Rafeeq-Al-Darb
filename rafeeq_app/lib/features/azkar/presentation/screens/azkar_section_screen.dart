@@ -12,6 +12,7 @@ import '../../../../core/services/sync_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/azkar_repeat.dart';
 import '../../../../core/utils/screen_class.dart';
+import '../../../../core/widgets/remote_tap.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
 ///
@@ -332,7 +333,7 @@ class _BottomControls extends StatelessWidget {
         children: [
           // Tappable countdown ring — shows repeats *remaining* (counts down),
           // with a check once complete. Tapping anywhere on it counts.
-          GestureDetector(
+          RemoteTap(
             onTap: onTap,
             child: SizedBox(
               width: 108,

@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~16:55 STAGE B IN CODE (595 pass, NOT built): FocusRingOverlay (MaterialApp.builder; gold ring on FocusManager.primaryFocus, only in traditional highlight mode, ticker only then); RemoteTap (focus + ActivateIntent) swapped for tap-only GestureDetectors: adhan backgrounds, adhkar section, mathur card, tasbeeh circle, Hajj counters x3, hifz session, clock gallery tiles, prayer slides x2, player play, prayer countdown flip, splash; ToolbarAction focusable (whole mushaf toolbar); MushafRemoteKeys around the mushaf PageView (LEFT=next, RIGHT=previous, OK=controls). NOT converted yet: makharij diagram (tap position), daily hadith swipe, mushaf ayah long-press (remote has no long press - needs a way to pick an ayah), arrow_scrollbar. NEXT: build; phone: nothing changed by touch (no ring); Google TV AVD (kill phone first): ring visible, walk tabs/home/tasbeeh/mushaf with keyevent DPAD_*.
+
 ~16:35 SEEN build 16:26:58 (Xiaomi size sideways): More six cards equal + aligned; Prayer compass card whole (short bar); Adhkar header smaller BUT row 2 cut -> rows sized to height (mainAxisExtent) when height short; Downloads card description hidden in grid too. 595 pass, NOT built. NEXT: build, see Adhkar 2 rows + More; then stage B focus ring.
 
 ~16:35 OWNER photos (Xiaomi sideways, v3.64.1): title bars «الأذكار/الصلاة» take too much height; More cards 3-a-row uneven (descriptions 2-6 lines) -> DONE IN CODE: app-wide AppBar 44 dp + title 17 when height < 480 (MaterialApp.builder Theme override); MoreGroup in a grid: no description, title one line (IslamicActionCard.singleLineTitle) -> equal heights. «بص على الباقي»: rest of sideways screens to be looked at in the sweep. NOT built. NEXT: build, see on phone sideways (Xiaomi size 1220x2712/480): More, Adhkar, Prayer; then stage B focus ring.
@@ -523,6 +525,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 16:40 - Stage B: app-wide focus ring, remote-reachable taps, mushaf keys (not built)
 - 2026-09-26 16:31 - Seen: shorter bars, equal More cards; Adhkar rows fit the height (not built)
 - 2026-09-26 16:23 - Sideways: shorter title bars app-wide; More grid cards without descriptions, equal height (not built)
 - 2026-09-26 15:21 - TV emulators installed; app runs on Google TV; focus highlight too faint (stage B first)

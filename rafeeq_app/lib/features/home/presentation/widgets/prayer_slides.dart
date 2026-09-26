@@ -19,6 +19,7 @@ import '../../../adhan/data/adhan_settings_provider.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
 import '../../data/prayer_controller.dart';
 import 'prayer_slide_adhan_extras.dart';
+import '../../../../core/widgets/remote_tap.dart';
 
 /// The six timings, in the order they occur.
 const prayerSlideOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -275,7 +276,7 @@ class _PrayerSlide extends StatelessWidget {
     // legible form of `color`; `color` itself stays the chip fill.
     final hero = HeroSurface.of(context);
     final accent = hero.accent(color);
-    return GestureDetector(
+    return RemoteTap(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
@@ -750,7 +751,7 @@ class _Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hero = HeroSurface.of(context);
-    return GestureDetector(
+    return RemoteTap(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),

@@ -15,6 +15,7 @@ import '../../../../core/services/sync_service.dart';
 import '../../data/tasbeeh_catalog.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../../../core/widgets/remote_tap.dart';
 
 part 'tasbeeh_mathur_cards.dart';
 
@@ -416,7 +417,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           padding: EdgeInsets.all(sideways ? 12 : 0),
                           child: FittedBox(
                             fit: sideways ? BoxFit.contain : BoxFit.scaleDown,
-                            child: GestureDetector(
+                            child: RemoteTap(
                               onTap: _tap,
                               child: Container(
                                 width: 250,
