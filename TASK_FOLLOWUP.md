@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+17:35 SHAMELA stage A (data) DONE: lib/features/shamela/data/shamela_catalog.dart (fetch /ajax/books/ once, gzip cache in app support, weekly refresh, local ranked search) + test on the real list (test/fixtures/shamela_books_2026-09-26.json.gz, 192,566 B): 8,598 books (earlier «8,599» included the placeholder - corrected), صيد الخاطر->12028, الفقه المنهجي->6369. Official Shamela MCP at https://mcp.shamela.ws (4 tools) recorded in SHAMELA_IMPORT_PLAN.md as stage E (search only). NEXT: stage A UI (ShamelaSearchScreen, entry in Library behind a dart-define), then stage B: port scripts/build_book_text.py parse_nass (lines ~895-994) to Dart, verify paragraphs equal the pipeline's for 2 books.
+
 17:20 SHAMELA research done, design in SHAMELA_IMPORT_PLAN.md (measured: ajax/books/ = whole catalogue 8,599 books, 195 KB gzip, q ignored; ajax/authors/ 3,191; pageContent per page; /book/{id} card). NEXT: stage A - lib/features/shamela/data/shamela_catalog.dart (download+cache+local search) + search screen; then B (parse_nass Dart port verified vs pipeline). Open: read /page/terms.
 
 17:06 SEEN build 17:05:11 (emulator): author search «ibn al-jawzi» -> ONE author card «الإمام أبو الفرج ابن الجوزي • ٣٤ كتابًا» (no Ibn al-Qayyim) + «تحميل كل كتب المؤلف (٣٠)»; tapped -> «جارٍ تحميل كتب المؤلف: ١٢ من ٣٠» with bar. OWNER NEW (big): in-app Shamela integration - search Shamela by book name and import the book into the app; GitHub build only (not Play). NEXT: research shamela.ws (structure, search, book pages, terms), design, respect library-content-policy memory.
@@ -535,6 +537,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 17:14 - Shamela catalogue on the phone: fetch once, local search, tested on the real 8,598-book list
 - 2026-09-26 17:11 - Shamela plan: official MCP service found and measured (search/open only; import stays on pageContent)
 - 2026-09-26 17:09 - Shamela in-app import: live research and design
 - 2026-09-26 17:06 - Seen: author search card and download-all; Shamela integration next

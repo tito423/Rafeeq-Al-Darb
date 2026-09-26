@@ -9,7 +9,7 @@ chosen book into the library, readable offline like any other.
 
 | What | Endpoint | Result |
 |---|---|---|
-| Whole book catalogue | `GET https://shamela.ws/ajax/books/` (the site's own select2 autocomplete; the `q` parameter is IGNORED) | JSON `{"results":{"items":[{"id","text"}...]}}` - **8,599 books**, ids 1..151203, 1,679,477 B raw, **195,186 B gzip** |
+| Whole book catalogue | `GET https://shamela.ws/ajax/books/` (the site's own select2 autocomplete; the `q` parameter is IGNORED) | JSON `{"results":{"items":[{"id","text"}...]}}` - **8,598 books** (8,599 items less the «جميع الكتب» placeholder; corrected - first reported as 8,599), ids 1..151203, 1,679,477 B raw, **195,186 B gzip** |
 | Whole author list | `GET https://shamela.ws/ajax/authors/` | 3,191 authors, 344,128 B raw |
 | One page of a book | `GET https://shamela.ws/ajax/pageContent/{book}/{page}` with `X-Requested-With: XMLHttpRequest` | JSON with `nass` = the page's HTML (the pipeline's `fetch_shamela_pages.py` has used this for months) |
 | Book card + TOC | `GET https://shamela.ws/book/{id}` (HTML) | title, author (link `/author/{id}`), publisher, edition, parts, «[ترقيم الكتاب موافق للمطبوع]», TOC headings |
