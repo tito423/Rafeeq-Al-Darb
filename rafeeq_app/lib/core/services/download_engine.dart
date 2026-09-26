@@ -302,12 +302,14 @@ class DownloadEngine {
           t['notif.dl_files_error_body']!),
       paused: TaskNotification(t['notif.dl_paused_title']!,
           t['notif.dl_paused_body']!),
-      // No bar and no «x of y» for this group. The plugin counts only the
-      // tasks it has been handed, and the ayah library hands it twelve at a
-      // time from a backlog of up to 6,236 - so its total grew while the
-      // reader watched and never matched the screen («1488 من 1485», owner's
-      // phone, 2026-09-25). The one true count is in the app.
-      progressBar: false,
+      // A bar and «x of y» again. They were off because the ayah library
+      // fed this group twelve tasks at a time from a backlog of up to 6,236,
+      // so its total grew while the reader watched («1488 من 1485», owner's
+      // phone, 2026-09-25). The ayahs have their own group now (groupAyah,
+      // with the app's own notification), and what is left here is enqueued
+      // whole, so the plugin's count is the true one - and the owner did not
+      // want the old «التقدم الدقيق داخل التطبيق» line (2026-09-26).
+      progressBar: true,
       groupNotificationId: _notifGroupFiles,
     );
 

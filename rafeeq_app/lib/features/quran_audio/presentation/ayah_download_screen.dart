@@ -179,7 +179,7 @@ class _ReciterTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       active
-                          ? '${'ayah_dl.downloading'.tr()} · ${localizeDigits('ayah_dl.ayahs_of'.tr(args: ['$downloaded', '${downloaded + lib.remainingCount(reciter.identifier)}']), locale)}'
+                          ? '${'ayah_dl.downloading'.tr()} ${localizeDigits('ayah_dl.ayahs_of'.tr(args: ['$downloaded', '${downloaded + lib.remainingCount(reciter.identifier)}']), locale)}'
                           : paused
                               ? 'ayah_dl.paused'.tr()
                               : downloaded == 0

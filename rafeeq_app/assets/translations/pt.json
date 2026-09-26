@@ -1183,7 +1183,7 @@
     "prayer_enable_location": "Ative a localização para ver os horários de oração",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "A transferir",
-    "dl_files_running_body": "O progresso exato está na app, em Transferências",
+    "dl_files_running_body": "{numFinished} de {numTotal} arquivos",
     "dl_files_complete_title": "Transferência concluída",
     "dl_files_complete_body": "O conteúdo está pronto para usar sem ligação",
     "dl_files_error_title": "Falha na transferência",

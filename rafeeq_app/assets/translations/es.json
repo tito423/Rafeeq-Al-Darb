@@ -1183,7 +1183,7 @@
     "prayer_enable_location": "Activa la ubicación para ver los horarios de oración",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "Descargando",
-    "dl_files_running_body": "El progreso exacto está en la app, en Descargas",
+    "dl_files_running_body": "{numFinished} de {numTotal} archivos",
     "dl_files_complete_title": "Descarga completada",
     "dl_files_complete_body": "El contenido está listo para usar sin conexión",
     "dl_files_error_title": "No se pudo descargar",

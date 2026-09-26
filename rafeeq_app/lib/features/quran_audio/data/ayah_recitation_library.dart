@@ -692,16 +692,19 @@ class AyahRecitationLibrary extends ChangeNotifier {
         ...await FileDownloader().allTasks(group: DownloadEngine.groupFiles),
       ];
 
-  /// Whether [edition] has ayahs asked for and still on their way - in our
-  /// backlog or handed to the downloader - and is not paused.
+  /// Whether [edition] is downloading: not paused, and a surah it asked for
+  /// still has an ayah on its way ([isSurahPending] - so a surah whose every
+  /// missing ayah failed does not count). Pending surahs are re-queued on
+  /// load (`repair`), so «pending» is «being fetched».
+  ///
+  /// Not «in the backlog or in `_handed`»: `_handed` lets go of a task at
+  /// its FIRST status (running), so the last dozen ayahs of a reciter read
+  /// as idle while they downloaded, and the end-of-download notice never
+  /// came (emulator-5554, Banna, 2026-09-26).
   bool isActive(String edition) {
     final entry = _entries[edition];
-    if (entry == null || entry.paused || entry.pendingSurahs.isEmpty) {
-      return false;
-    }
-    final prefix = 'ayah_${edition}_';
-    return _backlog.any((w) => w.$1 == edition) ||
-        _handed.any((id) => id.startsWith(prefix));
+    if (entry == null || entry.paused) return false;
+    return entry.pendingSurahs.any((s) => isSurahPending(edition, s));
   }
 
   /// Ayahs [edition] still has to fetch for the surahs it was asked for.

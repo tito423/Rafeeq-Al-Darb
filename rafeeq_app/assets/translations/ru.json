@@ -1183,7 +1183,7 @@
     "prayer_enable_location": "Включите геолокацию, чтобы видеть время молитв",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "Загрузка",
-    "dl_files_running_body": "Точный прогресс — в приложении, в разделе «Загрузки»",
+    "dl_files_running_body": "{numFinished} из {numTotal} файлов",
     "dl_files_complete_title": "Загрузка завершена",
     "dl_files_complete_body": "Материалы готовы к работе без интернета",
     "dl_files_error_title": "Не удалось загрузить",

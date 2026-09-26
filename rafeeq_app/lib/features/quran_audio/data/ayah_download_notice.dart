@@ -66,7 +66,8 @@ class AyahDownloadNotice {
     }
     _shown = active.toSet();
     final lang = uiLanguageCode;
-    final pct = total == 0 ? 0 : (done * 100 ~/ total);
+    // Rounded like the bar (`showProgress`), so the two never disagree.
+    final pct = total == 0 ? 0 : (done * 100 / total).round();
     DownloadNotifications.instance.ensureInitialized().then((_) {
       DownloadNotifications.instance.showProgress(
         id: _id,

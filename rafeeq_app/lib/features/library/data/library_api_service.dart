@@ -5,7 +5,8 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart' show debugPrint, visibleForTesting;
+import 'package:flutter/foundation.dart'
+    show ValueNotifier, debugPrint, visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -172,18 +173,42 @@ class LibraryApiService {
   Future<void> downloadBook(String bookId, String url) async {
     final expected = bookById(bookId)?.textEdition?.sizeBytes ?? 0;
     final dio = Dio();
-    final bytes = await ContentMirrors.fetchFirst<List<int>>(
-      url,
-      (u) async => (await dio.get<List<int>>(
-            u,
-            options: Options(responseType: ResponseType.bytes),
-          ))
-              .data ??
-          const [],
-      accept: (b) => b.isNotEmpty && (expected == 0 || b.length == expected),
-    );
-    await installBookBytes(bookId, bytes);
+    void setProgress(double? v) {
+      final next = Map<String, double?>.from(bookDownloads.value);
+      if (v == null && !next.containsKey(bookId)) return;
+      next[bookId] = v;
+      bookDownloads.value = next;
+    }
+
+    setProgress(0);
+    try {
+      final bytes = await ContentMirrors.fetchFirst<List<int>>(
+        url,
+        (u) async => (await dio.get<List<int>>(
+              u,
+              options: Options(responseType: ResponseType.bytes),
+              onReceiveProgress: (got, total) {
+                final t = total > 0 ? total : expected;
+                if (t > 0) setProgress((got / t).clamp(0.0, 1.0));
+              },
+            ))
+                .data ??
+            const [],
+        accept: (b) => b.isNotEmpty && (expected == 0 || b.length == expected),
+      );
+      await installBookBytes(bookId, bytes);
+    } finally {
+      final next = Map<String, double?>.from(bookDownloads.value)
+        ..remove(bookId);
+      bookDownloads.value = next;
+    }
   }
+
+  /// Book id -> 0..1 while it downloads, for «جارٍ التنزيل الآن» on the
+  /// Downloads hub - «اي حاجة يتم تنزيلها لازم تظهر تفاصيل تحميلها في
+  /// التنزيلات» (owner, 2026-09-26). Books went through Dio with no trace.
+  final ValueNotifier<Map<String, double?>> bookDownloads =
+      ValueNotifier(const {});
 
   /// «حط … المتون built-in في التطبيق لأن تحميلهم بيفشل لما التطبيق بيروح
   /// في الخلفية» (2026-09-19). Every book in the hadith category («كتب

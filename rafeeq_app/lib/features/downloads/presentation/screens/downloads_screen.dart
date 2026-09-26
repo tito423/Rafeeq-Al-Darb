@@ -12,10 +12,6 @@ import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../data/downloads_controller.dart';
-import '../../../quran_audio/presentation/widgets/audio_common.dart';
-import '../../../quran_audio/presentation/reciter_screen.dart';
-import '../../../quran_audio/data/mp3quran_api.dart';
-import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
@@ -29,6 +25,7 @@ import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/presentation/screens/sciences_pack_screen.dart';
 import '../widgets/initial_downloads_entry.dart';
 import '../widgets/storage_auto_refresh.dart';
+import '../widgets/active_downloads_panel.dart';
 import '../../../../core/widgets/two_pane_scroll.dart';
 
 String _fmtSize(int bytes) {
@@ -200,7 +197,7 @@ class _OverviewTab extends ConsumerWidget {
                   ? () => _confirmFree(context, ref, null)
                   : null,
             ),
-            const _ActiveDownloadsPanel(),
+            const ActiveDownloadsPanel(),
             const InitialDownloadsEntry(),
           ],
           end: [
@@ -248,131 +245,6 @@ class _OverviewTab extends ConsumerWidget {
 /// المية». Every transfer in flight — a mushaf's pages, a surah of a
 /// recitation, a book or pack — with its own bar and percentage; a tap goes to
 /// where that download lives. Hidden when nothing is downloading.
-class _ActiveDownloadsPanel extends ConsumerStatefulWidget {
-  const _ActiveDownloadsPanel();
-
-  @override
-  ConsumerState<_ActiveDownloadsPanel> createState() => _ActiveDownloadsPanelState();
-}
-
-class _ActiveDownloadsPanelState extends ConsumerState<_ActiveDownloadsPanel> {
-  Timer? _tick;
-
-  @override
-  void initState() {
-    super.initState();
-    // Page progress moves many times a second; once a second reads smoothly.
-    _tick = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _tick?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final locale = context.locale.languageCode;
-    final scheme = Theme.of(context).colorScheme;
-    final editions = ref.watch(mushafEditionsProvider).valueOrNull ?? const [];
-    final data = ref.watch(mushafDataProvider).valueOrNull;
-    final service = MushafPageService.instance;
-    final audio = QuranAudioLibrary.instance.activeDownloads;
-    // A whole recitation is a hundred queued surahs; listing each one buried
-    // the few actually transferring. The waiting ones are one count.
-    final waiting = audio.where((d) => !d.running).length;
-    final items = <(String, double?, VoidCallback)>[
-      for (final e in editions)
-        if (service.activeEditions.contains(e.id))
-          (
-            e.localizedName(locale),
-            service.progressFor(e.id).fraction,
-            () {},
-          ),
-      for (final d in audio)
-        if (d.running)
-        (
-          '${d.entry.reciterName} — ${surahTitle(data, d.surah, locale)}',
-          d.progress <= 0 ? null : d.progress,
-          () => Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => ReciterScreen(
-                  reciter: Mp3Reciter(
-                    id: d.entry.reciterId,
-                    name: d.entry.reciterName,
-                    moshafs: [d.entry.moshaf],
-                  ),
-                ),
-              )),
-        ),
-      for (final t in DownloadManager.instance.activeTasks)
-        (t.title.isEmpty ? t.fileName : t.title, t.total == null ? null : t.progress, () {}),
-    ];
-    if (items.isEmpty && waiting == 0) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(top: 14),
-      child: Material(
-        color: AppColors.gold.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(18),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.downloading_rounded, color: goldText(context), size: 20),
-                  const SizedBox(width: 8),
-                  Text('downloads.active_now'.tr(),
-                      style: const TextStyle(fontWeight: FontWeight.w800)),
-                ],
-              ),
-              const SizedBox(height: 6),
-              for (final (title, value, onTap) in items)
-                InkWell(
-                  onTap: onTap,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 13)),
-                            ),
-                            Text(
-                              value == null ? '…' : percentOf(value),
-                              style: TextStyle(fontSize: 12, color: goldOn(scheme), fontWeight: FontWeight.w700),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        GoldProgressBar(value: value, height: 4, color: AppColors.gold),
-                      ],
-                    ),
-                  ),
-                ),
-              if (waiting > 0)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text('${'quran_audio.queued'.tr()} · ${ltr('$waiting')}',
-                      style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// The hero panel: total on-disk size over the lattice, with a stacked bar
 /// showing how it splits across categories.
 class _StorageHero extends StatelessWidget {

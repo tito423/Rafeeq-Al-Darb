@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~14:35 SEEN build 14:01: ayah notification «تنزيل تلاوة آية بآية · محمود علي البنا / ٢٤١ من ٦٢٣٦ آية» with bar; tap -> ayah page directly; list: Banna first with ring, others download icon + «لم يُنزَّل بعد»; Banna finished 114/114. FAULTS found: no end notice (isActive used _handed, which drops a task at its first status -> last batch read idle) -> fixed via isSurahPending; «·» reads as Arabic zero -> «(٥٪)» and « — ». OWNER 14:20-14:30: «اي حاجة يتم تنزيلها لازم تظهر تفاصيل تحميلها في التنزيلات» -> ActiveDownloadsPanel (own file now) lists ayah reciters (n من total آية), voice, tasmee (bytes), books (new LibraryApiService.bookDownloads), translations, mushaf, surahs, DownloadManager tasks (bytes via ratio()). files group notification: bar + «n من total ملف» (no more «التقدم الدقيق»). 595 pass, NOT built. NEXT: build; download one surah for a reciter: notification progress + END notice, Downloads panel detail line, voice row size.
+
 ~14:15 DONE IN CODE (595 pass, NOT built) - owner's four download items: availableEditions = RecitationSource.everyAyahEditions (35, was 19 without Banna); ayah tasks in their own group rafeeq_ayah with NO plugin notification; AyahDownloadNotice posts reciter name + «n من total آية · pct٪» + bar (<=1/s), done notice at the end, tap dl:ayah -> AyahDownloadScreen; list: active first, download icon for untouched, «جارٍ التنزيل… · n من total آية»; voice: usageBytes adopts finished files AND StorageAutoRefresh pokes on OpenVoice.installed + ayah library + on open. NEXT: build; emulator: download one short surah for a reciter, see the notification (dumpsys notification + shade), tap it, list order, Downloads voice row.
 
 ~13:55 SEEN build 13:49:40: paper recitation upright (button «التلاوة المستمرة» in paper, 2:35 exact) then rotated sideways -> view goes to 2:35 by itself. Continuous recitation in paper + text, both orientations: DONE and seen. NOW: owner's four download items. Cause of (1)+(2) found: AyahRecitationLibrary.availableEditions is a hard-coded 19 reciters; onboarding offers all 35 in RecitationSource._everyAyahFolders (Banna is not in the 19) -> his download has no page.
@@ -501,6 +503,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 14:26 - Downloads: every running transfer listed with detail; ayah end notice fixed; files notification shows a real count (not built)
 - 2026-09-26 13:58 - Ayah downloads: all 35 reciters listed, own progress notification, honest list states; voice total refreshes (not built)
 - 2026-09-26 13:52 - Paper recitation seen following after rotation; download items next
 - 2026-09-26 13:46 - Paper recitation seen following both ways; reveal after rotation too (not built)
