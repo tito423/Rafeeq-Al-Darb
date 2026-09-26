@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+17:20 SHAMELA research done, design in SHAMELA_IMPORT_PLAN.md (measured: ajax/books/ = whole catalogue 8,599 books, 195 KB gzip, q ignored; ajax/authors/ 3,191; pageContent per page; /book/{id} card). NEXT: stage A - lib/features/shamela/data/shamela_catalog.dart (download+cache+local search) + search screen; then B (parse_nass Dart port verified vs pipeline). Open: read /page/terms.
+
 17:06 SEEN build 17:05:11 (emulator): author search «ibn al-jawzi» -> ONE author card «الإمام أبو الفرج ابن الجوزي • ٣٤ كتابًا» (no Ibn al-Qayyim) + «تحميل كل كتب المؤلف (٣٠)»; tapped -> «جارٍ تحميل كتب المؤلف: ١٢ من ٣٠» with bar. OWNER NEW (big): in-app Shamela integration - search Shamela by book name and import the book into the app; GitHub build only (not Play). NEXT: research shamela.ws (structure, search, book pages, terms), design, respect library-content-policy memory.
 
 16:59 Typing Arabic on the emulator: ADBKeyBoard (github senzhk, installed on emulator only) does NOT receive broadcasts on Android 16; Windows clipboard is locked for this process (Set-Clipboard fails). Arabic path covered by unit test on the real catalogue; on-screen test uses Latin «ibn al-jawzi» - authorEn now also whole-word (was equality then contains). 598 pass. NEXT: build, search «ibn al-jawzi» in author scope -> only Imam Ibn al-Jawzi card + download all; paper recitation highlight with marks; then Google TV.
@@ -533,6 +535,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 17:09 - Shamela in-app import: live research and design
 - 2026-09-26 17:06 - Seen: author search card and download-all; Shamela integration next
 - 2026-09-26 17:02 - Author search whole-word in Latin names too; log times corrected to the PC clock
 - 2026-09-26 16:53 - Library search: whole-word author match first; authors shown as authors with download-all (not built)
