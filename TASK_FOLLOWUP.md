@@ -38,6 +38,7 @@ SEEN 05:30-05:33 (build 05:30:09): settings page 2x4; tasbeeh rounds off the edg
 SEEN ~05:35-05:48 (build 05:30:09): khatma sheet scrolls to its button; home hadith card; quote fullscreen; about/sources (readable width); adhan settings readable; azan preview sideways; hadeethenc detail; adhkar category bar WHITE (fix seen); hifz paired + session; books search. My earlier claim that tuhfa lesson numbers were Latin was WRONG (zoom: Arabic) - nothing changed there; Bukhari claim re-checked TRUE. DONE IN CODE (not built): makharij diagram - AspectRatio under a tight width came out wide+short, markers off the drawing -> Center + 62% height sideways; adhan backgrounds 4 across sideways; adhkar sections list paired; support page readable width. NEXT: build, see makharij (sideways AND upright), backgrounds, adhkar sections; link-manage + focus picker not yet opened.
 SEEN 07:09-07:11 (build 07:07:56): makharij drawing in shape with markers ON it, sideways AND upright, ق animates to the back of the tongue; adhan backgrounds 4 across; narrated duas sections paired; support page readable width. NOT OPENED sideways yet: link-manage screen, focus-mode picker sheet, ayah reciter/download screens, prayer location screen, sunan reminder sheet, mushaf index/jump sheets. Listening across rotation still unverified (needs a diacritised book). Nothing released (still v3.63.7).
 SEEN 10:02-10:10 (build 07:07:56): focus picker whole; adjustments + location readable; sunan reminders readable; Kahf reminder sheet whole BUT time 20:00 LATIN; mushaf sideways has no chrome BY THE OWNER'S OLD RULE («الخيارات تظهر بس في الوضع العمودي») - ask him; back works (home, then exit). DONE IN CODE: link manage readable width; sunan sheet time + khatma reminder time (sheet + screen) localizeDigits (found by searching every padLeft time); comment dp figures corrected (emulator 2 px/dp). 595 pass. Building.
+SEEN 10:20-10:21 (build 10:19:20): Kahf reminder time ٢٠:٠٠ Arabic; link manage readable; khatma sheet «تذكير الساعة ٢٠:٠٠» Arabic (sheet closed, no khatma created). Flutter's own time-picker dialog shows Latin digits - built-in widget, not changed. SWEEP COMPLETE except: listening across rotation (needs a diacritised book). Open question for owner: mushaf sideways has no controls by his old rule.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -471,6 +472,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 10:22 - Landscape sweep complete; reminder times seen in Arabic digits
 - 2026-09-26 10:14 - Arabic digits in reminder times (sunan sheet, khatma); link manage at reading width
 - 2026-09-26 10:05 - Link manage at reading width; three dp figures in comments corrected (emulator is 2 px/dp, not 3)
 - 2026-09-26 07:11 - Seen: makharij fixed both ways, backgrounds, duas sections, support page
