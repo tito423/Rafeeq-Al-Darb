@@ -31,6 +31,7 @@ SEEN 03:31 build 03:30:44: Library pills beside title (3 authors in view), adhka
 DONE IN CODE ~03:45: PairedListView/PairedColumn (two cards a row sideways; header/footer full width; test paired_list_view_test) on reciters list, tajweed levels, hifz surahs, ruqyah recordings, dedications. Hajj left one column on purpose (sequential steps that expand). Building.
 SEEN 03:53-03:55 on emulator-5554 (build 03:50, rotated with adb emu rotate; Arabic RTL): tabs on the right, Home 2 cols, More 2 cols, reciters 2 a row in RTL reading order, tajweed 2x2, hifz surahs paired, ruqyah 6 recordings 3x2. Xiaomi went upright at 03:50 (owner holding it) - my landscape taps opened the clock-face picker twice, nothing changed (Minimal kept). Dedications empty on emulator (pairs covered by test). NEXT: book reader + surah index sideways.
 DONE IN CODE ~04:05: library authors/categories/my-library paired; book reader actions in a side column sideways (BookListenAction keyed so rotating does not stop the voice); AppShell tab stack GlobalKey (_tabsKey) - without it rotating rebuilt every tab (lost mushaf page etc.). Building; verify on emulator incl. state kept across rotation.
+SEEN 04:08 on emulator (build 04:07:35): tab state KEPT across rotation (Library > My library stayed selected sideways->upright); my-library books paired sideways, one column upright; book reader actions in a side column. UNVERIFIED ON DEVICE: listening survives rotation (BookListenAction GlobalKey) - the book tried (Arba'in Nawawi) is not read aloud (0% diacritised); needs a diacritised book.
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -464,6 +465,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 04:09 - Seen on emulator: tab state kept across rotation, reader side column, paired library
 - 2026-09-26 04:03 - Sideways: paired library lists, reader actions in a side column; tab state kept across rotation
 - 2026-09-26 03:55 - Seen sideways on the emulator (Arabic): paired card lists in RTL order
 - 2026-09-26 03:46 - Sideways card lists two a row: reciters, tajweed levels, hifz, ruqyah, dedications
