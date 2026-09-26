@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+14:53 RELEASED v3.64.1 (tag 1e43ae49 = HEAD, 275,682,817 B, 206). OWNER NEW HARD REQUIREMENT («شرط أساسي»): whole app correct upright and sideways, nothing overlapping, space used well, dynamic for every phone/tablet/smart screen size and density, AND TV remote (D-pad) - step by step, research online first, no surprises. NEXT: (1) research (Flutter adaptive + Android TV/D-pad guidance, live); (2) audit plan per screen; (3) implement in stages, each seen at 3 sizes x 2 orientations + D-pad.
+
 ~14:40 SEEN build 14:36:22: panel «تلاوات الآيات — فارس عباد · ٢٥٨ من ٢٨٦ آية · ٩٠٪»; voice listed ONCE (٣١٫٢ MB / ٢٦٠٫٧ MB); tasmee (١٫٩ MB / ٧٧٫٧ MB). All owner items of 13:30-14:30 done + seen on emulator. NOT seen: book download row (hadith books are built-in, no transfer), translation row, files-group plugin notification «n من total ملف». NEXT: ask owner whether to release 3.64.1 (v3.64.0 is published; master ahead: clock gallery sideways, paper recitation, ayah downloads/notification, Downloads panel).
 
 ~14:35 SEEN build 14:29:41: Downloads «جارٍ تنزيله الآن» lists the voice with bytes (ratio, LTR); voice row after install «٢٤٨٫٦ MB · ١» (was «لا يوجد»); ayah notice 0→38→96→151→162/200 then «اكتمل تنزيل تلاوة فارس عباد». FAULT: voice listed 3x (summed row + its 2 DownloadManager files) -> files skipped (not built). NEXT: build, see panel once with an ayah download running; then report to owner.
@@ -507,6 +509,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 14:53 - Released v3.64.1; next: all-devices layout + TV remote (owner hard requirement)
 - 2026-09-26 14:39 - Seen: Downloads panel lists ayah reciter, voice once, tasmee; owner items done
 - 2026-09-26 14:33 - Seen: ayah progress + end notice, voice row; voice listed once in the panel (not built)
 - 2026-09-26 14:26 - Downloads: every running transfer listed with detail; ayah end notice fixed; files notification shows a real count (not built)
