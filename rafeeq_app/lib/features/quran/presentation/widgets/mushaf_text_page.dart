@@ -464,7 +464,12 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
         // and a pan cannot both own the same drag.
         physics: _zoomedIn ? const NeverScrollableScrollPhysics() : null,
         slivers: [
-          // ── Pinned surah header ──
+          // ── Pinned surah header ── only outside full screen. In full screen
+          // the page is the whole screen and the surah's name comes with the
+          // controls a tap brings up (`MushafChrome`): «شيل اسم السورة من
+          // اعلى منتصف الصفحة، مش يظهر الا اذا ضغطت وظهرت خيارات الصفحة»
+          // (owner, 2026-09-26, his photo of al-Baqarah p.5).
+          if (!widget.pageFillScreen)
           SliverAppBar(
             // Pinned in portrait, where 52 pixels is cheap and a running
             // header earns them. NOT in landscape: the whole text area is

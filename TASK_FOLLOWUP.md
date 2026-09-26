@@ -39,6 +39,7 @@ SEEN ~05:35-05:48 (build 05:30:09): khatma sheet scrolls to its button; home had
 SEEN 07:09-07:11 (build 07:07:56): makharij drawing in shape with markers ON it, sideways AND upright, ق animates to the back of the tongue; adhan backgrounds 4 across; narrated duas sections paired; support page readable width. NOT OPENED sideways yet: link-manage screen, focus-mode picker sheet, ayah reciter/download screens, prayer location screen, sunan reminder sheet, mushaf index/jump sheets. Listening across rotation still unverified (needs a diacritised book). Nothing released (still v3.63.7).
 SEEN 10:02-10:10 (build 07:07:56): focus picker whole; adjustments + location readable; sunan reminders readable; Kahf reminder sheet whole BUT time 20:00 LATIN; mushaf sideways has no chrome BY THE OWNER'S OLD RULE («الخيارات تظهر بس في الوضع العمودي») - ask him; back works (home, then exit). DONE IN CODE: link manage readable width; sunan sheet time + khatma reminder time (sheet + screen) localizeDigits (found by searching every padLeft time); comment dp figures corrected (emulator 2 px/dp). 595 pass. Building.
 SEEN 10:20-10:21 (build 10:19:20): Kahf reminder time ٢٠:٠٠ Arabic; link manage readable; khatma sheet «تذكير الساعة ٢٠:٠٠» Arabic (sheet closed, no khatma created). Flutter's own time-picker dialog shows Latin digits - built-in widget, not changed. SWEEP COMPLETE except: listening across rotation (needs a diacritised book). Open question for owner: mushaf sideways has no controls by his old rule.
+OWNER 11:00-11:15: (1) mushaf sideways: show controls on tap + check highlighting sideways -> DONE+SEEN (chrome, jump sheet, long-press highlight); (2) then REPORT + PUBLISH. Mid-turn adds: (3) More tab photo «بتديق على نفسك» -> 3 a row, one scroll (code, not built); (4) text mushaf full screen: no pinned surah header unless the tap shows the controls (code, not built); (5) Home on any tablet/smart screen: analog clock + big prayer card must shrink to fit, beautiful at every size (TODO). Then report + publish (he asked).
 NOW: tour every screen in LANDSCAPE on the Xiaomi (current build), list faults,
 fix all, ONE build_github_release.bat, install -r, record boot + tour again.
 Then the old list below (phone checks, 222 refs).
@@ -472,6 +473,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 11:18 - More three a row in one scroll; no pinned surah header in full-screen text mushaf (not built)
 - 2026-09-26 11:09 - Test pins the new rule: the sideways page tap shows the controls
 - 2026-09-26 11:04 - Mushaf sideways: a tap shows the floating controls (owner reversed the portrait-only rule)
 - 2026-09-26 10:22 - Landscape sweep complete; reminder times seen in Arabic digits

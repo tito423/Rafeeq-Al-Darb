@@ -99,32 +99,39 @@ class PairedListView extends StatelessWidget {
 }
 
 /// [PairedListView]'s rule for a run of cards inside a longer list: one a
-/// row upright with [gap] between, two a row sideways.
+/// row upright with [gap] between, [columns] a row sideways (two unless told).
 class PairedColumn extends StatelessWidget {
   const PairedColumn({
     super.key,
     required this.children,
     this.gap = 12,
+    this.columnGap,
+    this.columns = 2,
     this.equalHeights = true,
   });
 
   final List<Widget> children;
-  final double gap;
 
-  /// Stretch the two cards of a row to the taller one. Off for cards that
-  /// open in place: a closed card stretched to its open neighbour's height
-  /// is a tall empty slab.
+  /// Space between rows, and between the cards of a row unless [columnGap].
+  final double gap;
+  final double? columnGap;
+
+  /// Cards a row sideways.
+  final int columns;
+
+  /// Stretch the cards of a row to the tallest. Off for cards that open in
+  /// place: a closed card stretched to its open neighbour's height is a tall
+  /// empty slab.
   final bool equalHeights;
 
   @override
   Widget build(BuildContext context) {
     final sideways = MediaQuery.orientationOf(context) == Orientation.landscape;
+    final per = sideways ? columns : 1;
     final rows = <Widget>[];
-    for (var i = 0; i < children.length; i += sideways ? 2 : 1) {
+    for (var i = 0; i < children.length; i += per) {
       if (rows.isNotEmpty) rows.add(SizedBox(height: gap));
-      rows.add(
-        sideways ? _row(i) : children[i],
-      );
+      rows.add(per == 1 ? children[i] : _row(i, per));
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -132,16 +139,17 @@ class PairedColumn extends StatelessWidget {
     );
   }
 
-  Widget _row(int i) {
+  Widget _row(int i, int per) {
     final row = Row(
       crossAxisAlignment:
           equalHeights ? CrossAxisAlignment.stretch : CrossAxisAlignment.start,
       children: [
-        Expanded(child: children[i]),
-        SizedBox(width: gap),
-        Expanded(
-          child: i + 1 < children.length ? children[i + 1] : const SizedBox(),
-        ),
+        for (var k = 0; k < per; k++) ...[
+          if (k > 0) SizedBox(width: columnGap ?? gap),
+          Expanded(
+            child: i + k < children.length ? children[i + k] : const SizedBox(),
+          ),
+        ],
       ],
     );
     return equalHeights ? IntrinsicHeight(child: row) : row;

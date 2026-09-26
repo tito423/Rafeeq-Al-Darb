@@ -1,4 +1,4 @@
-import '../../../../core/widgets/two_pane_scroll.dart';
+import '../../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../dedications/presentation/dedications_screen.dart';
 import '../../../ruqyah/data/ruqyah_catalog.dart';
@@ -66,13 +66,19 @@ class MoreScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('nav.more'.tr())),
-      // Sideways, the six groups in two columns (see `TwoPaneScroll`): what
-      // the reader goes to on the start side, what he sets on the other.
-      body: TwoPaneScroll(
+      // SIDEWAYS, THREE A ROW, ONE SCROLL. Two columns scrolling apart were
+      // seen on the owner's Xiaomi (2026-09-26, his photo): both cut at the
+      // top, out of step, empty space under them - «تحس انك بتديق على نفسك
+      // وربنا موسعها عليك». Three a row puts all six on screen at once.
+      body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-        gap: 0,
-        columnGap: 16,
-        start: [
+        children: [
+          PairedColumn(
+            columns: 3,
+            gap: 0,
+            columnGap: 16,
+            equalHeights: false,
+            children: [
           // «عايزك ترتب قسم المزيد بشكل أحسن … يبقى فيه تقسيمات منطقية
           // للمتشابهات» (2026-09-19). Seven groups, each under its own
           // header: what the reader does with the Qur'an and worship, what
@@ -226,8 +232,6 @@ class MoreScreen extends ConsumerWidget {
               const TutorialEntryCard(),
             ],
           ),
-        ],
-        end: [
           MoreGroup(
             title: 'more.group_reminders'.tr(),
             subtitle: _names([
@@ -280,6 +284,8 @@ class MoreScreen extends ConsumerWidget {
               ),
 
               const SettingsBody(part: SettingsPart.about),
+            ],
+          ),
             ],
           ),
         ],
