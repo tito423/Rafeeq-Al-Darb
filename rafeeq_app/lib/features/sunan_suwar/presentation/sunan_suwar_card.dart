@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/digits.dart' show localizeDigits;
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/sunan_suwar_catalog.dart';
 import '../data/sunan_suwar_store.dart';
@@ -184,7 +185,12 @@ class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
             },
             icon: const Icon(Icons.schedule),
             label: Text(
-                '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}'),
+                // In the reader's digits: «20:00» in Latin in the Arabic
+                // interface, which writes ٢٠:٠٠ everywhere else
+                // (emulator-5554, 2026-09-26).
+                localizeDigits(
+                    '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
+                    context.locale.languageCode)),
           ),
           const SizedBox(height: 16),
           Row(

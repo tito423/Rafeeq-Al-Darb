@@ -446,7 +446,10 @@ class _DurationStep extends StatelessWidget {
                     ? 'khatma.no_reminder'.tr()
                     : 'khatma.reminder_at'.tr(
                         args: [
-                          '${reminder!.hour.toString().padLeft(2, '0')}:${reminder!.minute.toString().padLeft(2, '0')}',
+                          localizeDigits(
+                            '${reminder!.hour.toString().padLeft(2, '0')}:${reminder!.minute.toString().padLeft(2, '0')}',
+                            context.locale.languageCode,
+                          ),
                         ],
                       ),
                 style: TextStyle(color: gold),

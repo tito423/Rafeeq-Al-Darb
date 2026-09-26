@@ -315,8 +315,11 @@ class _KhatmaTile extends ConsumerWidget {
     );
   }
 
-  String _fmtTime(TimeOfDay t) =>
-      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+  /// In the reader's digits - it was Latin inside the Arabic interface
+  /// (found by a search for raw padded times, 2026-09-26).
+  String _fmtTime(TimeOfDay t) => localizeDigits(
+      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
+      uiLanguageCode);
 }
 
 class _CompletedTile extends StatelessWidget {
