@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+02:03 (09-27) XIAOMI: hadeethenc DETAIL screen button SEEN (under «الدرجة»). OFFLINE CACHE SEEN: wifi + data off via adb (verified: «Wi-Fi is disabled», ping dorar.net failed), the same hadith's sheet opened from the saved result (2 gradings, Bukhari 5696). Dorar check now seen in ALL five places (hadith books, adhkar, book selection on emulator; daily hadith, hadeethenc, adhkar on the Xiaomi).
+
 01:50 (09-27) XIAOMI (23078PND5G, 1220x2712) - v3.66.0 installed fresh (streamed install OK), onboarding in Arabic, location resolved «دبي، الإمارات». Dorar check SEEN on the phone: adhkar «الحمد لله الذي أحيانا» -> 15 gradings (الألباني 5049 صحيح، ابن حبان); DAILY HADITH (first time on any device) «عن أنس ... أجر الحجام» -> 2 gradings, first = صحيح البخاري 5696 (البخاري، [صحيح]). Remaining unseen: hadeethenc detail screen button.
 
 01:50 (09-27) Emulator WINDOW works again after the reboot (no «hanging thread» in 120 s, booted, adb authorized after the owner tapped Allow) - trap 57 was the crashed-machine state; keep the headless fallback. Self-lock: DynamicLock off, no screensaver timeout, PowerToys Keyboard Manager disabled (no remaps); TeamViewer + RustDesk + ArmouryCrateKeyControl running; Security 4800/4801 log needs admin (script E:\DevEnv\c_admin.ps1 running elevated since 01:35, writes E:\DevEnv\c_admin.txt). Owner-run fix script READY: E:\DevEnv\fix_laptop.ps1 (no sleep/hibernate on AC, powercfg /h off, temp cleanup) - NOT run yet (system settings: he runs it). Quota 91 % at 01:51, resets 02:40.
@@ -584,6 +586,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 02:02 - Dorar check: hadeethenc + offline cache seen on the Xiaomi
 - 2026-09-27 01:49 - Dorar check seen on the Xiaomi: adhkar + daily hadith (Bukhari 5696)
 - 2026-09-27 01:41 - Emulator window works after reboot; laptop fix script ready for owner
 - 2026-09-27 01:34 - Owner new list logged (C drive, crash settings, emulator window, EaseUS, self-lock)
