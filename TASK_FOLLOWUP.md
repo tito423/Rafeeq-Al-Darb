@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+01:50 (09-27) XIAOMI (23078PND5G, 1220x2712) - v3.66.0 installed fresh (streamed install OK), onboarding in Arabic, location resolved «دبي، الإمارات». Dorar check SEEN on the phone: adhkar «الحمد لله الذي أحيانا» -> 15 gradings (الألباني 5049 صحيح، ابن حبان); DAILY HADITH (first time on any device) «عن أنس ... أجر الحجام» -> 2 gradings, first = صحيح البخاري 5696 (البخاري، [صحيح]). Remaining unseen: hadeethenc detail screen button.
+
 01:50 (09-27) Emulator WINDOW works again after the reboot (no «hanging thread» in 120 s, booted, adb authorized after the owner tapped Allow) - trap 57 was the crashed-machine state; keep the headless fallback. Self-lock: DynamicLock off, no screensaver timeout, PowerToys Keyboard Manager disabled (no remaps); TeamViewer + RustDesk + ArmouryCrateKeyControl running; Security 4800/4801 log needs admin (script E:\DevEnv\c_admin.ps1 running elevated since 01:35, writes E:\DevEnv\c_admin.txt). Owner-run fix script READY: E:\DevEnv\fix_laptop.ps1 (no sleep/hibernate on AC, powercfg /h off, temp cleanup) - NOT run yet (system settings: he runs it). Quota 91 % at 01:51, resets 02:40.
 
 01:35 (09-27) OWNER NEW LIST after rebooting the laptop (boot 01:26), Xiaomi connected (adb BYKRKJPRC6O7FMHU, model 23078PND5G), Avast turned OFF by him. ORDER: (1) finish drive C: measure the unmeasured (C:\ProgramData\Microsoft\Windows\Containers 99 GB nominal, needs admin; vssadmin shadowstorage; DISM AnalyzeComponentStore) then clean/move - known real: pagefile 32 GB, hiberfil 12.6, Temp 11.1 + C:\temp 4.6, Packages 23.5, wsl 9.3, npm 3.1, pip 2.9, flutter 2.9 (Play Games 512 GB and avast sandbox are SPARSE: real 0.91 GB). (2) change the settings that crash the laptop: BSOD 0x9F amdacpbus.sys (AMD Audio CoProcessor 6.0.0.79, ASUS ROG Flow X13 GV301QC) during Connected Standby -> no sleep on AC, hibernate off (system settings: give him a script to run, do not change them silently). (3) emulator WINDOW after the reboot - test again. (4) EaseUS Partition Master 19.6 «sometimes hangs» - no Application Error/Hang event for it in 60 days; find why. (5) laptop LOCKS ITSELF as soon as he types on the keyboard (since 09-26) - find cause (Security 4800/4801, dynamic lock, screensaver, hotkeys). (6) then everything left: Dorar button on daily hadith + hadeethenc not opened on device; Shamela open items; ADAPTIVE_PLAN stage C; test on the Xiaomi. Quota at 01:35: 5h window 89 % (resets 02:40 Dubai), weekly 64 %.
@@ -582,6 +584,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 01:49 - Dorar check seen on the Xiaomi: adhkar + daily hadith (Bukhari 5696)
 - 2026-09-27 01:41 - Emulator window works after reboot; laptop fix script ready for owner
 - 2026-09-27 01:34 - Owner new list logged (C drive, crash settings, emulator window, EaseUS, self-lock)
 - 2026-09-27 00:00 - Released v3.66.0 (Dorar in app); emulator trap 57 updated
