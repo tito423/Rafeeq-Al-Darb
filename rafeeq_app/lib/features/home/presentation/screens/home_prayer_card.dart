@@ -67,7 +67,8 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
     // الشاشة تستوعبهم» (owner, 2026-09-26). In two columns this card has a
     // column to itself, and the clock is sized from the height that column
     // actually has: the card's fixed parts are its padding (36), the prayer
-    // slides (126) and the gap above them (12), plus 8 dp of air. Seen before
+    // slides (126) and the gap above them (12), plus 26 dp of air (8 left
+    // the card's bottom edge under the viewport at the Xiaomi's size). Seen before
     // this: sideways at the Xiaomi's size (1220x2712, 480 dpi - 407 dp high)
     // the fixed 176 dp clock sat entirely below the screen's edge.
     final twoPane = TwoPaneScroll.isTwoPane(context);
@@ -76,7 +77,7 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
         ? (media.size.height -
                   media.padding.vertical -
                   _homeListVertical -
-                  182)
+                  200)
               .clamp(96.0, 240.0)
         : 176.0;
 

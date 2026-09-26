@@ -260,8 +260,16 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       selected.color.withValues(alpha: 0.10),
       scheme.surfaceContainerHighest,
     );
+    // Sideways as a TAB, no title bar: the side rail already says «المسبحة»
+    // beside it, and at the Xiaomi's density (1220x2712, 480 dpi) those
+    // 56 dp were what pushed «أذكار مأثورة» below the edge (emulator-5554,
+    // 2026-09-26). Opened from a notification it is a pushed route and keeps
+    // the bar - that is where its back arrow lives.
+    final bareTab =
+        MediaQuery.orientationOf(context) == Orientation.landscape &&
+        !(ModalRoute.of(context)?.canPop ?? false);
     return Scaffold(
-      appBar: AppBar(title: Text('azkar.tab_tasbeeh'.tr())),
+      appBar: bareTab ? null : AppBar(title: Text('azkar.tab_tasbeeh'.tr())),
       body: SafeArea(
         child: Stack(
           children: [

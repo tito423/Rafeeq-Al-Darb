@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~12:10 SEEN build 12:02:26 (emulator, installed 12:02:55): Home sideways at emulator/Xiaomi/tablet/smart sizes - whole prayer card on screen, clock beside countdown; tablet UPRIGHT two panes; phone upright unchanged; tasbeeh circle fills height. FIXES after it (595 pass, NOT built): Xiaomi size card bottom under viewport -> clock budget margin 8->26; tasbeeh sideways as tab has no title bar (controls were cut at 480 dpi). NEXT: rebuild, then app in ENGLISH at Xiaomi size orientation 1 (hole on left = owner's case) to see rail beside notch; reset wm size/density after.
+
 ~12:05 DONE IN CODE (analyze clean, 595 pass, NOT built): Home two panes -> prayer card alone in the start column, clock BESIDE countdown, analog size from height (clamp 96-240; was fixed 176, below the edge on Xiaomi-size sideways); header card opens the end column. TwoPaneScroll.isTwoPane = sideways OR width>=700 (tablet/smart screen upright: was one column of 760dp cards). Prayer card split to home_prayer_card.dart (part; 800-line rule). Emulator analog face set. NEXT: build_github_release.bat (kills emulator), restart emulator, install, see: Home phone/tablet/smart sizes (wm size+density, RESET after), tasbeeh sideways, side tabs (emulated hole cutout: cmd overlay enable com.android.internal.display.cutout.emulation.hole).
 
 SESSION 2026-09-26 11:30- (quota 5h 2%, weekly 27%). SEEN on emulator (build 11:24, installed 11:31): More 3-a-row sideways / one column upright; text mushaf full screen no surah header until tap (upright+sideways); recitation wash on 2:30 sideways. Build 11:24 also on the Xiaomi (11:32:55). Xiaomi measured sideways (ROTATION_90): cutout strip 117px=39dp, hole y 580-640; rail icons at 69-93dp; home cards 60dp past rail (39 = notch inset re-applied).
@@ -483,6 +485,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 12:08 - Home clock budget margin; tasbeeh sideways tab drops its title bar (not built)
 - 2026-09-26 11:59 - Home: prayer card alone and clock sized to height in two panes; two panes on any screen 700dp wide (not built)
 - 2026-09-26 11:43 - Tasbeeh sideways fills height; side tabs hug the notch; no double inset beside the rail (not built)
 - 2026-09-26 11:28 - Handover 2026-09-26 11:30: landscape/tablet session state, verified and measured; next = owner's three new requests then 3.64.0
