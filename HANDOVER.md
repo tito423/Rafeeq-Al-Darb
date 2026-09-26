@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 18:26 — IN PROGRESS — resume here**
+**2026-09-26 18:55 — IN PROGRESS — resume here**
 
-Shamela mark string in 7 languages
+Released v3.65.1 after the interrupted publish
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

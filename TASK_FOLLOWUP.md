@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+18:55 RELEASED v3.65.1 (tag e0d4066a = HEAD, 275,998,265 B, 206; v3.65.0 deleted). The session died mid-publish at ~18:35 - checked: nothing had been published, APK badging = 3.65.1, then published. OWNER NEW: research dorar.net (الدرر السنية) and islamqa.info - what can the app do with them (import? queries? extraction?). NEXT: live research, report.
+
 OWNER clarified (after v3.65.0): (1) the named five are NOT excluded from Shamela import - already so in 3.65.0; (2) a Shamela result the library already has must carry a mark. DONE IN CODE (not built): scripts/build_shamela_catalogue_ids.py -> lib/features/shamela/data/shamela_catalogue_ids.dart (238 of 239 library books -> Shamela id from each book's own meta; al_fiqh_al_manhaji_hajj left out = only part of 6369); results show «في مكتبتك» (on phone: imported or downloaded) or «موجود في مكتبة التطبيق» (catalogue, not downloaded), tap opens/downloads OUR copy instead of re-importing; test: all 238 ids exist in the live catalogue. NEXT: build, emulator: paste link of a library book (e.g. tuhfat_al_atfal 9632 - which is BOTH in the catalogue and imported earlier), see marks; then release if owner asks.
 
 18:15 RELEASED v3.65.0 (tag 9fdfcc52 = HEAD, 275,998,265 B, 206; v3.64.1 deleted). Owner: no exclusion in Shamela import (removed; memory updated). NEXT: owner tries it on his phone; then stage C sweep + Google TV walk (ADAPTIVE_PLAN.md), Shamela open items (long book, resume, notification, shelf).
@@ -549,6 +551,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 18:55 - Released v3.65.1 after the interrupted publish
 - 2026-09-26 18:26 - Shamela mark string in 7 languages
 - 2026-09-26 18:23 - Shamela results mark books the library already has; open our copy instead of importing
 - 2026-09-26 18:16 - Released v3.65.0 (tag = HEAD 9fdfcc52)
