@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~16:35 SEEN build 16:26:58 (Xiaomi size sideways): More six cards equal + aligned; Prayer compass card whole (short bar); Adhkar header smaller BUT row 2 cut -> rows sized to height (mainAxisExtent) when height short; Downloads card description hidden in grid too. 595 pass, NOT built. NEXT: build, see Adhkar 2 rows + More; then stage B focus ring.
+
 ~16:35 OWNER photos (Xiaomi sideways, v3.64.1): title bars «الأذكار/الصلاة» take too much height; More cards 3-a-row uneven (descriptions 2-6 lines) -> DONE IN CODE: app-wide AppBar 44 dp + title 17 when height < 480 (MaterialApp.builder Theme override); MoreGroup in a grid: no description, title one line (IslamicActionCard.singleLineTitle) -> equal heights. «بص على الباقي»: rest of sideways screens to be looked at in the sweep. NOT built. NEXT: build, see on phone sideways (Xiaomi size 1220x2712/480): More, Adhkar, Prayer; then stage B focus ring.
 
 ~15:35 TV READY: images installed (android-34 google-tv x86, android-36 android-tv x86_64); AVDs GoogleTV_1080p and AndroidTV16_1080p (1920x1080, 320 dpi = 960x540 dp). ONLY ONE emulator at a time (both are emulator-5554): kill the phone before booting a TV. SEEN on GoogleTV_1080p with build 15:05: app is in the LEANBACK launcher (query-activities), installs, splash clip whole on blurred frame, permissions page two panes fine, D-pad DOWN moves focus (reached «Français») BUT the focus highlight is a faint light grey - invisible from a sofa. NEXT = STAGE B, first item: strong app-wide focus indicator (theme focusColor + visible ring on cards/chips/InkWell), then the 21 GestureDetector targets, then a full D-pad walk on the TV. Banner WITH name (15:20) not yet built into an APK. Quota 5h 93% at 15:35 (resets ~16:30 Dubai).
@@ -521,6 +523,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 16:31 - Seen: shorter bars, equal More cards; Adhkar rows fit the height (not built)
 - 2026-09-26 16:23 - Sideways: shorter title bars app-wide; More grid cards without descriptions, equal height (not built)
 - 2026-09-26 15:21 - TV emulators installed; app runs on Google TV; focus highlight too faint (stage B first)
 - 2026-09-26 15:14 - TV banner with the shaped Arabic name; TV system images downloading

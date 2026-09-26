@@ -1,3 +1,4 @@
+import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../dedications/presentation/dedications_screen.dart';
@@ -205,7 +206,11 @@ class MoreScreen extends ConsumerWidget {
               icon: Icons.download_for_offline_outlined,
               accent: AppColors.info,
               title: 'downloads.title'.tr(),
-              subtitle: 'downloads.offline_ready'.tr(),
+              // No description in a grid, like the groups beside it.
+              subtitle: ScreenClass.twoColumns(context)
+                  ? ''
+                  : 'downloads.offline_ready'.tr(),
+              singleLineTitle: ScreenClass.twoColumns(context),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const DownloadsScreen(),

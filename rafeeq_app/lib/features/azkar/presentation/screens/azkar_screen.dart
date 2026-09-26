@@ -98,6 +98,13 @@ class _SectionsTab extends ConsumerWidget {
     // the cards kept the old language until a restart (Arabic -> Urdu on
     // emulator-5554, 2026-09-24). Reading the locale makes it depend on it.
     context.locale;
+    return LayoutBuilder(builder: (context, box) {
+    // Where height is short (a phone sideways), each row is half of what
+    // the grid has, so both rows of sections are whole on screen - the
+    // second row was cut at the bottom (owner's Xiaomi, 2026-09-26).
+    final rowHeight = ScreenClass.shortHeight(context)
+        ? ((box.maxHeight - 32 - 14) / 2).clamp(120.0, 220.0)
+        : null;
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       // By card width, not a fixed 2: in landscape two columns made each
@@ -109,11 +116,12 @@ class _SectionsTab extends ConsumerWidget {
       // cards are smaller and wider than tall, like a tablet's tiles: four
       // across on that phone (788 dp / 214), two rows and more in view.
       gridDelegate: ScreenClass.twoColumns(context)
-          ? const SliverGridDelegateWithMaxCrossAxisExtent(
+          ? SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
               mainAxisSpacing: 14,
               crossAxisSpacing: 14,
               childAspectRatio: 1.2,
+              mainAxisExtent: rowHeight,
             )
           : const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 260,
@@ -138,6 +146,7 @@ class _SectionsTab extends ConsumerWidget {
             : card;
       },
     );
+    });
   }
 }
 
