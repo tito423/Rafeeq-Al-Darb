@@ -145,22 +145,25 @@ class MushafToolbar extends ConsumerWidget {
             },
           ),
         ),
-        // ── استماع ── text mushaf only: the Tajweed printing highlighted
-        // 4:3 on page 77 a line low, so the image page does not offer it.
-        if (_textOnly)
-          TutorialAnchor(
-            id: TourAnchor.quranRecite,
-            child: ToolbarAction(
-              icon: reciteActive
-                  ? Icons.stop_circle_rounded
-                  : Icons.headphones_rounded,
-              label: reciteActive
-                  ? 'quran.recite_stop'.tr()
-                  : 'quran.recite_continuous'.tr(),
-              active: reciteActive,
-              onPressed: onToggleRecite,
-            ),
+        // ── استماع ── both mushafs. It was text-only because the Tajweed
+        // printing highlighted 4:3 on page 77 a line low; that printing is
+        // gone, and the one paper printing left (madinah_qc) highlights from
+        // its own polygons, which already follow the recitation
+        // (`_highlightRegion`). Owner, 2026-09-26: «حط خيار التلاوة المستمرة
+        // في المصحف الورقي».
+        TutorialAnchor(
+          id: TourAnchor.quranRecite,
+          child: ToolbarAction(
+            icon: reciteActive
+                ? Icons.stop_circle_rounded
+                : Icons.headphones_rounded,
+            label: reciteActive
+                ? 'quran.recite_stop'.tr()
+                : 'quran.recite_continuous'.tr(),
+            active: reciteActive,
+            onPressed: onToggleRecite,
           ),
+        ),
         // ── نصي ⇄ ورقي ── «ضيف خيار التنقل من وضع النص لوضع المصحف مباشرة».
         // It lived only inside «العرض», two taps and a scroll away; it is the
         // switch readers flip most, so it sits on the strip itself. The label
