@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 19:10 — IN PROGRESS — resume here**
+**2026-09-26 19:45 — IN PROGRESS — resume here**
 
-Dorar hub design: all encyclopedias measured (aqeeda 1,469, feqhia 5,419 sections)
+Dorar encyclopedias: contents tree and section parser, tested on real pages
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
