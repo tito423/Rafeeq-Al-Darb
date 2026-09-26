@@ -2010,6 +2010,21 @@
     "more": "Más",
     "failed": "No se pudo acceder a Dorar. Comprueba la conexión.",
     "none": "Sin resultados",
-    "credit": "Fuente: Enciclopedia del hadiz — al-Durar al-Saniyya (dorar.net)"
+    "credit": "Fuente: Enciclopedia del hadiz — al-Durar al-Saniyya (dorar.net)",
+    "hub_title": "al-Durar al-Saniyya",
+    "grading_sub": "Scholars’ rulings on a hadith, by name",
+    "hub_credit": "Source: dorar.net — read live from the site",
+    "section_credit": "Source: al-Durar al-Saniyya",
+    "enc_aqeeda": "Creed Encyclopedia",
+    "enc_feqhia": "Fiqh Encyclopedia",
+    "enc_qfiqhia": "Legal Maxims Encyclopedia",
+    "enc_osolfeqh": "Usul al-Fiqh Encyclopedia",
+    "enc_tafseer": "Tafsir Encyclopedia",
+    "enc_history": "History Encyclopedia",
+    "enc_adyan": "Religions Encyclopedia",
+    "enc_frq": "Sects Encyclopedia",
+    "enc_alakhlaq": "Ethics Encyclopedia",
+    "enc_aadab": "Islamic Etiquette Encyclopedia",
+    "enc_arabia": "Arabic Language Encyclopedia"
   }
 }

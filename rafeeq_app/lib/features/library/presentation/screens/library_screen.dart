@@ -14,7 +14,7 @@ import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../../core/utils/screen_class.dart';
 import '../../../shamela/data/shamela_import_service.dart';
 import '../../../shamela/presentation/shamela_screen.dart';
-import '../../../dorar/presentation/dorar_screen.dart';
+import '../../../dorar/presentation/dorar_hub_screen.dart';
 
 /// Library — two top tabs:
 ///  • "الكتب المتوفرة" — the books catalog, itself split into
@@ -135,10 +135,10 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
           // Dorar's hadith gradings, live (GitHub build only, same gate).
           if (kShamelaEnabled)
             IconButton(
-              tooltip: 'dorar.title'.tr(),
+              tooltip: 'dorar.hub_title'.tr(),
               icon: const Icon(Icons.fact_check_outlined),
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const DorarScreen()),
+                MaterialPageRoute<void>(builder: (_) => const DorarHubScreen()),
               ),
             ),
           if (kShamelaEnabled)

@@ -75,7 +75,7 @@ List<DorarTocNode> parseDorarToc(String html, String slug) {
     r'<ul\b|</ul>|<a\s+href="([^"]*)"[^>]*>(.*?)</a>',
     dotAll: true,
   );
-  final sectionHref = RegExp('^/$slug/(\\d+)\$');
+  final sectionHref = RegExp('^/${RegExp.escape(slug)}/' r'(\d+)$');
   final root = <DorarTocNode>[];
   final stack = <List<DorarTocNode>>[root];
   DorarTocNode? lastFolder;

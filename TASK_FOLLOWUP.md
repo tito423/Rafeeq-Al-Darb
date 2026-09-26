@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+20:00 Dorar hub screens IN CODE (612 pass, NOT built): DorarHubScreen (grading + 11 encyclopedias), DorarTocScreen (tree), DorarSectionScreen (headings, text, footnotes, credit+link); library bar icon now opens the hub. NEXT: build, see hub -> aqeeda -> tree -> section 10; grading search; then IslamQA; release 3.66.0 with both links.
+
 19:50 Dorar encyclopedias DATA DONE: lib/features/dorar/data/dorar_encyclopedia.dart (11 encyclopedias list, parseDorarToc = mtree tree, parseDorarSection = title from #cntnt h1, paras (title-1/2 headings), footnotes from span.tip, FAQ block cut, soft-404 -> null; service with gzip cache in app support dorar/, TOC weekly). test/dorar_encyclopedia_test.dart on real pages: aqeeda TOC 1,469 sections exact tree, aq10, fq10 headings+3 footnotes, aq30 soft-404 -> null. Emulator was stuck (adb lost it); killed + cold boot started (bg). NEXT: screens (hub, TOC tree, section reader) + library entry, build, see, then IslamQA, then release 3.66.0 with both links.
 
 19:30 OWNER wants a full «الدرر السنية» hub (all encyclopedias: العقدية 1,469 sections, الفقهية 5,419, + qfiqhia/osolfeqh/tafseer/history/adyan/frq/akhlaq/aadab/arabia/azkar/fake-hadith/gsearch), not only hadith grading. Design + measurements in DORAR_ISLAMQA_NOTES.md (HTML only except hadith API; «جميع الحقوق محفوظة» -> live read + per-section cache, no bulk copy). ORDER: (1) build + see DorarScreen (hadith grading, in code); (2) hub + encyclopedia TOC + section reader (read 3+ real pages first); (3) IslamQA live search/read; (4) release 3.66.0 and give BOTH links (release page + direct APK). Context of this session ~90% -> next session continues.
@@ -559,6 +561,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 19:52 - Dorar hub: encyclopedias with contents tree and section reader (not built)
 - 2026-09-26 19:45 - Dorar encyclopedias: contents tree and section parser, tested on real pages
 - 2026-09-26 19:10 - Dorar hub design: all encyclopedias measured (aqeeda 1,469, feqhia 5,419 sections)
 - 2026-09-26 19:09 - Dorar hadith gradings in the app: service, parser (tested on a real response), screen (not built)
