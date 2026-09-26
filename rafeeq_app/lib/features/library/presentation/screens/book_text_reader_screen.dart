@@ -425,10 +425,70 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     );
   }
 
+  /// Keeps the listen button's State - which owns the voice reading aloud -
+  /// alive when turning the phone moves it between the row and the column.
+  /// Without it the move disposed the State and stopped the reading.
+  final _listenKey = GlobalKey<BookListenActionState>();
+
+  /// The reader's seven actions: a row under the title upright, a column
+  /// beside the page sideways.
+  List<Widget> _actions(BookText doc, bool bookmarked) => [
+        ToolbarAction(
+          icon: Icons.format_size,
+          label: 'library.text_font_size'.tr(),
+          onPressed: _openFontSizeSheet,
+        ),
+        ToolbarAction(
+          icon: Icons.palette_outlined,
+          label: 'library.text_font_color'.tr(),
+          onPressed: _openInkColorSheet,
+        ),
+        ToolbarAction(
+          icon: Icons.text_format,
+          label: 'library.text_tashkeel'.tr(),
+          active: _showTashkeel,
+          onPressed: _toggleTashkeel,
+        ),
+        ToolbarAction(
+          icon: Icons.search,
+          label: 'library.text_search'.tr(),
+          onPressed: _openSearch,
+        ),
+        BookListenAction(
+          key: _listenKey,
+          book: widget.book,
+          doc: doc,
+          pageIndex: _pageIndex,
+          onTurnPage: _goToPageIndex,
+        ),
+        // `Scaffold.of(context)` needs a context *below*
+        // the Scaffold in the tree — this `build()`
+        // method's own `context` sits above it, same
+        // reason the old breadcrumb row's index button
+        // needed a `Builder` too.
+        Builder(
+          builder: (ctx) => ToolbarAction(
+            icon: Icons.list_alt,
+            label: 'library.text_index'.tr(),
+            onPressed: () => Scaffold.of(ctx).openEndDrawer(),
+          ),
+        ),
+        ToolbarAction(
+          icon: bookmarked
+              ? Icons.bookmark
+              : Icons.bookmark_border,
+          label: 'library.text_bookmark'.tr(),
+          active: bookmarked,
+          onPressed: _toggleBookmark,
+        ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     final doc = _doc;
     final bookmarked = doc != null && _bookmarks.contains(_pageIndex);
+    final sideways =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -461,64 +521,18 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           // "التعليقات" slot — this app has no comments feature to back
           // that icon honestly) / the existing فهرس drawer / the
           // existing bookmark toggle.
-          bottom: doc == null
+          // SIDEWAYS THE ACTIONS MOVE TO A SIDE COLUMN (see `build`'s body):
+          // under the title they cost 60 of a phone-on-its-side's ~340 dp,
+          // and the page was left about 40 % of the screen on
+          // emulator-5554 (2026-09-26).
+          bottom: doc == null || sideways
               ? null
               : PreferredSize(
                   preferredSize: const Size.fromHeight(60),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsetsDirectional.only(start: 4, end: 12),
-                    child: Row(
-                      children: [
-                        ToolbarAction(
-                          icon: Icons.format_size,
-                          label: 'library.text_font_size'.tr(),
-                          onPressed: _openFontSizeSheet,
-                        ),
-                        ToolbarAction(
-                          icon: Icons.palette_outlined,
-                          label: 'library.text_font_color'.tr(),
-                          onPressed: _openInkColorSheet,
-                        ),
-                        ToolbarAction(
-                          icon: Icons.text_format,
-                          label: 'library.text_tashkeel'.tr(),
-                          active: _showTashkeel,
-                          onPressed: _toggleTashkeel,
-                        ),
-                        ToolbarAction(
-                          icon: Icons.search,
-                          label: 'library.text_search'.tr(),
-                          onPressed: _openSearch,
-                        ),
-                        BookListenAction(
-                          book: widget.book,
-                          doc: doc,
-                          pageIndex: _pageIndex,
-                          onTurnPage: _goToPageIndex,
-                        ),
-                        // `Scaffold.of(context)` needs a context *below*
-                        // the Scaffold in the tree — this `build()`
-                        // method's own `context` sits above it, same
-                        // reason the old breadcrumb row's index button
-                        // needed a `Builder` too.
-                        Builder(
-                          builder: (ctx) => ToolbarAction(
-                            icon: Icons.list_alt,
-                            label: 'library.text_index'.tr(),
-                            onPressed: () => Scaffold.of(ctx).openEndDrawer(),
-                          ),
-                        ),
-                        ToolbarAction(
-                          icon: bookmarked
-                              ? Icons.bookmark
-                              : Icons.bookmark_border,
-                          label: 'library.text_bookmark'.tr(),
-                          active: bookmarked,
-                          onPressed: _toggleBookmark,
-                        ),
-                      ],
-                    ),
+                    child: Row(children: _actions(doc, bookmarked)),
                   ),
                 ),
         ),
@@ -531,7 +545,21 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
             _goToPageIndex(i);
           },
         ),
-        body: _buildBody(context),
+        body: doc == null || !sideways
+            ? _buildBody(context)
+            : Row(
+                children: [
+                  Expanded(child: _buildBody(context)),
+                  const VerticalDivider(width: 1),
+                  SizedBox(
+                    width: 84,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Column(children: _actions(doc, bookmarked)),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

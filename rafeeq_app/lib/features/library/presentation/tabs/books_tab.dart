@@ -6,6 +6,7 @@
 /// twenty-five classes in it.
 library;
 
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../../../core/widgets/accordion.dart';
 import 'dart:async';
 import '../../../../core/utils/digits.dart';
@@ -325,10 +326,12 @@ class _AuthorsView extends StatelessWidget {
       list.sort((a, b) => a.sortKey.compareTo(b.sortKey));
     }
 
-    return ListView(
+    // Sideways two authors a row (`PairedListView`).
+    return PairedListView(
       padding: const EdgeInsets.symmetric(vertical: 8),
+      gap: 0,
+      header: const HiddenBooksButton(),
       children: [
-        const HiddenBooksButton(),
         for (var i = 0; i < authors.length; i++)
           _AuthorExpansionTile(
             key: PageStorageKey<String>(authors[i]),
@@ -485,10 +488,12 @@ class _CategoriesView extends StatelessWidget {
     // looks empty on entry. `PageStorageKey` keeps each tile's open/closed
     // state across rebuilds (locale/theme changes, scrolling far away and
     // back) so the user's expand/collapse choices don't reset under them.
-    return ListView(
+    // Sideways two shelves a row (`PairedListView`).
+    return PairedListView(
       padding: const EdgeInsets.symmetric(vertical: 8),
+      gap: 0,
+      header: const HiddenBooksButton(),
       children: [
-        const HiddenBooksButton(),
         for (var i = 0; i < cats.length; i++)
           _CategoryExpansionTile(
             key: PageStorageKey<int>(cats[i].index),
@@ -627,10 +632,16 @@ class _MyLibraryView extends StatelessWidget {
         ),
       );
     }
-    return ListView(
+    // Sideways two books a row (`PairedListView`).
+    return PairedListView(
       padding: const EdgeInsets.all(14),
+      gap: 8,
       children: [
-        for (final b in rows) ...[_row(context, b), const SizedBox(height: 8)],
+        for (final b in rows)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: _row(context, b),
+          ),
       ],
     );
   }

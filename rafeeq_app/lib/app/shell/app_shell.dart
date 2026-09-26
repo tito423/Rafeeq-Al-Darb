@@ -85,6 +85,7 @@ class _PopIcon extends StatelessWidget {
 class _AppShellState extends ConsumerState<AppShell>
     with WidgetsBindingObserver {
   int _index = 0;
+  final _tabsKey = GlobalKey();
 
   void _goTo(int index, {int? tab}) {
     setState(() => _index = index);
@@ -340,16 +341,23 @@ class _AppShellState extends ConsumerState<AppShell>
       (Icons.library_books_outlined, Icons.library_books, 'nav.library'),
       (Icons.menu, Icons.menu_open, 'nav.more'),
     ];
+    // The GlobalKey is what makes turning the phone keep every tab's state:
+    // sideways the stack moves from the Scaffold's body into a Row beside
+    // `SideTabs`, and without it that move would build every tab afresh -
+    // the mushaf page, every scroll position, an open card.
     final tabStack = KeyedSubtree(
-      key: ValueKey<String>(localeCode),
-      child: IndexedStack(index: shown, children: screens),
+      key: _tabsKey,
+      child: KeyedSubtree(
+        key: ValueKey<String>(localeCode),
+        child: IndexedStack(index: shown, children: screens),
+      ),
     );
     // SIDEWAYS, THE TABS GO TO THE SIDE. Measured on the owner's Xiaomi held
     // sideways (2026-09-26): the bottom bar took 290 of the screen's 1220 px,
     // leaving every tab a letterbox under a header card. A phone on its side
     // has width to spare and height to none, so the tabs stand at the
     // start edge (`SideTabs`) and every screen gets the full height. The IndexedStack
-    // is the same one either way - turning the phone keeps each tab's state.
+    // is the same one either way (`_tabsKey`).
     final sideways = MediaQuery.orientationOf(context) == Orientation.landscape &&
         !fullScreen &&
         focus == null;
