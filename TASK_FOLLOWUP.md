@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+
+21:55 ENV MOVE step: local.properties sdk.dir -> E:\DevEnv\Android\Sdk; flutter config --android-sdk E:\DevEnv\Android\Sdk; flutter pub get with PUB_CACHE=E:\DevEnv\pub-cache OK; flutter doctor: No issues, SDK at E. NOTE: this desktop-app process did NOT inherit the new user env vars (they are set at User level) -> every command sets them explicitly. Release build from E running. NEXT: build result, boot emulator from E (Medium_Phone_API_36.1), install, then delete C copies.
 NEXT (exact, 2026-09-26 ~20:30, owner paused this session and opens a new one):
 1. ENV MOVE (owner-approved): user env vars ALREADY SET -> ANDROID_HOME, ANDROID_SDK_ROOT = E:\DevEnv\Android\Sdk; GRADLE_USER_HOME = E:\DevEnv\gradle; PUB_CACHE = E:\DevEnv\pub-cache; ANDROID_AVD_HOME = E:\DevEnv\avd. AVDs are MOVED (phone data wiped). SDK/Gradle/Pub are COPIED; C originals still exist. STILL TO DO: rafeeq_app/android/local.properties sdk.dir -> E:\DevEnv\Android\Sdk; `flutter config --android-sdk E:\DevEnv\Android\Sdk`; `flutter pub get` (new PUB_CACHE); verify: flutter doctor, build_github_release.bat, emulator E:\DevEnv\Android\Sdk\emulator\emulator.exe -avd Medium_Phone_API_36.1 boots, app installs. ONLY THEN delete C copies (%LOCALAPPDATA%\Android\Sdk, %USERPROFILE%\.gradle, %LOCALAPPDATA%\Pub\Cache) and report C free space. NOTE: a new session inherits the new user env vars; old ones do not.
 2. Build + SEE the Dorar hub on the emulator (code done, 612 tests pass): library bar icon -> hub -> الموسوعة العقدية -> tree -> section 10 (text + footnote), a fiqh section, hadith grading search (needs Arabic input: use a pasted text or a selection).
@@ -570,6 +572,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 21:51 - Env move: Flutter pointed at E:\DevEnv SDK, pub get + doctor clean; release build running
 - 2026-09-26 21:41 - NEXT_PROMPT for the new session: env move, Dorar hub, Dorar check everywhere, IslamQA, 3.66.0
 - 2026-09-26 20:19 - Usage limit mid environment move: AVDs moved, SDK/Gradle/Pub copied to E:\DevEnv; next steps logged
 - 2026-09-26 19:52 - Dorar hub: encyclopedias with contents tree and section reader (not built)

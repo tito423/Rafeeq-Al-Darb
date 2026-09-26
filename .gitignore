@@ -127,3 +127,4 @@ scripts/strip_named_notes_out/*.json
 scripts/asr_probe/
 scripts/_geonames/
 scripts/shamela_raw/irab_daas_equran.jsonl
+_build.log
