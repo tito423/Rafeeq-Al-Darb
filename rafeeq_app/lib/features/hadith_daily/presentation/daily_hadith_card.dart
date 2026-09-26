@@ -12,6 +12,7 @@ import '../../../core/widgets/arabic_text.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
 import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
 import '../data/daily_hadith_provider.dart';
+import '../../dorar/presentation/dorar_check_sheet.dart';
 
 /// Home, bottom card (P2‑13) — one full hadith (complete text, narrator,
 /// book/number, grade line), re-rolled every app launch, with a manual
@@ -435,6 +436,9 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                               color: scheme.onSurfaceVariant,
                             ),
                           ),
+                          // Dorar's gradings of the same matn, by name
+                          // (GitHub build; owner, 2026-09-26).
+                          DorarCheckButton(text: daily.arabic),
                           const SizedBox(height: 10),
                           // «خلي كارت الحديث يعرض بس الأحاديث منها على أساس إنها
                           // مشروحة». The explanation is the reason this corpus is

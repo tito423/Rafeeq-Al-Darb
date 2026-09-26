@@ -121,7 +121,7 @@ class _DorarScreenState extends State<DorarScreen> {
                   padding: const EdgeInsets.all(20),
                   child: Text('dorar.none'.tr(), textAlign: TextAlign.center),
                 ),
-              for (final h in _results) _Grading(h: h),
+              for (final h in _results) DorarGradingCard(h: h),
               if (_results.isNotEmpty && !_exhausted)
                 Center(
                   child: _busy
@@ -150,8 +150,11 @@ class _DorarScreenState extends State<DorarScreen> {
   }
 }
 
-class _Grading extends StatelessWidget {
-  const _Grading({required this.h});
+/// One grading from Dorar: the text as Dorar has it, then narrator, the
+/// named grader, source, page and the verdict. Also used by the
+/// «تخريج من الدرر» sheet.
+class DorarGradingCard extends StatelessWidget {
+  const DorarGradingCard({super.key, required this.h});
   final DorarHadith h;
 
   @override

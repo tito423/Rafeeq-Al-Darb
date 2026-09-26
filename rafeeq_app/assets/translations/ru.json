@@ -2025,6 +2025,13 @@
     "enc_frq": "Sects Encyclopedia",
     "enc_alakhlaq": "Ethics Encyclopedia",
     "enc_aadab": "Islamic Etiquette Encyclopedia",
-    "enc_arabia": "Arabic Language Encyclopedia"
+    "enc_arabia": "Arabic Language Encyclopedia",
+    "check": "Проверить на Dorar",
+    "retry": "Повторить",
+    "check_too_short": "Слишком коротко, чтобы определить хадис. Выделите более длинную фразу матна.",
+    "check_query": "Поиск в Энциклопедии хадисов по этим словам матна: {}",
+    "check_none": "На Dorar не найден хадис, совпадающий с этим матном. Это ничего не говорит о его достоверности; попробуйте поискать сами.",
+    "check_found": "Оценки учёных этого матна на Dorar ({}):",
+    "check_open_search": "Открыть поиск Dorar"
   }
 }

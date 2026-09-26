@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/arabic_text.dart';
 import '../widgets/hadith_translation.dart';
+import '../../../dorar/presentation/dorar_check_sheet.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -185,6 +186,10 @@ class _HadithContent extends StatelessWidget {
           padding: const EdgeInsets.only(top: 16),
           child: _TakhrijChip(book: book, item: item),
         ),
+        // Every grading Dorar holds for this matn, each with its grader's
+        // name (GitHub build; owner, 2026-09-26). Shown only when Dorar's own
+        // text matches - see DorarCheck.
+        DorarCheckButton(text: item.arabic),
         // An earlier build ended this screen with «ابحث عن شرحه في موسوعة
         // الأحاديث» — a button that took the first words of the matn to the
         // Hadeeth Encyclopaedia and offered whatever came back as candidates.

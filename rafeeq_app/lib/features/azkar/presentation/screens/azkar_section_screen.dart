@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/azkar_repeat.dart';
 import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/remote_tap.dart';
+import '../../../dorar/presentation/dorar_check_sheet.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
 ///
@@ -281,6 +282,14 @@ class _DhikrPage extends StatelessWidget {
                   fontSize: 13,
                   height: 1.6,
                 ),
+              ),
+              // The hadith this dhikr comes from, graded by name on Dorar
+              // (GitHub build; owner, 2026-09-26). Only a dhikr with a hadith
+              // source gets it: 97 of the 98 in azkar.db, none a bare ayah.
+              DorarCheckButton(
+                text: item.body,
+                color: Colors.white,
+                alignment: Alignment.center,
               ),
             ],
             if (isFirst) ...[

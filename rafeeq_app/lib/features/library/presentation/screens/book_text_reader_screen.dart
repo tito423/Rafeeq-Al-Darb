@@ -19,6 +19,7 @@ import '../widgets/book_provenance_strip.dart';
 import '../widgets/book_page_rail.dart';
 import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/utils/screen_class.dart';
+import '../../../dorar/presentation/dorar_check_sheet.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
 /// by the "لون الخط" toolbar action. Each entry carries both a light- and a
@@ -74,6 +75,9 @@ class BookTextReaderScreen extends StatefulWidget {
 
 class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   final _scrollCtrl = ScrollController();
+
+  /// What the reader has selected on the page, for «تخريج من الدرر».
+  String _selectedText = '';
 
   BookText? _doc;
   Object? _error;
@@ -651,6 +655,27 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
               onPointerDown: _handlePointerDown,
               onPointerUp: _handlePointerUp,
               child: SelectionArea(
+                // «تخريج من الدرر» on any passage the reader selects - a
+                // hadith quoted in a book is checked like one in the hadith
+                // library (GitHub build; owner, 2026-09-26).
+                onSelectionChanged: (c) => _selectedText = c?.plainText ?? '',
+                contextMenuBuilder: (menuContext, region) {
+                  final items = region.contextMenuButtonItems;
+                  final picked = _selectedText.trim();
+                  if (kDorarCheckEnabled && picked.isNotEmpty) {
+                    items.add(ContextMenuButtonItem(
+                      label: 'dorar.check'.tr(),
+                      onPressed: () {
+                        region.hideToolbar();
+                        showDorarCheckSheet(context, picked);
+                      },
+                    ));
+                  }
+                  return AdaptiveTextSelectionToolbar.buttonItems(
+                    anchors: region.contextMenuAnchors,
+                    buttonItems: items,
+                  );
+                },
                 child: SingleChildScrollView(
                   controller: _scrollCtrl,
                   padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),

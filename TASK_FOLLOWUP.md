@@ -574,6 +574,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 22:52 - Dorar check everywhere IN CODE: hadith books, daily hadith, hadeethenc, adhkar, book text selection; 615 pass, analyze clean; NOT built
 - 2026-09-26 22:46 - Dorar check data: matn extraction + match score + cache, tested on 10 real hadiths vs live Dorar
 - 2026-09-26 22:38 - Env move done (C freed 54 GB); Dorar hub seen on emulator; trap 57 emulator window hang
 - 2026-09-26 21:51 - Env move: Flutter pointed at E:\DevEnv SDK, pub get + doctor clean; release build running

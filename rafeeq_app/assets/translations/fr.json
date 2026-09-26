@@ -2025,6 +2025,13 @@
     "enc_frq": "Sects Encyclopedia",
     "enc_alakhlaq": "Ethics Encyclopedia",
     "enc_aadab": "Islamic Etiquette Encyclopedia",
-    "enc_arabia": "Arabic Language Encyclopedia"
+    "enc_arabia": "Arabic Language Encyclopedia",
+    "check": "Vérifier sur Dorar",
+    "retry": "Réessayer",
+    "check_too_short": "Trop court pour identifier un hadith. Sélectionnez une phrase plus longue du matn.",
+    "check_query": "Recherche dans l'Encyclopédie du hadith avec ces mots du matn : {}",
+    "check_none": "Aucun hadith correspondant à ce matn n'a été trouvé sur Dorar. Cela ne dit rien de son authenticité ; essayez de chercher vous-même.",
+    "check_found": "Jugements des savants sur ce matn sur Dorar ({}) :",
+    "check_open_search": "Ouvrir la recherche Dorar"
   }
 }
