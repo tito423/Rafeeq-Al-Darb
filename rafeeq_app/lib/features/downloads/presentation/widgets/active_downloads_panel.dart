@@ -70,6 +70,7 @@ class ActiveDownloadsPanelState extends ConsumerState<ActiveDownloadsPanel> {
     final waiting = audio.where((d) => !d.running).length;
     final ayahLib = AyahRecitationLibrary.instance;
     final voice = OpenVoice.installProgress.value;
+    final voiceIds = {for (final f in OpenVoice.files) OpenVoice.taskId(f)};
     final tasmee = TasmeeEngine.instance.downloadProgress.value;
     final catalog =
         ref.watch(quranTranslationCatalogProvider).valueOrNull ?? const [];
@@ -157,7 +158,9 @@ class ActiveDownloadsPanelState extends ConsumerState<ActiveDownloadsPanel> {
                 ),
               )),
         ),
+      // The voice's two files are already one row above, summed.
       for (final t in DownloadManager.instance.activeTasks)
+        if (!voiceIds.contains(t.id))
         (
           t.title.isEmpty ? t.fileName : t.title,
           t.total == null

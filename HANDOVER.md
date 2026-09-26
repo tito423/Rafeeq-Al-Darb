@@ -2504,9 +2504,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 14:26 — IN PROGRESS — resume here**
+**2026-09-26 14:33 — IN PROGRESS — resume here**
 
-Downloads: every running transfer listed with detail; ayah end notice fixed; files notification shows a real count (not built)
+Seen: ayah progress + end notice, voice row; voice listed once in the panel (not built)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
