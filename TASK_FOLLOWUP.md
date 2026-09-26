@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~14:40 SEEN build 14:36:22: panel «تلاوات الآيات — فارس عباد · ٢٥٨ من ٢٨٦ آية · ٩٠٪»; voice listed ONCE (٣١٫٢ MB / ٢٦٠٫٧ MB); tasmee (١٫٩ MB / ٧٧٫٧ MB). All owner items of 13:30-14:30 done + seen on emulator. NOT seen: book download row (hadith books are built-in, no transfer), translation row, files-group plugin notification «n من total ملف». NEXT: ask owner whether to release 3.64.1 (v3.64.0 is published; master ahead: clock gallery sideways, paper recitation, ayah downloads/notification, Downloads panel).
+
 ~14:35 SEEN build 14:29:41: Downloads «جارٍ تنزيله الآن» lists the voice with bytes (ratio, LTR); voice row after install «٢٤٨٫٦ MB · ١» (was «لا يوجد»); ayah notice 0→38→96→151→162/200 then «اكتمل تنزيل تلاوة فارس عباد». FAULT: voice listed 3x (summed row + its 2 DownloadManager files) -> files skipped (not built). NEXT: build, see panel once with an ayah download running; then report to owner.
 
 ~14:35 SEEN build 14:01: ayah notification «تنزيل تلاوة آية بآية · محمود علي البنا / ٢٤١ من ٦٢٣٦ آية» with bar; tap -> ayah page directly; list: Banna first with ring, others download icon + «لم يُنزَّل بعد»; Banna finished 114/114. FAULTS found: no end notice (isActive used _handed, which drops a task at its first status -> last batch read idle) -> fixed via isSurahPending; «·» reads as Arabic zero -> «(٥٪)» and « — ». OWNER 14:20-14:30: «اي حاجة يتم تنزيلها لازم تظهر تفاصيل تحميلها في التنزيلات» -> ActiveDownloadsPanel (own file now) lists ayah reciters (n من total آية), voice, tasmee (bytes), books (new LibraryApiService.bookDownloads), translations, mushaf, surahs, DownloadManager tasks (bytes via ratio()). files group notification: bar + «n من total ملف» (no more «التقدم الدقيق»). 595 pass, NOT built. NEXT: build; download one surah for a reciter: notification progress + END notice, Downloads panel detail line, voice row size.
@@ -505,6 +507,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 14:39 - Seen: Downloads panel lists ayah reciter, voice once, tasmee; owner items done
 - 2026-09-26 14:33 - Seen: ayah progress + end notice, voice row; voice listed once in the panel (not built)
 - 2026-09-26 14:26 - Downloads: every running transfer listed with detail; ayah end notice fixed; files notification shows a real count (not built)
 - 2026-09-26 13:58 - Ayah downloads: all 35 reciters listed, own progress notification, honest list states; voice total refreshes (not built)
