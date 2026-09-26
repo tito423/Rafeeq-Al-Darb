@@ -532,7 +532,9 @@
     "hidden_done": "«{}» فہرست سے ہٹا دی گئی",
     "hidden_books": "چھپی ہوئی کتابیں ({})",
     "restore": "واپس لائیں",
-    "hidden_empty": "کوئی چھپی ہوئی کتاب نہیں"
+    "hidden_empty": "کوئی چھپی ہوئی کتاب نہیں",
+    "search_authors_found": "ملتے جلتے مصنفین",
+    "author_downloading": "مصنف کی کتابیں ڈاؤن لوڈ ہو رہی ہیں: {} از {}"
   },
   "azkar": {
     "title": "اذکار",

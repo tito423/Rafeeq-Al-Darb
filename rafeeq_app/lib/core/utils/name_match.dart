@@ -48,3 +48,24 @@ bool _wordHit(String text, String q) {
   }
   return false;
 }
+
+/// Every query word equals a WHOLE word of [text] - no «starts with».
+///
+/// Owner, 2026-09-26: searching «ابن الجوزي» brought Ibn Qayyim al-Jawziyya
+/// first - «الجوزي» starts «الجوزية», so [nameMatches] took it. They are two
+/// scholars. Callers use this first and fall back to [nameMatches] only when
+/// nothing matches whole, so a half-typed word still finds something.
+bool nameMatchesExact(String text, String query) {
+  final q = _words(query);
+  if (q.isEmpty) return false;
+  final t = _words(text).toSet();
+  for (final w in q) {
+    if (t.contains(w)) continue;
+    // «والقيم», «بالجوزي»: a clitic the text never carries.
+    if (w.length > 3 && 'وبل'.contains(w[0]) && t.contains(_core(w.substring(1)))) {
+      continue;
+    }
+    return false;
+  }
+  return true;
+}

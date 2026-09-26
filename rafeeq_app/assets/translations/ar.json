@@ -532,7 +532,9 @@
     "hidden_done": "أُزيل «{}» من القائمة",
     "hidden_books": "الكتب المخفية ({})",
     "restore": "إرجاع",
-    "hidden_empty": "لا توجد كتب مخفية"
+    "hidden_empty": "لا توجد كتب مخفية",
+    "search_authors_found": "مؤلفون مطابقون",
+    "author_downloading": "جارٍ تحميل كتب المؤلف: {} من {}"
   },
   "azkar": {
     "title": "الأذكار",

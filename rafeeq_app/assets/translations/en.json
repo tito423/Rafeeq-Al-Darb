@@ -532,7 +532,9 @@
     "hidden_done": "“{}” removed from the list",
     "hidden_books": "Hidden books ({})",
     "restore": "Restore",
-    "hidden_empty": "No hidden books"
+    "hidden_empty": "No hidden books",
+    "search_authors_found": "Matching authors",
+    "author_downloading": "Downloading the author's books: {} of {}"
   },
   "azkar": {
     "title": "Adhkar",

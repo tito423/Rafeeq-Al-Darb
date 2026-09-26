@@ -30,4 +30,21 @@ void main() {
     expect(hits.length, greaterThanOrEqualTo(30));
     expect(hits.every((a) => a.contains('قيّم')), isTrue);
   });
+
+  test('«ابن الجوزي» is Ibn al-Jawzi, not Ibn Qayyim al-Jawziyya', () {
+    // Owner's photo, 2026-09-26: the author search listed Ibn al-Qayyim's
+    // books first. Whole words first; the catalogue has both scholars.
+    expect(nameMatchesExact('الإمام أبو الفرج ابن الجوزي', 'ابن الجوزي'),
+        isTrue);
+    expect(nameMatchesExact('الإمام ابن قيّم الجوزية', 'ابن الجوزي'), isFalse);
+    expect(nameMatchesExact('الإمام ابن قيّم الجوزية', 'ابن القيم'), isTrue);
+    expect(nameMatchesExact('الإمام ابن قيّم الجوزية', 'ابن قيم الجوزيه'),
+        isTrue);
+    final exact = {
+      for (final b in libraryBookCatalog)
+        if (nameMatchesExact(b.authorAr, 'ابن الجوزي')) b.authorAr,
+    };
+    expect(exact, isNotEmpty);
+    expect(exact.any((a) => a.contains('قيّم')), isFalse);
+  });
 }

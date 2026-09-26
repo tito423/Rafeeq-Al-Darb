@@ -532,7 +532,9 @@
     "hidden_done": "«{}» убрана из списка",
     "hidden_books": "Скрытые книги ({})",
     "restore": "Вернуть",
-    "hidden_empty": "Скрытых книг нет"
+    "hidden_empty": "Скрытых книг нет",
+    "search_authors_found": "Подходящие авторы",
+    "author_downloading": "Загрузка книг автора: {} из {}"
   },
   "azkar": {
     "title": "Азкары",
