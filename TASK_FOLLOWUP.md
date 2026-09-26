@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+20:19 USAGE LIMIT hit mid-move. OWNER approved: move dev env to E:\DevEnv, wipe phone emulator data, Dorar check everywhere (incl. library book text selection). STATE: AVDs MOVED to E:\DevEnvvd (phone data wiped; .ini paths fixed; user env ANDROID_AVD_HOME=E:\DevEnvvd SET). COPIED (C originals still in place, nothing deleted): Android SDK -> E:\DevEnv\Android\Sdk (126,185 files, 0 failed), Gradle -> E:\DevEnv\gradle (204,770 files), Pub cache -> E:\DevEnv\pub-cache (117,461 files). NOT YET: set user env ANDROID_HOME/ANDROID_SDK_ROOT=E:\DevEnv\Android\Sdk, GRADLE_USER_HOME=E:\DevEnv\gradle, PUB_CACHE=E:\DevEnv\pub-cache; flutter config --android-sdk E:\DevEnv\Android\Sdk; rafeeq_app/android/local.properties sdk.dir; flutter pub get; verify flutter doctor + build_github_release.bat + emulator boots from E + app installs; ONLY THEN delete the C copies (%LOCALAPPDATA%\Android\Sdk, %USERPROFILE%\.gradle, %LOCALAPPDATA%\Pub\Cache). Then: build+see Dorar hub (code done, 612 pass), Dorar check on every hadith + book text selection, IslamQA, release 3.66.0 with BOTH links.
+
 20:00 Dorar hub screens IN CODE (612 pass, NOT built): DorarHubScreen (grading + 11 encyclopedias), DorarTocScreen (tree), DorarSectionScreen (headings, text, footnotes, credit+link); library bar icon now opens the hub. NEXT: build, see hub -> aqeeda -> tree -> section 10; grading search; then IslamQA; release 3.66.0 with both links.
 
 19:50 Dorar encyclopedias DATA DONE: lib/features/dorar/data/dorar_encyclopedia.dart (11 encyclopedias list, parseDorarToc = mtree tree, parseDorarSection = title from #cntnt h1, paras (title-1/2 headings), footnotes from span.tip, FAQ block cut, soft-404 -> null; service with gzip cache in app support dorar/, TOC weekly). test/dorar_encyclopedia_test.dart on real pages: aqeeda TOC 1,469 sections exact tree, aq10, fq10 headings+3 footnotes, aq30 soft-404 -> null. Emulator was stuck (adb lost it); killed + cold boot started (bg). NEXT: screens (hub, TOC tree, section reader) + library entry, build, see, then IslamQA, then release 3.66.0 with both links.
@@ -561,6 +563,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 20:19 - Usage limit mid environment move: AVDs moved, SDK/Gradle/Pub copied to E:\DevEnv; next steps logged
 - 2026-09-26 19:52 - Dorar hub: encyclopedias with contents tree and section reader (not built)
 - 2026-09-26 19:45 - Dorar encyclopedias: contents tree and section parser, tested on real pages
 - 2026-09-26 19:10 - Dorar hub design: all encyclopedias measured (aqeeda 1,469, feqhia 5,419 sections)
