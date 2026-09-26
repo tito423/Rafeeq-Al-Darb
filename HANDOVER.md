@@ -2505,9 +2505,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 17:02 — IN PROGRESS — resume here**
+**2026-09-26 17:06 — IN PROGRESS — resume here**
 
-Author search whole-word in Latin names too; log times corrected to the PC clock
+Seen: author search card and download-all; Shamela integration next
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

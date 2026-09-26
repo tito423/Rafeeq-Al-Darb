@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+17:06 SEEN build 17:05:11 (emulator): author search «ibn al-jawzi» -> ONE author card «الإمام أبو الفرج ابن الجوزي • ٣٤ كتابًا» (no Ibn al-Qayyim) + «تحميل كل كتب المؤلف (٣٠)»; tapped -> «جارٍ تحميل كتب المؤلف: ١٢ من ٣٠» with bar. OWNER NEW (big): in-app Shamela integration - search Shamela by book name and import the book into the app; GitHub build only (not Play). NEXT: research shamela.ws (structure, search, book pages, terms), design, respect library-content-policy memory.
+
 16:59 Typing Arabic on the emulator: ADBKeyBoard (github senzhk, installed on emulator only) does NOT receive broadcasts on Android 16; Windows clipboard is locked for this process (Set-Clipboard fails). Arabic path covered by unit test on the real catalogue; on-screen test uses Latin «ibn al-jawzi» - authorEn now also whole-word (was equality then contains). 598 pass. NEXT: build, search «ibn al-jawzi» in author scope -> only Imam Ibn al-Jawzi card + download all; paper recitation highlight with marks; then Google TV.
 
 ~16:50 (PC clock; «17:30» was a guess) DONE IN CODE (597 pass, NOT built): library search - nameMatchesExact (whole words) first for authors, starts-of-words only as fallback (test: «ابن الجوزي» never Ibn al-Qayyim); author/all scope shows AUTHOR cards (AuthorSearchResult: name, death, count, «تحميل كل كتب المؤلف (n)» sequential with progress «n من m», tap opens the books); title matches stay book cards. NEXT: build (includes stage B + highlight fix + this), then: phone - paper highlight marks, search «ابن الجوزي» (needs Arabic typed: copy/paste trick, trap in CLAUDE §1.3), download-all; Google TV - ring + D-pad walk.
@@ -531,6 +533,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 17:06 - Seen: author search card and download-all; Shamela integration next
 - 2026-09-26 17:02 - Author search whole-word in Latin names too; log times corrected to the PC clock
 - 2026-09-26 16:53 - Library search: whole-word author match first; authors shown as authors with download-all (not built)
 - 2026-09-26 16:49 - Paper highlight covers harakat and waqf marks: no inset on the ink-tight madinah_qc layer (measured); test over all pages
