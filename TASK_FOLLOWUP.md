@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+~15:35 TV READY: images installed (android-34 google-tv x86, android-36 android-tv x86_64); AVDs GoogleTV_1080p and AndroidTV16_1080p (1920x1080, 320 dpi = 960x540 dp). ONLY ONE emulator at a time (both are emulator-5554): kill the phone before booting a TV. SEEN on GoogleTV_1080p with build 15:05: app is in the LEANBACK launcher (query-activities), installs, splash clip whole on blurred frame, permissions page two panes fine, D-pad DOWN moves focus (reached «Français») BUT the focus highlight is a faint light grey - invisible from a sofa. NEXT = STAGE B, first item: strong app-wide focus indicator (theme focusColor + visible ring on cards/chips/InkWell), then the 21 GestureDetector targets, then a full D-pad walk on the TV. Banner WITH name (15:20) not yet built into an APK. Quota 5h 93% at 15:35 (resets ~16:30 Dubai).
+
 ~15:20 OWNER: standing permission to download any tool («نزل اللي انت عايز تنزله دايما»). TV banner redone WITH the Arabic name: scripts/build_tv_banner.ps1 (Windows GDI+ shapes Arabic; PIL here cannot) - owner icon unchanged + «رفيق الدرب» in Alexandria Bold on #9BC4B3; seen correct. DOWNLOADING in background (sdkmanager): system-images;android-34;google-tv;x86 and android-36;android-tv;x86_64 -> log scratchpad tvdl.log; if the session died, re-run the install (it resumes). NEXT: create AVDs (Google TV 1080p), install the APK, see launcher banner + D-pad walk; continue stage A checks, then stage B.
 
 ~15:08 Build 15:05 (stage A) installed on emulator; SEEN only: tablet 1600x2560/320 upright = two columns + bottom bar (800 dp < 840), no break. FOUND for stage C: tall start column -> analog clock beside the countdown comes out ~100 dp (FittedBox in half a column); when the column is tall put clock ABOVE countdown. NOT seen yet: stage A on phone both ways, smart screen, tablet sideways rail, adhan sideways. wm reset done. Quota 5h 87% at 15:05 -> stopped here. NEXT SESSION: continue stage A checks, then stage B (remote). Owner to answer: OK to download the Android TV emulator image (~1 GB, Google sdkmanager) for stage D?
@@ -517,6 +519,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 15:21 - TV emulators installed; app runs on Google TV; focus highlight too faint (stage B first)
 - 2026-09-26 15:14 - TV banner with the shaped Arabic name; TV system images downloading
 - 2026-09-26 15:06 - Stage A built and partly seen (tablet upright); paused for quota
 - 2026-09-26 15:01 - Stage A: layout by window size (ScreenClass), TV launcher + banner, adhan not locked (not built)
