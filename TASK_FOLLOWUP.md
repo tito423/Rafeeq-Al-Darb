@@ -12,6 +12,13 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+NEXT (exact, 2026-09-26 ~20:30, owner paused this session and opens a new one):
+1. ENV MOVE (owner-approved): user env vars ALREADY SET -> ANDROID_HOME, ANDROID_SDK_ROOT = E:\DevEnv\Android\Sdk; GRADLE_USER_HOME = E:\DevEnv\gradle; PUB_CACHE = E:\DevEnv\pub-cache; ANDROID_AVD_HOME = E:\DevEnv\avd. AVDs are MOVED (phone data wiped). SDK/Gradle/Pub are COPIED; C originals still exist. STILL TO DO: rafeeq_app/android/local.properties sdk.dir -> E:\DevEnv\Android\Sdk; `flutter config --android-sdk E:\DevEnv\Android\Sdk`; `flutter pub get` (new PUB_CACHE); verify: flutter doctor, build_github_release.bat, emulator E:\DevEnv\Android\Sdk\emulator\emulator.exe -avd Medium_Phone_API_36.1 boots, app installs. ONLY THEN delete C copies (%LOCALAPPDATA%\Android\Sdk, %USERPROFILE%\.gradle, %LOCALAPPDATA%\Pub\Cache) and report C free space. NOTE: a new session inherits the new user env vars; old ones do not.
+2. Build + SEE the Dorar hub on the emulator (code done, 612 tests pass): library bar icon -> hub -> الموسوعة العقدية -> tree -> section 10 (text + footnote), a fiqh section, hadith grading search (needs Arabic input: use a pasted text or a selection).
+3. Dorar check everywhere (owner-approved): a shared «تخريج من الدرر» action on every hadith (hadith books, daily hadith, hadeethenc, adhkar) AND on text selected in any library book; bottom sheet with gradings (named grader), matn extracted (drop isnad, harakat), result cached per hadith. Design in DORAR_ISLAMQA_NOTES.md.
+4. IslamQA: live search + read on demand (no API; sitemap index; «جميع الحقوق محفوظة» -> no bulk import).
+5. Release 3.66.0; reply with BOTH links (release page + direct APK) - memory release-link-always.
+
 20:19 USAGE LIMIT hit mid-move. OWNER approved: move dev env to E:\DevEnv, wipe phone emulator data, Dorar check everywhere (incl. library book text selection). STATE: AVDs MOVED to E:\DevEnvvd (phone data wiped; .ini paths fixed; user env ANDROID_AVD_HOME=E:\DevEnvvd SET). COPIED (C originals still in place, nothing deleted): Android SDK -> E:\DevEnv\Android\Sdk (126,185 files, 0 failed), Gradle -> E:\DevEnv\gradle (204,770 files), Pub cache -> E:\DevEnv\pub-cache (117,461 files). NOT YET: set user env ANDROID_HOME/ANDROID_SDK_ROOT=E:\DevEnv\Android\Sdk, GRADLE_USER_HOME=E:\DevEnv\gradle, PUB_CACHE=E:\DevEnv\pub-cache; flutter config --android-sdk E:\DevEnv\Android\Sdk; rafeeq_app/android/local.properties sdk.dir; flutter pub get; verify flutter doctor + build_github_release.bat + emulator boots from E + app installs; ONLY THEN delete the C copies (%LOCALAPPDATA%\Android\Sdk, %USERPROFILE%\.gradle, %LOCALAPPDATA%\Pub\Cache). Then: build+see Dorar hub (code done, 612 pass), Dorar check on every hadith + book text selection, IslamQA, release 3.66.0 with BOTH links.
 
 20:00 Dorar hub screens IN CODE (612 pass, NOT built): DorarHubScreen (grading + 11 encyclopedias), DorarTocScreen (tree), DorarSectionScreen (headings, text, footnotes, credit+link); library bar icon now opens the hub. NEXT: build, see hub -> aqeeda -> tree -> section 10; grading search; then IslamQA; release 3.66.0 with both links.
@@ -563,6 +570,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 21:41 - NEXT_PROMPT for the new session: env move, Dorar hub, Dorar check everywhere, IslamQA, 3.66.0
 - 2026-09-26 20:19 - Usage limit mid environment move: AVDs moved, SDK/Gradle/Pub copied to E:\DevEnv; next steps logged
 - 2026-09-26 19:52 - Dorar hub: encyclopedias with contents tree and section reader (not built)
 - 2026-09-26 19:45 - Dorar encyclopedias: contents tree and section parser, tested on real pages
