@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-26 21:51 — IN PROGRESS — resume here**
+**2026-09-26 22:38 — IN PROGRESS — resume here**
 
-Env move: Flutter pointed at E:\DevEnv SDK, pub get + doctor clean; release build running
+Env move done (C freed 54 GB); Dorar hub seen on emulator; trap 57 emulator window hang
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

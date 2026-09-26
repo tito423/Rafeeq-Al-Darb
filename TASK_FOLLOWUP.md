@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+22:40 ENV MOVE DONE + DORAR HUB SEEN. Release build from E:\DevEnv OK (380 s, signed, 276,096,569 B; E gradle daemon log 21:51, C untouched). Emulator window hangs here (TRAPS 57) -> headless `-no-window -no-audio` boots in 45-85 s; APK installed (lastUpdateTime 22:24:38), app runs. C copies DELETED after that: SDK 27.79 GB, .gradle 22.18 GB, Pub 3.16 GB -> C freed 54.02 GB, C free 106.38 GB. Dorar hub SEEN on emulator: Library bar icon -> hub (grading + encyclopedias) -> العقدية tree (4 levels expand) -> المبحث الرابع (aqeeda/37): heading, text, footnote «يُنظر شرح العقدية الطحاوية للبراك ص 240», credit link; cross-checked vs live page (curl -L with the app UA; a browser UA gets a Cloudflare block). الفقهية -> الطهارة -> تمهيد: headings, ayahs with refs, footnote marks. Grading search «الطُّهورُ» (pasted via long-press -> لصق): cards with rawi, named muhaddith (الدارقطني، شعيب الأرناؤوط، ابن حجر), source, number, verdict. NEXT: item 3 - «تخريج من الدرر» action everywhere (design in DORAR_ISLAMQA_NOTES.md).
+
 21:55 ENV MOVE step: local.properties sdk.dir -> E:\DevEnv\Android\Sdk; flutter config --android-sdk E:\DevEnv\Android\Sdk; flutter pub get with PUB_CACHE=E:\DevEnv\pub-cache OK; flutter doctor: No issues, SDK at E. NOTE: this desktop-app process did NOT inherit the new user env vars (they are set at User level) -> every command sets them explicitly. Release build from E running. NEXT: build result, boot emulator from E (Medium_Phone_API_36.1), install, then delete C copies.
 NEXT (exact, 2026-09-26 ~20:30, owner paused this session and opens a new one):
 1. ENV MOVE (owner-approved): user env vars ALREADY SET -> ANDROID_HOME, ANDROID_SDK_ROOT = E:\DevEnv\Android\Sdk; GRADLE_USER_HOME = E:\DevEnv\gradle; PUB_CACHE = E:\DevEnv\pub-cache; ANDROID_AVD_HOME = E:\DevEnv\avd. AVDs are MOVED (phone data wiped). SDK/Gradle/Pub are COPIED; C originals still exist. STILL TO DO: rafeeq_app/android/local.properties sdk.dir -> E:\DevEnv\Android\Sdk; `flutter config --android-sdk E:\DevEnv\Android\Sdk`; `flutter pub get` (new PUB_CACHE); verify: flutter doctor, build_github_release.bat, emulator E:\DevEnv\Android\Sdk\emulator\emulator.exe -avd Medium_Phone_API_36.1 boots, app installs. ONLY THEN delete C copies (%LOCALAPPDATA%\Android\Sdk, %USERPROFILE%\.gradle, %LOCALAPPDATA%\Pub\Cache) and report C free space. NOTE: a new session inherits the new user env vars; old ones do not.
@@ -572,6 +574,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 22:38 - Env move done (C freed 54 GB); Dorar hub seen on emulator; trap 57 emulator window hang
 - 2026-09-26 21:51 - Env move: Flutter pointed at E:\DevEnv SDK, pub get + doctor clean; release build running
 - 2026-09-26 21:41 - NEXT_PROMPT for the new session: env move, Dorar hub, Dorar check everywhere, IslamQA, 3.66.0
 - 2026-09-26 20:19 - Usage limit mid environment move: AVDs moved, SDK/Gradle/Pub copied to E:\DevEnv; next steps logged

@@ -578,3 +578,16 @@ Do not rediscover these.
     restart (and trap 24 forces one per release build): `adb install -r`
     the APK again, check `lastUpdateTime`, and redo any setting the test
     depends on.
+
+57. **Since the Windows restart of 2026-09-26 18:37 the emulator WINDOW hangs
+    the whole emulator; `-no-window` boots fine.** Every AVD (phone, Google
+    TV), with both the E: and the original C: emulator binary, with
+    `-gpu host`, `-gpu swiftshader_indirect`, `-accel off` and `-no-audio`,
+    logged `detected a hanging thread 'QEMU2 CPU0 thread'` within 5 s,
+    qemu CPU time froze at ~2 s and adb never saw a device. The same AVD
+    with `-no-window -no-audio -no-snapshot` booted in 85 s (0 hang lines)
+    and the release APK installed and ran. So it is not the move to
+    E:\DevEnv and not WHPX. Launch headless:
+    `E:\DevEnv\Android\Sdk\emulator\emulator.exe -avd Medium_Phone_API_36.1 -no-window -no-audio`
+    and take screenshots with `adb exec-out screencap -p`. Delete stale
+    `*.lock` files in the .avd folder after killing a hung emulator.
