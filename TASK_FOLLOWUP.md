@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+23:05 DORAR CHECK EVERYWHERE SEEN on emulator (build 22:55, GitHub build): Abu Dawud 392 «أفلح وأبيه إن صدق» -> sheet, 13 gradings, first = Abu Dawud 392 itself («سكت عنه»); adhkar «الحمد لله الذي أحيانا» (white button over photo) -> 15 gradings (الألباني صحيح أبي داود 5049 صحيح، ابن حبان 5539); الأربعون النووية p.38 select-all -> «من حفظ على أمتي أربعين حديثًا», النووي «اتفق الحفاظ على أنه حديث ضعيف وإن كثرت طرقه»; one word selected -> «النص قصير جدًّا». FIX after seeing: the book-selection item was last (hidden in the overflow behind Ask Gemini) -> now first (analyze clean, NOT rebuilt). Daily hadith + hadeethenc detail use the same DorarCheckButton - not opened on the emulator. PC restart at 18:37 was a BSOD 0x9F DRIVER_POWER_STATE_FAILURE (p1=3) during Connected Standby, dump C:\Windows\MEMORY.DMP + Minidump 092626-10031-01.dmp (admin needed to read); 8 more unexpected shutdowns since 08-26 with no bugcheck. NEXT: item 4 IslamQA.
+
 22:40 ENV MOVE DONE + DORAR HUB SEEN. Release build from E:\DevEnv OK (380 s, signed, 276,096,569 B; E gradle daemon log 21:51, C untouched). Emulator window hangs here (TRAPS 57) -> headless `-no-window -no-audio` boots in 45-85 s; APK installed (lastUpdateTime 22:24:38), app runs. C copies DELETED after that: SDK 27.79 GB, .gradle 22.18 GB, Pub 3.16 GB -> C freed 54.02 GB, C free 106.38 GB. Dorar hub SEEN on emulator: Library bar icon -> hub (grading + encyclopedias) -> العقدية tree (4 levels expand) -> المبحث الرابع (aqeeda/37): heading, text, footnote «يُنظر شرح العقدية الطحاوية للبراك ص 240», credit link; cross-checked vs live page (curl -L with the app UA; a browser UA gets a Cloudflare block). الفقهية -> الطهارة -> تمهيد: headings, ayahs with refs, footnote marks. Grading search «الطُّهورُ» (pasted via long-press -> لصق): cards with rawi, named muhaddith (الدارقطني، شعيب الأرناؤوط، ابن حجر), source, number, verdict. NEXT: item 3 - «تخريج من الدرر» action everywhere (design in DORAR_ISLAMQA_NOTES.md).
 
 21:55 ENV MOVE step: local.properties sdk.dir -> E:\DevEnv\Android\Sdk; flutter config --android-sdk E:\DevEnv\Android\Sdk; flutter pub get with PUB_CACHE=E:\DevEnv\pub-cache OK; flutter doctor: No issues, SDK at E. NOTE: this desktop-app process did NOT inherit the new user env vars (they are set at User level) -> every command sets them explicitly. Release build from E running. NEXT: build result, boot emulator from E (Medium_Phone_API_36.1), install, then delete C copies.
@@ -574,6 +576,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 23:03 - Dorar check seen on emulator (hadith, adhkar, book selection); menu item moved first
 - 2026-09-26 22:52 - Dorar check everywhere IN CODE: hadith books, daily hadith, hadeethenc, adhkar, book text selection; 615 pass, analyze clean; NOT built
 - 2026-09-26 22:46 - Dorar check data: matn extraction + match score + cache, tested on 10 real hadiths vs live Dorar
 - 2026-09-26 22:38 - Env move done (C freed 54 GB); Dorar hub seen on emulator; trap 57 emulator window hang

@@ -663,7 +663,9 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                   final items = region.contextMenuButtonItems;
                   final picked = _selectedText.trim();
                   if (kDorarCheckEnabled && picked.isNotEmpty) {
-                    items.add(ContextMenuButtonItem(
+                    // First, not last: at the end it fell into the overflow
+                    // menu behind «Ask Gemini» (seen on the emulator).
+                    items.insert(0, ContextMenuButtonItem(
                       label: 'dorar.check'.tr(),
                       onPressed: () {
                         region.hideToolbar();
