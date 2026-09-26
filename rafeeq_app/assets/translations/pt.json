@@ -1998,5 +1998,18 @@
     "source": "Fonte: al-Maktaba al-Shamela (shamela.ws)",
     "no_results": "Nenhum livro com esse título",
     "in_app_library": "Na biblioteca do app"
+  },
+  "dorar": {
+    "title": "Classificação do hadith — Dorar",
+    "hint": "Digite parte do hadith (em árabe)",
+    "rawi": "Narrador",
+    "muhaddith": "Classificado por",
+    "source": "Fonte",
+    "page": "Página ou número",
+    "grade": "Parecer",
+    "more": "Mais",
+    "failed": "Não foi possível acessar o Dorar. Verifique a conexão.",
+    "none": "Sem resultados",
+    "credit": "Fonte: Enciclopédia do hadith — al-Durar al-Saniyya (dorar.net)"
   }
 }

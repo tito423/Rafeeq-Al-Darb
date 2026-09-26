@@ -1998,5 +1998,18 @@
     "source": "Source : al-Maktaba al-Shamela (shamela.ws)",
     "no_results": "Aucun livre de ce titre",
     "in_app_library": "Dans la bibliothèque de l'app"
+  },
+  "dorar": {
+    "title": "Authentification du hadith — Dorar",
+    "hint": "Tapez une partie du hadith (en arabe)",
+    "rawi": "Rapporteur",
+    "muhaddith": "Jugé par",
+    "source": "Source",
+    "page": "Page ou numéro",
+    "grade": "Jugement",
+    "more": "Plus",
+    "failed": "Impossible de joindre Dorar. Vérifiez la connexion.",
+    "none": "Aucun résultat",
+    "credit": "Source : Encyclopédie du hadith — al-Durar al-Saniyya (dorar.net)"
   }
 }

@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+OWNER: «ابدأ في الاتنين … ابدأ بالدرر … لما تخلص الاتنين ارفع ريليز»; do wide research. Dorar map: encyclopedias hadith, aqeeda, adyan, frq, alakhlaq, feqhia, qfiqhia, osolfeqh, tafseer, history, arabia, azkar, fake-hadith, gsearch; JSON only for hadith (dorar_api.json?skey=&page=, 15/page, paging works). DONE IN CODE (not built): lib/features/dorar/data/dorar_service.dart (+parseDorar, drops entries without a named grader) + test on real fixture; DorarScreen (search, cards: text/rawi/muhaddith/source/page/grade, «المزيد» paging, credit); Library bar icon (kShamelaEnabled gate). NEXT: build+see Dorar; then IslamQA (no API: answers HTML, sitemap index 39 files; «جميع الحقوق محفوظة» -> live read on demand, no bulk import); then release with links.
+
 19:00 Dorar + IslamQA researched live -> DORAR_ISLAMQA_NOTES.md (Dorar public JSON API dorar_api.json?skey= with named grader; IslamQA no API, HTML answers, sitemap of all answers, «جميع الحقوق محفوظة»). Waiting for owner's choice. Context 85%+ -> offer handover.
 
 18:55 RELEASED v3.65.1 (tag e0d4066a = HEAD, 275,998,265 B, 206; v3.65.0 deleted). The session died mid-publish at ~18:35 - checked: nothing had been published, APK badging = 3.65.1, then published. OWNER NEW: research dorar.net (الدرر السنية) and islamqa.info - what can the app do with them (import? queries? extraction?). NEXT: live research, report.
@@ -553,6 +555,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 19:09 - Dorar hadith gradings in the app: service, parser (tested on a real response), screen (not built)
 - 2026-09-26 18:56 - Dorar and IslamQA: live research notes
 - 2026-09-26 18:55 - Released v3.65.1 after the interrupted publish
 - 2026-09-26 18:26 - Shamela mark string in 7 languages

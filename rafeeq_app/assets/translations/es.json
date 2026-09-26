@@ -1998,5 +1998,18 @@
     "source": "Fuente: al-Maktaba al-Shamela (shamela.ws)",
     "no_results": "Ningún libro con ese título",
     "in_app_library": "En la biblioteca de la app"
+  },
+  "dorar": {
+    "title": "Grado del hadiz — Dorar",
+    "hint": "Escribe parte del hadiz (en árabe)",
+    "rawi": "Narrador",
+    "muhaddith": "Calificado por",
+    "source": "Fuente",
+    "page": "Página o número",
+    "grade": "Dictamen",
+    "more": "Más",
+    "failed": "No se pudo acceder a Dorar. Comprueba la conexión.",
+    "none": "Sin resultados",
+    "credit": "Fuente: Enciclopedia del hadiz — al-Durar al-Saniyya (dorar.net)"
   }
 }

@@ -1998,5 +1998,18 @@
     "source": "Source: al-Maktaba al-Shamela (shamela.ws)",
     "no_results": "No book by that title",
     "in_app_library": "In the app library"
+  },
+  "dorar": {
+    "title": "Hadith grading — Dorar",
+    "hint": "Type part of the hadith (Arabic)",
+    "rawi": "Narrator",
+    "muhaddith": "Graded by",
+    "source": "Source",
+    "page": "Page or number",
+    "grade": "Ruling",
+    "more": "More",
+    "failed": "Could not reach Dorar. Check your connection.",
+    "none": "No results",
+    "credit": "Source: Hadith Encyclopedia — al-Durar al-Saniyya (dorar.net)"
   }
 }
