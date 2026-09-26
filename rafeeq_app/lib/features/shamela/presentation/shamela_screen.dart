@@ -7,7 +7,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
+import '../../library/data/book_catalog.dart';
 import '../data/shamela_book_builder.dart';
+import '../data/shamela_catalogue_ids.dart';
 import '../data/shamela_catalog.dart';
 import '../data/shamela_import_service.dart';
 import '../data/shamela_library.dart';
@@ -29,11 +31,26 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
   bool _failed = false;
   List<ShamelaBookRef> _results = const [];
 
+  /// Shamela id -> the library book that IS that Shamela book (238 of the
+  /// catalogue's 239, `shamela_catalogue_ids.dart`), so a search result the
+  /// library already has is marked and opens that copy instead of being
+  /// imported again (owner, 2026-09-26).
+  static final Map<int, String> _libraryByShamela = {
+    for (final e in shamelaIdOfLibraryBook.entries) e.value: e.key,
+  };
+
+  /// Library books on this phone, re-read when a book arrives or goes.
+  Set<String> _onDevice = const {};
+  StreamSubscription<void>? _bookSub;
+  String? _opening;
+
   @override
   void initState() {
     super.initState();
     ShamelaLibrary.instance.addListener(_changed);
     ShamelaImportService.instance.jobs.addListener(_changed);
+    _bookSub = LibraryApiService.instance.changes.listen((_) => _readOnDevice());
+    _readOnDevice();
     _loadCatalog();
   }
 
@@ -42,6 +59,7 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
     ShamelaLibrary.instance.removeListener(_changed);
     ShamelaImportService.instance.jobs.removeListener(_changed);
     _debounce?.cancel();
+    _bookSub?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -81,6 +99,36 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
         builder: (_) => BookTextReaderScreen(book: book, path: path),
       ),
     );
+  }
+
+  Future<void> _readOnDevice() async {
+    final ids = (await LibraryApiService.instance.downloadedBookIds()).toSet();
+    if (mounted) setState(() => _onDevice = ids);
+  }
+
+  /// A Shamela book the app's own library has: opened from the phone, or
+  /// downloaded from our copy first (the one the pipeline cleaned).
+  Future<void> _openLibraryCopy(String bookId) async {
+    final book = bookById(bookId);
+    final url = book?.textEdition?.url;
+    if (book == null) return;
+    final api = LibraryApiService.instance;
+    if (!_onDevice.contains(bookId)) {
+      if (url == null) return;
+      setState(() => _opening = bookId);
+      try {
+        await api.downloadBook(bookId, url);
+      } catch (_) {
+        if (mounted) setState(() => _opening = null);
+        return;
+      }
+    }
+    final path = await api.bookFilePath(bookId);
+    if (!mounted) return;
+    setState(() => _opening = null);
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => BookTextReaderScreen(book: book, path: path),
+    ));
   }
 
   Future<void> _delete(String bookId) async {
@@ -203,26 +251,58 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Center(child: Text('shamela.no_results'.tr())),
                   ),
-                for (final r in _results)
-                  Card(
-                    child: ListTile(
-                      title: Text(r.title),
-                      subtitle: ShamelaLibrary.instance.isImported(r.id)
-                          ? Text(
-                              'shamela.in_library'.tr(),
-                              style: TextStyle(color: scheme.primary),
-                            )
-                          : null,
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: ShamelaLibrary.instance.isImported(r.id)
-                          ? () => _open(ShamelaLibrary.idFor(r.id))
-                          : () => _showCard(r),
-                    ),
-                  ),
+                for (final r in _results) _resultTile(r, scheme),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+extension on _ShamelaScreenState {
+  /// One search result, marked when the reader already has the book:
+  /// «في مكتبتك» (on this phone - imported or downloaded) or «موجود في مكتبة
+  /// التطبيق» (in the app's library, not downloaded yet).
+  Widget _resultTile(ShamelaBookRef r, ColorScheme scheme) {
+    final libraryId = _ShamelaScreenState._libraryByShamela[r.id];
+    final imported = ShamelaLibrary.instance.isImported(r.id);
+    final onPhone =
+        imported || (libraryId != null && _onDevice.contains(libraryId));
+    final inApp = libraryId != null;
+    final String? mark = onPhone
+        ? 'shamela.in_library'.tr()
+        : inApp
+            ? 'shamela.in_app_library'.tr()
+            : null;
+    final busy = libraryId != null && _opening == libraryId;
+    return Card(
+      child: ListTile(
+        leading: mark == null
+            ? null
+            : Icon(onPhone ? Icons.check_circle : Icons.library_books,
+                color: onPhone ? scheme.primary : goldText(context)),
+        title: Text(r.title),
+        subtitle: mark == null
+            ? null
+            : Text(mark,
+                style: TextStyle(
+                    color: onPhone ? scheme.primary : goldText(context),
+                    fontWeight: FontWeight.w600)),
+        trailing: busy
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2))
+            : const Icon(Icons.chevron_right),
+        onTap: busy
+            ? null
+            : imported
+                ? () => _open(ShamelaLibrary.idFor(r.id))
+                : libraryId != null
+                    ? () => _openLibraryCopy(libraryId)
+                    : () => _showCard(r),
       ),
     );
   }

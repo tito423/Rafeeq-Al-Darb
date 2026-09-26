@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/features/shamela/data/shamela_catalog.dart';
+import 'package:rafeeq_app/features/shamela/data/shamela_catalogue_ids.dart';
 
 /// Against a copy of Shamela's real catalogue (`/ajax/books/`, fetched
 /// 2026-09-26: 8,598 books).
@@ -32,4 +33,16 @@ void main() {
     expect(cat.search('قثقثقث'), isEmpty);
     expect(cat.search('في', limit: 80).length, lessThanOrEqualTo(80));
   });
+
+  test('every library book mapped to Shamela exists in its catalogue', () {
+    // shamela_catalogue_ids.dart, read from each book's own meta: 238 of
+    // the 239 (al_fiqh_al_manhaji_hajj is only part of 6369, left out).
+    expect(shamelaIdOfLibraryBook.length, 238);
+    final missing = [
+      for (final e in shamelaIdOfLibraryBook.entries)
+        if (cat.search('${e.value}').isEmpty) e.key,
+    ];
+    expect(missing, isEmpty, reason: 'ids not in Shamela: $missing');
+  });
 }
+

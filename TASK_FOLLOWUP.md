@@ -12,6 +12,8 @@ phone item by item -> a 5-stage plan in NEXT_SESSION_PROMPT.md, numbered with
 his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
+OWNER clarified (after v3.65.0): (1) the named five are NOT excluded from Shamela import - already so in 3.65.0; (2) a Shamela result the library already has must carry a mark. DONE IN CODE (not built): scripts/build_shamela_catalogue_ids.py -> lib/features/shamela/data/shamela_catalogue_ids.dart (238 of 239 library books -> Shamela id from each book's own meta; al_fiqh_al_manhaji_hajj left out = only part of 6369); results show «في مكتبتك» (on phone: imported or downloaded) or «موجود في مكتبة التطبيق» (catalogue, not downloaded), tap opens/downloads OUR copy instead of re-importing; test: all 238 ids exist in the live catalogue. NEXT: build, emulator: paste link of a library book (e.g. tuhfat_al_atfal 9632 - which is BOTH in the catalogue and imported earlier), see marks; then release if owner asks.
+
 18:15 RELEASED v3.65.0 (tag 9fdfcc52 = HEAD, 275,998,265 B, 206; v3.64.1 deleted). Owner: no exclusion in Shamela import (removed; memory updated). NEXT: owner tries it on his phone; then stage C sweep + Google TV walk (ADAPTIVE_PLAN.md), Shamela open items (long book, resume, notification, shelf).
 
 17:53 (PC clock; the «~18:10»/«~18:40» log lines above were guesses - wrong) SHAMELA SEEN END TO END on emulator (build 17:49:58, GitHub build with RAFEEQ_SHAMELA): Library bar shows the Shamela icon; screen loads the live catalogue «٨٥٩٨ كتاب في الشاملة»; pasting https://shamela.ws/book/9632 finds تحفة الأطفال; card sheet from shamela.ws (author, commentator, «عدد الصفحات: ٨», «ترقيم موافق للمطبوع»); import: «جارٍ الاستيراد… ٥ صفحة» -> «في مكتبتك»; reader opens it (1/8, TOC, «المكتبة الشاملة» label). Shamela already credited in sources_catalog.dart. NOT SEEN: «من الشاملة» category shelf (code: visibleBookCatalog includes imports), the import notification, delete, a big book (thousands of pages), resume after kill, Arabic title typed (adb cannot type Arabic). NEXT: owner's review; then remaining stage C sweep + TV walk (ADAPTIVE_PLAN.md).
@@ -547,6 +549,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-26 18:23 - Shamela results mark books the library already has; open our copy instead of importing
 - 2026-09-26 18:16 - Released v3.65.0 (tag = HEAD 9fdfcc52)
 - 2026-09-26 17:54 - Shamela import seen end to end on the emulator
 - 2026-09-26 17:47 - Shamela search takes a pasted link or book id
