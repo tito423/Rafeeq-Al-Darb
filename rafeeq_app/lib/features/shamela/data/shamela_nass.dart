@@ -74,6 +74,11 @@ String _cleanText(String fragment) {
   return t.trim();
 }
 
+/// Whether the page holds a footnote block (`hamesh`), which [parseNass]
+/// drops as the editor's apparatus. A page whose only text is there (the
+/// editor's «قالوا عن الكتاب», Shamela 30197 pages 1-3) parses to nothing.
+bool hasHamesh(String nass) => _hamesh.hasMatch(nass);
+
 List<Map<String, String>> parseNass(String nass) {
   final body = nass.replaceAll(_hamesh, ''); // the footnote apparatus
   final out = <Map<String, String>>[];

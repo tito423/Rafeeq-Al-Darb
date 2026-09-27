@@ -155,6 +155,7 @@ class BookText {
       for (final p in (j['pages'] as List? ?? const []))
         BookPage(
           printedPage: (p['p'] ?? 0) as int,
+          editorOnly: p['e'] == 1,
           paras: [
             for (final a in (p['paras'] as List? ?? const []))
               if (!_isNoise((a['t'] ?? '') as String))
@@ -277,7 +278,15 @@ class BookPage {
   final int printedPage;
   final List<BookPara> paras;
 
-  const BookPage({required this.printedPage, required this.paras});
+  /// The source page held only the editor's footnotes, which are not
+  /// carried over (see `parseNass`); set by the Shamela importer.
+  final bool editorOnly;
+
+  const BookPage({
+    required this.printedPage,
+    required this.paras,
+    this.editorOnly = false,
+  });
 }
 
 /// One paragraph. [kind]:

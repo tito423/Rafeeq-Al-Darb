@@ -177,7 +177,15 @@ class ShamelaBookBuilder {
           });
         }
         if (title.isNotEmpty) lastTitle = title;
-        pages.add({'p': printed, 'paras': paras});
+        // 'e': the page's text was all editor's apparatus, so the reader
+        // can say so instead of «صفحة بلا نص» (seen on the Xiaomi,
+        // 2026-09-27: the owner took a blank page for a broken import).
+        final nass = '${data['nass'] ?? ''}';
+        pages.add({
+          'p': printed,
+          'paras': paras,
+          if (paras.isEmpty && hasHamesh(nass)) 'e': 1,
+        });
         onPage?.call(pages.length);
         final nxt = data['nextId'];
         pageId = (nxt == null || '$nxt' == '' || '$nxt' == '0') ? null : '$nxt';

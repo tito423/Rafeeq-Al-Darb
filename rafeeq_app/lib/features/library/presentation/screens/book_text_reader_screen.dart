@@ -696,7 +696,11 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                       if (page.paras.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: Text('library.text_blank_page'.tr(),
+                          child: Text(
+                              (page.editorOnly
+                                      ? 'library.text_editor_page'
+                                      : 'library.text_blank_page')
+                                  .tr(),
                               textAlign: TextAlign.center,
                               style: TextStyle(color: ink.withValues(alpha: 0.6))),
                         ),

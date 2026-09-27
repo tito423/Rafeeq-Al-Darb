@@ -535,7 +535,8 @@
     "hidden_empty": "Nenhum livro oculto",
     "search_authors_found": "Autores correspondentes",
     "author_downloading": "Baixando os livros do autor: {} de {}",
-    "cat_shamela": "Da Shamela"
+    "cat_shamela": "Da Shamela",
+    "text_editor_page": "Página de notas do editor — não incluída neste aplicativo; o livro continua depois dela."
   },
   "azkar": {
     "title": "Adhkar",

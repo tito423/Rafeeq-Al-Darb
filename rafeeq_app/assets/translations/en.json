@@ -535,7 +535,8 @@
     "hidden_empty": "No hidden books",
     "search_authors_found": "Matching authors",
     "author_downloading": "Downloading the author's books: {} of {}",
-    "cat_shamela": "From Shamela"
+    "cat_shamela": "From Shamela",
+    "text_editor_page": "A page of the editor's own notes — not carried over in this app; the book continues after it."
   },
   "azkar": {
     "title": "Adhkar",

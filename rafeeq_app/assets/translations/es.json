@@ -535,7 +535,8 @@
     "hidden_empty": "No hay libros ocultos",
     "search_authors_found": "Autores que coinciden",
     "author_downloading": "Descargando los libros del autor: {} de {}",
-    "cat_shamela": "De Shamela"
+    "cat_shamela": "De Shamela",
+    "text_editor_page": "Página de notas del editor — no se incluye en esta aplicación; el libro continúa después."
   },
   "azkar": {
     "title": "Adhkar",
