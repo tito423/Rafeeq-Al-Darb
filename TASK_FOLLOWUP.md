@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~01:16 (09-28) STOPPING (weekly quota 99 percent). Step-2 build (01:1x, emulator was OFF during the build) INSTALLED 01:13:00, then the emulator CRASHED (exit 139, 9th time since 20:30) right after the app was opened - so the step-2 clip («يا رفيق فين الأذكار») was NOT heard. Tree clean, everything pushed. NEXT (Codex / next session): restart the emulator (NEXT_PROMPT.md flags), push that clip, expect the Azkar tab; then «يا رفيق طفيها فيديو البداية» -> splash switch off. The emulator crash pattern tonight: 139 after builds AND after app launches, swiftshader_indirect, with or without -no-audio - cause not found; if it keeps up, test on the owner's phone instead.
+
 ~01:10 (09-28) Step 2 continued: on/off verbs with the pronoun attached («شغلها، ولّع، ولعها، اقفلها، طفيها، وقفها، شيلها، عطلها»…); tests «طفيها التأثيرات الحركية» -> motion off, «ولع فيديو البداية» -> splash on. analyze 0, 641 pass. NOT built / NOT voiced. NEXT: «كبّر/صغّر الخط» needs an ACTION (font size) - that is step 4 (commands with details), not lexicon; then build (emulator OFF during build) + one clip for open («فين الأذكار») and one for off («طفيها فيديو البداية»).
 
 ~01:05 (09-28) Item 4 step 2 STARTED: openVerbs += Egyptian «فتح/فتحلي (the ASR drops the alif)، افتحهولي، اشوف، شوف، شوفلي، خدني، دخلني، فين، عرضلي»; tests «عايز اشوف تذكير صيام السنن», «فين الاذكار», «خدني علي القبله» pass. analyze 0, 641 pass. NOT built, NOT tried by voice. NEXT: more Egyptian forms (off/on: «طفّي/اقفل/ولّع/شغّل»; «كبّر/صغّر»), then build (emulator OFF during the build) and one clip per group. Weekly quota 99 percent.
@@ -722,6 +724,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 01:15 - Stopping at weekly quota 99%: step-2 build installed but the emulator crashed (9th, exit 139) right after launch, so the Egyptian-verb clips were not heard; NEXT_PROMPT.md and TASK_FOLLOWUP say exactly what to run next
 - 2026-09-28 01:07 - Step 2: Egyptian on/off verbs with attached pronouns + tests; 641 pass; not built or voiced
 - 2026-09-28 01:04 - Item 4 step 2 start: Egyptian open verbs (incl. 'فتح' as the recogniser drops the alif, 'فين', 'خدني', 'اشوف') + tests; 641 pass; not built or voiced yet
 - 2026-09-28 01:01 - Item 4 step 1 DONE and seen: 'يا رفيق افتح ضبط المواقيت والتاريخ' (heard 'فتحضط المواقيط والتاريخ') opened Settings scrolled to that section, expanded; both SettingsParts proven by voice. Not released
