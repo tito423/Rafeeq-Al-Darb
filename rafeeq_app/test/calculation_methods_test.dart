@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:adhan/adhan.dart' as adhan;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rafeeq_app/features/adhan/data/prayer_calculation_methods.dart';
+import 'package:rafeeq_app/core/models/prayer_calculation_methods.dart';
 
 /// The app calculates prayer times offline, so every calculation method it
 /// offers is a set of angles this repo states itself — and a wrong angle is

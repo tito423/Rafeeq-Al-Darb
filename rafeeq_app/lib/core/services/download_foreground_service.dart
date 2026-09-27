@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import '../../core/utils/digits.dart';
+import '../utils/digits.dart';
 import '../utils/byte_formatter.dart' show ratio;
 
 /// P3-46: thin bridge to the real Android foreground service

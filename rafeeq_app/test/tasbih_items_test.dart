@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rafeeq_app/core/services/tasbih_reminder_service.dart';
+import 'package:rafeeq_app/features/tasbih_reminder/data/tasbih_reminder_service.dart';
 import 'package:rafeeq_app/features/tasbih_reminder/data/tasbih_items.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

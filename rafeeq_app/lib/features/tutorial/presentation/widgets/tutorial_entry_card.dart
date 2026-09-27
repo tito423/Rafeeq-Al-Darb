@@ -1,10 +1,9 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import '../../../../core/widgets/more_group_accent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../more/presentation/widgets/more_group.dart'
-    show MoreGroupAccent;
 import '../../data/tutorial_state.dart';
 
 /// The tour's entry in «المزيد»: one card that plays it now, with the

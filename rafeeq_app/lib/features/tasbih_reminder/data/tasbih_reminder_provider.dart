@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/services/tasbih_reminder_service.dart';
+import 'tasbih_reminder_service.dart';
 
 /// Minutes between tasbih reminders; 0 = off (the same contract as the quote
 /// reminder). Off until asked for.

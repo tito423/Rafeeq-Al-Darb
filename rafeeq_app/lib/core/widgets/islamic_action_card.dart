@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../features/more/presentation/widgets/more_group.dart';
 
+import 'more_group_accent.dart';
 import '../theme/app_colors.dart';
 import '../theme/hero_surface.dart';
 import 'islamic_pattern.dart';

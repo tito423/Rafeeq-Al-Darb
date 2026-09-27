@@ -642,6 +642,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 20:05 - Audit stage 2: core/ no longer imports features/ or app/ (8 violations -> 0, enforced by test/layering_test.dart). Reminder services moved to their features; mushaf_page_service to quran (it and mushaf_edition imported each other); prayer_calculation_methods down to core/models; RecitationSource gets downloaded ayahs through a hook the quran_audio feature registers (dependency inversion); MoreGroupAccent and sharedPrefsProvider moved down to core (app re-exports). scripts/dart_move.py moves a Dart file and fixes relative imports. 642 pass
 - 2026-09-27 19:54 - Audit stage 1: repo root organised - 14 plan/history docs to docs/history, 3 living docs to docs/, 31 reports to docs/reports, 4 script inputs to scripts/data, previous audit to docs/audits, empty  file removed; 65 code references rewritten (scripts write reports to docs/reports); local APKs/logs to gitignored .local-archive; 641 pass
 - 2026-09-27 19:46 - v3.69.0 verified end to end on emulator (wake+command, background, French, auto-hide, prayer settings link)
 - 2026-09-27 19:37 - Chrome auto-hide moved into MushafChrome (ChromeAutoHide) - quran_screen back at its 1057 ceiling, prayer_slides 797; 641 pass

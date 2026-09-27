@@ -1,4 +1,5 @@
 import '../../../../core/widgets/paired_list_view.dart';
+import '../../../../core/widgets/more_group_accent.dart';
 import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../../assistant/presentation/assistant_settings_card.dart';
 import '../widgets/app_font_picker.dart';
@@ -29,7 +30,6 @@ import 'about_screen.dart';
 import 'sources_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../widgets/permissions_section.dart';
-import '../../../more/presentation/widgets/more_group.dart';
 import '../../../../core/widgets/readable_insets.dart';
 import '../../../../core/utils/screen_class.dart';
 

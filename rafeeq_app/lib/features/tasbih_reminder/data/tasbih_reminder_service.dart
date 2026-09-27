@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../features/tasbih_reminder/data/tasbih_items.dart';
-import 'notification_router.dart';
+import 'tasbih_items.dart';
+import '../../../core/services/notification_router.dart';
 
 /// The waking hours the tasbih reminders fall in. Nobody is woken at 3 a.m.
 /// to be told to say «سبحان الله».

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../app/rafeeq_app.dart' show sharedPrefsProvider;
+import '../config/prefs_provider.dart';
 
 /// The four themes that cover the whole app. Adding a fifth is one entry in
 /// [kThemeSpecs] (see `theme_registry.dart`) plus, if it needs one, a builder

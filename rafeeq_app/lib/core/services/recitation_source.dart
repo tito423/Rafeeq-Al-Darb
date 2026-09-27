@@ -1,5 +1,5 @@
+import 'dart:io';
 
-import '../../features/quran_audio/data/ayah_recitation_library.dart';
 import '../config/app_config.dart';
 
 /// Where one ayah's recitation audio actually comes from.
@@ -39,6 +39,15 @@ import '../config/app_config.dart';
 /// no underscores while `Husary_128kbps` does), and a wrong guess is a
 /// silent 404 for that reciter.
 class RecitationSource {
+  /// The downloaded copy of an ayah, if there is one - supplied by the
+  /// `quran_audio` feature (`AyahRecitationLibrary` registers itself).
+  ///
+  /// A hook rather than an import: `core/` must not depend on a feature
+  /// (ARCHITECTURE.md §1, enforced by layering_test), and this is the one
+  /// thing the URL chooser needs from it. Null until registered, which only
+  /// means «stream it».
+  static File? Function(String edition, int surah, int ayah)? localFile;
+
   RecitationSource._();
 
   /// alquran.cloud edition identifier -> everyayah.com folder.
@@ -156,8 +165,7 @@ class RecitationSource {
     required int ayah,
     required int globalAyah,
   }) {
-    final local =
-        AyahRecitationLibrary.instance.localFile(edition, surah, ayah);
+    final local = localFile?.call(edition, surah, ayah);
     if (local != null) return [Uri.file(local.path).toString()];
 
     final urls = <String>[];

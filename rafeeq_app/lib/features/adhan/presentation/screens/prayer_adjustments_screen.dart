@@ -11,7 +11,7 @@ import '../../../../core/services/prayer_reminder_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_settings_provider.dart';
-import '../../data/prayer_calculation_methods.dart';
+import '../../../../core/models/prayer_calculation_methods.dart';
 import '../../data/prayer_adjustments_provider.dart';
 import 'prayer_location_screen.dart';
 import '../../../../core/widgets/readable_insets.dart';

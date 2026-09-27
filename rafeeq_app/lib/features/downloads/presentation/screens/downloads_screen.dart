@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/download_engine.dart';
 import '../../../../core/services/download_manager.dart';
-import '../../../../core/services/mushaf_page_service.dart';
+import '../../../quran/data/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';

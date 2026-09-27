@@ -81,7 +81,11 @@ class AyahDlEntry {
 /// requests (HTTP 206, confirmed live) — which is what makes a dropped
 /// connection resume from its bytes instead of restarting.
 class AyahRecitationLibrary extends ChangeNotifier {
-  AyahRecitationLibrary._();
+  AyahRecitationLibrary._() {
+    // Tells the core URL chooser where downloaded ayahs are (see
+    // RecitationSource.localFile).
+    RecitationSource.localFile = localFile;
+  }
   static final AyahRecitationLibrary instance = AyahRecitationLibrary._();
 
   static const _dirName = 'ayah_recitations';

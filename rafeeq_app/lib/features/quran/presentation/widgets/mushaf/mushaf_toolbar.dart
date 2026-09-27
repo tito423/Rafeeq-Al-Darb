@@ -29,7 +29,7 @@ library;
 import '../../../../../core/widgets/toolbar_action.dart';
 import '../../../../search/presentation/screens/search_screen.dart';
 import '../../../data/mushaf_data_provider.dart';
-import '../../widgets/mushaf_nav_sheets.dart';
+import '../mushaf_nav_sheets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

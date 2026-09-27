@@ -36,7 +36,7 @@ void main() {
       'lib/core/services/khatma_reminder_service.dart': [
         r"'${NotificationRouter.openPrefix}khatma'",
       ],
-      'lib/core/services/tasbih_reminder_service.dart': [
+      'lib/features/tasbih_reminder/data/tasbih_reminder_service.dart': [
         r"'${NotificationRouter.openPrefix}tasbih'",
       ],
     };

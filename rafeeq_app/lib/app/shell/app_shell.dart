@@ -16,7 +16,7 @@ import '../../core/services/download_manager.dart';
 import '../../features/downloads/data/download_tap_channel.dart';
 import '../../core/services/download_notifications.dart';
 import '../../features/quran_audio/data/quran_audio_library.dart';
-import '../../core/services/mushaf_page_service.dart';
+import '../../features/quran/data/mushaf_page_service.dart';
 import '../../features/quran/data/mushaf_edition.dart';
 import '../../core/services/prayer_status_notification.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';

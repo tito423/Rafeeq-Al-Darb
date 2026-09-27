@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../features/fasting/data/sunnah_fasting.dart';
-import 'notification_router.dart';
+import 'sunnah_fasting.dart';
+import '../../../core/services/notification_router.dart';
 
 /// Arms the evenings [planFastingReminders] chose, one notification each.
 ///

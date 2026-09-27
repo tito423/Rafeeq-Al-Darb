@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/config/app_config.dart';
-import '../../../core/services/mushaf_page_service.dart';
+import 'mushaf_page_service.dart';
 
 /// How a printing's polygon layer maps onto its own pages.
 ///

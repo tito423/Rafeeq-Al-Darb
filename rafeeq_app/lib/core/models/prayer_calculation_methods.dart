@@ -1,7 +1,7 @@
 import 'package:adhan/adhan.dart' as adhan;
 import 'package:hijri/hijri_calendar.dart';
 
-import '../../../core/i18n/proper_name.dart';
+import '../i18n/proper_name.dart';
 
 /// Every prayer-time calculation method the app offers, with the actual
 /// parameters the organisation behind it publishes.

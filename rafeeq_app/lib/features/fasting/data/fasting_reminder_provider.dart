@@ -2,7 +2,7 @@ import '../../../core/services/official_hijri.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/services/fasting_reminder_service.dart';
+import 'fasting_reminder_service.dart';
 import '../../adhan/data/prayer_adjustments_provider.dart';
 import 'sunnah_fasting.dart';
 

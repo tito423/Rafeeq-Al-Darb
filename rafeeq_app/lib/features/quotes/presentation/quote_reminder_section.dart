@@ -5,7 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/services/quote_reminder_service.dart';
+import '../data/quote_reminder_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/quote_background_catalog.dart';
 import '../data/quote_repository.dart';

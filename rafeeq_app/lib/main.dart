@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'features/quran_audio/data/ayah_recitation_library.dart';
+import 'core/services/recitation_source.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -27,7 +29,7 @@ import 'core/services/sunan_suwar_reminder_service.dart';
 import 'core/services/notification_router.dart';
 import 'core/utils/digits.dart';
 import 'core/utils/startup_trace.dart';
-import 'core/services/quote_reminder_service.dart';
+import 'features/quotes/data/quote_reminder_service.dart';
 import 'features/downloads/presentation/download_navigation.dart';
 import 'app/notification_open.dart';
 import 'features/quotes/presentation/quote_navigation.dart';
@@ -55,6 +57,9 @@ Future<void> adhanMain() => runAdhanAlertApp();
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // Downloaded per-ayah audio is found through this hook (core does not
+  // import features); set before anything can ask for an ayah's URL.
+  RecitationSource.localFile = AyahRecitationLibrary.instance.localFile;
   // P3‑56: hold the OS-drawn native splash on screen through the whole
   // bootstrap below (fonts, prefs, localization, timezone, alarm init) instead
   // of letting Flutter tear it down at its first frame — that early teardown,

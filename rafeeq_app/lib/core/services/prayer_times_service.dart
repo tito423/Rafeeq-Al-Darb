@@ -5,7 +5,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../features/adhan/data/prayer_calculation_methods.dart';
+import '../models/prayer_calculation_methods.dart';
 import '../models/prayer_times.dart';
 import '../utils/digits.dart';
 

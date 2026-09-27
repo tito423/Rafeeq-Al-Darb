@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics_compat.dart' show RenderingStrategy;
 
-import '../../../../core/services/mushaf_page_service.dart';
+import '../../data/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_edition.dart';

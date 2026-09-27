@@ -1,7 +1,7 @@
-import '../config/content_mirrors.dart';
+import '../../../core/config/content_mirrors.dart';
 import 'dart:async';
-import '../../core/utils/digits.dart';
-import '../utils/byte_formatter.dart' show ratio;
+import '../../../core/utils/digits.dart';
+import '../../../core/utils/byte_formatter.dart' show ratio;
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -12,11 +12,11 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../features/quran/data/mushaf_edition.dart';
-import '../config/app_config.dart';
-import 'download_foreground_service.dart';
-import 'download_notifications.dart';
-import 'notification_router.dart';
+import 'mushaf_edition.dart';
+import '../../../core/config/app_config.dart';
+import '../../../core/services/download_foreground_service.dart';
+import '../../../core/services/download_notifications.dart';
+import '../../../core/services/notification_router.dart';
 
 /// **Nothing is bundled any more, on purpose.**
 ///

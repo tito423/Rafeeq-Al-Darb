@@ -8,7 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
-import '../../../adhan/data/prayer_calculation_methods.dart';
+import '../../../../core/models/prayer_calculation_methods.dart';
 import '../../../channels/data/islamic_channels.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../library/data/book_catalog.dart';

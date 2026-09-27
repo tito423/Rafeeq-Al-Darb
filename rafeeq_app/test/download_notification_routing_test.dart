@@ -65,7 +65,7 @@ void main() {
       expect(nav.contains("'$what'"), isTrue,
           reason: 'a notification sends dl:$what and nothing handles it');
     }
-    final mushaf = File('lib/core/services/mushaf_page_service.dart')
+    final mushaf = File('lib/features/quran/data/mushaf_page_service.dart')
         .readAsStringSync();
     expect(mushaf.contains('downloadPrefix}mushaf'), isTrue);
   });
