@@ -85,6 +85,7 @@ void main() {
   test('a setting opens its own section (owner, 2026-09-27)', () {
     expect(of('افتح ضبط المواقيت والتاريخ'), 'setting prayer.adjustments');
     expect(of('يا رفيق افتحلي تذكير صيام السنن'), 'setting fasting.section_title');
+    expect(of('افتح لي تذكير صيام السنن'), 'setting fasting.section_title');
     expect(of('ساعة الشاشة الرئيسية'), 'setting home.clock_section');
   });
 
