@@ -13,6 +13,10 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+21:10 (09-27) STOPPED by owner (quota 100 percent). Stage 3 NOT started in code (analysis_options reverted, tree clean). Measured with the stricter lint set: directives_ordering 622, avoid_redundant_argument_values 113, prefer_single_quotes 88, prefer_const_constructors 68, avoid_dynamic_calls 47, prefer_const_declarations 32, unawaited_futures 31, unnecessary_lambdas 10, cancel_subscriptions 4, close_sinks 1, others 7. Run dart fix --apply INSIDE rafeeq_app with no path args. NEXT: stages 3, 4, 5, 6 as listed at 21:00.
+
+21:00 (09-27) RELEASED v3.69.0 (tag bb72e7f6, APK 313,985,071 B, range 206; v3.68.0 deleted). FULL AUDIT in progress: stage 1 root organised (commit), stage 2 layering 8->0 + layering_test (commit). NEXT: stage 3 stricter lints (dart fix + manual unawaited/dynamic/cancel), stage 4 dead code, stage 5 CI (GitHub Actions analyze+test), stage 6 docs/audits/AUDIT_2026-09-27.md + ARCHITECTURE.md refresh. Device check still owed after stage 2: downloaded ayah audio plays from the local file (RecitationSource.localFile hook).
+
 20:20 (09-27) v3.69.0 SEEN END TO END on emulator (build 19:42, test clip pushed as files/rafeeq_test.wav): «يا رفيق افتحلي الأذكار» heard as «يار فيق فيتحل الأثكار» in 473 ms -> Azkar tab opened; «...شغللي سورة الكهف بصوت الحصري» heard exactly in 1127 ms -> Kahf page, 18:1 PLAYING; app in BACKGROUND (launcher on top) + French «Rafeeq, passe en mode sombre» heard in 436 ms -> app came back DARK. Quran chrome: shown at 1 s, gone at 6 s. Isha card -> «ضبط المواقيت والتاريخ» -> PrayerAdjustmentsScreen. NOT seen: the owner's real voice on a phone, phone CPU latency, battery. Publishing v3.69.0 next, then the FULL AUDIT.
 
 20:10 (09-27) OWNER NEW (after releasing 3.69.0): FULL AUDIT of code, files and infrastructure against best practices and design patterns - organised, clean code the owner can learn from («عشان لما أبقى أتعلم عليها»). 3.69.0 build 20:0x: ORT 1.28.2 on all 3 ABIs (check_apk_native.py), web wasm gone, APK 313,985,071 B.
@@ -642,6 +646,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 20:06 - Stopped by owner at quota limit: audit stages 1-2 done, stage 3 measured only
 - 2026-09-27 20:05 - Audit stage 2: core/ no longer imports features/ or app/ (8 violations -> 0, enforced by test/layering_test.dart). Reminder services moved to their features; mushaf_page_service to quran (it and mushaf_edition imported each other); prayer_calculation_methods down to core/models; RecitationSource gets downloaded ayahs through a hook the quran_audio feature registers (dependency inversion); MoreGroupAccent and sharedPrefsProvider moved down to core (app re-exports). scripts/dart_move.py moves a Dart file and fixes relative imports. 642 pass
 - 2026-09-27 19:54 - Audit stage 1: repo root organised - 14 plan/history docs to docs/history, 3 living docs to docs/, 31 reports to docs/reports, 4 script inputs to scripts/data, previous audit to docs/audits, empty  file removed; 65 code references rewritten (scripts write reports to docs/reports); local APKs/logs to gitignored .local-archive; 641 pass
 - 2026-09-27 19:46 - v3.69.0 verified end to end on emulator (wake+command, background, French, auto-hide, prayer settings link)

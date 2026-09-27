@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 20:05 — IN PROGRESS — resume here**
+**2026-09-27 20:06 — IN PROGRESS — resume here**
 
-Audit stage 2: core/ no longer imports features/ or app/ (8 violations -> 0, enforced by test/layering_test.dart). Reminder services moved to their features; mushaf_page_service to quran (it and mushaf_edition imported each other); prayer_calculation_methods down to core/models; RecitationSource gets downloaded ayahs through a hook the quran_audio feature registers (dependency inversion); MoreGroupAccent and sharedPrefsProvider moved down to core (app re-exports). scripts/dart_move.py moves a Dart file and fixes relative imports. 642 pass
+Stopped by owner at quota limit: audit stages 1-2 done, stage 3 measured only
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
