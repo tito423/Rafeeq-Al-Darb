@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+17:40 (09-27) SEEN on emulator, v3.68.0 build 17:31: settings «تفعيل رفيق» switch flips visibly on/off (CollapsibleSection pages now rebuild children - every switch there was stale before); mic button hidden while off, shown when on; wake loop: preferOffline -> error 12 once -> online, then listens continuously (NO_SPEECH every ~5 s, restarts); 0 listens during 15 s of continuous recitation (media_session PLAYING), resumes after MEDIA_PAUSE (2 in 10 s); button hidden in full-screen mushaf. NOT SEEN: any command by real voice (emulator never heard PC audio). NEXT: publish v3.68.0, owner tests on Honor + Xiaomi.
+
 17:10 (09-27) OWNER: «دعم اللغات والخيارات وخلص وارفع الريليز، هنزله على الأونور والشاومي وأجربه» + «زر في الإعدادات يفعل المساعد ويقفله، ولما يشغله يبقى على النداء يا رفيق، ذكي ودقيق». DONE IN CODE (analyze clean, 639 pass): assistant_lexicon.dart (colloquial verbs/fillers/screen names/languages/theme/on-off in ar,en,es,fr,pt,ru,ur) + labels from the 7 translation files (screen titles, every settings title -> opens settings, switch titles); norm() folds Latin accents, Cyrillic->Latin, Urdu->Arabic letters, transliteration variants; new intents theme/language/toggle(motion,splash,transliteration)/clock faces; test groups for all 7 languages; settings switch «تفعيل رفيق» (default OFF; asks mic permission); AssistantWakeListener: loops SpeechRecognizer in the app language (preferOffline) while app open, not during playback or the sheet; «يا رفيق + أمر» runs at once, «يا رفيق» alone opens the sheet. v3.68.0+79. NEXT: build (running 17:1x) -> emulator: settings switch, mic button, logcat shows wake loop, pauses during recitation -> release v3.68.0 (delete v3.67.0 + tag; keep v3.51.0 + content-*) -> reply with release page + APK links. Owner tests voice on Honor + Xiaomi.
 
 16:35 (09-27) SEEN (build 16:29): sheet full width, floating mic hidden under the sheet. Voice injection on the emulator FAILED: emulator was started with -no-audio (no mic at all) -> restarted WITH audio + `adb emu avd hostmicon`, played edge-tts ar-EG mp3 on the PC via WPF MediaPlayer -> Google recogniser (online; on-device SODA has no ar-EG pack, error 12) got NO_SPEECH both times. Not established whether the PC speaker played / the laptop mic heard (owner is remote). So the INTENT EXECUTION (tabs, screens, play surah, book, author, hijri date) is NOT yet seen on any device. NEXT: Xiaomi with a real voice (owner) OR find a reliable injection path; then multilingual (see 16:30). Weekly quota 89 % at 16:33.
@@ -626,6 +628,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 17:34 - v3.68.0 verified on emulator: assistant switch, wake loop online fallback, pauses during recitation
 - 2026-09-27 17:28 - Wake loop falls back online on language-pack error 12 (seen); settings section pages rebuild their switches (seen stale)
 - 2026-09-27 17:18 - Assistant: settings switch, wake call, 7-language options wired; 639 pass; v3.68.0 bump (not built yet)
 - 2026-09-27 17:11 - Assistant parser: 7 languages (colloquial lexicon + the app's own translation labels), theme/language/switch options; 9 test groups pass
