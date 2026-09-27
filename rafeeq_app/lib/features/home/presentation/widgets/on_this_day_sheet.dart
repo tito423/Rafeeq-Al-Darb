@@ -54,11 +54,6 @@ Future<void> showGregorianDaySheet(BuildContext context,
         {int hijriOffset = 0}) =>
     _show(context, DayCalendar.gregorian, hijriOffset);
 
-/// Kept so older call sites (and anything that just wants "the day sheet")
-/// still compile; the Gregorian sheet is the one that covers both dates.
-Future<void> showOnThisDaySheet(BuildContext context, {int hijriOffset = 0}) =>
-    showGregorianDaySheet(context, hijriOffset: hijriOffset);
-
 Future<void> _show(BuildContext context, DayCalendar calendar, int offset,
     [(int, int)? day]) {
   return showModalBottomSheet<void>(

@@ -369,6 +369,3 @@ class OpenVoice {
     return b.buffer.asUint8List();
   }
 }
-
-@visibleForTesting
-Uint8List openVoiceWavForTest(Float32List s) => OpenVoice.wav(s);

@@ -22,16 +22,3 @@ class AssistantEnabled extends StateNotifier<bool> {
 final assistantEnabledProvider =
     StateNotifierProvider<AssistantEnabled, bool>(
         (ref) => AssistantEnabled(ref.watch(sharedPrefsProvider)));
-
-/// The recogniser's and the voice's language for the app's locale - the
-/// spoken form people use (Egyptian Arabic understands MSA as well).
-String speechLocaleFor(String code) => switch (code) {
-      'ar' => 'ar-EG',
-      'en' => 'en-US',
-      'es' => 'es-ES',
-      'fr' => 'fr-FR',
-      'pt' => 'pt-BR',
-      'ru' => 'ru-RU',
-      'ur' => 'ur-PK',
-      _ => code,
-    };

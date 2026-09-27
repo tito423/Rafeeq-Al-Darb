@@ -78,15 +78,7 @@ class RafeeqEar {
               manageBluetooth: false,
             ),
           ));
-          _micSub = stream.listen((bytes) {
-            final pcm = bytes.buffer.asInt16List(
-                bytes.offsetInBytes, bytes.lengthInBytes ~/ 2);
-            final f = Float32List(pcm.length);
-            for (var i = 0; i < pcm.length; i++) {
-              f[i] = pcm[i] / 32768.0;
-            }
-            _toWorker?.send(f);
-          });
+          _micSub = stream.listen((chunk) => _toWorker?.send(pcm16ToFloat(chunk)));
           listening.value = true;
         } finally {
           _starting = null;
@@ -201,4 +193,22 @@ class RafeeqEar {
       }
     });
   }
+}
+
+/// 16-bit little-endian mono PCM -> samples in [-1, 1).
+///
+/// A mic chunk can start at an ODD offset in its buffer, and an Int16 view
+/// must be 2-byte aligned: seen on the emulator 2026-09-27, 508 RangeErrors
+/// in a minute and nothing reached the recogniser. Such a chunk is copied
+/// first.
+@visibleForTesting
+Float32List pcm16ToFloat(Uint8List chunk) {
+  final bytes = chunk.offsetInBytes.isEven ? chunk : Uint8List.fromList(chunk);
+  final pcm =
+      bytes.buffer.asInt16List(bytes.offsetInBytes, bytes.lengthInBytes ~/ 2);
+  final f = Float32List(pcm.length);
+  for (var i = 0; i < pcm.length; i++) {
+    f[i] = pcm[i] / 32768.0;
+  }
+  return f;
 }

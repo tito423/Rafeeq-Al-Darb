@@ -1,0 +1,52 @@
+# Analyze + test on every push to master and every PR.
+#
+# The two databases the tests read are gitignored (they are built by the
+# pipeline and hosted on R2), so the job fetches the SAME hosted zips the app
+# downloads. Checked 2026-09-27: both hosted copies are byte-identical to the
+# local ones (SHA-1 704e34ff.. quran_sciences.db, 78c136ef.. hadith.db).
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: rafeeq_app
+    env:
+      CONTENT: https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          # Pinned to the version the app is built and released with.
+          flutter-version: 3.38.7
+          cache: true
+
+      - name: Fetch hosted databases the tests read
+        # R2 answers a request with no User-Agent with 403 (TRAPS.md #19).
+        run: |
+          for p in hadith/hadith.zip sciences/v2/quran_sciences.zip; do
+            curl -fsSL -A "rafeeq-ci (github.com/tito423/Rafeeq-Al-Darb)" \
+              -o /tmp/db.zip "$CONTENT/$p"
+            unzip -o -q /tmp/db.zip -d assets/data
+          done
+          ls -l assets/data/*.db
+
+      - run: flutter pub get
+
+      - run: flutter analyze lib test
+
+      - run: flutter test

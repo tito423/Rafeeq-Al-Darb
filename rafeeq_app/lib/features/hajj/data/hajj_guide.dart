@@ -117,7 +117,6 @@ const journeyPlaces = <String>[
 
 /// The source book, by its Library id.
 const hajjGuideBook = 'al_fiqh_al_manhaji_hajj';
-const hajjGuideShamelaUrl = 'https://shamela.ws/book/6369';
 
 /// الإفصاح, the modern commentary this printing carries under al-Nawawi's
 /// text, and which is NOT his and not ours to show.
