@@ -666,6 +666,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 22:54 - NEXT_PROMPT.md rewritten for Codex (owner asked): exact resume at item 4 step 1 (settings sections - code+tests, NOT built or seen), the test-clip method, environment notes, working method
 - 2026-09-27 22:52 - Item 4 step 1 (code, NOT on device yet): Rafeeq opens a settings SECTION where it is - scripts/build_assistant_settings_map.py reads settings_screen.dart (14 sections, their SettingsPart, 62 keys incl. the widgets each builds) -> assistant_settings_map.dart; OpenSettingIntent; SettingsBody(focusSection) opens + scrolls to it. Parser test with the real map. 641 pass
 - 2026-09-27 22:42 - Released v3.69.2; v3.69.1 deleted
 - 2026-09-27 22:41 - v3.69.2 release build: About card v3.69.2 SEEN on emulator (the 3.69.1 card said 3.69.0), support button present, splash log 'no clip'. Dorar all-encyclopaedia search, Rafeeq Shamela voice search, splash fix

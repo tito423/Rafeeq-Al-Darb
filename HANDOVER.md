@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 22:52 — IN PROGRESS — resume here**
+**2026-09-27 22:54 — IN PROGRESS — resume here**
 
-Item 4 step 1 (code, NOT on device yet): Rafeeq opens a settings SECTION where it is - scripts/build_assistant_settings_map.py reads settings_screen.dart (14 sections, their SettingsPart, 62 keys incl. the widgets each builds) -> assistant_settings_map.dart; OpenSettingIntent; SettingsBody(focusSection) opens + scrolls to it. Parser test with the real map. 641 pass
+NEXT_PROMPT.md rewritten for Codex (owner asked): exact resume at item 4 step 1 (settings sections - code+tests, NOT built or seen), the test-clip method, environment notes, working method
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
