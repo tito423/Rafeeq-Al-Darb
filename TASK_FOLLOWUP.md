@@ -652,6 +652,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 21:07 - v3.69.1: Rafeeq mic fix release build - installed on emulator over 3.69.0, versionName 3.69.1, 0 RangeErrors, mic recording, support button shown
 - 2026-09-27 21:01 - CI green for the first time: run 36335053720 on 86b2214d, analyze clean, 635 passed / 4 skipped
 - 2026-09-27 20:56 - Owner: Rafeeq hears nothing on his phone. Root cause proven: mic chunks arrive as a view at byte 5 of the StandardMethodCodec envelope on every device, asInt16List threw on each (fixed in 895349ae); test now encodes a real envelope and asserts offset 5. The earlier end-to-end check used the test clip, which bypasses the mic path
 - 2026-09-27 20:53 - CI run 2: book_speaker_focus_test waited 20 empty ticks for speak() to start - too few on the runner, interruption arrived first; now time-bounded (5 s). shamela_builder_live_test claimed to be skipped unless asked but dart_test.yaml had no live tag rule - added (it hit shamela.ws on every flutter test); still passes with --run-skipped. 634 pass

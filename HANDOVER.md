@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 21:01 — IN PROGRESS — resume here**
+**2026-09-27 21:07 — IN PROGRESS — resume here**
 
-CI green for the first time: run 36335053720 on 86b2214d, analyze clean, 635 passed / 4 skipped
+v3.69.1: Rafeeq mic fix release build - installed on emulator over 3.69.0, versionName 3.69.1, 0 RangeErrors, mic recording, support button shown
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
