@@ -98,13 +98,17 @@ class RafeeqVoicePack {
             }
             final tmp = '$path.part';
             await ContentMirrors.fetchFirst<void>(f.url, (url) async {
-              await _dio.download(url, tmp,
+              // A whole file left by an interrupted install is checked, not
+              // fetched again (366 MB).
+              final left = File(tmp);
+              if (!(left.existsSync() && await left.length() == f.bytes)) {
+                await _dio.download(url, tmp,
                   cancelToken: _cancel,
                   onReceiveProgress: (got, _) =>
                       progress.value = (done + got) / voicePackBytes);
+              }
               final got = await File(tmp).length();
-              final hash = await Isolate.run(() async =>
-                  (await sha256.bind(File(tmp).openRead()).first).toString());
+              final hash = await _sha256(tmp);
               if (got != f.bytes || hash != f.sha256) {
                 await File(tmp).delete();
                 throw StateError('${f.name}: $got bytes, sha256 $hash');
@@ -123,6 +127,13 @@ class RafeeqVoicePack {
           _inFlight = null;
         }
       }();
+
+  /// Static on purpose: a closure made inside [download] would carry this
+  /// object (its Dio, its notifiers) into the isolate, and they cannot be
+  /// sent - the first download on emulator-5554 got all 366 MB and then
+  /// failed right here.
+  static Future<String> _sha256(String path) => Isolate.run(() async =>
+      (await sha256.bind(File(path).openRead()).first).toString());
 
   void cancel() => _cancel?.cancel();
 

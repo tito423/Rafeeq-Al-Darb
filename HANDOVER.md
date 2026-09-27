@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 19:01 — IN PROGRESS — resume here**
+**2026-09-27 19:18 — IN PROGRESS — resume here**
 
-ORT conflict found in the first 3.69.0 APK (ARM carried 1.15.1, sherpa needs API 28): app jniLibs take sherpa's 1.28.2, build fails otherwise (check_apk_native.py); web wasm excluded; wake word glued to next word; 11 parser groups pass
+Voice pack: static sha256 (closure carried Dio into the isolate - download failed after 366 MB on emulator), resume a whole .part; size shown while downloading; TRAPS 58 (ORT per ABI)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

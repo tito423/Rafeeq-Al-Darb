@@ -599,3 +599,19 @@ Do not rediscover these.
     installed again. `-gpu swiftshader_indirect` has run without a crash
     since. Launch: `emulator -avd Medium_Phone_API_36.1 -no-window -no-audio
     -gpu swiftshader_indirect`.
+
+58. **Two plugins, one `libonnxruntime.so`: `pickFirsts` picks per ABI, and it
+    picked the wrong one.** `onnxruntime` (the book reader's voice) ships ORT
+    1.15.1 for ARM; `sherpa_onnx` 1.13.8 («رفيق») ships ORT 1.28.2 and asks for
+    C API 28. The first 3.69.0 APK carried 1.15.1 for arm64-v8a/armeabi-v7a and
+    1.28.2 for x86_64 - so the emulator would have worked and every phone would
+    have failed («The requested API version [28] is not available, only [1,
+    17]», the same message a host test gave against Windows' own System32
+    onnxruntime.dll). Fix: `copySherpaOrt` in app/build.gradle.kts puts
+    sherpa's copy in the app's own jniLibs; 1.28.2 still serves the reading
+    voice's API 14 (seen reading aloud on emulator-5554). `scripts/
+    check_apk_native.py` (run by build_github_release.bat) compares the ORT
+    version string per ABI and fails the build - bytes differ because AGP
+    strips the packaged copy. **Also: the emulator is x86_64; an ABI-specific
+    native bug never shows there. Read the APK's `lib/` for every ABI.**
+

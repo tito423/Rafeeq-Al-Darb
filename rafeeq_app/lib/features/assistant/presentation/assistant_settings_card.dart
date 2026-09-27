@@ -32,7 +32,8 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
   Future<void> _download() async {
     try {
       await _pack.download();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('rafeeq voice pack: $e');
       rootScaffoldMessengerKey.currentState?.showSnackBar(
           SnackBar(content: Text('assistant.pack_failed'.tr())));
     }
@@ -88,7 +89,17 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                 subtitle: progress != null
                     ? Padding(
                         padding: const EdgeInsets.only(top: 8),
-                        child: LinearProgressIndicator(value: progress),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            LinearProgressIndicator(value: progress),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${formatBytes((progress * voicePackBytes).round())}'
+                              ' / ${formatBytes(voicePackBytes)}',
+                            ),
+                          ],
+                        ),
                       )
                     : Text('assistant.pack_desc'
                         .tr(args: [formatBytes(voicePackBytes)])),

@@ -365,6 +365,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 55. `cp.bat` commits tracked files only - `git add` every new file (it now warns).
 56. Restarting the emulator resumes an OLD snapshot - reinstall and re-check `lastUpdateTime` every time.
 57. The emulator window hangs the emulator here since 2026-09-26 - launch with `-no-window -no-audio -gpu swiftshader_indirect` (host GPU crashed headless too).
+58. Two plugins ship `libonnxruntime.so` and `pickFirsts` chose the OLD one for ARM only - the emulator (x86_64) hid it; `check_apk_native.py` now fails the build.
 
 ## 4. Where things live
 
