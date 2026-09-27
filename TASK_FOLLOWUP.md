@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~00:01 (09-28) Rafeeq enabled successfully after granting RECORD_AUDIO + POST_NOTIFICATIONS: UI semantics `checked=true`; Android started `AssistantListenService` foreground service. NEXT EXACT: generate edge-tts clip 1 «يا رفيق، افتحلي تذكير صيام السنن», transcode to mono 16 kHz PCM WAV, push as app external file `rafeeq_test.wav`, clear/watch logcat, then screenshot and READ the opened/focused section.
+
 ~00:00 (09-28) REAL Rafeeq pack download COMPLETED on emulator: screenshots read at 41.3, 119.1, 171.1, 239.3, 304.1, 348.9 MB, then UI changed to installed card with enabled switch + Delete; no cancel stack, Dio error or hash error. Thus the earlier cancellation did not reproduce under observation; no behavioral fix justified. NEXT EXACT: turn the now-enabled Rafeeq switch on, grant mic/notification if asked, checkpoint, generate/push voice clip 1 and capture/read its focused Settings section.
 
 ~23:55 (09-27) Voice-pack stall = the DYING EMULATOR, not the app: on a fresh boot the same build downloaded 10.7 MB in 15 s, 49.7 MB at 23:42, 149.5 MB / 368.2 at 23:53 (slowing to ~0.2 MB/s, emulator network). Still downloading. Clips ready in the session scratchpad (lost with it; regenerate with edge_tts as in NEXT_PROMPT.md): «يا رفيق، افتحلي تذكير صيام السنن», «يا رفيق، افتح ضبط المواقيت والتاريخ». NEXT: when the pack is installed, turn «تفعيل رفيق» on, push each clip as rafeeq_test.wav, screenshot: the named section must be OPEN and visible. Weekly quota 98 percent.
@@ -698,6 +700,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 00:01 - Enable Rafeeq foreground listener after pack install
 - 2026-09-28 00:00 - Complete verified Rafeeq voice pack download
 - 2026-09-27 23:54 - Voice-pack stall was the dying emulator: fresh boot downloads (10.7 MB/15 s, 149.5/368.2 MB at 23:53); step-1 voice test waits for the pack
 - 2026-09-27 23:52 - Observe Rafeeq pack retry progressing past prior stall
