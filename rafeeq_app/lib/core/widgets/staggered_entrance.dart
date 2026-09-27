@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// A list item that rises and fades in, a beat after the one above it
@@ -32,6 +34,8 @@ class _StaggeredEntranceState extends State<StaggeredEntrance>
   late final Animation<double> _t =
       CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
 
+  Timer? _start;
+
   bool get _animates => widget.index < widget.maxAnimated;
 
   @override
@@ -41,7 +45,9 @@ class _StaggeredEntranceState extends State<StaggeredEntrance>
       _c.value = 1;
       return;
     }
-    Future.delayed(Duration(milliseconds: 45 * widget.index), () {
+    // A Timer, not Future.delayed: cancelled with the row, so a row that
+    // scrolls away (or a widget test that ends) leaves nothing pending.
+    _start = Timer(Duration(milliseconds: 45 * widget.index), () {
       if (mounted) _c.forward();
     });
   }
@@ -54,6 +60,7 @@ class _StaggeredEntranceState extends State<StaggeredEntrance>
 
   @override
   void dispose() {
+    _start?.cancel();
     _c.dispose();
     super.dispose();
   }

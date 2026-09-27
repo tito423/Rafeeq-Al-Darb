@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -82,11 +84,12 @@ class _SourceCardState extends State<_SourceCard>
     duration: const Duration(milliseconds: 4200),
   );
   bool _pressed = false;
+  Timer? _start;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 120 + widget.delayMs), () {
+    _start = Timer(Duration(milliseconds: 120 + widget.delayMs), () {
       if (!mounted) return;
       _enter.forward();
       _sheen.repeat();
@@ -104,6 +107,7 @@ class _SourceCardState extends State<_SourceCard>
 
   @override
   void dispose() {
+    _start?.cancel();
     _enter.dispose();
     _sheen.dispose();
     super.dispose();
