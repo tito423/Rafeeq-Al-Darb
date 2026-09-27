@@ -118,6 +118,9 @@ void main() {
     expect(of('غير اللغة للانجليزي'), 'language en');
     expect(of('اقفل التأثيرات الحركية'), 'toggle motion off');
     expect(of('شغل فيديو البداية'), 'toggle splash on');
+    // Egyptian, pronoun attached.
+    expect(of('طفيها التأثيرات الحركية'), 'toggle motion off');
+    expect(of('ولع فيديو البداية'), 'toggle splash on');
     expect(of('افتح شكل الساعة'), 'open clockFaces');
   });
 

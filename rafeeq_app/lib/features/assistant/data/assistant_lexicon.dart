@@ -164,6 +164,8 @@ const changeVerbs = <String>[
 /// A switch turned on / off («شغل فيديو البداية», «اقفل التأثيرات الحركية»).
 const onWords = <String>[
   'شغل', 'فعل', 'اظهر', 'ظهر', 'تشغيل', 'فعال', 'اظهار',
+  // Egyptian, with the pronoun attached as it is said.
+  'شغلي', 'شغله', 'شغلها', 'ولع', 'ولعلي', 'ولعها', 'فعله', 'فعلها',
   'on', 'enable', 'activate', 'show',
   'activa', 'activar', 'enciende', 'muestra', 'mostrar',
   'active', 'activer', 'affiche', 'allume',
@@ -173,6 +175,8 @@ const onWords = <String>[
 ];
 const offWords = <String>[
   'اقفل', 'قفل', 'اطفي', 'طفي', 'وقف', 'الغي', 'عطل', 'شيل', 'اخفي', 'بطل',
+  'اقفله', 'اقفلها', 'طفيه', 'طفيها', 'وقفه', 'وقفها', 'شيله', 'شيلها',
+  'عطله', 'عطلها',
   'off', 'disable', 'deactivate', 'hide', 'stop', 'remove',
   'desactiva', 'desactivar', 'apaga', 'quita', 'oculta',
   'desactive', 'desactiver', 'désactive', 'eteins', 'éteins', 'masque', 'enleve',

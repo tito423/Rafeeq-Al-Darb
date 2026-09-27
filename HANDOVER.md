@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 01:04 — IN PROGRESS — resume here**
+**2026-09-28 01:07 — IN PROGRESS — resume here**
 
-Item 4 step 2 start: Egyptian open verbs (incl. 'فتح' as the recogniser drops the alif, 'فين', 'خدني', 'اشوف') + tests; 641 pass; not built or voiced yet
+Step 2: Egyptian on/off verbs with attached pronouns + tests; 641 pass; not built or voiced
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
