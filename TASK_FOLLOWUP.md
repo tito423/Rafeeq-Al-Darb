@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+14:23 (09-27) RELEASED v3.67.0 (tag 038fcf9b = HEAD, RafeeqAlDarb-v3.67.0.apk 276,493,881 B, range request 206; v3.66.0 + tag deleted; v3.51.0 and content-* kept). Before publishing: analyze clean, 630 tests pass, APK badging 3.67.0 (78), About card v3.67.0 on the emulator. Contents: all 11 Dorar encyclopedias (Tafseer + History readers), read-on-site fallback, dynamic source rules (R2 config/source_rules.json v5, 31 rules), library cards + staggered lists, continuous recitation «أكمل مع …», Shamela resume/confirm-delete/link-with-spaces/editor pages, reciter page grey-box fix, downloads row, no Google Location Accuracy loop. NEXT: Google TV remote walk (stopped at first-run screen); schedule scripts/check_sources.py daily (needs owner OK for a Windows scheduled task).
+
 14:10 (09-27) SEEN on emulator (build 14:0x, 630 tests pass): (1) HISTORY reader: 7 eras -> عصر النبوة events with titles + هجري/ميلادي years. (2) CONTINUOUS RECITATION RESUME: first start - sheet lists the chosen reciter first, no resume card; picked أبو بكر الشاطري, recited to 1:6-1:7; FORCE-STOPPED the app; relaunch -> التلاوة المستمرة -> card «أكمل مع أبو بكر الشاطري — سورة الفاتحة، الآية ٧» on top + الشاطري first in the list -> tap -> playing 1:7 (media_session PLAYING, description 1:7, verse highlighted). Build note: a release build failed once because I ran analyze during it (trap 54) - rebuilt clean. Library card: «١١ موسوعة». UNRELEASED since v3.66.0: all of today's work. NEXT: ask owner to release 3.67.0; Google TV remote walk (paused at the first-run screen).
 
 13:45 (09-27) TAFSEER READER SEEN (emulator, build 13:4x, 628 tests pass): hub lists «موسوعة التفسير» again -> 114 surahs (numbered) -> سورة الفاتحة intro (أسماء السورة, الأدلة, footnote numbers), السابق disabled at the start -> التالي -> «سورة الفاتحة الآيات (1-7)» (المعنى الإجمالي، غريب الكلمات، مشكل الإعراب) -> التالي -> سورة البقرة intro (chain crosses surahs). Chevron in the surah list fixed to chevron_right (trap 7) - NOT rebuilt. Library card now says ١٠ موسوعات. NEXT: History reader (eras ?era=N + /history/event/N) - read real pages first.
@@ -612,6 +614,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 14:23 - Released v3.67.0
 - 2026-09-27 14:17 - 3.67.0: version bump
 - 2026-09-27 14:11 - Continuous recitation resume seen after force-stop (1:7, same reciter); History reader seen
 - 2026-09-27 14:04 - Resume logic moved out of quran_screen (back to its 1057-line ceiling); History reader seen on emulator

@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 14:17 — IN PROGRESS — resume here**
+**2026-09-27 14:23 — IN PROGRESS — resume here**
 
-3.67.0: version bump
+Released v3.67.0
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
