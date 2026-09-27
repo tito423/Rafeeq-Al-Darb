@@ -159,19 +159,25 @@ class SettingsBody extends ConsumerWidget {
             title: 'assistant.setting_title'.tr(),
             icon: Icons.mic_rounded,
             children: [
-              Card(
-                child: SwitchListTile(
-                  secondary: Icon(Icons.record_voice_over_rounded,
-                      color: scheme.primary),
-                  title: Text('assistant.setting_switch'.tr()),
-                  subtitle: Text('assistant.setting_desc'.tr()),
-                  value: ref.watch(assistantEnabledProvider),
-                  onChanged: (v) async {
-                    if (v && !(await Permission.microphone.request()).isGranted) {
-                      return;
-                    }
-                    await ref.read(assistantEnabledProvider.notifier).set(v);
-                  },
+              // Its own Consumer: the section opens as a page of its own and
+              // does not rebuild these children - the switch stayed «off»
+              // after it was turned on (seen on emulator-5554).
+              Consumer(
+                builder: (context, ref, _) => Card(
+                  child: SwitchListTile(
+                    secondary: Icon(Icons.record_voice_over_rounded,
+                        color: scheme.primary),
+                    title: Text('assistant.setting_switch'.tr()),
+                    subtitle: Text('assistant.setting_desc'.tr()),
+                    value: ref.watch(assistantEnabledProvider),
+                    onChanged: (v) async {
+                      if (v &&
+                          !(await Permission.microphone.request()).isGranted) {
+                        return;
+                      }
+                      await ref.read(assistantEnabledProvider.notifier).set(v);
+                    },
+                  ),
                 ),
               ),
             ],
@@ -526,6 +532,25 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
     with SingleTickerProviderStateMixin, AccordionMember<CollapsibleSection> {
   late bool _open = widget.initiallyOpen;
 
+  /// What the section's own page shows. A pushed page keeps the widgets it
+  /// was built with, so a switch there stayed where it was when tapped
+  /// (the new «رفيق» switch, seen on emulator-5554, 2026-09-27; every switch
+  /// in these pages had the same flaw). The page listens to this instead,
+  /// and each rebuild of the settings hands it the fresh children.
+  late final _children = ValueNotifier<List<Widget>>(widget.children);
+
+  @override
+  void didUpdateWidget(CollapsibleSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _children.value = widget.children;
+  }
+
+  @override
+  void dispose() {
+    _children.dispose();
+    super.dispose();
+  }
+
   @override
   bool get accordionIsOpen => _open;
 
@@ -545,9 +570,13 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
           appBar: AppBar(title: Text(widget.title)),
           body: MoreGroupAccent(
             accent: accent,
-            child: ListView(
-              padding: readableInsets(context, const EdgeInsets.fromLTRB(16, 12, 16, 28)),
-              children: widget.children,
+            child: ValueListenableBuilder<List<Widget>>(
+              valueListenable: _children,
+              builder: (context, children, _) => ListView(
+                padding: readableInsets(
+                    context, const EdgeInsets.fromLTRB(16, 12, 16, 28)),
+                children: children,
+              ),
             ),
           ),
         ),

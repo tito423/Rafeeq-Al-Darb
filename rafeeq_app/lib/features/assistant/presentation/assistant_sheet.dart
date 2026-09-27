@@ -206,6 +206,11 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
   bool _playing = false;
   bool _running = false;
   bool _granted = false;
+
+  /// On-device first; a phone with no offline pack for the language answers
+  /// «language pack» (error 12) at once - seen on emulator-5554, 2026-09-27,
+  /// every 4 s for ever - so the loop falls back to the online service.
+  bool _offline = true;
   StreamSubscription<bool>? _audio;
 
   bool get _should =>
@@ -260,7 +265,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       while (_should) {
         final r = await SpeechInput.instance.listen(
           lang: speechLocaleFor(_appLanguage()),
-          preferOffline: true,
+          preferOffline: _offline,
         );
         if (!_should) break;
         if (r.ok) {
@@ -272,6 +277,10 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
             await Future<void>.delayed(const Duration(milliseconds: 250));
           case SpeechInput.errPermission:
             _granted = false;
+          case SpeechInput.errLanguageNotSupported ||
+                  SpeechInput.errLanguageUnavailable
+              when _offline:
+            _offline = false;
           default:
             // Busy, no network, a language the phone cannot hear: wait, so a
             // failing recogniser is not hammered in a loop.
