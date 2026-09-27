@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 12:14 — IN PROGRESS — resume here**
+**2026-09-27 12:47 — IN PROGRESS — resume here**
 
-Stage C sweep tooling (fresh boot per class); location dialog fix built
+Stage C sweep: 70 screens across 5 classes and both orientations, all seen, no layout faults
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

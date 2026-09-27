@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+12:50 (09-27) STAGE C SWEEP DONE (touch part): scripts/screen_sweep_all.sh, 5 classes x 2 orientations x 7 tabs = 70 shots, every orientation confirmed by screencap size (1080x2400/2400x1080, 1220x2712/2712x1220, 1600x2560/2560x1600, 1080x1920/1920x1080, 1920x1080/1080x1920). Looked at every sheet: no clipping/overflow; upright = bottom bar, sideways/expanded = right rail; home 2 columns on tablet/smart/sideways; prayer: settings beside the qibla compass; adhkar 4 columns; tasbeeh counter beside phrases; library 2 author columns; Quran opens full-screen (Android's one-time «Viewing full screen» notice covered 4 shots - system, not app). Emulator fix for the tool: rotate AFTER launch (restart undid the lock). NEXT: D-pad walk on the Google TV AVD (GoogleTV_1080p).
+
 12:20 (09-27) STAGE C sweep started. Tool: scripts/screen_sweep.py (tab positions from app_shell.dart rule; uiautomator cannot dump the ticking home) + scripts/screen_sweep_all.sh (fresh emulator boot per class). Findings so far: (1) FIXED+built: Google «Location Accuracy» dialog on every resume when Google accuracy off -> Geolocator AndroidSettings(forceLocationManager: true) (platform FUSED provider, no Play dialog; low accuracy = no GPS, falls back to last known). Dialog gone on emulator; a FRESH fix via LocationManager not yet proven (emulator network location off) -> check on the Xiaomi. (2) Emulator: back-to-back `wm size` -> «System UI isn't responding» (29/70 shots); settings user_rotation does not rotate -> `cmd window user-rotation lock N`; `emu kill` then snapshot load hung -> boot with -no-snapshot. Phone upright: prayer/adhkar/tasbeeh/library/more fine; tablet on a fresh boot: home 2 columns + bottom bar fine.
 
 10:29 (09-27) Owner asked me to run the fix script (double-click opened Notepad). Ran E:\DevEnv\fix_laptop.ps1 elevated: C free 102.4 -> 130.2 GB (+27.8 GB); hiberfil.sys gone (powercfg /a: «Hibernation has not been enabled»); sleep on AC = 0 and hibernate on AC = 0 (verified with powercfg /q; DC standby was already 0); DISM StartComponentCleanup completed. Log E:\DevEnv\fix_laptop_log.txt. Self-lock: owner «بيتهيالي اه» the last key was L/م -> stuck Win key (Win+L) is the leading cause; not proven. NEXT: ADAPTIVE_PLAN stage C.
@@ -598,6 +600,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 12:47 - Stage C sweep: 70 screens across 5 classes and both orientations, all seen, no layout faults
 - 2026-09-27 12:14 - Stage C sweep tooling (fresh boot per class); location dialog fix built
 - 2026-09-27 11:10 - Location: LocationManager instead of fused provider (Google Location Accuracy dialog looped on every resume); screen_sweep.py for stage C
 - 2026-09-27 10:29 - Laptop fix script run: C +27.8 GB, no sleep/hibernate on AC

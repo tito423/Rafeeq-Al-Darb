@@ -86,18 +86,23 @@ def main():
             adb("shell", "wm", "size", size)
             adb("shell", "wm", "density", str(dens))
             for rot in (0, 1):
-                # settings user_rotation did not rotate this emulator (all "sideways"
-                # shots came out upright); cmd window user-rotation does.
-                adb("shell", "cmd", "window", "user-rotation", "lock", str(rot))
                 adb("shell", "am", "force-stop", PKG)
                 time.sleep(1)
                 adb("shell", "monkey", "-p", PKG, "-c", "android.intent.category.LAUNCHER", "1")
                 time.sleep(18)  # the splash runs ~12 s
+                # Rotated AFTER the launch: `settings user_rotation` never
+                # rotated this emulator, and a `cmd window user-rotation lock`
+                # set before force-stop was undone by the restart
+                # (ROTATION_90 -> ROTATION_0, accelerometer_rotation back to 1).
+                adb("shell", "cmd", "window", "user-rotation", "lock", str(rot))
+                time.sleep(4)
                 paths, labels = [], []
                 probe = os.path.join(out, "probe.png")
                 shot(probe)
                 w, h = Image.open(probe).size
-                for i, tab in enumerate(TABS):
+                print(name, rot, "screen", w, h, flush=True)
+                for i in [0, 2, 3, 4, 5, 6, 1]:  # Quran last: its reader hides the tab bar
+                    tab = TABS[i]
                     pos = tab_pos(i, w, h, dens)
                     adb("shell", "input", "tap", str(pos[0]), str(pos[1]))
                     time.sleep(3)
