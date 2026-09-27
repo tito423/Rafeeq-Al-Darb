@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~00:12 (09-28) Runtime-catalogue diagnostic signed release built successfully: 314,017,839 B, SHA-256 `27167FEC4D63D2F9DE692D7181CFE1F0A86050521C06F44451366B55FFCA7085`; ORT all ABIs + signing lineage verified. NEXT EXACT: `adb install -r`, confirm Rafeeq pack survived and switch enabled, clear logcat, push existing `work/rafeeq_test_2.wav`, read `assistant catalogue:` and `rafeeq ... intent:` lines, then fix only the proven cause.
+
 ~00:09 (09-28) Runtime diagnostics + exact recognized phrase test are clean: focused analyze = No issues; `flutter test test/assistant_intent_test.dart` = 13 passed. NEXT EXACT: run signed release build alone, checkpoint/install, ensure voice pack survived, replay clip 2, and read the new catalogue exception/count + exact parsed intent from logcat.
 
 ~00:07 (09-28) Runtime diagnostics added (not built): locale load failures now print locale+exception+stack instead of being silently swallowed; provider prints locale/section/phrase counts; both background and open-sheet paths print exact phrase -> intent. No matching behavior changed. NEXT EXACT: focused analyze `assistant_sheet.dart` + focused assistant intent test, checkpoint, then signed release build/install and replay clip 2 to read the cause.
@@ -708,6 +710,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 00:12 - Build signed runtime assistant catalogue diagnostic APK
 - 2026-09-28 00:08 - Verify runtime assistant diagnostics and exact phrase test
 - 2026-09-28 00:07 - Instrument runtime assistant catalogue and parsed intents
 - 2026-09-28 00:06 - Prove runtime settings catalogue fails while parser test passes
