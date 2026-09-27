@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 23:52 — IN PROGRESS — resume here**
+**2026-09-27 23:54 — IN PROGRESS — resume here**
 
-Observe Rafeeq pack retry progressing past prior stall
+Voice-pack stall was the dying emulator: fresh boot downloads (10.7 MB/15 s, 149.5/368.2 MB at 23:53); step-1 voice test waits for the pack
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
