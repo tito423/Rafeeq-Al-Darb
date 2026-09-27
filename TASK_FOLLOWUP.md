@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+18:10 (09-27) OWNER TESTED v3.68.0 ON HIS PHONE (screenshots): repeated beep on every listen (Google recogniser restarting), «افتح كتاب رجال حول الرسول» opened the library only (book NOT in the app catalogue - must say so), error «الرمز 11» (ERROR_SERVER_DISCONNECTED), offline -> «يحتاج اتصالًا بالإنترنت», Google TTS voice bad. RULING: «دور على أفضل نموذج وحطه في التحميلات وفي الإعدادات، المستخدم ينزله أول مرة بس، ولو منزلوش الأفضل مايشتغلش بدل ما يشتغل بسوء» + works in the BACKGROUND while enabled. DECISION (checked live 18:15): engine = sherpa_onnx 1.13.8 (pub.dev 2026-09-11, flutter>=3.10, Apache-2.0, all ABIs; py sherpa_onnx 1.13.8 on this PC) = silero VAD v5 (2 MB, always on, cheap) -> Whisper multilingual on each speech segment -> wake word + command; fully offline, no Google, no beeps. Candidates (k2-fsa asr-models): whisper-turbo 537 MB tarball, whisper-small 609 MB tarball (fp32+int8 inside), distil-large-v3 504 MB (en-only). STAGES: S2 measure small vs turbo int8 on this PC (edge-tts colloquial commands in 7 languages + timing) -> host chosen int8 files + VAD on R2 + GitHub mirror (HEAD check); S3 sherpa_onnx in app: model pack in Downloads + settings (switch disabled until downloaded), recogniser replaces Google in sheet + wake loop; remove Google TTS (text reply); book-not-found reply; S4 foreground service (mic type) for background listening with persistent notification; S5 phone latency on Honor + Xiaomi. Weekly quota 91 % at 17:50.
+
 17:45 (09-27) RELEASED v3.68.0 (tag 3dc2c5a6 = HEAD, RafeeqAlDarb-v3.68.0.apk 276,874,809 B; v3.67.0 + tag deleted; v3.51.0 + content-* kept). NEXT: wait for the owner's test on Honor + Xiaomi (voice commands in real use, wake call, beeps/battery, offline Arabic).
 
 17:40 (09-27) SEEN on emulator, v3.68.0 build 17:31: settings «تفعيل رفيق» switch flips visibly on/off (CollapsibleSection pages now rebuild children - every switch there was stale before); mic button hidden while off, shown when on; wake loop: preferOffline -> error 12 once -> online, then listens continuously (NO_SPEECH every ~5 s, restarts); 0 listens during 15 s of continuous recitation (media_session PLAYING), resumes after MEDIA_PAUSE (2 in 10 s); button hidden in full-screen mushaf. NOT SEEN: any command by real voice (emulator never heard PC audio). NEXT: publish v3.68.0, owner tests on Honor + Xiaomi.
@@ -630,6 +632,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 18:09 - Owner test of v3.68.0: Google recogniser rejected; plan: sherpa_onnx VAD + Whisper offline model pack
 - 2026-09-27 17:35 - Released v3.68.0
 - 2026-09-27 17:34 - v3.68.0 verified on emulator: assistant switch, wake loop online fallback, pauses during recitation
 - 2026-09-27 17:28 - Wake loop falls back online on language-pack error 12 (seen); settings section pages rebuild their switches (seen stale)
