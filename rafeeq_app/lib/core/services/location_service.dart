@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -143,11 +144,24 @@ class LocationService {
     // give in (emulator-5554, 2026-09-25). The card's button
     // ([askToEnable]) opens the location settings when the reader asks.
     if (!await Geolocator.isLocationServiceEnabled()) return null;
+    // Android's own LocationManager, not Google Play services' fused
+    // provider: with device location ON but Google «Location Accuracy» OFF,
+    // the fused provider raises «For a better experience, your device will
+    // need to use Location Accuracy» on every request - «No thanks» resumes
+    // the app, the resume refresh asks again, and the dialog covered every
+    // tab of a 70-screenshot sweep (emulator-5554, 2026-09-27). A low
+    // accuracy fix does not need Google's service.
     final pos = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.low,
-        timeLimit: Duration(seconds: 12),
-      ),
+      locationSettings: Platform.isAndroid
+          ? AndroidSettings(
+              accuracy: LocationAccuracy.low,
+              timeLimit: const Duration(seconds: 12),
+              forceLocationManager: true,
+            )
+          : const LocationSettings(
+              accuracy: LocationAccuracy.low,
+              timeLimit: Duration(seconds: 12),
+            ),
     );
     final (locality, country) =
         await _reverseGeocode(pos.latitude, pos.longitude, localeCode);

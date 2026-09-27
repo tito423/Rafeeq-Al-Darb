@@ -596,6 +596,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 11:10 - Location: LocationManager instead of fused provider (Google Location Accuracy dialog looped on every resume); screen_sweep.py for stage C
 - 2026-09-27 10:29 - Laptop fix script run: C +27.8 GB, no sleep/hibernate on AC
 - 2026-09-27 05:20 - Shamela on the Xiaomi: delete confirmation seen; all Shamela open items verified
 - 2026-09-27 05:07 - Shamela: confirm before deleting an imported book (one tap deleted a 2,277-page import on the Xiaomi); NOT built

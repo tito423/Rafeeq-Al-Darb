@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 10:29 — IN PROGRESS — resume here**
+**2026-09-27 11:10 — IN PROGRESS — resume here**
 
-Laptop fix script run: C +27.8 GB, no sleep/hibernate on AC
+Location: LocationManager instead of fused provider (Google Location Accuracy dialog looped on every resume); screen_sweep.py for stage C
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
