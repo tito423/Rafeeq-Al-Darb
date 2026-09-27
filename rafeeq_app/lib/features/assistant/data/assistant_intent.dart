@@ -193,6 +193,7 @@ String _foldLatin(String w) => w
     .replaceAll('dh', 'd')
     .replaceAll('th', 't')
     .replaceAll('q', 'k')
+    .replaceAll('ph', 'f')
     .replaceAllMapped(RegExp(r'(.)\1+'), (m) => m[1]!);
 
 /// Plain, comparable text in any of the seven languages: Arabic without
@@ -237,6 +238,74 @@ Set<String> _normSet(Iterable<String> words) =>
 /// like fillers.
 const _latinArticles = {'al', 'el', 'ul', 'ar', 'ash', 'as', 'az', 'ad', 'at', 'an', 'i'};
 
+/// Levenshtein distance, giving up (returning [max] + 1) once it must
+/// exceed [max].
+int editDistance(String a, String b, int max) {
+  if ((a.length - b.length).abs() > max) return max + 1;
+  var prev = List<int>.generate(b.length + 1, (i) => i);
+  for (var i = 1; i <= a.length; i++) {
+    final cur = List<int>.filled(b.length + 1, 0)..[0] = i;
+    var rowMin = cur[0];
+    for (var j = 1; j <= b.length; j++) {
+      final cost = a.codeUnitAt(i - 1) == b.codeUnitAt(j - 1) ? 0 : 1;
+      cur[j] = [prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost]
+          .reduce((x, y) => x < y ? x : y);
+      if (cur[j] < rowMin) rowMin = cur[j];
+    }
+    if (rowMin > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
+}
+
+final _wakeNorm = {for (final w in lex.wakeWords) norm(w)};
+
+/// What was said after «يا رفيق», or null when it was not called.
+///
+/// The recogniser writes the name many ways - «يار فيق», «يارفيق», «رفيك»,
+/// "rafek", "rafec", "refiq", «рафик» - so a word (or two words joined)
+/// within one edit of a form of the name counts, and «يا» glued to it is
+/// taken off. An empty string means the name alone.
+String? afterWakeWord(String heard) {
+  final w = norm(heard).split(' ').where((x) => x.isNotEmpty).toList();
+  bool isName(String x) {
+    var t = x;
+    if (t.startsWith('يا') && t.length > 4) t = t.substring(2);
+    if (t.startsWith('ya') && t.length > 5) t = t.substring(2);
+    if (t.startsWith('hey') && t.length > 6) t = t.substring(3);
+    for (final n in _wakeNorm) {
+      if (editDistance(t, n, 1) <= 1) return true;
+    }
+    return false;
+  }
+
+  for (var i = 0; i < w.length && i < 4; i++) {
+    if (isName(w[i])) return w.sublist(i + 1).join(' ');
+    if (i + 1 < w.length && isName(w[i] + w[i + 1])) {
+      return w.sublist(i + 2).join(' ');
+    }
+  }
+  return null;
+}
+
+/// Day numbers as they are said (Egyptian and MSA), normalised.
+final _numberWords = <String, int>{
+  for (final e in const {
+    1: ['واحد', 'وحده', 'الاول'], 2: ['اتنين', 'اثنين', 'اثنان', 'تاني'],
+    3: ['تلاته', 'ثلاثه', 'تالت'], 4: ['اربعه', 'اربع', 'رابع'],
+    5: ['خمسه', 'خمس', 'خامس'], 6: ['سته', 'ست', 'سادس'],
+    7: ['سبعه', 'سبع', 'سابع'], 8: ['تمانيه', 'ثمانيه', 'تامن'],
+    9: ['تسعه', 'تسع', 'تاسع'], 10: ['عشره', 'عاشر'],
+    11: ['حداشر', 'احداشر', 'احدعشر'], 12: ['اتناشر', 'اتناش', 'اثناعشر', 'اطناشر'],
+    13: ['تلتاشر', 'تلطاشر', 'ثلاثهعشر'], 14: ['اربعتاشر', 'اربعطاشر'],
+    15: ['خمستاشر', 'خمسطاشر'], 16: ['ستاشر', 'سطاشر'],
+    17: ['سبعتاشر', 'سبعطاشر'], 18: ['تمنتاشر', 'طمنطاشر'],
+    19: ['تسعتاشر', 'تسعطاشر'], 20: ['عشرين', 'عشرون'],
+    30: ['تلاتين', 'ثلاثين', 'ثلاثون'],
+  }.entries)
+    for (final w in e.value) norm(w): e.key,
+};
+
 class AssistantParser {
   AssistantParser(this.catalog) {
     _surahKeys = [
@@ -266,6 +335,68 @@ class AssistantParser {
           ...?catalog.optionLabels[e.key]?.map(_canon),
         }.where((p) => p.isNotEmpty).toList(),
     };
+
+    // Every word the assistant can act on, for [_correct].
+    final v = <String>{
+      ..._open, ..._play, ..._surahWord, ..._bookWord, ..._booksOf,
+      ..._change, ..._on, ..._off, ..._langWord, ..._themeWord,
+      for (final l in _screens.values) for (final ph in l) ...ph.split(' '),
+      for (final ph in _settings) ...ph.split(' '),
+      for (final l in _options.values) for (final ph in l) ...ph.split(' '),
+      for (final k in _surahKeys) for (final ph in k) ...ph.split(' '),
+      for (final m in lex.hijriMonthWords) for (final w in m) ...norm(w).split(' '),
+      for (final l in lex.languageNames.values) for (final w in l) ...norm(w).split(' '),
+      for (final l in lex.themeValueWords.values) for (final w in l) ...norm(w).split(' '),
+      for (final l in lex.onThisDayPhrases) ...norm(l).split(' '),
+    }..removeWhere((w) => w.length < 3);
+    // Names from the catalogues are a second tier: a slip is corrected to a
+    // command word first («الاثكار» -> «الاذكار», not a book's «الافكار»).
+    final names = <String>{
+      for (final r in catalog.reciters)
+        for (final n in r.names) ...norm(n).split(' '),
+      for (final b in catalog.books) ...norm('${b.title} ${b.author}').split(' '),
+    }..removeWhere((w) => w.length < 3 || v.contains(w));
+    _tiers = [_byLen(v), _byLen(names)];
+    _vocab = {...v, ...names};
+  }
+
+  static Map<int, List<String>> _byLen(Set<String> words) {
+    final m = <int, List<String>>{};
+    for (final w in words) {
+      (m[w.length] ??= []).add(w);
+    }
+    return m;
+  }
+
+  late final Set<String> _vocab;
+  late final List<Map<int, List<String>>> _tiers;
+
+  /// A heard word the app does not know, replaced by the nearest word it
+  /// does - the recogniser's slips («الأثكار» -> «الاذكار», «التديق» ->
+  /// «التطبيق», «بلغ» -> «بلوغ»). One edit for words of 4-6 letters, two
+  /// from 7; shorter words and ties are left alone rather than guessed.
+  String _correct(String w) {
+    if (w.length < 4 || _vocab.contains(w) || _fillers.contains(w)) return w;
+    final max = w.length >= 7 ? 2 : 1;
+    for (final tier in _tiers) {
+      String? best;
+      var bestD = max + 1;
+      var tie = false;
+      for (var len = w.length - max; len <= w.length + max; len++) {
+        for (final c in tier[len] ?? const <String>[]) {
+          final d = editDistance(w, c, max);
+          if (d < bestD) {
+            best = c;
+            bestD = d;
+            tie = false;
+          } else if (d == bestD && c != best) {
+            tie = true;
+          }
+        }
+      }
+      if (best != null) return tie ? w : best;
+    }
+    return w;
   }
 
   final AssistantCatalog catalog;
@@ -307,6 +438,7 @@ class AssistantParser {
     final all = norm(asciiDigits(heard))
         .split(' ')
         .where((w) => w.isNotEmpty)
+        .map(_correct)
         .toList();
     final words = [for (final w in all) if (!_fillers.contains(w)) w];
     final clean = words.join(' ');
@@ -523,14 +655,27 @@ class AssistantParser {
     var monthLen = 0;
     for (var i = 0; i < lex.hijriMonthWords.length; i++) {
       for (final m in lex.hijriMonthWords[i].map(_canon)) {
-        if (m.length > monthLen && (' $clean ').contains(' $m ')) {
+        if (m.length > monthLen && _hasPhrase(clean, [m])) {
           month = i + 1;
           monthLen = m.length;
         }
       }
     }
     final d = RegExp(r'\b(\d{1,2})\b').firstMatch(clean);
-    final day = int.tryParse(d?.group(1) ?? '');
+    var day = int.tryParse(d?.group(1) ?? '');
+    if (day == null) {
+      // «اتناشر ربيع الأول»: the day said as a word, as recognisers write it.
+      final ws = clean.split(' ');
+      for (var i = 0; i < ws.length && day == null; i++) {
+        final n = _numberWords[ws[i]];
+        if (n == null) continue;
+        // «واحد وعشرين» / «خمسه و عشرين»
+        final next = i + 1 < ws.length ? ws[i + 1] : '';
+        final tens = _numberWords[next.startsWith('و') ? next.substring(1) : ''] ??
+            (next == 'و' && i + 2 < ws.length ? _numberWords[ws[i + 2]] : null);
+        day = n < 10 && (tens == 20 || tens == 30) ? n + tens! : n;
+      }
+    }
     return OnThisDayIntent(
       day: day != null && day >= 1 && day <= 30 ? day : null,
       month: month,

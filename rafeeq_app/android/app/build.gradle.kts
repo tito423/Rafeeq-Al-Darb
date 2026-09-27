@@ -91,6 +91,11 @@ android {
     // x86 is not an ABI Flutter builds for.
     packaging {
         jniLibs {
+            // Two plugins ship libonnxruntime.so: `onnxruntime` (ORT 1.15.1,
+            // ARM only) and `sherpa_onnx` (ORT 1.28.2, «رفيق»'s recogniser).
+            // sherpa's C API needs ITS runtime; the reading voice asks the
+            // runtime for API 14, which 1.28.2 still serves. Which copy the
+            // APK carries is checked after every build (see TRAPS).
             pickFirsts += "**/libonnxruntime.so"
             excludes += listOf("**/libonnxruntime4j_jni.so", "lib/x86/**")
         }
@@ -133,7 +138,8 @@ dependencies {
     // two can never resolve to different majors behind our back.
     implementation("androidx.work:work-runtime-ktx:2.11.0")
 
-    // Only for its x86_64 libonnxruntime.so — see `packaging` above. Must stay
-    // at the ORT version the `onnxruntime` pub package was built against.
-    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.15.1")
+    // (The Microsoft ORT 1.15.1 AAR that supplied x86_64 is gone: sherpa_onnx
+    // 1.13.8 ships libonnxruntime.so 1.28.2 for every ABI, and ORT keeps old
+    // API versions working - the reading voice asks for API 14 - so ONE
+    // runtime, the newer, serves both. See `packaging` above.)
 }

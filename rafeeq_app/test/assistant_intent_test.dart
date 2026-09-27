@@ -125,4 +125,23 @@ void main() {
     expect(of('سورہ کہف چلاؤ'), 'play surah 18 by -');
     expect(of('زبان انگریزی کرو'), 'language en');
   });
+
+  // omnilingual-asr's own output on the spoken test commands
+  // (E:\\DevEnv\\asr\\measure2.py, 2026-09-27) - the text the app will get.
+  test('what the recogniser actually wrote', () {
+    String call(String heard) => of(afterWakeWord(heard) ?? 'NO WAKE');
+    expect(call('يار فيق فتحل الأثكار'), 'open azkar');
+    expect(call('يا رفيق شغل سورة الكهف بصوت الحصري'),
+        startsWith('play surah 18 by ar.husary'));
+    expect(call('يا رفيق خل التديق ليلي'), 'theme dark');
+    expect(call('يا رفيق افتح كتاب بلوغ المرام'), 'book bulugh_al_maram');
+    expect(call('يا رفيق حدث في مثل هذا اليوم أتناش الربيع الأول'),
+        'on this day 12/3');
+    expect(call('يارفيق ورين اتجاها القبلة'), 'open qibla');
+    expect(call('рафик открой настройки'), 'open settings');
+    expect(call('rafec abre los ajustes'), 'open settings');
+    expect(call('rafek ouvre la kibla'), 'open qibla');
+    expect(afterWakeWord('صلاة العصر بعد قليل'), isNull);
+    expect(afterWakeWord('افتح الأذكار'), isNull);
+  });
 }

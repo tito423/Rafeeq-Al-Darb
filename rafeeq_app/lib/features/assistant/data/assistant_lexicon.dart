@@ -136,7 +136,7 @@ const languageWords = <String>[
 
 /// «خلي / غير / بدل …» - a setting is being changed.
 const changeVerbs = <String>[
-  'خلي', 'خليه', 'غير', 'حول', 'بدل', 'اقلب', 'حط', 'اعمل',
+  'خلي', 'خل', 'خليه', 'غير', 'حول', 'بدل', 'اقلب', 'حط', 'اعمل',
   'switch', 'change', 'set', 'make', 'turn', 'use',
   'cambia', 'cambiar', 'usa', 'change', 'changer', 'passe', 'utilise',
   'muda', 'mudar', 'troca', 'trocar', 'coloque', 'usar',
@@ -353,4 +353,6 @@ String? lookup(Map<String, dynamic> locale, String dotted) {
 /// The assistant's name, as recognisers write it in each language.
 const wakeWords = <String>[
   'رفيق', 'rafik', 'rafiq', 'rafeeq', 'refik', 'rafique', 'рафик', 'رفیق',
+  // As omnilingual-asr wrote it on the measured clips (2026-09-27).
+  'rafek', 'rafec', 'rafeek', 'رفيك', 'رافك',
 ];

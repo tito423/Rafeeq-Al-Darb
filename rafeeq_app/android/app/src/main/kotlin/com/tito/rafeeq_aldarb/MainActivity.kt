@@ -177,6 +177,6 @@ class MainActivity: AudioServiceActivity() {
 
         registerVoicePlayerChannel(flutterEngine)
 
-        registerSpeechChannel(flutterEngine)
+        registerAssistantChannel(flutterEngine)
     }
 }

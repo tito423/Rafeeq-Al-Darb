@@ -28,6 +28,8 @@
          like Salatuk's. specialUse is the honest FGS type for a standing
          countdown card that isn't one of the predefined categories. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <!-- «رفيق» listening in the background (AssistantListenService). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
     <!-- Vibration for notifications -->
     <!-- «التسميع»: the microphone is read only while the reader is reciting,
          and the audio never leaves the device. -->
@@ -254,6 +256,10 @@
             android:foregroundServiceType="dataSync"
             tools:node="merge" />
         <service
+            android:name=".AssistantListenService"
+            android:exported="false"
+            android:foregroundServiceType="microphone"/>
+        <service
             android:name=".DownloadForegroundService"
             android:exported="false"
             android:foregroundServiceType="dataSync"/>
@@ -308,10 +314,6 @@
     </application>
 
     <queries>
-        <!-- «رفيق»: Android 11+ hides the speech service without this. -->
-        <intent>
-            <action android:name="android.speech.RecognitionService"/>
-        </intent>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>

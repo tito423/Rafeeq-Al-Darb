@@ -634,6 +634,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 18:44 - Rafeeq voice pack on R2+mirror (206); RafeeqEar (sherpa VAD+omnilingual, no audio focus); AssistantListenService (mic FGS) + busy channel; fuzzy correction + wake detection tested on real ASR output (10 groups pass); UI not rewired yet
 - 2026-09-27 18:25 - ASR measured: omnilingual 300M chosen (366 MB, 0.5 s, best Arabic) over whisper turbo/small and zipformer
 - 2026-09-27 18:16 - Assistant mic button see-through (owner request); not built yet
 - 2026-09-27 18:09 - Owner test of v3.68.0: Google recogniser rejected; plan: sherpa_onnx VAD + Whisper offline model pack

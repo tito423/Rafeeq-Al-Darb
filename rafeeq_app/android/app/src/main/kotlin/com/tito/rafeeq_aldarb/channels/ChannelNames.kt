@@ -18,5 +18,5 @@ object Channels {
     const val MEDIA_AUDIO = "com.tito.rafeeq_aldarb/media_audio"
     const val PRAYER_CARD = "com.tito.rafeeq_aldarb/prayer_card"
     const val VOICE_PLAYER = "com.tito.rafeeq_aldarb/voice_player"
-    const val SPEECH = "com.tito.rafeeq_aldarb/speech"
+    const val ASSISTANT = "com.tito.rafeeq_aldarb/assistant"
 }

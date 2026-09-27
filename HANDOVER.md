@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 18:25 — IN PROGRESS — resume here**
+**2026-09-27 18:44 — IN PROGRESS — resume here**
 
-ASR measured: omnilingual 300M chosen (366 MB, 0.5 s, best Arabic) over whisper turbo/small and zipformer
+Rafeeq voice pack on R2+mirror (206); RafeeqEar (sherpa VAD+omnilingual, no audio focus); AssistantListenService (mic FGS) + busy channel; fuzzy correction + wake detection tested on real ASR output (10 groups pass); UI not rewired yet
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
