@@ -632,6 +632,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 18:16 - Assistant mic button see-through (owner request); not built yet
 - 2026-09-27 18:09 - Owner test of v3.68.0: Google recogniser rejected; plan: sherpa_onnx VAD + Whisper offline model pack
 - 2026-09-27 17:35 - Released v3.68.0
 - 2026-09-27 17:34 - v3.68.0 verified on emulator: assistant switch, wake loop online fallback, pauses during recitation

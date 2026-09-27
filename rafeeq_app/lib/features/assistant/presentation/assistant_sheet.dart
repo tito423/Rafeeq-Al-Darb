@@ -145,16 +145,19 @@ class AssistantMicButton extends ConsumerWidget {
       bottom: 92 + pad.bottom,
       child: Tooltip(
         message: 'assistant.tooltip'.tr(),
+        // See-through: «لما الزرار يظهر خليه شفاف مش يخبي الحاجة اللي
+        // وراه» (owner, 2026-09-27) - the screen shows under it.
         child: Material(
-          color: AppColors.gold.withValues(alpha: 0.92),
-          shape: const CircleBorder(),
-          elevation: 4,
+          color: AppColors.gold.withValues(alpha: 0.28),
+          shape: CircleBorder(
+              side: BorderSide(color: AppColors.gold.withValues(alpha: 0.55))),
+          elevation: 0,
           child: InkWell(
             customBorder: const CircleBorder(),
             onTap: () => showAssistantSheet(),
             child: const Padding(
               padding: EdgeInsets.all(11),
-              child: Icon(Icons.mic_rounded, color: Colors.black87, size: 24),
+              child: Icon(Icons.mic_rounded, color: Colors.black45, size: 24),
             ),
           ),
         ),
