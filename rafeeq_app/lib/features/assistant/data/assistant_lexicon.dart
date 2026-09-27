@@ -47,6 +47,9 @@ const fillerWords = <String>[
 const openVerbs = <String>[
   'افتح', 'افتحلي', 'افتحي', 'وريني', 'ورني', 'اعرض', 'اعرضلي', 'روح', 'روحلي',
   'ادخل', 'خش', 'هات', 'هاتلي', 'اظهر', 'طلعلي', 'جيبلي', 'ودني', 'وديني',
+  // Egyptian, and «افتح» as the recogniser drops its alif (2026-09-28).
+  'فتح', 'فتحلي', 'افتحهولي', 'اشوف', 'شوف', 'شوفلي', 'خدني', 'دخلني',
+  'فين', 'عرضلي',
   'open', 'show', 'go', 'take', 'launch', 'bring', 'see', 'view', 'display',
   'abre', 'abrir', 'muestra', 'muestrame', 've', 'ir', 'llevame', 'ensename',
   'ouvre', 'ouvrir', 'montre', 'affiche', 'va', 'aller', 'emmene',
