@@ -82,6 +82,7 @@ class RafeeqVoicePack {
 
   /// Starts the download, or joins the one running.
   Future<void> download() => _inFlight ??= () async {
+        debugPrint('rafeeq voice pack: download started');
         _cancel = CancelToken();
         progress.value = 0;
         try {
@@ -135,7 +136,13 @@ class RafeeqVoicePack {
   static Future<String> _sha256(String path) => Isolate.run(() async =>
       (await sha256.bind(File(path).openRead()).first).toString());
 
-  void cancel() => _cancel?.cancel();
+  void cancel() {
+    debugPrintStack(
+      label: 'rafeeq voice pack: cancel requested',
+      stackTrace: StackTrace.current,
+    );
+    _cancel?.cancel('user requested voice-pack cancellation');
+  }
 
   /// Bytes the pack takes on the phone (the downloads' storage row).
   Future<int> usageBytes() async {
