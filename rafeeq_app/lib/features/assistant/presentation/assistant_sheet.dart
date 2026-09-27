@@ -307,6 +307,8 @@ Future<String> describeIntent(
       return 'assistant.opening'.tr(args: [b?.titleAr ?? '']);
     case AuthorBooksIntent(:final author):
       return 'assistant.opening'.tr(args: [author]);
+    case ShamelaSearchIntent(:final title):
+      return 'assistant.opening'.tr(args: [title]);
     default:
       return 'assistant.ok'.tr();
   }
@@ -325,6 +327,8 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       nav.push(MaterialPageRoute<void>(builder: (_) => screen));
 
   switch (intent) {
+    case ShamelaSearchIntent(:final title, :final download):
+      push(ShamelaScreen(initialQuery: title, openBest: download));
     case OpenScreenIntent(:final screen):
       switch (screen) {
         case AssistantScreen.home || AssistantScreen.dailyHadith:

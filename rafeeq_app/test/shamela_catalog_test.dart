@@ -23,6 +23,21 @@ void main() {
     expect(cat.search('صَيْد الخاطِر').first.id, 12028);
   });
 
+  test('a title SAID aloud finds the book (owner, 2026-09-27)', () {
+    // «نزلي كتاب الزهد للإمام أحمد ابن حنبل من الشاملة» - the title is
+    // «الزهد لأحمد بن حنبل» (8494); a whole-word search found nothing.
+    expect(cat.search('الزهد للإمام أحمد ابن حنبل'), isEmpty);
+    final r = cat.searchSpoken('الزهد للإمام أحمد ابن حنبل');
+    expect(r.books.first.id, 8494);
+    expect(r.full, isTrue);
+    // Only the book's name: every «الزهد», none of them a full answer
+    // beyond the name itself - the list is shown, not guessed.
+    final z = cat.searchSpoken('الزهد');
+    expect(z.books.length, greaterThan(10));
+    expect(z.books.map((b) => b.id), contains(8494));
+    expect(cat.searchSpoken('صيد الخاطر لابن الجوزي').books.first.id, 12028);
+  });
+
   test('a pasted link or a bare id finds that book', () {
     expect(cat.search('https://shamela.ws/book/9632/2').single.id, 9632);
     // A phone keyboard adds a space after the dot (Xiaomi, 2026-09-27).

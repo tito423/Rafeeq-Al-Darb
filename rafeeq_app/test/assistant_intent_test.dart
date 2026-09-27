@@ -72,6 +72,15 @@ void main() {
     expect(of('وريني كل كتب ابن حجر العسقلاني'), contains('ابن حجر العسقلاني'));
   });
 
+  test('Shamela: a title said with «الشاملة» (owner, 2026-09-27)', () {
+    expect(p.parse('يا رفيق نزلي كتاب الزهد للامام احمد ابن حنبل من الشامله').toString(),
+        'shamela "الزهد للامام احمد ابن حنبل" download');
+    expect(p.parse('دورلي في المكتبه الشامله علي كتاب صيد الخاطر').toString(),
+        'shamela "صيد الخاطر"');
+    // No title: the screen itself.
+    expect(p.parse('افتح المكتبه الشامله').toString(), 'open shamela');
+  });
+
   test('on this day, today or a hijri date', () {
     expect(of('حدث في مثل هذا اليوم'), 'on this day -/-');
     expect(of('حدث في مثل هذا اليوم ١٢ ربيع الأول'), 'on this day 12/3');

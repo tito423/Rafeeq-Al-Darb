@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 21:17 — IN PROGRESS — resume here**
+**2026-09-27 21:40 — IN PROGRESS — resume here**
 
-Audit 2026-09-27 complete: report docs/audits/AUDIT_2026-09-27.md (6 stages, 7 findings incl. the Rafeeq mic bug); downloaded ayah plays offline on 3.69.1 (stage-2 hook seen); TRAPS #59; HANDOVER state row corrects the v3.69.0 end-to-end claim
+Rafeeq + Shamela by voice (owner): 'نزلي كتاب الزهد للإمام أحمد ابن حنبل من الشاملة' found nothing - the assistant only knew imported books and the catalogue search wants whole words (title is 'الزهد لأحمد بن حنبل', 8494). ShamelaSearchIntent (raw words, before library books) + ShamelaCatalog.searchSpoken (prefix/ابن stemming, rank by words held) + ShamelaScreen(initialQuery, openBest: card only on a full match). Tests on the real 8,598-book catalogue. Owner item 4 logged
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

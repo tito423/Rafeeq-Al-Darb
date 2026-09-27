@@ -74,6 +74,19 @@ const surahWords = <String>[
 
 /// «كتاب X» / «كتب X».
 const bookWords = <String>['كتاب', 'book', 'libro', 'livre', 'livro', 'книга', 'книгу'];
+/// Said to Shamela: «دورلي في الشاملة على …», «نزلي كتاب … من الشاملة».
+const shamelaWords = <String>['الشامله', 'شامله', 'الشامل', 'shamela', 'shamila'];
+const downloadVerbs = <String>[
+  'نزل', 'نزلي', 'نزللي', 'نزلهولي', 'حمل', 'حملي', 'حمللي', 'تنزيل',
+  'تحميل', 'download', 'import', 'descarga', 'descargar', 'telecharge',
+  'baixar', 'скачай',
+];
+/// Words around a title in a Shamela request that are not the title.
+const shamelaNoise = <String>[
+  'دور', 'دورلي', 'ابحث', 'ابحثلي', 'دوري', 'شوف', 'شوفلي', 'هات', 'هاتلي',
+  'افتح', 'افتحلي', 'في', 'علي', 'على', 'عن', 'من', 'المكتبه', 'مكتبه',
+  'كتاب', 'search', 'find', 'open', 'in', 'on', 'from', 'library', 'book',
+];
 const booksOfWords = <String>[
   'كتب', 'books', 'libros', 'livres', 'livros', 'книги', 'کتابیں',
 ];

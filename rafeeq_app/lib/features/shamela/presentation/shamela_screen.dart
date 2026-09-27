@@ -17,7 +17,16 @@ import '../data/shamela_library.dart';
 /// «المكتبة الشاملة» inside the app: search Shamela's own catalogue by book
 /// title, see a book's card, import it into the library (owner, 2026-09-26).
 class ShamelaScreen extends StatefulWidget {
-  const ShamelaScreen({super.key});
+  const ShamelaScreen({super.key, this.initialQuery, this.openBest = false});
+
+  /// A title said to «رفيق» - searched the spoken way
+  /// ([ShamelaCatalog.searchSpoken]), not as typed.
+  final String? initialQuery;
+
+  /// «نزلي …»: when one title holds every word said, its card (with the
+  /// import button) opens straight away. Otherwise the list is shown - a
+  /// guess is never imported.
+  final bool openBest;
 
   @override
   State<ShamelaScreen> createState() => _ShamelaScreenState();
@@ -80,6 +89,22 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
       if (mounted) setState(() => _failed = true);
     }
     if (mounted) setState(() => _loading = false);
+    final q = widget.initialQuery;
+    if (q == null || !mounted || !_catalog.isLoaded) return;
+    final r = _catalog.searchSpoken(q);
+    _controller.text = q;
+    setState(() => _results = r.books);
+    if (widget.openBest && r.full && r.books.isNotEmpty) {
+      final best = r.books.first;
+      final libraryId = _libraryByShamela[best.id];
+      if (ShamelaLibrary.instance.byId(ShamelaLibrary.idFor(best.id)) != null) {
+        await _open(ShamelaLibrary.idFor(best.id));
+      } else if (libraryId != null) {
+        await _openLibraryCopy(libraryId);
+      } else {
+        _showCard(best);
+      }
+    }
   }
 
   void _onQuery(String q) {

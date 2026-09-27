@@ -13,6 +13,10 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~21:55 (09-27) OWNER ITEM 4: «خلي رفيق يفهم العامية بتاعتي ويبقى قادر يفتح اي حاجة في التطبيق بالمنطق والعقل ... في اي خرم ابرة» - Egyptian dialect + reach EVERY screen/setting/option by reasoning. Too big for this session's quota; START HERE NEXT after items 1-3 (see the 21:35 entry). In progress now: item 3 (ShamelaCatalog.searchSpoken done + test; intent/lexicon/screen next).
+
+~21:35 (09-27) NEW FROM OWNER (said «4 things», listed 3 - ask for the 4th): (1) ONE search across ALL Dorar encyclopedias, like the Shamela search; (2) splash sometimes stops half-way and the app skips into Home; (3) «رفيق»: sometimes slow to answer the wake call; «دورلي في المكتبة الشاملة على كتاب كذا» -> says not found; «نزلي كتاب الزهد للإمام أحمد بن حنبل من الشاملة» not found / not understood. Order: 2 (splash), 3 (Rafeeq Shamela intent), 1 (Dorar search). Weekly quota 93 percent at start.
+
 ~21:30 (09-27) AUDIT COMPLETE (stages 1-6). docs/audits/AUDIT_2026-09-27.md written; downloaded ayah (Alafasy al-Fatiha, per ayah) played with wifi+data OFF on 3.69.1 = stage-2 hook seen; TRAPS #59 + CLAUDE.md line; HANDOVER state row + correction of the v3.69.0 «end to end» claim. NEXT: the owner's result for «يا رفيق» on his phone (v3.69.1). Nothing half-done.
 
 ~21:10 (09-27) RELEASED v3.69.1 (tag cfb36fa3 = HEAD, APK 314,001,455 B, range 206; v3.69.0 + tag deleted). Owner to try «يا رفيق» on his phone. NEXT: his result; then audit stage 6 doc (docs/audits/AUDIT_2026-09-27.md) + downloaded-ayah offline playback check owed from stage 2.
@@ -656,6 +660,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 21:40 - Rafeeq + Shamela by voice (owner): 'نزلي كتاب الزهد للإمام أحمد ابن حنبل من الشاملة' found nothing - the assistant only knew imported books and the catalogue search wants whole words (title is 'الزهد لأحمد بن حنبل', 8494). ShamelaSearchIntent (raw words, before library books) + ShamelaCatalog.searchSpoken (prefix/ابن stemming, rank by words held) + ShamelaScreen(initialQuery, openBest: card only on a full match). Tests on the real 8,598-book catalogue. Owner item 4 logged
 - 2026-09-27 21:17 - Audit 2026-09-27 complete: report docs/audits/AUDIT_2026-09-27.md (6 stages, 7 findings incl. the Rafeeq mic bug); downloaded ayah plays offline on 3.69.1 (stage-2 hook seen); TRAPS #59; HANDOVER state row corrects the v3.69.0 end-to-end claim
 - 2026-09-27 21:09 - Released v3.69.1 (Rafeeq mic fix); v3.69.0 deleted
 - 2026-09-27 21:07 - v3.69.1: Rafeeq mic fix release build - installed on emulator over 3.69.0, versionName 3.69.1, 0 RangeErrors, mic recording, support button shown

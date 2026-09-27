@@ -104,6 +104,59 @@ class ShamelaCatalog {
     return out;
   }
 
+  /// A title asked for by VOICE («الزهد للإمام أحمد ابن حنبل»), not typed.
+  ///
+  /// [search] wants every word whole, which a spoken request never meets:
+  /// Shamela writes «الزهد لأحمد بن حنبل» (id 8494) - «لأحمد» is one word,
+  /// «ابن» is «بن», and «الإمام» is not in the title at all. Here a word
+  /// matches with its attached «و/ل/لل/ب» dropped on either side, «ابن» =
+  /// «بن», and titles are ranked by how many of the words they hold; the
+  /// first word (the book's own name, as people say it) must be among them.
+  /// `full` is true when the best title holds EVERY word.
+  ({List<ShamelaBookRef> books, bool full}) searchSpoken(String said,
+      {int limit = 40}) {
+    final books = _books;
+    final words = [
+      for (final w in normalizeArabicLoose(normalizeArabic(said.trim()))
+          .split(RegExp(r'\s+')))
+        if (_stem(w).isNotEmpty && !_spokenOnly.contains(_stem(w))) _stem(w),
+    ];
+    if (books == null || words.isEmpty) return (books: const [], full: false);
+    final ranked = <(int, ShamelaBookRef)>[];
+    for (final (book, norm) in books) {
+      final title = {
+        for (final t in norm.split(RegExp(r'[^ء-ي0-9a-z٠-٩]+'))) _stem(t),
+      };
+      if (!title.contains(words.first)) continue;
+      final hits = words.where(title.contains).length;
+      if (hits * 2 >= words.length) ranked.add((hits, book));
+    }
+    ranked.sort((a, b) {
+      final r = b.$1.compareTo(a.$1);
+      return r != 0 ? r : a.$2.title.length.compareTo(b.$2.title.length);
+    });
+    return (
+      books: [for (final r in ranked.take(limit)) r.$2],
+      full: ranked.isNotEmpty && ranked.first.$1 == words.length,
+    );
+  }
+
+  /// Honorifics people say and titles do not carry.
+  static const _spokenOnly = {'امام', 'الامام', 'شيخ', 'الشيخ', 'العلامه', 'الحافظ'};
+
+  static String _stem(String w) {
+    var s = w;
+    if (s.length > 3 && s.startsWith('و')) s = s.substring(1);
+    if (s.length > 4 && s.startsWith('لل')) {
+      s = 'ال${s.substring(2)}';
+    } else if (s.length > 3 && (s.startsWith('ل') || s.startsWith('ب'))) {
+      // Over-stripping («لسان» -> «سان») is harmless: title and request
+      // are stemmed the same way.
+      s = s.substring(1);
+    }
+    return s == 'ابن' ? 'بن' : s;
+  }
+
   /// Titles matching [query], best first: the whole title, then titles
   /// starting with it, then titles holding every query word whole, then
   /// titles holding them anywhere. At most [limit].

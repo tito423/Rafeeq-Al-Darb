@@ -104,6 +104,18 @@ class ToggleOptionIntent extends AssistantIntent {
   String toString() => 'toggle $option ${on ? 'on' : 'off'}';
 }
 
+/// A title to find in Shamela's own catalogue (not yet on the phone):
+/// «دورلي في الشاملة على صيد الخاطر», «نزلي كتاب الزهد لأحمد من الشاملة».
+/// [title] is what was SAID, uncorrected - a book name is not a command
+/// word to be snapped to the nearest one the app knows.
+class ShamelaSearchIntent extends AssistantIntent {
+  const ShamelaSearchIntent(this.title, {required this.download});
+  final String title;
+  final bool download;
+  @override
+  String toString() => 'shamela "$title"${download ? ' download' : ''}';
+}
+
 /// Understood the words but not a thing the app has; [heard] is echoed
 /// back so the reader sees what was recognised.
 class UnknownIntent extends AssistantIntent {
@@ -353,6 +365,7 @@ class AssistantParser {
     // Every word the assistant can act on, for [_correct].
     final v = <String>{
       ..._open, ..._play, ..._surahWord, ..._bookWord, ..._booksOf,
+      ..._shamelaWord, ..._download,
       ..._change, ..._on, ..._off, ..._langWord, ..._themeWord,
       for (final l in _screens.values) for (final ph in l) ...ph.split(' '),
       for (final ph in _settings) ...ph.split(' '),
@@ -424,6 +437,9 @@ class AssistantParser {
   static final _play = _normSet(lex.playVerbs);
   static final _surahWord = _normSet(lex.surahWords);
   static final _bookWord = _normSet(lex.bookWords);
+  static final _shamelaWord = _normSet(lex.shamelaWords);
+  static final _shamelaNoise = _normSet(lex.shamelaNoise);
+  static final _download = _normSet(lex.downloadVerbs);
   static final _booksOf = _normSet(lex.booksOfWords);
   static final _change = _normSet(lex.changeVerbs);
   static final _on = _normSet(lex.onWords);
@@ -465,6 +481,23 @@ class AssistantParser {
     // «حدث في مثل هذا اليوم [١٢ ربيع الأول]»
     if (_hasPhrase(clean, lex.onThisDayPhrases.map(_canon))) {
       return _onThisDay(clean);
+    }
+    // «دورلي في الشاملة على …» / «نزلي كتاب … من الشاملة». Before the
+    // library's own books: said with «الشاملة», it is Shamela that is meant.
+    final raw = norm(asciiDigits(heard)).split(' ').where((w) => w.isNotEmpty);
+    if (all.any(_shamelaWord.contains) || raw.any(_shamelaWord.contains)) {
+      final title = [
+        for (final w in raw)
+          if (!_fillers.contains(w) &&
+              !_shamelaWord.contains(w) &&
+              !_shamelaNoise.contains(w) &&
+              !_download.contains(w))
+            w,
+      ].join(' ');
+      if (title.isNotEmpty) {
+        return ShamelaSearchIntent(title,
+            download: raw.any(_download.contains) || all.any(_download.contains));
+      }
     }
     // «كل كتب ابن الجوزي» / "books by Ibn al-Jawzi"
     final ob = words.indexWhere(_booksOf.contains);
