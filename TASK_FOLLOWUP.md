@@ -618,6 +618,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 15:59 - Handover 2026-09-27: verified (635 pass, hosted 206), measured, NEXT_PROMPT rewritten
 - 2026-09-27 15:29 - Assistant parser uses the shared asciiDigits (digits_test); all tests green
 - 2026-09-27 15:26 - Assistant brain: Arabic command parser over the real catalogues, tested
 - 2026-09-27 15:21 - Voice assistant plan + measured model sizes logged
