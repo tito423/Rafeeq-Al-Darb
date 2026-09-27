@@ -27,7 +27,7 @@ const dorarEncyclopedias = [
   // /history is browsed by era (?era=N) and event (/history/event/N) -
   // neither has the <ul id="mtree"> tree the other nine share.
   // tafseer: its own reader (DorarTafseerScreen), listed by the hub.
-  // DorarEncyclopedia('history', 'dorar.enc_history'),
+  // history: its own reader (DorarHistoryScreen), listed by the hub.
   DorarEncyclopedia('adyan', 'dorar.enc_adyan'),
   DorarEncyclopedia('frq', 'dorar.enc_frq'),
   DorarEncyclopedia('alakhlaq', 'dorar.enc_alakhlaq'),
@@ -236,6 +236,59 @@ List<DorarPara> _bodyParas(String body, List<String> footnotes) {
   return paras;
 }
 
+/// One event of the History encyclopaedia, as its era page lists it (the
+/// page carries every event's whole text in an accordion - 20 a page,
+/// `?era=N&page=M`; measured 2026-09-27).
+class DorarHistoryEvent {
+  const DorarHistoryEvent(
+      this.id, this.title, this.hijri, this.gregorian, this.details);
+  final int id;
+  final String title;
+  final String hijri;
+  final String gregorian;
+  final List<String> details;
+}
+
+class DorarHistoryPage {
+  const DorarHistoryPage(this.events, this.lastPage);
+  final List<DorarHistoryEvent> events;
+  final int lastPage;
+}
+
+/// The eras on /history («عصر النبوة» …), `?era=N`.
+List<DorarSurahRef> parseDorarHistoryEras(String html) {
+  final seen = <int>{};
+  return [
+    for (final m in SourceRules.instance.re('dorar.history.era').allMatches(html))
+      if (seen.add(int.parse(m.group(1)!)))
+        DorarSurahRef(int.parse(m.group(1)!), _text(m.group(2)!)),
+  ];
+}
+
+DorarHistoryPage parseDorarHistoryPage(String html) {
+  final rules = SourceRules.instance;
+  final events = <DorarHistoryEvent>[
+    for (final m in rules.re('dorar.history.event').allMatches(html))
+      DorarHistoryEvent(
+        int.parse(m.group(5)!),
+        _text(m.group(1)!).replaceFirst(RegExp(r'\s*\.$'), ''),
+        _text(m.group(2)!),
+        _text(m.group(3)!),
+        [
+          for (final para
+              in m.group(4)!.split(RegExp(r'<br\s*/?>|</p>\s*<p[^>]*>')))
+            if (_text(para).isNotEmpty) _text(para),
+        ],
+      ),
+  ];
+  var last = 1;
+  for (final m in rules.re('dorar.history.page').allMatches(html)) {
+    final n = int.parse(m.group(1)!);
+    if (n > last) last = n;
+  }
+  return DorarHistoryPage(events, last);
+}
+
 /// Reads dorar.net on demand. A table of contents or a section once read is
 /// kept on the phone (app support `dorar/`), so it opens again without the
 /// network - a reader's cache, not a copy of the site («جميع الحقوق محفوظة
@@ -297,6 +350,17 @@ class DorarEncyclopediaService {
       parseDorarChainPage(
           await _get(path, '${path.substring(1).replaceAll('/', '.')}.html.gz'),
           slug);
+
+  /// The History encyclopaedia's eras, refreshed weekly.
+  Future<List<DorarSurahRef>> historyEras() async => parseDorarHistoryEras(
+      await _get('/history', 'history.eras.html.gz',
+          maxAge: const Duration(days: 7)));
+
+  /// One page (20 events) of an era, refreshed weekly.
+  Future<DorarHistoryPage> historyPage(int era, int page) async =>
+      parseDorarHistoryPage(await _get('/history?era=$era&page=$page',
+          'history.$era.$page.html.gz',
+          maxAge: const Duration(days: 7)));
 
   String url(String slug, [int? id]) =>
       id == null ? 'https://dorar.net/$slug' : 'https://dorar.net/$slug/$id';

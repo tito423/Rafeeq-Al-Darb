@@ -99,7 +99,16 @@ def main():
         ok = len(surahs) == 114 and len(arts) >= 5 and             links.get(r["dorar.chain.next"]) == "/tafseer/2/2"
         return ok, f"{len(surahs)} surahs, {len(arts)} sections, next={links.get(r['dorar.chain.next'])}"
 
+    def dorar_history():
+        eras = rx(r["dorar.history.era"]).findall(get("https://dorar.net/history"))
+        p = get("https://dorar.net/history?era=1")
+        ev = rx(r["dorar.history.event"]).findall(p)
+        pages = [int(x) for x in rx(r["dorar.history.page"]).findall(p)]
+        ok = len({e[0] for e in eras}) == 7 and len(ev) == 20 and max(pages or [0]) >= 2
+        return ok, f"{len({e[0] for e in eras})} eras, {len(ev)} events on era 1 page 1, last page {max(pages or [0])}"
+
     check("Dorar hadith grading API", "dorar.api.*", dorar_api)
+    check("Dorar History eras + events", "dorar.history.*", dorar_history)
     check("Dorar Tafseer surahs + chain", "dorar.tafseer.*, dorar.chain.*", dorar_tafseer)
     check("Shamela book card", "shamela.card*", shamela_card)
     check("Shamela page content", "shamela.page.path", shamela_page)

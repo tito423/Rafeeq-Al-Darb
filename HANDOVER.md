@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 13:45 — IN PROGRESS — resume here**
+**2026-09-27 13:50 — IN PROGRESS — resume here**
 
-Tafseer reader seen on emulator (surahs, parts, chain across surahs)
+Dorar History reader: 7 eras, events 20 a page with both years and full text (tested on real pages); rules v5 (31), check_sources 7/7
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

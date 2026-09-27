@@ -537,7 +537,7 @@
     "author_downloading": "Téléchargement des livres de l'auteur : {} sur {}",
     "cat_shamela": "De Shamela",
     "text_editor_page": "Page de notes de l'éditeur — non reprise dans cette application ; le livre continue ensuite.",
-    "dorar_card_sub": "Jugements des hadiths et 10 encyclopédies",
+    "dorar_card_sub": "Jugements des hadiths et 11 encyclopédies",
     "shamela_card_sub": "Importez n’importe lequel des 8 598 livres"
   },
   "azkar": {
@@ -2038,6 +2038,8 @@
     "check_found": "Jugements des savants sur ce matn sur Dorar ({}) :",
     "check_open_search": "Ouvrir la recherche Dorar",
     "read_on_site": "Ouvrir sur le site",
-    "read_on_site_msg": "Cette page n’a pas pu être lue dans l’application. Vous pouvez la lire sur le site Dorar."
+    "read_on_site_msg": "Cette page n’a pas pu être lue dans l’application. Vous pouvez la lire sur le site Dorar.",
+    "hijri_year": "Année hégirienne",
+    "gregorian_year": "Année grégorienne"
   }
 }

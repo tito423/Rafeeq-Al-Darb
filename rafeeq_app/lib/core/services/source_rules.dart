@@ -50,6 +50,10 @@ class SourceRules {
     'dorar.chain.link': r'<a[^>]*href="(/[a-z]+/[\d/]+)"[^>]*>(.*?)</a>',
     'dorar.chain.prev': 'السابق',
     'dorar.chain.next': 'التالي',
+    // dorar.net History encyclopaedia: eras, and each era page's events
+    'dorar.history.era': r'href="/history\?era=(\d+)"[^>]*>([^<]+)<',
+    'dorar.history.event': r'<i class="fa fa-history[^"]*"[^>]*></i>(.*?)</div>.*?العام الهجري\s*:\s*<span[^>]*>(.*?)</span>.*?العام الميلادي\s*:\s*<span[^>]*>(.*?)</span>.*?تفاصيل الحدث:\s*</h6>(.*?)<a href="https://dorar\.net/history/event/(\d+)"',
+    'dorar.history.page': r'[?&]page=(\d+)',
     // dorar.net hadith grading API (dorar_service.dart)
     'dorar.api.url': 'https://dorar.net/dorar_api.json',
     'dorar.api.block':
@@ -159,6 +163,9 @@ class SourceRules {
         'dorar.chain.heading',
         'dorar.chain.title',
         'dorar.chain.link',
+        'dorar.history.era',
+        'dorar.history.event',
+        'dorar.history.page',
         'shamela.card',
         'shamela.card.title',
         'shamela.card.author',

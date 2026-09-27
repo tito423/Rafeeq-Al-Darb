@@ -537,7 +537,7 @@
     "author_downloading": "Descargando los libros del autor: {} de {}",
     "cat_shamela": "De Shamela",
     "text_editor_page": "Página de notas del editor — no se incluye en esta aplicación; el libro continúa después.",
-    "dorar_card_sub": "Calificación de hadices y 10 enciclopedias",
+    "dorar_card_sub": "Calificación de hadices y 11 enciclopedias",
     "shamela_card_sub": "Importe cualquiera de 8598 libros"
   },
   "azkar": {
@@ -2038,6 +2038,8 @@
     "check_found": "Calificaciones de los sabios sobre este matn en Dorar ({}):",
     "check_open_search": "Abrir la búsqueda de Dorar",
     "read_on_site": "Abrir en el sitio web",
-    "read_on_site_msg": "No se pudo leer esta página en la aplicación. Puede leerla en el sitio de Dorar."
+    "read_on_site_msg": "No se pudo leer esta página en la aplicación. Puede leerla en el sitio de Dorar.",
+    "hijri_year": "Año hégira",
+    "gregorian_year": "Año gregoriano"
   }
 }

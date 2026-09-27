@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/external_link.dart';
+import 'dorar_history_screen.dart';
 import 'dorar_tafseer_screen.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -33,6 +34,12 @@ class DorarHubScreen extends StatelessWidget {
         title: 'dorar.enc_tafseer'.tr(),
         onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (_) => const DorarTafseerScreen())),
+      ),
+      _Tile(
+        icon: Icons.history_edu,
+        title: 'dorar.enc_history'.tr(),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const DorarHistoryScreen())),
       ),
       for (final e in dorarEncyclopedias)
         _Tile(
