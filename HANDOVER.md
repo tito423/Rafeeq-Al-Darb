@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 22:21 — IN PROGRESS — resume here**
+**2026-09-27 22:41 — IN PROGRESS — resume here**
 
-Splash cut half-way (owner): the intro ended on ANY non-resumed lifecycle state incl. inactive (shade, system dialog), and its safety timer ran on the wall clock (duration+2s) so a stuttering start-up could fire it mid-clip. Now inactive is ignored and the fallback is a stall watch (no progress 3 s, cap 3x); debugPrint names the path. Seen: pm clear + shade at 4 s -> 'proceed (ended) at 9.878 of 10.010'. Old build's cut not reproduced (emulator crashed). Dorar search + Rafeeq Shamela seen on device. 640 pass
+v3.69.2 release build: About card v3.69.2 SEEN on emulator (the 3.69.1 card said 3.69.0), support button present, splash log 'no clip'. Dorar all-encyclopaedia search, Rafeeq Shamela voice search, splash fix
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
