@@ -41,6 +41,15 @@ class SourceRules {
     'dorar.section.footnote': r'<span class="tip">(.*?)</span>',
     'dorar.section.heading': r'<span class="title-\d">(.*?)</span>',
     'dorar.section.drop': r'<a id="enc-tip".*?</a>',
+    // dorar.net Tafseer encyclopaedia: surah cards and chained pages
+    'dorar.tafseer.surah':
+        r'<a href="/tafseer/(\d+)">\s*<strong>(.*?)</strong>',
+    'dorar.chain.article': r'<article[^>]*>(.*?)</article>',
+    'dorar.chain.heading': r'<h5[^>]*>(.*?)</h5>',
+    'dorar.chain.title': r'<title>(.*?)</title>',
+    'dorar.chain.link': r'<a[^>]*href="(/[a-z]+/[\d/]+)"[^>]*>(.*?)</a>',
+    'dorar.chain.prev': 'السابق',
+    'dorar.chain.next': 'التالي',
     // dorar.net hadith grading API (dorar_service.dart)
     'dorar.api.url': 'https://dorar.net/dorar_api.json',
     'dorar.api.block':
@@ -145,6 +154,11 @@ class SourceRules {
         'dorar.section.heading',
         'dorar.section.drop',
         'dorar.api.block',
+        'dorar.tafseer.surah',
+        'dorar.chain.article',
+        'dorar.chain.heading',
+        'dorar.chain.title',
+        'dorar.chain.link',
         'shamela.card',
         'shamela.card.title',
         'shamela.card.author',

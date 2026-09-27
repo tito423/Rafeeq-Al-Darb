@@ -90,7 +90,17 @@ def main():
 
     check("Dorar encyclopaedia contents", "dorar.toc.*", dorar_toc)
     check("Dorar encyclopaedia section", "dorar.section.*", dorar_section)
+    def dorar_tafseer():
+        h = get("https://dorar.net/tafseer")
+        surahs = rx(r["dorar.tafseer.surah"]).findall(h)
+        p = get("https://dorar.net/tafseer/2/1")
+        arts = rx(r["dorar.chain.article"]).findall(p)
+        links = {re.sub(r"<[^>]+>|\s", "", t): u for u, t in rx(r["dorar.chain.link"]).findall(p)}
+        ok = len(surahs) == 114 and len(arts) >= 5 and             links.get(r["dorar.chain.next"]) == "/tafseer/2/2"
+        return ok, f"{len(surahs)} surahs, {len(arts)} sections, next={links.get(r['dorar.chain.next'])}"
+
     check("Dorar hadith grading API", "dorar.api.*", dorar_api)
+    check("Dorar Tafseer surahs + chain", "dorar.tafseer.*, dorar.chain.*", dorar_tafseer)
     check("Shamela book card", "shamela.card*", shamela_card)
     check("Shamela page content", "shamela.page.path", shamela_page)
 

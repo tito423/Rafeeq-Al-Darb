@@ -608,6 +608,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 13:39 - Dorar Tafseer reader: 114 surahs + the site's prev/next chain (tested on real pages); rules v4 published (28), check_sources 6/6
 - 2026-09-27 13:33 - Library cards seen; entrance timers made cancellable (tests green)
 - 2026-09-27 13:25 - Library: named animated cards for Dorar and Shamela (were bare app-bar icons), staggered list entrance; NOT yet seen
 - 2026-09-27 13:21 - Dynamic source rules proven live (broken v2 -> fallback, v3 -> restored); tests fixed

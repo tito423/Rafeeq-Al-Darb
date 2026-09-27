@@ -26,7 +26,7 @@ const dorarEncyclopedias = [
   // (/tafseer/N, split into parts /tafseer/N/M, sections #tt1..), and
   // /history is browsed by era (?era=N) and event (/history/event/N) -
   // neither has the <ul id="mtree"> tree the other nine share.
-  // DorarEncyclopedia('tafseer', 'dorar.enc_tafseer'),
+  // tafseer: its own reader (DorarTafseerScreen), listed by the hub.
   // DorarEncyclopedia('history', 'dorar.enc_history'),
   DorarEncyclopedia('adyan', 'dorar.enc_adyan'),
   DorarEncyclopedia('frq', 'dorar.enc_frq'),
@@ -138,19 +138,93 @@ DorarSection? parseDorarSection(String html) {
   final title = titleM == null ? '' : _text(titleM.group(1)!);
 
   final footnotes = <String>[];
-  body = body.replaceAllMapped(
-    rules.re('dorar.section.footnote'),
-    (m) {
-      final note = _text(m.group(1)!).replaceFirst(RegExp(r'^\[\d+\]\s*'), '');
-      footnotes.add(note);
-      return ' (${footnotes.length}) ';
-    },
-  );
+  // The end-of-section control (a popover button) is dropped in _bodyParas.
+  final paras = _bodyParas(body, footnotes);
+  return DorarSection(title, paras, footnotes);
+}
+
+/// One surah card on /tafseer (read 2026-09-27: 114 cards,
+/// `<a href="/tafseer/N"><strong>سورة …</strong></a>`).
+class DorarSurahRef {
+  const DorarSurahRef(this.number, this.title);
+  final int number;
+  final String title;
+}
+
+List<DorarSurahRef> parseDorarTafseerSurahs(String html) => [
+      for (final m in SourceRules.instance
+          .re('dorar.tafseer.surah')
+          .allMatches(html))
+        DorarSurahRef(int.parse(m.group(1)!), _text(m.group(2)!)),
+    ];
+
+/// A page of the Tafseer encyclopaedia: a surah's introduction
+/// (/tafseer/N) or a range of its ayahs (/tafseer/N/M). There is no list of
+/// the parts: each page links only to the one before and after it
+/// («السابق» / «التالي»), across surahs too, so the reader follows that chain.
+class DorarChainPage {
+  const DorarChainPage(this.title, this.paras, this.footnotes,
+      {this.prev, this.next});
+  final String title;
+  final List<DorarPara> paras;
+  final List<String> footnotes;
+
+  /// Site paths («/tafseer/2/1»), null at either end.
+  final String? prev;
+  final String? next;
+}
+
+/// Each section is an `<article>` whose `<h5>` is its heading («تفسير
+/// الآيات:», «غريب الكلمات:» …); footnotes are the same `span.tip` as the
+/// other encyclopaedias. Null when the page has no article (soft 404).
+DorarChainPage? parseDorarChainPage(String html, String slug) {
+  final rules = SourceRules.instance;
+  final articles = rules.re('dorar.chain.article').allMatches(html).toList();
+  if (articles.isEmpty) return null;
+  final t = rules.re('dorar.chain.title').firstMatch(html);
+  var title = t == null ? '' : _text(t.group(1)!);
+  final dash = title.lastIndexOf(' - ');
+  if (dash >= 0) title = title.substring(dash + 3).trim();
+  final footnotes = <String>[];
+  final paras = <DorarPara>[];
+  for (final a in articles) {
+    var body = a.group(1)!;
+    final h = rules.re('dorar.chain.heading').firstMatch(body);
+    if (h != null) {
+      final head = _text(h.group(1)!).replaceFirst(RegExp(r':\s*$'), '');
+      if (head.isNotEmpty) paras.add(DorarPara(head, heading: true));
+      body = body.replaceRange(h.start, h.end, '');
+    }
+    paras.addAll(_bodyParas(body, footnotes));
+  }
+  String? link(String label) {
+    for (final m in rules.re('dorar.chain.link').allMatches(html)) {
+      if (_text(m.group(2)!) == label &&
+          m.group(1)!.startsWith('/$slug/')) {
+        return m.group(1);
+      }
+    }
+    return null;
+  }
+
+  return DorarChainPage(title, paras, footnotes,
+      prev: link(rules.s('dorar.chain.prev')),
+      next: link(rules.s('dorar.chain.next')));
+}
+
+/// A section body's paragraphs, with its footnotes lifted into [footnotes]
+/// and replaced by their number - shared by the section and chain pages.
+List<DorarPara> _bodyParas(String body, List<String> footnotes) {
+  final rules = SourceRules.instance;
+  body = body.replaceAllMapped(rules.re('dorar.section.footnote'), (m) {
+    final note = _text(m.group(1)!).replaceFirst(RegExp(r'^\[\d+\]\s*'), '');
+    footnotes.add(note);
+    return ' (${footnotes.length}) ';
+  });
   body = body.replaceAllMapped(
     rules.re('dorar.section.heading'),
     (m) => '<br/>\u0001${m.group(1)}<br/>',
   );
-  // The end-of-section control (a popover button) is not content.
   body = body.replaceAll(rules.re('dorar.section.drop'), '');
   final paras = <DorarPara>[];
   for (final chunk in body.split(RegExp(r'<br\s*/?>|</p>|<p[^>]*>'))) {
@@ -159,7 +233,7 @@ DorarSection? parseDorarSection(String html) {
     if (t.isEmpty || t == '.') continue;
     paras.add(DorarPara(t, heading: heading));
   }
-  return DorarSection(title, paras, footnotes);
+  return paras;
 }
 
 /// Reads dorar.net on demand. A table of contents or a section once read is
@@ -212,6 +286,17 @@ class DorarEncyclopediaService {
 
   Future<DorarSection?> section(String slug, int id) async =>
       parseDorarSection(await _get('/$slug/$id', '$slug.$id.html.gz'));
+
+  /// The 114 surah cards of the Tafseer encyclopaedia, refreshed weekly.
+  Future<List<DorarSurahRef>> tafseerSurahs() async =>
+      parseDorarTafseerSurahs(await _get('/tafseer', 'tafseer.toc.html.gz',
+          maxAge: const Duration(days: 7)));
+
+  /// A page of a chained encyclopaedia by its site path («/tafseer/2/1»).
+  Future<DorarChainPage?> chainPage(String path, String slug) async =>
+      parseDorarChainPage(
+          await _get(path, '${path.substring(1).replaceAll('/', '.')}.html.gz'),
+          slug);
 
   String url(String slug, [int? id]) =>
       id == null ? 'https://dorar.net/$slug' : 'https://dorar.net/$slug/$id';
