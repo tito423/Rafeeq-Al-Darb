@@ -600,6 +600,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 12:58 - Fix: every reciter page was a grey error box (_PanelInk.of outside its scope); downloads row opens the right recitation; Dorar tafseer/history hidden until they have readers
 - 2026-09-27 12:47 - Stage C sweep: 70 screens across 5 classes and both orientations, all seen, no layout faults
 - 2026-09-27 12:14 - Stage C sweep tooling (fresh boot per class); location dialog fix built
 - 2026-09-27 11:10 - Location: LocationManager instead of fused provider (Google Location Accuracy dialog looped on every resume); screen_sweep.py for stage C

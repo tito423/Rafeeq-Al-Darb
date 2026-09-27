@@ -158,15 +158,30 @@ class ActiveDownloadsPanelState extends ConsumerState<ActiveDownloadsPanel> {
           '${d.entry.reciterName} — ${surahTitle(data, d.surah, locale)}',
           null,
           d.progress <= 0 ? null : d.progress,
-          () => Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => ReciterScreen(
-                  reciter: Mp3Reciter(
+          // A tap on the row (its progress bar included) opens the reciter
+          // on the recitation being fetched - the place to see each surah's
+          // state and pause or cancel - the same way the audio library's
+          // own list opens it: the whole reciter when the catalogue is
+          // loaded, this recitation alone when offline.
+          () {
+            final all = ref.read(mp3RecitersProvider).valueOrNull;
+            final full =
+                all?.where((r) => r.id == d.entry.reciterId).firstOrNull;
+            final reciter = full != null &&
+                    full.moshafs.any((m) => m.id == d.entry.moshafId)
+                ? full
+                : Mp3Reciter(
                     id: d.entry.reciterId,
                     name: d.entry.reciterName,
                     moshafs: [d.entry.moshaf],
-                  ),
-                ),
-              )),
+                  );
+            Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => ReciterScreen(
+                reciter: reciter,
+                initialMoshafId: d.entry.moshafId,
+              ),
+            ));
+          },
         ),
       // The voice's two files are already one row above, summed.
       for (final t in DownloadManager.instance.activeTasks)

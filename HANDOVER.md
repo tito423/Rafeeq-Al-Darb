@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 12:47 — IN PROGRESS — resume here**
+**2026-09-27 12:58 — IN PROGRESS — resume here**
 
-Stage C sweep: 70 screens across 5 classes and both orientations, all seen, no layout faults
+Fix: every reciter page was a grey error box (_PanelInk.of outside its scope); downloads row opens the right recitation; Dorar tafseer/history hidden until they have readers
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

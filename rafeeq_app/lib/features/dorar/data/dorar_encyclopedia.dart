@@ -19,8 +19,13 @@ const dorarEncyclopedias = [
   DorarEncyclopedia('feqhia', 'dorar.enc_feqhia'),
   DorarEncyclopedia('qfiqhia', 'dorar.enc_qfiqhia'),
   DorarEncyclopedia('osolfeqh', 'dorar.enc_osolfeqh'),
-  DorarEncyclopedia('tafseer', 'dorar.enc_tafseer'),
-  DorarEncyclopedia('history', 'dorar.enc_history'),
+  // Not listed until each has its own reader: both opened EMPTY on the
+  // owner's Xiaomi (2026-09-27). Measured: /tafseer is 114 surah cards
+  // (/tafseer/N, split into parts /tafseer/N/M, sections #tt1..), and
+  // /history is browsed by era (?era=N) and event (/history/event/N) -
+  // neither has the <ul id="mtree"> tree the other nine share.
+  // DorarEncyclopedia('tafseer', 'dorar.enc_tafseer'),
+  // DorarEncyclopedia('history', 'dorar.enc_history'),
   DorarEncyclopedia('adyan', 'dorar.enc_adyan'),
   DorarEncyclopedia('frq', 'dorar.enc_frq'),
   DorarEncyclopedia('alakhlaq', 'dorar.enc_alakhlaq'),

@@ -176,7 +176,13 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                   padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
                   child: _ThemedPanel(
                     theme: theme,
-                    child: Column(
+                    // A Builder, so `context` below is INSIDE the panel's
+                    // _PanelInkScope. Without it _PanelInk.of looked the ink
+                    // up from the screen's own context, found nothing and
+                    // threw «Null check operator used on a null value» -
+                    // every reciter's page was a grey error box on the
+                    // release build (Xiaomi and emulator, 2026-09-27).
+                    child: Builder(builder: (context) => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
@@ -297,7 +303,7 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
                           ],
                         ),
                       ],
-                    ),
+                    )),
                   ),
                 ),
               ),
