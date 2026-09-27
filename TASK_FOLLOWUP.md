@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:49 (09-27) Diagnostic APK installed with `adb install -r` = Success; no uninstall/data loss. NEXT EXACT: confirm installed base hash is `6498...600`, launch direct More > Settings > Rafeeq, clear logcat, tap Download once, then capture the new cancel stack/reason before changing code.
+
 ~23:48 (09-27) Diagnostic signed release build succeeded alone: APK 314,017,839 B, SHA-256 `6498DE3F8DF003FC924567CE622A8ADACB203E0DAEE81E877502C0F12EB00600`; ORT 1.28.2 all 3 ABIs, signing lineage verified. NEXT EXACT: boot/recover emulator after build, install this changed APK; if `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, remove exactly `com.tito.rafeeq_aldarb` (only partial failed pack in its data), reinstall, then reproduce pack download once and read `rafeeq voice pack: cancel requested` stack.
 
 ~23:43 (09-27) Diagnostic instrumentation compiles: focused `flutter analyze lib/features/assistant/data/rafeeq_voice_pack.dart` = No issues. No focused voice-pack test exists. NEXT EXACT: run `build_github_release.bat` alone, checkpoint, install (uninstall only if PackageManager again rejects the changed signed APK; emulator data contains no completed downloads), reproduce once and read the new cancel stack.
@@ -690,6 +692,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:49 - Install Rafeeq cancellation diagnostic APK without data loss
 - 2026-09-27 23:48 - Build signed Rafeeq cancellation diagnostic APK
 - 2026-09-27 23:42 - Verify Rafeeq cancellation diagnostics analyze clean
 - 2026-09-27 23:41 - Instrument Rafeeq pack cancellation caller
