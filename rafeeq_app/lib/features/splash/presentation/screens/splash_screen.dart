@@ -157,15 +157,39 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       WidgetsBinding.instance.addPostFrameCallback((_) => _removeNativeSplash());
       // Belt-and-braces: `_onVideoTick` should catch the end first, but a
       // decoder that never reports a clean completion must not strand the
-      // user on frame one forever.
-      Future<void>.delayed(
-          c.value.duration + const Duration(seconds: 2), _proceed);
+      // user on frame one forever. Judged by the CLIP's progress, not the
+      // wall clock: it was `duration + 2 s` from play(), and a start-up
+      // that makes the decoder stutter (since 3.69 «رفيق» loads its models
+      // then) put the clip behind the clock - the timer fired with the clip
+      // half-way and the intro was cut into Home.
+      _watchStall(c);
     } catch (_) {
       // Asset missing/undecodable on this device — lift the native splash onto
       // the (identical) Flutter icon, brief hold, then proceed.
       _removeNativeSplash();
       Future<void>.delayed(const Duration(milliseconds: 1500), _proceed);
     }
+  }
+
+  /// Hands off only when the clip has made no progress for 3 s (a decoder
+  /// that stalled for good), or after three times its length in any case.
+  void _watchStall(VideoPlayerController c) {
+    var last = Duration.zero;
+    var still = 0;
+    final cap = DateTime.now().add(c.value.duration * 3);
+    Timer.periodic(const Duration(seconds: 1), (t) {
+      if (_navigated || !mounted || !identical(_video, c)) {
+        t.cancel();
+        return;
+      }
+      final pos = c.value.position;
+      still = pos == last ? still + 1 : 0;
+      last = pos;
+      if (still >= 3 || DateTime.now().isAfter(cap)) {
+        t.cancel();
+        _proceed(why: 'stalled at $pos of ${c.value.duration}');
+      }
+    });
   }
 
   /// Whether the app is actually in front of the reader right now.
@@ -188,12 +212,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (mounted && identical(_video, c)) setState(() => _video = null);
     await c.dispose();
     _removeNativeSplash();
-    _proceed();
+    _proceed(why: 'left the foreground');
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) return;
+    // `inactive` is not leaving: the notification shade pulled over the
+    // clip, a system dialog, the recents gesture begun and abandoned all
+    // send it with the app still on screen - and it cut the intro half-way
+    // into Home («الاسبلاش مش بتكمل تيجي في النص والتطبيق يعمل اسكيب»,
+    // owner 2026-09-27). Only really going away (hidden/paused) ends it.
+    if (state == AppLifecycleState.resumed ||
+        state == AppLifecycleState.inactive) {
+      return;
+    }
     final c = _video;
     if (c == null) return;
     // Leaving the foreground ends the intro outright rather than pausing it:
@@ -208,13 +240,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final value = v.value;
     if (value.duration > Duration.zero &&
         value.position >= value.duration - const Duration(milliseconds: 150)) {
-      _proceed();
+      _proceed(why: 'ended');
       return;
     }
   }
 
-  void _proceed() {
+  void _proceed({String why = 'no clip'}) {
     if (_navigated || !mounted) return;
+    // Which path ended the intro, and where the clip was: the only way to
+    // tell a cut intro's cause apart on a phone (logcat, tag flutter).
+    final v = _video?.value;
+    debugPrint('splash: proceed ($why) at ${v?.position} of ${v?.duration}');
     // Safety net: if we somehow reach the hand-off with the native splash
     // still up (e.g. a decoder that never painted a frame), lift it now so it
     // can't cover the app.
