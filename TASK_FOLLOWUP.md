@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:24 (09-27) NEW release APK built successfully from HEAD 9558de35: 314,017,839 B at 23:24; all 3 ABIs contain sherpa ORT 1.28.2 and signing lineage verified (new key Android 9+, old key 7-8). No Flutter/test command ran in parallel. NEXT EXACT: confirm emulator state, `adb install -r` this APK, check `lastUpdateTime`, restore/download the Rafeeq voice pack if missing, then feed the two required Arabic clips and capture/read each resulting Settings screen.
+
 ~23:17 (09-27) RESUMED item 4 step 1. Git HEAD d3b9029b; emulator-5554 is live. Existing APK is the OLD v3.69.2 build from 22:37 (314,017,839 B), so the settings-section code is still NOT built or seen. Untracked pre-existing `scripts/github_content_mirror_report.txt` and `scripts/out/` left untouched. NEXT EXACT: run `build_github_release.bat` alone; after it finishes, checkpoint, reinstall the new APK, then verify the two Arabic voice commands with screenshots.
 
 ~22:45 (09-27) RELEASED v3.69.2 (tag a3db995e = HEAD, APK 314,017,839 B, range 206; v3.69.1 + tag deleted). About card v3.69.2 SEEN. Link: https://github.com/tito423/Rafeeq-Al-Darb/releases/download/v3.69.2/RafeeqAlDarb-v3.69.2.apk . NOW: item 4 (Rafeeq: Egyptian dialect + every screen/setting). Owner: work until the quota stops the session.
@@ -668,6 +670,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:24 - Build signed assistant settings verification APK
 - 2026-09-27 23:17 - Resume assistant settings device verification from measured baseline
 - 2026-09-27 22:54 - NEXT_PROMPT.md rewritten for Codex (owner asked): exact resume at item 4 step 1 (settings sections - code+tests, NOT built or seen), the test-clip method, environment notes, working method
 - 2026-09-27 22:52 - Item 4 step 1 (code, NOT on device yet): Rafeeq opens a settings SECTION where it is - scripts/build_assistant_settings_map.py reads settings_screen.dart (14 sections, their SettingsPart, 62 keys incl. the widgets each builds) -> assistant_settings_map.dart; OpenSettingIntent; SettingsBody(focusSection) opens + scrolls to it. Parser test with the real map. 641 pass
