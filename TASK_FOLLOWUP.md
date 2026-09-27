@@ -612,6 +612,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 14:17 - 3.67.0: version bump
 - 2026-09-27 14:11 - Continuous recitation resume seen after force-stop (1:7, same reciter); History reader seen
 - 2026-09-27 14:04 - Resume logic moved out of quran_screen (back to its 1057-line ceiling); History reader seen on emulator
 - 2026-09-27 13:55 - Continuous recitation: last reciter/surah/verse saved (RecitationResume) + «أكمل مع …» card on top of the reciter sheet, chosen reciter first; History reader built earlier
