@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 22:41 — IN PROGRESS — resume here**
+**2026-09-27 22:42 — IN PROGRESS — resume here**
 
-v3.69.2 release build: About card v3.69.2 SEEN on emulator (the 3.69.1 card said 3.69.0), support button present, splash log 'no clip'. Dorar all-encyclopaedia search, Rafeeq Shamela voice search, splash fix
+Released v3.69.2; v3.69.1 deleted
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
