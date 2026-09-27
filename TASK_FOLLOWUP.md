@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+14:55 (09-27) ASSISTANT STEP 1 DONE (brain, text only, NOT wired to UI): lib/features/assistant/data/assistant_intent.dart - AssistantParser over the app's REAL catalogues (114 surah names from quran_local.db, 176 Arabic audio editions, libraryBookCatalog). Understands: screens (أذكار، مسبحة، إعدادات، تنزيلات، مشغل التلاوة، آية بآية، الشاملة، المكتبة، القبلة…), play surah by name/number with an optional reciter, book by title (+author), all books of an author, on-this-day today or a hijri date. Never answers questions (a question that mentions a screen stays unknown). test/assistant_intent_test.dart 5/5 groups. NEXT: (2) wire: mic button + Android SpeechRecognizer first, execute intents (navigation hooks in AppShell._goTo etc.), TTS reply; (3) benchmark screen for whisper small-q5_1 vs large-v3-turbo-q5_0 vs Android recognizer on the owner's voice; (4) «يا رفيق» wake word.
+
 14:40 (09-27) OWNER NEW BIG FEATURE: «رفيق» voice assistant for the whole app (wake word «يا رفيق», open/play anything: surah by reciter, ayah player, adhkar, tasbeeh, book by title/author, all books of an author, settings, downloads, clock face, theme, on-this-day by hijri date). Model downloadable from the Downloads screen. MEASURED 2026-09-27: Porcupine supports Arabic BUT Picovoice free tier ended 2026-06-30 (keys disabled) -> not usable. Vosk ar-mgb2 318 MB (MSA broadcast). whisper.cpp ggml sizes (HF, live): base 141, small 465, small-q5_1 181, medium-q5_0 514, large-v3-turbo-q5_0 547 MB. App already ships whisper.cpp (whisper_flutter_new) for tasmee. PLAN: (1) intent engine («المخ»): Arabic command grammar + fuzzy match over the app's own catalogues (surahs, reciters, books/authors, screens, settings, clock faces) -> action; testable on text now. (2) hidden benchmark screen: owner records ~10 commands on the Xiaomi -> small-q5_1 vs large-v3-turbo-q5_0 vs Android SpeechRecognizer; pick by measured accuracy/latency. (3) mic button + TTS reply; (4) «يا رفيق» wake word (open-source engine, tested on Arabic first; background = optional foreground service). An LLM (if any) only parses intent, never answers religious content. Weekly quota ~86% at 14:40.
 
 14:23 (09-27) RELEASED v3.67.0 (tag 038fcf9b = HEAD, RafeeqAlDarb-v3.67.0.apk 276,493,881 B, range request 206; v3.66.0 + tag deleted; v3.51.0 and content-* kept). Before publishing: analyze clean, 630 tests pass, APK badging 3.67.0 (78), About card v3.67.0 on the emulator. Contents: all 11 Dorar encyclopedias (Tafseer + History readers), read-on-site fallback, dynamic source rules (R2 config/source_rules.json v5, 31 rules), library cards + staggered lists, continuous recitation «أكمل مع …», Shamela resume/confirm-delete/link-with-spaces/editor pages, reciter page grey-box fix, downloads row, no Google Location Accuracy loop. NEXT: Google TV remote walk (stopped at first-run screen); schedule scripts/check_sources.py daily (needs owner OK for a Windows scheduled task).
@@ -616,6 +618,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 15:26 - Assistant brain: Arabic command parser over the real catalogues, tested
 - 2026-09-27 15:21 - Voice assistant plan + measured model sizes logged
 - 2026-09-27 14:23 - Released v3.67.0
 - 2026-09-27 14:17 - 3.67.0: version bump
