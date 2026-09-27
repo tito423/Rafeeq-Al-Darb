@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 22:54 — IN PROGRESS — resume here**
+**2026-09-27 23:17 — IN PROGRESS — resume here**
 
-NEXT_PROMPT.md rewritten for Codex (owner asked): exact resume at item 4 step 1 (settings sections - code+tests, NOT built or seen), the test-clip method, environment notes, working method
+Resume assistant settings device verification from measured baseline
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

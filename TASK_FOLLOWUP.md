@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:17 (09-27) RESUMED item 4 step 1. Git HEAD d3b9029b; emulator-5554 is live. Existing APK is the OLD v3.69.2 build from 22:37 (314,017,839 B), so the settings-section code is still NOT built or seen. Untracked pre-existing `scripts/github_content_mirror_report.txt` and `scripts/out/` left untouched. NEXT EXACT: run `build_github_release.bat` alone; after it finishes, checkpoint, reinstall the new APK, then verify the two Arabic voice commands with screenshots.
+
 ~22:45 (09-27) RELEASED v3.69.2 (tag a3db995e = HEAD, APK 314,017,839 B, range 206; v3.69.1 + tag deleted). About card v3.69.2 SEEN. Link: https://github.com/tito423/Rafeeq-Al-Darb/releases/download/v3.69.2/RafeeqAlDarb-v3.69.2.apk . NOW: item 4 (Rafeeq: Egyptian dialect + every screen/setting). Owner: work until the quota stops the session.
 
 ~22:20 (09-27) OWNER ITEMS 1-3 DONE AND SEEN on emulator-5554 (build 21:53, versionName 3.69.1, NOT released): (1) Dorar hub first tile «بحث في الموسوعات كلها»: all 9 contents loaded, «العقيدة» (pasted) -> results from العقدية + الفرق with paths, a result opened dorar.net/aqeeda/8; (3) edge_tts ar-EG clip «يا رفيق، نزّلي كتاب الزهد للإمام أحمد ابن حنبل من الشاملة» via rafeeq_test.wav -> Shamela opened, box «الزهد للامام احمد ابن» (ASR lost «حنبل»), first result «الزهد لأحمد بن حنبل», card with «استيراد إلى مكتبتي» opened; (2) splash: `pm clear` + notification shade pulled at 4 s -> clip kept playing, logcat «splash: proceed (ended) at 9.878 of 10.010». The OLD build's cut was NOT reproduced (emulator crashed, exit 139, at the clip); the new debugPrint names the path if it happens on the phone. Emulator data was CLEARED by pm clear (downloads gone). analyze 0, 640 pass. NEXT: ask owner to release (3.69.2: About card also fixed); then item 4 (Egyptian dialect + every screen/option) and Rafeeq latency measurement.
@@ -666,6 +668,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:17 - Resume assistant settings device verification from measured baseline
 - 2026-09-27 22:54 - NEXT_PROMPT.md rewritten for Codex (owner asked): exact resume at item 4 step 1 (settings sections - code+tests, NOT built or seen), the test-clip method, environment notes, working method
 - 2026-09-27 22:52 - Item 4 step 1 (code, NOT on device yet): Rafeeq opens a settings SECTION where it is - scripts/build_assistant_settings_map.py reads settings_screen.dart (14 sections, their SettingsPart, 62 keys incl. the widgets each builds) -> assistant_settings_map.dart; OpenSettingIntent; SettingsBody(focusSection) opens + scrolls to it. Parser test with the real map. 641 pass
 - 2026-09-27 22:42 - Released v3.69.2; v3.69.1 deleted
