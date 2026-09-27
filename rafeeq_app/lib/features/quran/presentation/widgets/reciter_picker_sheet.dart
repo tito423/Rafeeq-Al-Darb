@@ -10,6 +10,8 @@ import '../../../downloads/data/reciters_provider.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/presentation/widgets/audio_common.dart' show surahTitle;
 import '../../../../core/services/recitation_resume.dart';
+import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/db/quran_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 
 /// «اديني في خيارات تلاوة الآية بآية إمكانية اختيار القارئ في البلاير
@@ -27,6 +29,28 @@ class ReciterPick {
   const ReciterPick(this.id, {this.resume});
   final String id;
   final RecitationResume? resume;
+}
+
+/// The sheet for starting the continuous recitation: it leads with «أكمل
+/// مع …» when a recitation was under way - the same reciter from the very
+/// verse it reached, even after the app was killed (owner, 2026-09-27).
+Future<ReciterPick?> pickReciterOrResume(BuildContext context) async {
+  final last = await RecitationResume.load();
+  if (!context.mounted) return null;
+  return showReciterPickerForStart(context, resume: last);
+}
+
+/// Carries on from [ReciterPick.resume] when that was the choice. False
+/// when it was a plain reciter (start from the page) or the verse is gone.
+Future<bool> resumeContinuousIfPicked(
+    ReciterPick pick, QuranRepository repo) async {
+  final r = pick.resume;
+  if (r == null) return false;
+  final from = await repo.ayah(r.surah, r.ayah);
+  if (from == null) return false;
+  await AyahAudioService.instance
+      .startContinuous(from: from, repo: repo, edition: pick.id);
+  return true;
 }
 
 /// The sheet with, when [resume] is given, a «أكمل مع …» card on top that

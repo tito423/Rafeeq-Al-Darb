@@ -12,7 +12,6 @@ import '../widgets/mushaf/toolbar_bar.dart';
 import '../../data/mushaf_paper_provider.dart';
 import '../../data/ayah_coords_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
-import '../../../../core/services/recitation_resume.dart';
 import '../../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../data/mushaf_data_provider.dart';
@@ -538,33 +537,19 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       await audio.stopContinuous();
       return;
     }
-    // «لما تضغط على التلاوة المستمرة يديني اختيار قارئ» (2026-09-23): the
-    // reciter is chosen on every start. Downloaded reciters head the list
-    // and play from the device; the rest stream.
-    // The sheet leads with «أكمل مع …» when a recitation was under way -
-    // the same reciter from the very verse it reached, even after the app
-    // was killed (RecitationResume, owner 2026-09-27).
-    final last = await RecitationResume.load();
-    if (!mounted) return;
-    final pick = await showReciterPickerForStart(context, resume: last);
+    // «لما تضغط على التلاوة المستمرة يديني اختيار قارئ» (2026-09-23), with
+    // «أكمل مع …» on top (2026-09-27); downloaded reciters first.
+    final pick = await pickReciterOrResume(context);
     if (pick == null || !mounted) return;
-    final id = pick.id;
-    await ref.read(selectedReciterProvider.notifier).select(id);
-    final resume = pick.resume;
-    if (resume != null) {
-      final from = await data.repo.ayah(resume.surah, resume.ayah);
-      if (from != null && mounted) {
-        await audio.startContinuous(from: from, repo: data.repo, edition: id);
-        return;
-      }
-    }
+    await ref.read(selectedReciterProvider.notifier).select(pick.id);
+    if (await resumeContinuousIfPicked(pick, data.repo)) return;
     final ayahs = await _ayahsOfPage(_current, data);
     if (ayahs.isEmpty || !mounted) return;
     final start = ayahs.firstWhere(
       (a) => a.surahId == _highlightSurah && a.ayahNumber == _highlightAyah,
       orElse: () => ayahs.first,
     );
-    await audio.startContinuous(from: start, repo: data.repo, edition: id);
+    await audio.startContinuous(from: start, repo: data.repo, edition: pick.id);
   }
 
   @override

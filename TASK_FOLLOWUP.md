@@ -610,6 +610,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 14:04 - Resume logic moved out of quran_screen (back to its 1057-line ceiling); History reader seen on emulator
 - 2026-09-27 13:55 - Continuous recitation: last reciter/surah/verse saved (RecitationResume) + «أكمل مع …» card on top of the reciter sheet, chosen reciter first; History reader built earlier
 - 2026-09-27 13:50 - Dorar History reader: 7 eras, events 20 a page with both years and full text (tested on real pages); rules v5 (31), check_sources 7/7
 - 2026-09-27 13:45 - Tafseer reader seen on emulator (surahs, parts, chain across surahs)
