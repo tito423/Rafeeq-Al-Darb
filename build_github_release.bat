@@ -19,4 +19,6 @@ rem («الجزء ده بالذات في تطبيقنا احنا بس مش ال�
 cd /d "%~dp0rafeeq_app" || exit /b 1
 call flutter build apk --release --dart-define=RAFEEQ_SUPPORT_URL=https://paypal.me/Tito320 --dart-define=RAFEEQ_SHAMELA=true || exit /b 1
 cd /d "%~dp0" || exit /b 1
+rem One ONNX Runtime for two plugins - see scripts/check_apk_native.py.
+py -3 scripts\check_apk_native.py || exit /b 1
 py -3 scripts\sign_release.py || exit /b 1

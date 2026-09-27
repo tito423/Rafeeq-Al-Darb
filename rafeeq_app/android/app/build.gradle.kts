@@ -89,6 +89,14 @@ android {
     // version (1.15.1, see dependencies) supplies x86_64; the ARM copies are
     // the package's, the Java binding's JNI shim is never used, and 32-bit
     // x86 is not an ABI Flutter builds for.
+    // sherpa_onnx_web's JavaScript/WASM (15 MB) is for the web build only;
+    // an Android APK never loads it.
+    androidResources {
+        ignoreAssetsPattern =
+            "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~:" +
+                "!sherpa-onnx-*.js:!sherpa-onnx-wasm-web.wasm"
+    }
+
     packaging {
         jniLibs {
             // Two plugins ship libonnxruntime.so: `onnxruntime` (ORT 1.15.1,
@@ -125,6 +133,35 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// «رفيق»: sherpa_onnx 1.13.8 needs ITS ONNX Runtime (1.28.2, C API 28); the
+// `onnxruntime` pub package ships 1.15.1 for ARM, and `pickFirsts` above
+// took that one for arm64-v8a and armeabi-v7a in the first 3.69.0 build
+// (14,203,216 B in the APK against sherpa's 22,249,560) - the recogniser
+// would have failed on every phone («The requested API version [28] is not
+// available»). Copied into the app's OWN jniLibs, sherpa's copy is the one
+// packaged; the reading voice asks the runtime for API 14, which 1.28.2
+// still serves (seen reading aloud on emulator-5554). Checked after every
+// build by build_github_release.bat.
+val sherpaOrtDir = layout.buildDirectory.dir("generated/sherpaOrt/jniLibs")
+val copySherpaOrt = tasks.register<Copy>("copySherpaOrt") {
+    for (name in listOf(
+        "sherpa_onnx_android_arm64",
+        "sherpa_onnx_android_armeabi",
+        "sherpa_onnx_android_x86_64",
+    )) {
+        rootProject.findProject(":$name")?.let { plugin ->
+            from(plugin.projectDir.resolve("src/main/jniLibs")) {
+                include("**/libonnxruntime.so")
+            }
+        }
+    }
+    into(sherpaOrtDir)
+}
+android.sourceSets.getByName("main").jniLibs.srcDir(sherpaOrtDir)
+tasks.configureEach {
+    if (name.startsWith("merge") && name.endsWith("JniLibFolders")) dependsOn(copySherpaOrt)
 }
 
 dependencies {

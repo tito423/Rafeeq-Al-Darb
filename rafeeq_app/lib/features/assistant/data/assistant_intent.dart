@@ -279,8 +279,22 @@ String? afterWakeWord(String heard) {
     return false;
   }
 
+  // The name glued to the next word («يارفيقورين» = «يا رفيق وريني»).
+  String? gluedRest(String x) {
+    var t = x;
+    if (t.startsWith('يا')) t = t.substring(2);
+    for (final n in _wakeNorm) {
+      if (n.length >= 4 && t.length > n.length + 2 && t.startsWith(n)) {
+        return t.substring(n.length);
+      }
+    }
+    return null;
+  }
+
   for (var i = 0; i < w.length && i < 4; i++) {
     if (isName(w[i])) return w.sublist(i + 1).join(' ');
+    final glued = gluedRest(w[i]);
+    if (glued != null) return [glued, ...w.sublist(i + 1)].join(' ');
     if (i + 1 < w.length && isName(w[i] + w[i + 1])) {
       return w.sublist(i + 2).join(' ');
     }

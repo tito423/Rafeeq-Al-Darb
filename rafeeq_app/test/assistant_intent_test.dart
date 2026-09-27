@@ -144,4 +144,17 @@ void main() {
     expect(afterWakeWord('صلاة العصر بعد قليل'), isNull);
     expect(afterWakeWord('افتح الأذكار'), isNull);
   });
+
+  // The same clips through silero VAD with RafeeqEar's settings, then the
+  // recogniser (E:\DevEnv\asr\vad_pipe.py, 2026-09-27): one segment each.
+  test('the VAD pipeline output', () {
+    String call(String heard) => of(afterWakeWord(heard) ?? 'NO WAKE');
+    expect(call('يار فيق فيتحل الأثكار'), 'open azkar');
+    expect(call('يارفيق خل التديق ليلي'), 'theme dark');
+    expect(call('يا رفيق إفتح كتاب بلوغ المرام'), 'book bulugh_al_maram');
+    expect(call('يارفيقورين اتجاه القبلة'), 'open qibla');
+    expect(call('rafique passe en mode sombre'), 'theme dark');
+    expect(call('rafiek abre as configurações'), 'open settings');
+    expect(call('رفيق ترتيبت کولو'), 'open settings');
+  });
 }

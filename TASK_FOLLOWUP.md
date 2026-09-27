@@ -634,6 +634,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 19:01 - ORT conflict found in the first 3.69.0 APK (ARM carried 1.15.1, sherpa needs API 28): app jniLibs take sherpa's 1.28.2, build fails otherwise (check_apk_native.py); web wasm excluded; wake word glued to next word; 11 parser groups pass
 - 2026-09-27 18:52 - Rafeeq v3.69.0 in code: no button, wake call via RafeeqEar, sheet takes next sentence, conflict rules (call/sound/other recorder), background FGS, voice pack in Settings + Downloads, Shamela books, credits; 640 pass; not built
 - 2026-09-27 18:44 - Rafeeq voice pack on R2+mirror (206); RafeeqEar (sherpa VAD+omnilingual, no audio focus); AssistantListenService (mic FGS) + busy channel; fuzzy correction + wake detection tested on real ASR output (10 groups pass); UI not rewired yet
 - 2026-09-27 18:25 - ASR measured: omnilingual 300M chosen (366 MB, 0.5 s, best Arabic) over whisper turbo/small and zipformer

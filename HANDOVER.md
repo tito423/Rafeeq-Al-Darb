@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 18:52 — IN PROGRESS — resume here**
+**2026-09-27 19:01 — IN PROGRESS — resume here**
 
-Rafeeq v3.69.0 in code: no button, wake call via RafeeqEar, sheet takes next sentence, conflict rules (call/sound/other recorder), background FGS, voice pack in Settings + Downloads, Shamela books, credits; 640 pass; not built
+ORT conflict found in the first 3.69.0 APK (ARM carried 1.15.1, sherpa needs API 28): app jniLibs take sherpa's 1.28.2, build fails otherwise (check_apk_native.py); web wasm excluded; wake word glued to next word; 11 parser groups pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
