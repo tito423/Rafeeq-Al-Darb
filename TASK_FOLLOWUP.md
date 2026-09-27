@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:27 (09-27) Emulator crashed/disappeared after the fresh install while navigating toward Settings (same known exit-139 class; `adb devices` is empty and no emulator/qemu process remains). One screenshot was read first: app Home rendered normally; no Rafeeq pack check or voice command happened yet. NEXT EXACT: delete only stale `*.lock` under `E:\DevEnv\avd\Medium_Phone_API_36.1.avd`, restart headless with swiftshader, wait for boot, reinstall the 23:24 APK again and re-check `lastUpdateTime` before continuing.
+
 ~23:25 (09-27) NEW APK installed over the existing app on emulator-5554: `adb install -r` Success; package reports versionName 3.69.2 and lastUpdateTime 23:24:29, so this is not the stale snapshot build. NEXT EXACT: start app, inspect Rafeeq pack/settings and install the real pack if missing; then run voice clip 1 «يا رفيق، افتحلي تذكير صيام السنن», capture/read the target section, checkpoint, then clip 2.
 
 ~23:24 (09-27) NEW release APK built successfully from HEAD 9558de35: 314,017,839 B at 23:24; all 3 ABIs contain sherpa ORT 1.28.2 and signing lineage verified (new key Android 9+, old key 7-8). No Flutter/test command ran in parallel. NEXT EXACT: confirm emulator state, `adb install -r` this APK, check `lastUpdateTime`, restore/download the Rafeeq voice pack if missing, then feed the two required Arabic clips and capture/read each resulting Settings screen.
@@ -672,6 +674,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:27 - Record emulator crash before assistant voice verification
 - 2026-09-27 23:25 - Install fresh assistant settings APK on emulator
 - 2026-09-27 23:24 - Build signed assistant settings verification APK
 - 2026-09-27 23:17 - Resume assistant settings device verification from measured baseline
