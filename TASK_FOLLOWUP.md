@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:36 (09-27) Voice-pack attempt did NOT complete: UI reached 1.7/368.2 MB then froze; snackbar «تعذّر تنزيل حزمة الصوت» and logcat exactly `DioException [request cancelled]: The request was manually cancelled by the user.` No manual cancel was issued before that line; R2 itself is live (1 MiB range = 206 in 0.519 s) and emulator network was VALIDATED. Force-stopping to reset the stuck singleton was followed by another emulator exit/crash; `adb` lost emulator-5554. Cause of the cancellation is NOT established yet. NEXT EXACT: restart emulator, prove installed APK hash/current state again, retry the pack once from a clean process while capturing logcat; if the same self-cancel reproduces, fix it before any voice command.
+
 ~23:32 (09-27) Settings > Rafeeq inspected on the proven-current build: pack is definitely absent; UI says 368.2 MB, enable switch disabled, «نزّل حزمة الصوت أولًا». Tapped Download; UI measured 1.7/368.2 MB (0%). NEXT EXACT: keep app/emulator alive until this real download finishes, confirm switch becomes enabled, turn Rafeeq on, then run voice clip 1.
 
 ~23:30 (09-27) Emulator restarted headless and booted. `adb install -r` reported `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, but this is PackageManager snapshot state, not a stale APK: pulled installed `base.apk` is byte-identical to the 23:24 build (both SHA-256 `1D0491056AC4688D69B5488252E7821DCEF87A30FAC23DB39F00B71A20CC9DCA`, 314,017,839 B) and both signer digests are `a505...9349`; package still reports lastUpdateTime 23:24:29. No uninstall/data loss done. NEXT EXACT: launch this proven-current binary, open Settings > Rafeeq and confirm whether the pack exists/enabled, then voice clip 1.
@@ -678,6 +680,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:36 - Record failed Rafeeq pack attempt and second emulator crash
 - 2026-09-27 23:31 - Start real Rafeeq voice pack download for device test
 - 2026-09-27 23:29 - Verify restarted emulator already has byte-identical APK
 - 2026-09-27 23:27 - Record emulator crash before assistant voice verification
