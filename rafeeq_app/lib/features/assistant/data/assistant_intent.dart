@@ -617,6 +617,29 @@ class AssistantParser {
         bestWords = p.split(' ').length;
       }
     }
+    // Nothing matched whole: a section name of three words or more with
+    // all but one of its words said. On emulator-5554 (2026-09-28) «افتح
+    // ضبط المواقيت والتاريخ» came back as «فتحضط المواقيط والتاريخ» - the
+    // verb swallowed «ضبط»; the other two words still name one section.
+    if (section == null) {
+      final said = {for (final w in words) bare(w)};
+      // A screen matched on fewer words («المواقيت» alone) loses to it.
+      var bestHits = best == null ? 0 : bestWords;
+      for (final e in _sections.entries) {
+        for (final p in e.value) {
+          final pw = p.split(' ');
+          if (pw.length < 3) continue;
+          final hits = pw.where((w) => said.contains(bare(w))).length;
+          if (hits == pw.length - 1 && hits > bestHits) {
+            section = e.key;
+            best = null;
+            bestHits = hits;
+            bestLen = p.length;
+            bestWords = pw.length;
+          }
+        }
+      }
+    }
     // A section's name of three words or more is specific enough to allow
     // two stray words around it - «في تحلي» is how the recogniser broke
     // «افتحلي» on emulator-5554 (2026-09-28).

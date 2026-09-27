@@ -92,6 +92,9 @@ void main() {
     const heard = 'يا رفيقفي تحلي تذكير صيام السنا';
     expect(afterWakeWord(heard), isNotNull);
     expect(of(afterWakeWord(heard)!), 'setting fasting.section_title');
+    // «افتح ضبط المواقيت والتاريخ», as it was heard the same night.
+    expect(of(afterWakeWord('يار فيق فتحضط المواقيط والتاريخ')!),
+        'setting prayer.adjustments');
   });
 
   test('on this day, today or a hijri date', () {
