@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 13:12 — IN PROGRESS — resume here**
+**2026-09-27 13:21 — IN PROGRESS — resume here**
 
-Dynamic source rules: Dorar/Shamela parsing rules published on R2 + GitHub (v1, 21 rules), check_sources.py 5/5 live, read-on-site fallback
+Dynamic source rules proven live (broken v2 -> fallback, v3 -> restored); tests fixed
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

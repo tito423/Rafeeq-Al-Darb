@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+13:20 (09-27) DYNAMIC FALLBACK DONE + PROVEN END TO END on the emulator: published rules v2 with a deliberately broken dorar.toc.start -> app (no new APK) showed «افتح على الموقع» on الموسوعة العقدية; published v3 (= defaults) -> the tree came back. Live rules now: version 3 (scripts/source_rules_overrides.json = {"version":3,"rules":{}}), R2 + GitHub content-mirror (config__source_rules.json). check_sources.py 5/5. Two tests fixed (content_mirrors RELEASES gets config/; source_rules.dart allowed Arabic labels). NEXT: library redesign (cards for الدرر/الشاملة, shelf, Hero, staggered, animations).
+
 13:10 (09-27) SEEN (emulator, build 13:0x): reciter page renders again (was a grey error box for EVERY reciter: «Null check operator» in _PanelInk.of - context outside _PanelInkScope; fixed with a Builder). Downloads «جارٍ تنزيله الآن» row tap -> reciter page on the fetching recitation (per-surah bars 34/46/52 %, pause/cancel). Tafseer/history hidden from the hub. NEXT: dynamic fallback (source rules JSON on R2 + «افتح على الموقع» + scripts/check_sources.py).
 
 13:05 (09-27) OWNER APPROVED ALL («نفذ كل ده»). ORDER: (1) see reciter-page fix (build running: _PanelInk Builder fix; downloads row opens full reciter + initialMoshafId; tafseer/history hidden). (2) DYNAMIC FALLBACK: parsing rules for Dorar + Shamela in a JSON on R2 (bundled defaults, fetched + cached, versioned), «افتح على الموقع» when a parse fails, scripts/check_sources.py daily health check. (3) LIBRARY REDESIGN with animations: two big labelled cards (الدرر / الشاملة) at the top, shelf of book covers, Hero cover->reader, staggered list entry, expanding search. (4) Tafseer (114 surahs, parts /tafseer/N/M) + History (eras ?era=N, /history/event/N) readers, then re-list them.
@@ -604,6 +606,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 13:21 - Dynamic source rules proven live (broken v2 -> fallback, v3 -> restored); tests fixed
 - 2026-09-27 13:12 - Dynamic source rules: Dorar/Shamela parsing rules published on R2 + GitHub (v1, 21 rules), check_sources.py 5/5 live, read-on-site fallback
 - 2026-09-27 13:04 - Reciter page fix + downloads row seen on emulator
 - 2026-09-27 12:58 - Fix: every reciter page was a grey error box (_PanelInk.of outside its scope); downloads row opens the right recitation; Dorar tafseer/history hidden until they have readers
