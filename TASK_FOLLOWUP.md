@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:51 (09-27) Diagnostic build retry is actively progressing, not cancelled: one tap logged `download started`; after ~70 s the screenshot visibly shows 41.3/368.2 MB and no `cancel requested` stack exists. This run proves the earlier 1.7 MB stop is not deterministic; do NOT change behavior yet. NEXT EXACT: leave this exact process/screen untouched, monitor screenshots/logcat only until completion or a logged cancel/crash; if complete, enable Rafeeq and resume the two required voice clips.
+
 ~23:49 (09-27) Diagnostic APK installed with `adb install -r` = Success; no uninstall/data loss. NEXT EXACT: confirm installed base hash is `6498...600`, launch direct More > Settings > Rafeeq, clear logcat, tap Download once, then capture the new cancel stack/reason before changing code.
 
 ~23:48 (09-27) Diagnostic signed release build succeeded alone: APK 314,017,839 B, SHA-256 `6498DE3F8DF003FC924567CE622A8ADACB203E0DAEE81E877502C0F12EB00600`; ORT 1.28.2 all 3 ABIs, signing lineage verified. NEXT EXACT: boot/recover emulator after build, install this changed APK; if `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, remove exactly `com.tito.rafeeq_aldarb` (only partial failed pack in its data), reinstall, then reproduce pack download once and read `rafeeq voice pack: cancel requested` stack.
@@ -692,6 +694,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:52 - Observe Rafeeq pack retry progressing past prior stall
 - 2026-09-27 23:49 - Install Rafeeq cancellation diagnostic APK without data loss
 - 2026-09-27 23:48 - Build signed Rafeeq cancellation diagnostic APK
 - 2026-09-27 23:42 - Verify Rafeeq cancellation diagnostics analyze clean
