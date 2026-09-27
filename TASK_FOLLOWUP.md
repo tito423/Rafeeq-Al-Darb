@@ -618,6 +618,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 15:29 - Assistant parser uses the shared asciiDigits (digits_test); all tests green
 - 2026-09-27 15:26 - Assistant brain: Arabic command parser over the real catalogues, tested
 - 2026-09-27 15:21 - Voice assistant plan + measured model sizes logged
 - 2026-09-27 14:23 - Released v3.67.0

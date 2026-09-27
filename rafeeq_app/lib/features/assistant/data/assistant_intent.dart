@@ -1,4 +1,5 @@
 import '../../../core/utils/arabic_normalize.dart';
+import '../../../core/utils/digits.dart' show asciiDigits;
 
 /// «رفيق» - the in-app assistant's understanding: an Arabic sentence (MSA or
 /// Egyptian, as speech recognition writes it) -> one action in the app.
@@ -192,17 +193,6 @@ const _hijriMonths = [
   ['ذو الحجه', 'ذي الحجه', 'الحجه'],
 ];
 
-/// Arabic-Indic and Eastern digits -> ASCII.
-String _digits(String s) {
-  const a = '٠١٢٣٤٥٦٧٨٩', e = '۰۱۲۳۴۵۶۷۸۹';
-  final b = StringBuffer();
-  for (final c in s.split('')) {
-    final i = a.indexOf(c), j = e.indexOf(c);
-    b.write(i >= 0 ? '$i' : (j >= 0 ? '$j' : c));
-  }
-  return b.toString();
-}
-
 class AssistantParser {
   AssistantParser(this.catalog)
       : _surahs = [for (final s in catalog.surahs) _surahKey(s)];
@@ -220,7 +210,7 @@ class AssistantParser {
   final List<String> _surahs;
 
   AssistantIntent parse(String heard) {
-    final text = norm(_digits(heard));
+    final text = norm(asciiDigits(heard));
     final words = [
       for (final w in text.split(' '))
         if (w.isNotEmpty && !_fillers.contains(w)) w,

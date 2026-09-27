@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 15:26 — IN PROGRESS — resume here**
+**2026-09-27 15:29 — IN PROGRESS — resume here**
 
-Assistant brain: Arabic command parser over the real catalogues, tested
+Assistant parser uses the shared asciiDigits (digits_test); all tests green
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
