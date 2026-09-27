@@ -94,10 +94,10 @@ Grep `lib/` for `signIn`/`FirebaseAuth`/`google_sign_in` and you'll find
 nothing — this is deliberate, not unfinished. Every feature in the app
 today is either bundled or downloaded content, or purely local state, so
 there has never been a reason to identify a user across devices. The one
-Firebase project that exists (`rafeeq-aldarb`, see `HOSTING.md` §4) is
+Firebase project that exists (`rafeeq-aldarb`, see `docs/HOSTING.md` §4) is
 provisioned but has zero SDK code talking to it — it's there for the day a
 real cross-device feature (the leading candidate: a shared/group khatma,
-researched in `PHASE2_RESEARCH.md` but not approved to build) actually
+researched in `docs/history/PHASE2_RESEARCH.md` but not approved to build) actually
 needs it. Don't add `firebase_core` speculatively; it's real install-size
 weight for a feature nothing uses yet.
 
@@ -185,7 +185,7 @@ scholarly review this project hasn't done (flagged honestly in
   owner's own keystore, alias, and passwords (P2‑10's own owner-blocker,
   `android/app/build.gradle.kts` still has the `// TODO`).
 - **Mushaf pages are pinned to GitHub raw**, not a real CDN — fine for this
-  project's own testing traffic, not for real users (`HOSTING.md` §3 has
+  project's own testing traffic, not for real users (`docs/HOSTING.md` §3 has
   the migration plan).
 - **No physical-device pass yet** — everything in this document has only
   been verified on `emulator-5554`, never a real phone (flagged repeatedly

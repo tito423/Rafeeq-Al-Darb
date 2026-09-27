@@ -10,7 +10,7 @@ the ground *under a scrim*, which is where the countdown pill's text sits.
     py -3 scripts/check_hero_contrast.py
 
 Exits non-zero if anything is under 4.5 : 1, and writes
-`hero_contrast.txt` (UTF-8, but everything printed is ASCII — the console
+`docs/reports/hero_contrast.txt` (UTF-8, but everything printed is ASCII — the console
 here is cp1256).
 """
 
@@ -19,7 +19,7 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "hero_contrast.txt")
+OUT = os.path.join(ROOT, "docs/reports/hero_contrast.txt")
 
 FLOOR = 4.5
 
@@ -151,7 +151,7 @@ def main():
         out.write(u"\n")
 
     out.close()
-    sys.stdout.write("wrote hero_contrast.txt\n")
+    sys.stdout.write("wrote docs/reports/hero_contrast.txt\n")
     if failures:
         sys.stdout.write("BELOW %.1f:1 -> %s\n" % (FLOOR, ", ".join(failures)))
         sys.exit(1)

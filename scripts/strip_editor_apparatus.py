@@ -229,7 +229,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--book")
     ap.add_argument("--all", action="store_true")
-    ap.add_argument("--audit", default="_editor_apparatus.json")
+    ap.add_argument("--audit", default="docs/reports/_editor_apparatus.json")
     ap.add_argument("--report", default="_stripped_report.txt")
     args = ap.parse_args()
 

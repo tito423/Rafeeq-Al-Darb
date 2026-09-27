@@ -15,7 +15,7 @@ WHAT THIS COVERS AND WHAT IT DOES NOT.
     cannot tell you what MIUI does to a background service or which vendor
     kills alarms overnight, and pretending otherwise is how «متوافق مع كل
     الأجهزة» gets written about an app nobody tested. For brands there are
-    exactly two honest routes, both listed in COMPATIBILITY.md: Firebase Test
+    exactly two honest routes, both listed in docs/COMPATIBILITY.md: Firebase Test
     Lab (real Samsung/Xiaomi/Pixel hardware, free tier) and Play Console's
     pre-launch report (real devices, needs the developer account).
 

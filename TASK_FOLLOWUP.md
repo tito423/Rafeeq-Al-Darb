@@ -642,6 +642,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 19:54 - Audit stage 1: repo root organised - 14 plan/history docs to docs/history, 3 living docs to docs/, 31 reports to docs/reports, 4 script inputs to scripts/data, previous audit to docs/audits, empty  file removed; 65 code references rewritten (scripts write reports to docs/reports); local APKs/logs to gitignored .local-archive; 641 pass
 - 2026-09-27 19:46 - v3.69.0 verified end to end on emulator (wake+command, background, French, auto-hide, prayer settings link)
 - 2026-09-27 19:37 - Chrome auto-hide moved into MushafChrome (ChromeAutoHide) - quran_screen back at its 1057 ceiling, prayer_slides 797; 641 pass
 - 2026-09-27 19:28 - Qur'an chrome auto-hides after 5 s; prayer card + Settings lead to prayer-times settings; Rafeeq test clip path; web wasm removed at copyFlutterAssets; seen on emulator: voice pack installed, mic FGS type microphone, listening in background, mic closed during recitation and back after

@@ -1,6 +1,6 @@
 """Measure the real download size of every per-ayah reciter the app offers.
 
-Stage 1 of PLAN.md shows each reciter's full size on the first-run
+Stage 1 of docs/history/PLAN.md shows each reciter's full size on the first-run
 «التحميلات المبدئية» page, and recommends the smallest. The sizes must be
 measured, never typed: this reads every folder's everyayah.com listing,
 whose rows carry each file's exact byte count (`<td data-order="26624">`,

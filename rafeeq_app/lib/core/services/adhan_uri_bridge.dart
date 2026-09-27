@@ -36,7 +36,7 @@ class AdhanUriBridge {
   }
 
   /// P3‑44: real-device feedback (a Honor phone, Magic OS) confirmed the
-  /// long-flagged-but-not-yet-built gap in PHASE3.md — the Adhan
+  /// long-flagged-but-not-yet-built gap in docs/history/PHASE3.md — the Adhan
   /// notification got killed within seconds, a real Android-14 battery-
   /// optimization exemption doesn't fix, because OEMs like Honor/Huawei/
   /// Xiaomi/Oppo/Vivo/OnePlus run their own "auto-start"/"protected apps"

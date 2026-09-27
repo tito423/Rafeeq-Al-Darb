@@ -27,7 +27,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CATALOG = os.path.join(ROOT, "rafeeq_app", "lib", "features", "library",
                        "data", "book_catalog.dart")
-MEASURED = os.path.join(ROOT, "_diacritisation.json")
+MEASURED = os.path.join(ROOT, "docs/reports/_diacritisation.json")
 
 
 def main() -> int:

@@ -7,7 +7,7 @@ text **and a translation** with its own `attribution` (تخريج) and `grade`
 CLAUDE.md §1.2 forbids a grading without a named source, and this API names one
 per language.
 
-This script only counts. It writes `hadeethenc_survey.txt` (UTF-8 — the Windows
+This script only counts. It writes `docs/reports/hadeethenc_survey.txt` (UTF-8 — the Windows
 console is cp1256 and cannot print Arabic, CLAUDE.md trap #10) with:
   * which of the app's seven locales the API actually serves
   * the top-level categories and how many hadiths each holds
@@ -49,7 +49,7 @@ def get(path, tries=4):
 
 
 def main():
-    out = io.open(os.path.join(ROOT, "hadeethenc_survey.txt"), "w",
+    out = io.open(os.path.join(ROOT, "docs/reports/hadeethenc_survey.txt"), "w",
                   encoding="utf-8")
 
     langs = get("languages")
@@ -94,7 +94,7 @@ def main():
             if isinstance(v, str) and v.strip():
                 out.write("   %-12s %s\n" % (k, v.strip()[:220]))
     out.close()
-    print("wrote hadeethenc_survey.txt")
+    print("wrote docs/reports/hadeethenc_survey.txt")
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ gated per book on a real number rather than on a hope.
 
     py -3 scripts/measure_diacritisation.py
 
-Writes `_diacritisation.json` (id -> percent) next to the repo root and
+Writes `docs/reports/_diacritisation.json` (id -> percent) and
 prints the distribution. The Dart catalogue is generated from that file by
 `apply_diacritisation.py`, so the number in the app is the number measured
 here and cannot drift by being retyped.
@@ -42,7 +42,7 @@ UA = "RafeeqAlDarb/3.35 (https://github.com/tito423/Rafeeq-Al-Darb)"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CATALOG = os.path.join(ROOT, "rafeeq_app", "lib", "features", "library",
                        "data", "book_catalog.dart")
-OUT = os.path.join(ROOT, "_diacritisation.json")
+OUT = os.path.join(ROOT, "docs/reports/_diacritisation.json")
 
 MARKS = re.compile(r"[ً-ْٰ]")
 LETTERS = re.compile(r"[ء-ي]")

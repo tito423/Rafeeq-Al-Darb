@@ -6,7 +6,7 @@ The nine collections in `hadith.db` are 67,153 hadiths and nothing translates
 that corpus into Spanish, French, Portuguese, Russian or Urdu with a grading
 anyone would stand behind. موسوعة الأحاديث النبوية (hadeethenc.com) publishes a
 smaller, curated corpus **with a per-language `attribution` (تخريج) and `grade`
-(درجة)** — measured, not assumed: see `hadeethenc_survey.txt`, which prints one
+(درجة)** — measured, not assumed: see `docs/reports/hadeethenc_survey.txt`, which prints one
 whole record in all seven of the app's languages. CLAUDE.md §1.2 forbids a
 grading without a named source; this API carries one, in the reader's own
 language, which is exactly what makes it usable.
@@ -154,7 +154,7 @@ def fetch_texts(con):
 
 
 def status(con):
-    out = io.open(os.path.join(ROOT, "hadeethenc_status.txt"), "w",
+    out = io.open(os.path.join(ROOT, "docs/reports/hadeethenc_status.txt"), "w",
                   encoding="utf-8")
     total = con.execute("SELECT COUNT(*) FROM hadeeths").fetchone()[0]
     out.write("hadith ids: %d\n\n" % total)
@@ -170,7 +170,7 @@ def status(con):
             (code,)).fetchone()[0]
         out.write("%-5s %8d %8d %8d\n" % (code, got, graded, attrib))
     out.close()
-    print("wrote hadeethenc_status.txt")
+    print("wrote docs/reports/hadeethenc_status.txt")
 
 
 def main():

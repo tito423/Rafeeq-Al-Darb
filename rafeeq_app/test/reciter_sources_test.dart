@@ -20,7 +20,7 @@ import 'package:rafeeq_app/features/downloads/data/reciters_provider.dart';
 /// So a typo in a key here does not fail loudly — it removes a shaykh from
 /// the picker. That is what this file is for. It cannot check the network;
 /// each folder was range-checked by hand at its first and last ayah when it
-/// was added, and `_reciter_cdn_check.txt` / the commit message record it.
+/// was added, and `docs/reports/_reciter_cdn_check.txt` / the commit message record it.
 void main() {
   final raw = File('assets/data/catalogs/audio_editions.json').readAsStringSync();
   final editions = (jsonDecode(raw) as List<dynamic>).cast<Map<String, dynamic>>();

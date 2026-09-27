@@ -1,6 +1,6 @@
 """Measure, from the bucket itself, the packs the first-run page offers.
 
-«التحميلات المبدئية» (PLAN.md Stage 1) shows each pack's size and a total;
+«التحميلات المبدئية» (docs/history/PLAN.md Stage 1) shows each pack's size and a total;
 every figure there must be measured. This lists the R2 folders (one
 list_objects_v2 page per 1,000 objects) and sums their real byte counts:
 

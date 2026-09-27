@@ -1,7 +1,7 @@
 """Builds scripts/pipeline_zips/hadith.{db,zip} from the real hadith-json
 dumps already staged in scripts/temp_phase1/hadith9/ (source:
 A7med3bdulBaset/hadith-json on GitHub, the same source HANDOVER.md/
-RAFEEQ_PIPELINE.md already credit). No hadith text is invented; every row
+docs/RAFEEQ_PIPELINE.md already credit). No hadith text is invented; every row
 comes straight from those files.
 
 The output is NOT bundled into the Flutter app — it's uploaded to the
@@ -9,7 +9,7 @@ rafeeq-api content repo and downloaded on demand (see AppConfig.hadithDbUrl,
 DbHelper.openDownloaded), the same pattern as mushaf pages/recitations,
 because at ~74 MB it would otherwise roughly double the APK's size.
 
-Fixes the ordering bug WORK_QUEUE.md flags for STAGE 2 ("hadith ordering was
+Fixes the ordering bug docs/history/WORK_QUEUE.md flags for STAGE 2 ("hadith ordering was
 previously broken — jumping 2 -> 9 -> 99"): that happens when a hadith number
 is sorted/stored as TEXT ("2" < "9" < "99" lexicographically breaks the moment
 you hit two digits). `number_in_book` here is INTEGER, and every query in the

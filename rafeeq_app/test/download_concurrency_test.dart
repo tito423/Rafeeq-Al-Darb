@@ -33,7 +33,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// So what this test guards is what is actually true: the Dart-side queues are
 /// the app's real limits, and the per-host caps are the measured, polite ones.
 /// **The owner's stall is not reproduced and not explained** — see
-/// `WORK_QUEUE.md` C2.
+/// `docs/history/WORK_QUEUE.md` C2.
 void main() {
   final engine =
       File('lib/core/services/download_engine.dart').readAsStringSync();

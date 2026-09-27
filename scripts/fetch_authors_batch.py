@@ -1,6 +1,6 @@
 """P3-43 follow-up (2026-09-05): the owner asked directly to "fetch and
 organize all my books needed as I mentioned" — the original, genuinely
-open-ended ask from `PHASE3_FEEDBACK.md`'s "A2" ("the library only has 5
+open-ended ask from `docs/history/PHASE3_FEEDBACK.md`'s "A2" ("the library only has 5
 books... I want you to download them all, Shamela-style"). Rather than
 keep adding one title at a time, this pulls a real, large batch from the
 same 3 already-established authors (Ibn Taymiyyah, al-Hakim al-Tirmidhi,

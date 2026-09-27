@@ -60,11 +60,11 @@ def main():
         rows = list(ex.map(check, pairs))
 
     bad = [r for r in rows if r[1] != r[2]]
-    with io.open("_catalog_sizes.txt", "w", encoding="utf-8") as f:
+    with io.open("docs/reports/_catalog_sizes.txt", "w", encoding="utf-8") as f:
         f.write("books checked: %d\nmismatches: %d\n\n" % (len(rows), len(bad)))
         for bid, declared, real in bad:
             f.write("%-48s catalogue %-10s bucket %s\n" % (bid, declared, real))
-    print("checked %d, mismatches %d -> _catalog_sizes.txt" % (len(rows), len(bad)))
+    print("checked %d, mismatches %d -> docs/reports/_catalog_sizes.txt" % (len(rows), len(bad)))
     return 1 if bad else 0
 
 

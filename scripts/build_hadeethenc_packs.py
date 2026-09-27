@@ -39,7 +39,7 @@ import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "hadeethenc.db")
-CATS = os.path.join(ROOT, "hadeethenc_categories.json")
+CATS = os.path.join(ROOT, "scripts/data/hadeethenc_categories.json")
 OUT = os.path.join(ROOT, "dist", "hadeethenc")
 LOCALES = ["ar", "en", "es", "fr", "pt", "ru", "ur"]
 
@@ -203,7 +203,7 @@ def main():
     for lang in wanted:
         report.append(build(lang, cats, src))
 
-    path = os.path.join(ROOT, "hadeethenc_packs.json")
+    path = os.path.join(ROOT, "scripts/data/hadeethenc_packs.json")
     with io.open(path, "w", encoding="utf-8", newline="\n") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
         f.write("\n")

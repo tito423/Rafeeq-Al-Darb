@@ -21,7 +21,7 @@ cannot be read is kept.
 
 WHAT IS PRODUCED.
 `dist/quote_backgrounds/<id>.jpg` — 1080×1920, cropped to the phone's shape so
-nothing has to be upscaled at draw time — plus `quote_backgrounds.json`, the
+nothing has to be upscaled at draw time — plus `scripts/data/quote_backgrounds.json`, the
 manifest carrying each file's Commons page, author and licence, which is what
 the Sources screen and `assets/data/quote_backgrounds.json` are built from.
 
@@ -38,7 +38,7 @@ import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "dist", "quote_backgrounds")
-MANIFEST = os.path.join(ROOT, "quote_backgrounds.json")
+MANIFEST = os.path.join(ROOT, "scripts/data/quote_backgrounds.json")
 API = "https://commons.wikimedia.org/w/api.php"
 # Wikimedia's User-Agent policy wants the tool named and a way to reach
 # whoever is running it. Without a contact in the UA, `upload.wikimedia.org`

@@ -18,7 +18,7 @@ class ShamelaBookRef {
 /// The whole Shamela catalogue on the phone, searched locally.
 ///
 /// Owner, 2026-09-26: search Shamela by book name from inside the app and
-/// import the book (GitHub build only - see SHAMELA_IMPORT_PLAN.md).
+/// import the book (GitHub build only - see docs/history/SHAMELA_IMPORT_PLAN.md).
 ///
 /// The site's own title autocomplete (`/ajax/books/`, the select2 box on its
 /// search page) ignores the typed text and returns EVERY book - measured

@@ -172,8 +172,8 @@ def verdict(r):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--report", default="_editor_apparatus_report.txt")
-    ap.add_argument("--json", default="_editor_apparatus.json")
+    ap.add_argument("--report", default="docs/reports/_editor_apparatus_report.txt")
+    ap.add_argument("--json", default="docs/reports/_editor_apparatus.json")
     ap.add_argument("--workers", type=int, default=8)
     args = ap.parse_args()
 

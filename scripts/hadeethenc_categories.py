@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Fetch the seven top-level HadeethEnc category titles in the app's seven
-languages, into `hadeethenc_categories.json`.
+languages, into `scripts/data/hadeethenc_categories.json`.
 
 WHY THIS IS A SEPARATE STEP
 `hadeethenc_crawl.py` walked the category tree in Arabic only — it needed the
@@ -23,7 +23,7 @@ import os
 import subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "hadeethenc_categories.json")
+OUT = os.path.join(ROOT, "scripts/data/hadeethenc_categories.json")
 API = "https://hadeethenc.com/api/v1"
 LOCALES = ["ar", "en", "es", "fr", "pt", "ru", "ur"]
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) RafeeqAlDarb/1.0 "

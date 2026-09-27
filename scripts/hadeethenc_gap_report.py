@@ -19,7 +19,7 @@ Arabic without being byte-identical, which equality alone would miss.
 
     py -3 scripts/hadeethenc_gap_report.py
 
-Writes `hadeethenc_gaps.txt` in UTF-8 and prints nothing but ASCII — the
+Writes `docs/reports/hadeethenc_gaps.txt` in UTF-8 and prints nothing but ASCII — the
 Windows console here is cp1256 and cannot print Arabic (CLAUDE.md #10).
 """
 
@@ -30,7 +30,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(ROOT, "hadeethenc.db")
-OUT = os.path.join(ROOT, "hadeethenc_gaps.txt")
+OUT = os.path.join(ROOT, "docs/reports/hadeethenc_gaps.txt")
 
 LOCALES = ["ar", "en", "es", "fr", "pt", "ru", "ur"]
 # Urdu is written in Arabic script, so "how Arabic does this look" says
@@ -123,7 +123,7 @@ def main():
                   % (hid, attribution, grade))
 
     out.close()
-    sys.stdout.write("wrote hadeethenc_gaps.txt\n")
+    sys.stdout.write("wrote docs/reports/hadeethenc_gaps.txt\n")
 
 
 if __name__ == "__main__":

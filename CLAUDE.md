@@ -377,7 +377,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 | Hosted content | `https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev` (bucket `rafeeq-content`) |
 | Bundled databases | `rafeeq_app/assets/data/*.db` — gitignored, regenerable |
 | Mushaf covers | `rafeeq_app/assets/mushaf_covers/*.jpg` — built by `scripts/build_mushaf_covers.py` |
-| Long-form history | `HANDOVER.md` (state), `PHASE2.md` / `PHASE3.md` (build logs) |
+| Long-form history | `HANDOVER.md` (state), `docs/history/PHASE2.md` / `docs/history/PHASE3.md` (build logs) |
 | Next-session brief | `NEXT_SESSION_PROMPT.md` |
 
 **Content is hosted, not bundled — except where the owner asked otherwise.**

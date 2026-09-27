@@ -1,4 +1,4 @@
-"""Stage C sweep (ADAPTIVE_PLAN.md): every main tab at every screen class,
+"""Stage C sweep (docs/history/ADAPTIVE_PLAN.md): every main tab at every screen class,
 upright and sideways, on the emulator, via `wm size` / `wm density`.
 
 Tab positions come from app_shell.dart's layout rule (see tab_pos); the
@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw
 
 ADB = [r"E:\DevEnv\Android\Sdk\platform-tools\adb.exe", "-s", "emulator-5554"]
 PKG = "com.tito.rafeeq_aldarb"
-CONFIGS = [  # name, size, density (ADAPTIVE_PLAN.md stage C)
+CONFIGS = [  # name, size, density (docs/history/ADAPTIVE_PLAN.md stage C)
     ("phone", "1080x2400", 420),
     ("xiaomi", "1220x2712", 480),
     ("tablet", "1600x2560", 320),

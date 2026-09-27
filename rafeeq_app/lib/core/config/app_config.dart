@@ -102,10 +102,10 @@ abstract final class AppConfig {
   /// Content origin (catalogs, offline packs). Configurable at build time
   /// via --dart-define.
   ///
-  /// Migrated 2026‑09‑03 (P2‑9 follow-up, HOSTING.md) from GitHub raw to a
+  /// Migrated 2026‑09‑03 (P2‑9 follow-up, docs/HOSTING.md) from GitHub raw to a
   /// dedicated Cloudflare R2 bucket (`rafeeq-content`, public r2.dev domain,
   /// free egress — GitHub raw was never meant to serve real download
-  /// traffic, see HOSTING.md §2/§5.5). R2 holds only the three folders the
+  /// traffic, see docs/HOSTING.md §2/§5.5). R2 holds only the three folders the
   /// app actually reads (`hadith/hadith.zip`, `books/text/*.json`,
   /// `adhan/video/*.mp4`) — the rest of `tito423/rafeeq-api` (raw per-book
   /// hadith JSON, the abandoned PNG mushaf set, spare adhan mp3s) is build

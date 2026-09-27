@@ -33,7 +33,7 @@ from r2_common import BUCKET, r2_client
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIST = os.path.join(ROOT, "dist", "hadeethenc")
-PACKS = os.path.join(ROOT, "hadeethenc_packs.json")
+PACKS = os.path.join(ROOT, "scripts/data/hadeethenc_packs.json")
 CATALOG = os.path.join(ROOT, "rafeeq_app", "assets", "data", "catalogs",
                        "hadeethenc.json")
 PUBLIC = "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev"

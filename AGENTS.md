@@ -14,7 +14,7 @@ Whatever agent you are, the rules are the same.
    Continue from there. Do not restart the task and do not trust a step
    marked unverified.
 3. `TRAPS.md` — the entry for any area you are about to touch.
-4. `HANDOVER.md` (state table + WIP), `PLAN.md` (stages), `docs/AUDIT_*.md`.
+4. `HANDOVER.md` (state table + WIP), `docs/history/PLAN.md` (stages), `docs/audits/AUDIT_*.md`.
 
 ## While you work
 Update `TASK_FOLLOWUP.md` after EVERY step and commit + push it (`.\cp.bat

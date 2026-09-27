@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 19:46 — IN PROGRESS — resume here**
+**2026-09-27 19:54 — IN PROGRESS — resume here**
 
-v3.69.0 verified end to end on emulator (wake+command, background, French, auto-hide, prayer settings link)
+Audit stage 1: repo root organised - 14 plan/history docs to docs/history, 3 living docs to docs/, 31 reports to docs/reports, 4 script inputs to scripts/data, previous audit to docs/audits, empty  file removed; 65 code references rewritten (scripts write reports to docs/reports); local APKs/logs to gitignored .local-archive; 641 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -128,3 +128,6 @@ scripts/asr_probe/
 scripts/_geonames/
 scripts/shamela_raw/irab_daas_equran.jsonl
 _build.log
+
+# Local, never committed: old APKs, logs and scratch moved out of the root (2026-09-27 audit).
+.local-archive/

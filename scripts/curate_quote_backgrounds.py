@@ -33,8 +33,8 @@ from PIL import Image, ImageEnhance
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "dist", "quote_backgrounds")
 OUT = os.path.join(ROOT, "dist", "quote_backgrounds_final")
-MANIFEST = os.path.join(ROOT, "quote_backgrounds.json")
-FINAL = os.path.join(ROOT, "quote_backgrounds_final.json")
+MANIFEST = os.path.join(ROOT, "scripts/data/quote_backgrounds.json")
+FINAL = os.path.join(ROOT, "scripts/data/quote_backgrounds_final.json")
 
 # The card's ink, from `QuoteCardScreen`'s palettes — the lightest of them, so
 # the measurement is of the pairing that is hardest to keep legible.

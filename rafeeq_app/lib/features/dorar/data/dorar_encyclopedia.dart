@@ -292,7 +292,7 @@ DorarHistoryPage parseDorarHistoryPage(String html) {
 /// Reads dorar.net on demand. A table of contents or a section once read is
 /// kept on the phone (app support `dorar/`), so it opens again without the
 /// network - a reader's cache, not a copy of the site («جميع الحقوق محفوظة
-/// لمؤسسة الدرر السنية»; see DORAR_ISLAMQA_NOTES.md).
+/// لمؤسسة الدرر السنية»; see docs/history/DORAR_ISLAMQA_NOTES.md).
 class DorarEncyclopediaService {
   DorarEncyclopediaService._();
   static final DorarEncyclopediaService instance = DorarEncyclopediaService._();

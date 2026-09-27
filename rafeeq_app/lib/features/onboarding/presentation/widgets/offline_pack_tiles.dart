@@ -34,7 +34,7 @@ class _Probe {
 /// all 6,236 ayahs through [AyahRecitationLibrary] - the same job the
 /// Downloads screen runs.
 ///
-/// PLAN.md: offer the reciters whose hosts answered fastest, show the full
+/// docs/history/PLAN.md: offer the reciters whose hosts answered fastest, show the full
 /// size, recommend the smallest. Each reciter's own first-choice URL (R2
 /// where mirrored, everyayah otherwise) is asked for its first KB; the ones
 /// that answered are listed smallest first, each with the time it took, and

@@ -33,7 +33,7 @@ being read to like this".
 
     py -3 scripts/evaluate_catt_on_our_books.py [n_books]
 
-Writes `_catt_eval.txt`. Slow — it runs a transformer on CPU over real pages.
+Writes `docs/reports/_catt_eval.txt`. Slow — it runs a transformer on CPU over real pages.
 """
 
 from __future__ import annotations
@@ -50,8 +50,8 @@ import urllib.request
 BASE = "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text"
 UA = "RafeeqAlDarb/3.36 (https://github.com/tito423/Rafeeq-Al-Darb)"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MEASURED = os.path.join(ROOT, "_diacritisation.json")
-OUT = os.path.join(ROOT, "_catt_eval.txt")
+MEASURED = os.path.join(ROOT, "docs/reports/_diacritisation.json")
+OUT = os.path.join(ROOT, "docs/reports/_catt_eval.txt")
 
 MARKS = "ًٌٍَُِّْٰ"
 SHADDA = "ّ"

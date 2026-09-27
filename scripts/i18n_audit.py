@@ -461,9 +461,9 @@ def main():
         for line, text in native[rel]:
             out.write("   %-8s :%-5d %s\n" % ("native", line, text))
         out.write("\n")
-    io.open(os.path.join(ROOT, "i18n_audit.txt"), "w",
+    io.open(os.path.join(ROOT, "docs/reports/i18n_audit.txt"), "w",
             encoding="utf-8").write(out.getvalue())
-    print("wrote i18n_audit.txt  -  %d total, %d chrome, %d native, %d content"
+    print("wrote docs/reports/i18n_audit.txt  -  %d total, %d chrome, %d native, %d content"
           % (total + native_count, chrome, native_count, total - chrome))
     return chrome + native_count
 

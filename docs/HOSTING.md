@@ -184,7 +184,7 @@ reasons:
 
 **Bottom line: nothing in this plan can cost money without the owner
 explicitly opting into Blaze later** — which is exactly the guardrail
-PHASE2.md's original P2‑9 spec asked for.
+docs/history/PHASE2.md's original P2‑9 spec asked for.
 
 ---
 

@@ -489,7 +489,7 @@ const List<LibraryBook> libraryBookCatalog = [
     ),
   ),
   // --- P3-43 #16 (2026-09-05): one more real title per already-established
-  // author, نص-only — same safe default recorded in PHASE3.md (the owner's
+  // author, نص-only — same safe default recorded in docs/history/PHASE3.md (the owner's
   // "download them all, Shamela-style" ask was open-ended with no scope
   // answer given this round). Each Shamela id/edition verified directly
   // against its own landing page before being added (see

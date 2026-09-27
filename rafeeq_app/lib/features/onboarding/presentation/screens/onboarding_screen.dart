@@ -33,7 +33,7 @@ import '../widgets/offline_pack_tiles.dart';
 /// fabricated cover art. The video's own edition-choice screen additionally
 /// showed a "تصفح أغلفة ومعاينات الـ 17 مصحفاً" catalog with real scanned
 /// cover thumbnails — strong evidence of QuranFlash-derived assets (see the
-/// warning in PHASE3.md right above P3‑20) — that catalog is deliberately
+/// warning in docs/history/PHASE3.md right above P3‑20) — that catalog is deliberately
 /// **not** rebuilt here.
 ///
 /// Covers both G4 ("pick + download a mushaf edition, immediately") and G5

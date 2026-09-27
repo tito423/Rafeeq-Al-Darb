@@ -19,7 +19,7 @@ import 'package:sqlite3/sqlite3.dart';
 ///     have gone through `.tr()` — "Arabic must not reach a non-Arabic
 ///     reader". It has nothing to say about English reaching an Arabic one.
 ///   * `translation_parity_test` compares the seven locale FILES' key sets.
-///   * `i18n_audit.txt` reported "UNTRANSLATED USER-VISIBLE STRINGS: 0" — and
+///   * `docs/reports/i18n_audit.txt` reported "UNTRANSLATED USER-VISIBLE STRINGS: 0" — and
 ///     it was right, by its own definition: it looks at source files.
 ///
 /// None of them looks at what comes OUT OF THE DATABASE. The bundled data was

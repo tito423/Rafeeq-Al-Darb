@@ -1,7 +1,7 @@
 # RAFIQ AL-DARB — Autonomous Rebuild Pipeline
 
 > **Handing this project to another agent?** Read `HANDOVER.md` in this
-> folder first, then `WORK_QUEUE.md` for the ordered backlog.
+> folder first, then `docs/history/WORK_QUEUE.md` for the ordered backlog.
 >
 > **Original note:** Read `HANDOVER.md` in this
 > folder first — it carries the design decisions, the hard rules, and the

@@ -9,7 +9,7 @@ Every catalog book already ships as a scanned image PDF (see
 as a real *text* edition: a chapter tree (فهرس), in-book search, selectable
 text, font control. Shamela is the owner's chosen source (2026-09-02) and its
 texts are keyed to a specific printed edition — see the sourcing table in
-`PHASE2.md` (stage P2-4b) for which Shamela book id / edition was picked per
+`docs/history/PHASE2.md` (stage P2-4b) for which Shamela book id / edition was picked per
 title and why.
 
 HOW SHAMELA SERVES A BOOK
@@ -76,7 +76,7 @@ from datetime import datetime, timezone
 
 # --- the 5 catalog books and the exact Shamela edition chosen for each -------
 # id  -> must match LibraryBook.id in book_catalog.dart
-# See PHASE2.md stage P2-4b "Sourcing decisions" for the reasoning.
+# See docs/history/PHASE2.md stage P2-4b "Sourcing decisions" for the reasoning.
 BOOKS = {
     # ─────────────────────────────────────────────────────────────────────
     # 2026-09-17 — «اشهر وافضل الكتب في تنمية الذات واداب النفس» and a new
@@ -620,7 +620,7 @@ BOOKS = {
         "الطبعة الأولى ١٤١٠هـ/١٩٩٠م",
     },
     # --- P3-43 #16 (2026-09-05): growing the same 3-author set with one more
-    # real title each, per PHASE3.md's own safe-default guidance (owner's ask
+    # real title each, per docs/history/PHASE3.md's own safe-default guidance (owner's ask
     # was open-ended; no scope answer given this round). Each id/edition
     # verified directly against its shamela.ws landing page before being
     # added here — printMatches=True and a real موافق-للمطبوع flag for all 3,

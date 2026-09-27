@@ -30,7 +30,7 @@ void main() {
   const grandfathered = <String, int>{
     'lib/features/library/presentation/screens/book_text_reader_screen.dart': 1156,
     // The remaining lines are almost entirely one State class. Breaking it up
-    // is a controller extraction, not a move — see REFACTOR.md stage 3b.
+    // is a controller extraction, not a move — see docs/history/REFACTOR.md stage 3b.
     //
     // 1047 → 1057 on 2026-09-17, and the five lines are declared rather than
     // shaved. Three owner-requested features landed in this screen that day

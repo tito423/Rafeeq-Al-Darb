@@ -52,7 +52,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "dist", "quotes_src")
 OUT = os.path.join(ROOT, "scripts", "quotes_built.json")
-REPORT = os.path.join(ROOT, "quotes_report.txt")
+REPORT = os.path.join(ROOT, "docs/reports/quotes_report.txt")
 
 # A quote has to read as one finished thought on a card, not as a paragraph
 # of a chapter. Measured against the four books rather than guessed: below 70
