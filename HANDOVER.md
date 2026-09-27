@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 23:36 — IN PROGRESS — resume here**
+**2026-09-27 23:41 — IN PROGRESS — resume here**
 
-Step 1 built+installed, NOT verified: voice-pack download stalled at 1.7/368.2 MB with a validated emulator network, then the emulator went offline - cause unknown (app Dio vs emulator); recorded as the FIRST item in NEXT_PROMPT.md and TASK_FOLLOWUP
+Reproduce Rafeeq pack self-cancellation on clean process
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:40 (09-27) SELF-CANCEL REPRODUCED from a clean process after another cold boot. Installed base again proved exact SHA-256 `1D0491...DCA`; direct More > Settings > Rafeeq focus worked. One deliberate tap on «تنزيل» returned to «تنزيل» within seconds and logcat again printed `DioException [request cancelled]: The request was manually cancelled by the user.` No cancel tap; network still valid. This blocks the required voice check and must be fixed. NEXT EXACT: instrument `RafeeqVoicePack.cancel()` with a release-visible stack/reason (and download lifecycle logs), build/install, reproduce once to identify the caller; then implement the proven fix + regression test.
+
 ~23:36 (09-27) Item 4 step 1 BUILT (23:29, build_github_release.bat failed ONCE at apksigner - `py -3 scripts\sign_release.py` alone then succeeded) and INSTALLED on emulator-5554, NOT VERIFIED: the voice pack (wiped by pm clear at 22:18) had to be downloaded again; it sat at «1.7 MB / 368.2 MB» for 3+ min while the emulator network was VALIDATED and the PC pulled R2 at ~9 MB/s; then adb said «device offline» (6th emulator failure today). UNKNOWN whether the stall is the app (Dio in rafeeq_voice_pack.dart) or the dying emulator - NEXT: fresh emulator boot, download the pack again and watch progress; if it stalls on a healthy emulator it is an app bug - investigate before anything else. Then the step-1 voice test in NEXT_PROMPT.md.
 
 ~23:36 (09-27) Voice-pack attempt did NOT complete: UI reached 1.7/368.2 MB then froze; snackbar «تعذّر تنزيل حزمة الصوت» and logcat exactly `DioException [request cancelled]: The request was manually cancelled by the user.` No manual cancel was issued before that line; R2 itself is live (1 MiB range = 206 in 0.519 s) and emulator network was VALIDATED. Force-stopping to reset the stuck singleton was followed by another emulator exit/crash; `adb` lost emulator-5554. Cause of the cancellation is NOT established yet. NEXT EXACT: restart emulator, prove installed APK hash/current state again, retry the pack once from a clean process while capturing logcat; if the same self-cancel reproduces, fix it before any voice command.
@@ -682,6 +684,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:41 - Reproduce Rafeeq pack self-cancellation on clean process
 - 2026-09-27 23:36 - Step 1 built+installed, NOT verified: voice-pack download stalled at 1.7/368.2 MB with a validated emulator network, then the emulator went offline - cause unknown (app Dio vs emulator); recorded as the FIRST item in NEXT_PROMPT.md and TASK_FOLLOWUP
 - 2026-09-27 23:36 - Record failed Rafeeq pack attempt and second emulator crash
 - 2026-09-27 23:31 - Start real Rafeeq voice pack download for device test
