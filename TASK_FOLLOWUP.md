@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+12:20 (09-27) STAGE C sweep started. Tool: scripts/screen_sweep.py (tab positions from app_shell.dart rule; uiautomator cannot dump the ticking home) + scripts/screen_sweep_all.sh (fresh emulator boot per class). Findings so far: (1) FIXED+built: Google «Location Accuracy» dialog on every resume when Google accuracy off -> Geolocator AndroidSettings(forceLocationManager: true) (platform FUSED provider, no Play dialog; low accuracy = no GPS, falls back to last known). Dialog gone on emulator; a FRESH fix via LocationManager not yet proven (emulator network location off) -> check on the Xiaomi. (2) Emulator: back-to-back `wm size` -> «System UI isn't responding» (29/70 shots); settings user_rotation does not rotate -> `cmd window user-rotation lock N`; `emu kill` then snapshot load hung -> boot with -no-snapshot. Phone upright: prayer/adhkar/tasbeeh/library/more fine; tablet on a fresh boot: home 2 columns + bottom bar fine.
+
 10:29 (09-27) Owner asked me to run the fix script (double-click opened Notepad). Ran E:\DevEnv\fix_laptop.ps1 elevated: C free 102.4 -> 130.2 GB (+27.8 GB); hiberfil.sys gone (powercfg /a: «Hibernation has not been enabled»); sleep on AC = 0 and hibernate on AC = 0 (verified with powercfg /q; DC standby was already 0); DISM StartComponentCleanup completed. Log E:\DevEnv\fix_laptop_log.txt. Self-lock: owner «بيتهيالي اه» the last key was L/م -> stuck Win key (Win+L) is the leading cause; not proven. NEXT: ADAPTIVE_PLAN stage C.
 
 05:21 (09-27) XIAOMI, build 05:18 (618 tests pass): delete confirmation SEEN («سيُحذف الكتاب من جهازك...» إلغاء/حذف); إلغاء keeps the book. Shamela open items ALL DONE on the phone: big book (2,277 pp) import + read, resume after kill, notification, «من الشاملة» shelf, editor-only page label, delete confirm, link with spaces. UNRELEASED since v3.66.0: those Shamela fixes (ask owner before releasing 3.66.1). Still waiting on owner: run E:\DevEnv\fix_laptop.ps1; answer the Win+L question. NEXT: ADAPTIVE_PLAN stage C (orientations/sizes + Google TV).
@@ -596,6 +598,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 12:14 - Stage C sweep tooling (fresh boot per class); location dialog fix built
 - 2026-09-27 11:10 - Location: LocationManager instead of fused provider (Google Location Accuracy dialog looped on every resume); screen_sweep.py for stage C
 - 2026-09-27 10:29 - Laptop fix script run: C +27.8 GB, no sleep/hibernate on AC
 - 2026-09-27 05:20 - Shamela on the Xiaomi: delete confirmation seen; all Shamela open items verified

@@ -79,15 +79,20 @@ def main():
     adb("shell", "settings", "put", "system", "accelerometer_rotation", "0")
     missing = []
     try:
+        only = os.environ.get("SWEEP_ONLY")
         for name, size, dens in CONFIGS:
+            if only and name != only:
+                continue
             adb("shell", "wm", "size", size)
             adb("shell", "wm", "density", str(dens))
             for rot in (0, 1):
-                adb("shell", "settings", "put", "system", "user_rotation", str(rot))
+                # settings user_rotation did not rotate this emulator (all "sideways"
+                # shots came out upright); cmd window user-rotation does.
+                adb("shell", "cmd", "window", "user-rotation", "lock", str(rot))
                 adb("shell", "am", "force-stop", PKG)
                 time.sleep(1)
                 adb("shell", "monkey", "-p", PKG, "-c", "android.intent.category.LAUNCHER", "1")
-                time.sleep(9)
+                time.sleep(18)  # the splash runs ~12 s
                 paths, labels = [], []
                 probe = os.path.join(out, "probe.png")
                 shot(probe)
@@ -107,7 +112,7 @@ def main():
     finally:
         adb("shell", "wm", "size", "reset")
         adb("shell", "wm", "density", "reset")
-        adb("shell", "settings", "put", "system", "user_rotation", "0")
+        adb("shell", "cmd", "window", "user-rotation", "lock", "0")
     print("missing:", missing)
 
 
