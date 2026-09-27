@@ -624,6 +624,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 17:11 - Assistant parser: 7 languages (colloquial lexicon + the app's own translation labels), theme/language/switch options; 9 test groups pass
 - 2026-09-27 16:32 - Assistant: full-width sheet, mic hidden under sheets/dialogs (seen); voice injection on emulator not working yet
 - 2026-09-27 16:17 - Assistant step 2 in code: SpeechRecognizer channel, mic button, sheet + executor (not built)
 - 2026-09-27 15:59 - Handover 2026-09-27: verified (635 pass, hosted 206), measured, NEXT_PROMPT rewritten

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/features/assistant/data/assistant_intent.dart';
+import 'package:rafeeq_app/features/assistant/data/assistant_lexicon.dart';
 import 'package:rafeeq_app/features/library/data/book_catalog.dart';
 
 /// «رفيق»'s understanding, on the app's REAL catalogues: the 114 surah
@@ -21,8 +22,23 @@ void main() {
     for (final b in libraryBookCatalog)
       CatalogBook(b.id, b.titleAr, b.authorAr),
   ];
+  final latin = (jsonDecode(File('test/fixtures/surah_names_en.json')
+          .readAsStringSync()) as List)
+      .cast<String>();
+  // The app's own seven translation files, as the app reads them.
+  final labels = labelsFrom([
+    for (final l in ['ar', 'en', 'es', 'fr', 'pt', 'ru', 'ur'])
+      jsonDecode(File('assets/translations/$l.json').readAsStringSync())
+          as Map<String, dynamic>,
+  ]);
   final p = AssistantParser(AssistantCatalog(
-      surahs: surahs, reciters: reciters, books: books));
+      surahs: surahs,
+      surahsLatin: latin,
+      reciters: reciters,
+      books: books,
+      screenLabels: labels.screens,
+      settingLabels: labels.settings,
+      optionLabels: labels.options));
   String of(String s) => p.parse(s).toString();
 
   test('screens, in the words people say', () {
@@ -61,5 +77,52 @@ void main() {
   test('nothing the app has is not made up', () {
     expect(of('ما هو حكم صلاة الجمعة'), 'unknown');
     expect(of('شغل سورة المستحيل'), 'unknown');
+  });
+
+  test('options, in Arabic', () {
+    expect(of('خلي التطبيق ليلي'), 'theme dark');
+    expect(of('غير المظهر لنهاري'), 'theme light');
+    expect(of('غير اللغة للانجليزي'), 'language en');
+    expect(of('اقفل التأثيرات الحركية'), 'toggle motion off');
+    expect(of('شغل فيديو البداية'), 'toggle splash on');
+    expect(of('افتح شكل الساعة'), 'open clockFaces');
+  });
+
+  test('English, as people say it', () {
+    expect(of('open settings'), 'open settings');
+    expect(of('take me to the qibla'), 'open qibla');
+    expect(of('show me the downloads'), 'open downloads');
+    expect(of('play surah Al Kahf'), 'play surah 18 by -');
+    expect(of('play Yasin by Alafasy'), startsWith('play surah 36 by ar.alafasy'));
+    expect(of('switch to dark mode'), 'theme dark');
+    expect(of('change the language to French'), 'language fr');
+    expect(of('turn off animations'), 'toggle motion off');
+    expect(of('on this day'), 'on this day -/-');
+    expect(of('open privacy policy'), 'open settings');
+    expect(of('what is the ruling on prayer'), 'unknown');
+  });
+
+  test('Spanish, French, Portuguese', () {
+    expect(of('abre los ajustes'), 'open settings');
+    expect(of('pon la sura Al-Kahf'), 'play surah 18 by -');
+    expect(of('cambia el idioma a inglés'), 'language en');
+    expect(of('modo oscuro'), 'theme dark');
+    expect(of('ouvre les paramètres'), 'open settings');
+    expect(of('mets la sourate Al-Fatiha'), 'play surah 1 by -');
+    expect(of('passe en mode sombre'), 'theme dark');
+    expect(of('change la langue en arabe'), 'language ar');
+    expect(of('abre as configurações'), 'open settings');
+    expect(of('toca a surata Al-Mulk'), 'play surah 67 by -');
+    expect(of('muda o idioma para russo'), 'language ru');
+  });
+
+  test('Russian and Urdu', () {
+    expect(of('открой настройки'), 'open settings');
+    expect(of('включи суру Аль-Кахф'), 'play surah 18 by -');
+    expect(of('поменяй язык на английский'), 'language en');
+    expect(of('тёмная тема'), 'theme dark');
+    expect(of('ترتیبات کھولو'), 'open settings');
+    expect(of('سورہ کہف چلاؤ'), 'play surah 18 by -');
+    expect(of('زبان انگریزی کرو'), 'language en');
   });
 }
