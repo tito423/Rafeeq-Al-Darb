@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+10:29 (09-27) Owner asked me to run the fix script (double-click opened Notepad). Ran E:\DevEnv\fix_laptop.ps1 elevated: C free 102.4 -> 130.2 GB (+27.8 GB); hiberfil.sys gone (powercfg /a: «Hibernation has not been enabled»); sleep on AC = 0 and hibernate on AC = 0 (verified with powercfg /q; DC standby was already 0); DISM StartComponentCleanup completed. Log E:\DevEnv\fix_laptop_log.txt. Self-lock: owner «بيتهيالي اه» the last key was L/م -> stuck Win key (Win+L) is the leading cause; not proven. NEXT: ADAPTIVE_PLAN stage C.
+
 05:21 (09-27) XIAOMI, build 05:18 (618 tests pass): delete confirmation SEEN («سيُحذف الكتاب من جهازك...» إلغاء/حذف); إلغاء keeps the book. Shamela open items ALL DONE on the phone: big book (2,277 pp) import + read, resume after kill, notification, «من الشاملة» shelf, editor-only page label, delete confirm, link with spaces. UNRELEASED since v3.66.0: those Shamela fixes (ask owner before releasing 3.66.1). Still waiting on owner: run E:\DevEnv\fix_laptop.ps1; answer the Win+L question. NEXT: ADAPTIVE_PLAN stage C (orientations/sizes + Google TV).
 
 05:16 (09-27) XIAOMI, build 05:04: re-import of 30197 took 7 min (05:06-05:13, 2,277 pages); page 1 now reads «صفحة من كلام المحقق (حواشيه) — لا يُنقل في هذا التطبيق، والكتاب يبدأ بعدها» (SEEN). Found: delete of an imported book was ONE tap, no confirmation (deleted the 2,277-page book) -> confirmation dialog added (analyze clean), build running. NEXT: install, tap delete -> dialog -> Cancel keeps the book.
@@ -594,6 +596,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 10:29 - Laptop fix script run: C +27.8 GB, no sleep/hibernate on AC
 - 2026-09-27 05:20 - Shamela on the Xiaomi: delete confirmation seen; all Shamela open items verified
 - 2026-09-27 05:07 - Shamela: confirm before deleting an imported book (one tap deleted a 2,277-page import on the Xiaomi); NOT built
 - 2026-09-27 05:00 - Shamela: pages holding only the editor's hamesh are flagged and labelled instead of «صفحة بلا نص»; NOT yet seen
