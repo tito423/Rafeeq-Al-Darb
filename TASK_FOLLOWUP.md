@@ -13,6 +13,10 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+05:21 (09-27) XIAOMI, build 05:18 (618 tests pass): delete confirmation SEEN («سيُحذف الكتاب من جهازك...» إلغاء/حذف); إلغاء keeps the book. Shamela open items ALL DONE on the phone: big book (2,277 pp) import + read, resume after kill, notification, «من الشاملة» shelf, editor-only page label, delete confirm, link with spaces. UNRELEASED since v3.66.0: those Shamela fixes (ask owner before releasing 3.66.1). Still waiting on owner: run E:\DevEnv\fix_laptop.ps1; answer the Win+L question. NEXT: ADAPTIVE_PLAN stage C (orientations/sizes + Google TV).
+
+05:16 (09-27) XIAOMI, build 05:04: re-import of 30197 took 7 min (05:06-05:13, 2,277 pages); page 1 now reads «صفحة من كلام المحقق (حواشيه) — لا يُنقل في هذا التطبيق، والكتاب يبدأ بعدها» (SEEN). Found: delete of an imported book was ONE tap, no confirmation (deleted the 2,277-page book) -> confirmation dialog added (analyze clean), build running. NEXT: install, tap delete -> dialog -> Cancel keeps the book.
+
 03:25 (09-27) XIAOMI: 30197 import FINISHED (notification «تم التنزيل»), shelf «من الشاملة / كتاب واحد» SEEN, card «٢٢٧٧ صفحة، 1.3 MB», reader opens; pages 413, 887, 1139 full text. Pages 1-3 show «صفحة بلا نص»: measured on shamela.ws/book/30197/1-4 (215/208/114/267 words) - ALL of it inside <p class="hamesh"> after <hr> («قالوا عن الكتاب», compiled by the editor). hamesh is dropped BY DESIGN in both parse_nass (Python + Dart) = editor apparatus. Not data loss; the label «صفحة بلا نص» misleads. Asked the owner: keep, relabel, or show hamesh-only pages.
 
 03:06 (09-27) XIAOMI, build 03:02: (a) Shamela link typed on the Xiaomi keyboard became «shamela. ws/book/30197» and found nothing on 3.66.0 -> FIXED (spaces removed before matching; test added) and SEEN finding the book. (b) Import notification SEEN («سبيل الرشاد في هدي خير العباد / جارٍ الاستيراد… ٤٧ صفحة»). (c) Kill mid-import: on 3.66.0 it did NOT come back by itself (re-import continued from cache: 63 -> 68) -> ADDED shamela/pending.json + resumePending() at launch; SEEN: 866 pages -> force-stop -> relaunch with no taps -> 891 -> 899. «صيد الخاطر» (12028) shows «موجود في مكتبة التطبيق». NEXT: let 30197 finish, open it (big book reader), see «من الشاملة» shelf; then release 3.66.1 only if owner asks.
@@ -590,6 +594,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 05:20 - Shamela on the Xiaomi: delete confirmation seen; all Shamela open items verified
 - 2026-09-27 05:07 - Shamela: confirm before deleting an imported book (one tap deleted a 2,277-page import on the Xiaomi); NOT built
 - 2026-09-27 05:00 - Shamela: pages holding only the editor's hamesh are flagged and labelled instead of «صفحة بلا نص»; NOT yet seen
 - 2026-09-27 03:23 - Shamela big import finished and read on the Xiaomi; hamesh-only pages explained
