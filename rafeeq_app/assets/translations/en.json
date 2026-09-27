@@ -2043,5 +2043,23 @@
     "read_on_site_msg": "This page could not be read inside the app. You can read it on the Dorar website.",
     "hijri_year": "Hijri year",
     "gregorian_year": "Gregorian year"
+  },
+  "assistant": {
+    "name": "Rafeeq",
+    "tooltip": "Rafeeq — voice assistant",
+    "listening": "Listening… say what you want",
+    "heard": "Heard: “{}”",
+    "not_understood": "Nothing in the app matches that command",
+    "no_speech": "Heard nothing — tap to try again",
+    "no_recognizer": "This device has no speech recognition service",
+    "mic_denied": "Microphone permission was not granted",
+    "network": "Speech recognition on this device needs an internet connection",
+    "lang_unavailable": "Arabic is not available in this device’s speech recognition",
+    "failed": "Speech recognition failed (code {})",
+    "ok": "OK",
+    "playing": "OK — Surah {}, recited by {}",
+    "opening": "OK — opening {}",
+    "downloading": "Downloading “{}”…",
+    "download_failed": "The book could not be downloaded"
   }
 }

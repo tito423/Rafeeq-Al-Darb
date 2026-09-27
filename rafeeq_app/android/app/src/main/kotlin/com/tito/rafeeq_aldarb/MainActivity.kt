@@ -176,5 +176,7 @@ class MainActivity: AudioServiceActivity() {
         registerAdhanControlChannel(flutterEngine)
 
         registerVoicePlayerChannel(flutterEngine)
+
+        registerSpeechChannel(flutterEngine)
     }
 }

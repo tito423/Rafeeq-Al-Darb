@@ -1,4 +1,5 @@
 import 'package:rafeeq_app/core/theme/app_font.dart';
+import '../features/assistant/presentation/assistant_sheet.dart';
 import 'package:rafeeq_app/core/theme/app_typography.dart';
 import '../core/widgets/arrow_scrollbar.dart';
 import '../core/utils/digits.dart';
@@ -206,6 +207,8 @@ class RafeeqApp extends ConsumerWidget {
           page = RgbScaffoldBackground(child: page);
         }
         // A remote or keyboard gets a ring on whatever it is on (TV).
+        // «رفيق»'s mic sits over every route, not only the shell's tabs.
+        page = Stack(children: [page, const AssistantMicButton()]);
         return FocusRingOverlay(color: AppColors.gold, child: page);
       },
       // P3‑49: the owner asked for his AI-generated splash video (Gemini

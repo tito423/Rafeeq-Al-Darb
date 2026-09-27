@@ -2043,5 +2043,23 @@
     "read_on_site_msg": "No se pudo leer esta página en la aplicación. Puede leerla en el sitio de Dorar.",
     "hijri_year": "Año hégira",
     "gregorian_year": "Año gregoriano"
+  },
+  "assistant": {
+    "name": "Rafeeq",
+    "tooltip": "Rafeeq — asistente de voz",
+    "listening": "Escuchando… di lo que quieres",
+    "heard": "Oído: «{}»",
+    "not_understood": "Nada en la aplicación coincide con esa orden",
+    "no_speech": "No se oyó nada: toca para intentarlo de nuevo",
+    "no_recognizer": "Este dispositivo no tiene servicio de reconocimiento de voz",
+    "mic_denied": "No se concedió el permiso del micrófono",
+    "network": "El reconocimiento de voz en este dispositivo necesita internet",
+    "lang_unavailable": "El árabe no está disponible en el reconocimiento de voz de este dispositivo",
+    "failed": "Falló el reconocimiento de voz (código {})",
+    "ok": "De acuerdo",
+    "playing": "De acuerdo: sura {}, recitada por {}",
+    "opening": "De acuerdo: abriendo {}",
+    "downloading": "Descargando «{}»…",
+    "download_failed": "No se pudo descargar el libro"
   }
 }

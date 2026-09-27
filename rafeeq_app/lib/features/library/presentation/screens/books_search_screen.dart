@@ -21,7 +21,10 @@ import '../widgets/author_search_result.dart';
 /// its own island — which is why finding a phrase meant remembering which book
 /// it was in first. This is the missing half.
 class BooksSearchScreen extends StatefulWidget {
-  const BooksSearchScreen({super.key});
+  const BooksSearchScreen({super.key, this.initialQuery});
+
+  /// Searched for as soon as the screen opens - «رفيق»'s «كل كتب ابن حجر».
+  final String? initialQuery;
 
   @override
   State<BooksSearchScreen> createState() => _BooksSearchScreenState();
@@ -53,6 +56,16 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
   bool _phrase = false;
   bool _exactMarks = false;
   String? _downloading;
+
+  @override
+  void initState() {
+    super.initState();
+    final q = widget.initialQuery;
+    if (q != null && q.isNotEmpty) {
+      _controller.text = q;
+      _run(q);
+    }
+  }
 
   @override
   void dispose() {

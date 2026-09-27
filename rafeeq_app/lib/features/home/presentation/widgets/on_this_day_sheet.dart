@@ -44,8 +44,11 @@ import '../../data/on_this_day_repository.dart';
 /// Which calendar a sheet is about.
 enum DayCalendar { hijri, gregorian }
 
-Future<void> showHijriDaySheet(BuildContext context, {int hijriOffset = 0}) =>
-    _show(context, DayCalendar.hijri, hijriOffset);
+/// [day] picks another Hijri day (month, day) than today - «رفيق»'s
+/// «حدث في مثل هذا اليوم ١٢ ربيع الأول».
+Future<void> showHijriDaySheet(BuildContext context,
+        {int hijriOffset = 0, (int, int)? day}) =>
+    _show(context, DayCalendar.hijri, hijriOffset, day);
 
 Future<void> showGregorianDaySheet(BuildContext context,
         {int hijriOffset = 0}) =>
@@ -56,12 +59,14 @@ Future<void> showGregorianDaySheet(BuildContext context,
 Future<void> showOnThisDaySheet(BuildContext context, {int hijriOffset = 0}) =>
     showGregorianDaySheet(context, hijriOffset: hijriOffset);
 
-Future<void> _show(BuildContext context, DayCalendar calendar, int offset) {
+Future<void> _show(BuildContext context, DayCalendar calendar, int offset,
+    [(int, int)? day]) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) => _DaySheet(calendar: calendar, hijriOffset: offset),
+    builder: (_) =>
+        _DaySheet(calendar: calendar, hijriOffset: offset, day: day),
   );
 }
 
@@ -69,7 +74,12 @@ class _DaySheet extends ConsumerWidget {
   final DayCalendar calendar;
   final int hijriOffset;
 
-  const _DaySheet({required this.calendar, required this.hijriOffset});
+  /// A Hijri (month, day) other than today; the year is then not shown,
+  /// since the events of that day are of every year.
+  final (int, int)? day;
+
+  const _DaySheet(
+      {required this.calendar, required this.hijriOffset, this.day});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,12 +90,15 @@ class _DaySheet extends ConsumerWidget {
 
     HijriCalendar.setLocal(locale == 'ar' ? 'ar' : 'en');
     ref.watch(officialHijriProvider);
-    final (hYear, hMonth, hDay) =
-        OfficialHijri.dateOf(now, offsetDays: hijriOffset);
-    final hijri = '${localizeDigits('$hDay', locale)} '
-        '${hijriMonthName(hMonth)} '
-        '${localizeDigits('$hYear', locale)} '
-        '${'hijri.suffix'.tr()}';
+    final today = OfficialHijri.dateOf(now, offsetDays: hijriOffset);
+    final hYear = today.$1;
+    final (hMonth, hDay) = day ?? (today.$2, today.$3);
+    final hijri = day != null
+        ? '${localizeDigits('$hDay', locale)} ${hijriMonthName(hMonth)}'
+        : '${localizeDigits('$hDay', locale)} '
+            '${hijriMonthName(hMonth)} '
+            '${localizeDigits('$hYear', locale)} '
+            '${'hijri.suffix'.tr()}';
     final gregorian = DateFormat.yMMMMEEEEd(locale).format(now);
 
     final isHijri = calendar == DayCalendar.hijri;
@@ -127,8 +140,8 @@ class _DaySheet extends ConsumerWidget {
                   height: 1,
                   color: AppColors.gold.withValues(alpha: 0.55),
                 ),
-                const SizedBox(height: 8),
-                Text(
+                if (day == null) const SizedBox(height: 8),
+                if (day == null) Text(
                   isHijri ? gregorian : hijri,
                   textAlign: TextAlign.center,
                   style: TextStyle(

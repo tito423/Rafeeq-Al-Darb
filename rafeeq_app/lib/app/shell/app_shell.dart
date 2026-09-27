@@ -38,6 +38,7 @@ import '../../features/tutorial/presentation/widgets/tutorial_overlay.dart';
 import '../../features/splash/data/splash_video_provider.dart';
 import '../rafeeq_app.dart';
 import 'tab_request_provider.dart';
+import '../../features/assistant/presentation/assistant_sheet.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
 /// sections (Home, Quran, Prayer, Azkar, Tasbeeh, Library). "Library" holds
@@ -100,6 +101,7 @@ class _AppShellState extends ConsumerState<AppShell>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(assistantShellUpProvider.notifier).state = true;
       _syncPrayerStatus();
       // A download notification that launched the app, or one tapped while
       // it runs. Wired from here rather than `main()` because both paths end
