@@ -8,6 +8,9 @@ import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
+import '../../../quran_audio/presentation/widgets/audio_common.dart' show surahTitle;
+import '../../../../core/services/recitation_resume.dart';
+import '../../data/mushaf_data_provider.dart';
 
 /// «اديني في خيارات تلاوة الآية بآية إمكانية اختيار القارئ في البلاير
 /// الصغير». Opened from the recitation bar under the page; returns the
@@ -16,20 +19,35 @@ import '../../../quran_audio/data/ayah_recitation_library.dart';
 /// Every reciter in this sheet has a verified per-ayah source — the list is
 /// `RecitationSource`'s mirrors (see `recitersProvider`). Ones already on the
 /// device are listed first and marked.
-Future<String?> showReciterPickerSheet(BuildContext context) {
-  return showModalBottomSheet<String>(
+Future<String?> showReciterPickerSheet(BuildContext context) async =>
+    (await showReciterPickerForStart(context))?.id;
+
+/// A choice in the sheet: a reciter, or «أكمل» - carry on from [resume].
+class ReciterPick {
+  const ReciterPick(this.id, {this.resume});
+  final String id;
+  final RecitationResume? resume;
+}
+
+/// The sheet with, when [resume] is given, a «أكمل مع …» card on top that
+/// carries on with the same reciter from the very verse the recitation last
+/// reached (owner, 2026-09-27).
+Future<ReciterPick?> showReciterPickerForStart(BuildContext context,
+    {RecitationResume? resume}) {
+  return showModalBottomSheet<ReciterPick>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
-    builder: (_) => const _ReciterPickerSheet(),
+    builder: (_) => _ReciterPickerSheet(resume: resume),
   );
 }
 
 class _ReciterPickerSheet extends ConsumerStatefulWidget {
-  const _ReciterPickerSheet();
+  const _ReciterPickerSheet({this.resume});
+  final RecitationResume? resume;
 
   @override
   ConsumerState<_ReciterPickerSheet> createState() => _ReciterPickerSheetState();
@@ -68,6 +86,10 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
             r.nameEn.toLowerCase().contains(q))
           r,
     ]..sort((a, b) {
+        // The reciter last chosen heads the list («القارئ اللي أنا محدده
+        // يطلع في أول القايمة»), then those on the device.
+        if (a.identifier == selected) return -1;
+        if (b.identifier == selected) return 1;
         final da = _onDevice(a.identifier) > 0 ? 0 : 1;
         final db = _onDevice(b.identifier) > 0 ? 0 : 1;
         if (da != db) return da - db;
@@ -128,6 +150,14 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
               ],
             ),
           ),
+          if (widget.resume != null && q.isEmpty)
+            _ResumeCard(
+              resume: widget.resume!,
+              reciter: all
+                  .where((r) => r.identifier == widget.resume!.edition)
+                  .firstOrNull,
+              locale: locale,
+            ),
           Expanded(
             child: ListView.builder(
               itemCount: list.length,
@@ -161,12 +191,74 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
                       ? Icon(Icons.check_circle_rounded,
                           color: goldOn(Theme.of(context).colorScheme))
                       : null,
-                  onTap: () => Navigator.of(context).pop(r.identifier),
+                  onTap: () => Navigator.of(context).pop(ReciterPick(r.identifier)),
                 );
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+/// «أكمل مع [القارئ] — [السورة]، الآية N»: one tap carries on.
+class _ResumeCard extends ConsumerWidget {
+  const _ResumeCard(
+      {required this.resume, required this.reciter, required this.locale});
+  final RecitationResume resume;
+  final Reciter? reciter;
+  final String locale;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (reciter == null) return const SizedBox.shrink();
+    final data = ref.watch(mushafDataProvider).valueOrNull;
+    final scheme = Theme.of(context).colorScheme;
+    final where = localizeDigits(
+        'quran.recite_resume_where'.tr(args: [
+          surahTitle(data, resume.surah, locale),
+          '${resume.ayah}',
+        ]),
+        locale);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
+      child: Material(
+        color: goldOn(scheme).withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => Navigator.of(context)
+              .pop(ReciterPick(resume.edition, resume: resume)),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(children: [
+              CircleAvatar(
+                backgroundColor: goldOn(scheme),
+                child: const Icon(Icons.play_arrow_rounded, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'quran.recite_resume_with'
+                          .tr(args: [reciter!.displayName(locale)]),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w800, fontSize: 15),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(where,
+                        style: TextStyle(
+                            fontSize: 12.5, color: scheme.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+        ),
       ),
     );
   }

@@ -36,6 +36,7 @@ import 'features/quran_audio/presentation/widgets/audio_common.dart';
 import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 import 'features/shamela/data/shamela_import_service.dart';
 import 'core/services/source_rules.dart';
+import 'core/services/recitation_resume.dart';
 import 'features/shamela/data/shamela_library.dart';
 
 /// The Adhan alert screen's Dart entrypoint, run by `AdhanActivity` (Kotlin)
@@ -111,6 +112,8 @@ Future<void> main() async {
   // How dorar.net / shamela.ws are read: cached copy now, published one
   // fetched in the background (a site change is fixed without an APK).
   unawaited(SourceRules.instance.load());
+  // Where the continuous recitation last was, for «أكمل مع …».
+  RecitationResume.watch();
   StartupTrace.step('EasyLocalization.ensureInitialized');
   try {
     // EVERY language the app speaks, not just Arabic.

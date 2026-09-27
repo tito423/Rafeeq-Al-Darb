@@ -367,7 +367,9 @@
     "display_turn_book": "Virar como um mushaf de papel",
     "sciences_words": "Palavras",
     "ayah_count": "{} versículos",
-    "autoscroll_follows": "A rolagem automática acompanha a recitação; volta à sua velocidade quando ela para."
+    "autoscroll_follows": "A rolagem automática acompanha a recitação; volta à sua velocidade quando ela para.",
+    "recite_resume_with": "Continuar com {}",
+    "recite_resume_where": "{}, versículo {}"
   },
   "library": {
     "title": "Biblioteca",

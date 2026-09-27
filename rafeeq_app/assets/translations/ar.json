@@ -367,7 +367,9 @@
     "display_turn_book": "تقليب كالمصحف الورقي",
     "sciences_words": "عدد الكلمات",
     "ayah_count": "{} آية",
-    "autoscroll_follows": "التمرير التلقائي يتبع التلاوة الآن، ويعود لسرعته عند إيقافها."
+    "autoscroll_follows": "التمرير التلقائي يتبع التلاوة الآن، ويعود لسرعته عند إيقافها.",
+    "recite_resume_with": "أكمل مع {}",
+    "recite_resume_where": "{}، الآية {}"
   },
   "library": {
     "title": "المكتبة",
