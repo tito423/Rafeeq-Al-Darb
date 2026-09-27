@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:25 (09-27) NEW APK installed over the existing app on emulator-5554: `adb install -r` Success; package reports versionName 3.69.2 and lastUpdateTime 23:24:29, so this is not the stale snapshot build. NEXT EXACT: start app, inspect Rafeeq pack/settings and install the real pack if missing; then run voice clip 1 «يا رفيق، افتحلي تذكير صيام السنن», capture/read the target section, checkpoint, then clip 2.
+
 ~23:24 (09-27) NEW release APK built successfully from HEAD 9558de35: 314,017,839 B at 23:24; all 3 ABIs contain sherpa ORT 1.28.2 and signing lineage verified (new key Android 9+, old key 7-8). No Flutter/test command ran in parallel. NEXT EXACT: confirm emulator state, `adb install -r` this APK, check `lastUpdateTime`, restore/download the Rafeeq voice pack if missing, then feed the two required Arabic clips and capture/read each resulting Settings screen.
 
 ~23:17 (09-27) RESUMED item 4 step 1. Git HEAD d3b9029b; emulator-5554 is live. Existing APK is the OLD v3.69.2 build from 22:37 (314,017,839 B), so the settings-section code is still NOT built or seen. Untracked pre-existing `scripts/github_content_mirror_report.txt` and `scripts/out/` left untouched. NEXT EXACT: run `build_github_release.bat` alone; after it finishes, checkpoint, reinstall the new APK, then verify the two Arabic voice commands with screenshots.
@@ -670,6 +672,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 23:25 - Install fresh assistant settings APK on emulator
 - 2026-09-27 23:24 - Build signed assistant settings verification APK
 - 2026-09-27 23:17 - Resume assistant settings device verification from measured baseline
 - 2026-09-27 22:54 - NEXT_PROMPT.md rewritten for Codex (owner asked): exact resume at item 4 step 1 (settings sections - code+tests, NOT built or seen), the test-clip method, environment notes, working method
