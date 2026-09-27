@@ -2060,6 +2060,9 @@
     "playing": "OK — Surah {}, recited by {}",
     "opening": "OK — opening {}",
     "downloading": "Downloading “{}”…",
-    "download_failed": "The book could not be downloaded"
+    "download_failed": "The book could not be downloaded",
+    "setting_title": "Rafeeq — voice assistant",
+    "setting_switch": "Turn Rafeeq on",
+    "setting_desc": "A mic button on every screen, and it listens for “Rafeeq” while the app is open — say the command right after. It never listens in the background or while sound is playing. Speech is recognised by the device’s own service."
   }
 }

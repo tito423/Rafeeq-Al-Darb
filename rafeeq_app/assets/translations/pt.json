@@ -2060,6 +2060,9 @@
     "playing": "Certo — surata {}, recitada por {}",
     "opening": "Certo — a abrir {}",
     "downloading": "A transferir «{}»…",
-    "download_failed": "Não foi possível transferir o livro"
+    "download_failed": "Não foi possível transferir o livro",
+    "setting_title": "Rafeeq — assistente de voz",
+    "setting_switch": "Ativar o Rafeeq",
+    "setting_desc": "Um botão de microfone em todos os ecrãs; ouve «Rafeeq» com a aplicação aberta — diga o comando logo a seguir. Nunca ouve em segundo plano nem enquanto toca som. O reconhecimento de voz é feito pelo serviço do próprio aparelho."
   }
 }

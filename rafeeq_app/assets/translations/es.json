@@ -2060,6 +2060,9 @@
     "playing": "De acuerdo: sura {}, recitada por {}",
     "opening": "De acuerdo: abriendo {}",
     "downloading": "Descargando «{}»…",
-    "download_failed": "No se pudo descargar el libro"
+    "download_failed": "No se pudo descargar el libro",
+    "setting_title": "Rafeeq — asistente de voz",
+    "setting_switch": "Activar Rafeeq",
+    "setting_desc": "Un botón de micrófono en todas las pantallas; escucha «Rafeeq» mientras la aplicación está abierta: di la orden justo después. Nunca escucha en segundo plano ni mientras suena audio. El reconocimiento de voz lo hace el servicio del propio dispositivo."
   }
 }

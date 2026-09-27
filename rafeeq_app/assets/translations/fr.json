@@ -2060,6 +2060,9 @@
     "playing": "D’accord — sourate {}, récitée par {}",
     "opening": "D’accord — ouverture de {}",
     "downloading": "Téléchargement de « {} »…",
-    "download_failed": "Le livre n’a pas pu être téléchargé"
+    "download_failed": "Le livre n’a pas pu être téléchargé",
+    "setting_title": "Rafeeq — assistant vocal",
+    "setting_switch": "Activer Rafeeq",
+    "setting_desc": "Un bouton micro sur chaque écran ; il écoute « Rafeeq » quand l’application est ouverte — dites la commande juste après. Il n’écoute jamais en arrière-plan ni pendant la lecture d’un son. La reconnaissance vocale est faite par le service de l’appareil."
   }
 }

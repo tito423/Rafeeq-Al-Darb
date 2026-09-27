@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,14 +11,16 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../app/navigation.dart';
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/db/quran_repository.dart';
+import '../../../core/i18n/supported_locales.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/digits.dart';
+import '../../../core/theme/theme_controller.dart';
 import '../../dorar/presentation/dorar_hub_screen.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../downloads/presentation/screens/downloads_screen.dart';
 import '../../hajj/presentation/hajj_screen.dart';
 import '../../hifz/presentation/hifz_screen.dart';
+import '../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../home/presentation/widgets/on_this_day_sheet.dart';
 import '../../library/data/book_catalog.dart';
 import '../../library/data/library_api_service.dart';
@@ -28,20 +32,26 @@ import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../settings/data/focus_mode_provider.dart';
+import '../../settings/data/transliteration_settings_provider.dart';
 import '../../shamela/presentation/shamela_screen.dart';
+import '../../splash/data/splash_video_provider.dart';
 import '../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../data/assistant_intent.dart';
+import '../data/assistant_lexicon.dart';
+import '../data/assistant_settings.dart';
 import '../data/speech_input.dart';
 
 /// True once `AppShell` is on screen - the mic has nowhere to take the
 /// reader before that (splash, onboarding).
 final assistantShellUpProvider = StateProvider<bool>((ref) => false);
 
-/// The parser over the app's own catalogues: surah names from the Qur'an
-/// database, the reciters that have a verified source, the library's books.
+/// The parser over the app's own catalogues: surah names (Arabic and
+/// transliterated) from the Qur'an database, the reciters that have a
+/// verified source, the library's books, and every screen, setting and
+/// switch title of the seven translation files.
 final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
   final repo = await ref.watch(quranRepositoryProvider.future);
-  final surahs = [for (final s in await repo.surahs()) s.nameAr];
+  final surahs = await repo.surahs();
   final reciters = [
     for (final r in await ref.watch(recitersProvider.future))
       CatalogReciter(r.identifier, [r.nameAr, r.nameEn]),
@@ -49,14 +59,41 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
   final books = [
     for (final b in libraryBookCatalog) CatalogBook(b.id, b.titleAr, b.authorAr),
   ];
-  return AssistantParser(
-      AssistantCatalog(surahs: surahs, reciters: reciters, books: books));
+  final locales = <Map<String, dynamic>>[];
+  for (final l in kSupportedLocales) {
+    try {
+      locales.add(jsonDecode(await rootBundle
+              .loadString('assets/translations/${l.languageCode}.json'))
+          as Map<String, dynamic>);
+    } catch (_) {
+      // A locale file that will not load only loses its own titles.
+    }
+  }
+  final labels = labelsFrom(locales);
+  return AssistantParser(AssistantCatalog(
+    surahs: [for (final s in surahs) s.nameAr],
+    surahsLatin: [for (final s in surahs) s.nameEn],
+    reciters: reciters,
+    books: books,
+    screenLabels: labels.screens,
+    settingLabels: labels.settings,
+    optionLabels: labels.options,
+  ));
 });
+
+/// The app's language code now («ar», «en», …).
+String _appLanguage() {
+  final ctx = rootNavigatorKey.currentContext;
+  return ctx == null ? 'ar' : ctx.locale.languageCode;
+}
 
 /// False while a sheet or a dialog is on top: the button is drawn above the
 /// whole navigator, so without this it floated bright over their dim, and
 /// over «رفيق»'s own sheet (seen on emulator-5554, 2026-09-27).
 final assistantTopIsPage = ValueNotifier<bool>(true);
+
+/// True while «رفيق»'s sheet is open - the call is not listened for then.
+final assistantSheetOpen = ValueNotifier<bool>(false);
 
 class AssistantRouteObserver extends NavigatorObserver {
   void _top(Route<dynamic>? r) {
@@ -77,14 +114,16 @@ class AssistantRouteObserver extends NavigatorObserver {
       _top(newRoute);
 }
 
-/// «رفيق»'s button, over every screen once the shell is up. Hidden where it
-/// would be in the way: the tour, focus mode, a full-screen mushaf page.
+/// «رفيق»'s button, over every screen once the shell is up and the
+/// assistant is switched on. Hidden where it would be in the way: the tour,
+/// focus mode, a full-screen mushaf page.
 class AssistantMicButton extends ConsumerWidget {
   const AssistantMicButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hidden = !ref.watch(assistantShellUpProvider) ||
+    final hidden = !ref.watch(assistantEnabledProvider) ||
+        !ref.watch(assistantShellUpProvider) ||
         ref.watch(tutorialRunningProvider) ||
         ref.watch(focusModeProvider) != null ||
         (ref.watch(quranFullScreenProvider) &&
@@ -126,12 +165,315 @@ class AssistantMicButton extends ConsumerWidget {
 
 Future<void> showAssistantSheet() async {
   final ctx = rootNavigatorKey.currentContext;
-  if (ctx == null) return;
-  await showModalBottomSheet<void>(
-    context: ctx,
-    showDragHandle: true,
-    builder: (_) => const _AssistantSheet(),
-  );
+  if (ctx == null || assistantSheetOpen.value) return;
+  assistantSheetOpen.value = true;
+  try {
+    await showModalBottomSheet<void>(
+      context: ctx,
+      showDragHandle: true,
+      builder: (_) => const _AssistantSheet(),
+    );
+  } finally {
+    assistantSheetOpen.value = false;
+  }
+}
+
+/// The name that wakes the assistant, as recognisers write it in each
+/// language («رفيق», "Rafiq", "Rafeeq", «Рафик», «رفیق»), normalised.
+final _wakeWords = {
+  for (final w in wakeWords) norm(w),
+};
+
+/// «يا رفيق», heard while the app is open, when the assistant is on.
+///
+/// Android's own recogniser, one utterance at a time, in the app's language,
+/// asking for the on-device model. Said with a command («يا رفيق شغل
+/// الكهف»), the command runs at once; said alone, the sheet opens and
+/// listens. It does not listen in the background, while the sheet is open,
+/// or while the app is playing sound - the recogniser takes the audio focus,
+/// and would stop a recitation to listen for its name.
+class AssistantWakeListener extends ConsumerStatefulWidget {
+  const AssistantWakeListener({super.key});
+
+  @override
+  ConsumerState<AssistantWakeListener> createState() =>
+      _AssistantWakeListenerState();
+}
+
+class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
+    with WidgetsBindingObserver {
+  bool _resumed = true;
+  bool _playing = false;
+  bool _running = false;
+  bool _granted = false;
+  StreamSubscription<bool>? _audio;
+
+  bool get _should =>
+      mounted &&
+      _granted &&
+      _resumed &&
+      !_playing &&
+      !assistantSheetOpen.value &&
+      ref.read(assistantEnabledProvider) &&
+      ref.read(assistantShellUpProvider);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    assistantSheetOpen.addListener(_poke);
+    _audio = AyahAudioService.instance.isPlayingStream.listen((p) {
+      _playing = p;
+      if (p && _running && !assistantSheetOpen.value) {
+        unawaited(SpeechInput.instance.cancel());
+      }
+      _poke();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    assistantSheetOpen.removeListener(_poke);
+    _audio?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _resumed = state == AppLifecycleState.resumed;
+    if (!_resumed && _running && !assistantSheetOpen.value) {
+      unawaited(SpeechInput.instance.cancel());
+    }
+    _poke();
+  }
+
+  void _poke() {
+    if (!_running) unawaited(_loop());
+  }
+
+  Future<void> _loop() async {
+    if (_running || !mounted) return;
+    _running = true;
+    try {
+      _granted = await Permission.microphone.isGranted;
+      while (_should) {
+        final r = await SpeechInput.instance.listen(
+          lang: speechLocaleFor(_appLanguage()),
+          preferOffline: true,
+        );
+        if (!_should) break;
+        if (r.ok) {
+          await _heard(r);
+          continue;
+        }
+        switch (r.error) {
+          case SpeechInput.errNoMatch || SpeechInput.errSpeechTimeout:
+            await Future<void>.delayed(const Duration(milliseconds: 250));
+          case SpeechInput.errPermission:
+            _granted = false;
+          default:
+            // Busy, no network, a language the phone cannot hear: wait, so a
+            // failing recogniser is not hammered in a loop.
+            await Future<void>.delayed(const Duration(seconds: 4));
+        }
+      }
+    } finally {
+      _running = false;
+    }
+  }
+
+  Future<void> _heard(SpeechResult r) async {
+    final container = ProviderScope.containerOf(context, listen: false);
+    for (final text in [r.text!, ...r.alternatives]) {
+      final words = norm(text).split(' ');
+      final at = words.indexWhere(_wakeWords.contains);
+      if (at < 0) continue;
+      final rest = words.sublist(at + 1).join(' ');
+      if (rest.isNotEmpty) {
+        final parser = await ref.read(assistantParserProvider.future);
+        final intent = parser.parse(rest);
+        if (intent is! UnknownIntent) {
+          final reply = await describeIntent(container, intent);
+          await sayReply(reply);
+          await runIntent(container, intent);
+          return;
+        }
+      }
+      await showAssistantSheet();
+      return;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Switching the assistant on (or the shell arriving) starts listening.
+    ref.listen<bool>(assistantEnabledProvider, (_, on) {
+      if (on) _poke();
+    });
+    ref.listen<bool>(assistantShellUpProvider, (_, up) => _poke());
+    return const SizedBox.shrink();
+  }
+}
+
+/// What the reader is told before it happens - short, and said aloud.
+Future<String> describeIntent(
+    ProviderContainer ref, AssistantIntent intent) async {
+  switch (intent) {
+    case PlaySurahIntent(:final surah, :final reciterId):
+      final repo = await ref.read(quranRepositoryProvider.future);
+      final s = (await repo.surahs())[surah - 1];
+      final name = _appLanguage() == 'ar' || _appLanguage() == 'ur'
+          ? s.nameAr
+          : s.nameEn;
+      final id = reciterId ?? ref.read(selectedReciterProvider);
+      final reciters = await ref.read(recitersProvider.future);
+      final r = reciters.where((x) => x.identifier == id).firstOrNull;
+      final who = r == null
+          ? ''
+          : (_appLanguage() == 'ar' ? r.nameAr : r.nameEn);
+      return 'assistant.playing'.tr(args: [name, who]);
+    case OpenBookIntent(:final bookId):
+      final b = libraryBookCatalog.where((x) => x.id == bookId).firstOrNull;
+      return 'assistant.opening'.tr(args: [b?.titleAr ?? '']);
+    case AuthorBooksIntent(:final author):
+      return 'assistant.opening'.tr(args: [author]);
+    default:
+      return 'assistant.ok'.tr();
+  }
+}
+
+/// The reply, spoken in the app's language when the phone has that voice.
+Future<void> sayReply(String text) async {
+  try {
+    final tts = FlutterTts();
+    await tts.awaitSpeakCompletion(true);
+    await tts.setLanguage(speechLocaleFor(_appLanguage()));
+    await tts.speak(text);
+  } catch (_) {
+    // No voice for this language on the phone: the words are on screen.
+  }
+}
+
+/// Does what was asked.
+Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
+  final nav = rootNavigatorKey.currentState;
+  if (nav == null) return;
+  void tab(int t) {
+    nav.popUntil((r) => r.isFirst);
+    ref.read(requestedTabProvider.notifier).state = t;
+  }
+
+  void push(Widget screen) =>
+      nav.push(MaterialPageRoute<void>(builder: (_) => screen));
+
+  switch (intent) {
+    case OpenScreenIntent(:final screen):
+      switch (screen) {
+        case AssistantScreen.home || AssistantScreen.dailyHadith:
+          tab(AppTab.home);
+        case AssistantScreen.quran:
+          tab(AppTab.quran);
+        case AssistantScreen.prayer || AssistantScreen.qibla:
+          tab(AppTab.prayer);
+        case AssistantScreen.azkar:
+          tab(AppTab.azkar);
+        case AssistantScreen.tasbeeh:
+          tab(AppTab.tasbeeh);
+        case AssistantScreen.library:
+          tab(AppTab.library);
+        case AssistantScreen.more || AssistantScreen.settings:
+          tab(AppTab.more);
+        case AssistantScreen.downloads:
+          push(const DownloadsScreen());
+        case AssistantScreen.recitationPlayer:
+          push(const QuranAudioScreen());
+        case AssistantScreen.ayahPlayer:
+          push(const AyahDownloadScreen());
+        case AssistantScreen.hifz:
+          push(const HifzScreen());
+        case AssistantScreen.ruqyah:
+          push(const RuqyahAudioScreen());
+        case AssistantScreen.hajj:
+          push(const HajjScreen());
+        case AssistantScreen.tajweed:
+          push(const TajweedLevelsScreen());
+        case AssistantScreen.dorar:
+          push(const DorarHubScreen());
+        case AssistantScreen.shamela:
+          push(const ShamelaScreen());
+        case AssistantScreen.onThisDay:
+          await showHijriDaySheet(nav.context);
+        case AssistantScreen.clockFaces:
+          tab(AppTab.home);
+          await ClockGallerySheet.show(nav.context);
+      }
+    case OnThisDayIntent(:final day, :final month):
+      await showHijriDaySheet(nav.context,
+          day: day != null && month != null ? (month, day) : null);
+    case PlaySurahIntent(:final surah, :final reciterId):
+      final repo = await ref.read(quranRepositoryProvider.future);
+      final first = await repo.ayah(surah, 1);
+      if (first == null) return;
+      // Saying a reciter chooses him, as picking him in the list does, so
+      // the mushaf's own play button goes on with the same voice.
+      if (reciterId != null) {
+        await ref.read(selectedReciterProvider.notifier).select(reciterId);
+      }
+      ref.read(quranJumpRequestProvider.notifier).state = first.pageNumber;
+      tab(AppTab.quran);
+      await AyahAudioService.instance.startContinuous(
+        from: first,
+        repo: repo,
+        edition: reciterId ?? ref.read(selectedReciterProvider),
+        wholeMushaf: false,
+      );
+    case OpenBookIntent(:final bookId):
+      await _openBook(nav, bookId);
+    case AuthorBooksIntent(:final author):
+      push(BooksSearchScreen(initialQuery: author));
+    case SetThemeIntent(:final theme):
+      await ref
+          .read(themeControllerProvider.notifier)
+          .set(ThemeVariant.values.byName(theme));
+    case SetLanguageIntent(:final code):
+      await nav.context.setLocale(Locale(code));
+    case ToggleOptionIntent(:final option, :final on):
+      switch (option) {
+        case 'motion':
+          await ref.read(motionEffectsProvider.notifier).set(on);
+        case 'splash':
+          await ref.read(splashVideoEnabledProvider.notifier).set(on);
+        case 'transliteration':
+          await ref.read(transliterationEnabledProvider.notifier).set(on);
+      }
+    case UnknownIntent():
+      break;
+  }
+}
+
+/// Opened if it is on the phone, otherwise downloaded first - the same
+/// path the library's search takes.
+Future<void> _openBook(NavigatorState nav, String id) async {
+  final book = libraryBookCatalog.where((b) => b.id == id).firstOrNull;
+  if (book == null) return;
+  final api = LibraryApiService.instance;
+  if (!await api.isBookDownloaded(id)) {
+    final url = book.textEdition?.url;
+    if (url == null) return;
+    rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+        content: Text('assistant.downloading'.tr(args: [book.titleAr]))));
+    try {
+      await api.downloadBook(id, url);
+    } catch (_) {
+      rootScaffoldMessengerKey.currentState?.showSnackBar(
+          SnackBar(content: Text('assistant.download_failed'.tr())));
+      return;
+    }
+  }
+  final path = await api.bookFilePath(id);
+  nav.push(MaterialPageRoute<void>(
+      builder: (_) => BookTextReaderScreen(book: book, path: path)));
 }
 
 enum _Phase { starting, listening, done }
@@ -195,7 +537,7 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
     }
     final (any, _) = await _speech.available();
     if (!any) return _end('assistant.no_recognizer'.tr());
-    final r = await _speech.listen();
+    final r = await _speech.listen(lang: speechLocaleFor(_appLanguage()));
     if (!mounted) return;
     if (!r.ok) return _end(_errorText(r.error));
     setState(() => _words = r.text!);
@@ -211,14 +553,15 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
     if (intent is UnknownIntent) {
       return _end('assistant.not_understood'.tr());
     }
-    final reply = await _describe(intent);
-    _end(reply);
-    await _say(reply);
     if (!mounted) return;
     // The sheet goes before the action, so the action cannot use its `ref`.
     final container = ProviderScope.containerOf(context, listen: false);
+    final reply = await describeIntent(container, intent);
+    _end(reply);
+    await sayReply(reply);
+    if (!mounted) return;
     Navigator.of(context).pop();
-    await _execute(container, intent);
+    await runIntent(container, intent);
   }
 
   String _errorText(int? code) => switch (code) {
@@ -234,140 +577,6 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
           'assistant.lang_unavailable'.tr(),
         _ => 'assistant.failed'.tr(args: ['${code ?? '-'}']),
       };
-
-  /// What the reader is told before it happens - short, and said aloud.
-  Future<String> _describe(AssistantIntent intent) async {
-    switch (intent) {
-      case PlaySurahIntent(:final surah, :final reciterId):
-        final repo = await ref.read(quranRepositoryProvider.future);
-        final name = (await repo.surahs())[surah - 1].nameAr;
-        final id = reciterId ?? ref.read(selectedReciterProvider);
-        final reciters = await ref.read(recitersProvider.future);
-        final r = reciters.where((x) => x.identifier == id).firstOrNull;
-        return 'assistant.playing'.tr(args: [name, r?.nameAr ?? '']);
-      case OpenBookIntent(:final bookId):
-        final b = libraryBookCatalog.where((x) => x.id == bookId).firstOrNull;
-        return 'assistant.opening'.tr(args: [b?.titleAr ?? '']);
-      case AuthorBooksIntent(:final author):
-        return 'assistant.opening'.tr(args: [author]);
-      default:
-        return 'assistant.ok'.tr();
-    }
-  }
-
-  Future<void> _say(String text) async {
-    try {
-      final tts = FlutterTts();
-      await tts.awaitSpeakCompletion(true);
-      await tts.setLanguage('ar');
-      await tts.speak(text);
-    } catch (_) {
-      // No Arabic voice on the phone: the words are on the sheet already.
-    }
-  }
-
-  static Future<void> _execute(
-      ProviderContainer ref, AssistantIntent intent) async {
-    final nav = rootNavigatorKey.currentState;
-    if (nav == null) return;
-    void tab(int t) {
-      nav.popUntil((r) => r.isFirst);
-      ref.read(requestedTabProvider.notifier).state = t;
-    }
-
-    void push(Widget screen) =>
-        nav.push(MaterialPageRoute<void>(builder: (_) => screen));
-
-    switch (intent) {
-      case OpenScreenIntent(:final screen):
-        switch (screen) {
-          case AssistantScreen.home || AssistantScreen.dailyHadith:
-            tab(AppTab.home);
-          case AssistantScreen.quran:
-            tab(AppTab.quran);
-          case AssistantScreen.prayer || AssistantScreen.qibla:
-            tab(AppTab.prayer);
-          case AssistantScreen.azkar:
-            tab(AppTab.azkar);
-          case AssistantScreen.tasbeeh:
-            tab(AppTab.tasbeeh);
-          case AssistantScreen.library:
-            tab(AppTab.library);
-          case AssistantScreen.more || AssistantScreen.settings:
-            tab(AppTab.more);
-          case AssistantScreen.downloads:
-            push(const DownloadsScreen());
-          case AssistantScreen.recitationPlayer:
-            push(const QuranAudioScreen());
-          case AssistantScreen.ayahPlayer:
-            push(const AyahDownloadScreen());
-          case AssistantScreen.hifz:
-            push(const HifzScreen());
-          case AssistantScreen.ruqyah:
-            push(const RuqyahAudioScreen());
-          case AssistantScreen.hajj:
-            push(const HajjScreen());
-          case AssistantScreen.tajweed:
-            push(const TajweedLevelsScreen());
-          case AssistantScreen.dorar:
-            push(const DorarHubScreen());
-          case AssistantScreen.shamela:
-            push(const ShamelaScreen());
-          case AssistantScreen.onThisDay:
-            await showHijriDaySheet(nav.context);
-        }
-      case OnThisDayIntent(:final day, :final month):
-        await showHijriDaySheet(nav.context,
-            day: day != null && month != null ? (month, day) : null);
-      case PlaySurahIntent(:final surah, :final reciterId):
-        final repo = await ref.read(quranRepositoryProvider.future);
-        final first = await repo.ayah(surah, 1);
-        if (first == null) return;
-        // Saying a reciter chooses him, as picking him in the list does, so
-        // the mushaf's own play button goes on with the same voice.
-        if (reciterId != null) {
-          await ref.read(selectedReciterProvider.notifier).select(reciterId);
-        }
-        ref.read(quranJumpRequestProvider.notifier).state = first.pageNumber;
-        tab(AppTab.quran);
-        await AyahAudioService.instance.startContinuous(
-          from: first,
-          repo: repo,
-          edition: reciterId ?? ref.read(selectedReciterProvider),
-          wholeMushaf: false,
-        );
-      case OpenBookIntent(:final bookId):
-        await _openBook(nav, bookId);
-      case AuthorBooksIntent(:final author):
-        push(BooksSearchScreen(initialQuery: author));
-      case UnknownIntent():
-        break;
-    }
-  }
-
-  /// Opened if it is on the phone, otherwise downloaded first - the same
-  /// path the library's search takes.
-  static Future<void> _openBook(NavigatorState nav, String id) async {
-    final book = libraryBookCatalog.where((b) => b.id == id).firstOrNull;
-    if (book == null) return;
-    final api = LibraryApiService.instance;
-    if (!await api.isBookDownloaded(id)) {
-      final url = book.textEdition?.url;
-      if (url == null) return;
-      rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
-          content: Text('assistant.downloading'.tr(args: [book.titleAr]))));
-      try {
-        await api.downloadBook(id, url);
-      } catch (_) {
-        rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
-            content: Text('assistant.download_failed'.tr())));
-        return;
-      }
-    }
-    final path = await api.bookFilePath(id);
-    nav.push(MaterialPageRoute<void>(
-        builder: (_) => BookTextReaderScreen(book: book, path: path)));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -403,7 +612,9 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
                       : AppColors.gold.withValues(alpha: 0.35),
                 ),
                 child: Icon(
-                  _phase == _Phase.done ? Icons.refresh_rounded : Icons.mic_rounded,
+                  _phase == _Phase.done
+                      ? Icons.refresh_rounded
+                      : Icons.mic_rounded,
                   size: 36,
                   color: Colors.black87,
                 ),
@@ -422,7 +633,7 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
             if (_words.isNotEmpty) ...[
               const SizedBox(height: 10),
               Text(
-                'assistant.heard'.tr(args: [localizeDigits(_words, 'ar')]),
+                'assistant.heard'.tr(args: [_words]),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),

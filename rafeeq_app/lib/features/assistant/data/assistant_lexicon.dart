@@ -349,3 +349,8 @@ String? lookup(Map<String, dynamic> locale, String dotted) {
   }
   return (screens: screens, settings: settings, options: options);
 }
+
+/// The assistant's name, as recognisers write it in each language.
+const wakeWords = <String>[
+  'رفيق', 'rafik', 'rafiq', 'rafeeq', 'refik', 'rafique', 'рафик', 'رفیق',
+];

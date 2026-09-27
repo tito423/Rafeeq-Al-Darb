@@ -209,7 +209,11 @@ class RafeeqApp extends ConsumerWidget {
         }
         // A remote or keyboard gets a ring on whatever it is on (TV).
         // «رفيق»'s mic sits over every route, not only the shell's tabs.
-        page = Stack(children: [page, const AssistantMicButton()]);
+        page = Stack(children: [
+          page,
+          const AssistantMicButton(),
+          const AssistantWakeListener(),
+        ]);
         return FocusRingOverlay(color: AppColors.gold, child: page);
       },
       // P3‑49: the owner asked for his AI-generated splash video (Gemini
