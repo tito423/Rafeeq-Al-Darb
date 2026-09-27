@@ -366,6 +366,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 56. Restarting the emulator resumes an OLD snapshot - reinstall and re-check `lastUpdateTime` every time.
 57. The emulator window hangs the emulator here since 2026-09-26 - launch with `-no-window -no-audio -gpu swiftshader_indirect` (host GPU crashed headless too).
 58. Two plugins ship `libonnxruntime.so` and `pickFirsts` chose the OLD one for ARM only - the emulator (x86_64) hid it; `check_apk_native.py` now fails the build.
+59. A platform-channel `Uint8List` is a view at byte 5 - `asInt16List` on it throws; a test clip fed past the mic path hid it (v3.69.0 «رفيق» heard nothing).
 
 ## 4. Where things live
 

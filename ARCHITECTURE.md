@@ -3,7 +3,7 @@
 **Written 2026-09-03, P2‑10; refreshed by the 2026-09-27 audit.** A map of
 how the codebase is put together. It describes what's actually here, not an
 aspiration. Measured 2026-09-27: 417 Dart files / 95,823 lines in `lib/`,
-31 feature folders, 7 locales, 157 test files (636 tests), `flutter analyze`
+31 feature folders, 7 locales, 157 test files (635 tests, 4 skipped), `flutter analyze`
 at zero with the stricter lint set in `analysis_options.yaml`.
 
 **Guards that enforce this document** (they fail `flutter test`, and CI runs

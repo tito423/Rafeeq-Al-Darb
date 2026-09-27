@@ -615,3 +615,17 @@ Do not rediscover these.
     strips the packaged copy. **Also: the emulator is x86_64; an ABI-specific
     native bug never shows there. Read the APK's `lib/` for every ABI.**
 
+
+59. **A platform-channel `Uint8List` is a VIEW at an odd offset, and a test
+    input that skips the channel hides it.** The record plugin's mic stream
+    arrives through a StandardMethodCodec envelope: 0x00, the type byte, then
+    the length - 3 bytes for anything >= 254 bytes - so the samples start at
+    byte 5 of the message, on every device. `bytes.buffer.asInt16List(
+    bytes.offsetInBytes, ...)` needs 2-byte alignment and threw on every
+    chunk: v3.69.0's «رفيق» showed «يسمع» and heard nothing, on every phone.
+    The «seen end to end» check before release fed `rafeeq_test.wav`
+    through `RafeeqEar.feed()`, which bypasses the mic path entirely. Fix:
+    copy a misaligned chunk first (`pcm16ToFloat`); the test encodes a real
+    envelope with `StandardMethodCodec` and asserts the offset. **A test
+    clip proves the recogniser, not the microphone - read logcat while the
+    real input path runs.**

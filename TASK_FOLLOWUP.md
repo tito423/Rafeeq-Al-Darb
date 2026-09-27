@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~21:30 (09-27) AUDIT COMPLETE (stages 1-6). docs/audits/AUDIT_2026-09-27.md written; downloaded ayah (Alafasy al-Fatiha, per ayah) played with wifi+data OFF on 3.69.1 = stage-2 hook seen; TRAPS #59 + CLAUDE.md line; HANDOVER state row + correction of the v3.69.0 «end to end» claim. NEXT: the owner's result for «يا رفيق» on his phone (v3.69.1). Nothing half-done.
+
 ~21:10 (09-27) RELEASED v3.69.1 (tag cfb36fa3 = HEAD, APK 314,001,455 B, range 206; v3.69.0 + tag deleted). Owner to try «يا رفيق» on his phone. NEXT: his result; then audit stage 6 doc (docs/audits/AUDIT_2026-09-27.md) + downloaded-ayah offline playback check owed from stage 2.
 
 ~21:00 (09-27) OWNER REPORT from his phone (v3.69.0): ط¢آ«ط·آ±ط¸ظ¾ط¸ظ¹ط¸â€ڑط¢آ» notification says listening, ط¢آ«ط¸ظ¹ط·آ§ ط·آ±ط¸ظ¾ط¸ظ¹ط¸â€ڑط¢آ» does nothing. ROOT CAUSE, proven: the record plugin's EventChannel delivers each chunk as a Uint8List VIEW at byte 5 of a StandardMethodCodec envelope (0x00, type, 254+uint16 size - message_codecs.dart writeSize), so asInt16List threw on EVERY chunk on EVERY device; the 20:20 "seen end to end" used the test clip, which enters via feed() and skips that path. Fix pcm16ToFloat (committed 895349ae) + test that encodes/decodes a real envelope (offset 5 asserted). Emulator with fix: 0 RangeErrors, mic recording VOICE_RECOGNITION 16 kHz. NOT yet: the owner's voice on his phone - needs a release (ask him; v3.69.1). Audit stage 6 doc still to write; CI GREEN: run 36335053720 on 86b2214d - analyze 0, 635 passed, 4 skipped.
@@ -654,6 +656,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 21:17 - Audit 2026-09-27 complete: report docs/audits/AUDIT_2026-09-27.md (6 stages, 7 findings incl. the Rafeeq mic bug); downloaded ayah plays offline on 3.69.1 (stage-2 hook seen); TRAPS #59; HANDOVER state row corrects the v3.69.0 end-to-end claim
 - 2026-09-27 21:09 - Released v3.69.1 (Rafeeq mic fix); v3.69.0 deleted
 - 2026-09-27 21:07 - v3.69.1: Rafeeq mic fix release build - installed on emulator over 3.69.0, versionName 3.69.1, 0 RangeErrors, mic recording, support button shown
 - 2026-09-27 21:01 - CI green for the first time: run 36335053720 on 86b2214d, analyze clean, 635 passed / 4 skipped
