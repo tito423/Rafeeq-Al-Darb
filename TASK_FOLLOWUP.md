@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~00:00 (09-28) REAL Rafeeq pack download COMPLETED on emulator: screenshots read at 41.3, 119.1, 171.1, 239.3, 304.1, 348.9 MB, then UI changed to installed card with enabled switch + Delete; no cancel stack, Dio error or hash error. Thus the earlier cancellation did not reproduce under observation; no behavioral fix justified. NEXT EXACT: turn the now-enabled Rafeeq switch on, grant mic/notification if asked, checkpoint, generate/push voice clip 1 and capture/read its focused Settings section.
+
 ~23:55 (09-27) Voice-pack stall = the DYING EMULATOR, not the app: on a fresh boot the same build downloaded 10.7 MB in 15 s, 49.7 MB at 23:42, 149.5 MB / 368.2 at 23:53 (slowing to ~0.2 MB/s, emulator network). Still downloading. Clips ready in the session scratchpad (lost with it; regenerate with edge_tts as in NEXT_PROMPT.md): «يا رفيق، افتحلي تذكير صيام السنن», «يا رفيق، افتح ضبط المواقيت والتاريخ». NEXT: when the pack is installed, turn «تفعيل رفيق» on, push each clip as rafeeq_test.wav, screenshot: the named section must be OPEN and visible. Weekly quota 98 percent.
 
 ~23:51 (09-27) Diagnostic build retry is actively progressing, not cancelled: one tap logged `download started`; after ~70 s the screenshot visibly shows 41.3/368.2 MB and no `cancel requested` stack exists. This run proves the earlier 1.7 MB stop is not deterministic; do NOT change behavior yet. NEXT EXACT: leave this exact process/screen untouched, monitor screenshots/logcat only until completion or a logged cancel/crash; if complete, enable Rafeeq and resume the two required voice clips.
@@ -696,6 +698,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 00:00 - Complete verified Rafeeq voice pack download
 - 2026-09-27 23:54 - Voice-pack stall was the dying emulator: fresh boot downloads (10.7 MB/15 s, 149.5/368.2 MB at 23:53); step-1 voice test waits for the pack
 - 2026-09-27 23:52 - Observe Rafeeq pack retry progressing past prior stall
 - 2026-09-27 23:49 - Install Rafeeq cancellation diagnostic APK without data loss
