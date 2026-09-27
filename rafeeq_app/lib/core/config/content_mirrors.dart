@@ -46,6 +46,8 @@ class ContentMirrors {
       'ruqyah/',
       'images/backgrounds/',
       'geo/',
+      // How dorar.net / shamela.ws are parsed (SourceRules).
+      'config/',
     ],
     'content-mushaf': ['mushaf/madinah_qc/'],
     'content-surah': [

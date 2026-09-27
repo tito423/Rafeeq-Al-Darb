@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../../core/services/source_rules.dart';
 import 'shamela_nass.dart';
 
 /// The book card on `https://shamela.ws/book/{id}`.
@@ -83,10 +84,8 @@ class ShamelaBookBuilder {
   /// The «بطاقة الكتاب» block (pipeline: `fetch_meta_card`).
   Future<ShamelaCard> fetchCard() async {
     final h = await _get('/book/$shamelaId');
-    final m = RegExp(
-      r'<div style="line-height: 1\.8;">(.*?)</div>',
-      dotAll: true,
-    ).firstMatch(h);
+    final rules = SourceRules.instance;
+    final m = rules.re('shamela.card').firstMatch(h);
     var card = '';
     if (m != null) {
       card = m.group(1)!.replaceAll(RegExp(r'<br\s*/?>'), '\n');
@@ -94,9 +93,9 @@ class ShamelaBookBuilder {
     }
     // «الكتاب : x» and «الكتاب: x» both occur (3 of 182 books had the space).
     final title =
-        RegExp(r'الكتاب\s*:\s*(.+)').firstMatch(card)?.group(1)?.trim() ?? '';
+        rules.re('shamela.card.title', dotAll: false).firstMatch(card)?.group(1)?.trim() ?? '';
     final author =
-        RegExp(r'المؤلف\s*:\s*(.+)').firstMatch(card)?.group(1)?.trim() ?? '';
+        rules.re('shamela.card.author', dotAll: false).firstMatch(card)?.group(1)?.trim() ?? '';
     // «غير موافق للمطبوع» CONTAINS «موافق للمطبوع» - the negation first.
     final printMatches =
         card.contains('موافق للمطبوع') &&
@@ -152,7 +151,10 @@ class ShamelaBookBuilder {
         var data = cache[pageId];
         if (data == null) {
           final raw = await _get(
-            '/ajax/pageContent/$shamelaId/$pageId',
+            SourceRules.instance
+                .s('shamela.page.path')
+                .replaceAll('{book}', '$shamelaId')
+                .replaceAll('{page}', pageId),
             ajax: true,
           );
           data = jsonDecode(raw) as Map<String, dynamic>;

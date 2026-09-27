@@ -2034,6 +2034,8 @@
     "check_query": "Se buscó en la Enciclopedia del Hadiz con estas palabras del matn: {}",
     "check_none": "No se encontró en Dorar un hadiz que coincida con este matn. Esto no dice nada sobre su autenticidad; pruebe a buscar usted mismo.",
     "check_found": "Calificaciones de los sabios sobre este matn en Dorar ({}):",
-    "check_open_search": "Abrir la búsqueda de Dorar"
+    "check_open_search": "Abrir la búsqueda de Dorar",
+    "read_on_site": "Abrir en el sitio web",
+    "read_on_site_msg": "No se pudo leer esta página en la aplicación. Puede leerla en el sitio de Dorar."
   }
 }

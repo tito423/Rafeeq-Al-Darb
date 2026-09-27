@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/external_link.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/screen_class.dart';
 import '../data/dorar_encyclopedia.dart';
@@ -136,6 +138,15 @@ class _DorarTocScreenState extends State<DorarTocScreen> {
           if (!snap.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
+          // Read but nothing parsed: the page changed (or never had the
+          // tree - /tafseer and /history, seen EMPTY on the owner's Xiaomi,
+          // 2026-09-27). Never a blank screen: say so, offer the site.
+          if (snap.data!.isEmpty) {
+            return DorarReadOnSite(
+              url: DorarEncyclopediaService.instance
+                  .url(widget.encyclopedia.slug),
+            );
+          }
           return ListView(
             padding: const EdgeInsets.symmetric(vertical: 8),
             children: [
@@ -203,15 +214,15 @@ class DorarSectionScreen extends StatelessWidget {
       body: FutureBuilder<DorarSection?>(
         future: DorarEncyclopediaService.instance.section(slug, id),
         builder: (context, snap) {
-          if (snap.hasError) {
-            return Center(child: Text('dorar.failed'.tr()));
-          }
           if (snap.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           }
           final s = snap.data;
-          if (s == null) {
-            return Center(child: Text('dorar.none'.tr()));
+          if (snap.hasError || s == null) {
+            return DorarReadOnSite(
+              url: DorarEncyclopediaService.instance.url(slug, id),
+              offline: snap.hasError,
+            );
           }
           return Center(
             child: ConstrainedBox(
@@ -261,6 +272,40 @@ class DorarSectionScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+
+/// Shown when a Dorar page could not be read here: offline, or the site's
+/// layout no longer matches the rules (SourceRules) - the reader is sent to
+/// the page itself instead of being left on an empty screen.
+class DorarReadOnSite extends StatelessWidget {
+  const DorarReadOnSite({super.key, required this.url, this.offline = false});
+  final String url;
+  final bool offline;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Icon(offline ? Icons.wifi_off_rounded : Icons.travel_explore,
+              size: 44, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(height: 14),
+          Text(
+            (offline ? 'dorar.failed' : 'dorar.read_on_site_msg').tr(),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            onPressed: () => openExternalLink(url),
+            icon: const Icon(Icons.open_in_new),
+            label: Text('dorar.read_on_site'.tr()),
+          ),
+        ]),
       ),
     );
   }

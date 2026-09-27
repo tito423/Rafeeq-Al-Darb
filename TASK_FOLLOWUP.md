@@ -604,6 +604,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 13:12 - Dynamic source rules: Dorar/Shamela parsing rules published on R2 + GitHub (v1, 21 rules), check_sources.py 5/5 live, read-on-site fallback
 - 2026-09-27 13:04 - Reciter page fix + downloads row seen on emulator
 - 2026-09-27 12:58 - Fix: every reciter page was a grey error box (_PanelInk.of outside its scope); downloads row opens the right recitation; Dorar tafseer/history hidden until they have readers
 - 2026-09-27 12:47 - Stage C sweep: 70 screens across 5 classes and both orientations, all seen, no layout faults

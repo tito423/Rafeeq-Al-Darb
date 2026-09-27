@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../../core/services/source_rules.dart';
+
 /// One of al-Durar al-Saniyya's encyclopaedias (dorar.net/`slug`).
 class DorarEncyclopedia {
   const DorarEncyclopedia(this.slug, this.titleKey);
@@ -72,14 +74,12 @@ String _text(String html) => html
 /// `<li class="mtree-node"><a href="#">title</a><ul>…</ul></li>`, a
 /// section `<li><a href="/<slug>/N">title</a></li>`.
 List<DorarTocNode> parseDorarToc(String html, String slug) {
-  final start = html.indexOf('id="mtree"');
+  final rules = SourceRules.instance;
+  final start = html.indexOf(rules.s('dorar.toc.start'));
   if (start < 0) return const [];
   // From the tree's own opening tag - `id="mtree"` sits inside it.
   final body = html.substring(html.lastIndexOf('<ul', start));
-  final token = RegExp(
-    r'<ul\b|</ul>|<a\s+href="([^"]*)"[^>]*>(.*?)</a>',
-    dotAll: true,
-  );
+  final token = rules.re('dorar.toc.token');
   final sectionHref = RegExp('^/${RegExp.escape(slug)}/' r'(\d+)$');
   final root = <DorarTocNode>[];
   final stack = <List<DorarTocNode>>[root];
@@ -118,25 +118,28 @@ List<DorarTocNode> parseDorarToc(String html, String slug) {
 /// Null when the page is not a section (an unknown id answers 200 with the
 /// generic page - a soft 404, trap #5).
 DorarSection? parseDorarSection(String html) {
-  final a = html.indexOf('<div class="w-100 mt-4">');
+  final rules = SourceRules.instance;
+  final startMarker = rules.s('dorar.section.start');
+  final a = html.indexOf(startMarker);
   if (a < 0) return null;
-  var b = html.indexOf('id="more-titles"', a);
+  var b = html.indexOf(rules.s('dorar.section.end'), a);
   if (b >= 0) b = html.lastIndexOf('<h3', b); // from the tag's start
-  if (b < 0) b = html.indexOf('public-qa-section', a);
+  if (b < 0) b = html.indexOf(rules.s('dorar.section.end_alt'), a);
   if (b < 0) b = html.length;
-  var body = html.substring(a + '<div class="w-100 mt-4">'.length, b);
-  final qa = body.indexOf('public-qa-section');
+  var body = html.substring(a + startMarker.length, b);
+  final qa = body.indexOf(rules.s('dorar.section.end_alt'));
   if (qa >= 0) body = body.substring(0, qa);
   // The section's own <h1> is inside the content card (`id="cntnt"`); the
   // first <h1> of the page is the site header («الموسوعة العقدية»).
-  final card = html.indexOf('id="cntnt"');
-  final titleM = RegExp(r'<h1[^>]*>(.*?)</h1>', dotAll: true)
+  final card = html.indexOf(rules.s('dorar.section.card'));
+  final titleM = rules
+      .re('dorar.section.title')
       .firstMatch(card < 0 ? html : html.substring(card));
   final title = titleM == null ? '' : _text(titleM.group(1)!);
 
   final footnotes = <String>[];
   body = body.replaceAllMapped(
-    RegExp(r'<span class="tip">(.*?)</span>', dotAll: true),
+    rules.re('dorar.section.footnote'),
     (m) {
       final note = _text(m.group(1)!).replaceFirst(RegExp(r'^\[\d+\]\s*'), '');
       footnotes.add(note);
@@ -144,11 +147,11 @@ DorarSection? parseDorarSection(String html) {
     },
   );
   body = body.replaceAllMapped(
-    RegExp(r'<span class="title-\d">(.*?)</span>', dotAll: true),
+    rules.re('dorar.section.heading'),
     (m) => '<br/>\u0001${m.group(1)}<br/>',
   );
   // The end-of-section control (a popover button) is not content.
-  body = body.replaceAll(RegExp(r'<a id="enc-tip".*?</a>', dotAll: true), '');
+  body = body.replaceAll(rules.re('dorar.section.drop'), '');
   final paras = <DorarPara>[];
   for (final chunk in body.split(RegExp(r'<br\s*/?>|</p>|<p[^>]*>'))) {
     final heading = chunk.contains('\u0001');

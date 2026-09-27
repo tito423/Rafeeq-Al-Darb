@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
+import '../../../core/services/source_rules.dart';
+
 /// One grading of a hadith, as Dorar's encyclopaedia records it.
 ///
 /// Every field is Dorar's own text. [muhaddith] is never empty on a result
@@ -41,7 +43,7 @@ class DorarService {
     final q = query.trim();
     if (q.isEmpty) return const [];
     final res = await _dio.get<String>(
-      'https://dorar.net/dorar_api.json',
+      SourceRules.instance.s('dorar.api.url'),
       queryParameters: {'skey': q, 'page': page},
       options: Options(
         responseType: ResponseType.plain,
@@ -55,10 +57,6 @@ class DorarService {
   }
 }
 
-final _block = RegExp(
-  r'<div class="hadith"[^>]*>(.*?)</div>\s*<div class="hadith-info">(.*?)</div>',
-  dotAll: true,
-);
 final _tag = RegExp(r'<[^>]+>');
 final _ws = RegExp(r'\s+');
 final _num = RegExp(r'^\s*\d+\s*-\s*');
@@ -85,19 +83,20 @@ String _field(String info, String label) {
 /// out; the rest keep Dorar's wording exactly (nothing normalised - trap:
 /// never «fix» text that is hadith or next to it).
 List<DorarHadith> parseDorar(String html) {
+  final r = SourceRules.instance;
   final out = <DorarHadith>[];
-  for (final m in _block.allMatches(html)) {
+  for (final m in r.re('dorar.api.block').allMatches(html)) {
     final text = _plain(m.group(1)!).replaceFirst(_num, '');
     final info = m.group(2)!;
-    final muhaddith = _field(info, 'المحدث');
+    final muhaddith = _field(info, r.s('dorar.api.label.muhaddith'));
     if (muhaddith.isEmpty || muhaddith == '-') continue;
     out.add(DorarHadith(
       text: text.endsWith(' .') ? text.substring(0, text.length - 2) : text,
-      rawi: _field(info, 'الراوي'),
+      rawi: _field(info, r.s('dorar.api.label.rawi')),
       muhaddith: muhaddith,
-      source: _field(info, 'المصدر'),
-      page: _field(info, 'الصفحة أو الرقم'),
-      grade: _field(info, 'خلاصة حكم المحدث'),
+      source: _field(info, r.s('dorar.api.label.source')),
+      page: _field(info, r.s('dorar.api.label.page')),
+      grade: _field(info, r.s('dorar.api.label.grade')),
     ));
   }
   return out;
