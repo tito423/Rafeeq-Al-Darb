@@ -13,6 +13,10 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+20:20 (09-27) v3.69.0 SEEN END TO END on emulator (build 19:42, test clip pushed as files/rafeeq_test.wav): «يا رفيق افتحلي الأذكار» heard as «يار فيق فيتحل الأثكار» in 473 ms -> Azkar tab opened; «...شغللي سورة الكهف بصوت الحصري» heard exactly in 1127 ms -> Kahf page, 18:1 PLAYING; app in BACKGROUND (launcher on top) + French «Rafeeq, passe en mode sombre» heard in 436 ms -> app came back DARK. Quran chrome: shown at 1 s, gone at 6 s. Isha card -> «ضبط المواقيت والتاريخ» -> PrayerAdjustmentsScreen. NOT seen: the owner's real voice on a phone, phone CPU latency, battery. Publishing v3.69.0 next, then the FULL AUDIT.
+
+20:10 (09-27) OWNER NEW (after releasing 3.69.0): FULL AUDIT of code, files and infrastructure against best practices and design patterns - organised, clean code the owner can learn from («عشان لما أبقى أتعلم عليها»). 3.69.0 build 20:0x: ORT 1.28.2 on all 3 ABIs (check_apk_native.py), web wasm gone, APK 313,985,071 B.
+
 19:35 (09-27) OWNER NEW (queue, after the prayer-settings button): Qur'an reader - the options bar (الانتقال إلى/البحث/إيقاف التلاوة/وضع المصحف/العرض) AND the page-number pill at the bottom hide by themselves after 5 seconds.
 
 19:20 (09-27) OWNER NEW (queue after Rafeeq 3.69.0): in each prayer slide sheet (e.g. العشاء: تعديل أوقات الصلاة / طريقة التنبيه / صوت الأذان), the settings button must open the PRAYER-TIMES settings inside Settings. EMULATOR (first 3.69.0 build): book reader voice READ ALOUD on ORT 1.28.2 (MediaPlayer CONTENT_TYPE_SPEECH started, no ORT error); Rafeeq pack download got 366 MB then failed silently -> cause: sha256 in Isolate.run with a closure capturing the pack object (Dio) -> static _sha256 (fixed, not rebuilt). ARM ORT fix + check_apk_native.py in place (not rebuilt).
@@ -638,6 +642,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 19:46 - v3.69.0 verified end to end on emulator (wake+command, background, French, auto-hide, prayer settings link)
 - 2026-09-27 19:37 - Chrome auto-hide moved into MushafChrome (ChromeAutoHide) - quran_screen back at its 1057 ceiling, prayer_slides 797; 641 pass
 - 2026-09-27 19:28 - Qur'an chrome auto-hides after 5 s; prayer card + Settings lead to prayer-times settings; Rafeeq test clip path; web wasm removed at copyFlutterAssets; seen on emulator: voice pack installed, mic FGS type microphone, listening in background, mic closed during recitation and back after
 - 2026-09-27 19:18 - Voice pack: static sha256 (closure carried Dio into the isolate - download failed after 366 MB on emulator), resume a whole .part; size shown while downloading; TRAPS 58 (ORT per ABI)
