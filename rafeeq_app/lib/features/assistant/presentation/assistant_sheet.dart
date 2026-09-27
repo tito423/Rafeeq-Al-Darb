@@ -53,6 +53,30 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
       AssistantCatalog(surahs: surahs, reciters: reciters, books: books));
 });
 
+/// False while a sheet or a dialog is on top: the button is drawn above the
+/// whole navigator, so without this it floated bright over their dim, and
+/// over «رفيق»'s own sheet (seen on emulator-5554, 2026-09-27).
+final assistantTopIsPage = ValueNotifier<bool>(true);
+
+class AssistantRouteObserver extends NavigatorObserver {
+  void _top(Route<dynamic>? r) {
+    if (r != null) assistantTopIsPage.value = r is PageRoute;
+  }
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) =>
+      _top(route);
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) =>
+      _top(previousRoute);
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) =>
+      _top(previousRoute);
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) =>
+      _top(newRoute);
+}
+
 /// «رفيق»'s button, over every screen once the shell is up. Hidden where it
 /// would be in the way: the tour, focus mode, a full-screen mushaf page.
 class AssistantMicButton extends ConsumerWidget {
@@ -67,6 +91,14 @@ class AssistantMicButton extends ConsumerWidget {
             ref.watch(activeTabProvider) == AppTab.quran);
     if (hidden) return const SizedBox.shrink();
     final pad = MediaQuery.paddingOf(context);
+    return ValueListenableBuilder<bool>(
+      valueListenable: assistantTopIsPage,
+      builder: (context, page, _) =>
+          page ? _button(pad) : const SizedBox.shrink(),
+    );
+  }
+
+  Widget _button(EdgeInsets pad) {
     // Bottom-left: in Arabic that is the far end of the navigation bar, above
     // «المزيد», where no screen of this app keeps a button of its own.
     return Positioned(
@@ -341,8 +373,11 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final listening = _phase == _Phase.listening;
+    // A Material 3 sheet is only as wide as what is in it; this one is
+    // the width of the screen.
     return SafeArea(
-      child: Padding(
+      child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,

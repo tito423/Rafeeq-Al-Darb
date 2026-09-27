@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 16:17 — IN PROGRESS — resume here**
+**2026-09-27 16:32 — IN PROGRESS — resume here**
 
-Assistant step 2 in code: SpeechRecognizer channel, mic button, sheet + executor (not built)
+Assistant: full-width sheet, mic hidden under sheets/dialogs (seen); voice injection on emulator not working yet
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

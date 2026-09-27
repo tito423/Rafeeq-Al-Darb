@@ -172,6 +172,7 @@ class RafeeqApp extends ConsumerWidget {
 
     return MaterialApp(
       navigatorKey: rootNavigatorKey,
+      navigatorObservers: [AssistantRouteObserver()],
       scaffoldMessengerKey: rootScaffoldMessengerKey,
       title: 'app.name'.tr(),
       debugShowCheckedModeBanner: false,
