@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/widgets/future_view.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/widgets/future_view.dart';
 import 'hadith_detail_screen.dart';
 
 /// All hadiths in one chapter — numbered exactly as they are in the book,

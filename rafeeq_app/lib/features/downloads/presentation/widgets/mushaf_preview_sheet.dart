@@ -1,17 +1,17 @@
-import '../../../../core/widgets/mirrored_network_image.dart';
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../quran/data/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../quran/data/mushaf_edition.dart';
-import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
 import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/mirrored_network_image.dart';
+import '../../../quran/data/mushaf_edition.dart';
+import '../../../quran/data/mushaf_page_service.dart';
+import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
 
 /// A luxury preview BottomSheet for a mushaf edition, inspired by Quran Flash.
 ///
@@ -287,7 +287,7 @@ class _MushafPreviewSheetState extends State<MushafPreviewSheet> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.offline_pin,
+                            const Icon(Icons.offline_pin,
                                 color: AppColors.success, size: 20),
                             const SizedBox(width: 6),
                             Text(
@@ -413,7 +413,6 @@ class _BookSpread extends StatelessWidget {
             textDirection: ui.TextDirection.rtl, // RTL: cover → page 1 → page 2
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
               // ── Leather cover ──
               QuranBookCoverThumbnail(
@@ -455,8 +454,6 @@ class _BookSpread extends StatelessWidget {
                         height: pageHeight,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
                             colors: [
                               Colors.black.withValues(alpha: 0.20),
                               Colors.black.withValues(alpha: 0.08),
@@ -564,7 +561,6 @@ class _PreviewPage extends StatelessWidget {
           color: bgColor,
           child: SvgPicture.string(
             snap.data!,
-            fit: BoxFit.contain,
             colorFilter: ColorFilter.mode(ink, BlendMode.srcIn),
           ),
         );

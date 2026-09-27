@@ -2,11 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/rafeeq_app.dart' show sharedPrefsProvider;
+import '../presentation/widgets/mushaf/page_turn.dart';
 
 // Re-exported so a caller that only wants the provider does not also have
 // to import the widget file for the enum.
 export '../presentation/widgets/mushaf/page_turn.dart' show PageTurnStyle;
-import '../presentation/widgets/mushaf/page_turn.dart';
 
 /// Which page-turn the mushaf uses, persisted.
 ///

@@ -127,7 +127,7 @@ class _RgbPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
     final w = size.width, h = size.height;
-    final tau = 2 * math.pi;
+    const tau = 2 * math.pi;
 
     // The ground: a vertical fall from navy to a deeper navy, so the screen
     // has a horizon rather than one flat colour.
@@ -250,7 +250,7 @@ class _RgbPainter extends CustomPainter {
   }();
 
   static void _paintStars(Canvas canvas, Size size, double t) {
-    final tau = 2 * math.pi;
+    const tau = 2 * math.pi;
     for (var i = 0; i < _stars.length; i++) {
       final twinkle = 0.5 + 0.5 * math.sin(t * tau * 3 + i * 1.7);
       final c = Offset(_stars[i].dx * size.width, _stars[i].dy * size.height);
@@ -370,7 +370,7 @@ class _RgbPainter extends CustomPainter {
     final cached = _lattice;
     if (cached != null && _latticeSize == size) return cached;
     final path = Path();
-    final r = _tile * 0.42;
+    const r = _tile * 0.42;
     for (var y = -_tile * 2; y < size.height + _tile * 2; y += _tile) {
       for (var x = -_tile * 2; x < size.width + _tile * 2; x += _tile) {
         final c = Offset(x + _tile / 2, y + _tile / 2);

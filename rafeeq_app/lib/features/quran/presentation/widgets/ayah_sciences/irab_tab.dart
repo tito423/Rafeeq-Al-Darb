@@ -79,7 +79,7 @@ class _SourceHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     final range = section.ayahTo > section.ayahFrom;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -93,7 +93,7 @@ class _SourceHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.menu_book_outlined, size: 16, color: gold),
+              const Icon(Icons.menu_book_outlined, size: 16, color: gold),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -164,7 +164,7 @@ class _ReferenceBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 2, 12, 12),
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:convert';
 import 'dart:ui' show Offset, Rect;
 
@@ -176,7 +178,7 @@ class AyahCoordsRepository {
       }
       _byAsset[assetPath] = parsed;
     } finally {
-      _loading.remove(assetPath);
+      unawaited(_loading.remove(assetPath));
     }
   }
 

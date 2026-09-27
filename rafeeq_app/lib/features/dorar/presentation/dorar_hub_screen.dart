@@ -1,14 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/external_link.dart';
-import 'dorar_history_screen.dart';
-import 'dorar_tafseer_screen.dart';
-
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/external_link.dart';
 import '../../../core/utils/screen_class.dart';
 import '../data/dorar_encyclopedia.dart';
+import 'dorar_history_screen.dart';
 import 'dorar_screen.dart';
+import 'dorar_tafseer_screen.dart';
 
 /// «الدرر السنية» inside the app: hadith grading and every encyclopaedia of
 /// dorar.net, read live with its own table of contents (owner, 2026-09-26:

@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/db/quran_repository.dart';
+import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/services/recitation_resume.dart';
 import '../../../../core/services/recitation_source.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
@@ -9,9 +12,6 @@ import '../../../../core/utils/digits.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/presentation/widgets/audio_common.dart' show surahTitle;
-import '../../../../core/services/recitation_resume.dart';
-import '../../../../core/services/ayah_audio_service.dart';
-import '../../../../core/db/quran_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 
 /// «اديني في خيارات تلاوة الآية بآية إمكانية اختيار القارئ في البلاير

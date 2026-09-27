@@ -114,12 +114,12 @@ class OfficialHijri {
   /// One `gToHCalendar` response -> its days. Public for the test.
   static Map<String, (int, int, int)> parseMonth(Map<String, dynamic> body) {
     final out = <String, (int, int, int)>{};
-    for (final d in body['data'] as List) {
-      final g = (d['gregorian']['date'] as String).split('-'); // dd-mm-yyyy
-      final h = d['hijri'];
+    for (final d in (body['data'] as List).cast<Map<String, dynamic>>()) {
+      final g = ((d['gregorian'] as Map)['date'] as String).split('-'); // dd-mm-yyyy
+      final h = d['hijri'] as Map<String, dynamic>;
       out['${g[2]}-${g[1]}-${g[0]}'] = (
         int.parse('${h['year']}'),
-        h['month']['number'] as int,
+        (h['month'] as Map)['number'] as int,
         int.parse('${h['day']}'),
       );
     }

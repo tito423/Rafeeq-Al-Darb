@@ -1,17 +1,7 @@
 /// «الحديث» — the nine collections, downloaded on demand, with their books,
 /// chapters and the search across them.
 library;
-import '../../../../core/widgets/paired_list_view.dart';
 import 'dart:async';
-
-import '../../../../core/widgets/accordion.dart';
-import '../../data/hidden_books.dart';
-import '../../../../core/utils/byte_formatter.dart';
-import '../../../../core/utils/digits.dart';
-
-import '../../../../core/widgets/arabic_text.dart';
-import '../../../../core/widgets/future_view.dart';
-import '../../../../core/utils/arabic_normalize.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -19,18 +9,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/app_config.dart';
 import '../../../../core/db/hadith_repository.dart';
-import '../../../../core/services/download_manager.dart';
-import '../widgets/book_card.dart';
-import '../../data/library_api_service.dart';
 import '../../../../core/i18n/proper_name.dart';
+import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/accordion.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/error_retry.dart';
+import '../../../../core/widgets/future_view.dart';
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../data/book_catalog.dart';
-import '../../data/hadith_imam_bios.dart';
 import '../../data/book_category.dart';
+import '../../data/hadith_imam_bios.dart';
+import '../../data/hidden_books.dart';
+import '../../data/library_api_service.dart';
 import '../screens/book_text_reader_screen.dart';
 import '../screens/hadith_book_screen.dart';
 import '../screens/hadith_detail_screen.dart';
+import '../widgets/book_card.dart';
 
 class HadithTab extends ConsumerStatefulWidget {
   const HadithTab({super.key});

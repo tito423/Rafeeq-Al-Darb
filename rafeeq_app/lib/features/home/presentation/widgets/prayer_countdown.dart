@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/digits.dart';
-
 import '../../../../core/theme/hero_surface.dart';
+import '../../../../core/utils/digits.dart';
 
 /// The live countdown to the next prayer, on the Home clock card.
 ///
@@ -100,7 +99,6 @@ class _PrayerCountdownState extends State<PrayerCountdown> {
       textDirection: TextDirection.ltr,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (hours > 0) ...[
             _Unit(

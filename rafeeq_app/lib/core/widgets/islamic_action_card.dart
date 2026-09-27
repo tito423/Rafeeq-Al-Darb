@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-
-import 'more_group_accent.dart';
 import '../theme/app_colors.dart';
 import '../theme/hero_surface.dart';
 import 'islamic_pattern.dart';
+import 'more_group_accent.dart';
 
 /// A tappable card with an illuminated Islamic ground.
 ///

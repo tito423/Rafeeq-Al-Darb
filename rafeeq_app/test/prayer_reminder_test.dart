@@ -41,7 +41,7 @@ void main() {
     test('a warning before a Fajr just after midnight lands the day before',
         () {
       // Fajr 00:10, warned 30 minutes ahead: 23:40 yesterday.
-      const at = Duration(hours: 0, minutes: 10 - 30);
+      const at = Duration(minutes: 10 - 30);
       expect(PrayerReminderService.wrapToDay(at), (23, 40));
     });
 

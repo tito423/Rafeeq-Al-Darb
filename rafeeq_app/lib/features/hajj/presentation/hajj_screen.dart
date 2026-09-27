@@ -9,25 +9,25 @@
 /// pebbles at the jamarat.
 library;
 
-import '../../../core/widgets/accordion.dart';
-import '../../library/presentation/widgets/listen_text_button.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
+import '../../../core/widgets/accordion.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../library/data/book_text.dart';
+import '../../library/presentation/widgets/listen_text_button.dart';
 import '../../tajweed/data/bundled_matn.dart';
-import '../data/hajj_text_scale.dart';
 import '../data/hajj_guide.dart';
 import '../data/hajj_step_text.dart';
+import '../data/hajj_text_scale.dart';
 import 'widgets/hajj_summary_card.dart';
-import 'widgets/mawaqit_today_card.dart';
 import 'widgets/jamarat_counter.dart';
 import 'widgets/journey_map.dart';
 import 'widgets/madhahib_section.dart';
+import 'widgets/mawaqit_today_card.dart';
 import 'widgets/sai_counter.dart';
 import 'widgets/tawaf_counter.dart';
 
@@ -257,7 +257,7 @@ class _StepCard extends StatelessWidget {
         ),
         title: Text(
           'hajj.step_${step.key}'.tr(),
-          style: TextStyle(fontWeight: FontWeight.w800),
+          style: const TextStyle(fontWeight: FontWeight.w800),
         ),
         subtitle: step.dayKey == null
             ? null

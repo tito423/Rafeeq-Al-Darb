@@ -1,9 +1,9 @@
 import 'package:geolocator/geolocator.dart';
-import 'notification_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'adhan_native.dart';
 import 'adhan_uri_bridge.dart';
+import 'notification_router.dart';
 
 /// The permission gates the Adhan actually depends on, and nothing else.
 ///

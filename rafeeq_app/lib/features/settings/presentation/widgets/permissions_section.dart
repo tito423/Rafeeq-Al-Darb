@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/services/adhan_uri_bridge.dart';
+import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/theme/app_colors.dart';
 
 /// P3‑41: the owner's real-device feedback asked directly for one place
@@ -92,7 +94,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
             onTap: () async {
               final status = await Permission.notification.request();
               if (!status.isGranted) await openAppSettings();
-              _refreshAll();
+              unawaited(_refreshAll());
             },
           ),
           const Divider(height: 1),
@@ -109,7 +111,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
               if (status == LocationPermission.deniedForever) {
                 await Geolocator.openAppSettings();
               }
-              _refreshAll();
+              unawaited(_refreshAll());
             },
           ),
           const Divider(height: 1),
@@ -130,7 +132,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
                 await AlarmPermissionsService.instance
                     .requestBatteryOptimizationExemption();
               }
-              _refreshAll();
+              unawaited(_refreshAll());
             },
           ),
           const Divider(height: 1),
@@ -141,7 +143,7 @@ class _PermissionsSectionState extends State<PermissionsSection>
             granted: _fullScreenOk,
             onTap: () async {
               await AdhanUriBridge.openFullScreenIntentSettings();
-              _refreshAll();
+              unawaited(_refreshAll());
             },
           ),
           // P3‑44: no public Android API can report whether this is

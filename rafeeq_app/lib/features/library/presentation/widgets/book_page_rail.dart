@@ -94,7 +94,6 @@ class BookPageRail extends StatelessWidget {
                             const RoundSliderOverlayShape(overlayRadius: 16),
                       ),
                       child: Slider(
-                        min: 0,
                         max: (doc.pages.length - 1).toDouble(),
                         value: pageIndex.toDouble(),
                         divisions:

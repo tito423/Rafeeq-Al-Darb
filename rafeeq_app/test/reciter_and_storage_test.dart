@@ -63,7 +63,7 @@ void main() {
         reason: 'show it on the app-level messenger, not a sheet’s');
     expect(header, contains('repeat.whenComplete'),
         reason: 'the banner has to be closed when the audio stops');
-    expect(header, isNot(contains("duration: const Duration(seconds: 4)")),
+    expect(header, isNot(contains('duration: const Duration(seconds: 4)')),
         reason: 'a timed toast for audio that is still playing is what stuck');
   });
 

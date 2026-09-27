@@ -33,7 +33,7 @@ void main() {
 
   test('nonsense finds nothing, and results are capped', () {
     expect(cat.search('قثقثقث'), isEmpty);
-    expect(cat.search('في', limit: 80).length, lessThanOrEqualTo(80));
+    expect(cat.search('في').length, lessThanOrEqualTo(80));
   });
 
   test('every library book mapped to Shamela exists in its catalogue', () {

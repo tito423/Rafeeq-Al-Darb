@@ -1,15 +1,15 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import 'official_hijri.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../i18n/hijri_months.dart';
 import '../models/prayer_times.dart';
 import '../utils/digits.dart';
 import '../utils/time_formatter.dart';
 import 'notification_router.dart';
+import 'official_hijri.dart';
 import 'prayer_times_service.dart';
 
 /// P2‑6 — a low-priority status-bar card showing the **next prayer** (name +

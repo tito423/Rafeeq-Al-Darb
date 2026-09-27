@@ -20,6 +20,7 @@
 library;
 
 import 'dart:async';
+import 'dart:convert' show jsonDecode;
 import 'dart:math' as math;
 
 // easy_localization re-exports package:intl, whose `TextDirection`
@@ -28,17 +29,16 @@ import 'dart:math' as math;
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert' show jsonDecode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/i18n/supported_locales.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/utils/screen_class.dart';
 import '../../data/tutorial_anchors.dart';
 import '../../data/tutorial_chapters.dart';
 import '../../data/tutorial_state.dart';
-import '../../../../core/utils/screen_class.dart';
 
 part 'tour_pieces.dart';
 part 'tour_slides.dart';
@@ -184,9 +184,8 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
         // The one place the visible stop changes — see [_shown].
         _shown = i;
       });
-      _move
-        ..reset()
-        ..forward();
+      _move.reset();
+      unawaited(_move.forward());
     });
   }
 

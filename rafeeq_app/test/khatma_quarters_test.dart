@@ -35,7 +35,7 @@ void main() {
     () {
       final khatma = Khatma(
         id: 't1',
-        startDate: DateTime(2026, 1, 1),
+        startDate: DateTime(2026),
         mode: KhatmaMode.dailyQuarters,
         dailyAmount: 3,
       );
@@ -49,7 +49,7 @@ void main() {
   test('4 quarters/day (a full hizb) matches the real page span exactly', () {
     final khatma = Khatma(
       id: 't2',
-      startDate: DateTime(2026, 1, 1),
+      startDate: DateTime(2026),
       mode: KhatmaMode.dailyQuarters,
       dailyAmount: 4,
     );
@@ -64,7 +64,7 @@ void main() {
       final startPage = rubPages[9];
       final khatma = Khatma(
         id: 't3',
-        startDate: DateTime(2026, 1, 1),
+        startDate: DateTime(2026),
         mode: KhatmaMode.dailyQuarters,
         dailyAmount: 2,
         startPage: startPage,
@@ -79,7 +79,7 @@ void main() {
     () {
       final khatma = Khatma(
         id: 't4',
-        startDate: DateTime(2026, 1, 1),
+        startDate: DateTime(2026),
         mode: KhatmaMode.dailyJuz,
         dailyAmount: 1,
       );
@@ -94,7 +94,7 @@ void main() {
   test('portionsRemaining counts the real quarter wirds to the end', () {
     final khatma = Khatma(
       id: 't5',
-      startDate: DateTime(2026, 1, 1),
+      startDate: DateTime(2026),
       mode: KhatmaMode.dailyQuarters,
       dailyAmount: 1,
     );

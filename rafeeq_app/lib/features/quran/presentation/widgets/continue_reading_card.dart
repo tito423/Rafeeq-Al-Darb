@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../khatma/presentation/khatma_card.dart' show HomeNavigate;
 import '../../data/mushaf_data_provider.dart';
 import '../../data/quran_jump_provider.dart';
@@ -85,7 +85,7 @@ class _ContinueReadingBodyState extends ConsumerState<_ContinueReadingBody> {
         if (surah == null) return const SizedBox.shrink();
 
         final theme = Theme.of(context);
-        final gold = AppColors.gold;
+        const gold = AppColors.gold;
 
         return Card(
           clipBehavior: Clip.antiAlias,
@@ -98,7 +98,7 @@ class _ContinueReadingBodyState extends ConsumerState<_ContinueReadingBody> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Icon(Icons.menu_book_outlined, color: gold, size: 32),
+                  const Icon(Icons.menu_book_outlined, color: gold, size: 32),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(

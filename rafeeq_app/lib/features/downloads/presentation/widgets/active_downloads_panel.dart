@@ -5,20 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/download_manager.dart';
-import '../../../quran/data/mushaf_page_service.dart';
+import '../../../../core/services/quran_translation_store.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
-import '../../../../core/services/quran_translation_store.dart';
 import '../../../hifz/data/tasmee_engine.dart';
 import '../../../library/data/book_catalog.dart';
 import '../../../library/data/library_api_service.dart';
 import '../../../library/data/tts/open_voice.dart';
-import '../../../quran/data/quran_translation_catalog.dart';
-import '../../data/reciters_provider.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../../quran/data/mushaf_edition.dart';
+import '../../../quran/data/mushaf_page_service.dart';
+import '../../../quran/data/quran_translation_catalog.dart';
 import '../../../quran_audio/data/ayah_download_notice.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/data/mp3quran_api.dart';
@@ -27,6 +26,7 @@ import '../../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../../quran_audio/presentation/reciter_screen.dart';
 import '../../../quran_audio/presentation/widgets/audio_common.dart';
 import '../../../shamela/data/shamela_import_service.dart';
+import '../../data/reciters_provider.dart';
 
 /// «جارٍ التنزيل الآن» on the Downloads hub: every transfer running, each
 /// with what it is and how far it has got. Moved out of downloads_screen.dart

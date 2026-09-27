@@ -20,10 +20,10 @@ import 'package:flutter/material.dart';
 
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/theme/app_colors.dart';
-import 'tutorial_anchors.dart';
 import '../../hifz/presentation/hifz_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../tajweed/presentation/screens/tajweed_levels_screen.dart';
+import 'tutorial_anchors.dart';
 
 /// One stop on the tour.
 ///

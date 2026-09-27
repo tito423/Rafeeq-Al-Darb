@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../data/reader_name_provider.dart';
-import '../../../../core/widgets/fitted_sheet.dart';
 
 Future<void> showReaderNameSheet(BuildContext context) {
   return showFittedSheet<void>(

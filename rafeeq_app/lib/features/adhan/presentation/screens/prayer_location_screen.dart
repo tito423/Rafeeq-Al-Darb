@@ -8,8 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/city_catalog.dart';
 import '../../../../core/services/manual_location.dart';
 import '../../../../core/utils/user_error.dart';
-import '../../../home/data/prayer_controller.dart';
 import '../../../../core/widgets/readable_insets.dart';
+import '../../../home/data/prayer_controller.dart';
 
 /// The row in Adhan settings: where the prayer times are calculated for, and
 /// the way into [PrayerLocationScreen].
@@ -227,7 +227,7 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
               ListTile(
                 // «تحديد يدوي» was a row that did nothing when tapped: it
                 // takes the reader to the search that sets it.
-                onTap: () => _queryFocus.requestFocus(),
+                onTap: _queryFocus.requestFocus,
                 leading: const Icon(Icons.edit_location_alt),
                 title: Text('location.manual'.tr()),
                 subtitle: Text(_manual == null

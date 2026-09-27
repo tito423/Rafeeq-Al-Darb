@@ -89,8 +89,7 @@ extension _ContinuousRecovery on AyahAudioService {
   /// which the app keeps on its own bucket, rather than silence.
   Future<bool> _playBackupVoice(
       Ayah ayah, QuranRepository repo, String? title) async {
-    final ok = await play(ayah, repo,
-        edition: AyahAudioService.defaultEdition, title: title);
+    final ok = await play(ayah, repo, title: title);
     if (ok) _noticeVoice();
     return ok;
   }

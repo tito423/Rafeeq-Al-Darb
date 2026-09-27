@@ -1,8 +1,8 @@
 import 'dart:async';
-import '../i18n/isolate_strings.dart';
 
 import 'package:background_downloader/background_downloader.dart';
 
+import '../i18n/isolate_strings.dart';
 import 'notification_router.dart';
 
 /// The one place `background_downloader` is configured for the whole app.
@@ -219,6 +219,9 @@ class DownloadEngine {
   /// of times, and from anywhere.
   static Stream<TaskUpdate> get updates => _updates.stream;
 
+  // Lives as long as the process (a singleton, set up once), so it is
+  // deliberately never cancelled/closed.
+  // ignore: cancel_subscriptions
   static StreamSubscription<TaskUpdate>? _sourceSub;
 
   static bool _askedNotifications = false;

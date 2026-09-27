@@ -75,7 +75,6 @@ class PrayerReminderService {
         _channelId,
         _channelName,
         description: 'notif.prayer_reminder_channel_desc'.tr(),
-        importance: Importance.defaultImportance,
       ),
     );
     _channelReady = true;
@@ -178,8 +177,6 @@ class PrayerReminderService {
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
-          importance: Importance.defaultImportance,
-          priority: Priority.defaultPriority,
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,

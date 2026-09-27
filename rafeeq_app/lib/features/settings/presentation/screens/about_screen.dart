@@ -4,17 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/i18n/supported_locales.dart';
+import '../../../../core/models/prayer_calculation_methods.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../../core/widgets/readable_insets.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
-import '../../../../core/models/prayer_calculation_methods.dart';
 import '../../../channels/data/islamic_channels.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../library/data/book_catalog.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../../quran/data/quran_translation_catalog.dart';
-import '../../../../core/widgets/readable_insets.dart';
 
 /// The "about" page: who built the app, what version this is, and what it can
 /// actually do.

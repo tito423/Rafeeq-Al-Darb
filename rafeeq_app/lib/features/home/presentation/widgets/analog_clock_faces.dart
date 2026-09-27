@@ -487,10 +487,10 @@ class _ArabicNumeralsPainter extends _FacePainter {
       c,
       r - 5,
       Paint()
-        ..shader = RadialGradient(
+        ..shader = const RadialGradient(
           colors: [
-            const Color(0xFF15243A),
-            const Color(0xFF060A12),
+            Color(0xFF15243A),
+            Color(0xFF060A12),
           ],
         ).createShader(Rect.fromCircle(center: c, radius: r)),
     );

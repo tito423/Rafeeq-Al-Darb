@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
-import '../utils/digits.dart';
+
 import '../utils/byte_formatter.dart' show ratio;
+import '../utils/digits.dart';
 
 /// P3-46: thin bridge to the real Android foreground service
 /// (`DownloadForegroundService.kt`) that keeps this process from being

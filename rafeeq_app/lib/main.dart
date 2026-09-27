@@ -1,45 +1,45 @@
 import 'dart:async';
 
-import 'features/quran_audio/data/ayah_recitation_library.dart';
-import 'core/services/recitation_source.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter_timezone/flutter_timezone.dart';
 
 import 'adhan_entry.dart';
 import 'app/navigation.dart';
+import 'app/notification_open.dart';
 import 'app/rafeeq_app.dart';
 import 'core/i18n/supported_locales.dart';
-import 'core/services/sync_service.dart';
-import 'core/services/syncable_shared_preferences.dart';
 import 'core/services/alarm_permissions_service.dart';
 import 'core/services/ayah_audio_service.dart';
-import 'core/services/quran_translation_store.dart';
 import 'core/services/download_engine.dart';
-import 'core/services/sunan_suwar_reminder_service.dart';
 import 'core/services/notification_router.dart';
+import 'core/services/quran_translation_store.dart';
+import 'core/services/recitation_resume.dart';
+import 'core/services/recitation_source.dart';
+import 'core/services/source_rules.dart';
+import 'core/services/sunan_suwar_reminder_service.dart';
+import 'core/services/sync_service.dart';
+import 'core/services/syncable_shared_preferences.dart';
 import 'core/utils/digits.dart';
 import 'core/utils/startup_trace.dart';
-import 'features/quotes/data/quote_reminder_service.dart';
 import 'features/downloads/presentation/download_navigation.dart';
-import 'app/notification_open.dart';
+import 'features/quotes/data/quote_reminder_service.dart';
 import 'features/quotes/presentation/quote_navigation.dart';
+import 'features/quran_audio/data/ayah_recitation_library.dart';
 import 'features/quran_audio/data/quran_audio_player.dart';
 import 'features/quran_audio/presentation/widgets/audio_common.dart';
-import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 import 'features/shamela/data/shamela_import_service.dart';
-import 'core/services/source_rules.dart';
-import 'core/services/recitation_resume.dart';
 import 'features/shamela/data/shamela_library.dart';
+import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 
 /// The Adhan alert screen's Dart entrypoint, run by `AdhanActivity` (Kotlin)
 /// in its own Flutter engine instead of [main].
@@ -197,16 +197,6 @@ Future<void> main() async {
       supportedLocales: kSupportedLocales,
       path: 'assets/translations',
       fallbackLocale: const Locale('ar'),
-      // P3‑37: `startLocale` used to be hardcoded to Arabic, so a fresh
-      // install always opened in Arabic regardless of the device's own
-      // language — omitting it lets easy_localization detect the device's
-      // system locale on the very first launch (matched against
-      // `supportedLocales`, falling back to `fallbackLocale` above for any
-      // device language this app doesn't ship a translation for). Once the
-      // user picks a language explicitly (or this auto-detected default is
-      // used once), `saveLocale: true` persists it — this only affects the
-      // *very first* launch before anything is saved.
-      saveLocale: true,
       // easy_localization defaults `ignorePluralRules` to TRUE, which means
       // `.plural()` only ever picks zero/one/two/other and the `few` and
       // `many` forms in every locale file are dead. Russian showed «7277

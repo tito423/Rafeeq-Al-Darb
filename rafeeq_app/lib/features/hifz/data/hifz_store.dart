@@ -142,7 +142,6 @@ class HifzStore extends StateNotifier<HifzState> {
       HifzAyah(
         box: 0,
         dueDay: now,
-        streak: 0,
         bestPercent: cur?.bestPercent ?? -1,
       ),
     );

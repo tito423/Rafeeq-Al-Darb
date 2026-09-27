@@ -206,7 +206,6 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
     final chars = _shown.split('');
     return Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         for (var i = 0; i < chars.length; i++)
           if (chars[i] == ':')
@@ -259,7 +258,6 @@ class _DigitalClockFaceViewState extends State<DigitalClockFaceView>
   // ── 6. Arabic calligraphy ─────────────────────────────────────────────
   Widget _arabic(double h) => Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             // This face is the one that always shows Arabic-Indic digits —

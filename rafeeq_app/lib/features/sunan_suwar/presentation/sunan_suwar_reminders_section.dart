@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/digits.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/sunan_suwar_catalog.dart';
 import '../data/sunan_suwar_store.dart';
@@ -21,7 +21,7 @@ class SunanSuwarRemindersSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mushaf = ref.watch(mushafDataProvider).valueOrNull;
     final reminders = ref.watch(sunanSuwarStoreProvider);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     final scheme = Theme.of(context).colorScheme;
 
     return Card(

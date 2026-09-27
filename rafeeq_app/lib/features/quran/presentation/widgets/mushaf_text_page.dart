@@ -1,5 +1,3 @@
-import 'mushaf/ayah_marker.dart';
-import 'mushaf/ayah_wash_painter.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -10,10 +8,12 @@ import '../../../../core/db/models.dart';
 import '../../data/basmala.dart';
 import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
-import '../../data/quran_zoom_provider.dart';
 import '../../data/quran_typography.dart';
-import 'mushaf_frame_painter.dart';
+import '../../data/quran_zoom_provider.dart';
 import '../../data/text_layout_provider.dart';
+import 'mushaf/ayah_marker.dart';
+import 'mushaf/ayah_wash_painter.dart';
+import 'mushaf_frame_painter.dart';
 
 part 'mushaf_ayah_row.dart';
 
@@ -478,7 +478,6 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
             // showing — which is the two «سُورَةُ البَقَرَة» in the owner's
             // landscape screenshot, one of them sitting on the first line.
             pinned: !isLandscape,
-            floating: false,
             automaticallyImplyLeading: false,
             backgroundColor: paper,
             surfaceTintColor: Colors.transparent,

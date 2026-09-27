@@ -302,7 +302,6 @@ class Khatma {
       portionsRead: index,
       lastReadDate: hasRecord ? target.lastReadBefore : lastReadDate,
       streak: hasRecord ? (target.streakBefore ?? streak) : streak,
-      completedAt: null,
       reminderTime: reminderTime,
       wirds: [
         for (final w in wirds)

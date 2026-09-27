@@ -1,6 +1,4 @@
 import 'dart:async';
-import '../../../../core/widgets/remote_tap.dart';
-import '../../../../core/services/notification_router.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +8,12 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../app/rafeeq_app.dart';
 import '../../../../app/shell/app_shell.dart';
+import '../../../../core/services/notification_router.dart';
+import '../../../../core/widgets/remote_tap.dart';
 import '../../../onboarding/data/onboarding_state.dart';
-import '../widgets/whole_clip.dart';
-import '../../data/splash_video_provider.dart';
 import '../../../onboarding/presentation/screens/permissions_intro_screen.dart';
+import '../../data/splash_video_provider.dart';
+import '../widgets/whole_clip.dart';
 
 /// The colour the OS paints at launch, and the colour of the intro's first
 /// frame — `#2B516B`, the clip's own median pixel. Kept beside the native

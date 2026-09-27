@@ -1,28 +1,29 @@
-import '../../../more/presentation/widgets/sign_in_offer.dart';
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/widgets/headed_list_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/rafeeq_app.dart' show sharedPrefsProvider;
 import '../../../../app/shell/app_shell.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/error_retry.dart';
-import '../../../downloads/presentation/widgets/mushaf_download_tile.dart'
-    show MushafDownloadTile;
-import '../../../quran/data/mushaf_edition.dart';
-import '../../data/onboarding_state.dart';
-import '../../../home/data/prayer_controller.dart'
-    show prayerControllerProvider;
 import '../../../../core/config/app_config.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/download_manager.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart' show formatBytes;
 import '../../../../core/utils/digits.dart' show trn;
+import '../../../../core/widgets/error_retry.dart';
+import '../../../../core/widgets/headed_list_layout.dart';
+import '../../../downloads/presentation/widgets/mushaf_download_tile.dart'
+    show MushafDownloadTile;
 import '../../../hifz/data/tasmee_engine.dart' show tasmeeDownloadBytes;
+import '../../../home/data/prayer_controller.dart'
+    show prayerControllerProvider;
 import '../../../library/data/tts/open_voice.dart';
+import '../../../more/presentation/widgets/sign_in_offer.dart';
+import '../../../quran/data/mushaf_edition.dart';
 import '../../data/offline_pack_sizes.dart';
+import '../../data/onboarding_state.dart';
 import '../widgets/content_pack_tile.dart';
 import '../widgets/offline_pack_tiles.dart';
 
@@ -78,11 +79,11 @@ class OnboardingScreen extends ConsumerWidget {
     // `context.locale` (which walks up an `InheritedWidget`) throws
     // "Looking up a deactivated widget's ancestor is unsafe."
     final localeCode = context.locale.languageCode;
-    Navigator.of(context).pushReplacement(
+    unawaited(Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => AppShell(key: ValueKey(localeCode)),
       ),
-    );
+    ));
   }
 
   @override

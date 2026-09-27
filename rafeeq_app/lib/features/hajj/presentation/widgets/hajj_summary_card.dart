@@ -39,7 +39,7 @@ class HajjSummaryCard extends ConsumerWidget {
                   ? 'hajj.summary_umrah'
                   : 'hajj.summary_hajj')
               .tr(),
-          style: TextStyle(fontWeight: FontWeight.w800),
+          style: const TextStyle(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
           'hajj.summary_hint'.tr(),

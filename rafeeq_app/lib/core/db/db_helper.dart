@@ -93,7 +93,7 @@ class DbHelper {
 
     if (_cache[fileName] != null) return _cache[fileName]!;
     if (!File(dbPath).existsSync()) return null;
-    final db = await openDatabase(dbPath, readOnly: false, version: 1);
+    final db = await openDatabase(dbPath, version: 1);
     _cache[fileName] = db;
     return db;
   }

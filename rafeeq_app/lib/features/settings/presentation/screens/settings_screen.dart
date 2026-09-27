@@ -1,37 +1,37 @@
-import '../../../../core/widgets/paired_list_view.dart';
-import '../../../../core/widgets/more_group_accent.dart';
-import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
-import '../../../assistant/presentation/assistant_settings_card.dart';
-import '../widgets/app_font_picker.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/accordion.dart';
-import '../../../../core/widgets/islamic_action_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/app_config.dart';
+import '../../../../core/i18n/supported_locales.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../../core/utils/external_link.dart';
+import '../../../../core/utils/screen_class.dart';
+import '../../../../core/widgets/accordion.dart';
+import '../../../../core/widgets/islamic_action_card.dart';
+import '../../../../core/widgets/more_group_accent.dart';
+import '../../../../core/widgets/paired_list_view.dart';
+import '../../../../core/widgets/readable_insets.dart';
+import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
+import '../../../assistant/presentation/assistant_settings_card.dart';
+import '../../../fasting/presentation/fasting_reminder_section.dart';
 import '../../../home/data/clock_settings_provider.dart';
+import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
+import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quotes/presentation/quote_reminder_section.dart';
 import '../../../quran/data/mushaf_theme.dart';
 import '../../../quran/presentation/widgets/mushaf_theme_picker.dart';
-import '../../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../../splash/data/splash_video_provider.dart';
 import '../../../splash/presentation/screens/splash_preview_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
-import '../../../library/presentation/widgets/book_voice_section.dart';
-import '../../../fasting/presentation/fasting_reminder_section.dart';
 import '../../../tasbih_reminder/presentation/tasbih_reminder_section.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
+import '../widgets/app_font_picker.dart';
 import '../widgets/non_arabic_reading_card.dart';
-import '../../../../core/i18n/supported_locales.dart';
+import '../widgets/permissions_section.dart';
 import 'about_screen.dart';
 import 'sources_screen.dart';
-import '../../../tutorial/data/tutorial_anchors.dart';
-import '../widgets/permissions_section.dart';
-import '../../../../core/widgets/readable_insets.dart';
-import '../../../../core/utils/screen_class.dart';
 
 /// Every actual setting, as a `Column` with no scroll view and no `Scaffold`
 /// of its own.
@@ -381,7 +381,7 @@ class SettingsBody extends ConsumerWidget {
           CollapsibleSection(
             title: 'settings.permissions'.tr(),
             icon: Icons.verified_user_rounded,
-            children: [PermissionsSection()],
+            children: [const PermissionsSection()],
           ),
 
           CollapsibleSection(
@@ -401,7 +401,7 @@ class SettingsBody extends ConsumerWidget {
           CollapsibleSection(
             title: 'sunan_suwar.reminders_section_title'.tr(),
             icon: Icons.menu_book_rounded,
-            children: [SunanSuwarRemindersSection()],
+            children: [const SunanSuwarRemindersSection()],
           ),
 
           CollapsibleSection(
@@ -422,7 +422,7 @@ class SettingsBody extends ConsumerWidget {
           CollapsibleSection(
             title: 'quotes.section_title'.tr(),
             icon: Icons.format_quote_rounded,
-            children: [QuoteReminderSection()],
+            children: [const QuoteReminderSection()],
           ),
         ],
         if (part == SettingsPart.about) ...[

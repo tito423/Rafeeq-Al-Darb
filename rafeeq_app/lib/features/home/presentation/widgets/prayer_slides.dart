@@ -1,5 +1,4 @@
 import 'dart:async';
-import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -9,18 +8,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
 import '../../../../core/models/prayer_times.dart';
-import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/services/adhan_native.dart';
+import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/utils/digits.dart' show localizeDigits, uiLanguageCode;
 import '../../../../core/utils/time_formatter.dart';
 import '../../../../core/widgets/card_route.dart';
+import '../../../../core/widgets/remote_tap.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
 import '../../../adhan/data/adhan_scheduler.dart';
 import '../../../adhan/data/adhan_settings_provider.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
+import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../data/prayer_controller.dart';
 import 'prayer_slide_adhan_extras.dart';
-import '../../../../core/widgets/remote_tap.dart';
 
 /// The six timings, in the order they occur.
 const prayerSlideOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -206,7 +206,6 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
         // at the right-hand (leading) end on its own. Setting `reverse`
         // here double-flipped it and laid the day out left-to-right.
         itemCount: prayerSlideOrder.length,
-        padEnds: true,
         itemBuilder: (context, index) {
           final key = prayerSlideOrder[index];
           final distance = (_page - index).abs().clamp(0.0, 1.0);

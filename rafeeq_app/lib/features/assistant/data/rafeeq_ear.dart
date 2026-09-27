@@ -140,13 +140,9 @@ class RafeeqEar {
         config: so.VadModelConfig(
           sileroVad: so.SileroVadModelConfig(
             model: p.join(dir, 'silero_vad.onnx'),
-            threshold: 0.5,
             minSilenceDuration: 0.6,
-            minSpeechDuration: 0.25,
             maxSpeechDuration: 10,
           ),
-          sampleRate: 16000,
-          numThreads: 1,
           debug: false,
         ),
         bufferSizeInSeconds: 30,

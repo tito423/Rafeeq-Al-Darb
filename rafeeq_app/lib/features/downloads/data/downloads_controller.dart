@@ -1,21 +1,21 @@
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+import '../../../core/db/db_helper.dart';
+import '../../../core/db/sciences_repository.dart';
+import '../../../core/services/download_manager.dart';
 import '../../assistant/data/assistant_settings.dart';
 import '../../assistant/data/rafeeq_ear.dart';
 import '../../assistant/data/rafeeq_voice_pack.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../quran_audio/data/quran_audio_library.dart';
-import '../../quran_audio/data/ayah_recitation_library.dart';
-import '../../../core/services/download_manager.dart';
-import '../../quran/data/mushaf_page_service.dart';
-import '../../quran/data/mushaf_edition.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/data/tts/open_voice.dart';
-import '../../../core/db/db_helper.dart';
-import '../../../core/db/sciences_repository.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
+import '../../quran/data/mushaf_edition.dart';
+import '../../quran/data/mushaf_page_service.dart';
+import '../../quran_audio/data/ayah_recitation_library.dart';
+import '../../quran_audio/data/quran_audio_library.dart';
 
 /// P2‑5 — a read-only aggregator over every place the app stores downloaded
 /// content, so the Downloads hub can show one storage picture and free space

@@ -152,12 +152,12 @@ class BookText {
   factory BookText.fromJson(Map<String, dynamic> j) {
     final m = (j['meta'] as Map).cast<String, dynamic>();
     final pages = [
-      for (final p in (j['pages'] as List? ?? const []))
+      for (final p in (j['pages'] as List? ?? const []).cast<Map<String, dynamic>>())
         BookPage(
           printedPage: (p['p'] ?? 0) as int,
           editorOnly: p['e'] == 1,
           paras: [
-            for (final a in (p['paras'] as List? ?? const []))
+            for (final a in (p['paras'] as List? ?? const []).cast<Map<String, dynamic>>())
               if (!_isNoise((a['t'] ?? '') as String))
                 BookPara(
                   text: (a['t'] ?? '') as String,
@@ -173,7 +173,7 @@ class BookText {
         ((m['printReliable'] ?? false) as bool) &&
         _printedNumbersUsable(pages);
     final toc = [
-      for (final t in (j['toc'] as List? ?? const []))
+      for (final t in (j['toc'] as List? ?? const []).cast<Map<String, dynamic>>())
         BookSection(
           title: (t['title'] ?? '') as String,
           page: (t['page'] ?? 0) as int,

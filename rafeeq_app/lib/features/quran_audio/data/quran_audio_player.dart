@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 
+import '../../../core/config/content_mirrors.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/utils/http_status_probe.dart';
-import '../../../core/config/content_mirrors.dart';
 import 'surah_fallback.dart';
 
 /// One thing the player can play: a downloaded surah, a streamed one, or a
@@ -440,7 +440,7 @@ class QuranAudioPlayer extends ChangeNotifier {
     if (active) await _player.stop();
     setSleep(SleepMode.off);
     for (final s in _subs) {
-      s.cancel();
+      unawaited(s.cancel());
     }
     _subs.clear();
     _queue = const [];

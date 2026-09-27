@@ -1,4 +1,3 @@
-import '../config/content_mirrors.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -9,6 +8,7 @@ import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
 import '../config/app_config.dart';
+import '../config/content_mirrors.dart';
 
 /// On-device storage for the Quran translations that are **not** bundled.
 ///

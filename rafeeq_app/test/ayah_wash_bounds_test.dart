@@ -31,16 +31,16 @@ void main() {
       ),
     ));
     final p = key.currentContext!.findRenderObject()! as RenderParagraph;
-    final m1 = v1.length; // the first marker's placeholder offset
+    const m1 = v1.length; // the first marker's placeholder offset
     final markerBoxes = p.getBoxesForSelection(
-        TextSelection(baseOffset: m1, extentOffset: m1 + 1));
+        const TextSelection(baseOffset: m1, extentOffset: m1 + 1));
     expect(markerBoxes, isNotEmpty);
     final marker1 = markerBoxes.first.toRect();
 
-    final start = m1 + 1;
-    final end = start + v2.length - 1; // trailing space excluded
+    const start = m1 + 1;
+    const end = start + v2.length - 1; // trailing space excluded
     final wash = p.getBoxesForSelection(
-        TextSelection(baseOffset: start, extentOffset: end));
+        const TextSelection(baseOffset: start, extentOffset: end));
     expect(wash, isNotEmpty);
     for (final b in wash) {
       final overlap = b.toRect().deflate(1).intersect(marker1.deflate(1));

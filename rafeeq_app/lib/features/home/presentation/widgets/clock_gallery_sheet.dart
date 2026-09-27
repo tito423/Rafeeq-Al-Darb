@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/widgets/card_route.dart';
+import '../../../../core/widgets/remote_tap.dart';
 import '../../data/clock_settings_provider.dart';
 import 'analog_clock_faces.dart';
 import 'digital_clock_faces.dart';
-import '../../../../core/widgets/remote_tap.dart';
 
 /// The clock gallery — twenty live faces, ten digital and ten analogue.
 ///

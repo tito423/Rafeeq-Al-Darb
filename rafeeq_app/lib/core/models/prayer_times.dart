@@ -36,7 +36,6 @@ class PrayerTimes {
         maghrib: '--:--',
         isha: '--:--',
         cityName: '',
-        countryName: '',
         hijriDate: '',
         gregorianDate: '',
       );

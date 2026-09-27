@@ -29,24 +29,24 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // The ayah text and the font it is drawn in, since 2026-09-25
       // (scripts/build_quran_text_kfgqpc.py; licence in
       // assets/fonts/KFGQPC-HAFS-LICENSE.txt).
-      SourceEntry('مجمع الملك فهد لطباعة المصحف الشريف',
+      const SourceEntry('مجمع الملك فهد لطباعة المصحف الشريف',
           'https://qurancomplex.gov.sa', 'about.src_kfgqpc'),
       // The i'rab tab since 2026-09-26: Shamela 23584, its 27 damaged sections
       // transcribed from the printed edition and the rest checked against it
       // (scripts/build_irab_daas_final.py; CONTENT-LICENSES.md).
-      SourceEntry('المكتبة الشاملة — إعراب القرآن الكريم (الدعاس)',
+      const SourceEntry('المكتبة الشاملة — إعراب القرآن الكريم (الدعاس)',
           'https://shamela.ws/book/23584', 'about.src_irab_daas'),
       // Where al-Da'as's own commentary is wrong in all four copies, the
       // fix is taken from these named books (scripts/irab_daas_quran_
       // corrections.json), read on tafsir.app on 2026-09-26.
-      SourceEntry('tafsir.app — الجدول، إعراب درويش، الإعراب الميسر',
+      const SourceEntry('tafsir.app — الجدول، إعراب درويش، الإعراب الميسر',
           'https://tafsir.app', 'about.src_irab_check'),
-      SourceEntry('quran.com', 'https://quran.com', 'about.src_qurancom'),
-      SourceEntry('api.alquran.cloud', 'https://alquran.cloud',
+      const SourceEntry('quran.com', 'https://quran.com', 'about.src_qurancom'),
+      const SourceEntry('api.alquran.cloud', 'https://alquran.cloud',
           'about.src_alquran'),
-      SourceEntry('quran/quran_android (mushaf images + ayahinfo)',
+      const SourceEntry('quran/quran_android (mushaf images + ayahinfo)',
           'https://github.com/quran/quran_android', 'about.src_svg'),
-      SourceEntry('archive.org', 'https://archive.org', 'about.src_archive'),
+      const SourceEntry('archive.org', 'https://archive.org', 'about.src_archive'),
     ]
   ),
   // Each scanned printing, named with the item it came from and the rights
@@ -67,46 +67,46 @@ final sourceGroups = <(String, List<SourceEntry>)>[
   (
     'about.src_audio',
     [
-      SourceEntry('everyayah.com', 'https://everyayah.com', 'about.src_everyayah'),
-      SourceEntry('cdn.islamic.network', 'https://islamic.network',
+      const SourceEntry('everyayah.com', 'https://everyayah.com', 'about.src_everyayah'),
+      const SourceEntry('cdn.islamic.network', 'https://islamic.network',
           'about.src_islamicnetwork'),
-      SourceEntry('mp3quran.net', 'https://mp3quran.net', 'about.src_mp3quran'),
+      const SourceEntry('mp3quran.net', 'https://mp3quran.net', 'about.src_mp3quran'),
       // The book reader's downloadable voice: the speaker and the corpus
       // (CC BY 4.0) and the phonetiser rules (CC BY-NC 4.0) are Halabi's, the
       // trained models nipponjo's. See CONTENT-LICENSES.md.
-      SourceEntry('Arabic Speech Corpus', 'http://en.arabicspeechcorpus.com/',
+      const SourceEntry('Arabic Speech Corpus', 'http://en.arabicspeechcorpus.com/',
           'about.src_asc'),
-      SourceEntry('nipponjo/tts_arabic', 'https://github.com/nipponjo/tts_arabic',
+      const SourceEntry('nipponjo/tts_arabic', 'https://github.com/nipponjo/tts_arabic',
           'about.src_tts_arabic'),
       // «رفيق»'s downloadable voice pack (scripts/publish_rafeeq_voice_pack.py):
       // Meta's recogniser (Apache-2.0), silero VAD (MIT), run by sherpa-onnx
       // (Apache-2.0).
-      SourceEntry('Omnilingual ASR — Meta',
+      const SourceEntry('Omnilingual ASR — Meta',
           'https://github.com/facebookresearch/omnilingual-asr',
           'about.src_omnilingual'),
-      SourceEntry('Silero VAD', 'https://github.com/snakers4/silero-vad',
+      const SourceEntry('Silero VAD', 'https://github.com/snakers4/silero-vad',
           'about.src_silero'),
-      SourceEntry('sherpa-onnx', 'https://github.com/k2-fsa/sherpa-onnx',
+      const SourceEntry('sherpa-onnx', 'https://github.com/k2-fsa/sherpa-onnx',
           'about.src_sherpa'),
     ]
   ),
   (
     'about.src_hadith',
     [
-      SourceEntry('sunnah.com', 'https://sunnah.com', 'about.src_sunnah'),
-      SourceEntry('المكتبة الشاملة', 'https://shamela.ws', 'about.src_shamela'),
+      const SourceEntry('sunnah.com', 'https://sunnah.com', 'about.src_sunnah'),
+      const SourceEntry('المكتبة الشاملة', 'https://shamela.ws', 'about.src_shamela'),
       // Named separately from Shamela itself: these are the two edited
       // editions the app's hadith gradings actually come from, and a grading
       // is only worth anything if the reader can see whose it is.
-      SourceEntry('مسند أحمد — ط الرسالة', 'https://shamela.ws/book/25794',
+      const SourceEntry('مسند أحمد — ط الرسالة', 'https://shamela.ws/book/25794',
           'about.src_musnad_arnaut'),
-      SourceEntry('سنن الدارمي — ت حسين أسد', 'https://shamela.ws/book/21795',
+      const SourceEntry('سنن الدارمي — ت حسين أسد', 'https://shamela.ws/book/21795',
           'about.src_darimi_asad'),
       // موسوعة الأحاديث النبوية — the separate multilingual collection. Its
       // own republication terms require clear credit to the publisher and
       // the source; this row is part of meeting them, alongside the credit
       // on the collection screen and on every hadith it shows.
-      SourceEntry('hadeethenc.com', 'https://hadeethenc.com',
+      const SourceEntry('hadeethenc.com', 'https://hadeethenc.com',
           'about.src_hadeethenc'),
     ]
   ),
@@ -124,19 +124,19 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // Since 2026-09-23 the guide reads الفقه المنهجي, not al-Nawawi's
       // «الإيضاح» (which is now a library book like any other) -
       // scripts/build_hajj_guide_book.py.
-      SourceEntry(
+      const SourceEntry(
           'الفقه المنهجي على مذهب الإمام الشافعي — الخن، البغا، الشربجي',
           'https://shamela.ws/book/6369',
           'hajj.source'),
       // «في المذاهب الأربعة» under each step (2026-09-22), verbatim from
       // al-Jaziri's كتاب الحج — scripts/build_hajj_madhahib.py.
-      SourceEntry(
+      const SourceEntry(
           'الفقه على المذاهب الأربعة — عبد الرحمن الجزيري',
           'https://shamela.ws/book/9849',
           'hajj.madhahib_title'),
       // «المواقيت اليوم» under the miqat steps (2026-09-23): the ministry's
       // own sentence per miqat, verbatim - assets/data/mawaqit_today.json.
-      SourceEntry(
+      const SourceEntry(
           'وزارة الحج والعمرة — المواقيت',
           'https://haj.gov.sa/ar/Umrah/Miqaats',
           'hajj.mawaqit_today_title'),
@@ -149,24 +149,24 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // own catalogue entries; this row is the picture behind them. Only
       // public-domain and CC0 files were taken, and each file's licence,
       // author and Commons page is in `assets/data/quote_backgrounds.json`.
-      SourceEntry('Wikimedia Commons', 'https://commons.wikimedia.org',
+      const SourceEntry('Wikimedia Commons', 'https://commons.wikimedia.org',
           'about.src_commons'),
       // The Azkar grid and the New Muslim guide draw their card photographs
       // from Unsplash, hotlinked to `images.unsplash.com` — the reader's own
       // device fetches them and nothing is rehosted here, the same position
       // the recitations sit in. Credited because this screen says every
       // source is on it, and this one was not.
-      SourceEntry('Unsplash', 'https://unsplash.com/license',
+      const SourceEntry('Unsplash', 'https://unsplash.com/license',
           'about.src_unsplash'),
     ]
   ),
   (
     'about.src_prayer',
     [
-      SourceEntry('api.aladhan.com', 'https://aladhan.com', 'about.src_aladhan'),
+      const SourceEntry('api.aladhan.com', 'https://aladhan.com', 'about.src_aladhan'),
       // The world city list behind manual prayer location (CC BY 4.0 -
       // attribution is the licence's one condition).
-      SourceEntry('GeoNames (CC BY 4.0)', 'https://www.geonames.org',
+      const SourceEntry('GeoNames (CC BY 4.0)', 'https://www.geonames.org',
           'about.src_geonames'),
     ]
   ),
@@ -177,7 +177,7 @@ final sourceGroups = <(String, List<SourceEntry>)>[
   (
     'channels.title',
     [
-      SourceEntry('YouTube', 'https://www.youtube.com', 'about.src_youtube'),
+      const SourceEntry('YouTube', 'https://www.youtube.com', 'about.src_youtube'),
     ]
   ),
   (

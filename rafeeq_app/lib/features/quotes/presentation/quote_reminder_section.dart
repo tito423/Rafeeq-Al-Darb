@@ -1,15 +1,15 @@
 import 'dart:math';
-import '../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/quote_reminder_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/digits.dart';
 import '../data/quote_background_catalog.dart';
-import '../data/quote_repository.dart';
 import '../data/quote_reminder_provider.dart';
+import '../data/quote_reminder_service.dart';
+import '../data/quote_repository.dart';
 import 'quote_card_screen.dart';
 
 /// «إشعار كل مدة يحددها المالك (نص ساعة أو أكتر أو أقل)» — the interval, and

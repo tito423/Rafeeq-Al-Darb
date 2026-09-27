@@ -1,18 +1,18 @@
-import 'dart:collection';
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/foundation.dart';
+import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:just_audio_background/just_audio_background.dart' show MediaItem;
 
 import '../../../core/config/app_config.dart';
+import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/services/download_engine.dart';
 import '../../../core/services/recitation_source.dart';
-import '../../../core/services/ayah_audio_service.dart';
 import 'ayah_download_notice.dart';
 
 /// Progress snapshot for one reciter's per-ayah download.
@@ -156,6 +156,9 @@ class AyahRecitationLibrary extends ChangeNotifier {
   final Set<String> _handed = {};
   static const _window = 12;
 
+  // Lives as long as the process (a singleton, set up once), so it is
+  // deliberately never cancelled/closed.
+  // ignore: cancel_subscriptions
   StreamSubscription<TaskUpdate>? _sub;
   Future<void>? _ready;
   Timer? _notifyTimer;
@@ -269,7 +272,6 @@ class AyahRecitationLibrary extends ChangeNotifier {
     final entry = _entries[edition];
     return AyahDlProgress(
       downloaded: downloadedCount(edition),
-      total: totalAyahs,
       paused: entry?.paused ?? false,
     );
   }
@@ -436,14 +438,8 @@ class AyahRecitationLibrary extends ChangeNotifier {
         taskId: id,
         url: url,
         filename: _fileName(surah, ayah),
-        baseDirectory: BaseDirectory.applicationDocuments,
         directory: p.join(_dirName, edition),
         group: DownloadEngine.groupAyah,
-        // Status only. An ayah is a few KB; its progress bar is invisible
-        // and the screens count ayahs, not bytes - but every progress event
-        // crossed the platform channel and ran through three listeners on
-        // the main thread, several times per ayah, 6,236 ayahs long.
-        updates: Updates.status,
         retries: 3,
         allowPause: true,
       ));

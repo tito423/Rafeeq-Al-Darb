@@ -30,7 +30,6 @@ class _SheetSearchField extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
         child: TextField(
-          autofocus: false,
           textInputAction: TextInputAction.search,
           onChanged: onChanged,
           decoration: InputDecoration(

@@ -23,7 +23,7 @@ class AyahPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     // «ظاهر نطق الكلمات العربية بالإنجليزية مع إني مش مفعّل الخيار ده وكمان
     // أنا مختار اللغة العربية للتطبيق». The switch is a reading aid for
     // someone who cannot read the script — an Arabic-reading user has no use

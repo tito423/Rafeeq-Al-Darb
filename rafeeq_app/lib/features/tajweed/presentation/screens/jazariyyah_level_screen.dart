@@ -1,5 +1,3 @@
-import '../../../../core/widgets/accordion.dart';
-import '../../data/bundled_matn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/accordion.dart';
 import '../../../library/data/book_text.dart';
+import '../../data/bundled_matn.dart';
 import '../../data/jazariyyah_course.dart';
 import '../../data/jazariyyah_examples.dart';
 import '../../data/jazariyyah_lesson_text.dart';

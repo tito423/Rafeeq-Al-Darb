@@ -1,8 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 import 'notification_router.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 /// Weekly "read your sunnah surah" reminders (P2‑12) — one per surah, fired
 /// on the picked weekday+time every week via
@@ -41,7 +41,6 @@ class SunanSuwarReminderService {
         _channelId,
         _channelName,
         description: 'notif.sunan_channel_desc'.tr(),
-        importance: Importance.defaultImportance,
       ),
     );
     _channelReady = true;
@@ -66,8 +65,6 @@ class SunanSuwarReminderService {
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
-          importance: Importance.defaultImportance,
-          priority: Priority.defaultPriority,
           // One id per surah per WEEKDAY, so undismissed reminders pile up:
           // four surahs set daily reach 28 in a week, past the 25 Android
           // allows a package, and then the adhan's own notification is the

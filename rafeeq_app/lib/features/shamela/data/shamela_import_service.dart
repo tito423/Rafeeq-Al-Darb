@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -10,7 +11,6 @@ import '../../../core/utils/digits.dart';
 import '../../library/data/library_api_service.dart';
 import 'shamela_book_builder.dart';
 import 'shamela_library.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 /// The owner's Shamela imports are in the GitHub build only
 /// («الجزء ده بالذات في تطبيقنا احنا بس مش البلاي ستور»). A build without
@@ -154,7 +154,7 @@ class ShamelaImportService {
       unawaited(_savePending());
     } catch (e) {
       debugPrint('shamela import ${job.shamelaId} failed: $e');
-      DownloadNotifications.instance.clear(nid);
+      unawaited(DownloadNotifications.instance.clear(nid));
       if (isRunning(job.shamelaId)) {
         job.error = '$e';
         _touch();

@@ -113,7 +113,6 @@ void main() {
           // is part of the calculation, not just of the request.
           date: DateTime.utc(parts[2], parts[1], parts[0]),
           madhab: madhab,
-          highLatitudeRule: adhan.HighLatitudeRule.twilight_angle,
         ),
       );
 

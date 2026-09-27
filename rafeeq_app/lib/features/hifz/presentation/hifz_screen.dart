@@ -11,21 +11,21 @@
 /// nothing new is downloaded and nothing is written by the app itself.
 library;
 
-import '../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/utils/user_error.dart';
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/user_error.dart';
+import '../../../core/widgets/paired_list_view.dart';
+import '../../tutorial/data/tutorial_anchors.dart';
 import '../data/hifz_store.dart';
 import 'hifz_session_screen.dart';
 import 'widgets/hifz_plans_section.dart';
-import '../../tutorial/data/tutorial_anchors.dart';
 
 final _surahsProvider = FutureProvider<List<Surah>>((ref) async {
   final repo = await ref.watch(quranRepositoryProvider.future);

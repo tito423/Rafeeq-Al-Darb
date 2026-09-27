@@ -30,6 +30,9 @@ class AudioExclusive {
   AudioExclusive._();
 
   static final Set<Future<void> Function()> _speakers = {};
+  // Lives as long as the process (a singleton, set up once), so it is
+  // deliberately never cancelled/closed.
+  // ignore: cancel_subscriptions
   static StreamSubscription<bool>? _watch;
 
   static void speakerStarted(Future<void> Function() stop) {

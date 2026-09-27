@@ -213,7 +213,6 @@ class PrayerModeCard extends StatelessWidget {
                 ),
                 items: [
                   DropdownMenuItem<String?>(
-                    value: null,
                     child: Text('prayer.use_default'.tr()),
                   ),
                   for (final o in catalog.where((o) => o.fitsPrayer(prayerKey)))

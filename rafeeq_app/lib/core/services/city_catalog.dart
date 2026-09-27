@@ -173,7 +173,7 @@ void prepareCityFiles(List<int> gz, String tsvPath, String keyPath) {
     if (line.isEmpty) continue;
     out.writeln(line);
     if (line.startsWith('#')) {
-      keys.writeln('');
+      keys.writeln();
       continue;
     }
     final c = line.split('\t');

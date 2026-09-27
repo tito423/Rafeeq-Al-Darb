@@ -1,19 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
-import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../../core/db/models.dart';
-import '../../../../core/db/azkar_repository.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/arabic_text.dart';
-import '../../../../core/services/sync_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/azkar_repeat.dart';
+
+import '../../../../core/db/azkar_repository.dart';
+import '../../../../core/db/models.dart';
+import '../../../../core/services/sync_service.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/byte_formatter.dart' show ratio;
+import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/screen_class.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
+import '../../data/azkar_repeat.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
 ///
@@ -481,7 +481,7 @@ class _DonePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle, size: 84, color: AppColors.success),
+            const Icon(Icons.check_circle, size: 84, color: AppColors.success),
             const SizedBox(height: 16),
             Text(
               'azkar.section_done'.tr(),

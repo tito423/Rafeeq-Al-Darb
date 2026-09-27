@@ -25,7 +25,7 @@ void main() {
   });
 
   test('a mirrored book gets R2 first, then its GitHub asset', () {
-    final u = '${AppConfig.contentBaseUrl}/books/text/la_tahzan.json';
+    const u = '${AppConfig.contentBaseUrl}/books/text/la_tahzan.json';
     expect(ContentMirrors.of(u), [
       u,
       'https://github.com/tito423/Rafeeq-Al-Darb/releases/download/'
@@ -55,7 +55,7 @@ void main() {
   });
 
   test('per-ayah recitation and foreign hosts are not rewritten', () {
-    final ayah =
+    const ayah =
         '${AppConfig.contentBaseUrl}/recitations/ayah/Alafasy_128kbps/001001.mp3';
     expect(ContentMirrors.of(ayah), [ayah]);
     const other = 'https://everyayah.com/data/Husary_128kbps/001001.mp3';
@@ -64,7 +64,7 @@ void main() {
 
   test('fetchFirst falls through to the mirror and rethrows when all fail',
       () async {
-    final u = '${AppConfig.contentBaseUrl}/hadith/hadith.zip';
+    const u = '${AppConfig.contentBaseUrl}/hadith/hadith.zip';
     final tried = <String>[];
     final r = await ContentMirrors.fetchFirst<int>(u, (x) async {
       tried.add(x);

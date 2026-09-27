@@ -1,20 +1,20 @@
-import '../../../../core/services/official_hijri.dart';
-import '../../../../core/utils/time_formatter.dart';
 import 'package:adhan/adhan.dart' as adhan;
-import '../../../../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/i18n/hijri_months.dart';
+import '../../../../core/models/prayer_calculation_methods.dart';
+import '../../../../core/services/official_hijri.dart';
 import '../../../../core/services/prayer_reminder_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/utils/time_formatter.dart';
+import '../../../../core/widgets/readable_insets.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_settings_provider.dart';
-import '../../../../core/models/prayer_calculation_methods.dart';
 import '../../data/prayer_adjustments_provider.dart';
 import 'prayer_location_screen.dart';
-import '../../../../core/widgets/readable_insets.dart';
 
 /// Manual corrections for the Hijri date and each prayer time, plus the
 /// calculation method that decides those times in the first place.

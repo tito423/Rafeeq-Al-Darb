@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/hadeethenc_repository.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import 'hadeethenc_detail_screen.dart';
 
@@ -64,7 +64,6 @@ class _HadeethEncCategoryScreenState extends State<HadeethEncCategoryScreen> {
     setState(() => _loading = true);
     final page = await widget.repo.ofCategory(
       widget.category.id,
-      limit: _pageSize,
       offset: _items.length,
     );
     if (!mounted) return;

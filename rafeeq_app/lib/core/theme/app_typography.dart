@@ -56,7 +56,6 @@ abstract final class AppTypography {
     double height = 1.9,
   }) => TextStyle(
     fontFamily: quranFontFamily,
-    package: null,
     fontSize: fontSize,
     color: color,
     height: height,

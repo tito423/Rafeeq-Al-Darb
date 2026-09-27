@@ -1,17 +1,17 @@
-import '../../../../core/widgets/paired_list_view.dart';
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/db/hadeethenc_repository.dart';
-import '../../../../core/widgets/error_retry.dart';
 import '../../../../app/app_locale_provider.dart';
+import '../../../../core/db/hadeethenc_repository.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/utils/external_link.dart';
+import '../../../../core/widgets/error_retry.dart';
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../data/hadeethenc_providers.dart';
 import 'hadeethenc_category_screen.dart';
-import '../../../../core/utils/external_link.dart';
 
 /// موسوعة الأحاديث النبوية — a collection **beside** the nine books, not
 /// inside them.

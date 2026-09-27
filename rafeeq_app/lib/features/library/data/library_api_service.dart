@@ -1,4 +1,3 @@
-import '../../../core/config/content_mirrors.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -12,6 +11,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../../core/config/content_mirrors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import 'book_catalog.dart';
 import 'builtin_books.dart';

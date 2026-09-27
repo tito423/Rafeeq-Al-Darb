@@ -1,18 +1,17 @@
-import 'dart:ui' as ui;
-
 import 'dart:math' as math;
-import '../../../core/utils/arabic_normalize.dart';
+import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/widgets/arabic_text.dart';
+import '../../dorar/presentation/dorar_check_sheet.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
 import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
 import '../data/daily_hadith_provider.dart';
-import '../../dorar/presentation/dorar_check_sheet.dart';
 
 /// Home, bottom card (P2‑13) — one full hadith (complete text, narrator,
 /// book/number, grade line), re-rolled every app launch, with a manual
@@ -462,7 +461,6 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                               stripBidiControls(daily.explanation),
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 height: 1.7,
                               ),

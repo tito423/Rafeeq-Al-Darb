@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/i18n/proper_name.dart';
+import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart';
-import '../../../../core/services/download_manager.dart';
+import '../../../../core/utils/digits.dart';
 import '../../data/book_catalog.dart';
 import 'hidden_books_sheet.dart';
 
@@ -129,13 +129,13 @@ class BookCard extends StatelessWidget {
                     ),
                   if (downloaded)
                     FilledButton.icon(
-                      onPressed: () => onOpen(),
+                      onPressed: onOpen,
                       icon: const Icon(Icons.menu_book_outlined, size: 18),
                       label: Text('library.open'.tr()),
                     )
                   else
                     OutlinedButton.icon(
-                      onPressed: () => onDownload(),
+                      onPressed: onDownload,
                       icon: const Icon(Icons.download_rounded, size: 18),
                       label: Text('library.download'.tr()),
                     ),

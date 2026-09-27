@@ -129,7 +129,7 @@ void main() {
       gregorianDate: '16-09-2026',
     );
     final labels = PrayerStatusNotification.instance
-        .schedule(broken, DateTime(2026, 9, 16, 3, 0), 'ar')
+        .schedule(broken, DateTime(2026, 9, 16, 3), 'ar')
         .map((e) => _bare(e['label'] as String));
     expect(labels.any((l) => l.contains('الشروق')), isFalse);
     expect(labels.any((l) => l.contains('الفجر')), isTrue);

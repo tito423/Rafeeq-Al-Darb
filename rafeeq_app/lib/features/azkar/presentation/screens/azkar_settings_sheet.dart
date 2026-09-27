@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/azkar_settings_provider.dart';
 import '../../../../core/widgets/fitted_sheet.dart';
+import '../../data/azkar_settings_provider.dart';
 
 /// Shared settings entry point (haptics, + morning/evening reminders on
 /// the Azkar tab only) — pulled out to its own file (P3‑4 round 2) so

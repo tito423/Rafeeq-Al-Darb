@@ -1,19 +1,21 @@
-import '../../../../core/widgets/paired_list_view.dart';
-import '../../../../core/widgets/mirrored_network_image.dart';
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/db/models.dart';
 import '../../../../core/db/azkar_repository.dart';
+import '../../../../core/db/models.dart';
+import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../../core/widgets/mirrored_network_image.dart';
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_screen.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../data/azkar_backgrounds.dart';
 import '../../data/azkar_categories.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
-import '../../data/azkar_backgrounds.dart';
-import '../../../tutorial/data/tutorial_anchors.dart';
-import '../../../../core/utils/screen_class.dart';
 
 /// Azkar tab — real sections from Hisn al-Muslim (134 real sections, no
 /// duplicates within a section — verified against the bundled DB).
@@ -187,16 +189,16 @@ class _CategoryCard extends ConsumerWidget {
           if (!context.mounted) return;
           
           if (sections.length == 1 || category == AzkarCategory.morning || category == AzkarCategory.evening) {
-            Navigator.of(context).push(
+            unawaited(Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => AzkarSectionScreen(
                   section: sections.first,
                   accent: info.gradient.last,
                 ),
               ),
-            );
+            ));
           } else {
-            Navigator.of(context).push(
+            unawaited(Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => _CategorySectionsListScreen(
                   categoryInfo: info,
@@ -204,7 +206,7 @@ class _CategoryCard extends ConsumerWidget {
                   bgUrl: bgUrl,
                 ),
               ),
-            );
+            ));
           }
         },
         child: Container(

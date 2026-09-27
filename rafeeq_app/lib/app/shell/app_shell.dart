@@ -1,44 +1,44 @@
-import '../../features/library/data/library_api_service.dart';
 import 'dart:async';
 
-import 'side_tabs.dart';
-import '../../core/utils/screen_class.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/prayer_times.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/widgets/accordion.dart';
 import '../../core/services/alarm_permissions_service.dart';
 import '../../core/services/ayah_audio_service.dart';
 import '../../core/services/download_manager.dart';
-import '../../features/downloads/data/download_tap_channel.dart';
 import '../../core/services/download_notifications.dart';
-import '../../features/quran_audio/data/quran_audio_library.dart';
-import '../../features/quran/data/mushaf_page_service.dart';
-import '../../features/quran/data/mushaf_edition.dart';
 import '../../core/services/prayer_status_notification.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/utils/screen_class.dart';
+import '../../core/widgets/accordion.dart';
 import '../../features/adhan/data/prayer_status_enabled_provider.dart';
+import '../../features/assistant/presentation/assistant_sheet.dart';
 import '../../features/azkar/presentation/screens/azkar_screen.dart';
 import '../../features/azkar/presentation/screens/tasbeeh_screen.dart';
-import '../../features/home/data/prayer_controller.dart';
+import '../../features/downloads/data/download_tap_channel.dart';
 import '../../features/hifz/presentation/hifz_screen.dart';
+import '../../features/home/data/prayer_controller.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/library/data/library_api_service.dart';
 import '../../features/library/presentation/screens/library_screen.dart';
 import '../../features/more/presentation/screens/more_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_screen.dart';
+import '../../features/quran/data/mushaf_edition.dart';
+import '../../features/quran/data/mushaf_page_service.dart';
+import '../../features/quran/data/quran_fullscreen_provider.dart';
+import '../../features/quran/presentation/screens/quran_screen.dart';
+import '../../features/quran_audio/data/quran_audio_library.dart';
 import '../../features/settings/data/focus_mode_provider.dart';
 import '../../features/settings/data/reader_name_provider.dart';
 import '../../features/settings/presentation/widgets/reader_name_sheet.dart';
-import '../../features/quran/data/quran_fullscreen_provider.dart';
-import '../../features/quran/presentation/screens/quran_screen.dart';
+import '../../features/splash/data/splash_video_provider.dart';
 import '../../features/tutorial/data/tutorial_state.dart';
 import '../../features/tutorial/presentation/widgets/tutorial_overlay.dart';
-import '../../features/splash/data/splash_video_provider.dart';
 import '../rafeeq_app.dart';
+import 'side_tabs.dart';
 import 'tab_request_provider.dart';
-import '../../features/assistant/presentation/assistant_sheet.dart';
 
 /// Main navigation shell — bottom navigation bar across the app's primary
 /// sections (Home, Quran, Prayer, Azkar, Tasbeeh, Library). "Library" holds
@@ -275,18 +275,18 @@ class _AppShellState extends ConsumerState<AppShell>
     // what every one of these screens needs to stay in sync.
     final screens = [
       HomeScreen(onNavigate: (t) => _goTo(t, tab: t)),
-      QuranScreen(),
-      QiblaScreen(),
-      AzkarScreen(),
-      TasbeehScreen(),
-      LibraryScreen(),
-      MoreScreen(),
+      const QuranScreen(),
+      const QiblaScreen(),
+      const AzkarScreen(),
+      const TasbeehScreen(),
+      const LibraryScreen(),
+      const MoreScreen(),
       // AppTab.focusHifz — not a destination, and built ONLY while focus
       // mode is on it. `IndexedStack` builds every child it is given, and
       // `HifzScreen` opens the Qur'an database and reads the hifz store the
       // moment it is built; nobody who is not in that mode should pay for
       // that on every launch.
-      focus == FocusTarget.hifz ? HifzScreen() : const SizedBox.shrink(),
+      focus == FocusTarget.hifz ? const HifzScreen() : const SizedBox.shrink(),
     ];
 
     // P3‑43 #6: a genuinely full-screen mushaf reader needs this bar gone
@@ -431,7 +431,7 @@ class _AppShellState extends ConsumerState<AppShell>
                         tabs: tabs,
                         selectedIndex: _index,
                         onSelect: _goTo,
-                        selectedIcon: (icon) => _PopIcon(icon),
+                        selectedIcon: _PopIcon.new,
                       ),
                       const VerticalDivider(width: 1),
                       // The rail already stands clear of the notch; the screen

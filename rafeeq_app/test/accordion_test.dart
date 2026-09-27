@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/core/widgets/accordion.dart';
@@ -26,7 +28,7 @@ void main() {
         },
       ),
     );
-    tester.state<NavigatorState>(find.byType(Navigator)).pushNamed('/list');
+    unawaited(tester.state<NavigatorState>(find.byType(Navigator)).pushNamed('/list'));
     await tester.pumpAndSettle();
   }
 

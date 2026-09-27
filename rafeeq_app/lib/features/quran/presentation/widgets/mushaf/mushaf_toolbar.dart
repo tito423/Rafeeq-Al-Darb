@@ -26,14 +26,15 @@
 /// button that opens them rather than pointing at nothing.
 library;
 
-import '../../../../../core/widgets/toolbar_action.dart';
-import '../../../../search/presentation/screens/search_screen.dart';
-import '../../../data/mushaf_data_provider.dart';
-import '../mushaf_nav_sheets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../../core/widgets/toolbar_action.dart';
+import '../../../../search/presentation/screens/search_screen.dart';
 import '../../../../tutorial/data/tutorial_anchors.dart';
+import '../../../data/mushaf_data_provider.dart';
+import '../mushaf_nav_sheets.dart';
 import 'quran_display_sheet.dart';
 import 'toolbar_strip.dart';
 
@@ -125,7 +126,7 @@ class MushafToolbar extends ConsumerWidget {
               totalPages: totalPages,
               onSurahPage: (page) =>
                   onNavigateFromIndex(page, surahStart: true),
-              onPage: (page) => onNavigateFromIndex(page),
+              onPage: onNavigateFromIndex,
             ),
           ),
         ),

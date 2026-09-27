@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../shamela/data/shamela_library.dart';
 import '../../data/book_catalog.dart';
 import '../../data/hidden_books.dart';
-import '../../../shamela/data/shamela_library.dart';
 
 /// The catalogue without the books this reader removed from his list.
 List<LibraryBook> visibleBookCatalog() => [

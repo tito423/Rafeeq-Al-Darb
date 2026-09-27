@@ -6,8 +6,8 @@ library;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/utils/digits.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/utils/digits.dart';
 
 /// Quran tab — a real mushaf browser.
 ///  • Text mode: real Uthmani ayahs laid out by their real Madani page

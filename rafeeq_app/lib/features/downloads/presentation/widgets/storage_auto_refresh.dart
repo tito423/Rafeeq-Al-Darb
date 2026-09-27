@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/download_manager.dart';
-import '../../../quran/data/mushaf_page_service.dart';
 import '../../../library/data/tts/open_voice.dart';
+import '../../../quran/data/mushaf_page_service.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../data/downloads_controller.dart';

@@ -118,7 +118,7 @@ class _InstallDialogState extends State<_InstallDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final total = OpenVoice.totalBytes;
+    const total = OpenVoice.totalBytes;
     return AlertDialog(
       title: Text('library.open_voice_title'.tr()),
       content: _error != null

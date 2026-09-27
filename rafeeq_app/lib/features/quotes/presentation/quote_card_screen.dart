@@ -3,13 +3,12 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../data/quote_palettes.dart';
-
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../../core/widgets/islamic_pattern.dart';
 import '../data/quote_background_catalog.dart';
+import '../data/quote_palettes.dart';
 import '../data/quote_repository.dart';
 
 /// The card the quote notification opens: it **covers what is behind it**,
@@ -118,7 +117,6 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
               painter: IslamicPatternPainter(
                 tile: _tile,
                 color: _palette.ornament,
-                strokeWidth: 1,
               ),
             ),
           ],

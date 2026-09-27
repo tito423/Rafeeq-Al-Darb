@@ -1,4 +1,3 @@
-import '../../../../core/utils/digits.dart' show percentOf;
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -12,6 +11,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart' show formatBytes;
 import '../../../../core/utils/digits.dart'
     show localizeDigits, pluralN, trn, uiLanguageCode;
+import '../../../../core/utils/digits.dart' show percentOf;
 import '../../../../core/widgets/error_retry.dart';
 
 /// What علوم القرآن actually contains, once it is on the device.

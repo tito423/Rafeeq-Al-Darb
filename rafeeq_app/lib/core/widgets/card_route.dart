@@ -120,7 +120,6 @@ class CardRoute<T> extends PopupRoute<T> {
             // and they have not navigated away from it.
             Positioned.fill(
               child: IgnorePointer(
-                ignoring: true,
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 14 * t, sigmaY: 14 * t),
                   child: Container(

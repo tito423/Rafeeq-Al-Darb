@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/db/azkar_repository.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/db/quran_repository.dart';
-import '../../../../core/db/azkar_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../downloads/data/reciters_provider.dart';

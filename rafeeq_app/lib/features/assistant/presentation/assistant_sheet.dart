@@ -433,8 +433,8 @@ Future<void> _openBook(NavigatorState nav, String id) async {
     }
   }
   final path = await api.bookFilePath(id);
-  nav.push(MaterialPageRoute<void>(
-      builder: (_) => BookTextReaderScreen(book: book, path: path)));
+  unawaited(nav.push(MaterialPageRoute<void>(
+      builder: (_) => BookTextReaderScreen(book: book, path: path))));
 }
 
 /// The sheet «يا رفيق» alone opens: it takes the next sentence, shows what

@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/arabic_text.dart';
-import '../../data/sources_catalog.dart';
 import '../../../../core/utils/external_link.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/readable_insets.dart';
+import '../../data/sources_catalog.dart';
 
 /// Where every piece of content in the app actually comes from.
 ///

@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import 'tasbih_items.dart';
 import '../../../core/services/notification_router.dart';
+import 'tasbih_items.dart';
 
 /// The waking hours the tasbih reminders fall in. Nobody is woken at 3 a.m.
 /// to be told to say «سبحان الله».
@@ -54,7 +54,6 @@ class TasbihReminderService {
         _channelId,
         'tasbih.channel'.tr(),
         description: 'tasbih.channel_desc'.tr(),
-        importance: Importance.defaultImportance,
       ),
     );
     _channelReady = true;
@@ -87,8 +86,6 @@ class TasbihReminderService {
           android: AndroidNotificationDetails(
             _channelId,
             'tasbih.channel'.tr(),
-            importance: Importance.defaultImportance,
-            priority: Priority.defaultPriority,
             styleInformation: BigTextStyleInformation(body),
             // Cleared before the next one arrives: a day of undismissed
             // reminders would spend the 25-notification budget (trap #33).

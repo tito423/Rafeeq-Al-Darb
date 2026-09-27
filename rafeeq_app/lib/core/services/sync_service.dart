@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:uuid/uuid.dart';
+
 import '../config/app_config.dart';
 
 final googleSignInProvider = Provider((ref) => GoogleSignIn(
@@ -149,9 +151,7 @@ class SyncService {
     if (_ref.read(authStateProvider) == null) return;
     
     _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(seconds: 2), () {
-      _queueStateSync();
-    });
+    _debounceTimer = Timer(const Duration(seconds: 2), _queueStateSync);
   }
 
   Future<void> incrementCounter(String key, int amount) async {
@@ -169,7 +169,7 @@ class SyncService {
       'payload': jsonEncode(payload),
     });
     
-    _processQueue();
+    unawaited(_processQueue());
   }
 
   /// THE ONLY PREFERENCE KEYS THAT TRAVEL BETWEEN DEVICES.
@@ -224,7 +224,7 @@ class SyncService {
       'payload': jsonEncode(updates),
     });
 
-    _processQueue();
+    unawaited(_processQueue());
   }
 
   Future<void> _processQueue() async {
@@ -311,17 +311,17 @@ class SyncService {
       ));
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
         final rawPrefs = await SharedPreferences.getInstance();
         
-        final stateItems = data['state'] as List;
+        final stateItems = (data['state'] as List).cast<Map<String, dynamic>>();
         for (final item in stateItems) {
-          final key = item['key'];
+          final key = item['key'] as String;
           // THE PULL FILTERS TOO, and it matters more than the push: the
           // server still holds every setting an older build sent it, and
           // without this line it would keep restoring them for ever.
           if (!syncedStateKeys.contains(key)) continue;
-          final value = jsonDecode(item['value']);
+          final value = jsonDecode(item['value'] as String);
           
           if (value is String) {
             await rawPrefs.setString(key, value);
@@ -340,15 +340,15 @@ class SyncService {
         final queuedCounters = await _localQueueDb.query('queue', where: 'type = ?', whereArgs: ['counter']);
         final Map<String, int> unsynced = {};
         for (final row in queuedCounters) {
-           final payload = jsonDecode(row['payload'] as String);
+           final payload = jsonDecode(row['payload'] as String) as Map<String, dynamic>;
            final k = payload['key'] as String;
            final inc = payload['increment_value'] as int;
            unsynced[k] = (unsynced[k] ?? 0) + inc;
         }
 
-        final counterItems = data['counters'] as List;
+        final counterItems = (data['counters'] as List).cast<Map<String, dynamic>>();
         for (final item in counterItems) {
-           final key = item['key'];
+           final key = item['key'] as String;
            final total = item['total'] as int;
            final finalTotal = total + (unsynced[key] ?? 0);
            await rawPrefs.setInt(key, finalTotal);

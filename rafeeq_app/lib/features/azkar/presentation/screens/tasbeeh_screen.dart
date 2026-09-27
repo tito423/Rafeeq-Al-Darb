@@ -1,21 +1,23 @@
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (ltr/rtl) the long-dhikr cards need.
-import 'package:vibration/vibration.dart';
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
-import '../../../../core/utils/digits.dart';
-import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/sync_service.dart';
-import '../../data/tasbeeh_catalog.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/byte_formatter.dart' show ratio;
+import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
-import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../../core/widgets/remote_tap.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../data/tasbeeh_catalog.dart';
 
 part 'tasbeeh_mathur_cards.dart';
 
@@ -200,7 +202,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     );
     if (n == null || n <= 0) return;
     setState(() => _customTarget = n);
-    SharedPreferences.getInstance().then((p) => p.setInt(_kCustomPref, n));
+    unawaited(SharedPreferences.getInstance().then((p) => p.setInt(_kCustomPref, n)));
     _selectTarget(n);
   }
 
@@ -244,8 +246,8 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       _total = 0;
     });
     if (was > 0) {
-      SharedPreferences.getInstance().then((p) => p.setInt('tasbeeh_total', 0));
-      ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', -was);
+      unawaited(SharedPreferences.getInstance().then((p) => p.setInt('tasbeeh_total', 0)));
+      unawaited(ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', -was));
     }
   }
 

@@ -12,8 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/db/models.dart';
 import '../../../../../core/db/sciences_repository.dart';
-import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/services/quran_translation_store.dart';
+import '../../../../../core/theme/app_colors.dart';
 import '../../../data/quran_translation_catalog.dart';
 import '../../../data/translation_lang_provider.dart';
 import 'sciences_common.dart';

@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/digits.dart';
 import '../../data/makharij.dart';
 import '../widgets/makharij_diagram.dart';
 

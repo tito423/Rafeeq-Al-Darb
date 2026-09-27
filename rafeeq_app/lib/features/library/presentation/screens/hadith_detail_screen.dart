@@ -2,17 +2,16 @@
 // collides with the `dart:ui` enum (ltr/rtl) this file needs for the hadith's
 // own right-to-left layout.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
-import '../../../../core/utils/digits.dart';
-import '../../../../core/utils/arabic_normalize.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/arabic_text.dart';
-import '../widgets/hadith_translation.dart';
-import '../../../dorar/presentation/dorar_check_sheet.dart';
-
 import '../../../../core/db/hadith_repository.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/i18n/hadith_grade_i18n.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/arabic_text.dart';
+import '../../../dorar/presentation/dorar_check_sheet.dart';
+import '../widgets/hadith_translation.dart';
 
 /// One hadith, full text, with Previous/Next inside its chapter so reading
 /// doesn't require popping back for every hadith.

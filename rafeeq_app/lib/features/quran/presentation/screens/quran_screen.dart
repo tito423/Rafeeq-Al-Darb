@@ -1,35 +1,30 @@
 import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/db/models.dart';
-import '../../../../core/widgets/error_retry.dart';
-import '../widgets/mushaf/mushaf_remote_keys.dart';
-import '../widgets/mushaf/toolbar_bar.dart';
-import '../../data/mushaf_paper_provider.dart';
-import '../../data/ayah_coords_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../downloads/data/reciters_provider.dart';
+import '../../data/ayah_coords_repository.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
+import '../../data/mushaf_frame.dart';
+import '../../data/mushaf_paper_provider.dart';
+import '../../data/mushaf_theme.dart';
 import '../../data/page_surahs.dart';
 import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
-import '../../data/quran_zoom_provider.dart';
-import '../../data/mushaf_frame.dart';
-import '../../data/mushaf_theme.dart';
-import '../../data/text_layout_provider.dart';
 import '../../data/quran_last_read.dart';
+import '../../data/quran_zoom_provider.dart';
+import '../../data/text_layout_provider.dart';
 import '../widgets/ayah_sciences_sheet.dart';
-import '../widgets/mushaf_page_view.dart';
-import '../widgets/reciter_picker_sheet.dart';
-import '../widgets/mushaf_text_page.dart';
-import '../../../../app/shell/tab_request_provider.dart';
-
 /// Quran tab — a real mushaf browser.
 ///  • Text mode: real Uthmani ayahs laid out by their real Madani page
 ///    boundaries from the bundled database (works fully offline).
@@ -37,12 +32,17 @@ import '../../../../app/shell/tab_request_provider.dart';
 ///    device, with the real ayah polygons layered on top for tap/highlight.
 import '../widgets/mushaf/auto_scroll_speed_bar.dart';
 import '../widgets/mushaf/fast_page_scroll_bar.dart';
+import '../widgets/mushaf/follows_recitation_note.dart';
 import '../widgets/mushaf/mushaf_chrome.dart';
+import '../widgets/mushaf/mushaf_remote_keys.dart';
 import '../widgets/mushaf/mushaf_toolbar.dart';
 import '../widgets/mushaf/page_overlay.dart';
 import '../widgets/mushaf/page_turn.dart';
 import '../widgets/mushaf/recite_bar.dart';
-import '../widgets/mushaf/follows_recitation_note.dart';
+import '../widgets/mushaf/toolbar_bar.dart';
+import '../widgets/mushaf_page_view.dart';
+import '../widgets/mushaf_text_page.dart';
+import '../widgets/reciter_picker_sheet.dart';
 
 enum MushafMode { text, image }
 

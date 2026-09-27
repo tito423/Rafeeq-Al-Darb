@@ -1,34 +1,35 @@
-import 'package:rafeeq_app/core/theme/app_font.dart';
-// Defined in core so core/ can read it (layering_test); re-exported here for
-// the files that have always imported it from the app.
-export '../core/config/prefs_provider.dart' show sharedPrefsProvider;
-import '../features/assistant/presentation/assistant_sheet.dart';
-import 'package:rafeeq_app/core/theme/app_typography.dart';
-import '../core/widgets/arrow_scrollbar.dart';
-import '../core/utils/digits.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rafeeq_app/core/theme/app_font.dart';
+import 'package:rafeeq_app/core/theme/app_typography.dart';
 
 import '../core/services/native_strings.dart';
+import '../core/services/sync_service.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/rgb_backdrop.dart';
 import '../core/theme/theme_controller.dart';
+import '../core/utils/digits.dart';
+import '../core/utils/screen_class.dart';
+import '../core/widgets/arrow_scrollbar.dart';
+import '../core/widgets/focus_ring_overlay.dart';
 import '../features/adhan/data/prayer_adjustments_provider.dart';
+import '../features/assistant/presentation/assistant_sheet.dart';
 import '../features/fasting/data/fasting_reminder_provider.dart';
-import '../features/tasbih_reminder/data/tasbih_reminder_provider.dart';
 import '../features/home/data/prayer_controller.dart';
-import '../features/quotes/data/quote_reminder_service.dart';
 import '../features/quotes/data/quote_reminder_provider.dart';
+import '../features/quotes/data/quote_reminder_service.dart';
 import '../features/quotes/data/quote_repository.dart';
 import '../features/quran/data/translation_lang_provider.dart';
 import '../features/splash/presentation/screens/splash_screen.dart';
+import '../features/tasbih_reminder/data/tasbih_reminder_provider.dart';
 import 'app_locale_provider.dart';
 import 'navigation.dart';
-import '../core/services/sync_service.dart';
-import '../core/utils/screen_class.dart';
-import '../core/widgets/focus_ring_overlay.dart';
-import '../core/theme/app_colors.dart';
+
+// Defined in core so core/ can read it (layering_test); re-exported here for
+// the files that have always imported it from the app.
+export '../core/config/prefs_provider.dart' show sharedPrefsProvider;
 
 
 /// The locale the last frame was built in, so a *change* can be told from a

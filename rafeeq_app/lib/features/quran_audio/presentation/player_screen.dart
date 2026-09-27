@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import '../../../core/utils/digits.dart';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,13 +8,14 @@ import 'package:just_audio/just_audio.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/byte_formatter.dart';
+import '../../../core/utils/digits.dart';
+import '../../../core/widgets/fitted_sheet.dart';
 import '../../../core/widgets/islamic_pattern.dart';
+import '../../../core/widgets/remote_tap.dart';
 import '../data/player_theme.dart';
 import '../data/quran_audio_favorites.dart';
 import '../data/quran_audio_player.dart';
 import 'widgets/audio_common.dart';
-import '../../../core/widgets/fitted_sheet.dart';
-import '../../../core/widgets/remote_tap.dart';
 
 /// The full player.
 ///

@@ -1,16 +1,16 @@
-import '../../data/tts/open_voice.dart';
-import '../../data/tts/book_voice_pref.dart';
-import '../../../../core/theme/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/widgets/toolbar_action.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_speaker.dart';
 import '../../data/book_text.dart';
+import '../../data/tts/book_voice_pref.dart';
+import '../../data/tts/open_voice.dart';
 import 'open_voice_offer.dart';
-import '../../../../core/widgets/fitted_sheet.dart';
 
 /// The reader's «استماع» control, and everything behind it.
 ///

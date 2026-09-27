@@ -1,19 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import '../widgets/external_sources_strip.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import 'books_search_screen.dart';
+import '../../../../core/utils/screen_class.dart';
 import '../../../hadeethenc/presentation/screens/hadeethenc_tab.dart';
+import '../../../shamela/data/shamela_import_service.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 import '../tabs/books_tab.dart';
 import '../tabs/channels_tab.dart';
 import '../tabs/hadith_tab.dart';
 import '../tabs/websites_tab.dart';
-import '../../../tutorial/data/tutorial_anchors.dart';
-import '../../../../core/utils/screen_class.dart';
-import '../../../shamela/data/shamela_import_service.dart';
+import '../widgets/external_sources_strip.dart';
+import 'books_search_screen.dart';
 
 /// Library — two top tabs:
 ///  • "الكتب المتوفرة" — the books catalog, itself split into

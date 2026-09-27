@@ -1,6 +1,4 @@
 import 'dart:async';
-import '../../../core/utils/digits.dart';
-import '../../../core/utils/byte_formatter.dart' show ratio;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -9,19 +7,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/db/models.dart';
 import '../../../core/services/ayah_audio_service.dart';
+import '../../../core/utils/byte_formatter.dart' show ratio;
+import '../../../core/utils/digits.dart';
 import '../../../core/widgets/error_retry.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/mushaf_edition.dart';
 import '../../quran/data/mushaf_frame.dart';
+import '../../quran/data/mushaf_paper_provider.dart';
 import '../../quran/data/mushaf_theme.dart';
 import '../../quran/data/text_layout_provider.dart';
 import '../../quran/presentation/widgets/ayah_sciences_sheet.dart';
+import '../../quran/presentation/widgets/mushaf/mushaf_paper_chips.dart';
 import '../../quran/presentation/widgets/mushaf_page_view.dart';
 import '../../quran/presentation/widgets/mushaf_text_page.dart';
 import '../../quran/presentation/widgets/mushaf_theme_picker.dart';
-import '../../quran/data/mushaf_paper_provider.dart';
-import '../../quran/presentation/widgets/mushaf/mushaf_paper_chips.dart';
 
 enum _Mode { text, image }
 
@@ -107,11 +107,11 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
     if (!mounted || row == null) return;
     final page = row.pageNumber;
     if (page < _startPage || page > _endPage || page == _current) return;
-    _pages?.animateToPage(
+    unawaited(_pages?.animateToPage(
       page - _startPage,
       duration: const Duration(milliseconds: 320),
       curve: Curves.easeInOut,
-    );
+    ));
   }
 
   void _toggleFullScreen() {

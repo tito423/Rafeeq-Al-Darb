@@ -25,11 +25,11 @@
 library;
 
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/utils/digits.dart';
 import '../../../data/page_turn_provider.dart';
 import '../../../data/text_layout_provider.dart';
 import '../mushaf_theme_picker.dart';

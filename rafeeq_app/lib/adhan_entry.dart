@@ -52,7 +52,6 @@ Future<void> runAdhanAlertApp() async {
       supportedLocales: kSupportedLocales,
       path: 'assets/translations',
       fallbackLocale: const Locale('ar'),
-      saveLocale: true,
       // Same as `main.dart`: this alert boots as its own miniature app with
       // its own EasyLocalization, and the two must agree — `supportedLocales`
       // drifted apart once already (Urdu was missing here) and

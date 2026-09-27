@@ -1,18 +1,18 @@
-import '../config/content_mirrors.dart';
 import 'dart:async';
-import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math';
 
 import 'package:archive/archive.dart';
-import 'package:flutter/foundation.dart';
 import 'package:background_downloader/background_downloader.dart' as bd;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../config/content_mirrors.dart';
 import 'download_engine.dart';
 
 /// Status of a single download task.
@@ -455,10 +455,10 @@ class DownloadManager {
           if (task.status == DownloadStatus.failed) _mirrorAt[task.id] = -1;
           task.error = null;
           task.status = DownloadStatus.queued;
-          bd.FileDownloader().resume(task.platformTask!);
+          unawaited(bd.FileDownloader().resume(task.platformTask!));
         } else {
           // If no platform task exists, restart it entirely
-          enqueue(
+          unawaited(enqueue(
             id: task.id,
             url: task.url,
             category: task.category,
@@ -466,7 +466,7 @@ class DownloadManager {
             unzipToDatabases: task.unzipToDatabases,
             dbVersion: task.dbVersion,
             title: task.title,
-          );
+          ));
         }
       }
     }

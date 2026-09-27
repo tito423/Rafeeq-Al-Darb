@@ -111,7 +111,7 @@ class DorarCheckResult {
   factory DorarCheckResult.fromJson(Map<String, dynamic> j) => DorarCheckResult(
         query: '${j['query']}',
         matches: [
-          for (final m in (j['matches'] as List))
+          for (final m in (j['matches'] as List).cast<Map<String, dynamic>>())
             DorarHadith(
               text: '${m['text']}',
               rawi: '${m['rawi']}',

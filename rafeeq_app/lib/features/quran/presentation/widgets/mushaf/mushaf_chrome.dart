@@ -37,14 +37,14 @@
 library;
 
 
-// `hide TextDirection`: easy_localization re-exports intl, whose
-// TextDirection has no `.rtl` and shadows the one from dart:ui that Flutter
-// widgets actually take.
-import 'chrome_auto_hide.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 
 import '../../../data/mushaf_theme.dart';
+// `hide TextDirection`: easy_localization re-exports intl, whose
+// TextDirection has no `.rtl` and shadows the one from dart:ui that Flutter
+// widgets actually take.
+import 'chrome_auto_hide.dart';
 import 'page_overlay.dart' show PageNumberBadge, arabicPageNumber;
 
 /// How opaque the glass is over the page.
@@ -171,7 +171,6 @@ class MushafChrome extends StatelessWidget {
                         borderRadius: BorderRadius.circular(22),
                         border: Border.all(
                           color: mt.gold.withValues(alpha: 0.35),
-                          width: 1,
                         ),
                         boxShadow: [
                           BoxShadow(

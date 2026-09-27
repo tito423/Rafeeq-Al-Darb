@@ -92,7 +92,7 @@ class SourceBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(14, 10, 14, 0),

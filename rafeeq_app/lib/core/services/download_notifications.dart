@@ -94,10 +94,6 @@ class DownloadNotifications {
         importance: Importance.low,
         priority: Priority.low,
         onlyAlertOnce: true,
-        // Never `ongoing`: an ongoing notification outlives a killed process
-        // and cannot be swiped away. It also clears itself if nothing
-        // refreshes it — trap #33.
-        ongoing: false,
         timeoutAfter: 120000,
         showProgress: hasSize,
         maxProgress: 100,
@@ -142,7 +138,7 @@ class DownloadNotifications {
         id: _notificationId(id) + 1000,
         title: title,
         body: 'notif.dl_done'.tr(),
-        notificationDetails: NotificationDetails(android: android),
+        notificationDetails: const NotificationDetails(android: android),
         payload: payload,
       );
     } catch (_) {}

@@ -14,7 +14,7 @@ class NonArabicReadingCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     // fills and borders keep flat gold; icons and words need [goldText]
     final ink = goldText(context);
     final isEnabled = ref.watch(transliterationEnabledProvider);

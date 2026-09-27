@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
-import '../../../../core/widgets/more_group_accent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/more_group_accent.dart';
 import '../../data/tutorial_state.dart';
 
 /// The tour's entry in «المزيد»: one card that plays it now, with the
@@ -68,7 +68,7 @@ class TutorialEntryCard extends ConsumerWidget {
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () => _start(ref, TutorialMode.quick),
-                    icon: Icon(Icons.bolt_rounded, size: 18),
+                    icon: const Icon(Icons.bolt_rounded, size: 18),
                     label: Text('tutorial.quick_tour'.tr()),
                   ),
                 ),
@@ -76,7 +76,7 @@ class TutorialEntryCard extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _start(ref, TutorialMode.detailed),
-                    icon: Icon(Icons.list_alt_rounded, size: 18),
+                    icon: const Icon(Icons.list_alt_rounded, size: 18),
                     label: Text('tutorial.detailed_tour'.tr()),
                   ),
                 ),

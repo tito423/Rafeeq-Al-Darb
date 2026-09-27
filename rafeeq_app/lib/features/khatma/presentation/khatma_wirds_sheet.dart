@@ -185,7 +185,7 @@ class _WirdTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     final subtle = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
     );
@@ -198,7 +198,7 @@ class _WirdTile extends ConsumerWidget {
       shape: isCurrent
           ? RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
-              side: BorderSide(color: gold),
+              side: const BorderSide(color: gold),
             )
           : null,
       child: InkWell(

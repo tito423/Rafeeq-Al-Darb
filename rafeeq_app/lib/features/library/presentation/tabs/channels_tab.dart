@@ -4,15 +4,14 @@
 /// choose where they open (`link_list_manage_screen.dart`).
 library;
 
-import '../../../../core/widgets/paired_list_view.dart';
-import '../../../../core/widgets/mirrored_network_image.dart';
-import '../../../../core/widgets/arabic_text.dart';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/i18n/proper_name.dart';
+import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/widgets/mirrored_network_image.dart';
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../../channels/data/islamic_channels.dart';
 import '../../data/link_list_customization.dart';
 import '../widgets/link_list_manage_screen.dart';

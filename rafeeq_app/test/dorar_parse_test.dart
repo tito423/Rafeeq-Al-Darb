@@ -1,3 +1,7 @@
+// Reads JSON fixtures field by field; a wrong shape fails the test, which
+// is the point.
+// ignore_for_file: avoid_dynamic_calls
+
 import 'dart:convert';
 import 'dart:io';
 

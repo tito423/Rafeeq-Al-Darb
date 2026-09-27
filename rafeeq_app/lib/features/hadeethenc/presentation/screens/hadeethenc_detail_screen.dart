@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/db/hadeethenc_repository.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
-import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/utils/external_link.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
 
 /// One record of موسوعة الأحاديث النبوية, in full.

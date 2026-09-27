@@ -19,7 +19,7 @@ class SelectedSurahsCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mushaf = ref.watch(mushafDataProvider).valueOrNull;
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
 
     Widget tile(int id) => Expanded(
       child: Padding(

@@ -55,7 +55,7 @@ class RepeatDialogState extends State<RepeatDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     return AlertDialog(
       title: Text('quran.repeat_dialog_title'.tr()),
       scrollable: true,

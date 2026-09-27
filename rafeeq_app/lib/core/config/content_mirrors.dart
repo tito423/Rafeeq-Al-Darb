@@ -71,7 +71,7 @@ class ContentMirrors {
         url,
       ];
     }
-    final base = '${AppConfig.contentBaseUrl}/';
+    const base = '${AppConfig.contentBaseUrl}/';
     // A bucket URL by either road: the configured base, or r2.dev itself
     // (what a player holds after hopping from the domain to r2.dev).
     final String key;

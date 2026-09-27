@@ -123,7 +123,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          side: BorderSide(color: border, width: 1),
+          side: BorderSide(color: border),
         ),
         margin: EdgeInsets.zero,
       ),

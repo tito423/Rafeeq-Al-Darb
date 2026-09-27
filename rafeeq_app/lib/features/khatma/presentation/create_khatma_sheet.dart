@@ -305,7 +305,6 @@ class _StartStep extends StatelessWidget {
           ),
           items: [
             DropdownMenuItem(
-              value: null,
               child: Text('khatma.start_beginning'.tr()),
             ),
             for (var j = 1; j <= 30; j++)
@@ -357,7 +356,7 @@ class _DurationStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -452,7 +451,7 @@ class _DurationStep extends StatelessWidget {
                           ),
                         ],
                       ),
-                style: TextStyle(color: gold),
+                style: const TextStyle(color: gold),
               ),
             ),
             TextButton(

@@ -6,26 +6,26 @@
 /// twenty-five classes in it.
 library;
 
-import '../../../../core/widgets/paired_list_view.dart';
-import '../../../../core/widgets/accordion.dart';
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/services/download_manager.dart';
-import '../widgets/book_card.dart';
-import '../widgets/hidden_books_sheet.dart';
-import '../../data/hidden_books.dart';
-import 'spoken_books_view.dart';
-import '../../data/library_api_service.dart';
 import '../../../../core/i18n/proper_name.dart';
+import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/accordion.dart';
+import '../../../../core/widgets/paired_list_view.dart';
+import '../../../shamela/data/shamela_library.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_category.dart';
+import '../../data/hidden_books.dart';
+import '../../data/library_api_service.dart';
 import '../screens/book_text_reader_screen.dart';
-import '../../../shamela/data/shamela_library.dart';
+import '../widgets/book_card.dart';
+import '../widgets/hidden_books_sheet.dart';
+import 'spoken_books_view.dart';
 
 class BooksTab extends StatefulWidget {
   const BooksTab({super.key});
@@ -154,7 +154,7 @@ class _BooksTabState extends State<BooksTab> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(''),
+        title: const Text(''),
         content: Text('library.delete_confirm'.tr()),
         actions: [
           TextButton(
@@ -649,7 +649,7 @@ class _MyLibraryView extends StatelessWidget {
 
   Widget _row(BuildContext context, LibraryBook b) {
     final scheme = Theme.of(context).colorScheme;
-    final size = '';
+    const size = '';
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),

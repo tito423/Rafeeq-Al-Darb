@@ -1,6 +1,3 @@
-import '../../../../core/widgets/mirrored_network_image.dart';
-import '../../data/inked_svg.dart';
-import '../../data/mushaf_paper_provider.dart';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -10,10 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics_compat.dart' show RenderingStrategy;
 
-import '../../data/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/mirrored_network_image.dart';
 import '../../data/ayah_coords_repository.dart';
+import '../../data/inked_svg.dart';
 import '../../data/mushaf_edition.dart';
+import '../../data/mushaf_page_service.dart';
+import '../../data/mushaf_paper_provider.dart';
 import '../../data/quran_zoom_provider.dart';
 
 /// One mushaf page: the authentic KFQC page as vector art, with the real ayah
@@ -475,7 +475,6 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                   image: provider,
                   fit: BoxFit.contain,
                   colorFilter: filter,
-                  filterQuality: FilterQuality.medium,
                 ),
               ),
               child: const SizedBox.expand(),

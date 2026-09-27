@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/i18n/supported_locales.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../support/presentation/screens/support_screen.dart';
-import '../../../../core/widgets/fitted_sheet.dart';
 
 /// «حط تحت التاريخ الهجري زر سريع لتغيير الثيم … وتحت التاريخ الميلادي زر
 /// سريع لتغيير اللغة … وخلّي أيقوناتهم جميلة وأنيميتد». Two small round
@@ -21,7 +21,7 @@ class ThemeQuickButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final v = ref.watch(themeControllerProvider);
-    final all = ThemeVariant.values;
+    const all = ThemeVariant.values;
     return _QuickButton(
       color: color,
       icon: v.icon,

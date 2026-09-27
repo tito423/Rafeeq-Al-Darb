@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/mushaf_paper_provider.dart';
 import '../../../../../core/widgets/fitted_sheet.dart';
+import '../../../data/mushaf_paper_provider.dart';
 
 /// The paper mushaf's grounds - normal, warm, night - as one row of chips.
 ///

@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import 'sunnah_fasting.dart';
 import '../../../core/services/notification_router.dart';
+import 'sunnah_fasting.dart';
 
 /// Arms the evenings [planFastingReminders] chose, one notification each.
 ///
@@ -35,7 +35,6 @@ class FastingReminderService {
         _channelId,
         'fasting.channel'.tr(),
         description: 'fasting.channel_desc'.tr(),
-        importance: Importance.defaultImportance,
       ),
     );
     _channelReady = true;
@@ -71,8 +70,6 @@ class FastingReminderService {
           android: AndroidNotificationDetails(
             _channelId,
             'fasting.channel'.tr(),
-            importance: Importance.defaultImportance,
-            priority: Priority.defaultPriority,
             styleInformation: BigTextStyleInformation(body),
             // Gone by the next morning's fast if it was not dismissed — the
             // 25-notification budget is shared with everything else (trap #33).

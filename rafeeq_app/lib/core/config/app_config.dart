@@ -143,7 +143,6 @@ abstract final class AppConfig {
   /// appears; nothing else has to change.
   static const String supportUrl = String.fromEnvironment(
     'RAFEEQ_SUPPORT_URL',
-    defaultValue: '',
   );
 
   /// The privacy policy, hosted on the same bucket as the content.

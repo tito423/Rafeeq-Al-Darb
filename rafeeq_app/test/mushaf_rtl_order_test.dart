@@ -36,10 +36,10 @@ void main() {
           child: SizedBox(
             width: 400,
             child: Text.rich(
-              TextSpan(children: [
-                const TextSpan(text: a1),
+              const TextSpan(children: [
+                TextSpan(text: a1),
                 WidgetSpan(child: SizedBox(width: 20, height: 20)),
-                const TextSpan(text: a2),
+                TextSpan(text: a2),
                 WidgetSpan(child: SizedBox(width: 20, height: 20)),
               ]),
               key: key,

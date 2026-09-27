@@ -4,8 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import 'quote_repository.dart';
 import '../../../core/services/notification_router.dart';
+import 'quote_repository.dart';
 
 /// «إشعار كل مدة يحددها المالك … لما يضغط عليه يفتح كارت جوّه التطبيق».
 ///
@@ -59,7 +59,6 @@ class QuoteReminderService {
         _channelId,
         _channelName,
         description: 'notif.quote_channel_desc'.tr(),
-        importance: Importance.defaultImportance,
       ),
     );
     _channelReady = true;
@@ -147,8 +146,6 @@ class QuoteReminderService {
           android: AndroidNotificationDetails(
             _channelId,
             _channelName,
-            importance: Importance.defaultImportance,
-            priority: Priority.defaultPriority,
             styleInformation: BigTextStyleInformation(
               _preview(quote.text),
               summaryText: quote.bookTitle,

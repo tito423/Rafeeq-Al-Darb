@@ -12,8 +12,8 @@ import '../../../../core/db/quran_repository.dart';
 import '../../../../core/db/sciences_repository.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/digits.dart' show trn, percentOf;
 import '../../../../core/utils/byte_formatter.dart' show formatBytes;
+import '../../../../core/utils/digits.dart' show trn, percentOf;
 import 'ayah_sciences/ayah_panel.dart';
 import 'ayah_sciences/irab_tab.dart';
 import 'ayah_sciences/sciences_common.dart';
@@ -147,7 +147,7 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     final repo = ref.watch(sciencesRepositoryProvider).valueOrNull;
     if (repo != null) _bindRepo(repo);
     final ready = _tafseer != null;

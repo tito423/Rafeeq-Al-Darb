@@ -33,7 +33,7 @@ void main() {
 
   // A year and a month from today, so a Ramadan, both Eids and a Dhu
   // al-Hijjah are all inside the window.
-  final now = DateTime(2026, 9, 18, 16, 0);
+  final now = DateTime(2026, 9, 18, 16);
   final plan = planFastingReminders(
     now: now,
     hijriOffsetDays: 0,

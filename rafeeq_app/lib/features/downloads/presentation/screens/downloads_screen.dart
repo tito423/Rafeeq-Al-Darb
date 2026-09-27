@@ -1,33 +1,34 @@
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/services/download_engine.dart';
 import '../../../../core/services/download_manager.dart';
-import '../../../quran/data/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../../core/widgets/two_pane_scroll.dart';
+import '../../../assistant/presentation/assistant_settings_card.dart';
+import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/data/mushaf_edition.dart';
-import '../../data/downloads_controller.dart';
-import '../../../quran_audio/data/quran_audio_library.dart';
+import '../../../quran/data/mushaf_page_service.dart';
+import '../../../quran/presentation/screens/sciences_pack_screen.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
-import '../../../quran_audio/presentation/quran_audio_screen.dart';
-import '../widgets/download_category_style.dart';
-import '../../../../core/utils/byte_formatter.dart';
+import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../../quran_audio/presentation/ayah_download_screen.dart';
+import '../../../quran_audio/presentation/quran_audio_screen.dart';
+import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../data/downloads_controller.dart';
+import '../widgets/active_downloads_panel.dart';
+import '../widgets/download_category_style.dart';
+import '../widgets/initial_downloads_entry.dart';
 import '../widgets/library_route.dart';
 import '../widgets/mushaf_tiles.dart';
-import '../../../settings/presentation/screens/settings_screen.dart';
-import '../../../library/presentation/widgets/book_voice_section.dart';
-import '../../../quran/presentation/screens/sciences_pack_screen.dart';
-import '../../../assistant/presentation/assistant_settings_card.dart';
-import '../widgets/initial_downloads_entry.dart';
 import '../widgets/storage_auto_refresh.dart';
-import '../widgets/active_downloads_panel.dart';
-import '../../../../core/widgets/two_pane_scroll.dart';
 
 String _fmtSize(int bytes) {
   // Binary units, matching what Android's own storage screen reports.

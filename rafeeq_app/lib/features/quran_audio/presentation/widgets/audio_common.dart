@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/navigation.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/islamic_pattern.dart';
-import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/services/audio_failure.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../quran/data/mushaf_data_provider.dart';
 import '../../data/mp3quran_api.dart';
 import '../../data/quran_audio_library.dart';

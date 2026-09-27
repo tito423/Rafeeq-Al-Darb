@@ -127,7 +127,7 @@ class _AyahShareCard extends StatelessWidget {
             Text(
               translation!,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 17,
                 height: 1.5,
                 color: AppColors.textMedium,
@@ -149,7 +149,7 @@ class _AyahShareCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             'app.name'.tr(),
-            style: TextStyle(color: AppColors.textLow, fontSize: 12),
+            style: const TextStyle(color: AppColors.textLow, fontSize: 12),
           ),
         ],
       ),

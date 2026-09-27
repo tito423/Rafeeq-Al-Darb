@@ -4,28 +4,27 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:path/path.dart' as p;
 
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
-import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/services/adhan_catalog_service.dart';
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/services/adhan_uri_bridge.dart';
+import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_retry.dart';
+import '../../../../core/widgets/readable_insets.dart';
 import '../../../home/data/prayer_controller.dart';
 import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
+import '../../data/prayer_status_enabled_provider.dart';
 import '../widgets/adhan_backgrounds_card.dart';
 import '../widgets/adhan_choice_cards.dart';
 import '../widgets/adhan_preview_card.dart';
 import '../widgets/alarm_volume_tile.dart';
-import '../../data/prayer_status_enabled_provider.dart';
 import 'azan_player_screen.dart';
-import '../../../../core/widgets/readable_insets.dart';
 
 const _prayerLabels = {
   'fajr': 'prayer.fajr',

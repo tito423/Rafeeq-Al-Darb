@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
-import '../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
-
-import '../data/ayah_opening.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
+import '../data/ayah_opening.dart';
 import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
 import 'khatma_screen.dart';
@@ -27,7 +26,7 @@ class KhatmaCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final active = ref.watch(activeKhatmasProvider);
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
 
     return Card(
       clipBehavior: Clip.antiAlias,

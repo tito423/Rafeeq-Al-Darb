@@ -9,7 +9,7 @@ import 'package:rafeeq_app/features/khatma/data/khatma_store.dart';
 void main() {
   Khatma pages10({int read = 0, List<WirdRecord> wirds = const []}) => Khatma(
     id: 'k',
-    startDate: DateTime(2026, 9, 1),
+    startDate: DateTime(2026, 9),
     mode: KhatmaMode.dailyPages,
     dailyAmount: 10,
     pagesRead: read,

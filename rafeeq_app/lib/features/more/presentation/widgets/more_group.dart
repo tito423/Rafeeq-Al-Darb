@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/more_group_accent.dart';
+import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/accordion.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
+import '../../../../core/widgets/more_group_accent.dart';
 import '../../../tutorial/data/tutorial_state.dart';
-import '../../../../core/utils/screen_class.dart';
 
 /// One group of «المزيد» as a single card that opens onto its contents.
 ///
@@ -61,7 +61,6 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
         if (!mounted) return;
         Scrollable.ensureVisible(
           context,
-          alignment: 0,
           duration: const Duration(milliseconds: 280),
           curve: Curves.easeOutCubic,
         );

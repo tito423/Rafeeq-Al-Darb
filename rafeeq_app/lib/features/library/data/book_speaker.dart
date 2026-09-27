@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'dart:io';
 
 import 'package:audio_session/audio_session.dart';
@@ -9,9 +8,9 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../../core/services/audio_exclusive.dart';
 import 'tts/book_voice_pref.dart';
 import 'tts/open_voice.dart';
-import '../../../core/services/audio_exclusive.dart';
 
 /// Reads a book's page aloud, one sentence at a time.
 ///
@@ -243,7 +242,7 @@ class BookSpeaker {
     } catch (e) {
       debugPrint('BookSpeaker: engine setup failed: $e');
       _speaking = false;
-      _emit(BookSpeakerState(speaking: false, chunk: 0, total: 0));
+      _emit(const BookSpeakerState(speaking: false, chunk: 0, total: 0));
       return;
     }
 

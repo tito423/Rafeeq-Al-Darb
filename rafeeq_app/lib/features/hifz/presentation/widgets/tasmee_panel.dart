@@ -18,16 +18,16 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
+import '../../../../core/services/adhan_native.dart';
+import '../../../../core/services/audio_exclusive.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/utils/user_error.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../data/hifz_store.dart';
-import '../../data/tasmee_mic.dart';
 import '../../data/tasmee_engine.dart';
-import '../../../../core/services/adhan_native.dart';
-import '../../../../core/utils/user_error.dart';
-import '../../../../core/services/audio_exclusive.dart';
+import '../../data/tasmee_mic.dart';
 
 enum _Phase { idle, recording, thinking, done }
 
@@ -191,7 +191,6 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
         // paired headset cannot pull the route away from it.
         androidConfig: viaBluetooth
             ? const AndroidRecordConfig(
-                manageBluetooth: true,
                 audioSource: AndroidAudioSource.voiceCommunication,
                 audioManagerMode: AudioManagerMode.modeInCommunication,
               )

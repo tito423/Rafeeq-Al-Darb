@@ -55,7 +55,7 @@ void main() {
     var graded = 0;
 
     for (final row in db.select(
-        "SELECT grade, COUNT(*) AS n FROM hadiths "
+        'SELECT grade, COUNT(*) AS n FROM hadiths '
         "WHERE grade IS NOT NULL AND grade <> '' GROUP BY grade")) {
       final n = row['n'] as int;
       graded += n;
@@ -63,7 +63,7 @@ void main() {
       if (latin.hasMatch(ar)) offenders['grade: $ar'] = n;
     }
     for (final row in db.select(
-        "SELECT grader, COUNT(*) AS n FROM hadiths "
+        'SELECT grader, COUNT(*) AS n FROM hadiths '
         "WHERE grader IS NOT NULL AND grader <> '' GROUP BY grader")) {
       final ar = localizedHadithGrader(row['grader'] as String, 'ar');
       if (latin.hasMatch(ar)) offenders['grader: $ar'] = row['n'] as int;

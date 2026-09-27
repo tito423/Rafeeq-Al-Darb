@@ -1,13 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
-
 import 'package:flutter/material.dart';
 
+import '../../../../core/db/hadith_repository.dart';
+import '../../../../core/utils/digits.dart' show localizeDigits;
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/future_view.dart';
 import '../../../../core/widgets/paired_list_view.dart';
-import '../../../../core/utils/digits.dart' show localizeDigits;
-
-import '../../../../core/db/hadith_repository.dart';
 import 'hadith_chapter_screen.dart';
 
 /// A book's chapters (abwab). Tapping one opens its hadiths.

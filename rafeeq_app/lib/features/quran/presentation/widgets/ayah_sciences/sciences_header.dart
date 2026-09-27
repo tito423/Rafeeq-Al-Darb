@@ -8,7 +8,6 @@
 library;
 
 import 'dart:async';
-import '../../../../../core/utils/digits.dart';
 
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (rtl/ltr) used throughout this file.
@@ -17,13 +16,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../app/navigation.dart' show rootScaffoldMessengerKey;
 import '../../../../../core/db/models.dart';
 import '../../../../../core/db/quran_repository.dart';
 import '../../../../../core/db/sciences_repository.dart';
 import '../../../../../core/services/ayah_audio_service.dart';
-import '../../../../downloads/data/reciters_provider.dart';
-import '../../../../../app/navigation.dart' show rootScaffoldMessengerKey;
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/utils/digits.dart';
+import '../../../../downloads/data/reciters_provider.dart';
 import '../../../data/ayah_notes_store.dart';
 import '../../../data/translation_lang_provider.dart';
 import '../ayah_share_card.dart';
@@ -113,6 +113,9 @@ class SciencesHeader extends ConsumerWidget {
             ),
           ),
         );
+        // The tear-off `banner?.close` the lint suggests does not compile
+        // (a nullable tear-off is `VoidCallback?`).
+        // ignore: unnecessary_lambdas
         unawaited(repeat.whenComplete(() => banner?.close()));
       case 'note':
         await showDialog<void>(
@@ -144,7 +147,7 @@ class SciencesHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     final notes = ref.watch(ayahNotesProvider);
     final note = notes[AyahNotesNotifier.keyFor(ayah.surahId, ayah.ayahNumber)];
     final hasNote = note != null && note.isNotEmpty;

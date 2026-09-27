@@ -45,7 +45,6 @@ class ToolbarStrip extends StatelessWidget {
       // book reader's own toolbar).
       return FittedBox(
         fit: BoxFit.scaleDown,
-        alignment: Alignment.center,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

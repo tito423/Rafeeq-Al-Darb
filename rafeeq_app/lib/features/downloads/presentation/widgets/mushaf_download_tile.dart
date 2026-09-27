@@ -1,15 +1,15 @@
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../quran/data/mushaf_page_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../quran/data/mushaf_edition.dart';
+import '../../../quran/data/mushaf_page_service.dart';
 import '../../../quran/presentation/widgets/quran_book_cover_thumbnail.dart';
 import 'mushaf_preview_sheet.dart';
-import '../../../../core/utils/byte_formatter.dart';
 
 String formatBytes(int bytes) => formatBytesBinary(bytes);
 
@@ -145,7 +145,7 @@ class _MushafDownloadTileState extends State<MushafDownloadTile> {
                         ),
                       ),
                       if (complete)
-                        Icon(
+                        const Icon(
                           Icons.offline_pin,
                           color: AppColors.success,
                           size: 20,

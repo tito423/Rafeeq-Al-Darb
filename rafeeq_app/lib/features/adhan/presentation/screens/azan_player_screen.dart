@@ -1,21 +1,20 @@
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 import 'dart:convert';
-
-import 'package:flutter/services.dart' show rootBundle;
 
 // easy_localization re-exports package:intl, whose `TextDirection` collides
 // with dart:ui's (used here for the RTL adhan text) — hide it, same fix as
 // azkar_section_screen.dart / ayah_sciences_sheet.dart.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../data/azan_subtitle.dart';
+import '../../../../core/utils/digits.dart';
 import '../../data/adhan_background.dart';
+import '../../data/azan_subtitle.dart';
 import '../widgets/adhan_scene.dart';
 
 /// The prayer's name in the app's *current* language.
@@ -161,7 +160,7 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
       final elapsed = DateTime.now().difference(silentStart);
       _syncTo(elapsed);
       if (_subtitles.isNotEmpty && elapsed >= _subtitles.last.endTime) {
-        _dismiss();
+        unawaited(_dismiss());
       }
       return;
     }
@@ -182,7 +181,7 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
     } else if (_sawPlaying) {
       // The recording finished (or something else stopped it) — leave exactly
       // the way the Stop button does, so the screen never outlives the adhan.
-      _dismiss();
+      unawaited(_dismiss());
     } else if (++_silentPolls > _silentPollLimit) {
       // Never started at all: a raw resource that is missing, or a custom
       // file the user deleted. Rather than sit on a frozen first phrase,
@@ -408,7 +407,7 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
                             fontWeight: FontWeight.bold,
                             color: AppColors.gold,
                             shadows: [
-                              Shadow(blurRadius: 18, color: Color(0xFF000000)),
+                              Shadow(blurRadius: 18),
                             ],
                           ),
                         ),

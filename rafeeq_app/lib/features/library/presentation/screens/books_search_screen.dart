@@ -1,17 +1,17 @@
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/utils/name_match.dart';
 import '../../data/book_catalog.dart';
 import '../../data/library_api_service.dart';
-import '../../../../core/utils/arabic_normalize.dart';
-import '../../../../core/utils/name_match.dart';
-import 'book_text_reader_screen.dart';
-import '../../../../core/i18n/proper_name.dart';
 import '../widgets/author_search_result.dart';
+import 'book_text_reader_screen.dart';
 
 /// Searches every downloaded book at once.
 ///
@@ -216,13 +216,13 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
     if (book == null) return;
     final path = await LibraryApiService.instance.bookFilePath(hit.bookId);
     if (!mounted) return;
-    Navigator.of(context).push(MaterialPageRoute<void>(
+    unawaited(Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (_) => BookTextReaderScreen(
         book: book,
         path: path,
         initialPageIndex: hit.pageIndex,
       ),
-    ));
+    )));
   }
 
   /// A book found by title or author: opened if it is on the device,
@@ -247,9 +247,9 @@ class _BooksSearchScreenState extends State<BooksSearchScreen> {
     }
     final path = await api.bookFilePath(b.id);
     if (!mounted) return;
-    Navigator.of(context).push(MaterialPageRoute<void>(
+    unawaited(Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (_) => BookTextReaderScreen(book: b, path: path),
-    ));
+    )));
   }
 
   @override

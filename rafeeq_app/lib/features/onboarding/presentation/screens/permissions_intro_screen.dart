@@ -1,13 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/widgets/headed_list_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/i18n/supported_locales.dart';
+import '../../../../core/services/alarm_permissions_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_controller.dart';
+import '../../../../core/widgets/headed_list_layout.dart';
 import 'onboarding_screen.dart';
 
 /// EVERY PERMISSION, ONCE, BEFORE ANYTHING ELSE — and told why first.

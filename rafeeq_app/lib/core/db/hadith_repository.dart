@@ -196,7 +196,7 @@ class HadithRepository {
     return (
       await one('SELECT COUNT(*) FROM books'),
       await one('SELECT COUNT(*) FROM hadiths'),
-      await one("SELECT COUNT(*) FROM hadiths "
+      await one('SELECT COUNT(*) FROM hadiths '
           "WHERE grade IS NOT NULL AND TRIM(grade) <> ''"),
     );
   }
@@ -383,7 +383,7 @@ Future<void> installBundledHadith() async {
       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
   final support = await getApplicationSupportDirectory();
   final dir = p.join(support.path, 'databases');
-  final version = AppConfig.hadithDbVersion;
+  const version = AppConfig.hadithDbVersion;
   await Isolate.run(() async {
     final archive = ZipDecoder().decodeBytes(bytes);
     final entry = archive.files.firstWhere(

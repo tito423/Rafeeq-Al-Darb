@@ -95,7 +95,7 @@ class DeviceAudioScanner extends ChangeNotifier {
   }
 
   Future<void> _refreshFolders(List<String> paths) async {
-    final exts = audioExtensions;
+    const exts = audioExtensions;
     final listed = await Isolate.run(() {
       final out = <String, List<String>>{};
       for (final path in paths) {

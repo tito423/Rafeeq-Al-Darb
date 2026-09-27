@@ -1,4 +1,3 @@
-import '../../../core/config/content_mirrors.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -8,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../../core/config/content_mirrors.dart';
 import '../../../core/services/download_engine.dart';
 import 'mp3quran_api.dart';
 import 'quran_audio_player.dart';
@@ -95,6 +95,9 @@ class QuranAudioLibrary extends ChangeNotifier {
   final Map<int, Set<int>> _onDisk = {};
   final Map<String, SurahAudioStatus> _status = {};
   Future<void>? _ready;
+  // Lives as long as the process (a singleton, set up once), so it is
+  // deliberately never cancelled/closed.
+  // ignore: cancel_subscriptions
   StreamSubscription<TaskUpdate>? _sub;
   Timer? _notifyTimer;
 
@@ -256,7 +259,6 @@ class QuranAudioLibrary extends ChangeNotifier {
         taskId: taskIdFor(e.moshafId, surah),
         url: _sourcesFor(e, surah)[hop.clamp(0, _sourcesFor(e, surah).length - 1)],
         filename: fileNameFor(surah),
-        baseDirectory: BaseDirectory.applicationDocuments,
         directory: '$_dirName/${e.moshafId}',
         group: DownloadEngine.groupQuranAudio,
         updates: Updates.statusAndProgress,

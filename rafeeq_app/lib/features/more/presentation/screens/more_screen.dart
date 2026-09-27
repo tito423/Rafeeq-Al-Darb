@@ -1,28 +1,28 @@
-import '../../../../core/utils/screen_class.dart';
-import '../../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../../dedications/presentation/dedications_screen.dart';
-import '../../../ruqyah/data/ruqyah_catalog.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
+import '../../../../core/widgets/paired_list_view.dart';
+import '../../../dedications/presentation/dedications_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
+import '../../../hajj/presentation/hajj_screen.dart';
+import '../../../hifz/presentation/hifz_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
+import '../../../ruqyah/data/ruqyah_catalog.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../settings/presentation/widgets/focus_mode_picker.dart';
-import '../../../hajj/presentation/hajj_screen.dart';
-import '../../../hifz/presentation/hifz_screen.dart';
+import '../../../support/presentation/screens/support_screen.dart';
 import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
-import '../../../../app/shell/tab_request_provider.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../tutorial/presentation/widgets/tutorial_entry_card.dart';
 import '../widgets/more_group.dart';
 import '../widgets/sync_account_card.dart';
-import '../../../support/presentation/screens/support_screen.dart';
 
 /// The "المزيد" tab.
 ///
@@ -97,7 +97,6 @@ class MoreScreen extends ConsumerWidget {
           // two neighbours alike. Children inherit through MoreGroupAccent.
           MoreGroup(
             title: 'more.group_worship'.tr(),
-            accent: AppColors.gold,
             subtitle: _names([
               'quran_audio.title',
               'tajweed.title',
@@ -111,7 +110,6 @@ class MoreScreen extends ConsumerWidget {
                 id: TourAnchor.moreQuranAudio,
                 child: IslamicActionCard(
                   icon: Icons.library_music_outlined,
-                  accent: AppColors.gold,
                   title: 'quran_audio.title'.tr(),
                   subtitle: 'quran_audio.subtitle'.tr(),
                   onTap: () => Navigator.of(context).push(
@@ -126,7 +124,6 @@ class MoreScreen extends ConsumerWidget {
                 id: TourAnchor.moreTajweed,
                 child: IslamicActionCard(
                   icon: Icons.record_voice_over_outlined,
-                  accent: AppColors.gold,
                   title: 'tajweed.title'.tr(),
                   subtitle: 'tajweed.card_subtitle'.tr(),
                   onTap: () => Navigator.of(context).push(
@@ -139,7 +136,6 @@ class MoreScreen extends ConsumerWidget {
 
               IslamicActionCard(
                 icon: Icons.mosque_outlined,
-                accent: AppColors.gold,
                 title: 'hajj.title'.tr(),
                 subtitle: 'hajj.card_subtitle'.tr(),
                 onTap: () => Navigator.of(context).push(
@@ -152,7 +148,6 @@ class MoreScreen extends ConsumerWidget {
                 id: TourAnchor.moreHifz,
                 child: IslamicActionCard(
                   icon: Icons.school_outlined,
-                  accent: AppColors.gold,
                   title: 'hifz.title'.tr(),
                   subtitle: 'hifz.card_subtitle'.tr(),
                   onTap: () => Navigator.of(context).push(
@@ -278,7 +273,6 @@ class MoreScreen extends ConsumerWidget {
             children: [
               IslamicActionCard(
                 icon: Icons.volunteer_activism_outlined,
-                accent: AppColors.gold,
                 title: 'support.title'.tr(),
                 subtitle: 'support.entry_sub'.tr(),
                 onTap: () => Navigator.of(context).push(

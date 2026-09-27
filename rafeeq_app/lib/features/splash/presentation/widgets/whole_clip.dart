@@ -52,7 +52,7 @@ class WholeClip extends StatelessWidget {
             ),
           ),
           const ColoredBox(color: Color(0x59000000)),
-          FittedBox(fit: BoxFit.contain, child: media),
+          FittedBox(child: media),
         ],
       );
     });

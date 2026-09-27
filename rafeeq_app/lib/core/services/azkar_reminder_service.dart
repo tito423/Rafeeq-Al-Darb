@@ -1,6 +1,7 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+
 import 'notification_router.dart';
 
 /// Daily "time for your adhkar" reminders, at whatever time the user picked
@@ -39,7 +40,6 @@ class AzkarReminderService {
         _channelId,
         _channelName,
         description: 'notif.azkar_channel_desc'.tr(),
-        importance: Importance.defaultImportance,
       ),
     );
     _channelReady = true;
@@ -82,8 +82,6 @@ class AzkarReminderService {
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,
-          importance: Importance.defaultImportance,
-          priority: Priority.defaultPriority,
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,

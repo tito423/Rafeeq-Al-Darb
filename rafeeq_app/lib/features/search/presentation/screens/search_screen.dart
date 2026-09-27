@@ -1,5 +1,4 @@
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 
 // easy_localization re-exports package:intl, whose TextDirection collides
 // with dart:ui's — and the ayah highlighter below needs dart:ui's.
@@ -11,10 +10,11 @@ import '../../../../core/db/models.dart';
 import '../../../../core/db/quran_repository.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/quran_search_match.dart';
-import '../../data/topic_tree.dart';
+import '../../../../core/widgets/arabic_text.dart';
 import '../../../downloads/data/reciters_provider.dart';
+import '../../data/topic_tree.dart';
 
 /// Thematic + keyword Quran search. Returns the tapped ayah's page number via
 /// `Navigator.pop`, so the Quran screen can jump straight there.

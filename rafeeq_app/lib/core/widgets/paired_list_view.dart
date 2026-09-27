@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'staggered_entrance.dart';
 import '../utils/screen_class.dart';
+import 'staggered_entrance.dart';
 
 /// A list of cards: one card a row upright, two a row sideways.
 ///

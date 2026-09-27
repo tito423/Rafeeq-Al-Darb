@@ -350,7 +350,7 @@ class _AdhanScenePainter extends CustomPainter {
     for (var layer = 0; layer < 2; layer++) {
       final lift = size.height * (0.045 - layer * 0.018);
       final path = Path()..moveTo(0, horizonY);
-      final steps = 12;
+      const steps = 12;
       for (var i = 0; i <= steps; i++) {
         final x = size.width * i / steps;
         final y = horizonY -
@@ -467,10 +467,10 @@ class _AdhanScenePainter extends CustomPainter {
     canvas.drawRect(
       Rect.fromLTRB(0, horizonY, size.width, size.height),
       Paint()
-        ..shader = LinearGradient(
+        ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [const Color(0xFF03070F), const Color(0xFF01040A)],
+          colors: [Color(0xFF03070F), Color(0xFF01040A)],
         ).createShader(
           Rect.fromLTRB(0, horizonY, size.width, size.height),
         ),

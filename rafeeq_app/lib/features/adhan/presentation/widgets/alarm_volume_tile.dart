@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/utils/digits.dart';
-import '../../../../core/utils/byte_formatter.dart' show ratio;
 import 'package:flutter/material.dart';
 
 import '../../../../core/services/adhan_native.dart';
+import '../../../../core/utils/byte_formatter.dart' show ratio;
+import '../../../../core/utils/digits.dart';
 
 /// The phone's alarm volume, adjustable from inside the adhan settings.
 ///
@@ -90,7 +90,6 @@ class _AlarmVolumeTileState extends State<AlarmVolumeTile> {
             ),
             Slider(
               value: current.toDouble().clamp(0, _max.toDouble()),
-              min: 0,
               max: _max.toDouble(),
               divisions: _max,
               onChanged: (v) => setState(() => _current = v.round()),

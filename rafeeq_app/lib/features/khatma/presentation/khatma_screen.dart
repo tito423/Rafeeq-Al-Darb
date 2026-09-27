@@ -1,18 +1,17 @@
-import '../../../core/utils/digits.dart';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/digits.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
+import 'create_khatma_sheet.dart';
 import 'khatma_card.dart'
     show completeKhatmaWird, KhatmaPortionRangeBlock, KhatmaProgressSection;
-import 'create_khatma_sheet.dart';
 
 /// The full khatma manager (P2‑11) — every active khatma with its own
 /// progress/read-today/reminder controls, a "+" to start a new one, and a
@@ -174,7 +173,7 @@ class _KhatmaTile extends ConsumerWidget {
     // building blocks the Home card uses (KhatmaPortionRangeBlock /
     // KhatmaProgressSection), resolved from real mushaf data.
     final theme = Theme.of(context);
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     final subtleStyle = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
     );
@@ -200,7 +199,7 @@ class _KhatmaTile extends ConsumerWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.local_fire_department,
                           size: 14,
                           color: gold,

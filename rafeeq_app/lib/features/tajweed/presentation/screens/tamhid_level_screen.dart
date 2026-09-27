@@ -1,12 +1,12 @@
-import '../../../../core/widgets/accordion.dart';
-import '../../data/bundled_matn.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/accordion.dart';
 import '../../../library/data/book_text.dart';
+import '../../data/bundled_matn.dart';
 import '../../data/tamhid_course.dart';
 import '../../data/tamhid_lesson_text.dart';
 

@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:rafeeq_app/core/services/ayah_audio_service.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/core/config/app_config.dart';
+import 'package:rafeeq_app/core/services/ayah_audio_service.dart';
 import 'package:rafeeq_app/core/services/recitation_source.dart';
-import 'package:rafeeq_app/features/quran_audio/data/mp3quran_api.dart';
 import 'package:rafeeq_app/features/downloads/data/reciters_provider.dart';
+import 'package:rafeeq_app/features/quran_audio/data/mp3quran_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// The reciter list the app shows IS `RecitationSource.verifiedMirrors`
 /// (`recitersProvider` filters by it), because a reciter with no reachable
@@ -74,7 +74,7 @@ void main() {
   });
 
   group('a reciter saved before the fix', () {
-    setUp(() => TestWidgetsFlutterBinding.ensureInitialized());
+    setUp(TestWidgetsFlutterBinding.ensureInitialized);
 
     Future<String> restored(Map<String, Object> prefs) async {
       SharedPreferences.setMockInitialValues(prefs);

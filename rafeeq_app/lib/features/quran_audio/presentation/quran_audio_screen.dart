@@ -1,7 +1,4 @@
-import '../../../core/widgets/paired_list_view.dart';
-import '../../../core/widgets/accordion.dart';
 import 'dart:io';
-import '../../../core/utils/digits.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,17 +9,20 @@ import 'package:path/path.dart' as p;
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/utils/byte_formatter.dart';
+import '../../../core/utils/digits.dart';
+import '../../../core/utils/external_link.dart';
+import '../../../core/widgets/accordion.dart';
 import '../../../core/widgets/error_retry.dart';
+import '../../../core/widgets/paired_list_view.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/device_audio_scanner.dart';
-import '../data/quran_audio_favorites.dart';
 import '../data/mp3quran_api.dart';
+import '../data/quran_audio_favorites.dart';
 import '../data/quran_audio_library.dart';
 import '../data/quran_audio_player.dart';
 import 'reciter_screen.dart';
 import 'widgets/audio_common.dart';
 import 'widgets/mini_player.dart';
-import '../../../core/utils/external_link.dart';
 
 /// «تحميل تلاوات القرآن» — the reciters of mp3quran.net, what is on the
 /// device (a folder per reciter, a sub-folder per recitation), and audio files

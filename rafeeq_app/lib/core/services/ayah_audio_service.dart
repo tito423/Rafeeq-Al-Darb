@@ -10,18 +10,18 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'download_engine.dart';
-import 'surah_playlist.dart';
-
+import '../config/content_mirrors.dart';
 import '../db/models.dart';
-import 'continuous_recitation.dart';
-export 'continuous_recitation.dart';
 import '../db/quran_repository.dart';
 import '../utils/http_status_probe.dart';
-import '../config/content_mirrors.dart';
 import 'audio_failure.dart';
+import 'continuous_recitation.dart';
+import 'download_engine.dart';
 import 'finish_pauser.dart';
 import 'recitation_source.dart';
+import 'surah_playlist.dart';
+
+export 'continuous_recitation.dart';
 
 part 'continuous_recovery.dart';
 
@@ -83,9 +83,9 @@ class AyahAudioService {
   /// directly, so a widget that subscribed before a [_recreatePlayer] keeps
   /// receiving events from whichever player is current. Handing out
   /// `_player.playerStateStream` would leave every existing `StreamBuilder`
-  /// listening to a dead player.
-  final StreamController<PlayerState> _stateOut =
-      StreamController<PlayerState>.broadcast();
+  /// listening to a dead player. Never closed: it lives as long as the app.
+  // ignore: close_sinks
+  final StreamController<PlayerState> _stateOut = StreamController.broadcast();
   StreamSubscription<PlayerState>? _stateBridge;
   bool _bridged = false;
 

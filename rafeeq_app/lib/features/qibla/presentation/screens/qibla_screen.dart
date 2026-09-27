@@ -1,6 +1,4 @@
-import '../../../../core/widgets/two_pane_scroll.dart';
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -10,12 +8,14 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../app/app_locale_provider.dart';
-import '../../../../core/services/manual_location.dart';
+import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/services/location_service.dart';
+import '../../../../core/services/manual_location.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
@@ -155,7 +155,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     const kaabaLat = 21.4225;
     const kaabaLon = 39.8262;
     final phi1 = lat * math.pi / 180;
-    final phi2 = kaabaLat * math.pi / 180;
+    const phi2 = kaabaLat * math.pi / 180;
     final deltaLambda = (kaabaLon - lon) * math.pi / 180;
     final y = math.sin(deltaLambda) * math.cos(phi2);
     final x = math.cos(phi1) * math.sin(phi2) -
@@ -193,7 +193,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
             ),
           ],
           end: [
-            TutorialAnchor(
+            const TutorialAnchor(
               id: TourAnchor.adhanSettings,
               child: _AdhanSettingsLink(),
             ),
@@ -228,7 +228,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
           }
         },
         secondaryLabel: 'qibla.open_settings'.tr(),
-        onSecondary: () => Geolocator.openAppSettings(),
+        onSecondary: Geolocator.openAppSettings,
       );
     }
     if (_compassChecked && !_hasCompass) {

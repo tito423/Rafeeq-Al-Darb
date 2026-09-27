@@ -15,9 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/remote_tap.dart';
 import '../../data/adhan_background.dart';
 import '../widgets/adhan_background_painter.dart';
-import '../../../../core/widgets/remote_tap.dart';
 
 class AdhanBackgroundScreen extends ConsumerStatefulWidget {
   const AdhanBackgroundScreen({super.key});

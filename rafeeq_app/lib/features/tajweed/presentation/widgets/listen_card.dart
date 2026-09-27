@@ -98,7 +98,6 @@ class ListenCardState extends ConsumerState<ListenCard>
     await AyahAudioService.instance.play(
       ayah,
       repo,
-      edition: AyahAudioService.defaultEdition,
     );
   }
 
@@ -231,7 +230,6 @@ class _EqualizerBars extends StatelessWidget {
         animation: beat,
         builder: (context, _) => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             for (final p in phases)
               Container(

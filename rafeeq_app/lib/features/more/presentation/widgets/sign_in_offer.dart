@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/utils/user_error.dart';
 import '../../../../core/services/sync_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/user_error.dart';
 import '../../../../core/widgets/fitted_sheet.dart';
 
 /// Offers Google sign-in once, at the end of the very first run.

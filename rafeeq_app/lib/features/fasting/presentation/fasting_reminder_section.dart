@@ -1,10 +1,10 @@
-import '../../../core/utils/time_formatter.dart';
-import '../../../core/theme/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/time_formatter.dart';
 import '../data/fasting_reminder_provider.dart';
 import '../data/sunnah_fasting.dart';
 

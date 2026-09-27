@@ -3,12 +3,12 @@
 /// إسلامية» so the two can never drift into two different editors.
 library;
 
-import '../../../../core/widgets/readable_insets.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/utils/external_link.dart';
+import '../../../../core/widgets/readable_insets.dart';
 import '../../data/link_list_customization.dart';
 
 /// One entry as a list shows it — with the reader's edits already applied.

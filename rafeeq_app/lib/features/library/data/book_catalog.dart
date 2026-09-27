@@ -1,9 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
-import '../../../core/utils/digits.dart';
-
-import '../../../core/i18n/proper_name.dart';
 
 import '../../../core/config/app_config.dart';
+import '../../../core/i18n/proper_name.dart';
+import '../../../core/utils/digits.dart';
 import 'book_category.dart';
 
 /// A structured **text** edition of a book (P2-4b) — the companion to the
@@ -516,7 +515,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'adab_al_nafs',
-    diacritisedPct: 0,
     titleAr: 'أدب النفس',
     titleEn: 'Adab al-Nafs',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
@@ -1261,7 +1259,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_qubur_ibn_abi_al_dunya',
-    diacritisedPct: 0,
     titleAr: 'القبور لابن أبي الدنيا',
     titleEn: 'Al Qubur Ibn Abi Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -1574,7 +1571,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'nuniyyat_ibn_al_qayyim',
-    diacritisedPct: 0,
     titleAr: 'متن القصيدة النونية',
     titleEn: 'Nuniyyat Ibn Al Qayyim',
     authorAr: 'الإمام ابن قيّم الجوزية',
@@ -1784,7 +1780,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'dhamm_al_dunya',
-    diacritisedPct: 0,
     titleAr: 'ذم الدنيا',
     titleEn: 'Dhamm Al Dunya',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -2168,7 +2163,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'maqtal_ali',
-    diacritisedPct: 0,
     titleAr: 'مقتل أمير المؤمنين علي بن أبي طالب عليه السلام',
     titleEn: 'Maqtal Ali',
     authorAr: 'الإمام ابن أبي الدنيا',
@@ -2255,7 +2249,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'riyadat_al_nafs',
-    diacritisedPct: 0,
     titleAr: 'رياضة النفس',
     titleEn: 'Riyadat Al Nafs',
     authorAr: 'الحكيم أبو عبد الله محمد بن علي الترمذي',
@@ -2327,7 +2320,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_muqliq_ibn_al_jawzi',
-    diacritisedPct: 0,
     titleAr: 'المقلق',
     titleEn: 'Al Muqliq Ibn Al Jawzi',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2397,7 +2389,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tarikh_bayt_al_maqdis',
-    diacritisedPct: 0,
     titleAr: 'تاريخ بيت المقدس',
     titleEn: 'Tarikh Bayt Al Maqdis',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2414,7 +2405,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tadhkirat_al_arib_fi_tafsir_al_gharib',
-    diacritisedPct: 0,
     titleAr: 'تذكرة الأريب في تفسير الغريب (غريب القرآن الكريم)',
     titleEn: 'Tadhkirat Al Arib Fi Tafsir Al Gharib',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2634,7 +2624,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'mawaiz_ibn_al_jawzi_al_yaqutah',
-    diacritisedPct: 0,
     titleAr: 'الياقوتة - مواعظ ابن الجوزي',
     titleEn: 'Mawaiz Ibn Al Jawzi Al Yaqutah',
     authorAr: 'الإمام أبو الفرج ابن الجوزي',
@@ -2874,7 +2863,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'minhaj_al_talibin',
-    diacritisedPct: 0,
     titleAr: 'منهاج الطالبين وعمدة المفتين في الفقه',
     titleEn: 'Minhaj Al Talibin',
     authorAr: 'الإمام محيي الدين النووي',
@@ -3033,7 +3021,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'at_tibyan_hamalat_al_quran',
-    diacritisedPct: 0,
     titleAr: 'التبيان في آداب حملة القرآن',
     titleEn: 'At-Tibyan fi Adab Hamalat al-Quran',
     authorAr: 'الإمام محيي الدين النووي',
@@ -3055,7 +3042,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'al_arbaun_an_nawawiyyah',
-    diacritisedPct: 0,
     titleAr: 'الأربعون النووية',
     titleEn: 'The Forty Hadith of an-Nawawi',
     authorAr: 'الإمام محيي الدين النووي',
@@ -3077,7 +3063,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'at_taqrib_wat_taysir',
-    diacritisedPct: 0,
     // The book's full title, as Shamela 5586's card prints it. The short form
     // this entry used to carry is why the duplicate went unseen.
     titleAr: 'التقريب والتيسير لمعرفة سنن البشير النذير في أصول الحديث',
@@ -3274,7 +3259,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hilyat_al_awliya',
-    diacritisedPct: 0,
     titleAr: 'حلية الأولياء وطبقات الأصفياء',
     titleEn: 'Hilyat al-Awliya wa Tabaqat al-Asfiya',
     authorAr: 'الحافظ أبو نعيم الأصبهاني',
@@ -3294,7 +3278,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'taqrib_al_tahdhib',
-    diacritisedPct: 0,
     titleAr: 'تقريب التهذيب',
     titleEn: 'Taqrib al-Tahdhib',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3332,7 +3315,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'hady_al_sari',
-    diacritisedPct: 0,
     titleAr: 'هدي الساري مقدمة فتح الباري',
     titleEn: 'Hady al-Sari',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3429,7 +3411,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'nataij_al_afkar',
-    diacritisedPct: 0,
     titleAr: 'قطعة من نتائج الأفكار في تخريج أحاديث الأذكار',
     titleEn: 'Nataij al-Afkar',
     authorAr: 'الحافظ ابن حجر العسقلاني',
@@ -3723,7 +3704,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tarikh_al_khulafa_suyuti',
-    diacritisedPct: 0,
     titleAr: 'تاريخ الخلفاء',
     titleEn: 'History of the Caliphs',
     authorAr: 'جلال الدين عبد الرحمن السيوطي (ت ٩١١ هـ)',
@@ -3938,7 +3918,6 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'tahdhib_al_akhlaq',
-    diacritisedPct: 0,
     titleAr: 'تهذيب الأخلاق وتطهير الأعراق',
     titleEn: 'Tahdhib al-Akhlaq',
     authorAr: 'ابن مسكويه',

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
+import '../../library/data/book_catalog.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
-import '../../library/data/book_catalog.dart';
 import '../data/shamela_book_builder.dart';
-import '../data/shamela_catalogue_ids.dart';
 import '../data/shamela_catalog.dart';
+import '../data/shamela_catalogue_ids.dart';
 import '../data/shamela_import_service.dart';
 import '../data/shamela_library.dart';
 
@@ -94,11 +94,11 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
     if (book == null) return;
     final path = await LibraryApiService.instance.bookFilePath(bookId);
     if (!mounted) return;
-    Navigator.of(context).push(
+    unawaited(Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => BookTextReaderScreen(book: book, path: path),
       ),
-    );
+    ));
   }
 
   Future<void> _readOnDevice() async {
@@ -126,9 +126,9 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
     final path = await api.bookFilePath(bookId);
     if (!mounted) return;
     setState(() => _opening = null);
-    Navigator.of(context).push(MaterialPageRoute<void>(
+    unawaited(Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (_) => BookTextReaderScreen(book: book, path: path),
-    ));
+    )));
   }
 
   // One tap used to delete at once - a 2,277-page import (20 minutes)

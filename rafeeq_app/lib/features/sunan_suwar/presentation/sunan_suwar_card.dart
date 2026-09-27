@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart' show localizeDigits;
+import '../../../core/widgets/fitted_sheet.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/sunan_suwar_catalog.dart';
 import '../data/sunan_suwar_store.dart';
 import 'single_surah_screen.dart';
-import '../../../core/widgets/fitted_sheet.dart';
 
 const _weekdayKeys = {
   1: 'sunan_suwar.mon',
@@ -148,7 +148,7 @@ class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final gold = AppColors.gold;
+    const gold = AppColors.gold;
     return Padding(
       padding: EdgeInsets.only(
         left: 18,

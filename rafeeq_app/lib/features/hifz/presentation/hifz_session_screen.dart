@@ -7,29 +7,31 @@
 /// second half of the feature and is not pretended at here (§1.1).
 library;
 
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/utils/user_error.dart';
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/services/audio_failure.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
-import '../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/user_error.dart';
 import '../../../core/widgets/arabic_text.dart';
+import '../../../core/widgets/recitation_failure_snackbar.dart';
+import '../../../core/widgets/remote_tap.dart';
+import '../../downloads/data/reciters_provider.dart';
 import '../../quran/data/basmala.dart';
+import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
 import '../data/hifz_mask.dart';
 import '../data/hifz_plans.dart';
-import '../../downloads/data/reciters_provider.dart';
-import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
+import '../data/hifz_store.dart';
 import 'widgets/hifz_navigator.dart';
 import 'widgets/tasmee_panel.dart';
-import '../data/hifz_store.dart';
-import '../../../core/widgets/remote_tap.dart';
 
 class HifzSessionScreen extends ConsumerStatefulWidget {
   /// The stretch being worked through, ends included — a whole surah from
@@ -177,7 +179,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
   /// current stretch if it holds that ayah, otherwise the whole of the
   /// chosen surah, opened at it.
   Future<void> _goTo(int surah, int ayah) async {
-    AyahAudioService.instance.stopQueue();
+    unawaited(AyahAudioService.instance.stopQueue());
     final list = _ayahs!;
     final i = list.indexWhere(
       (a) => a.surahId == surah && a.ayahNumber == ayah,
@@ -409,7 +411,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
               onPressed: ref.watch(tasmeeRecordingProvider)
                   ? null
                   : _playing
-                  ? () => AyahAudioService.instance.stopQueue()
+                  ? AyahAudioService.instance.stopQueue
                   : () => _play(ayah),
               icon: Icon(
                 _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
@@ -487,7 +489,7 @@ class _Word extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = const TextStyle(
+    const style = TextStyle(
       fontFamily: 'KFGQPCHafs',
       fontSize: 24,
       height: 1.9,

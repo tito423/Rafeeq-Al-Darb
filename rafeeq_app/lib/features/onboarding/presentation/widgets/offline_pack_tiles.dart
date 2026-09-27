@@ -9,6 +9,7 @@ import '../../../../core/services/recitation_source.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart' show formatBytes;
 import '../../../../core/utils/digits.dart' show trn;
+import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../hifz/data/tasmee_engine.dart';
 import '../../../library/data/tts/open_voice.dart';
@@ -17,7 +18,6 @@ import '../../../quran_audio/data/mp3quran_api.dart';
 import '../../../quran_audio/data/quran_audio_library.dart';
 import '../../data/offline_pack_sizes.dart';
 import 'offline_pack_row.dart';
-import '../../../../core/widgets/fitted_sheet.dart';
 
 /// How fast one reciter's host answered a 1 KB range request for al-Fatiha
 /// 1:1, measured when the page opens. Null [ms] and [slow]: it ran past the

@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~20:30 (09-27) STAGE 3 DONE in code: 10 stricter lints in analysis_options, 1016 -> 0 (dart fix 455 fixes; 31 unawaited wrapped explicitly, same behaviour; clock_settings now awaits its prefs writes; 5 process-lifetime subscriptions/sinks ignored with a reason; JSON parsing in official_hijri/sync_service/dorar_check/madhahib_section/book_text typed with .cast<Map>() instead of dynamic calls; tests' fixture parsing file-level ignore). hadith_grade_i18n maps proven identical before/after (51 terms + 2 graders, same order, compared in Dart). analyze 0, 642 pass. NOT YET ON DEVICE: open a library book, hijri date on home, madhahib (hajj), dorar check, clock style toggle, ayah audio (still owed from stage 2). NEXT: that device run, then stage 4 dead code, 5 CI, 6 audit doc.
+
 21:10 (09-27) STOPPED by owner (quota 100 percent). Stage 3 NOT started in code (analysis_options reverted, tree clean). Measured with the stricter lint set: directives_ordering 622, avoid_redundant_argument_values 113, prefer_single_quotes 88, prefer_const_constructors 68, avoid_dynamic_calls 47, prefer_const_declarations 32, unawaited_futures 31, unnecessary_lambdas 10, cancel_subscriptions 4, close_sinks 1, others 7. Run dart fix --apply INSIDE rafeeq_app with no path args. NEXT: stages 3, 4, 5, 6 as listed at 21:00.
 
 21:00 (09-27) RELEASED v3.69.0 (tag bb72e7f6, APK 313,985,071 B, range 206; v3.68.0 deleted). FULL AUDIT in progress: stage 1 root organised (commit), stage 2 layering 8->0 + layering_test (commit). NEXT: stage 3 stricter lints (dart fix + manual unawaited/dynamic/cancel), stage 4 dead code, stage 5 CI (GitHub Actions analyze+test), stage 6 docs/audits/AUDIT_2026-09-27.md + ARCHITECTURE.md refresh. Device check still owed after stage 2: downloaded ayah audio plays from the local file (RecitationSource.localFile hook).
@@ -646,6 +648,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 20:27 - Audit stage 3: 10 stricter lints enabled, 1016 findings to 0 (dart fix + explicit unawaited, typed JSON casts, documented singleton ignores); grade maps proven identical; 642 pass; device check pending
 - 2026-09-27 20:06 - Stopped by owner at quota limit: audit stages 1-2 done, stage 3 measured only
 - 2026-09-27 20:05 - Audit stage 2: core/ no longer imports features/ or app/ (8 violations -> 0, enforced by test/layering_test.dart). Reminder services moved to their features; mushaf_page_service to quran (it and mushaf_edition imported each other); prayer_calculation_methods down to core/models; RecitationSource gets downloaded ayahs through a hook the quran_audio feature registers (dependency inversion); MoreGroupAccent and sharedPrefsProvider moved down to core (app re-exports). scripts/dart_move.py moves a Dart file and fixes relative imports. 642 pass
 - 2026-09-27 19:54 - Audit stage 1: repo root organised - 14 plan/history docs to docs/history, 3 living docs to docs/, 31 reports to docs/reports, 4 script inputs to scripts/data, previous audit to docs/audits, empty  file removed; 65 code references rewritten (scripts write reports to docs/reports); local APKs/logs to gitignored .local-archive; 641 pass

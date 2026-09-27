@@ -1,45 +1,42 @@
-import '../../../../core/widgets/remote_tap.dart';
-import '../../../../core/widgets/two_pane_scroll.dart';
-import '../../data/on_this_day_repository.dart';
-import '../widgets/header_quick_actions.dart';
-import '../../../../core/services/official_hijri.dart';
-import '../../../../core/services/official_hijri_provider.dart';
 import 'dart:async';
 import 'dart:math' as math;
-
-import '../../../../core/i18n/hijri_months.dart';
-import '../../../../core/utils/digits.dart' as digits;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/location_service.dart';
-
 import 'package:hijri/hijri_calendar.dart';
 
+import '../../../../core/i18n/hijri_months.dart';
+import '../../../../core/models/prayer_times.dart';
+import '../../../../core/services/location_service.dart';
+import '../../../../core/services/official_hijri.dart';
+import '../../../../core/services/official_hijri_provider.dart';
+import '../../../../core/services/prayer_times_service.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/hero_surface.dart';
+import '../../../../core/utils/digits.dart' as digits;
+import '../../../../core/widgets/remote_tap.dart';
+import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
+import '../../../hadith_daily/presentation/daily_hadith_card.dart';
+import '../../../khatma/presentation/khatma_card.dart';
+import '../../../quotes/presentation/widgets/home_quote_card.dart';
+import '../../../quran/presentation/widgets/continue_reading_card.dart';
+import '../../../settings/data/reader_name_provider.dart';
+import '../../../settings/presentation/widgets/reader_name_sheet.dart';
+import '../../../sunan_suwar/presentation/selected_surahs_card.dart';
+import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../data/clock_settings_provider.dart';
+import '../../data/on_this_day_repository.dart';
+import '../../data/prayer_controller.dart';
 import '../widgets/analog_clock_faces.dart';
 import '../widgets/clock_gallery_sheet.dart';
 import '../widgets/digital_clock_faces.dart';
+import '../widgets/header_quick_actions.dart';
+import '../widgets/on_this_day_sheet.dart';
 import '../widgets/prayer_countdown.dart';
 import '../widgets/prayer_slides.dart';
-
-import '../../../../core/services/prayer_times_service.dart';
-import '../../../../core/models/prayer_times.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/hero_surface.dart';
-import '../../../hadith_daily/presentation/daily_hadith_card.dart';
-import '../../../quotes/presentation/widgets/home_quote_card.dart';
-import '../../../settings/data/reader_name_provider.dart';
-import '../widgets/on_this_day_sheet.dart';
-import '../../../settings/presentation/widgets/reader_name_sheet.dart';
-import '../../../tutorial/data/tutorial_anchors.dart';
-import '../../../khatma/presentation/khatma_card.dart';
-import '../../../quran/presentation/widgets/continue_reading_card.dart';
-import '../../../sunan_suwar/presentation/selected_surahs_card.dart';
-import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
-import '../../data/prayer_controller.dart';
 
 part 'home_prayer_card.dart';
 
@@ -142,28 +139,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // ("where you left off") as its own thing, separate from the
                 // khatma daily-goal card below it. Renders nothing when
                 // there's no real last-read page yet (see its own doc).
-                TutorialAnchor(
+                const TutorialAnchor(
                   id: TourAnchor.continueReading,
-                  child: const ContinueReadingCard(),
+                  child: ContinueReadingCard(),
                 ),
-                TutorialAnchor(
+                const TutorialAnchor(
                   id: TourAnchor.khatmaCard,
-                  child: const KhatmaCard(),
+                  child: KhatmaCard(),
                 ),
-                TutorialAnchor(
+                const TutorialAnchor(
                   id: TourAnchor.sunanCard,
-                  child: const SunanSuwarCard(),
+                  child: SunanSuwarCard(),
                 ),
                 const SelectedSurahsCard(),
                 // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
                 // اليوم». It draws nothing at all when the setting is off.
-                TutorialAnchor(
+                const TutorialAnchor(
                   id: TourAnchor.quoteCard,
-                  child: const HomeQuoteCard(),
+                  child: HomeQuoteCard(),
                 ),
-                TutorialAnchor(
+                const TutorialAnchor(
                   id: TourAnchor.hadithCard,
-                  child: const DailyHadithCard(),
+                  child: DailyHadithCard(),
                 ),
               ],
             ),
@@ -296,7 +293,6 @@ class _HeaderCard extends ConsumerWidget {
       // used to share one InkWell over the whole card and open one sheet,
       // which meant tapping «١٧ رمضان» showed events keyed to 8 March.
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             flex: 3,
@@ -355,7 +351,6 @@ class _HeaderCard extends ConsumerWidget {
             flex: 4,
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              alignment: Alignment.center,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

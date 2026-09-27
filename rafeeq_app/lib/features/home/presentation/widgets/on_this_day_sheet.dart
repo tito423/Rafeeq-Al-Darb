@@ -20,11 +20,6 @@
 /// conversion is the first thing the header was ever asked for.
 library;
 
-// `intl`, which easy_localization re-exports, has a `TextDirection` of its own
-// (`TextDirection.RTL`), and it shadows the widget one in this file. The
-// paragraph direction below wants Flutter's, so it is named explicitly.
-import '../../../../core/services/official_hijri.dart';
-import '../../../../core/services/official_hijri_provider.dart';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -33,6 +28,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hijri/hijri_calendar.dart';
 
 import '../../../../core/i18n/hijri_months.dart';
+// `intl`, which easy_localization re-exports, has a `TextDirection` of its own
+// (`TextDirection.RTL`), and it shadows the widget one in this file. The
+// paragraph direction below wants Flutter's, so it is named explicitly.
+import '../../../../core/services/official_hijri.dart';
+import '../../../../core/services/official_hijri_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/external_link.dart';

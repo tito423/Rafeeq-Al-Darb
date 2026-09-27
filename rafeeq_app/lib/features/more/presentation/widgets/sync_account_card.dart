@@ -1,11 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math' as math;
 
-import '../../../../core/utils/user_error.dart';
 import '../../../../core/services/sync_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/user_error.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 
 class SyncAccountCard extends ConsumerStatefulWidget {

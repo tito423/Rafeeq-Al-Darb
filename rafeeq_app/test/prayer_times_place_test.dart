@@ -24,7 +24,7 @@ void main() {
       () async {
     final s = PrayerTimesService();
     // 4 = Umm al-Qura (Fajr 18.5°), 5 = Egyptian (Fajr 19.5°)
-    final a = await s.fetchPrayerTimes(lat: 25.2048, lon: 55.2708, method: 4);
+    final a = await s.fetchPrayerTimes(lat: 25.2048, lon: 55.2708);
     final b = await s.fetchPrayerTimes(lat: 25.2048, lon: 55.2708, method: 5);
     expect(b.fajr, isNot(a.fajr));
   });

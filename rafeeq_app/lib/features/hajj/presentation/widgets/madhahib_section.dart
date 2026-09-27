@@ -55,7 +55,7 @@ class HajjMadhahib {
     final steps = <String, List<MadhahibPart>>{};
     (j['steps'] as Map).forEach((key, parts) {
       steps[key as String] = [
-        for (final p in parts as List)
+        for (final p in (parts as List).cast<Map<String, dynamic>>())
           MadhahibPart(
             title: p['title'] as String,
             printedPage: (p['printed'] as num).toInt(),

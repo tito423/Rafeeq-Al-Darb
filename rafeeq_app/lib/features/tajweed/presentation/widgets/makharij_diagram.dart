@@ -148,7 +148,6 @@ class MakharijDiagram extends StatelessWidget {
         scaleX: -1,
         child: SvgPicture.asset(
           asset,
-          fit: BoxFit.contain,
           colorFilter: isDark
               ? const ColorFilter.mode(Color(0xFF8FA3B8), BlendMode.srcIn)
               : null,

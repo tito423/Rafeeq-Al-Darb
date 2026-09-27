@@ -1,6 +1,4 @@
-import '../../../../core/widgets/paired_list_view.dart';
 import 'dart:async';
-import '../../../../core/utils/digits.dart';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,7 +7,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart';
+import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
+import '../../../../core/widgets/paired_list_view.dart';
 import '../../../quran_audio/data/quran_audio_player.dart';
 import '../../../quran_audio/presentation/player_screen.dart';
 import '../../../quran_audio/presentation/widgets/mini_player.dart';

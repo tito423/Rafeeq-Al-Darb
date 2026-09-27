@@ -2,24 +2,24 @@
 // shadows the dart:ui one (ltr/rtl) this file uses — hide it (same fix as
 // ayah_sciences_sheet.dart, see HANDOVER §7).
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
-import '../widgets/book_listen_action.dart';
-import '../../../../core/utils/digits.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/i18n/proper_name.dart';
-import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/digits.dart';
+import '../../../../core/utils/external_link.dart';
+import '../../../../core/utils/screen_class.dart';
+import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/widgets/toolbar_action.dart';
+import '../../../dorar/presentation/dorar_check_sheet.dart';
 import '../../data/book_catalog.dart';
 import '../../data/book_text.dart';
-import '../../../../core/utils/external_link.dart';
-import '../widgets/book_provenance_strip.dart';
+import '../widgets/book_listen_action.dart';
 import '../widgets/book_page_rail.dart';
-import '../../../../core/widgets/fitted_sheet.dart';
-import '../../../../core/utils/screen_class.dart';
-import '../../../dorar/presentation/dorar_check_sheet.dart';
+import '../widgets/book_provenance_strip.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
 /// by the "لون الخط" toolbar action. Each entry carries both a light- and a
@@ -917,7 +917,7 @@ class _IndexDrawerState extends State<_IndexDrawer> {
                 padding: const EdgeInsets.fromLTRB(14, 8, 14, 4),
                 child: Row(
                   children: [
-                    Icon(Icons.bookmark, size: 15, color: AppColors.gold),
+                    const Icon(Icons.bookmark, size: 15, color: AppColors.gold),
                     const SizedBox(width: 6),
                     Text('quran.bookmarks'.tr(),
                         style: TextStyle(

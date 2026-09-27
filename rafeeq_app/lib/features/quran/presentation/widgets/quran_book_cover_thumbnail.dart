@@ -131,7 +131,7 @@ class QuranBookCoverThumbnail extends StatelessWidget {
                     ),
                   ),
                   // Gold ornamental frame + corner flourishes.
-                  Positioned.fill(
+                  const Positioned.fill(
                     child: CustomPaint(
                       painter: _FramePainter(
                         gold: _gold,
@@ -234,8 +234,7 @@ class _RealCover extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(asset, fit: BoxFit.cover, filterQuality:
-                  FilterQuality.medium),
+              Image.asset(asset, fit: BoxFit.cover),
               // Spine: on the binding edge, which in an RTL book is the right.
               PositionedDirectional(
                 start: 0,
@@ -261,7 +260,6 @@ class _RealCover extends StatelessWidget {
                   borderRadius: radius,
                   border: Border.all(
                     color: _kGold.withValues(alpha: 0.55),
-                    width: 1,
                   ),
                 ),
               ),
@@ -294,8 +292,6 @@ class _Ribbon extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
             colors: [
               color,
               Color.lerp(color, Colors.white, 0.22)!,

@@ -1,4 +1,3 @@
-import '../../../../core/widgets/readable_insets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +8,7 @@ import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/external_link.dart';
 import '../../../../core/widgets/fitted_sheet.dart';
+import '../../../../core/widgets/readable_insets.dart';
 
 /// «شاشة الدونيشن … بأسلوب راقي في الحديث وإظهار ليه سبب طلب الدونيشن».
 ///

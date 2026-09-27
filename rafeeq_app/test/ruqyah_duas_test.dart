@@ -90,7 +90,7 @@ void main() {
     // The old corpus carried «الؤلف: سعيد بن علي بن وهف القحطاني» in row 2's
     // footnote — which is how it was identified in the first place.
     final hits = await db.rawQuery(
-        "SELECT COUNT(*) c FROM azkar_items "
+        'SELECT COUNT(*) c FROM azkar_items '
         "WHERE body LIKE '%القحطاني%' OR footnote LIKE '%القحطاني%'");
     expect(hits.first['c'], 0);
   });

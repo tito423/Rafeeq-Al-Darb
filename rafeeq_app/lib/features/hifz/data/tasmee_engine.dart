@@ -26,12 +26,10 @@
 ///    wrong WORD, and nothing here would catch it. The screen must say so.
 library;
 
-import '../../../core/config/content_mirrors.dart';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:crypto/crypto.dart';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart'; // Float32List, @visibleForTesting
 import 'package:path/path.dart' as p;
@@ -39,6 +37,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:whisper_flutter_new/whisper_flutter_new.dart';
 
 import '../../../core/config/app_config.dart';
+import '../../../core/config/content_mirrors.dart';
 
 /// One file of the recogniser: where it lives on the bucket, and the exact
 /// number of bytes it must be once downloaded (a truncated model loads and

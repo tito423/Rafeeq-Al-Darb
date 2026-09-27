@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -177,7 +179,7 @@ class ClockSettingsNotifier extends StateNotifier<ClockSettings> {
 
   Future<void> setStyle(ClockStyle s) async {
     state = state.copyWith(style: s);
-    (await SharedPreferences.getInstance()).setString(_kStyle, s.name);
+    await (await SharedPreferences.getInstance()).setString(_kStyle, s.name);
   }
 
   /// Picking a digital face also switches the card to the digital family —
@@ -198,12 +200,12 @@ class ClockSettingsNotifier extends StateNotifier<ClockSettings> {
 
   Future<void> set12Hour(bool v) async {
     state = state.copyWith(use12Hour: v);
-    (await SharedPreferences.getInstance()).setBool(_k12h, v);
+    await (await SharedPreferences.getInstance()).setBool(_k12h, v);
   }
 
   Future<void> setShowSeconds(bool v) async {
     state = state.copyWith(showSeconds: v);
-    (await SharedPreferences.getInstance()).setBool(_kSeconds, v);
+    await (await SharedPreferences.getInstance()).setBool(_kSeconds, v);
   }
 }
 

@@ -1,4 +1,3 @@
-import '../../../core/widgets/paired_list_view.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
+import '../../../core/widgets/paired_list_view.dart';
 import '../data/dedication.dart';
 
 /// «الإهداءات» — the reader's list of people they read or make dhikr for.
