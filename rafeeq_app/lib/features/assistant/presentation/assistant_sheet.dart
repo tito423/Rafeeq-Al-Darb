@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app/navigation.dart';
@@ -201,6 +204,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       } else if (!quiet && _ear.listening.value) {
         await _ear.stop();
       }
+      if (_ear.listening.value) await _testClip();
     } catch (_) {
       // A failed check is retried on the next tick.
     } finally {
@@ -208,7 +212,28 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     }
   }
 
+  /// A 16 kHz mono WAV pushed to the app's external files folder as
+  /// `rafeeq_test.wav` is heard once, as if spoken, then deleted - how
+  /// «رفيق» is checked end to end on the emulator, which hears nothing from
+  /// the PC. The time from feeding to text is logged.
+  DateTime? _fedAt;
+  Future<void> _testClip() async {
+    final dir = await getExternalStorageDirectory();
+    if (dir == null) return;
+    final f = File('${dir.path}/rafeeq_test.wav');
+    if (!f.existsSync()) return;
+    final b = await f.readAsBytes();
+    await f.delete();
+    final pcm = b.buffer.asInt16List(44, (b.length - 44) ~/ 2);
+    _fedAt = DateTime.now();
+    _ear.feed(Float32List.fromList([for (final v in pcm) v / 32768.0]));
+  }
+
   Future<void> _onHeard(String text) async {
+    if (_fedAt != null) {
+      debugPrint('rafeeq heard in ${DateTime.now().difference(_fedAt!).inMilliseconds} ms: $text');
+      _fedAt = null;
+    }
     if (assistantSheetOpen.value || !mounted) return; // the sheet takes it
     final rest = afterWakeWord(text);
     if (rest == null) return;

@@ -93,6 +93,20 @@ class RafeeqEar {
         }
       }();
 
+  /// Feeds recorded speech (16 kHz mono) into the same path as the
+  /// microphone, followed by a second of silence so the VAD closes the
+  /// utterance. For checking «رفيق» on a device that cannot be spoken to
+  /// (the emulator): see `AssistantWakeListener._testClip`.
+  void feed(Float32List samples) {
+    final to = _toWorker;
+    if (to == null) return;
+    for (var i = 0; i < samples.length; i += 1600) {
+      final end = i + 1600 < samples.length ? i + 1600 : samples.length;
+      to.send(Float32List.fromList(samples.sublist(i, end)));
+    }
+    to.send(Float32List(16000));
+  }
+
   /// Closes the microphone; the models stay loaded for the next [start].
   Future<void> stop() async {
     await _starting;

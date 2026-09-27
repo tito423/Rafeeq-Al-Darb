@@ -89,14 +89,6 @@ android {
     // version (1.15.1, see dependencies) supplies x86_64; the ARM copies are
     // the package's, the Java binding's JNI shim is never used, and 32-bit
     // x86 is not an ABI Flutter builds for.
-    // sherpa_onnx_web's JavaScript/WASM (15 MB) is for the web build only;
-    // an Android APK never loads it.
-    androidResources {
-        ignoreAssetsPattern =
-            "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~:" +
-                "!sherpa-onnx-*.js:!sherpa-onnx-wasm-web.wasm"
-    }
-
     packaging {
         jniLibs {
             // Two plugins ship libonnxruntime.so: `onnxruntime` (ORT 1.15.1,
@@ -162,6 +154,23 @@ val copySherpaOrt = tasks.register<Copy>("copySherpaOrt") {
 android.sourceSets.getByName("main").jniLibs.srcDir(sherpaOrtDir)
 tasks.configureEach {
     if (name.startsWith("merge") && name.endsWith("JniLibFolders")) dependsOn(copySherpaOrt)
+}
+
+// sherpa_onnx_web's JavaScript/WASM (~15 MB) comes in with the package's
+// assets and is only ever loaded by a web build; `ignoreAssetsPattern` does not
+// reach Flutter's assets (tried: all 9 files were still in the APK), so they
+// are deleted from the copied assets before packaging.
+tasks.configureEach {
+    if (name.startsWith("copyFlutterAssets")) {
+        doLast {
+            outputs.files.forEach { out ->
+                out.walkTopDown()
+                    .filter { it.isDirectory && it.name == "sherpa_onnx_web" }
+                    .toList()
+                    .forEach { it.deleteRecursively() }
+            }
+        }
+    }
 }
 
 dependencies {

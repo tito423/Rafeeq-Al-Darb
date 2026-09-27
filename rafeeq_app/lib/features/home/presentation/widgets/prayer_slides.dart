@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -519,6 +520,17 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
               _StepperButton(icon: Icons.add_rounded, onTap: () => _nudge(1)),
             ],
           ),
+        ),
+        // «خلي زرار إعدادات الصلاة ينقلني لإعدادات مواقيت الصلاة» (owner,
+        // 2026-09-27): every prayer's card leads to the method, the madhab
+        // and the per-prayer minutes, one tap away.
+        _DetailRow(
+          icon: Icons.settings_rounded,
+          label: 'prayer.adjustments'.tr(),
+          trailing: Icon(Icons.chevron_right_rounded,
+              color: hero.onSurfaceFaint),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => const PrayerAdjustmentsScreen())),
         ),
 
         if (!_hasAdhan)

@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+19:35 (09-27) OWNER NEW (queue, after the prayer-settings button): Qur'an reader - the options bar (الانتقال إلى/البحث/إيقاف التلاوة/وضع المصحف/العرض) AND the page-number pill at the bottom hide by themselves after 5 seconds.
+
 19:20 (09-27) OWNER NEW (queue after Rafeeq 3.69.0): in each prayer slide sheet (e.g. العشاء: تعديل أوقات الصلاة / طريقة التنبيه / صوت الأذان), the settings button must open the PRAYER-TIMES settings inside Settings. EMULATOR (first 3.69.0 build): book reader voice READ ALOUD on ORT 1.28.2 (MediaPlayer CONTENT_TYPE_SPEECH started, no ORT error); Rafeeq pack download got 366 MB then failed silently -> cause: sha256 in Isolate.run with a closure capturing the pack object (Dio) -> static _sha256 (fixed, not rebuilt). ARM ORT fix + check_apk_native.py in place (not rebuilt).
 
 18:50 (09-27) ASR MEASURED on this PC (4 threads, sherpa_onnx 1.13.8 py, 18 edge-tts commands in 7 languages, scripts in E:\DevEnvsr: make_cmds.py, measure.py, measure2.py): whisper-turbo int8 1,036 MB (675+361), ~3.5 s/command, Arabic mostly right but «خلي التطبيق»->«خلط اليق»; whisper-small int8 374 MB, ~1.6 s, Arabic poor («الكافي/الفصري/يرفي قورين»); streaming zipformer ar/en/ru 247 MB, ~0.5 s, DROPS «رفيق» (useless for the wake word), no es/fr/pt/ur; **omnilingual-asr 300M ctc v2 int8 (Meta, 1600 languages) 366 MB, ~0.5 s/command (7x faster than whisper-small)**, Arabic best: «شغل سورة الكهف بصوت الحصري» and «افتح كتاب بلوغ المرام» EXACT, small slips («الأثكار», «التديق»); Latin output lowercase/no punctuation; ru exact; ur leaks a few Gujarati letters (ક ત) -> must fold. DECISION: omnilingual 300M v2 int8 + silero VAD v5 (2 MB) as the «رفيق» voice pack (download from Downloads/Settings; assistant disabled until installed), fuzzy (edit-distance) matching over the catalogues to absorb slips, wake word = fuzzy «رفيق» in each VAD segment. Owner also: hide the button completely - «رفيق» appears only when called; «ذكي يفهم أي حاجة» -> understanding layer: candidate llamadart 0.8.24 (llama.cpp, Android, Dart ^3.10.7 = ours) with a small multilingual GGUF, validated against catalogues. Mic button made see-through (committed, not built).
@@ -636,6 +638,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 19:28 - Qur'an chrome auto-hides after 5 s; prayer card + Settings lead to prayer-times settings; Rafeeq test clip path; web wasm removed at copyFlutterAssets; seen on emulator: voice pack installed, mic FGS type microphone, listening in background, mic closed during recitation and back after
 - 2026-09-27 19:18 - Voice pack: static sha256 (closure carried Dio into the isolate - download failed after 366 MB on emulator), resume a whole .part; size shown while downloading; TRAPS 58 (ORT per ABI)
 - 2026-09-27 19:01 - ORT conflict found in the first 3.69.0 APK (ARM carried 1.15.1, sherpa needs API 28): app jniLibs take sherpa's 1.28.2, build fails otherwise (check_apk_native.py); web wasm excluded; wake word glued to next word; 11 parser groups pass
 - 2026-09-27 18:52 - Rafeeq v3.69.0 in code: no button, wake call via RafeeqEar, sheet takes next sentence, conflict rules (call/sound/other recorder), background FGS, voice pack in Settings + Downloads, Shamela books, credits; 640 pass; not built

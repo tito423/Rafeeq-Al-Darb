@@ -1,4 +1,5 @@
 import '../../../../core/widgets/paired_list_view.dart';
+import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../../assistant/presentation/assistant_settings_card.dart';
 import '../widgets/app_font_picker.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -153,6 +154,26 @@ class SettingsBody extends ConsumerWidget {
           // with no heading of their own, so nothing on the screen said
           // «شاشة البداية». They have a heading now.
           // «كارت … بتغيير نوع الخط في البرنامج مع عرض شكل الاختيار فوري».
+          // Prayer times - the method, the madhab and each prayer's minutes -
+          // reachable from the settings too, not only from the prayer tab.
+          CollapsibleSection(
+            title: 'prayer.adjustments'.tr(),
+            icon: Icons.access_time_rounded,
+            children: [
+              Card(
+                child: ListTile(
+                  leading: Icon(Icons.tune_rounded, color: scheme.primary),
+                  title: Text('prayer.adjustments'.tr()),
+                  subtitle: Text('prayer.adjustments_hint'.tr()),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                        builder: (_) => const PrayerAdjustmentsScreen()),
+                  ),
+                ),
+              ),
+            ],
+          ),
           // «رفيق»: its voice pack and the switch (the call «يا رفيق»).
           CollapsibleSection(
             title: 'assistant.setting_title'.tr(),
