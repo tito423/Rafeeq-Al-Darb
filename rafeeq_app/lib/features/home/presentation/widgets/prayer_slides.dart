@@ -521,17 +521,11 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
             ],
           ),
         ),
-        // «خلي زرار إعدادات الصلاة ينقلني لإعدادات مواقيت الصلاة» (owner,
-        // 2026-09-27): every prayer's card leads to the method, the madhab
-        // and the per-prayer minutes, one tap away.
-        _DetailRow(
-          icon: Icons.settings_rounded,
-          label: 'prayer.adjustments'.tr(),
-          trailing: Icon(Icons.chevron_right_rounded,
-              color: hero.onSurfaceFaint),
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-              builder: (_) => const PrayerAdjustmentsScreen())),
-        ),
+        // Every prayer's card leads to the prayer-times settings (owner, 2026-09-27).
+        _DetailRow(icon: Icons.settings_rounded, label: 'prayer.adjustments'.tr(),
+            trailing: Icon(Icons.chevron_right_rounded, color: hero.onSurfaceFaint),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const PrayerAdjustmentsScreen()))),
 
         if (!_hasAdhan)
           // Honest: the sunrise is a timing, not a prayer — it has no adhan

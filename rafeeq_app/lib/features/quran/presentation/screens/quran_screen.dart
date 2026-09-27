@@ -99,20 +99,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// The floating controls (`MushafChrome`), toggled by the page tap.
   bool _chromeVisible = false;
 
-  /// «خلي شريط الخيارات يختفي لوحده بعد خمس ثواني هو والرقم اللي تحت»
-  /// (owner, 2026-09-27): the floating controls and the page number go by
-  /// themselves; a tap brings them back for another five seconds.
-  Timer? _chromeHide;
-  void _armChromeHide() {
-    _chromeHide?.cancel();
-    if (!_chromeVisible) return;
-    _chromeHide = Timer(const Duration(seconds: 5), () {
-      if (mounted && _chromeVisible && !ref.read(tutorialRunningProvider)) {
-        setState(() => _chromeVisible = false);
-      }
-    });
-  }
-
   /// P3‑41: "give option so I can change page from small to full fit of
   /// screen" — a persisted, explicit reader preference, independent of
   /// the toolbar-hide above (that just reclaims the toolbar's own strip;
@@ -202,7 +188,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // leaving the mode — the same gesture, deliberately; see MushafChrome.
     if (_pageFillScreen) {
       setState(() => _chromeVisible = !_chromeVisible);
-      _armChromeHide();
       return;
     }
     _togglePageFillScreen();
@@ -569,7 +554,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   @override
   void dispose() {
-    _chromeHide?.cancel();
     AyahAudioService.instance.continuous.removeListener(_onReciteChanged);
     AyahAudioService.instance.continuousError.removeListener(_onReciteError);
     _pages?.dispose();
@@ -863,6 +847,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 if (_pageFillScreen)
                   MushafChrome(
                     visible: _chromeVisible || ref.watch(tutorialRunningProvider),
+                    onAutoHide: () => setState(() => _chromeVisible = false),
                     mt: resolveMushafTheme(ref.watch(mushafThemeProvider),
                         Theme.of(context).brightness),
                     surahName: (edition?.hafsPagination ?? true)
@@ -871,8 +856,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                     juzNumber: (edition?.hafsPagination ?? true)
                         ? _currentJuzNumber(data)
                         : null,
-                    pageNumber: _current,
-                    totalPages: _totalPages,
+                    pageNumber: _current, totalPages: _totalPages,
                     actions: _toolbarFor(data, isRaster, canIndexBySurah),
                     pageBadges: !(edition?.printedHeader ?? false),
                   ),

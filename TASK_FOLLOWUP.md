@@ -638,6 +638,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 19:37 - Chrome auto-hide moved into MushafChrome (ChromeAutoHide) - quran_screen back at its 1057 ceiling, prayer_slides 797; 641 pass
 - 2026-09-27 19:28 - Qur'an chrome auto-hides after 5 s; prayer card + Settings lead to prayer-times settings; Rafeeq test clip path; web wasm removed at copyFlutterAssets; seen on emulator: voice pack installed, mic FGS type microphone, listening in background, mic closed during recitation and back after
 - 2026-09-27 19:18 - Voice pack: static sha256 (closure carried Dio into the isolate - download failed after 366 MB on emulator), resume a whole .part; size shown while downloading; TRAPS 58 (ORT per ABI)
 - 2026-09-27 19:01 - ORT conflict found in the first 3.69.0 APK (ARM carried 1.15.1, sherpa needs API 28): app jniLibs take sherpa's 1.28.2, build fails otherwise (check_apk_native.py); web wasm excluded; wake word glued to next word; 11 parser groups pass

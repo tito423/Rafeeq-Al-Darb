@@ -40,6 +40,7 @@ library;
 // `hide TextDirection`: easy_localization re-exports intl, whose
 // TextDirection has no `.rtl` and shadows the one from dart:ui that Flutter
 // widgets actually take.
+import 'chrome_auto_hide.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 
@@ -58,6 +59,10 @@ const double glassOpacity = 0.94;
 class MushafChrome extends StatelessWidget {
   /// Whether the panel is on screen. Driven by the page tap.
   final bool visible;
+
+  /// Called five seconds after the controls appear - «خلي شريط الخيارات
+  /// يختفي لوحده بعد خمس ثواني هو والرقم اللي تحت» (owner, 2026-09-27).
+  final VoidCallback? onAutoHide;
 
   /// The theme the page is painted with — the panel borrows its colours.
   final MushafTheme mt;
@@ -84,6 +89,7 @@ class MushafChrome extends StatelessWidget {
   const MushafChrome({
     super.key,
     required this.visible,
+    this.onAutoHide,
     required this.mt,
     required this.surahName,
     required this.juzNumber,
@@ -95,6 +101,14 @@ class MushafChrome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hide = onAutoHide;
+    final body = _build(context);
+    return hide == null
+        ? body
+        : ChromeAutoHide(visible: visible, onHide: hide, child: body);
+  }
+
+  Widget _build(BuildContext context) {
     final panel = _panel(context);
     if (!pageBadges) return panel;
     return Stack(
