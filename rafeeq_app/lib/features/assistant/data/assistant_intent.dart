@@ -104,6 +104,17 @@ class ToggleOptionIntent extends AssistantIntent {
   String toString() => 'toggle $option ${on ? 'on' : 'off'}';
 }
 
+/// A settings section, opened and scrolled to: «افتح إعدادات الخط»,
+/// «مواقيت الصلاة في الإعدادات», or the name of anything inside it.
+/// [section] is the section title's translation key
+/// (`assistantSettingsSections`).
+class OpenSettingIntent extends AssistantIntent {
+  const OpenSettingIntent(this.section);
+  final String section;
+  @override
+  String toString() => 'setting $section';
+}
+
 /// A title to find in Shamela's own catalogue (not yet on the phone):
 /// «دورلي في الشاملة على صيد الخاطر», «نزلي كتاب الزهد لأحمد من الشاملة».
 /// [title] is what was SAID, uncorrected - a book name is not a command
@@ -150,7 +161,12 @@ class AssistantCatalog {
     this.screenLabels = const {},
     this.settingLabels = const [],
     this.optionLabels = const {},
+    this.settingSections = const {},
   });
+
+  /// Settings section key -> its title and everything named inside it, in
+  /// the seven languages ([labelsFrom], `assistant_settings_map.dart`).
+  final Map<String, List<String>> settingSections;
 
   /// Surah names by number (index 0 = surah 1), Arabic.
   final List<String> surahs;
@@ -349,6 +365,10 @@ class AssistantParser {
       (_screens[e.key] ??= []).addAll(e.value.map(_canon));
     }
     _screens.updateAll((_, v) => v.where((p) => p.isNotEmpty).toSet().toList());
+    _sections = {
+      for (final e in catalog.settingSections.entries)
+        e.key: e.value.map(_canon).where((p) => p.isNotEmpty).toSet().toList(),
+    };
     _settings = catalog.settingLabels
         .map(_canon)
         .where((p) => p.isNotEmpty)
@@ -369,6 +389,7 @@ class AssistantParser {
       ..._change, ..._on, ..._off, ..._langWord, ..._themeWord,
       for (final l in _screens.values) for (final ph in l) ...ph.split(' '),
       for (final ph in _settings) ...ph.split(' '),
+      for (final l in _sections.values) for (final ph in l) ...ph.split(' '),
       for (final l in _options.values) for (final ph in l) ...ph.split(' '),
       for (final k in _surahKeys) for (final ph in k) ...ph.split(' '),
       for (final m in lex.hijriMonthWords) for (final w in m) ...norm(w).split(' '),
@@ -430,6 +451,7 @@ class AssistantParser {
   late final List<Set<String>> _surahKeys;
   late final Map<AssistantScreen, List<String>> _screens;
   late final List<String> _settings;
+  late final Map<String, List<String>> _sections;
   late final Map<String, List<String>> _options;
 
   static final _fillers = {..._normSet(lex.fillerWords), ..._latinArticles};
@@ -573,13 +595,30 @@ class AssistantParser {
         }
       }
     }
+    // A settings section - by its title or anything named inside it -
+    // opened WHERE IT IS rather than on the settings list («في اي خرم
+    // ابرة», owner 2026-09-27).
+    String? section;
+    for (final e in _sections.entries) {
+      for (final p in e.value) {
+        if (p.length > bestLen && _hasPhrase(clean, [p])) {
+          section = e.key;
+          bestLen = p.length;
+          bestWords = p.split(' ').length;
+        }
+      }
+    }
     // Any other setting, by its title in any language: open the settings.
     for (final p in _settings) {
       if (p.length > bestLen && _hasPhrase(clean, [p])) {
         best = AssistantScreen.settings;
+        section = null;
         bestLen = p.length;
         bestWords = p.split(' ').length;
       }
+    }
+    if (section != null && (commanded || words.length <= bestWords + 1)) {
+      return OpenSettingIntent(section);
     }
     if (best != null && (commanded || words.length <= bestWords + 1)) {
       return OpenScreenIntent(best);

@@ -42,7 +42,8 @@ void main() {
       books: books,
       screenLabels: labels.screens,
       settingLabels: labels.settings,
-      optionLabels: labels.options));
+      optionLabels: labels.options,
+      settingSections: labels.sections));
   String of(String s) => p.parse(s).toString();
 
   test('screens, in the words people say', () {
@@ -79,6 +80,12 @@ void main() {
         'shamela "صيد الخاطر"');
     // No title: the screen itself.
     expect(p.parse('افتح المكتبه الشامله').toString(), 'open shamela');
+  });
+
+  test('a setting opens its own section (owner, 2026-09-27)', () {
+    expect(of('افتح ضبط المواقيت والتاريخ'), 'setting prayer.adjustments');
+    expect(of('يا رفيق افتحلي تذكير صيام السنن'), 'setting fasting.section_title');
+    expect(of('ساعة الشاشة الرئيسية'), 'setting home.clock_section');
   });
 
   test('on this day, today or a hijri date', () {

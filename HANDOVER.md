@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 22:42 — IN PROGRESS — resume here**
+**2026-09-27 22:52 — IN PROGRESS — resume here**
 
-Released v3.69.2; v3.69.1 deleted
+Item 4 step 1 (code, NOT on device yet): Rafeeq opens a settings SECTION where it is - scripts/build_assistant_settings_map.py reads settings_screen.dart (14 sections, their SettingsPart, 62 keys incl. the widgets each builds) -> assistant_settings_map.dart; OpenSettingIntent; SettingsBody(focusSection) opens + scrolls to it. Parser test with the real map. 641 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

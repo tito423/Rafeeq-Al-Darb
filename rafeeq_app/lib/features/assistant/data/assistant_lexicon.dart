@@ -13,6 +13,7 @@
 library;
 
 import 'assistant_intent.dart' show AssistantScreen;
+import 'assistant_settings_map.dart';
 
 /// Words that carry no meaning in a command - dropped from what was heard
 /// and from every phrase alike.
@@ -341,11 +342,21 @@ String? lookup(Map<String, dynamic> locale, String dotted) {
   Map<AssistantScreen, List<String>> screens,
   List<String> settings,
   Map<String, List<String>> options,
+  Map<String, List<String>> sections,
 }) labelsFrom(Iterable<Map<String, dynamic>> locales) {
   final screens = <AssistantScreen, List<String>>{};
   final settings = <String>[];
   final options = <String, List<String>>{};
+  final sections = <String, List<String>>{};
   for (final l in locales) {
+    for (final e in assistantSettingsSections.entries) {
+      for (final k in [e.key, ...e.value.$2]) {
+        final v = lookup(l, k);
+        if (v != null && !v.contains('{') && v.length <= 40) {
+          (sections[e.key] ??= []).add(v);
+        }
+      }
+    }
     for (final e in screenLabelKeys.entries) {
       for (final k in e.value) {
         final v = lookup(l, k);
@@ -360,7 +371,12 @@ String? lookup(Map<String, dynamic> locale, String dotted) {
       }
     }
   }
-  return (screens: screens, settings: settings, options: options);
+  return (
+    screens: screens,
+    settings: settings,
+    options: options,
+    sections: sections,
+  );
 }
 
 /// The assistant's name, as recognisers write it in each language.

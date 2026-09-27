@@ -666,6 +666,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 22:52 - Item 4 step 1 (code, NOT on device yet): Rafeeq opens a settings SECTION where it is - scripts/build_assistant_settings_map.py reads settings_screen.dart (14 sections, their SettingsPart, 62 keys incl. the widgets each builds) -> assistant_settings_map.dart; OpenSettingIntent; SettingsBody(focusSection) opens + scrolls to it. Parser test with the real map. 641 pass
 - 2026-09-27 22:42 - Released v3.69.2; v3.69.1 deleted
 - 2026-09-27 22:41 - v3.69.2 release build: About card v3.69.2 SEEN on emulator (the 3.69.1 card said 3.69.0), support button present, splash log 'no clip'. Dorar all-encyclopaedia search, Rafeeq Shamela voice search, splash fix
 - 2026-09-27 22:21 - Splash cut half-way (owner): the intro ended on ANY non-resumed lifecycle state incl. inactive (shade, system dialog), and its safety timer ran on the wall clock (duration+2s) so a stuttering start-up could fire it mid-clip. Now inactive is ignored and the fallback is a stall watch (no progress 3 s, cap 3x); debugPrint names the path. Seen: pm clear + shade at 4 s -> 'proceed (ended) at 9.878 of 10.010'. Old build's cut not reproduced (emulator crashed). Dorar search + Rafeeq Shamela seen on device. 640 pass

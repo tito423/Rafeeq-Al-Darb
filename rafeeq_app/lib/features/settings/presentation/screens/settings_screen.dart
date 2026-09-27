@@ -54,9 +54,14 @@ class SettingsBody extends ConsumerWidget {
     super.key,
     this.part = SettingsPart.settings,
     this.paired = false,
+    this.focusSection,
   });
 
   final SettingsPart part;
+
+  /// A section to open and scroll to, by its title's translation key -
+  /// where «رفيق» takes the reader when a setting is named.
+  final String? focusSection;
 
   /// Two sections a row sideways - for the page of its own, not inside More.
   final bool paired;
@@ -463,9 +468,13 @@ class SettingsBody extends ConsumerWidget {
     ];
     // On its own page sideways, two a row like the More tab's groups. Inside
     // the More tab it already sits in one of two columns, and stays single.
-    return paired && ScreenClass.twoColumns(context)
+    final Widget laid = paired && ScreenClass.twoColumns(context)
         ? PairedColumn(gap: 0, equalHeights: false, children: items)
         : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: items);
+    final focus = focusSection;
+    return focus == null
+        ? laid
+        : _SettingsFocus(title: focus.tr(), child: laid);
   }
 }
 
@@ -498,6 +507,15 @@ String _currentFaceLabel(WidgetRef ref) {
 ///
 /// The state is deliberately local and not persisted: «افتراضيًا» means every
 /// visit starts closed, not that the app remembers a previous visit.
+/// Which section a [SettingsBody] was opened on ([SettingsBody.focusSection]),
+/// by its translated title.
+class _SettingsFocus extends InheritedWidget {
+  const _SettingsFocus({required this.title, required super.child});
+  final String title;
+  @override
+  bool updateShouldNotify(_SettingsFocus old) => old.title != title;
+}
+
 class CollapsibleSection extends StatefulWidget {
   final String title;
   final List<Widget> children;
@@ -531,6 +549,23 @@ class CollapsibleSection extends StatefulWidget {
 class _CollapsibleSectionState extends State<CollapsibleSection>
     with SingleTickerProviderStateMixin, AccordionMember<CollapsibleSection> {
   late bool _open = widget.initiallyOpen;
+  bool _focusChecked = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_focusChecked) return;
+    _focusChecked = true;
+    final focus = context.getInheritedWidgetOfExactType<_SettingsFocus>();
+    if (focus == null || focus.title != widget.title) return;
+    _open = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Scrollable.ensureVisible(context,
+            duration: const Duration(milliseconds: 350), alignment: 0.05);
+      }
+    });
+  }
 
   /// What the section's own page shows. A pushed page keeps the widgets it
   /// was built with, so a switch there stayed where it was when tapped

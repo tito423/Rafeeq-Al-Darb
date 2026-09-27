@@ -33,6 +33,8 @@ import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../settings/data/transliteration_settings_provider.dart';
+import '../../settings/presentation/screens/settings_screen.dart'
+    show SettingsBody, SettingsPart;
 import '../../shamela/data/shamela_library.dart';
 import '../../shamela/presentation/shamela_screen.dart';
 import '../../splash/data/splash_video_provider.dart';
@@ -40,6 +42,7 @@ import '../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../data/assistant_intent.dart';
 import '../data/assistant_lexicon.dart';
 import '../data/assistant_settings.dart';
+import '../data/assistant_settings_map.dart';
 import '../data/rafeeq_ear.dart';
 import '../data/rafeeq_voice_pack.dart';
 
@@ -86,6 +89,7 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     screenLabels: labels.screens,
     settingLabels: labels.settings,
     optionLabels: labels.options,
+    settingSections: labels.sections,
   ));
 });
 
@@ -309,6 +313,8 @@ Future<String> describeIntent(
       return 'assistant.opening'.tr(args: [author]);
     case ShamelaSearchIntent(:final title):
       return 'assistant.opening'.tr(args: [title]);
+    case OpenSettingIntent(:final section):
+      return 'assistant.opening'.tr(args: [section.tr()]);
     default:
       return 'assistant.ok'.tr();
   }
@@ -327,6 +333,17 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       nav.push(MaterialPageRoute<void>(builder: (_) => screen));
 
   switch (intent) {
+    case OpenSettingIntent(:final section):
+      final part = assistantSettingsSections[section]?.$1 == 'reminders'
+          ? SettingsPart.reminders
+          : SettingsPart.settings;
+      push(Scaffold(
+        appBar: AppBar(title: Text(section.tr())),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+          child: SettingsBody(part: part, focusSection: section),
+        ),
+      ));
     case ShamelaSearchIntent(:final title, :final download):
       push(ShamelaScreen(initialQuery: title, openBest: download));
     case OpenScreenIntent(:final screen):
