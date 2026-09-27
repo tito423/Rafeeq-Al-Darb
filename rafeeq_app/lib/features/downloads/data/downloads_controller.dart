@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import '../../assistant/data/assistant_settings.dart';
+import '../../assistant/data/rafeeq_ear.dart';
+import '../../assistant/data/rafeeq_voice_pack.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../quran_audio/data/quran_audio_library.dart';
@@ -50,6 +53,9 @@ enum DownloadCategory {
   /// علوم القرآن - the tafsir/translation/i'rab/word-meanings pack that
   /// left the APK in 3.45.0. 31.70 MB is worth a row of its own.
   quranSciences,
+
+  /// «رفيق»'s voice pack (the offline speech recogniser), ~368 MB.
+  assistant,
 }
 
 extension DownloadCategoryX on DownloadCategory {
@@ -60,6 +66,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.books => 'downloads.cat_books',
         DownloadCategory.voices => 'downloads.cat_voices',
         DownloadCategory.quranSciences => 'downloads.cat_quran_sciences',
+        DownloadCategory.assistant => 'downloads.cat_assistant',
       };
 
   /// [DownloadManager] `category` string(s) that map to this bucket.
@@ -83,6 +90,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.books => const ['books', 'books_text', 'hadith'],
         DownloadCategory.voices => const ['tts_voice'],
         DownloadCategory.quranSciences => const ['sciences'],
+        DownloadCategory.assistant => const [],
       };
 }
 
@@ -187,6 +195,9 @@ final storageSummaryProvider = FutureProvider<StorageSummary>((ref) async {
       // anything either.
       final sb = await downloadedDbBytes('quran_sciences.db');
       out.add(CategoryUsage(cat, sb, sb > 0 ? 1 : 0));
+    } else if (cat == DownloadCategory.assistant) {
+      final ab = await RafeeqVoicePack.instance.usageBytes();
+      out.add(CategoryUsage(cat, ab, ab > 0 ? 1 : 0));
     } else if (cat == DownloadCategory.voices) {
       final vb = await OpenVoice.usageBytes();
       out.add(CategoryUsage(cat, vb, vb > 0 ? 1 : 0));
@@ -212,6 +223,11 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       await AyahRecitationLibrary.instance.freeAll();
     case DownloadCategory.voices:
       await OpenVoice.uninstall();
+    case DownloadCategory.assistant:
+      // Without its pack «رفيق» does not work at all, so it goes off too.
+      await ref.read(assistantEnabledProvider.notifier).set(false);
+      await RafeeqEar.instance.shutdown();
+      await RafeeqVoicePack.instance.delete();
     case DownloadCategory.books:
       await LibraryApiService.instance.deleteAllBooks();
     case DownloadCategory.quranSciences:

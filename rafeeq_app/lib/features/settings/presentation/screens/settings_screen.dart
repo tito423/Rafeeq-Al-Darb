@@ -1,6 +1,5 @@
 import '../../../../core/widgets/paired_list_view.dart';
-import 'package:permission_handler/permission_handler.dart';
-import '../../../assistant/data/assistant_settings.dart';
+import '../../../assistant/presentation/assistant_settings_card.dart';
 import '../widgets/app_font_picker.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/accordion.dart';
@@ -154,32 +153,12 @@ class SettingsBody extends ConsumerWidget {
           // with no heading of their own, so nothing on the screen said
           // «شاشة البداية». They have a heading now.
           // «كارت … بتغيير نوع الخط في البرنامج مع عرض شكل الاختيار فوري».
-          // «رفيق»: one switch - the mic on every screen and the call «يا رفيق».
+          // «رفيق»: its voice pack and the switch (the call «يا رفيق»).
           CollapsibleSection(
             title: 'assistant.setting_title'.tr(),
             icon: Icons.mic_rounded,
             children: [
-              // Its own Consumer: the section opens as a page of its own and
-              // does not rebuild these children - the switch stayed «off»
-              // after it was turned on (seen on emulator-5554).
-              Consumer(
-                builder: (context, ref, _) => Card(
-                  child: SwitchListTile(
-                    secondary: Icon(Icons.record_voice_over_rounded,
-                        color: scheme.primary),
-                    title: Text('assistant.setting_switch'.tr()),
-                    subtitle: Text('assistant.setting_desc'.tr()),
-                    value: ref.watch(assistantEnabledProvider),
-                    onChanged: (v) async {
-                      if (v &&
-                          !(await Permission.microphone.request()).isGranted) {
-                        return;
-                      }
-                      await ref.read(assistantEnabledProvider.notifier).set(v);
-                    },
-                  ),
-                ),
-              ),
+              const AssistantSettingsCard(),
             ],
           ),
           CollapsibleSection(

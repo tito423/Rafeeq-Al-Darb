@@ -126,6 +126,17 @@ class RafeeqVoicePack {
 
   void cancel() => _cancel?.cancel();
 
+  /// Bytes the pack takes on the phone (the downloads' storage row).
+  Future<int> usageBytes() async {
+    final d = await dir();
+    if (!d.existsSync()) return 0;
+    var n = 0;
+    for (final f in d.listSync()) {
+      if (f is File) n += f.lengthSync();
+    }
+    return n;
+  }
+
   Future<void> delete() async {
     final d = await dir();
     if (d.existsSync()) await d.delete(recursive: true);

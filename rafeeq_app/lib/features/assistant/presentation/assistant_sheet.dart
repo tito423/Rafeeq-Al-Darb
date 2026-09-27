@@ -3,9 +3,8 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app/navigation.dart';
@@ -27,28 +26,29 @@ import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
 import '../../library/presentation/screens/books_search_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
-import '../../quran/data/quran_fullscreen_provider.dart';
 import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
-import '../../settings/data/focus_mode_provider.dart';
 import '../../settings/data/transliteration_settings_provider.dart';
+import '../../shamela/data/shamela_library.dart';
 import '../../shamela/presentation/shamela_screen.dart';
 import '../../splash/data/splash_video_provider.dart';
 import '../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../data/assistant_intent.dart';
 import '../data/assistant_lexicon.dart';
 import '../data/assistant_settings.dart';
-import '../data/speech_input.dart';
+import '../data/rafeeq_ear.dart';
+import '../data/rafeeq_voice_pack.dart';
 
-/// True once `AppShell` is on screen - the mic has nowhere to take the
-/// reader before that (splash, onboarding).
+/// True once `AppShell` is on screen - there is nowhere to take the reader
+/// before that (splash, onboarding).
 final assistantShellUpProvider = StateProvider<bool>((ref) => false);
 
 /// The parser over the app's own catalogues: surah names (Arabic and
 /// transliterated) from the Qur'an database, the reciters that have a
-/// verified source, the library's books, and every screen, setting and
-/// switch title of the seven translation files.
+/// verified source, the library's books AND the books the reader imported
+/// from Shamela, and every screen, setting and switch title of the seven
+/// translation files.
 final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
   final repo = await ref.watch(quranRepositoryProvider.future);
   final surahs = await repo.surahs();
@@ -56,8 +56,13 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     for (final r in await ref.watch(recitersProvider.future))
       CatalogReciter(r.identifier, [r.nameAr, r.nameEn]),
   ];
+  await ShamelaLibrary.instance.load();
   final books = [
     for (final b in libraryBookCatalog) CatalogBook(b.id, b.titleAr, b.authorAr),
+    // «لا موجود، نزلته من الشاملة» (owner, 2026-09-27) - «رجال حول الرسول»
+    // was on his phone, imported, and the assistant did not know it.
+    for (final b in ShamelaLibrary.instance.books)
+      CatalogBook(b.id, b.titleAr, b.authorAr),
   ];
   final locales = <Map<String, dynamic>>[];
   for (final l in kSupportedLocales) {
@@ -87,114 +92,26 @@ String _appLanguage() {
   return ctx == null ? 'ar' : ctx.locale.languageCode;
 }
 
-/// False while a sheet or a dialog is on top: the button is drawn above the
-/// whole navigator, so without this it floated bright over their dim, and
-/// over «رفيق»'s own sheet (seen on emulator-5554, 2026-09-27).
-final assistantTopIsPage = ValueNotifier<bool>(true);
-
-/// True while «رفيق»'s sheet is open - the call is not listened for then.
+/// True while «رفيق»'s sheet is open - it takes what is said next.
 final assistantSheetOpen = ValueNotifier<bool>(false);
 
-class AssistantRouteObserver extends NavigatorObserver {
-  void _top(Route<dynamic>? r) {
-    if (r != null) assistantTopIsPage.value = r is PageRoute;
-  }
+const _channel = MethodChannel('com.tito.rafeeq_aldarb/assistant');
 
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      _top(route);
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      _top(previousRoute);
-  @override
-  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      _top(previousRoute);
-  @override
-  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) =>
-      _top(newRoute);
-}
-
-/// «رفيق»'s button, over every screen once the shell is up and the
-/// assistant is switched on. Hidden where it would be in the way: the tour,
-/// focus mode, a full-screen mushaf page.
-class AssistantMicButton extends ConsumerWidget {
-  const AssistantMicButton({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final hidden = !ref.watch(assistantEnabledProvider) ||
-        !ref.watch(assistantShellUpProvider) ||
-        ref.watch(tutorialRunningProvider) ||
-        ref.watch(focusModeProvider) != null ||
-        (ref.watch(quranFullScreenProvider) &&
-            ref.watch(activeTabProvider) == AppTab.quran);
-    if (hidden) return const SizedBox.shrink();
-    final pad = MediaQuery.paddingOf(context);
-    return ValueListenableBuilder<bool>(
-      valueListenable: assistantTopIsPage,
-      builder: (context, page, _) =>
-          page ? _button(pad) : const SizedBox.shrink(),
-    );
-  }
-
-  Widget _button(EdgeInsets pad) {
-    // Bottom-left: in Arabic that is the far end of the navigation bar, above
-    // «المزيد», where no screen of this app keeps a button of its own.
-    return Positioned(
-      left: 12 + pad.left,
-      bottom: 92 + pad.bottom,
-      child: Tooltip(
-        message: 'assistant.tooltip'.tr(),
-        // See-through: «لما الزرار يظهر خليه شفاف مش يخبي الحاجة اللي
-        // وراه» (owner, 2026-09-27) - the screen shows under it.
-        child: Material(
-          color: AppColors.gold.withValues(alpha: 0.28),
-          shape: CircleBorder(
-              side: BorderSide(color: AppColors.gold.withValues(alpha: 0.55))),
-          elevation: 0,
-          child: InkWell(
-            customBorder: const CircleBorder(),
-            onTap: () => showAssistantSheet(),
-            child: const Padding(
-              padding: EdgeInsets.all(11),
-              child: Icon(Icons.mic_rounded, color: Colors.black45, size: 24),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-Future<void> showAssistantSheet() async {
-  final ctx = rootNavigatorKey.currentContext;
-  if (ctx == null || assistantSheetOpen.value) return;
-  assistantSheetOpen.value = true;
-  try {
-    await showModalBottomSheet<void>(
-      context: ctx,
-      showDragHandle: true,
-      builder: (_) => const _AssistantSheet(),
-    );
-  } finally {
-    assistantSheetOpen.value = false;
-  }
-}
-
-/// The name that wakes the assistant, as recognisers write it in each
-/// language («رفيق», "Rafiq", "Rafeeq", «Рафик», «رفیق»), normalised.
-final _wakeWords = {
-  for (final w in wakeWords) norm(w),
-};
-
-/// «يا رفيق», heard while the app is open, when the assistant is on.
+/// «يا رفيق», heard wherever the reader is, while he has it switched on and
+/// the voice pack is on the phone.
 ///
-/// Android's own recogniser, one utterance at a time, in the app's language,
-/// asking for the on-device model. Said with a command («يا رفيق شغل
-/// الكهف»), the command runs at once; said alone, the sheet opens and
-/// listens. It does not listen in the background, while the sheet is open,
-/// or while the app is playing sound - the recogniser takes the audio focus,
-/// and would stop a recitation to listen for its name.
+/// There is no button: «الأفضل إنه يختفي، مايظهرش غير لما أنده يا رفيق»
+/// (owner, 2026-09-27). Said with a command («يا رفيق شغل الكهف»), the
+/// command runs at once; said alone, the sheet opens and takes the next
+/// sentence.
+///
+/// Never in anyone's way («خد بالك من الكونفلكت … ولما تيجي مكالمة … في كل
+/// الحالات»): it takes no audio focus, and the microphone is CLOSED while a
+/// call rings or runs, while any sound plays (this app's recitation or adhan,
+/// another app's music), and while any other app - or the tasmee - records;
+/// checked every second, and it opens again when all is quiet. In the
+/// background a foreground service with a notification keeps it alive; its
+/// «إيقاف» switches the assistant off.
 class AssistantWakeListener extends ConsumerStatefulWidget {
   const AssistantWakeListener({super.key});
 
@@ -205,165 +122,168 @@ class AssistantWakeListener extends ConsumerStatefulWidget {
 
 class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     with WidgetsBindingObserver {
-  bool _resumed = true;
-  bool _playing = false;
-  bool _running = false;
-  bool _granted = false;
-
-  /// On-device first; a phone with no offline pack for the language answers
-  /// «language pack» (error 12) at once - seen on emulator-5554, 2026-09-27,
-  /// every 4 s for ever - so the loop falls back to the online service.
-  bool _offline = true;
-  StreamSubscription<bool>? _audio;
-
-  bool get _should =>
-      mounted &&
-      _granted &&
-      _resumed &&
-      !_playing &&
-      !assistantSheetOpen.value &&
-      ref.read(assistantEnabledProvider) &&
-      ref.read(assistantShellUpProvider);
+  final _ear = RafeeqEar.instance;
+  Timer? _tick;
+  StreamSubscription<String>? _heard;
+  bool _foreground = true;
+  bool _serviceOn = false;
+  bool _busy = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    assistantSheetOpen.addListener(_poke);
-    _audio = AyahAudioService.instance.isPlayingStream.listen((p) {
-      _playing = p;
-      if (p && _running && !assistantSheetOpen.value) {
-        unawaited(SpeechInput.instance.cancel());
-      }
-      _poke();
-    });
+    RafeeqVoicePack.instance.check();
+    ShamelaLibrary.instance.addListener(_booksChanged);
+    _heard = _ear.heard.listen(_onHeard);
+    _tick = Timer.periodic(const Duration(seconds: 1), (_) => _check());
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    assistantSheetOpen.removeListener(_poke);
-    _audio?.cancel();
+    ShamelaLibrary.instance.removeListener(_booksChanged);
+    _tick?.cancel();
+    _heard?.cancel();
     super.dispose();
   }
 
+  void _booksChanged() => ref.invalidate(assistantParserProvider);
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    _resumed = state == AppLifecycleState.resumed;
-    if (!_resumed && _running && !assistantSheetOpen.value) {
-      unawaited(SpeechInput.instance.cancel());
-    }
-    _poke();
+    _foreground = state == AppLifecycleState.resumed;
+    _check();
   }
 
-  void _poke() {
-    if (!_running) unawaited(_loop());
-  }
-
-  Future<void> _loop() async {
-    if (_running || !mounted) return;
-    _running = true;
+  Future<void> _check() async {
+    if (_busy || !mounted) return;
+    _busy = true;
     try {
-      _granted = await Permission.microphone.isGranted;
-      while (_should) {
-        final r = await SpeechInput.instance.listen(
-          lang: speechLocaleFor(_appLanguage()),
-          preferOffline: _offline,
-        );
-        if (!_should) break;
-        if (r.ok) {
-          await _heard(r);
-          continue;
-        }
-        switch (r.error) {
-          case SpeechInput.errNoMatch || SpeechInput.errSpeechTimeout:
-            await Future<void>.delayed(const Duration(milliseconds: 250));
-          case SpeechInput.errPermission:
-            _granted = false;
-          case SpeechInput.errLanguageNotSupported ||
-                  SpeechInput.errLanguageUnavailable
-              when _offline:
-            _offline = false;
-          default:
-            // Busy, no network, a language the phone cannot hear: wait, so a
-            // failing recogniser is not hammered in a loop.
-            await Future<void>.delayed(const Duration(seconds: 4));
-        }
+      final on = ref.read(assistantEnabledProvider) &&
+          RafeeqVoicePack.instance.installed.value == true &&
+          ref.read(assistantShellUpProvider);
+      // «إيقاف» pressed in the notification.
+      if (on && _serviceOn && await _channel.invokeMethod<bool>('stoppedByUser') == true) {
+        _serviceOn = false;
+        await ref.read(assistantEnabledProvider.notifier).set(false);
+        await _ear.stop();
+        return;
       }
+      if (!on) {
+        if (_ear.listening.value) await _ear.stop();
+        if (_serviceOn) {
+          _serviceOn = false;
+          await _channel.invokeMethod('stopService');
+        }
+        return;
+      }
+      // Started only while the app is on screen: Android refuses a
+      // microphone service started from the background.
+      if (!_serviceOn && _foreground) {
+        _serviceOn = true;
+        await _channel.invokeMethod('startService', {
+          'title': 'assistant.name'.tr(),
+          'text': 'assistant.notif_text'.tr(),
+          'stop': 'assistant.notif_stop'.tr(),
+          'channel': 'assistant.setting_title'.tr(),
+        });
+      }
+      final busy = await _channel.invokeMapMethod<String, dynamic>('busy') ?? {};
+      final ours = _ear.listening.value ? 1 : 0;
+      final quiet = busy['call'] != true &&
+          busy['playing'] != true &&
+          ((busy['recording'] as int?) ?? 0) <= ours &&
+          (_foreground || _serviceOn) &&
+          await Permission.microphone.isGranted;
+      if (quiet && !_ear.listening.value) {
+        await _ear.start();
+      } else if (!quiet && _ear.listening.value) {
+        await _ear.stop();
+      }
+    } catch (_) {
+      // A failed check is retried on the next tick.
     } finally {
-      _running = false;
+      _busy = false;
     }
   }
 
-  Future<void> _heard(SpeechResult r) async {
+  Future<void> _onHeard(String text) async {
+    if (assistantSheetOpen.value || !mounted) return; // the sheet takes it
+    final rest = afterWakeWord(text);
+    if (rest == null) return;
     final container = ProviderScope.containerOf(context, listen: false);
-    for (final text in [r.text!, ...r.alternatives]) {
-      final words = norm(text).split(' ');
-      final at = words.indexWhere(_wakeWords.contains);
-      if (at < 0) continue;
-      final rest = words.sublist(at + 1).join(' ');
-      if (rest.isNotEmpty) {
-        final parser = await ref.read(assistantParserProvider.future);
-        final intent = parser.parse(rest);
-        if (intent is! UnknownIntent) {
-          final reply = await describeIntent(container, intent);
-          await sayReply(reply);
-          await runIntent(container, intent);
-          return;
-        }
+    if (rest.isNotEmpty) {
+      final parser = await ref.read(assistantParserProvider.future);
+      final intent = parser.parse(rest);
+      if (intent is! UnknownIntent) {
+        await _act(container, intent);
+        return;
       }
-      await showAssistantSheet();
-      return;
     }
+    if (!_foreground) await _channel.invokeMethod('toFront');
+    await showAssistantSheet(heard: rest.isEmpty ? null : text);
+  }
+
+  Future<void> _act(ProviderContainer container, AssistantIntent intent) async {
+    final reply = await describeIntent(container, intent);
+    if (!_foreground && intent is! PlaySurahIntent &&
+        intent is! SetThemeIntent && intent is! ToggleOptionIntent) {
+      await _channel.invokeMethod('toFront');
+    }
+    rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+        content: Text(reply), duration: const Duration(seconds: 2)));
+    await runIntent(container, intent);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Switching the assistant on (or the shell arriving) starts listening.
-    ref.listen<bool>(assistantEnabledProvider, (_, on) {
-      if (on) _poke();
-    });
-    ref.listen<bool>(assistantShellUpProvider, (_, up) => _poke());
+    ref.listen<bool>(assistantEnabledProvider, (_, _) => _check());
+    ref.listen<bool>(assistantShellUpProvider, (_, _) => _check());
     return const SizedBox.shrink();
   }
 }
 
-/// What the reader is told before it happens - short, and said aloud.
+/// Opens the sheet that takes the next sentence. [heard] is what was said
+/// with the call when it was not understood.
+Future<void> showAssistantSheet({String? heard}) async {
+  final ctx = rootNavigatorKey.currentContext;
+  if (ctx == null || assistantSheetOpen.value) return;
+  assistantSheetOpen.value = true;
+  try {
+    await showModalBottomSheet<void>(
+      context: ctx,
+      showDragHandle: true,
+      builder: (_) => _AssistantSheet(firstHeard: heard),
+    );
+  } finally {
+    assistantSheetOpen.value = false;
+  }
+}
+
+/// What the reader is told before it happens - short, on screen.
 Future<String> describeIntent(
     ProviderContainer ref, AssistantIntent intent) async {
   switch (intent) {
     case PlaySurahIntent(:final surah, :final reciterId):
       final repo = await ref.read(quranRepositoryProvider.future);
       final s = (await repo.surahs())[surah - 1];
-      final name = _appLanguage() == 'ar' || _appLanguage() == 'ur'
-          ? s.nameAr
-          : s.nameEn;
+      final ar = _appLanguage() == 'ar' || _appLanguage() == 'ur';
       final id = reciterId ?? ref.read(selectedReciterProvider);
       final reciters = await ref.read(recitersProvider.future);
       final r = reciters.where((x) => x.identifier == id).firstOrNull;
-      final who = r == null
-          ? ''
-          : (_appLanguage() == 'ar' ? r.nameAr : r.nameEn);
-      return 'assistant.playing'.tr(args: [name, who]);
+      return 'assistant.playing'.tr(args: [
+        ar ? s.nameAr : s.nameEn,
+        r == null ? '' : (ar ? r.nameAr : r.nameEn),
+      ]);
     case OpenBookIntent(:final bookId):
-      final b = libraryBookCatalog.where((x) => x.id == bookId).firstOrNull;
+      final b = libraryBookCatalog.where((x) => x.id == bookId).firstOrNull ??
+          ShamelaLibrary.instance.byId(bookId);
       return 'assistant.opening'.tr(args: [b?.titleAr ?? '']);
     case AuthorBooksIntent(:final author):
       return 'assistant.opening'.tr(args: [author]);
     default:
       return 'assistant.ok'.tr();
-  }
-}
-
-/// The reply, spoken in the app's language when the phone has that voice.
-Future<void> sayReply(String text) async {
-  try {
-    final tts = FlutterTts();
-    await tts.awaitSpeakCompletion(true);
-    await tts.setLanguage(speechLocaleFor(_appLanguage()));
-    await tts.speak(text);
-  } catch (_) {
-    // No voice for this language on the phone: the words are on screen.
   }
 }
 
@@ -464,13 +384,17 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
   }
 }
 
+
 /// Opened if it is on the phone, otherwise downloaded first - the same
-/// path the library's search takes.
+/// path the library's search takes. A book imported from Shamela is always
+/// on the phone.
 Future<void> _openBook(NavigatorState nav, String id) async {
-  final book = libraryBookCatalog.where((b) => b.id == id).firstOrNull;
+  final shamela = ShamelaLibrary.instance.byId(id);
+  final book =
+      shamela ?? libraryBookCatalog.where((b) => b.id == id).firstOrNull;
   if (book == null) return;
   final api = LibraryApiService.instance;
-  if (!await api.isBookDownloaded(id)) {
+  if (shamela == null && !await api.isBookDownloaded(id)) {
     final url = book.textEdition?.url;
     if (url == null) return;
     rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
@@ -488,114 +412,82 @@ Future<void> _openBook(NavigatorState nav, String id) async {
       builder: (_) => BookTextReaderScreen(book: book, path: path)));
 }
 
-enum _Phase { starting, listening, done }
-
+/// The sheet «يا رفيق» alone opens: it takes the next sentence, shows what
+/// was heard and what will happen, and closes. Nothing to press - it closes
+/// by itself after [_wait] of silence.
 class _AssistantSheet extends ConsumerStatefulWidget {
-  const _AssistantSheet();
+  const _AssistantSheet({this.firstHeard});
+  final String? firstHeard;
 
   @override
   ConsumerState<_AssistantSheet> createState() => _AssistantSheetState();
 }
 
 class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
-  final _speech = SpeechInput.instance;
-  _Phase _phase = _Phase.starting;
+  static const _wait = Duration(seconds: 10);
+  final _ear = RafeeqEar.instance;
+  StreamSubscription<String>? _sub;
+  Timer? _close;
   String _words = '';
   String? _message;
-  double _level = 0;
+  bool _done = false;
 
   @override
   void initState() {
     super.initState();
-    _speech
-      ..onPartial = (t) {
-        if (mounted) setState(() => _words = t);
-      }
-      ..onLevel = (l) {
-        if (mounted) setState(() => _level = l);
-      }
-      ..onReady = () {
-        if (mounted) setState(() => _phase = _Phase.listening);
-      };
-    unawaited(_listen());
+    if (widget.firstHeard != null) {
+      _words = widget.firstHeard!;
+      _message = 'assistant.not_understood'.tr();
+    }
+    _sub = _ear.heard.listen(_onHeard);
+    _armClose();
+  }
+
+  void _armClose() {
+    _close?.cancel();
+    _close = Timer(_wait, () {
+      if (mounted && !_done) Navigator.of(context).pop();
+    });
   }
 
   @override
   void dispose() {
-    _speech
-      ..onPartial = null
-      ..onLevel = null
-      ..onReady = null;
-    if (_phase != _Phase.done) unawaited(_speech.cancel());
+    _sub?.cancel();
+    _close?.cancel();
     super.dispose();
   }
 
-  void _end(String message) {
-    if (!mounted) return;
+  Future<void> _onHeard(String text) async {
+    if (_done || !mounted) return;
+    // «يا رفيق شغل الكهف» said again into the open sheet counts too.
+    final said = afterWakeWord(text) ?? text;
     setState(() {
-      _phase = _Phase.done;
-      _message = message;
-    });
-  }
-
-  Future<void> _listen() async {
-    setState(() {
-      _phase = _Phase.starting;
-      _words = '';
+      _words = text;
       _message = null;
     });
-    if (!(await Permission.microphone.request()).isGranted) {
-      return _end('assistant.mic_denied'.tr());
-    }
-    final (any, _) = await _speech.available();
-    if (!any) return _end('assistant.no_recognizer'.tr());
-    final r = await _speech.listen(lang: speechLocaleFor(_appLanguage()));
-    if (!mounted) return;
-    if (!r.ok) return _end(_errorText(r.error));
-    setState(() => _words = r.text!);
+    _armClose();
+    if (said.isEmpty) return;
     final parser = await ref.read(assistantParserProvider.future);
-    // The first alternative the app understands wins: the recogniser's top
-    // guess is sometimes a near-miss of a surah or reciter name that its
-    // second or third guess has right.
-    var intent = parser.parse(r.text!);
-    for (final alt in r.alternatives) {
-      if (intent is! UnknownIntent) break;
-      intent = parser.parse(alt);
-    }
-    if (intent is UnknownIntent) {
-      return _end('assistant.not_understood'.tr());
-    }
+    final intent = parser.parse(said);
     if (!mounted) return;
-    // The sheet goes before the action, so the action cannot use its `ref`.
+    if (intent is UnknownIntent) {
+      setState(() => _message = 'assistant.not_understood'.tr());
+      return;
+    }
+    _done = true;
     final container = ProviderScope.containerOf(context, listen: false);
     final reply = await describeIntent(container, intent);
-    _end(reply);
-    await sayReply(reply);
+    if (!mounted) return;
+    setState(() => _message = reply);
+    await Future<void>.delayed(const Duration(milliseconds: 700));
     if (!mounted) return;
     Navigator.of(context).pop();
     await runIntent(container, intent);
   }
 
-  String _errorText(int? code) => switch (code) {
-        SpeechInput.errSpeechTimeout ||
-        SpeechInput.errNoMatch =>
-          'assistant.no_speech'.tr(),
-        SpeechInput.errNetwork ||
-        SpeechInput.errNetworkTimeout =>
-          'assistant.network'.tr(),
-        SpeechInput.errPermission => 'assistant.mic_denied'.tr(),
-        SpeechInput.errLanguageNotSupported ||
-        SpeechInput.errLanguageUnavailable =>
-          'assistant.lang_unavailable'.tr(),
-        _ => 'assistant.failed'.tr(args: ['${code ?? '-'}']),
-      };
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final listening = _phase == _Phase.listening;
-    // A Material 3 sheet is only as wide as what is in it; this one is
-    // the width of the screen.
     return SafeArea(
       child: Container(
         width: double.infinity,
@@ -607,38 +499,23 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
                 style: theme.textTheme.titleLarge
                     ?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 18),
-            GestureDetector(
-              onTap: switch (_phase) {
-                _Phase.listening => () => _speech.stop(),
-                _Phase.done => _listen,
-                _Phase.starting => null,
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 120),
-                width: 76 + (listening ? _level.clamp(0, 10) * 3 : 0),
-                height: 76 + (listening ? _level.clamp(0, 10) * 3 : 0),
+            ValueListenableBuilder<bool>(
+              valueListenable: _ear.speaking,
+              builder: (context, speaking, _) => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: speaking ? 96 : 76,
+                height: speaking ? 96 : 76,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: listening
-                      ? AppColors.gold
-                      : AppColors.gold.withValues(alpha: 0.35),
+                  color: AppColors.gold.withValues(alpha: speaking ? 0.9 : 0.4),
                 ),
-                child: Icon(
-                  _phase == _Phase.done
-                      ? Icons.refresh_rounded
-                      : Icons.mic_rounded,
-                  size: 36,
-                  color: Colors.black87,
-                ),
+                child: const Icon(Icons.graphic_eq_rounded,
+                    size: 36, color: Colors.black87),
               ),
             ),
             const SizedBox(height: 16),
             Text(
-              switch (_phase) {
-                _Phase.starting => '…',
-                _Phase.listening => 'assistant.listening'.tr(),
-                _Phase.done => _message ?? '',
-              },
+              _message ?? 'assistant.listening'.tr(),
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium,
             ),

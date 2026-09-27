@@ -172,7 +172,6 @@ class RafeeqApp extends ConsumerWidget {
 
     return MaterialApp(
       navigatorKey: rootNavigatorKey,
-      navigatorObservers: [AssistantRouteObserver()],
       scaffoldMessengerKey: rootScaffoldMessengerKey,
       title: 'app.name'.tr(),
       debugShowCheckedModeBanner: false,
@@ -208,12 +207,8 @@ class RafeeqApp extends ConsumerWidget {
           page = RgbScaffoldBackground(child: page);
         }
         // A remote or keyboard gets a ring on whatever it is on (TV).
-        // «رفيق»'s mic sits over every route, not only the shell's tabs.
-        page = Stack(children: [
-          page,
-          const AssistantMicButton(),
-          const AssistantWakeListener(),
-        ]);
+        // «رفيق» listens over every route, not only the shell's tabs.
+        page = Stack(children: [page, const AssistantWakeListener()]);
         return FocusRingOverlay(color: AppColors.gold, child: page);
       },
       // P3‑49: the owner asked for his AI-generated splash video (Gemini

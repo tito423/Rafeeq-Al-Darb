@@ -23,6 +23,7 @@ import '../widgets/mushaf_tiles.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/presentation/screens/sciences_pack_screen.dart';
+import '../../../assistant/presentation/assistant_settings_card.dart';
 import '../widgets/initial_downloads_entry.dart';
 import '../widgets/storage_auto_refresh.dart';
 import '../widgets/active_downloads_panel.dart';
@@ -158,6 +159,19 @@ class _OverviewTab extends ConsumerWidget {
         return () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const LibraryRoute(initialTab: 0),
+              ),
+            );
+      case DownloadCategory.assistant:
+        // The pack is «رفيق»'s: its card - switch, download, delete - alone.
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => Scaffold(
+                  appBar: AppBar(title: Text('assistant.setting_title'.tr())),
+                  body: const SingleChildScrollView(
+                    padding: EdgeInsets.all(14),
+                    child: AssistantSettingsCard(),
+                  ),
+                ),
               ),
             );
       // «والباقي مش بيوديني لحاجة» - these two had no destination at all.

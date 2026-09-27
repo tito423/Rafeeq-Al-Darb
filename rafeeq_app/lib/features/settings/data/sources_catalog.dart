@@ -78,6 +78,16 @@ final sourceGroups = <(String, List<SourceEntry>)>[
           'about.src_asc'),
       SourceEntry('nipponjo/tts_arabic', 'https://github.com/nipponjo/tts_arabic',
           'about.src_tts_arabic'),
+      // «رفيق»'s downloadable voice pack (scripts/publish_rafeeq_voice_pack.py):
+      // Meta's recogniser (Apache-2.0), silero VAD (MIT), run by sherpa-onnx
+      // (Apache-2.0).
+      SourceEntry('Omnilingual ASR — Meta',
+          'https://github.com/facebookresearch/omnilingual-asr',
+          'about.src_omnilingual'),
+      SourceEntry('Silero VAD', 'https://github.com/snakers4/silero-vad',
+          'about.src_silero'),
+      SourceEntry('sherpa-onnx', 'https://github.com/k2-fsa/sherpa-onnx',
+          'about.src_sherpa'),
     ]
   ),
   (

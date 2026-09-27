@@ -863,7 +863,8 @@
     "repair_unjammed": "Liberadas {} tareas bloqueadas",
     "repair_nothing": "No hay descargas incompletas",
     "active_now": "Descargando ahora",
-    "cat_ayah_recitations": "Recitaciones por Aleya"
+    "cat_ayah_recitations": "Recitaciones por Aleya",
+    "cat_assistant": "Rafeeq — asistente de voz"
   },
   "search": {
     "title": "Búsqueda temática",
@@ -1070,7 +1071,10 @@
     "src_youtube": "Cada imagen de canal procede de la propia página de YouTube de ese canal y se replica en el servidor de la aplicación para funcionar sin conexión. Los canales se abren en YouTube; no se republica ningún vídeo.",
     "src_unsplash": "Las fotografías de las tarjetas de Adhkar — bajo la licencia de Unsplash, obtenidas directamente de la fuente.",
     "dedication": "Dedico este trabajo a mi esposa, compañera de mi camino",
-    "src_geonames": "La lista de ciudades del mundo, con coordenadas y nombres, para fijar a mano la ubicación de la oración"
+    "src_geonames": "La lista de ciudades del mundo, con coordenadas y nombres, para fijar a mano la ubicación de la oración",
+    "src_omnilingual": "Reconocimiento de voz sin conexión de Rafeeq (más de 1600 idiomas)",
+    "src_silero": "Dónde empieza y termina el habla, para Rafeeq",
+    "src_sherpa": "Ejecuta los modelos de voz en el dispositivo"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -2046,16 +2050,10 @@
   },
   "assistant": {
     "name": "Rafeeq",
-    "tooltip": "Rafeeq — asistente de voz",
     "listening": "Escuchando… di lo que quieres",
     "heard": "Oído: «{}»",
-    "not_understood": "Nada en la aplicación coincide con esa orden",
-    "no_speech": "No se oyó nada: toca para intentarlo de nuevo",
-    "no_recognizer": "Este dispositivo no tiene servicio de reconocimiento de voz",
+    "not_understood": "Nada en la aplicación coincide con eso",
     "mic_denied": "No se concedió el permiso del micrófono",
-    "network": "El reconocimiento de voz en este dispositivo necesita internet",
-    "lang_unavailable": "El árabe no está disponible en el reconocimiento de voz de este dispositivo",
-    "failed": "Falló el reconocimiento de voz (código {})",
     "ok": "De acuerdo",
     "playing": "De acuerdo: sura {}, recitada por {}",
     "opening": "De acuerdo: abriendo {}",
@@ -2063,6 +2061,14 @@
     "download_failed": "No se pudo descargar el libro",
     "setting_title": "Rafeeq — asistente de voz",
     "setting_switch": "Activar Rafeeq",
-    "setting_desc": "Un botón de micrófono en todas las pantallas; escucha «Rafeeq» mientras la aplicación está abierta: di la orden justo después. Nunca escucha en segundo plano ni mientras suena audio. El reconocimiento de voz lo hace el servicio del propio dispositivo."
+    "setting_desc": "Escucha «Rafeeq» con la aplicación abierta o en segundo plano: di la orden justo después. Todo queda en el dispositivo, sin internet. Se detiene durante las llamadas, mientras suena cualquier audio y cuando otra aplicación usa el micrófono.",
+    "pack_title": "Paquete de voz de Rafeeq",
+    "pack_desc": "Reconocimiento de voz sin conexión en los siete idiomas ({}). Se descarga una vez.",
+    "pack_download": "Descargar",
+    "pack_delete": "Eliminar",
+    "pack_needed": "Descarga primero el paquete de voz; Rafeeq no funciona sin él.",
+    "pack_failed": "No se pudo descargar el paquete de voz",
+    "notif_text": "Escuchando «Rafeeq»",
+    "notif_stop": "Detener"
   }
 }

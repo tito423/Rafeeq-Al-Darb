@@ -863,7 +863,8 @@
     "repair_unjammed": "Freed {} stuck task(s)",
     "repair_nothing": "Nothing was left unfinished",
     "active_now": "Downloading now",
-    "cat_ayah_recitations": "Per-Ayah Recitations"
+    "cat_ayah_recitations": "Per-Ayah Recitations",
+    "cat_assistant": "Rafeeq — voice assistant"
   },
   "search": {
     "title": "Thematic Search",
@@ -1070,7 +1071,10 @@
     "src_youtube": "Each channel picture is taken from that channel’s own YouTube page and mirrored on the app’s server so the grid works offline. The channels open in YouTube; no video is re-published.",
     "src_unsplash": "The card photographs on the Azkar grid — under the Unsplash License, fetched straight from the source to your device.",
     "dedication": "I dedicate this work to my wife, the companion of my road",
-    "src_geonames": "The world city list, coordinates and names, for setting the prayer location by hand"
+    "src_geonames": "The world city list, coordinates and names, for setting the prayer location by hand",
+    "src_omnilingual": "Rafeeq’s offline speech recognition (1,600+ languages)",
+    "src_silero": "Where speech starts and stops, for Rafeeq",
+    "src_sherpa": "Runs the speech models on the device"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -2046,16 +2050,10 @@
   },
   "assistant": {
     "name": "Rafeeq",
-    "tooltip": "Rafeeq — voice assistant",
     "listening": "Listening… say what you want",
     "heard": "Heard: “{}”",
-    "not_understood": "Nothing in the app matches that command",
-    "no_speech": "Heard nothing — tap to try again",
-    "no_recognizer": "This device has no speech recognition service",
+    "not_understood": "Nothing in the app matches that",
     "mic_denied": "Microphone permission was not granted",
-    "network": "Speech recognition on this device needs an internet connection",
-    "lang_unavailable": "Arabic is not available in this device’s speech recognition",
-    "failed": "Speech recognition failed (code {})",
     "ok": "OK",
     "playing": "OK — Surah {}, recited by {}",
     "opening": "OK — opening {}",
@@ -2063,6 +2061,14 @@
     "download_failed": "The book could not be downloaded",
     "setting_title": "Rafeeq — voice assistant",
     "setting_switch": "Turn Rafeeq on",
-    "setting_desc": "A mic button on every screen, and it listens for “Rafeeq” while the app is open — say the command right after. It never listens in the background or while sound is playing. Speech is recognised by the device’s own service."
+    "setting_desc": "Listens for “Rafeeq” with the app open or in the background — say the command right after. Everything stays on the device, no internet. It pauses during calls, while any sound plays, and while another app uses the microphone.",
+    "pack_title": "Rafeeq voice pack",
+    "pack_desc": "Offline speech recognition in the seven languages ({}). Downloaded once.",
+    "pack_download": "Download",
+    "pack_delete": "Delete",
+    "pack_needed": "Download the voice pack first; Rafeeq does not work without it.",
+    "pack_failed": "The voice pack could not be downloaded",
+    "notif_text": "Listening for “Rafeeq”",
+    "notif_stop": "Stop"
   }
 }
