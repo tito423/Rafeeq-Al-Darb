@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 20:53 — IN PROGRESS — resume here**
+**2026-09-27 20:56 — IN PROGRESS — resume here**
 
-CI run 2: book_speaker_focus_test waited 20 empty ticks for speak() to start - too few on the runner, interruption arrived first; now time-bounded (5 s). shamela_builder_live_test claimed to be skipped unless asked but dart_test.yaml had no live tag rule - added (it hit shamela.ws on every flutter test); still passes with --run-skipped. 634 pass
+Owner: Rafeeq hears nothing on his phone. Root cause proven: mic chunks arrive as a view at byte 5 of the StandardMethodCodec envelope on every device, asInt16List threw on each (fixed in 895349ae); test now encodes a real envelope and asserts offset 5. The earlier end-to-end check used the test clip, which bypasses the mic path
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
