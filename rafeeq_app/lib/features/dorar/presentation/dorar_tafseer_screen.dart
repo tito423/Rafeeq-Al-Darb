@@ -69,7 +69,7 @@ class _DorarTafseerScreenState extends State<DorarTafseerScreen> {
                           color: goldText(context))),
                 ),
                 title: Text(s.title),
-                trailing: const Icon(Icons.chevron_left),
+                trailing: const Icon(Icons.chevron_right), // auto-mirrors in RTL (trap 7)
                 onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                   builder: (_) => DorarChainScreen(
                     slug: 'tafseer',

@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+13:45 (09-27) TAFSEER READER SEEN (emulator, build 13:4x, 628 tests pass): hub lists «موسوعة التفسير» again -> 114 surahs (numbered) -> سورة الفاتحة intro (أسماء السورة, الأدلة, footnote numbers), السابق disabled at the start -> التالي -> «سورة الفاتحة الآيات (1-7)» (المعنى الإجمالي، غريب الكلمات، مشكل الإعراب) -> التالي -> سورة البقرة intro (chain crosses surahs). Chevron in the surah list fixed to chevron_right (trap 7) - NOT rebuilt. Library card now says ١٠ موسوعات. NEXT: History reader (eras ?era=N + /history/event/N) - read real pages first.
+
 13:32 (09-27) LIBRARY REDESIGN step 1 SEEN (emulator, build 13:27): ExternalSourcesStrip = two named cards above the library tabs (الدرر السنية «تخريج الأحاديث و٩ موسوعات علمية», المكتبة الشاملة «استورد أي كتاب من ٨٥٩٨ كتابًا»), slide-in + sheen + press scale; app-bar icons removed (search kept). StaggeredEntrance in PairedListView (first 8 rows). Fixed after: Future.delayed -> cancellable Timer (paired_list_view_test failed on pending timers). 626 tests pass. NOT yet built with the Timer fix. NEXT: Tafseer reader (114 surahs, /tafseer/N parts) + History reader (eras), then re-list them.
 
 13:20 (09-27) DYNAMIC FALLBACK DONE + PROVEN END TO END on the emulator: published rules v2 with a deliberately broken dorar.toc.start -> app (no new APK) showed «افتح على الموقع» on الموسوعة العقدية; published v3 (= defaults) -> the tree came back. Live rules now: version 3 (scripts/source_rules_overrides.json = {"version":3,"rules":{}}), R2 + GitHub content-mirror (config__source_rules.json). check_sources.py 5/5. Two tests fixed (content_mirrors RELEASES gets config/; source_rules.dart allowed Arabic labels). NEXT: library redesign (cards for الدرر/الشاملة, shelf, Hero, staggered, animations).
@@ -608,6 +610,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 13:45 - Tafseer reader seen on emulator (surahs, parts, chain across surahs)
 - 2026-09-27 13:39 - Dorar Tafseer reader: 114 surahs + the site's prev/next chain (tested on real pages); rules v4 published (28), check_sources 6/6
 - 2026-09-27 13:33 - Library cards seen; entrance timers made cancellable (tests green)
 - 2026-09-27 13:25 - Library: named animated cards for Dorar and Shamela (were bare app-bar icons), staggered list entrance; NOT yet seen
