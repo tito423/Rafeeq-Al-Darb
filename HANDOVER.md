@@ -2506,9 +2506,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 05:00 — IN PROGRESS — resume here**
+**2026-09-27 05:07 — IN PROGRESS — resume here**
 
-Shamela: pages holding only the editor's hamesh are flagged and labelled instead of «صفحة بلا نص»; NOT yet seen
+Shamela: confirm before deleting an imported book (one tap deleted a 2,277-page import on the Xiaomi); NOT built
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

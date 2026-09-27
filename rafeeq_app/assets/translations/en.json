@@ -1998,7 +1998,8 @@
     "failed": "Import failed",
     "source": "Source: al-Maktaba al-Shamela (shamela.ws)",
     "no_results": "No book by that title",
-    "in_app_library": "In the app library"
+    "in_app_library": "In the app library",
+    "delete_confirm": "The book will be removed from this device; you will need to import it again to read it."
   },
   "dorar": {
     "title": "Hadith grading — Dorar",

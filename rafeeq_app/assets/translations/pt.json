@@ -1998,7 +1998,8 @@
     "failed": "Falha ao importar",
     "source": "Fonte: al-Maktaba al-Shamela (shamela.ws)",
     "no_results": "Nenhum livro com esse título",
-    "in_app_library": "Na biblioteca do app"
+    "in_app_library": "Na biblioteca do app",
+    "delete_confirm": "O livro será removido deste aparelho; você precisará importá-lo de novo para lê-lo."
   },
   "dorar": {
     "title": "Classificação do hadith — Dorar",

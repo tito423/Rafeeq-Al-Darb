@@ -131,7 +131,28 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
     ));
   }
 
-  Future<void> _delete(String bookId) async {
+  // One tap used to delete at once - a 2,277-page import (20 minutes)
+  // vanished that way on the Xiaomi (2026-09-27). Asked first now.
+  Future<void> _delete(String bookId, String title) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(title),
+        content: Text('shamela.delete_confirm'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('common.cancel'.tr()),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text('shamela.delete'.tr()),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
     await LibraryApiService.instance.deleteBook(bookId);
     await ShamelaLibrary.instance.remove(bookId);
   }
@@ -241,7 +262,7 @@ class _ShamelaScreenState extends State<ShamelaScreen> {
                         trailing: IconButton(
                           tooltip: 'shamela.delete'.tr(),
                           icon: Icon(Icons.delete_outline, color: scheme.error),
-                          onPressed: () => _delete(b.id),
+                          onPressed: () => _delete(b.id, b.titleAr),
                         ),
                       ),
                     ),

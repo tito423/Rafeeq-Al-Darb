@@ -590,6 +590,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 05:07 - Shamela: confirm before deleting an imported book (one tap deleted a 2,277-page import on the Xiaomi); NOT built
 - 2026-09-27 05:00 - Shamela: pages holding only the editor's hamesh are flagged and labelled instead of «صفحة بلا نص»; NOT yet seen
 - 2026-09-27 03:23 - Shamela big import finished and read on the Xiaomi; hamesh-only pages explained
 - 2026-09-27 03:04 - Shamela on the Xiaomi: link with spaces fixed, import resumes after kill (seen)

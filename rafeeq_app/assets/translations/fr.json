@@ -1998,7 +1998,8 @@
     "failed": "Échec de l’importation",
     "source": "Source : al-Maktaba al-Shamela (shamela.ws)",
     "no_results": "Aucun livre de ce titre",
-    "in_app_library": "Dans la bibliothèque de l'app"
+    "in_app_library": "Dans la bibliothèque de l'app",
+    "delete_confirm": "Le livre sera supprimé de cet appareil ; il faudra l'importer à nouveau pour le lire."
   },
   "dorar": {
     "title": "Authentification du hadith — Dorar",
