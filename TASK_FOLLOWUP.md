@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~01:00 (09-28) ITEM 4 STEP 1 DONE AND SEEN (installed 00:58): «يا رفيق افتح ضبط المواقيت والتاريخ» heard as «يار فيق فتحضط المواقيط والتاريخ» -> settings page opened, scrolled to «ضبط المواقيت والتاريخ», section EXPANDED. With 00:36 (fasting reminders) both SettingsParts are proven. NOT released (v3.69.2 is out). Emulator: stop it BEFORE build_github_release.bat (it crashed after every build tonight), restart after. NEXT: step 2 (Egyptian lexicon) per NEXT_PROMPT.md.
+
 ~00:45 (09-28) Second clip «يا رفيق افتح ضبط المواقيت والتاريخ» heard as «يار فيق فتحضط المواقيط والتاريخ» -> nothing (the verb swallowed «ضبط»; «المواقيت» alone matched the Prayer screen and blocked everything). Fallback added: a 3+-word section name with all but one word said wins over a screen matched on fewer words. Test with the exact heard text. analyze 0, 641 pass. NOT rebuilt yet: NEXT = build, install (use the Windows path E:/... with MSYS_NO_PATHCONV=1), push s4 clip, screenshot: «ضبط المواقيت والتاريخ» section open.
 
 ~00:36 (09-28) ITEM 4 STEP 1 SEEN ON DEVICE (build 00:2x, installed 00:34:51): clip «يا رفيق افتحلي تذكير صيام السنن» heard as «يارفيق في تحلي تذكير صيام السنا» (1115 ms) -> page «تذكير صيام السنن» opened with the section EXPANDED (both fasting switches, reminder time, hadiths). NOT released. Emulator crashed a 7th time (after the build, trap 24). NEXT: the second clip «يا رفيق افتح ضبط المواقيت والتاريخ» (a settings-part section), then step 2 (Egyptian lexicon) per NEXT_PROMPT.md.
@@ -716,6 +718,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 01:01 - Item 4 step 1 DONE and seen: 'يا رفيق افتح ضبط المواقيت والتاريخ' (heard 'فتحضط المواقيط والتاريخ') opened Settings scrolled to that section, expanded; both SettingsParts proven by voice. Not released
 - 2026-09-28 00:42 - Rafeeq: 'افتح ضبط المواقيت والتاريخ' heard as 'فتحضط المواقيط والتاريخ' did nothing - a 3+-word section name with all but one word said now wins over a screen matched on fewer words; test with the heard text; 641 pass; rebuild next
 - 2026-09-28 00:35 - Item 4 step 1 SEEN on emulator: voice 'يا رفيق افتحلي تذكير صيام السنن' (heard 'يارفيق في تحلي تذكير صيام السنا') opened the fasting-reminders section expanded. Not released
 - 2026-09-28 00:20 - Rafeeq on device: 'يا رفيق افتحلي تذكير صيام السنن' was heard as 'يا رفيقفي تحلي تذكير صيام السنا' and did nothing - the glued-name rule wanted >2 letters after the name ('في' is 2) and a section match allowed only 1 stray word. Fixed both (glued rest >=2; 3+-word section names allow 2); test with the exact heard text. 641 pass; rebuild + device check next

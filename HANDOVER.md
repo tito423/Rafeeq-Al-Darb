@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 00:42 — IN PROGRESS — resume here**
+**2026-09-28 01:01 — IN PROGRESS — resume here**
 
-Rafeeq: 'افتح ضبط المواقيت والتاريخ' heard as 'فتحضط المواقيط والتاريخ' did nothing - a 3+-word section name with all but one word said now wins over a screen matched on fewer words; test with the heard text; 641 pass; rebuild next
+Item 4 step 1 DONE and seen: 'يا رفيق افتح ضبط المواقيت والتاريخ' (heard 'فتحضط المواقيط والتاريخ') opened Settings scrolled to that section, expanded; both SettingsParts proven by voice. Not released
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
