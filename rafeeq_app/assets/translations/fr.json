@@ -536,7 +536,9 @@
     "search_authors_found": "Auteurs correspondants",
     "author_downloading": "Téléchargement des livres de l'auteur : {} sur {}",
     "cat_shamela": "De Shamela",
-    "text_editor_page": "Page de notes de l'éditeur — non reprise dans cette application ; le livre continue ensuite."
+    "text_editor_page": "Page de notes de l'éditeur — non reprise dans cette application ; le livre continue ensuite.",
+    "dorar_card_sub": "Jugements des hadiths et 9 encyclopédies",
+    "shamela_card_sub": "Importez n’importe lequel des 8 598 livres"
   },
   "azkar": {
     "title": "Adhkar",

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../widgets/external_sources_strip.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/shell/tab_request_provider.dart';
@@ -13,8 +14,6 @@ import '../tabs/websites_tab.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../../../core/utils/screen_class.dart';
 import '../../../shamela/data/shamela_import_service.dart';
-import '../../../shamela/presentation/shamela_screen.dart';
-import '../../../dorar/presentation/dorar_hub_screen.dart';
 
 /// Library — two top tabs:
 ///  • "الكتب المتوفرة" — the books catalog, itself split into
@@ -133,24 +132,9 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
         actions: [
           // Shamela import: the GitHub build only (`kShamelaEnabled`).
           // Dorar's hadith gradings, live (GitHub build only, same gate).
-          if (kShamelaEnabled)
-            IconButton(
-              tooltip: 'dorar.hub_title'.tr(),
-              icon: const Icon(Icons.fact_check_outlined),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const DorarHubScreen()),
-              ),
-            ),
-          if (kShamelaEnabled)
-            IconButton(
-              tooltip: 'shamela.title'.tr(),
-              icon: const Icon(Icons.travel_explore),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const ShamelaScreen(),
-                ),
-              ),
-            ),
+          // Dorar and Shamela moved out of here into the named cards above
+          // the tabs (ExternalSourcesStrip) - as bare icons nobody knew what
+          // they were (owner, 2026-09-27).
           IconButton(
             tooltip: 'library.search_all_books'.tr(),
             icon: const Icon(Icons.manage_search),
@@ -162,14 +146,21 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          BooksTab(),
-          HadithTab(),
-          HadeethEncTab(),
-          ChannelsTab(),
-          WebsitesTab(),
+      body: Column(
+        children: [
+          if (kShamelaEnabled) const ExternalSourcesStrip(),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: const [
+                BooksTab(),
+                HadithTab(),
+                HadeethEncTab(),
+                ChannelsTab(),
+                WebsitesTab(),
+              ],
+            ),
+          ),
         ],
       ),
     );

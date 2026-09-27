@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'staggered_entrance.dart';
 import '../utils/screen_class.dart';
 
 /// A list of cards: one card a row upright, two a row sideways.
@@ -67,7 +69,9 @@ class PairedListView extends StatelessWidget {
             if (i == 0) return header!;
             i -= 1;
           }
-          return i == itemCount ? footer! : itemBuilder(context, i);
+          return i == itemCount
+              ? footer!
+              : StaggeredEntrance(index: i, child: itemBuilder(context, i));
         },
       );
     }
@@ -84,7 +88,9 @@ class PairedListView extends StatelessWidget {
         if (row == (itemCount + 1) ~/ 2) return footer!;
         final a = row * 2;
         final b = a + 1;
-        return Row(
+        return StaggeredEntrance(
+          index: row,
+          child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: itemBuilder(context, a)),
@@ -93,7 +99,7 @@ class PairedListView extends StatelessWidget {
               child: b < itemCount ? itemBuilder(context, b) : const SizedBox(),
             ),
           ],
-        );
+        ));
       },
     );
   }

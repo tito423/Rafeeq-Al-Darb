@@ -536,7 +536,9 @@
     "search_authors_found": "Autores que coinciden",
     "author_downloading": "Descargando los libros del autor: {} de {}",
     "cat_shamela": "De Shamela",
-    "text_editor_page": "Página de notas del editor — no se incluye en esta aplicación; el libro continúa después."
+    "text_editor_page": "Página de notas del editor — no se incluye en esta aplicación; el libro continúa después.",
+    "dorar_card_sub": "Calificación de hadices y 9 enciclopedias",
+    "shamela_card_sub": "Importe cualquiera de 8598 libros"
   },
   "azkar": {
     "title": "Adhkar",

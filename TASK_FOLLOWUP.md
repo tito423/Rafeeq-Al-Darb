@@ -606,6 +606,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 13:25 - Library: named animated cards for Dorar and Shamela (were bare app-bar icons), staggered list entrance; NOT yet seen
 - 2026-09-27 13:21 - Dynamic source rules proven live (broken v2 -> fallback, v3 -> restored); tests fixed
 - 2026-09-27 13:12 - Dynamic source rules: Dorar/Shamela parsing rules published on R2 + GitHub (v1, 21 rules), check_sources.py 5/5 live, read-on-site fallback
 - 2026-09-27 13:04 - Reciter page fix + downloads row seen on emulator
