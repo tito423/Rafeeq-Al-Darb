@@ -87,6 +87,11 @@ void main() {
     expect(of('يا رفيق افتحلي تذكير صيام السنن'), 'setting fasting.section_title');
     expect(of('افتح لي تذكير صيام السنن'), 'setting fasting.section_title');
     expect(of('ساعة الشاشة الرئيسية'), 'setting home.clock_section');
+    // As the recogniser wrote it on emulator-5554 (2026-09-28): the name
+    // glued to a two-letter word, and «السنن» heard as «السنا».
+    const heard = 'يا رفيقفي تحلي تذكير صيام السنا';
+    expect(afterWakeWord(heard), isNotNull);
+    expect(of(afterWakeWord(heard)!), 'setting fasting.section_title');
   });
 
   test('on this day, today or a hijri date', () {

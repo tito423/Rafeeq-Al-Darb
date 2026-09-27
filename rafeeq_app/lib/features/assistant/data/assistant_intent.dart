@@ -312,7 +312,7 @@ String? afterWakeWord(String heard) {
     var t = x;
     if (t.startsWith('يا')) t = t.substring(2);
     for (final n in _wakeNorm) {
-      if (n.length >= 4 && t.length > n.length + 2 && t.startsWith(n)) {
+      if (n.length >= 4 && t.length >= n.length + 2 && t.startsWith(n)) {
         return t.substring(n.length);
       }
     }
@@ -617,7 +617,11 @@ class AssistantParser {
         bestWords = p.split(' ').length;
       }
     }
-    if (section != null && (commanded || words.length <= bestWords + 1)) {
+    // A section's name of three words or more is specific enough to allow
+    // two stray words around it - «في تحلي» is how the recogniser broke
+    // «افتحلي» on emulator-5554 (2026-09-28).
+    final slack = bestWords >= 3 ? 2 : 1;
+    if (section != null && (commanded || words.length <= bestWords + slack)) {
       return OpenSettingIntent(section);
     }
     if (best != null && (commanded || words.length <= bestWords + 1)) {
