@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 20:45 — IN PROGRESS — resume here**
+**2026-09-27 20:53 — IN PROGRESS — resume here**
 
-CI run 1 failed at asset bundling: assets/data/hadeethenc/ and hadith.zip are gitignored - workflow now fetches them from R2 (all 8 SHA-1-identical to local). ARCHITECTURE.md refreshed with measured facts (7 locales, 7 tabs, Google sync, 10 notification files, guards)
+CI run 2: book_speaker_focus_test waited 20 empty ticks for speak() to start - too few on the runner, interruption arrived first; now time-bounded (5 s). shamela_builder_live_test claimed to be skipped unless asked but dart_test.yaml had no live tag rule - added (it hit shamela.ws on every flutter test); still passes with --run-skipped. 634 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

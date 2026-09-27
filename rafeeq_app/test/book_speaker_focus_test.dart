@@ -48,6 +48,17 @@ void main() {
 
   Future<void> settle() => Future<void>.delayed(Duration.zero);
 
+  /// Until the first chunk reaches the engine. Bounded by TIME, not by a
+  /// count of empty ticks: speak() does real prefs/file I/O first, and on the
+  /// CI runner 20 ticks were not enough (2026-09-27, two failures there,
+  /// none locally) - the interruption then arrived before the reading began.
+  Future<void> started(_FakeTts tts) async {
+    final end = DateTime.now().add(const Duration(seconds: 5));
+    while (tts.spoken.isEmpty && DateTime.now().isBefore(end)) {
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+    }
+  }
+
   AudioInterruptionEvent ev(bool begin, AudioInterruptionType type) =>
       AudioInterruptionEvent(begin, type);
 
@@ -57,9 +68,7 @@ void main() {
     final focus = StreamController<AudioInterruptionEvent>.broadcast();
     final s = BookSpeaker(tts: tts, interruptions: focus.stream);
     final reading = s.speak('الجملة الأولى. الجملة الثانية.');
-    for (var i = 0; i < 20 && tts.spoken.isEmpty; i++) {
-      await settle();
-    }
+    await started(tts);
     expect(tts.spoken, hasLength(1));
     final first = tts.spoken.single;
 
@@ -88,9 +97,7 @@ void main() {
     final focus = StreamController<AudioInterruptionEvent>.broadcast();
     final s = BookSpeaker(tts: tts, interruptions: focus.stream);
     final reading = s.speak('الجملة الأولى. الجملة الثانية.');
-    for (var i = 0; i < 20 && tts.spoken.isEmpty; i++) {
-      await settle();
-    }
+    await started(tts);
     focus.add(ev(true, AudioInterruptionType.unknown));
     await reading.timeout(const Duration(seconds: 2));
     expect(s.isSpeaking, isFalse);
@@ -103,9 +110,7 @@ void main() {
     final focus = StreamController<AudioInterruptionEvent>.broadcast();
     final s = BookSpeaker(tts: tts, interruptions: focus.stream);
     final reading = s.speak('جملة واحدة فقط.');
-    for (var i = 0; i < 20 && tts.spoken.isEmpty; i++) {
-      await settle();
-    }
+    await started(tts);
     focus.add(ev(true, AudioInterruptionType.duck));
     await settle();
     expect(s.isSpeaking, isTrue);

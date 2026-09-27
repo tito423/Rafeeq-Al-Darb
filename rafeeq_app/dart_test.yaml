@@ -1,3 +1,5 @@
 tags:
   export:
     skip: "writes files under build/ for the pipeline scripts; run with: flutter test --tags export --run-skipped <file>"
+  live:
+    skip: "hits the network and needs the pipeline's gitignored scripts/book_text_build; run with: flutter test --tags live --run-skipped <file>"
