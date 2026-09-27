@@ -1,9 +1,8 @@
 # Analyze + test on every push to master and every PR.
 #
-# The two databases the tests read are gitignored (they are built by the
-# pipeline and hosted on R2), so the job fetches the SAME hosted zips the app
-# downloads. Checked 2026-09-27: both hosted copies are byte-identical to the
-# local ones (SHA-1 704e34ff.. quran_sciences.db, 78c136ef.. hadith.db).
+# Some bundled assets and the databases the tests read are gitignored (built
+# by the pipeline, hosted on R2), so the job fetches the SAME hosted files.
+# The first run failed on exactly this: assets/data/hadeethenc/ was empty.
 name: ci
 
 on:
@@ -35,15 +34,22 @@ jobs:
           flutter-version: 3.38.7
           cache: true
 
-      - name: Fetch hosted databases the tests read
+      - name: Fetch the gitignored content from R2
         # R2 answers a request with no User-Agent with 403 (TRAPS.md #19).
+        # Bundled zips (pubspec assets) are placed as they are; the two
+        # databases the tests open are unpacked. Every hosted file here was
+        # SHA-1-compared with the local copy on 2026-09-27: all identical.
         run: |
-          for p in hadith/hadith.zip sciences/v2/quran_sciences.zip; do
-            curl -fsSL -A "rafeeq-ci (github.com/tito423/Rafeeq-Al-Darb)" \
-              -o /tmp/db.zip "$CONTENT/$p"
-            unzip -o -q /tmp/db.zip -d assets/data
+          get() { curl -fsSL -A "rafeeq-ci (github.com/tito423/Rafeeq-Al-Darb)" -o "$2" "$CONTENT/$1"; }
+          mkdir -p assets/data/hadeethenc
+          for l in ar en es fr pt ru ur; do
+            get "hadeethenc/$l.zip" "assets/data/hadeethenc/hadeethenc_$l.zip"
           done
-          ls -l assets/data/*.db
+          get hadith/hadith.zip assets/data/hadith.zip
+          unzip -o -q assets/data/hadith.zip -d assets/data
+          get sciences/v2/quran_sciences.zip /tmp/sciences.zip
+          unzip -o -q /tmp/sciences.zip -d assets/data
+          ls -l assets/data/*.db assets/data/*.zip assets/data/hadeethenc
 
       - run: flutter pub get
 

@@ -650,6 +650,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 20:45 - CI run 1 failed at asset bundling: assets/data/hadeethenc/ and hadith.zip are gitignored - workflow now fetches them from R2 (all 8 SHA-1-identical to local). ARCHITECTURE.md refreshed with measured facts (7 locales, 7 tabs, Google sync, 10 notification files, guards)
 - 2026-09-27 20:40 - Audit stages 4-5 + a mic bug found on device: RafeeqEar threw RangeError on odd-offset PCM chunks (508/min, recogniser starved) - fixed + 3 tests; dead code out (buckwalter, tts_probe moved, 6 unused symbols, 351 lines); GitHub Actions CI (analyze+test, DBs from R2); 636 pass
 - 2026-09-27 20:27 - Audit stage 3: 10 stricter lints enabled, 1016 findings to 0 (dart fix + explicit unawaited, typed JSON casts, documented singleton ignores); grade maps proven identical; 642 pass; device check pending
 - 2026-09-27 20:06 - Stopped by owner at quota limit: audit stages 1-2 done, stage 3 measured only

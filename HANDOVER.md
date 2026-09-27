@@ -2507,9 +2507,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 20:40 — IN PROGRESS — resume here**
+**2026-09-27 20:45 — IN PROGRESS — resume here**
 
-Audit stages 4-5 + a mic bug found on device: RafeeqEar threw RangeError on odd-offset PCM chunks (508/min, recogniser starved) - fixed + 3 tests; dead code out (buckwalter, tts_probe moved, 6 unused symbols, 351 lines); GitHub Actions CI (analyze+test, DBs from R2); 636 pass
+CI run 1 failed at asset bundling: assets/data/hadeethenc/ and hadith.zip are gitignored - workflow now fetches them from R2 (all 8 SHA-1-identical to local). ARCHITECTURE.md refreshed with measured facts (7 locales, 7 tabs, Google sync, 10 notification files, guards)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

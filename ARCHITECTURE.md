@@ -1,8 +1,16 @@
 # ARCHITECTURE — Rafiq Al-Darb (رفيق الدرب)
 
-**Written 2026-09-03, P2‑10.** A map of how the codebase is put together —
-written for the owner, who is learning to program and will study this
-codebase. It describes what's actually here, not an aspiration.
+**Written 2026-09-03, P2‑10; refreshed by the 2026-09-27 audit.** A map of
+how the codebase is put together. It describes what's actually here, not an
+aspiration. Measured 2026-09-27: 417 Dart files / 95,823 lines in `lib/`,
+31 feature folders, 7 locales, 157 test files (636 tests), `flutter analyze`
+at zero with the stricter lint set in `analysis_options.yaml`.
+
+**Guards that enforce this document** (they fail `flutter test`, and CI runs
+them on every push, `.github/workflows/ci.yml`):
+`test/layering_test.dart` (§1's import rule), `test/code_layout_test.dart`
+(no file in `lib/` past 800 lines; older long files are listed and may only
+shrink), `test/translation_parity_test.dart` (§7).
 
 ---
 
@@ -13,18 +21,23 @@ lib/
   core/       — things nothing in the app is specific to: database access,
                 native services, app-wide config, theming, small utilities.
                 A `core/` file never imports from `features/`.
-  features/   — one folder per user-facing area (quran, azkar, adhan, khatma,
-                sunan_suwar, library, home, settings, downloads, search,
-                new_muslim). Each one owns its own `data/` (models +
+  features/   — one folder per user-facing area (31 of them: quran,
+                quran_audio, adhan, azkar, library, hifz, hajj, assistant,
+                shamela, …). Each one owns its own `data/` (models +
                 Riverpod providers/state) and `presentation/`
                 (screens + widgets). A feature *can* import `core/` and,
                 sparingly, another feature's public data providers — see §4.
   app/        — the two pieces that tie every feature into one running app:
                 `rafeeq_app.dart` (the `MaterialApp`, theme/locale wiring)
                 and `shell/app_shell.dart` (the bottom-nav `IndexedStack`
-                that keeps Home/Quran/Azkar/Library/Settings all alive at
-                once — see §5 for why that specific choice matters).
+                that keeps all seven tabs alive at once — see §5 for why
+                that specific choice matters).
 ```
+
+When `core/` needs something a feature owns, the feature registers it
+through a hook in `core/` (dependency inversion) — e.g. `RecitationSource`
+gets downloaded ayah files through a callback the `quran_audio` feature
+installs at startup. It never imports the feature.
 
 This is a fairly standard "feature-first" Flutter layout. The rule that
 actually matters day to day: **if you're not sure where a new file goes,
@@ -73,9 +86,9 @@ provider to reuse, not a new one.
 
 | Kind | Example | Where it lives on-device | Why this shape |
 |---|---|---|---|
-| **Bundled, read-only** | `quran_local.db`, `quran_sciences.db` | Shipped inside the APK (`assets/data/`), copied to app storage once via `DbHelper.openBundled` (a "stamp" file busts the cache when the asset changes — bump the stamp constant whenever you touch the DB's schema or content) | Needed offline from first launch, small enough (≈30 MB combined) to ship in the install |
-| **Downloaded on demand** | mushaf page SVGs, `hadith.zip`, book PDFs/texts, adhan video clips, per-ayah recitation | App-support directory, fetched via `DownloadManager` (generic files) or a dedicated service (`MushafPageService`, `AyahAudioService` — both needed their own resumable/paginated logic, a generic downloader wasn't enough) | Too large to bundle, or genuinely optional (most users won't download every reciter or every book) |
-| **User-authored, local-only** | khatma progress, sunan-suwar reminders, ayah notes, bookmarks, theme/locale choice | `SharedPreferences`, JSON-encoded for anything structured (a list of khatmas, a map of notes) | No accounts exist (§4 below) — nothing to sync to, so this is the whole story, not a cache in front of a server |
+| **Bundled, read-only** | `quran_local.db`, `azkar.db`, `hadith.zip` (the owner asked for the hadith library built in), `cities.tsv.gz`, built-in books | Shipped inside the APK (`assets/data/`, listed in `pubspec.yaml`), copied to app storage once via `DbHelper.openBundled` (a "stamp" file busts the cache when the asset changes — bump the stamp constant, e.g. `AppConfig.hadithDbVersion`, whenever the DB changes) | Needed offline from first launch |
+| **Downloaded on demand** | `quran_sciences.db` (tafsir, translations, i'rab — left the APK in 3.45.0), mushaf page images, book texts, recitations, «رفيق»'s voice pack | Hosted on R2 (`AppConfig.contentBaseUrl`), falling back to the GitHub `content-*` releases through `ContentMirrors`; stored in the app-support directory, fetched via `DownloadManager` (generic files) or a dedicated service (`MushafPageService`, `AyahAudioService` — both needed their own resumable/paginated logic, a generic downloader wasn't enough) | Too large to bundle, or genuinely optional (most users won't download every reciter or every book) |
+| **User-authored, local-only** | khatma progress, sunan-suwar reminders, ayah notes, bookmarks, theme/locale choice | `SharedPreferences`, JSON-encoded for anything structured (a list of khatmas, a map of notes) | Local first; a signed-in user's chosen keys are also synced (§4) |
 
 **Read `core/db/` before touching the database layer.** `db_helper.dart` is
 the one place that knows how to open a bundled DB read-only correctly
@@ -88,24 +101,24 @@ directly.
 
 ---
 
-## 4. No accounts, on purpose (for now)
+## 4. Optional Google sign-in, for sync only
 
-Grep `lib/` for `signIn`/`FirebaseAuth`/`google_sign_in` and you'll find
-nothing — this is deliberate, not unfinished. Every feature in the app
-today is either bundled or downloaded content, or purely local state, so
-there has never been a reason to identify a user across devices. The one
-Firebase project that exists (`rafeeq-aldarb`, see `docs/HOSTING.md` §4) is
-provisioned but has zero SDK code talking to it — it's there for the day a
-real cross-device feature (the leading candidate: a shared/group khatma,
-researched in `docs/history/PHASE2_RESEARCH.md` but not approved to build) actually
-needs it. Don't add `firebase_core` speculatively; it's real install-size
-weight for a feature nothing uses yet.
+Nothing needs an account. Signing in with Google (`google_sign_in`, from
+«المزيد») only turns on sync: `core/services/sync_service.dart` pushes the
+keys listed in `syncedStateKeys` and the counters in `syncedCounterKeys` to
+a Cloudflare Worker (`sync_backend/`, `AppConfig.syncBackendUrl`, D1
+storage), which checks the Google token (`iss`, `aud`, `exp`) and stores
+rows only under that token's `sub`. The pull filters by the same key list,
+so a setting an older build synced is never restored. Signing out clears
+only the synced keys and the queue, not the rest of the user's data
+(audit 2026-09-24, D1). No Firebase SDK is in the app.
 
 ---
 
 ## 5. Why `AppShell` uses `IndexedStack`, not named routes
 
-The 5 bottom-nav tabs (Home/Quran/Azkar/Library/Settings) are built once
+The 7 bottom-nav tabs (Home, Quran, Prayer, Azkar, Tasbih, Library, More)
+are built once
 into a `List<Widget>` and shown via `IndexedStack(index: _index, ...)` —
 every tab's widget tree, and therefore its Riverpod state and scroll
 position, stays alive the whole time the app runs, switching tabs is
@@ -118,7 +131,7 @@ purely a paint-time decision, not a rebuild. This is why:
 
 Screens reached by drilling in from a tab (library book reader, ayah
 sciences sheet, khatma/sunan-suwar detail, settings sub-screens) use normal
-`Navigator.push`/`MaterialPageRoute` — only the 5 root tabs are the
+`Navigator.push`/`MaterialPageRoute` — only the 7 root tabs are the
 `IndexedStack`.
 
 ---
@@ -126,12 +139,13 @@ sciences sheet, khatma/sunan-suwar detail, settings sub-screens) use normal
 ## 6. Native notifications: one `FlutterLocalNotificationsPlugin` instance
 ## per feature, each with its own channel
 
-There are five independent notification services, each a very similar
-shape (`_ensureChannel()` + `zonedSchedule`/`show` + `cancel`):
-`AdhanAlarmService`, `AzkarReminderService`, `KhatmaReminderService`,
-`SunanSuwarReminderService`, and `DownloadManager`'s
-`DownloadNotifications` — plus `PrayerStatusNotification` for the ongoing
-status card. This is deliberate repetition rather than one shared class,
+Ten files create a `FlutterLocalNotificationsPlugin` (counted 2026-09-27),
+each a very similar shape (`_ensureChannel()` + `zonedSchedule`/`show` +
+`cancel`): the prayer, azkar, khatma, sunan-suwar, fasting, quote and
+tasbih reminders, `DownloadNotifications`, `PrayerStatusNotification` for
+the ongoing status card, and `NotificationRouter` — the ONE tap handler for
+every notification in the app (TRAPS.md #31). The adhan itself is a native
+alarm scheduled by `features/adhan/data/adhan_scheduler.dart`. This is deliberate repetition rather than one shared class,
 because each has genuinely different requirements: Adhan needs
 `fullScreenIntent` + a native alarm sound + Stop/Mute actions; azkar/khatma/
 sunan-suwar are plain reminders; downloads need a live progress bar;
@@ -144,16 +158,16 @@ has settled on.
 alarm fires through a plain Android `BroadcastReceiver` that does **not**
 start the Dart VM when the app is killed — so only Android's own
 notification-sound API can possibly play anything at that moment. This is
-why `AdhanAlarmService` hands Android a `RawResourceAndroidNotificationSound`
+why the adhan hands Android a `RawResourceAndroidNotificationSound`
 instead of using `just_audio`, and why Stop/Mute act on the notification
 itself rather than a Dart audio player.
 
 ---
 
-## 7. Localization: 5 locales, one parity test
+## 7. Localization: 7 locales, one parity test
 
-`assets/translations/{ar,en,es,ru,pt}.json`, loaded by `easy_localization`.
-`test/translation_parity_test.dart` asserts all 5 files have the exact same
+`assets/translations/{ar,en,es,fr,pt,ru,ur}.json`, loaded by `easy_localization`.
+`test/translation_parity_test.dart` asserts all 7 files have the exact same
 key set and no empty values — this is a real CI-style guard, not a
 suggestion: **run `flutter test` before considering any UI change done.**
 Two categories of Arabic text are deliberately *not* run through the
@@ -181,12 +195,16 @@ scholarly review this project hasn't done (flagged honestly in
 
 ## 9. Known debt, honestly
 
-- **Release signing** uses the debug keystore — real signing needs the
-  owner's own keystore, alias, and passwords (P2‑10's own owner-blocker,
-  `android/app/build.gradle.kts` still has the `// TODO`).
-- **Mushaf pages are pinned to GitHub raw**, not a real CDN — fine for this
-  project's own testing traffic, not for real users (`docs/HOSTING.md` §3 has
-  the migration plan).
-- **No physical-device pass yet** — everything in this document has only
-  been verified on `emulator-5554`, never a real phone (flagged repeatedly
-  in `HANDOVER.md`, still true as of this writing).
+Measured by the 2026-09-27 audit (`docs/audits/AUDIT_2026-09-27.md`):
+
+- **Long files.** `test/code_layout_test.dart` lists the files that were
+  already past 800 lines when the ceiling came in (the largest:
+  `book_text_reader_screen.dart` 1,156, `quran_screen.dart` 1,057). They may only shrink.
+- **Content on `r2.dev`.** Cloudflare's public development URL is
+  rate-limited and uncached; a custom domain is the fix, deferred by the
+  owner. The GitHub `content-*` releases are the fallback meanwhile.
+- **Release signing happens outside Gradle** (`scripts/sign_release.py`,
+  TRAPS.md #41), so Gradle's own output still says "debug". Always build
+  with `build_github_release.bat`.
+- **Held-back packages** are recorded with their reason (e.g.
+  `permission_handler` stays on 12.x, TRAPS.md #52).
