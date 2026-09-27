@@ -2046,7 +2046,13 @@
     "read_on_site": "Open on the website",
     "read_on_site_msg": "This page could not be read inside the app. You can read it on the Dorar website.",
     "hijri_year": "Hijri year",
-    "gregorian_year": "Gregorian year"
+    "gregorian_year": "Gregorian year",
+    "search_all": "Search all encyclopedias",
+    "search_all_sub": "Any chapter or topic title across the nine encyclopedias",
+    "search_all_hint": "Type a chapter or topic",
+    "search_all_loading": "Loading the contents: {}",
+    "search_all_none": "No results",
+    "search_all_failed": "{} encyclopedias could not be loaded"
   },
   "assistant": {
     "name": "Rafeeq",

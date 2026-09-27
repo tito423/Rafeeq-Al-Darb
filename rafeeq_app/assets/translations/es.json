@@ -2046,7 +2046,13 @@
     "read_on_site": "Abrir en el sitio web",
     "read_on_site_msg": "No se pudo leer esta página en la aplicación. Puede leerla en el sitio de Dorar.",
     "hijri_year": "Año hégira",
-    "gregorian_year": "Año gregoriano"
+    "gregorian_year": "Año gregoriano",
+    "search_all": "Buscar en todas las enciclopedias",
+    "search_all_sub": "Cualquier capítulo o tema de las nueve enciclopedias",
+    "search_all_hint": "Escribe un capítulo o tema",
+    "search_all_loading": "Cargando los índices: {}",
+    "search_all_none": "Sin resultados",
+    "search_all_failed": "No se pudieron cargar {} enciclopedias"
   },
   "assistant": {
     "name": "Rafeeq",

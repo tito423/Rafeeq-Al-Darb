@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-27 21:40 — IN PROGRESS — resume here**
+**2026-09-27 21:48 — IN PROGRESS — resume here**
 
-Rafeeq + Shamela by voice (owner): 'نزلي كتاب الزهد للإمام أحمد ابن حنبل من الشاملة' found nothing - the assistant only knew imported books and the catalogue search wants whole words (title is 'الزهد لأحمد بن حنبل', 8494). ShamelaSearchIntent (raw words, before library books) + ShamelaCatalog.searchSpoken (prefix/ابن stemming, rank by words held) + ShamelaScreen(initialQuery, openBest: card only on a full match). Tests on the real 8,598-book catalogue. Owner item 4 logged
+Dorar: one search over all nine encyclopaedias' contents (owner: like the Shamela search) - DorarSearchScreen, first tile on the hub; searchDorarSections ranks title/prefix/words/folders; tests on the real aqeeda contents; 6 keys x 7 locales. ALSO: v3.69.1 shipped with About card 3.69.0 (AboutScreen.appVersion not bumped; full suite not run after the bump) - fixed here, visible from the next release. 640 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

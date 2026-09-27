@@ -660,6 +660,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-27 21:48 - Dorar: one search over all nine encyclopaedias' contents (owner: like the Shamela search) - DorarSearchScreen, first tile on the hub; searchDorarSections ranks title/prefix/words/folders; tests on the real aqeeda contents; 6 keys x 7 locales. ALSO: v3.69.1 shipped with About card 3.69.0 (AboutScreen.appVersion not bumped; full suite not run after the bump) - fixed here, visible from the next release. 640 pass
 - 2026-09-27 21:40 - Rafeeq + Shamela by voice (owner): 'نزلي كتاب الزهد للإمام أحمد ابن حنبل من الشاملة' found nothing - the assistant only knew imported books and the catalogue search wants whole words (title is 'الزهد لأحمد بن حنبل', 8494). ShamelaSearchIntent (raw words, before library books) + ShamelaCatalog.searchSpoken (prefix/ابن stemming, rank by words held) + ShamelaScreen(initialQuery, openBest: card only on a full match). Tests on the real 8,598-book catalogue. Owner item 4 logged
 - 2026-09-27 21:17 - Audit 2026-09-27 complete: report docs/audits/AUDIT_2026-09-27.md (6 stages, 7 findings incl. the Rafeeq mic bug); downloaded ayah plays offline on 3.69.1 (stage-2 hook seen); TRAPS #59; HANDOVER state row corrects the v3.69.0 end-to-end claim
 - 2026-09-27 21:09 - Released v3.69.1 (Rafeeq mic fix); v3.69.0 deleted

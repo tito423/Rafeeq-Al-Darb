@@ -46,7 +46,7 @@ import '../../../quran/data/quran_translation_catalog.dart';
 class AboutScreen extends ConsumerStatefulWidget {
   /// From `pubspec.yaml`'s `version:` — kept equal to it by
   /// `test/about_version_test.dart`.
-  static const appVersion = '3.69.0';
+  static const appVersion = '3.69.1';
 
   const AboutScreen({super.key});
 

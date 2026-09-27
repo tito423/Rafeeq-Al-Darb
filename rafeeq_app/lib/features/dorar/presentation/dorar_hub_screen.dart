@@ -7,6 +7,7 @@ import '../../../core/utils/screen_class.dart';
 import '../data/dorar_encyclopedia.dart';
 import 'dorar_history_screen.dart';
 import 'dorar_screen.dart';
+import 'dorar_search_screen.dart';
 import 'dorar_tafseer_screen.dart';
 
 /// «الدرر السنية» inside the app: hadith grading and every encyclopaedia of
@@ -19,6 +20,15 @@ class DorarHubScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final tiles = <Widget>[
+      // «بحث عام في الدرر كلها» (owner, 2026-09-27): first, above the
+      // encyclopaedias it searches.
+      _Tile(
+        icon: Icons.manage_search,
+        title: 'dorar.search_all'.tr(),
+        subtitle: 'dorar.search_all_sub'.tr(),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const DorarSearchScreen())),
+      ),
       _Tile(
         icon: Icons.fact_check_outlined,
         title: 'dorar.title'.tr(),
