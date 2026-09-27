@@ -76,11 +76,16 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
       locales.add(jsonDecode(await rootBundle
               .loadString('assets/translations/${l.languageCode}.json'))
           as Map<String, dynamic>);
-    } catch (_) {
-      // A locale file that will not load only loses its own titles.
+    } catch (error, stackTrace) {
+      debugPrint('assistant catalogue: failed to load '
+          '${l.languageCode}: $error');
+      debugPrintStack(stackTrace: stackTrace);
     }
   }
   final labels = labelsFrom(locales);
+  debugPrint('assistant catalogue: locales=${locales.length}, '
+      'sections=${labels.sections.length}, '
+      'section phrases=${labels.sections.values.fold<int>(0, (n, v) => n + v.length)}');
   return AssistantParser(AssistantCatalog(
     surahs: [for (final s in surahs) s.nameAr],
     surahsLatin: [for (final s in surahs) s.nameEn],
@@ -245,6 +250,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     if (rest.isNotEmpty) {
       final parser = await ref.read(assistantParserProvider.future);
       final intent = parser.parse(rest);
+      debugPrint('rafeeq intent: "$rest" -> $intent');
       if (intent is! UnknownIntent) {
         await _act(container, intent);
         return;
@@ -515,6 +521,7 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
     if (said.isEmpty) return;
     final parser = await ref.read(assistantParserProvider.future);
     final intent = parser.parse(said);
+    debugPrint('rafeeq sheet intent: "$said" -> $intent');
     if (!mounted) return;
     if (intent is UnknownIntent) {
       setState(() => _message = 'assistant.not_understood'.tr());

@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~00:07 (09-28) Runtime diagnostics added (not built): locale load failures now print locale+exception+stack instead of being silently swallowed; provider prints locale/section/phrase counts; both background and open-sheet paths print exact phrase -> intent. No matching behavior changed. NEXT EXACT: focused analyze `assistant_sheet.dart` + focused assistant intent test, checkpoint, then signed release build/install and replay clip 2 to read the cause.
+
 ~00:06 (09-28) REQUIRED clip 2 FAILED identically: sheet visibly says `سمعت: «افتح ضبط المواقيت والتاريخ»` then not-understood; no section opened. Added the exact clip-1 recognized spacing (`افتح لي ...`) to `assistant_intent_test.dart`; focused test passes all 13, so parser logic with desktop-loaded locale JSON is correct but the on-device parser catalogue lacks/loses section labels. NEXT EXACT: stop guessing: make the currently silent locale-load catch log locale+exception and log runtime catalogue counts + parsed intent; build/install, replay one clip, read exact cause. Do not alter matching yet.
 
 ~00:02 (09-28) REQUIRED voice clip 1 FAILED on device, with exact visual evidence: edge_tts clip «يا رفيق، افتحلي تذكير صيام السنن» was processed; assistant sheet visibly says `سمعت: «افتح لي تذكير صيام السنن»` then `لم أجد في التطبيق ما يوافق هذا!` (logcat first wake segment `يار في` in 296 ms). No Settings section opened. Therefore step-1 analyzer/device behavior is wrong despite the earlier unit test. NEXT EXACT: reproduce the exact normalized phrase in `assistant_intent_test.dart`, inspect ordering/settings-map matching, make the smallest proven fix, then analyze+full tests+release build and repeat both voice clips.
@@ -704,6 +706,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 00:07 - Instrument runtime assistant catalogue and parsed intents
 - 2026-09-28 00:06 - Prove runtime settings catalogue fails while parser test passes
 - 2026-09-28 00:02 - Record failed spoken settings section match on device
 - 2026-09-28 00:01 - Enable Rafeeq foreground listener after pack install
