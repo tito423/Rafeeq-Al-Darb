@@ -46,7 +46,6 @@ MISSING_TOP_LEVEL = set()
 DETAIL_INTENT_SUPPORTED = {
     "AyahReciterScreen", "AzkarSectionScreen", "BookTextReaderScreen",
     "HadeethEncCategoryScreen", "HifzSessionScreen", "ReciterScreen",
-    "HadeethEncDetailScreen",
     "SingleSurahScreen", "HadithBookScreen", "HadithChapterScreen",
     "HadithDetailScreen",
 }
@@ -54,7 +53,8 @@ DETAIL_COMMAND_CANDIDATES = {
 }
 CONTEXT_ONLY = {
     "AzanPlayerScreen", "DorarChainScreen", "DorarSectionScreen",
-    "DorarTocScreen", "LinkListManageScreen", "QuoteCardScreen",
+    "DorarTocScreen", "HadeethEncDetailScreen", "LinkListManageScreen",
+    "QuoteCardScreen",
 }
 INTERNAL_OR_LIFECYCLE = {
     "CardScreen", "PermissionsIntroScreen", "QuranAudioPlayerScreen",

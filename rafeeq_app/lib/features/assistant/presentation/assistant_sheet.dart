@@ -35,7 +35,6 @@ import '../../downloads/data/reciters_provider.dart';
 import '../../downloads/presentation/screens/downloads_screen.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
 import '../../hadeethenc/presentation/screens/hadeethenc_category_screen.dart';
-import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
 import '../../hajj/presentation/hajj_screen.dart';
 import '../../hifz/presentation/hifz_screen.dart';
 import '../../hifz/presentation/hifz_session_screen.dart';
@@ -583,17 +582,6 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
         push(HadeethEncCategoryScreen(
           repo: repo, category: category,
           sourceName: catalog.nameFor(pack.lang),
-          sourceUrl: catalog.sourceUrl, rtl: pack.isRtl,
-        ));
-      }
-    case OpenHadeethEncDetailIntent(:final itemId):
-      final repo = await ref.read(hadeethEncRepositoryProvider.future);
-      final catalog = await ref.read(hadeethEncCatalogProvider.future);
-      final pack = catalog.forLocale(_appLanguage());
-      final item = await repo?.byId(itemId);
-      if (item != null && pack != null) {
-        push(HadeethEncDetailScreen(
-          item: item, sourceName: catalog.nameFor(pack.lang),
           sourceUrl: catalog.sourceUrl, rtl: pack.isRtl,
         ));
       }
