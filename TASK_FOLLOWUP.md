@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~04:38 (09-28) Post-split full verification CLEAN: `flutter analyze lib test` = No issues; `flutter test` = 641 passed, 4 intentionally skipped, 0 failed. Wake parser files are 769 + 52 lines and code-layout passes. NEXT EXACT: checkpoint, stop emulator, signed build/reinstall, replay the off clip one final time and require Splash video checked=false; then step 2 is fully complete and step 3 inventory can start.
+
 ~04:35 (09-28) Full verification exposed one structural failure only: analyze clean; full suite reached 639 passed / 4 skipped, but `code_layout_test` rejected `assistant_intent.dart` at 807 lines. Fixed honestly by moving the wake-word splitter into new `assistant_wake_word.dart` (52 lines), leaving intent parser at 769; no formatter churn retained. Focused analyze clean; code-layout + assistant suites 15/15 pass. This refactor is behavior-equivalent but postdates the installed APK. NEXT EXACT: run full analyze + full test again; then checkpoint, stop emulator, signed build/reinstall, replay the off clip one final time and require splash checked=false before marking step 2 complete.
 
 ~04:30 (09-28) ITEM 4 STEP 2 DONE AND SEEN. New signed APK installed over 3.69.2, AssistantListenService foreground. The same clip was again heard as `يار فيقطفيها فيديو البداية` (1385 ms); the fixed wake splitter accepted it and applied splash OFF. Opened Settings > Splash screen and both screenshot + UI semantics proved `فيديو الشاشة الافتتاحية` checked=false. Together with the 04:18 «فين الأذكار» success, both required Egyptian-lexicon voice groups are proven on emulator. NEXT EXACT: run full `flutter analyze lib test` and full `flutter test`; if clean, checkpoint step 2 complete and start item 4 step 3 screen inventory (script existing `MaterialPageRoute(builder: ... Screen(` calls, compare against `AssistantScreen`, classify only user-meaningful destinations before editing).
@@ -736,6 +738,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:40 - Full verification after wake-parser split: analyze clean and 641 tests pass
 - 2026-09-28 04:37 - Track extracted wake-word parser so the layout fix is complete
 - 2026-09-28 04:37 - Split wake-word parsing after full suite caught the 800-line limit; focused checks pass
 - 2026-09-28 04:30 - Item 4 step 2 done: glued Egyptian off command disables splash on emulator and UI proves switch off
