@@ -408,6 +408,7 @@ class AssistantParser {
       for (final k in _surahKeys) for (final ph in k) ...ph.split(' '),
       for (final names in _azkarSectionKeys.values)
         for (final ph in names) ...ph.split(' '),
+      ..._numberWords.keys,
       for (final m in lex.hijriMonthWords) for (final w in m) ...norm(w).split(' '),
       for (final l in lex.languageNames.values) for (final w in l) ...norm(w).split(' '),
       for (final l in lex.themeValueWords.values) for (final w in l) ...norm(w).split(' '),

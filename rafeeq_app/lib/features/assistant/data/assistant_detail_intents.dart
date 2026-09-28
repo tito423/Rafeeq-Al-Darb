@@ -129,7 +129,13 @@ extension on AssistantParser {
     if (!clean.split(' ').map(bare).any(markers.contains)) return null;
     final match = RegExp(r'(?:رقم|number|no)?\s*(\d{1,6})(?:\s|$)')
         .firstMatch(clean);
-    return int.tryParse(match?.group(1) ?? '');
+    final digits = int.tryParse(match?.group(1) ?? '');
+    if (digits != null) return digits;
+    for (final word in clean.split(' ')) {
+      final spoken = _numberWords[word];
+      if (spoken != null) return spoken;
+    }
+    return null;
   }
 
   int? _azkarSectionIn(String clean) {

@@ -238,6 +238,8 @@ void main() {
 
   test('nine-books hadith detail requires a real parent book and number', () {
     expect(of('افتح الحديث رقم 1 من صحيح البخاري'), 'hadith detail 1/1');
+    // Exact emulator ASR output for the same hands-free command.
+    expect(of('افتح الحديث واحد من صحيح البخاري'), 'hadith detail 1/1');
     expect(of('وريني حديث 35 من سنن أبي داود'), 'hadith detail 3/35');
     expect(p.parse('افتح الحديث رقم 1 من سنن البيهقي'),
         isA<UnknownIntent>());
