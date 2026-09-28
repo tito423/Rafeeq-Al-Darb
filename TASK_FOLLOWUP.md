@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~15:28 (09-28) DEVICE CHECK FOUND A REAL FALSE ROUTE: alternate male Saudi TTS moved the HadeethEnc domain before the ID, but ASR still dropped the entire spoken number and heard «من موسوعة الأحديث النبوية اذتح الحديث الذي رقمه». The parser then incorrectly opened `RuqyahScreen`; screenshot confirmed the actual الرقية الشرعية destination. Root cause is bounded spelling correction: the unknown four-letter «رقمه» is one edit from a ruqyah label token and was corrected to it before destination matching. This is unsafe: a missing identifier must be unknown, never another screen. NEXT EXACT: add the measured heard phrase as a regression, protect the Arabic number-marker word «رقمه» from spelling correction, and prove the incomplete command becomes `UnknownIntent` while genuine «افتح الرقية الشرعية» and numeric detail commands remain correct. Run focused analyze/tests, inventory guard, checkpoint, then full verification + rebuild/install because device code changed. No release requested.
+
 ~15:26 (09-28) POST-BUILD DEVICE VOICE/UI CHECKS PARTIAL: restarted the known emulator, installed the exact signed APK from the 13:06 checkpoint with `adb install -r`, and confirmed `AssistantListenService` is foreground. Voice plus destination-screen evidence passed for real azkar section 20 («الأذكار بعد الصلاة»), whole-surah Husary reciter 118, and HadeethEnc category 3 («العقيدة»); screenshots showed the real destination content, not parser logs alone. HadeethEnc detail is NOT verified: Salma TTS for numeric «حديث رقم 1751...» was recognized as «حديث رم...», and a spoken-number retry lost the number too, so both honestly remained unknown. NEXT EXACT: try one clearer reordered/detail utterance and alternate Arabic voice before any code change. If the recognizer still drops the identifier, record the command as unsuitable for hands-free voice and decide from measured evidence whether it must become context-only; otherwise verify its real detail screen. Then voice/UI-check nine-books book/chapter/detail and one unknown rejection. Do not release.
 
 ~13:06 (09-28) POST-DETAIL SIGNED BUILD SUCCEEDED WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `29C423D2F5E6AF192D3B8B57FEB2CA5137E655CB6B6FF359ACC8444B22A2FC10`; build script verified sherpa ORT 1.28.2 for arm64-v8a (22,249,552 B), armeabi-v7a (15,359,576 B), and x86_64 (25,581,112 B), plus the rotated signing lineage (Rafeeq key Android 9+, retained Android key 7-8). ADB remained empty after the build. NEXT EXACT: checkpoint, restart the known emulator, install this exact APK with `adb install -r`, confirm the AssistantListenService foreground listener, then perform representative voice/UI checks for at least: real azkar section, whole-surah reciter, HadeethEnc category/detail, nine-books book/chapter/detail, plus one unknown rejection. Read the destination UI/semantics, not parser logs alone. No release requested.
@@ -786,6 +788,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 15:28 - Record unsafe assistant false route
 - 2026-09-28 15:26 - Record partial assistant device verification
 - 2026-09-28 13:06 - build(android): verify signed exhaustive-assistant APK
 - 2026-09-28 13:01 - test(assistant): verify exhaustive detail commands
