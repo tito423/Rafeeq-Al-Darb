@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:37 (09-28) V3.69.3 RELEASE GATE CLEAN: `flutter analyze lib test` reported no issues; full `flutter test` passed 650 tests with the same 4 intentional skips and zero failures. The About-version regression confirms `3.69.3` matches pubspec `3.69.3+83`. NEXT EXACT: checkpoint, stop the currently running emulator cleanly, prove ADB and emulator/qemu processes are empty, then run `build_github_release.bat` alone. Do not run Flutter commands during that build.
+
 ~16:34 (09-28) OWNER AUTHORIZED GITHUB RELEASE; VERSION BUMPED: preparing `v3.69.3` from the completed item-4 assistant work. `pubspec.yaml` is now `3.69.3+83` and the About card is `3.69.3`. Previous published release is `v3.69.2`; standing releases `v3.51.0` and `content-*` remain protected. NEXT EXACT: checkpoint, run the About-version regression plus full analyze/tests, stop the emulator and prove build isolation, then build only with `build_github_release.bat`; verify bytes/SHA/ORT/signing before publishing from `master` with honest Arabic notes.
 
 ~16:31 (09-28) OWNER ITEM 4 COMPLETE; FINAL APK INSTALLED AND SEEN: installed exact signed APK SHA-256 `E6758ECEFAE3ED50A77619C9A3635A5053FB0D33A04209635741DE70A30FD60D`; `AssistantListenService` foreground. Replayed the exact HadeethEnc attempt that previously false-routed to ruqyah: ASR again produced «من موسوعة الأحديث النبوية اذتح الحديث الذي رقمه», final parser logged `unknown`, and screenshot proved Home stayed visible with no navigation. Final matrix has real destination UI evidence for azkar section, whole-surah reciter, HadeethEnc category, nine-books book/chapter/spoken-number detail; nonexistent Bayhaqi and incomplete/internal-ID commands reject safely. `HadeethEncDetailScreen` is context-only through real category/Daily-Hadith items, not an undiscoverable internal-ID voice command. Final verification: analyze clean; 650 passed / 4 skipped / 0 failed; inventory 60 public screens, 49 route destinations, 44 enum destinations, zero unclassified/candidates; APK ORT 1.28.2 all ABIs + rotated signing. No release requested or performed. NEXT EXACT: checkpoint this completion. No further owner code item is queued after item 4; if the owner has his phone available, the only outstanding acceptance evidence is real-owner-voice latency/use on that phone. Otherwise wait for his next instruction; do not release autonomously.
@@ -822,6 +824,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 21:32 - Verify version 3.69.3 release gate
 - 2026-09-28 16:35 - Prepare version 3.69.3 for GitHub release
 - 2026-09-28 16:30 - Complete exhaustive Rafeeq assistant coverage
 - 2026-09-28 16:26 - Checkpoint final item four APK
