@@ -186,6 +186,7 @@ class AssistantCatalog {
     this.wholeSurahReciters = const [],
     this.hadeethCategories = const [],
     this.hadithBooks = const [],
+    this.hadithChapters = const [],
     this.reciters = const [],
     this.books = const [],
     this.screenLabels = const {},
@@ -208,6 +209,7 @@ class AssistantCatalog {
   final List<CatalogWholeReciter> wholeSurahReciters;
   final List<CatalogHadeethCategory> hadeethCategories;
   final List<CatalogHadithBook> hadithBooks;
+  final List<CatalogHadithChapter> hadithChapters;
   final List<CatalogReciter> reciters;
   final List<CatalogBook> books;
 
@@ -552,6 +554,13 @@ class AssistantParser {
       if (a != null) return AuthorBooksIntent(a);
     }
     // «كتاب الأذكار للنووي»
+    final chapterBook = _hadithBookMentionedIn(clean);
+    if (chapterBook != null && _hasHadithChapterWord(words)) {
+      final chapter = _hadithChapterIn(words, chapterBook);
+      return chapter == null
+          ? UnknownIntent(heard)
+          : OpenHadithChapterIntent(chapterBook, chapter);
+    }
     final hadithBook = _hadithBookIn(words);
     if (hadithBook != null) return OpenHadithBookIntent(hadithBook);
     final bk = words.indexWhere(_bookWord.contains);
@@ -653,20 +662,6 @@ class AssistantParser {
       }
     }
     return false;
-  }
-
-  int? _azkarSectionIn(String clean) {
-    int? best;
-    var bestLen = 0;
-    for (final e in _azkarSectionKeys.entries) {
-      for (final name in e.value) {
-        if (name.length > bestLen && _hasPhrase(clean, [name])) {
-          best = e.key;
-          bestLen = name.length;
-        }
-      }
-    }
-    return best;
   }
 
   /// A surah named in [words]: after «سورة»/"surah" anywhere, or (when a

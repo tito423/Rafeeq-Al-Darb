@@ -74,6 +74,9 @@ void main() {
         options: OpenDatabaseOptions(readOnly: true));
     final hadithRows = await hadithDb.query('books',
         columns: ['id', 'name_ar', 'name_en'], orderBy: 'sort_order');
+    final chapterRows = await hadithDb.query('chapters',
+        columns: ['book_id', 'chapter_no', 'name_ar', 'name_en'],
+        orderBy: 'book_id, chapter_no');
     final localeData = [
       for (final l in ['ar', 'en', 'es', 'fr', 'pt', 'ru', 'ur'])
         jsonDecode(File('assets/translations/$l.json').readAsStringSync())
@@ -102,6 +105,12 @@ void main() {
         hadithBooks: [
           for (final row in hadithRows)
             CatalogHadithBook(row['id'] as int,
+                [row['name_ar'] as String, row['name_en'] as String]),
+        ],
+        hadithChapters: [
+          for (final row in chapterRows)
+            CatalogHadithChapter(
+                row['book_id'] as int, row['chapter_no'] as num,
                 [row['name_ar'] as String, row['name_en'] as String]),
         ],
         reciters: reciters,
@@ -199,6 +208,15 @@ void main() {
     expect(of('وريني سنن النسائي'), 'hadith book 5');
     expect(of('افتح كتاب فتح الباري بشرح صحيح البخاري'), 'book fath_al_bari');
     expect(p.parse('افتح سنن البيهقي'), isA<UnknownIntent>());
+  });
+
+  test('hadith chapter requires a real chapter and its real parent book', () {
+    expect(of('افتح فصل بدء الوحي من صحيح البخاري'),
+        'hadith chapter 1/1');
+    expect(of('افتح فصل المزارعة من سنن النسائي'),
+        'hadith chapter 5/35.2');
+    expect(p.parse('افتح فصل الطب البيطري من صحيح البخاري'),
+        isA<UnknownIntent>());
   });
 
   test('whole-surah reciter uses only the mp3quran catalogue', () {

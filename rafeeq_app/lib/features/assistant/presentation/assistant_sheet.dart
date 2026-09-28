@@ -46,6 +46,7 @@ import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
 import '../../library/presentation/screens/books_search_screen.dart';
 import '../../library/presentation/screens/hadith_book_screen.dart';
+import '../../library/presentation/screens/hadith_chapter_screen.dart';
 import '../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../../quran/presentation/screens/sciences_pack_screen.dart';
@@ -113,9 +114,16 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     debugPrint('assistant catalogue: hadeeth categories unavailable: $error');
   }
   var hadithBooks = const <HadithBook>[];
+  var hadithChapters = const <HadithChapter>[];
   try {
     final hadithRepo = await ref.watch(hadithRepositoryProvider.future);
-    if (hadithRepo != null) hadithBooks = await hadithRepo.books();
+    if (hadithRepo != null) {
+      hadithBooks = await hadithRepo.books();
+      hadithChapters = [
+        for (final book in hadithBooks)
+          ...await hadithRepo.chaptersOfBook(book.id),
+      ];
+    }
   } catch (error) {
     debugPrint('assistant catalogue: hadith books unavailable: $error');
   }
@@ -161,6 +169,10 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     hadithBooks: [
       for (final b in hadithBooks)
         CatalogHadithBook(b.id, [b.nameAr, b.nameEn]),
+    ],
+    hadithChapters: [
+      for (final c in hadithChapters)
+        CatalogHadithChapter(c.bookId, c.chapterNo, [c.nameAr, c.nameEn]),
     ],
     reciters: reciters,
     books: books,
@@ -585,6 +597,15 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       if (repo == null) return;
       final book = (await repo.books()).where((b) => b.id == bookId).firstOrNull;
       if (book != null) push(HadithBookScreen(book: book, repo: repo));
+    case OpenHadithChapterIntent(:final bookId, :final chapterNo):
+      final repo = await ref.read(hadithRepositoryProvider.future);
+      if (repo == null) return;
+      final book = (await repo.books()).where((b) => b.id == bookId).firstOrNull;
+      final chapter = (await repo.chaptersOfBook(bookId))
+          .where((c) => c.chapterNo == chapterNo).firstOrNull;
+      if (book != null && chapter != null) {
+        push(HadithChapterScreen(book: book, chapter: chapter, repo: repo));
+      }
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
     case AuthorBooksIntent(:final author):

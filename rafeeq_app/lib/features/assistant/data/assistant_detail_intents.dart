@@ -24,6 +24,13 @@ class CatalogHadithBook {
   final List<String> names;
 }
 
+class CatalogHadithChapter {
+  const CatalogHadithChapter(this.bookId, this.chapterNo, this.names);
+  final int bookId;
+  final num chapterNo;
+  final List<String> names;
+}
+
 class MemorizeSurahIntent extends AssistantIntent {
   const MemorizeSurahIntent(this.surah);
   final int surah;
@@ -73,7 +80,77 @@ class OpenHadithBookIntent extends AssistantIntent {
   String toString() => 'hadith book $bookId';
 }
 
+class OpenHadithChapterIntent extends AssistantIntent {
+  const OpenHadithChapterIntent(this.bookId, this.chapterNo);
+  final int bookId;
+  final num chapterNo;
+  @override
+  String toString() => 'hadith chapter $bookId/$chapterNo';
+}
+
 extension on AssistantParser {
+  int? _azkarSectionIn(String clean) {
+    int? best;
+    var bestLen = 0;
+    for (final e in _azkarSectionKeys.entries) {
+      for (final name in e.value) {
+        if (name.length > bestLen && _hasPhrase(clean, [name])) {
+          best = e.key;
+          bestLen = name.length;
+        }
+      }
+    }
+    return best;
+  }
+
+  bool _hasHadithChapterWord(List<String> words) => words
+      .map(bare)
+      .any(const {'باب', 'فصل', 'ابواب', 'فصول', 'chapter', 'capitulo',
+        'chapitre', 'glava'}.contains);
+
+  int? _hadithBookMentionedIn(String clean) {
+    int? best;
+    var bestLength = 0;
+    for (final book in catalog.hadithBooks) {
+      for (final name in book.names.map(AssistantParser._canon)) {
+        if (name.length > bestLength && _hasPhrase(clean, [name])) {
+          best = book.id;
+          bestLength = name.length;
+        }
+      }
+    }
+    return best;
+  }
+
+  num? _hadithChapterIn(List<String> words, int bookId) {
+    final bookWords = <String>{
+      for (final book in catalog.hadithBooks)
+        if (book.id == bookId)
+          for (final name in book.names)
+            ...AssistantParser._canon(name).split(' ').map(bare),
+    };
+    final title = words
+        .map(bare)
+        .where((word) => !AssistantParser._open.contains(word) &&
+            !AssistantParser._bookWord.contains(word) &&
+            !bookWords.contains(word) &&
+            !const {'باب', 'فصل', 'ابواب', 'فصول', 'chapter', 'capitulo',
+              'chapitre', 'glava'}.contains(word))
+        .join(' ');
+    for (final chapter in catalog.hadithChapters) {
+      if (chapter.bookId != bookId) continue;
+      for (final raw in chapter.names) {
+        final name = AssistantParser._canon(raw);
+        final short = name.startsWith('كتاب ') ? name.substring(5) : name;
+        for (final phrase in {name, short}) {
+          final key = phrase.split(' ').map(bare).join(' ');
+          if (title == key) return chapter.chapterNo;
+        }
+      }
+    }
+    return null;
+  }
+
   int? _hadithBookIn(List<String> words) {
     final title = words
         .where((word) => !AssistantParser._open.contains(word) &&
