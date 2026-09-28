@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~04:45 (09-28) Final post-split signed build SUCCEEDED: 314,034,223 B, SHA-256 `969321F221737380664B0E9E0BF766EBC6F1796F6E165E4DD47C030A77C96C26`; ORT 1.28.2 all three ABIs + rotated signing lineage verified. NEXT EXACT: restart emulator, install this exact APK, wait for foreground listener, ensure splash is ON first (toggle manually if the prior test persisted OFF), replay off clip, and require the Splash video switch checked=false.
+
 ~04:38 (09-28) Post-split full verification CLEAN: `flutter analyze lib test` = No issues; `flutter test` = 641 passed, 4 intentionally skipped, 0 failed. Wake parser files are 769 + 52 lines and code-layout passes. NEXT EXACT: checkpoint, stop emulator, signed build/reinstall, replay the off clip one final time and require Splash video checked=false; then step 2 is fully complete and step 3 inventory can start.
 
 ~04:35 (09-28) Full verification exposed one structural failure only: analyze clean; full suite reached 639 passed / 4 skipped, but `code_layout_test` rejected `assistant_intent.dart` at 807 lines. Fixed honestly by moving the wake-word splitter into new `assistant_wake_word.dart` (52 lines), leaving intent parser at 769; no formatter churn retained. Focused analyze clean; code-layout + assistant suites 15/15 pass. This refactor is behavior-equivalent but postdates the installed APK. NEXT EXACT: run full analyze + full test again; then checkpoint, stop emulator, signed build/reinstall, replay the off clip one final time and require splash checked=false before marking step 2 complete.
@@ -738,6 +740,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:44 - Build final post-split signed APK and verify all native ABIs plus signing lineage
 - 2026-09-28 04:40 - Full verification after wake-parser split: analyze clean and 641 tests pass
 - 2026-09-28 04:37 - Track extracted wake-word parser so the layout fix is complete
 - 2026-09-28 04:37 - Split wake-word parsing after full suite caught the 800-line limit; focused checks pass
