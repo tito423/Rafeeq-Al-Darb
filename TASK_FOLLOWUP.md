@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:02 (09-28) FINAL BUILD ISOLATION READY: emulator shut down cleanly; after settling, ADB was empty and no emulator/qemu process remained. NEXT EXACT: checkpoint and run the signed build alone, then verify/install/test as described below. No release requested.
+
 ~16:00 (09-28) POST-SPOKEN-NUMBER FULL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. NEXT EXACT: checkpoint, stop emulator and prove ADB/processes empty, run `build_github_release.bat` alone, verify new APK bytes/SHA/ORT/signing, reinstall exact APK, and replay the already measured exact `hadith_detail_hamed2.wav`. Then verify one unrelated unknown command and close the device matrix honestly. No release requested.
 
 ~15:55 (09-28) SPOKEN NINE-BOOKS DETAIL FIXED IN CODE: `_hadithNumberIn` still prefers explicit digits, then falls back to the existing normalized `_numberWords` values (1-30) only after a hadith marker and exact parent book have matched. All number words were added to the parser's protected vocabulary so spelling correction cannot rewrite them first. Exact measured ASR phrase «افتح الحديث واحد من صحيح البخاري» now resolves to real book 1 / hadith 1; numeric Abu Dawud 35 and unknown-book rejection remain. The first focused run usefully failed before number-word vocabulary protection; after adding that missing layer, focused analyze is clean and assistant + layout tests pass 24/24. Parser 796 lines under guard. NEXT EXACT: checkpoint, run full analyze/tests, stop emulator, rebuild signed APK alone, reinstall, and replay `hadith_detail_hamed2.wav` for real detail-screen evidence. Then one unrelated unknown rejection and final task documentation; HadeethEnc sparse-ID detail remains explicitly voice-unverified. No release requested.
@@ -804,6 +806,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 15:58 - Confirm final isolated build state
 - 2026-09-28 15:57 - Checkpoint full spoken hadith verification
 - 2026-09-28 15:53 - Support spoken numbers for hadith details
 - 2026-09-28 15:51 - Record spoken hadith number gap
