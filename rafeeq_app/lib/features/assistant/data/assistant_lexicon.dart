@@ -317,6 +317,10 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.dedications: ['dedication.title'],
   AssistantScreen.khatma: ['khatma.title'],
   AssistantScreen.bookSearch: ['library.search_all_books'],
+  AssistantScreen.adhanSettings: ['prayer.adhan_settings'],
+  AssistantScreen.adhanBackgrounds: ['adhan.backgrounds_title'],
+  AssistantScreen.prayerAdjustments: ['prayer.adjustments'],
+  AssistantScreen.prayerLocation: ['location.title'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the

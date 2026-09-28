@@ -17,6 +17,10 @@ import '../../../core/i18n/supported_locales.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_controller.dart';
+import '../../adhan/presentation/screens/adhan_background_screen.dart';
+import '../../adhan/presentation/screens/adhan_settings_screen.dart';
+import '../../adhan/presentation/screens/prayer_adjustments_screen.dart';
+import '../../adhan/presentation/screens/prayer_location_screen.dart';
 import '../../dedications/presentation/dedications_screen.dart';
 import '../../dorar/presentation/dorar_hub_screen.dart';
 import '../../downloads/data/reciters_provider.dart';
@@ -408,6 +412,14 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           push(const KhatmaScreen());
         case AssistantScreen.bookSearch:
           push(const BooksSearchScreen());
+        case AssistantScreen.adhanSettings:
+          push(const AdhanSettingsScreen());
+        case AssistantScreen.adhanBackgrounds:
+          push(const AdhanBackgroundScreen());
+        case AssistantScreen.prayerAdjustments:
+          push(const PrayerAdjustmentsScreen());
+        case AssistantScreen.prayerLocation:
+          push(const PrayerLocationScreen());
       }
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,

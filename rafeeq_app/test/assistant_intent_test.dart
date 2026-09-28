@@ -62,6 +62,10 @@ void main() {
     expect(of('افتح الإهداءات'), 'open dedications');
     expect(of('افتح ختمة القرآن'), 'open khatma');
     expect(of('افتح بحث في كل الكتب'), 'open bookSearch');
+    expect(of('افتح إعدادات الأذان'), 'open adhanSettings');
+    expect(of('افتح خلفيات شاشة الأذان'), 'open adhanBackgrounds');
+    expect(of('افتح شاشة ضبط المواقيت والتاريخ'), 'open prayerAdjustments');
+    expect(of('افتح موقع الصلاة'), 'open prayerLocation');
   });
 
   test('a surah, with and without a reciter', () {

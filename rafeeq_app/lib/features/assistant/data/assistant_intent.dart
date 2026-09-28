@@ -41,6 +41,10 @@ enum AssistantScreen {
   dedications,
   khatma,
   bookSearch,
+  adhanSettings,
+  adhanBackgrounds,
+  prayerAdjustments,
+  prayerLocation,
 }
 
 sealed class AssistantIntent {
@@ -585,6 +589,13 @@ class AssistantParser {
           bestWords = p.split(' ').length;
         }
       }
+    }
+    // The existing command «افتح ضبط المواقيت والتاريخ» deliberately opens
+    // that settings section. Saying «شاشة» asks for its full-page editor.
+    if (best == AssistantScreen.prayerAdjustments &&
+        !words.any((w) => bare(w) == 'شاشه')) {
+      best = null;
+      section = 'prayer.adjustments';
     }
     // Any other setting, by its title in any language: open the settings.
     for (final p in _settings) {
