@@ -45,6 +45,7 @@ import '../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../../quran/presentation/screens/sciences_pack_screen.dart';
 import '../../quran_audio/presentation/ayah_download_screen.dart';
+import '../../quran_audio/presentation/ayah_reciter_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_screen.dart';
@@ -518,6 +519,11 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       final section =
           (await repo.sections()).where((s) => s.id == sectionId).firstOrNull;
       if (section != null) push(AzkarSectionScreen(section: section));
+    case OpenAyahReciterIntent(:final reciterId):
+      final reciters = await ref.read(recitersProvider.future);
+      final reciter =
+          reciters.where((r) => r.identifier == reciterId).firstOrNull;
+      if (reciter != null) push(AyahReciterScreen(reciter: reciter));
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
     case AuthorBooksIntent(:final author):

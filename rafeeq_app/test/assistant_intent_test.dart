@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rafeeq_app/core/services/recitation_source.dart';
 import 'package:rafeeq_app/features/assistant/data/assistant_intent.dart';
 import 'package:rafeeq_app/features/assistant/data/assistant_lexicon.dart';
 import 'package:rafeeq_app/features/library/data/book_catalog.dart';
@@ -24,7 +25,8 @@ void main() {
   final reciters = [
     for (final r in jsonDecode(File('test/fixtures/assistant_reciters.json')
         .readAsStringSync()) as List)
-      CatalogReciter(r['id'] as String, (r['names'] as List).cast<String>()),
+      if (RecitationSource.hasVerifiedMirror(r['id'] as String))
+        CatalogReciter(r['id'] as String, (r['names'] as List).cast<String>()),
   ];
   final books = [
     for (final b in libraryBookCatalog)
@@ -132,6 +134,15 @@ void main() {
     expect(of('افتح الأذكار بعد الصلاة'), 'azkar section 20');
     expect(of('وريني ما يقول إذا رجع من سفره'), 'azkar section 26');
     expect(p.parse('افتح ما يقال قبل المذاكرة'), isA<UnknownIntent>());
+  });
+
+  test('ayah-by-ayah reciter uses only its verified provider catalogue', () {
+    expect(of('افتح تلاوة آية بآية للحصري'), 'ayah reciter ar.husary');
+    expect(of('وريني آية بآية بصوت الطبلاوي'),
+        'ayah reciter ar.mohamedtablawi');
+    // Mohamed Hassan exists in the whole-surah catalogue only. The command
+    // may open the picker, but must not invent a per-ayah reciter route.
+    expect(of('افتح تلاوة آية بآية لمحمد حسان'), 'open ayahPlayer');
   });
 
   test('books and authors from the library', () {

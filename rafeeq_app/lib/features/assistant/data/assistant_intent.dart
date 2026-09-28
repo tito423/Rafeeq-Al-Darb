@@ -4,6 +4,7 @@ import 'assistant_lexicon.dart' as lex;
 import 'assistant_wake_word.dart';
 
 part 'assistant_destination_match.dart';
+part 'assistant_detail_intents.dart';
 
 /// «رفيق» - the in-app assistant's understanding: an Arabic sentence (MSA or
 /// Egyptian, as speech recognition writes it) -> one action in the app.
@@ -78,27 +79,6 @@ class PlaySurahIntent extends AssistantIntent {
   final String? reciterId;
   @override
   String toString() => 'play surah $surah by ${reciterId ?? '-'}';
-}
-
-class MemorizeSurahIntent extends AssistantIntent {
-  const MemorizeSurahIntent(this.surah);
-  final int surah;
-  @override
-  String toString() => 'memorize surah $surah';
-}
-
-class OpenSunanSurahIntent extends AssistantIntent {
-  const OpenSunanSurahIntent(this.surah);
-  final int surah;
-  @override
-  String toString() => 'sunan surah $surah';
-}
-
-class OpenAzkarSectionIntent extends AssistantIntent {
-  const OpenAzkarSectionIntent(this.sectionId);
-  final int sectionId;
-  @override
-  String toString() => 'azkar section $sectionId';
 }
 
 class OpenBookIntent extends AssistantIntent {
@@ -625,6 +605,8 @@ class AssistantParser {
     }
     // «آية بآية» names the ayah player even inside «مشغل التلاوة آية بآية».
     if (_hasPhrase(clean, _screens[AssistantScreen.ayahPlayer] ?? const [])) {
+      final reciterId = _reciterIn(clean);
+      if (reciterId != null) return OpenAyahReciterIntent(reciterId);
       return const OpenScreenIntent(AssistantScreen.ayahPlayer);
     }
     return _matchDestination(
