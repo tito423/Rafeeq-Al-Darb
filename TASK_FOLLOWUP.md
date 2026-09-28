@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:08 (09-28) FINAL SPOKEN-NUMBER SIGNED BUILD SUCCEEDED WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `BB6C6DD08585510DD34A76D97FA62699DE3661DAFBFDAEF5458DD1B847811413`; sherpa ORT 1.28.2 verified for arm64-v8a (22,249,552 B), armeabi-v7a (15,359,576 B), and x86_64 (25,581,112 B), plus rotated signing (Rafeeq key Android 9+, retained Android key 7-8). ADB remained empty and tree clean except the two pre-existing unrelated untracked outputs. NEXT EXACT: checkpoint, restart emulator, install this exact SHA, launch/confirm foreground listener, replay `hadith_detail_hamed2.wav`, inspect real detail UI, then replay `unknown.wav` and prove unknown/no navigation. Finally document the completed matrix and the honest HadeethEnc sparse-ID limitation. No release requested.
+
 ~16:02 (09-28) FINAL BUILD ISOLATION READY: emulator shut down cleanly; after settling, ADB was empty and no emulator/qemu process remained. NEXT EXACT: checkpoint and run the signed build alone, then verify/install/test as described below. No release requested.
 
 ~16:00 (09-28) POST-SPOKEN-NUMBER FULL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. NEXT EXACT: checkpoint, stop emulator and prove ADB/processes empty, run `build_github_release.bat` alone, verify new APK bytes/SHA/ORT/signing, reinstall exact APK, and replay the already measured exact `hadith_detail_hamed2.wav`. Then verify one unrelated unknown command and close the device matrix honestly. No release requested.
@@ -806,6 +808,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 16:05 - Checkpoint final spoken hadith build
 - 2026-09-28 15:58 - Confirm final isolated build state
 - 2026-09-28 15:57 - Checkpoint full spoken hadith verification
 - 2026-09-28 15:53 - Support spoken numbers for hadith details
