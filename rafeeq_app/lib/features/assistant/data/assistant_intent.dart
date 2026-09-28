@@ -94,6 +94,13 @@ class OpenSunanSurahIntent extends AssistantIntent {
   String toString() => 'sunan surah $surah';
 }
 
+class OpenAzkarSectionIntent extends AssistantIntent {
+  const OpenAzkarSectionIntent(this.sectionId);
+  final int sectionId;
+  @override
+  String toString() => 'azkar section $sectionId';
+}
+
 class OpenBookIntent extends AssistantIntent {
   const OpenBookIntent(this.bookId);
   final String bookId;
@@ -189,12 +196,19 @@ class CatalogBook {
   final String author;
 }
 
+class CatalogAzkarSection {
+  const CatalogAzkarSection(this.id, this.names);
+  final int id;
+  final List<String> names;
+}
+
 /// The names the assistant may act on - built from the app's own data.
 class AssistantCatalog {
   const AssistantCatalog({
     required this.surahs,
     this.surahsLatin = const [],
     this.sunanSurahIds = const {},
+    this.azkarSections = const [],
     this.reciters = const [],
     this.books = const [],
     this.screenLabels = const {},
@@ -213,6 +227,7 @@ class AssistantCatalog {
   /// The same, transliterated («Al-Kahf»), for the other languages.
   final List<String> surahsLatin;
   final Set<int> sunanSurahIds;
+  final List<CatalogAzkarSection> azkarSections;
   final List<CatalogReciter> reciters;
   final List<CatalogBook> books;
 
@@ -368,6 +383,10 @@ class AssistantParser {
           if (i < catalog.surahsLatin.length) _surahKey(catalog.surahsLatin[i]),
         }..remove(''),
     ];
+    _azkarSectionKeys = {
+      for (final s in catalog.azkarSections)
+        s.id: s.names.map(_canon).where((p) => p.isNotEmpty).toSet(),
+    };
     _screens = {
       for (final e in lex.screenWords.entries)
         e.key: [for (final p in e.value) _canon(p)],
@@ -404,6 +423,8 @@ class AssistantParser {
       for (final l in _sections.values) for (final ph in l) ...ph.split(' '),
       for (final l in _options.values) for (final ph in l) ...ph.split(' '),
       for (final k in _surahKeys) for (final ph in k) ...ph.split(' '),
+      for (final names in _azkarSectionKeys.values)
+        for (final ph in names) ...ph.split(' '),
       for (final m in lex.hijriMonthWords) for (final w in m) ...norm(w).split(' '),
       for (final l in lex.languageNames.values) for (final w in l) ...norm(w).split(' '),
       for (final l in lex.themeValueWords.values) for (final w in l) ...norm(w).split(' '),
@@ -461,6 +482,7 @@ class AssistantParser {
 
   final AssistantCatalog catalog;
   late final List<Set<String>> _surahKeys;
+  late final Map<int, Set<String>> _azkarSectionKeys;
   late final Map<AssistantScreen, List<String>> _screens;
   late final List<String> _settings;
   late final Map<String, List<String>> _sections;
@@ -549,6 +571,8 @@ class AssistantParser {
       final b = _book(words.sublist(bk + 1).join(' '));
       if (b != null) return OpenBookIntent(b);
     }
+    final azkarSection = _azkarSectionIn(clean);
+    if (azkarSection != null) return OpenAzkarSectionIntent(azkarSection);
     // «خلي اللغة إنجليزي» / "switch to English" / «поменяй язык на русский»
     if (changing || words.any(_langWord.contains)) {
       for (final e in lex.languageNames.entries) {
@@ -631,6 +655,20 @@ class AssistantParser {
       }
     }
     return false;
+  }
+
+  int? _azkarSectionIn(String clean) {
+    int? best;
+    var bestLen = 0;
+    for (final e in _azkarSectionKeys.entries) {
+      for (final name in e.value) {
+        if (name.length > bestLen && _hasPhrase(clean, [name])) {
+          best = e.key;
+          bestLen = name.length;
+        }
+      }
+    }
+    return best;
   }
 
   /// A surah named in [words]: after «سورة»/"surah" anywhere, or (when a

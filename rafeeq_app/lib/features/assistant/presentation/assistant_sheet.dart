@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app/navigation.dart';
 import '../../../app/shell/tab_request_provider.dart';
+import '../../../core/db/azkar_repository.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/i18n/supported_locales.dart';
 import '../../../core/services/ayah_audio_service.dart';
@@ -21,6 +22,7 @@ import '../../adhan/presentation/screens/adhan_background_screen.dart';
 import '../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../adhan/presentation/screens/prayer_location_screen.dart';
+import '../../azkar/presentation/screens/azkar_section_screen.dart';
 import '../../dedications/presentation/dedications_screen.dart';
 import '../../dorar/presentation/dorar_history_screen.dart';
 import '../../dorar/presentation/dorar_hub_screen.dart';
@@ -83,6 +85,8 @@ final assistantShellUpProvider = StateProvider<bool>((ref) => false);
 final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
   final repo = await ref.watch(quranRepositoryProvider.future);
   final surahs = await repo.surahs();
+  final azkarRepo = await ref.watch(azkarRepositoryProvider.future);
+  final azkarSections = await azkarRepo.sections();
   final reciters = [
     for (final r in await ref.watch(recitersProvider.future))
       CatalogReciter(r.identifier, [r.nameAr, r.nameEn]),
@@ -115,6 +119,10 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     surahs: [for (final s in surahs) s.nameAr],
     surahsLatin: [for (final s in surahs) s.nameEn],
     sunanSurahIds: {for (final s in sunanSuwarCatalog) s.surahId},
+    azkarSections: [
+      for (final s in azkarSections)
+        CatalogAzkarSection(s.id, _azkarSectionNames(locales, s.id, s.title)),
+    ],
     reciters: reciters,
     books: books,
     screenLabels: labels.screens,
@@ -123,6 +131,20 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     settingSections: labels.sections,
   ));
 });
+
+List<String> _azkarSectionNames(
+    List<Map<String, dynamic>> locales, int id, String arabicTitle) {
+  final names = <String>{arabicTitle};
+  for (final locale in locales) {
+    final azkar = locale['azkar'];
+    if (azkar is! Map<String, dynamic>) continue;
+    final sections = azkar['section'];
+    if (sections is! Map<String, dynamic>) continue;
+    final title = sections['$id'];
+    if (title is String && title.trim().isNotEmpty) names.add(title);
+  }
+  return names.toList();
+}
 
 /// The app's language code now («ar», «en», …).
 String _appLanguage() {
@@ -491,6 +513,11 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       if (item != null) push(HifzSessionScreen.surah(item));
     case OpenSunanSurahIntent(:final surah):
       push(SingleSurahScreen(surahId: surah));
+    case OpenAzkarSectionIntent(:final sectionId):
+      final repo = await ref.read(azkarRepositoryProvider.future);
+      final section =
+          (await repo.sections()).where((s) => s.id == sectionId).firstOrNull;
+      if (section != null) push(AzkarSectionScreen(section: section));
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
     case AuthorBooksIntent(:final author):

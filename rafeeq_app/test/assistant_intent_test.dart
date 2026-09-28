@@ -10,11 +10,14 @@ import 'package:rafeeq_app/features/assistant/data/assistant_intent.dart';
 import 'package:rafeeq_app/features/assistant/data/assistant_lexicon.dart';
 import 'package:rafeeq_app/features/library/data/book_catalog.dart';
 import 'package:rafeeq_app/features/sunan_suwar/data/sunan_suwar_catalog.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 /// «رفيق»'s understanding, on the app's REAL catalogues: the 114 surah
 /// names from quran_local.db, the 176 Arabic audio editions of
 /// audio_editions.json, the library's book catalogue.
 void main() {
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   final surahs = (jsonDecode(File('test/fixtures/surah_names_ar.json')
           .readAsStringSync()) as List)
       .cast<String>();
@@ -36,16 +39,39 @@ void main() {
       jsonDecode(File('assets/translations/$l.json').readAsStringSync())
           as Map<String, dynamic>,
   ]);
-  final p = AssistantParser(AssistantCatalog(
-      surahs: surahs,
-      surahsLatin: latin,
-      sunanSurahIds: {for (final s in sunanSuwarCatalog) s.surahId},
-      reciters: reciters,
-      books: books,
-      screenLabels: labels.screens,
-      settingLabels: labels.settings,
-      optionLabels: labels.options,
-      settingSections: labels.sections));
+  late AssistantParser p;
+  setUpAll(() async {
+    final db = await databaseFactory.openDatabase(
+        File('assets/data/azkar.db').absolute.path,
+        options: OpenDatabaseOptions(readOnly: true));
+    final rows = await db.query('azkar_sections', orderBy: 'id');
+    final localeData = [
+      for (final l in ['ar', 'en', 'es', 'fr', 'pt', 'ru', 'ur'])
+        jsonDecode(File('assets/translations/$l.json').readAsStringSync())
+            as Map<String, dynamic>,
+    ];
+    p = AssistantParser(AssistantCatalog(
+        surahs: surahs,
+        surahsLatin: latin,
+        sunanSurahIds: {for (final s in sunanSuwarCatalog) s.surahId},
+        azkarSections: [
+          for (final row in rows)
+            CatalogAzkarSection(row['id'] as int, [
+              row['title'] as String,
+              for (final locale in localeData)
+                (((locale['azkar'] as Map<String, dynamic>)['section']
+                        as Map<String, dynamic>)['${row['id']}'])
+                    as String,
+            ]),
+        ],
+        reciters: reciters,
+        books: books,
+        screenLabels: labels.screens,
+        settingLabels: labels.settings,
+        optionLabels: labels.options,
+        settingSections: labels.sections));
+    await db.close();
+  });
   String of(String s) => p.parse(s).toString();
 
   test('screens, in the words people say', () {
@@ -100,6 +126,12 @@ void main() {
     expect(of('افتح سنن سورة الكهف'), 'sunan surah 18');
     expect(of('وريني سنن سورة الملك'), 'sunan surah 67');
     expect(p.parse('افتح سنن سورة الإخلاص'), isA<UnknownIntent>());
+  });
+
+  test('azkar section commands resolve only real database sections', () {
+    expect(of('افتح الأذكار بعد الصلاة'), 'azkar section 20');
+    expect(of('وريني ما يقول إذا رجع من سفره'), 'azkar section 26');
+    expect(p.parse('افتح ما يقال قبل المذاكرة'), isA<UnknownIntent>());
   });
 
   test('books and authors from the library', () {
