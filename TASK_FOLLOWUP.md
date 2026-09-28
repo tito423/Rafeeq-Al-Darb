@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~04:49 (09-28) ITEM 4 STEP 2 FINAL COMPLETE on the post-split build. Installed exact APK SHA-256 `969321...96C26`; foreground listener live. Because splash persisted OFF, first manually set `فيديو الشاشة الافتتاحية` to checked=true, returned to the app, then replayed the same clip. It was heard as `يار فيقطفيها فيديو البداية` in 1039 ms; re-opened Settings > Splash screen and UI semantics proved checked=false. Final evidence: analyze clean, 641 tests pass, signed build verified, both required Egyptian voice groups seen. NOT released (owner did not ask). NEXT EXACT: item 4 step 3, inventory user-meaningful screens from navigation constructors/routes and compare to the 21 `AssistantScreen` values; write the inventory first, then add missing destinations in small tested groups.
+
 ~04:45 (09-28) Final post-split signed build SUCCEEDED: 314,034,223 B, SHA-256 `969321F221737380664B0E9E0BF766EBC6F1796F6E165E4DD47C030A77C96C26`; ORT 1.28.2 all three ABIs + rotated signing lineage verified. NEXT EXACT: restart emulator, install this exact APK, wait for foreground listener, ensure splash is ON first (toggle manually if the prior test persisted OFF), replay off clip, and require the Splash video switch checked=false.
 
 ~04:38 (09-28) Post-split full verification CLEAN: `flutter analyze lib test` = No issues; `flutter test` = 641 passed, 4 intentionally skipped, 0 failed. Wake parser files are 769 + 52 lines and code-layout passes. NEXT EXACT: checkpoint, stop emulator, signed build/reinstall, replay the off clip one final time and require Splash video checked=false; then step 2 is fully complete and step 3 inventory can start.
@@ -740,6 +742,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:49 - Item 4 step 2 final: post-split APK hears glued Egyptian command and disables splash on emulator
 - 2026-09-28 04:44 - Build final post-split signed APK and verify all native ABIs plus signing lineage
 - 2026-09-28 04:40 - Full verification after wake-parser split: analyze clean and 641 tests pass
 - 2026-09-28 04:37 - Track extracted wake-word parser so the layout fix is complete

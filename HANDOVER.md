@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 04:44 — IN PROGRESS — resume here**
+**2026-09-28 04:49 — IN PROGRESS — resume here**
 
-Build final post-split signed APK and verify all native ABIs plus signing lineage
+Item 4 step 2 final: post-split APK hears glued Egyptian command and disables splash on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
