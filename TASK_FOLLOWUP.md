@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~12:17 (09-28) STOPPING AT OWNER REQUEST; `NEXT_PROMPT.md` rewritten for a clean new session. Tree is fully checkpointed through `1a946651`; only the two pre-existing unrelated untracked script outputs remain. NEXT EXACT in the new session: read the required files, implement catalogue-limited «سنن سورة …» for `SingleSurahScreen` (only IDs 2/18/32/67), tests + inventory + checkpoint; then continue detailed commands in small honest groups. Full analyze/test, signed build, reinstall, and representative voice/device checks remain owed after the detail-command work. No release requested.
+
 ~05:13 (09-28) ITEM 4 STEP 4 group 2 IN CODE: added catalogue-backed `MemorizeSurahIntent`; «احفظ سورة الكهف» and Egyptian «حفظني البقرة» now open `HifzSessionScreen.surah` with the real `Surah` row from `QuranRepository`. This fixes the previous wrong fallthrough where any named surah, even after «احفظ», became `PlaySurahIntent`. Added multilingual memorization verbs, two regressions, and reclassified `HifzSessionScreen` as supported by a detailed intent. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean. NEXT EXACT: checkpoint, then add the sibling catalogue-backed command «سنن سورة …» for `SingleSurahScreen`, but accept only the four IDs in `sunanSuwarCatalog` (Baqarah, Kahf, Mulk, Sajdah), never pretend every surah has a virtue entry; focused checks + checkpoint.
 
 ~05:11 (09-28) ITEM 4 STEP 4 inventory review + group 1 IN CODE: reviewed all 18 constructor-dependent classes and replaced the vague bucket with exhaustive classifications: 1 already supported by a detailed intent (`BookTextReaderScreen` via book title), 10 real detail-command candidates, 6 context-only children that cannot be opened honestly without parent state; `SearchScreen` was dependency-only, so added direct translated `quranSearch` route resolving `QuranRepository` at execution. AssistantScreen 43 -> 44; Arabic assertion added. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean. NEXT EXACT: checkpoint, then first catalogue-backed detail command: «احفظ/حفظ سورة …» must create a dedicated intent and open `HifzSessionScreen.surah` using the real Quran repository; add regression proving it no longer falls through to `PlaySurahIntent`, focused checks, reclassify, checkpoint.
@@ -760,6 +762,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 12:18 - Write exact next-session prompt for Rafeeq assistant continuation
 - 2026-09-28 05:14 - Item 4 step 4 add memorize-surah command
 - 2026-09-28 05:12 - Item 4 step 4 review detailed screens and add Quran search
 - 2026-09-28 05:09 - Add extracted assistant destination matcher
