@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~04:28 (09-28) Signed release build of the glued-wake fix SUCCEEDED with emulator off: 314,034,223 B, SHA-256 `79E42013B661271944A9E013DFF93E6DB9B9F0700BD48A404E1BC779C38AA02E`; ORT 1.28.2 verified for arm64-v8a/armeabi-v7a/x86_64 and rotated signing lineage verified. NEXT EXACT: restart emulator, install this APK, wait for AssistantListenService foreground, replay the existing off clip, then open Settings > Splash screen and require `فيديو الشاشة الافتتاحية` checked=false.
+
 ~04:23 (09-28) Glued wake-command root cause FIXED in code: `afterWakeWord` already tolerated one ASR edit in a standalone wake word but required an exact wake prefix when the command was glued. It now tries prefix cuts at wake length -1/0/+1 with the same one-edit bound, so the device text `يار فيقطفيها فيديو البداية` yields `طفيها فيديو البدايه` and `toggle splash off`. Exact regression added; assistant tests 13/13 pass, focused analyze = No issues. NOT built/seen yet. NEXT EXACT: checkpoint, stop emulator, `build_github_release.bat` alone, restart/reinstall, replay the same off clip, open Settings > Splash screen and require the video switch checked=false.
 
 ~04:20 (09-28) ITEM 4 STEP 2 voice check 2/2 FAILED with exact device evidence: «يا رفيق طفيها فيديو البداية» was heard as `يار فيقطفيها فيديو البداية` (wake word glued to the command); no intent/action log appeared. Opened Settings > Splash screen and UI semantics still reported `فيديو الشاشة الافتتاحية` checked=true, so it was definitely NOT disabled. NEXT EXACT: add the exact heard phrase to `assistant_intent_test.dart`, isolate wake-word splitting for a glued known command prefix, make the smallest fix, focused analyze/test, checkpoint, rebuild with emulator OFF, reinstall and replay this clip; then re-open the section and require checked=false.
@@ -730,6 +732,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:27 - Build signed glued-wake fix; verify all ORT ABIs and signing lineage
 - 2026-09-28 04:22 - Fix glued wake words with one ASR edit; exact device phrase now parses and 13 assistant tests pass
 - 2026-09-28 04:20 - Item 4 step 2 voice 2/2: capture glued wake-command failure and prove splash stayed enabled
 - 2026-09-28 04:19 - Item 4 step 2 voice 1/2: Egyptian 'where are adhkar' opened the Azkar tab on emulator
