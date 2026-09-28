@@ -756,6 +756,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 05:09 - Add extracted assistant destination matcher
 - 2026-09-28 05:09 - Refactor assistant destination matching before detailed commands
 - 2026-09-28 05:07 - Item 4 step 3 complete top-level assistant screen coverage
 - 2026-09-28 05:03 - Item 4 step 3 group 4 add Dorar destinations
