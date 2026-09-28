@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:21 (09-28) FINAL CONTEXTUAL-DETAIL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. This is the final intended assistant behavior: all public screens classified, no invented/internal-ID voice route, real spoken numbers for nine-books details, and measured false-route protection. NEXT EXACT: checkpoint, stop emulator/prove isolation, final signed build, verify SHA/ORT/signing, reinstall exact APK, replay HadeethEnc internal-ID clip and require unknown/no navigation. Then mark owner item 4 complete; no release requested.
+
 ~16:16 (09-28) HadeethEnc DETAIL HONESTLY RECLASSIFIED IN CODE: removed the undiscoverable `OpenHadeethEncDetailIntent`, numeric internal-ID parser, and direct execution branch. `HadeethEncDetailScreen` is now inventory-classified context-only because real callers already supply a real item from category lists or Daily Hadith. Regression requires «حديث رقم 1751 من موسوعة الأحاديث النبوية» to remain unknown, while the same number with exact `صحيح البخاري` remains the distinct nine-books detail route. Category voice routing is unchanged. Inventory clean (60 public screens / 49 MaterialPageRoute destinations / 44 AssistantScreen values; zero unclassified/candidates); focused analyze clean; assistant + layout tests 24/24 pass; parser/sheet 796/787 lines. NEXT EXACT: checkpoint, run final full analyze + full tests. Since runtime code changed, stop emulator, make one final signed build with emulator OFF, install it, replay the internal-ID clip to prove unknown/no false route, then item 4 is complete. No release requested.
 
 ~16:11 (09-28) FINAL DEVICE MATRIX PASSED EXCEPT HadeethEnc INTERNAL-ID DETAIL; CLASSIFICATION DECISION: exact final APK SHA `BB6C...1413` installed, foreground listener live. Replaying the same measured clip now heard «افتح الحديث واحد من صحيح البخاري» and opened real `حديث رقم 1` / `صحيح البخاري`, with full text, grade, Dorar link, and pager visible. Unrelated «سنن البيهقي» was heard (ASR «سننا البيهقي»), logged unknown, and screenshot proved no navigation away from hadith 1. Together with earlier screenshots: real azkar section, whole-surah Husary, HadeethEnc category العقيدة, nine-books book/chapter/detail all pass voice + destination UI. HadeethEnc detail does NOT qualify: its only proposed handle is sparse internal DB ID 1751, not displayed to users, and three distinct TTS/voice/order attempts all dropped the identifier. It is already honestly reachable from category lists and Daily Hadith context. NEXT EXACT: reclassify `HadeethEncDetailScreen` as context-only and remove its direct assistant intent/parser/execution/test; add a regression that an explicit internal-ID phrase is unknown, keep category routing. Run inventory + focused/full checks, one final signed build/install only if runtime changed, then close item 4. No release requested.
@@ -812,6 +814,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 16:18 - Verify final contextual assistant inventory
 - 2026-09-28 16:14 - Keep HadeethEnc details contextual
 - 2026-09-28 16:11 - Classify internal HadeethEnc detail as contextual
 - 2026-09-28 16:05 - Checkpoint final spoken hadith build
