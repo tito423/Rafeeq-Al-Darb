@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~15:51 (09-28) NINE-BOOKS DEVICE CHECK PARTIAL; SPOKEN-NUMBER GAP FOUND: book voice command was heard exactly and opened real `صحيح البخاري` with its chapter catalogue; chapter command was heard exactly and opened real `كتاب بدء الوحي` with its seven hadith rows. Detail attempt «الحديث رقم واحد...» was heard once as «رقم واد» and safely rejected. A clearer male retry was heard exactly as «افتح الحديث واحد من صحيح البخاري» but still rejected because `_hadithNumberIn` accepts digits only even though the existing shared `_numberWords` map already understands spoken 1-30 for Hijri dates. This means the typed test with `1` did not prove the hands-free command. NEXT EXACT: add the exact measured spoken-one phrase as a regression and let nine-books hadith detail fall back to `_numberWords` only after a hadith marker and exact real parent book have already matched; preserve numeric 35 and all rejection tests. Focused checks, checkpoint, then full verify/rebuild/install again before claiming detail. No release requested.
+
 ~15:49 (09-28) POST-FIX APK INSTALLED AND SAFETY REGRESSION VERIFIED ON DEVICE: emulator-5554 booted, exact SHA-256 `BB837A...2B7` installed over the app (v3.69.2+82), app launched, and `AssistantListenService` reported `isForeground=true`. Replaying the exact male-TTS file produced the same ASR output («من موسوعة الأحديث النبوية اذتح الحديث الذي رقمه»), and the installed parser now logged `-> unknown`; it did not navigate to ruqyah. A transient Android `System UI isn't responding` dialog appeared after emulator boot; choosing Wait restored focus to the healthy app MainActivity, with no app ANR. NEXT EXACT: checkpoint, then voice/UI-check the nine-books book, chapter, and detail commands one at a time using the prepared WAVs and screenshots; also verify one unrelated unknown rejection. HadeethEnc detail remains not voice-verified because all measured ASR attempts dropped its sparse ID. No release requested.
 
 ~15:43 (09-28) POST-FIX SIGNED BUILD SUCCEEDED WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `BB837A4939CCA025967A336831102FFCC28BA06791C7BE8488A807903E4EB2B7`; build script verified sherpa ORT 1.28.2 for arm64-v8a (22,249,552 B), armeabi-v7a (15,359,576 B), and x86_64 (25,581,112 B), plus rotated signing (Rafeeq key Android 9+, retained Android key 7-8). ADB remained empty after the build; tree remained clean except the two pre-existing unrelated untracked script outputs. NEXT EXACT: checkpoint, restart the known emulator, install this exact APK with `adb install -r`, confirm the foreground listener, and replay the measured incomplete HadeethEnc audio to prove it is rejected rather than opening ruqyah. Then complete nine-books book/chapter/detail voice/UI checks and one unrelated unknown rejection. Treat HadeethEnc detail itself as unverified unless ASR preserves a real ID. No release requested.
@@ -798,6 +800,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 15:51 - Record spoken hadith number gap
 - 2026-09-28 15:48 - Verify assistant safety fix on installed APK
 - 2026-09-28 15:43 - Checkpoint signed assistant safety build
 - 2026-09-28 15:36 - Confirm isolated signed build state
