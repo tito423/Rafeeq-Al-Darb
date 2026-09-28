@@ -736,6 +736,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:37 - Track extracted wake-word parser so the layout fix is complete
 - 2026-09-28 04:37 - Split wake-word parsing after full suite caught the 800-line limit; focused checks pass
 - 2026-09-28 04:30 - Item 4 step 2 done: glued Egyptian off command disables splash on emulator and UI proves switch off
 - 2026-09-28 04:27 - Build signed glued-wake fix; verify all ORT ABIs and signing lineage

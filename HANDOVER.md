@@ -2510,7 +2510,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-09-28 04:37 — IN PROGRESS — resume here**
 
-Split wake-word parsing after full suite caught the 800-line limit; focused checks pass
+Track extracted wake-word parser so the layout fix is complete
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
