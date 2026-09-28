@@ -66,6 +66,11 @@ void main() {
     expect(of('افتح خلفيات شاشة الأذان'), 'open adhanBackgrounds');
     expect(of('افتح شاشة ضبط المواقيت والتاريخ'), 'open prayerAdjustments');
     expect(of('افتح موقع الصلاة'), 'open prayerLocation');
+    expect(of('افتح علوم القرآن'), 'open quranSciences');
+    expect(of('افتح مخارج الحروف'), 'open makharij');
+    expect(of('افتح المستوى الأول تحفة الأطفال'), 'open tuhfa');
+    expect(of('افتح المستوى الثاني المقدمة الجزرية'), 'open jazariyyah');
+    expect(of('افتح المستوى الثالث التمهيد في علم التجويد'), 'open tamhid');
   });
 
   test('a surah, with and without a reciter', () {

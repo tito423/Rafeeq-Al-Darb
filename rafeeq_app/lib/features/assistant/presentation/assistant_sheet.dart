@@ -35,6 +35,7 @@ import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
 import '../../library/presentation/screens/books_search_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
+import '../../quran/presentation/screens/sciences_pack_screen.dart';
 import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
@@ -47,7 +48,11 @@ import '../../shamela/data/shamela_library.dart';
 import '../../shamela/presentation/shamela_screen.dart';
 import '../../splash/data/splash_video_provider.dart';
 import '../../support/presentation/screens/support_screen.dart';
+import '../../tajweed/presentation/screens/jazariyyah_level_screen.dart';
+import '../../tajweed/presentation/screens/makharij_screen.dart';
 import '../../tajweed/presentation/screens/tajweed_levels_screen.dart';
+import '../../tajweed/presentation/screens/tamhid_level_screen.dart';
+import '../../tajweed/presentation/screens/tuhfa_level_screen.dart';
 import '../data/assistant_intent.dart';
 import '../data/assistant_lexicon.dart';
 import '../data/assistant_settings.dart';
@@ -420,6 +425,16 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           push(const PrayerAdjustmentsScreen());
         case AssistantScreen.prayerLocation:
           push(const PrayerLocationScreen());
+        case AssistantScreen.quranSciences:
+          push(const SciencesPackScreen());
+        case AssistantScreen.makharij:
+          push(const MakharijScreen());
+        case AssistantScreen.tuhfa:
+          push(const TuhfaLevelScreen());
+        case AssistantScreen.jazariyyah:
+          push(const JazariyyahLevelScreen());
+        case AssistantScreen.tamhid:
+          push(const TamhidLevelScreen());
       }
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,

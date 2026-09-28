@@ -34,15 +34,15 @@ SUPPORTED = {
     "AyahDownloadScreen", "AzkarScreen", "BooksSearchScreen",
     "DedicationsScreen", "DownloadsScreen", "DorarHubScreen", "HajjScreen",
     "HifzScreen", "HomeScreen", "KhatmaScreen", "LibraryScreen", "MoreScreen",
-    "PrayerAdjustmentsScreen", "PrayerLocationScreen", "QiblaScreen",
-    "QuranAudioScreen", "QuranScreen", "RuqyahAudioScreen", "ShamelaScreen",
-    "SourcesScreen", "SupportScreen", "TajweedLevelsScreen", "TasbeehScreen",
+    "JazariyyahLevelScreen", "MakharijScreen", "PrayerAdjustmentsScreen",
+    "PrayerLocationScreen", "QiblaScreen", "QuranAudioScreen", "QuranScreen",
+    "RuqyahAudioScreen", "SciencesPackScreen", "ShamelaScreen", "SourcesScreen",
+    "SupportScreen", "TajweedLevelsScreen", "TamhidLevelScreen", "TasbeehScreen",
+    "TuhfaLevelScreen",
 }
 MISSING_TOP_LEVEL = {
     "DorarHistoryScreen", "DorarScreen", "DorarSearchScreen", "DorarTafseerScreen",
-    "JazariyyahLevelScreen", "MakharijScreen",
-    "OnboardingScreen", "RuqyahScreen", "SciencesPackScreen",
-    "SplashPreviewScreen", "TamhidLevelScreen", "TuhfaLevelScreen",
+    "OnboardingScreen", "RuqyahScreen", "SplashPreviewScreen",
 }
 NEEDS_DETAILS = {
     "AyahReciterScreen", "AzanPlayerScreen", "AzkarSectionScreen",

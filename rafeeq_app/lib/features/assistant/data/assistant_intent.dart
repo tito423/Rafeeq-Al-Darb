@@ -45,6 +45,11 @@ enum AssistantScreen {
   adhanBackgrounds,
   prayerAdjustments,
   prayerLocation,
+  quranSciences,
+  makharij,
+  tuhfa,
+  jazariyyah,
+  tamhid,
 }
 
 sealed class AssistantIntent {

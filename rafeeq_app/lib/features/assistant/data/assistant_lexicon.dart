@@ -321,6 +321,11 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.adhanBackgrounds: ['adhan.backgrounds_title'],
   AssistantScreen.prayerAdjustments: ['prayer.adjustments'],
   AssistantScreen.prayerLocation: ['location.title'],
+  AssistantScreen.quranSciences: ['quran.sciences_pack'],
+  AssistantScreen.makharij: ['makharij.title'],
+  AssistantScreen.tuhfa: ['tajweed.level_one'],
+  AssistantScreen.jazariyyah: ['tajweed.level_two'],
+  AssistantScreen.tamhid: ['tajweed.level_three'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the

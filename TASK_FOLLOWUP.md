@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~05:01 (09-28) ITEM 4 STEP 3 group 3 IN CODE: AssistantScreen 31 -> 36. Added direct titled routes for Quran sciences, Makharij, Tuhfa level, Jazariyyah level, and Tamhid level using the screens' existing translation keys; five Arabic parser assertions; inventory reclassified all five as supported. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean; intent file 791 lines. NOT built/voiced yet. NEXT EXACT: group 4, the four Dorar top-level screens (search, hadith verification, tafseer, history) after inspecting their constructors/title keys; tests + focused checks, checkpoint.
+
 ~04:59 (09-28) ITEM 4 STEP 3 group 2 IN CODE: AssistantScreen 27 -> 31. Added direct routes for Adhan settings, Adhan backgrounds, Prayer adjustments, and Prayer location using their existing translated titles; inventory reclassified all four as supported. Preserved the owner's earlier behavior: «افتح ضبط المواقيت والتاريخ» still opens the focused Settings section, while explicit «افتح شاشة ضبط المواقيت والتاريخ» opens the full-page editor. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean (60 public screens / 31 AssistantScreen values); intent file 786 lines. NOT built/voiced yet. NEXT EXACT: group 3, the five Tajweed/Quran-sciences top-level screens (Sciences pack, Makharij, Tuhfa, Jazariyyah, Tamhid) using existing title keys, tests + focused checks, checkpoint.
 
 ~04:58 (09-28) ITEM 4 STEP 3 group 1 IN CODE: AssistantScreen 21 -> 27. Added direct, titled routes for About, Sources, Support, Dedications, Khatma, and all-books Search; each uses its existing translation key in all locales and has an Arabic parser assertion. Inventory reclassified these as supported and remains exhaustive. Focused assistant+layout tests 15/15 pass; assistant analyze clean; intent file 775 lines. NOT built/voiced yet. NEXT EXACT: group 2, the four prayer/adhan top-level screens (Adhan settings, adhan backgrounds, prayer adjustments, prayer location) using their existing title keys, tests + focused checks, checkpoint.
@@ -748,6 +750,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 05:01 - Item 4 step 3 group 3 add tajweed and Quran sciences destinations
 - 2026-09-28 04:59 - checkpoint(wip): Item 4 step 3 group 2 add prayer and adhan destinations
 - 2026-09-28 04:54 - Item 4 step 3 group 1: add six titled top-level assistant destinations with tests
 - 2026-09-28 04:51 - Item 4 step 3 inventory: classify all 60 public screens and fail on omissions
