@@ -56,6 +56,8 @@ import '../../shamela/data/shamela_library.dart';
 import '../../shamela/presentation/shamela_screen.dart';
 import '../../splash/data/splash_video_provider.dart';
 import '../../splash/presentation/screens/splash_preview_screen.dart';
+import '../../sunan_suwar/data/sunan_suwar_catalog.dart';
+import '../../sunan_suwar/presentation/single_surah_screen.dart';
 import '../../support/presentation/screens/support_screen.dart';
 import '../../tajweed/presentation/screens/jazariyyah_level_screen.dart';
 import '../../tajweed/presentation/screens/makharij_screen.dart';
@@ -112,6 +114,7 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
   return AssistantParser(AssistantCatalog(
     surahs: [for (final s in surahs) s.nameAr],
     surahsLatin: [for (final s in surahs) s.nameEn],
+    sunanSurahIds: {for (final s in sunanSuwarCatalog) s.surahId},
     reciters: reciters,
     books: books,
     screenLabels: labels.screens,
@@ -486,6 +489,8 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       final repo = await ref.read(quranRepositoryProvider.future);
       final item = (await repo.surahs()).where((s) => s.id == surah).firstOrNull;
       if (item != null) push(HifzSessionScreen.surah(item));
+    case OpenSunanSurahIntent(:final surah):
+      push(SingleSurahScreen(surahId: surah));
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
     case AuthorBooksIntent(:final author):

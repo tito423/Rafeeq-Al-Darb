@@ -75,6 +75,10 @@ const memorizeVerbs = <String>[
   'memoriser', 'заучить', 'выучить', 'حفظ کرو',
 ];
 
+/// The catalogue-backed «سنن سورة …» command. Intentionally narrow: the
+/// parser accepts only surahs present in `sunanSuwarCatalog`.
+const sunanWords = <String>['سنن'];
+
 /// «سورة» in every language (Russian and Urdu go through `norm` too).
 const surahWords = <String>[
   'سوره', 'سورت', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',

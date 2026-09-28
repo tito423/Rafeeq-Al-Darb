@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/features/assistant/data/assistant_intent.dart';
 import 'package:rafeeq_app/features/assistant/data/assistant_lexicon.dart';
 import 'package:rafeeq_app/features/library/data/book_catalog.dart';
+import 'package:rafeeq_app/features/sunan_suwar/data/sunan_suwar_catalog.dart';
 
 /// «رفيق»'s understanding, on the app's REAL catalogues: the 114 surah
 /// names from quran_local.db, the 176 Arabic audio editions of
@@ -38,6 +39,7 @@ void main() {
   final p = AssistantParser(AssistantCatalog(
       surahs: surahs,
       surahsLatin: latin,
+      sunanSurahIds: {for (final s in sunanSuwarCatalog) s.surahId},
       reciters: reciters,
       books: books,
       screenLabels: labels.screens,
@@ -92,6 +94,12 @@ void main() {
     expect(of('يا رفيق شغل البقرة بصوت الحصري'), startsWith('play surah 2 by ar.husary'));
     expect(of('احفظ سورة الكهف'), 'memorize surah 18');
     expect(of('حفظني البقرة'), 'memorize surah 2');
+  });
+
+  test('sunan surah commands use only the real four-surah catalogue', () {
+    expect(of('افتح سنن سورة الكهف'), 'sunan surah 18');
+    expect(of('وريني سنن سورة الملك'), 'sunan surah 67');
+    expect(p.parse('افتح سنن سورة الإخلاص'), isA<UnknownIntent>());
   });
 
   test('books and authors from the library', () {

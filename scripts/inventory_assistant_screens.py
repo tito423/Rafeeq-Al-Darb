@@ -43,12 +43,14 @@ SUPPORTED = {
     "TamhidLevelScreen", "TasbeehScreen", "TuhfaLevelScreen",
 }
 MISSING_TOP_LEVEL = set()
-DETAIL_INTENT_SUPPORTED = {"BookTextReaderScreen", "HifzSessionScreen"}
+DETAIL_INTENT_SUPPORTED = {
+    "BookTextReaderScreen", "HifzSessionScreen", "SingleSurahScreen",
+}
 DETAIL_COMMAND_CANDIDATES = {
     "AyahReciterScreen", "AzkarSectionScreen",
     "HadeethEncCategoryScreen", "HadeethEncDetailScreen",
     "HadithBookScreen", "HadithChapterScreen", "HadithDetailScreen",
-    "ReciterScreen", "SingleSurahScreen",
+    "ReciterScreen",
 }
 CONTEXT_ONLY = {
     "AzanPlayerScreen", "DorarChainScreen", "DorarSectionScreen",

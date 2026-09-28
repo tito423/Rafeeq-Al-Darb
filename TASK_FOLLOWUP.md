@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~12:28 (09-28) ITEM 4 STEP 4 group 3 COMPLETE IN CODE: added catalogue-backed `OpenSunanSurahIntent`; «افتح سنن سورة الكهف» and «وريني سنن سورة الملك» open `SingleSurahScreen(surahId: id)`. The parser receives its allowed IDs directly from the real `sunanSuwarCatalog` (2/18/32/67); «افتح سنن سورة الإخلاص» is deliberately `UnknownIntent`, never a fake virtue route or a playback fallthrough. Added two success assertions + one rejection, and reclassified `SingleSurahScreen` as detailed-intent supported. Inventory clean (60 screens / 49 routes / 44 AssistantScreen values); focused analyze clean; assistant+layout tests 16/16 pass. NOT built/voiced; full analyze/test still owed after the detail-command groups. NEXT EXACT: inspect `AzkarSectionScreen` and its real section catalogue/constructor, then implement one catalogue-backed spoken section command with positive + unknown-section regressions, focused checks, inventory reclassification, and checkpoint; do not bundle the reciter/hadith candidates into that step.
+
 ~12:17 (09-28) STOPPING AT OWNER REQUEST; `NEXT_PROMPT.md` rewritten for a clean new session. Tree is fully checkpointed through `1a946651`; only the two pre-existing unrelated untracked script outputs remain. NEXT EXACT in the new session: read the required files, implement catalogue-limited «سنن سورة …» for `SingleSurahScreen` (only IDs 2/18/32/67), tests + inventory + checkpoint; then continue detailed commands in small honest groups. Full analyze/test, signed build, reinstall, and representative voice/device checks remain owed after the detail-command work. No release requested.
 
 ~05:13 (09-28) ITEM 4 STEP 4 group 2 IN CODE: added catalogue-backed `MemorizeSurahIntent`; «احفظ سورة الكهف» and Egyptian «حفظني البقرة» now open `HifzSessionScreen.surah` with the real `Surah` row from `QuranRepository`. This fixes the previous wrong fallthrough where any named surah, even after «احفظ», became `PlaySurahIntent`. Added multilingual memorization verbs, two regressions, and reclassified `HifzSessionScreen` as supported by a detailed intent. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean. NEXT EXACT: checkpoint, then add the sibling catalogue-backed command «سنن سورة …» for `SingleSurahScreen`, but accept only the four IDs in `sunanSuwarCatalog` (Baqarah, Kahf, Mulk, Sajdah), never pretend every surah has a virtue entry; focused checks + checkpoint.
@@ -762,6 +764,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 12:28 - feat(assistant): open only catalogued sunan surahs
 - 2026-09-28 12:18 - Write exact next-session prompt for Rafeeq assistant continuation
 - 2026-09-28 05:14 - Item 4 step 4 add memorize-surah command
 - 2026-09-28 05:12 - Item 4 step 4 review detailed screens and add Quran search
