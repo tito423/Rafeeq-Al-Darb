@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:31 (09-28) OWNER ITEM 4 COMPLETE; FINAL APK INSTALLED AND SEEN: installed exact signed APK SHA-256 `E6758ECEFAE3ED50A77619C9A3635A5053FB0D33A04209635741DE70A30FD60D`; `AssistantListenService` foreground. Replayed the exact HadeethEnc attempt that previously false-routed to ruqyah: ASR again produced «من موسوعة الأحديث النبوية اذتح الحديث الذي رقمه», final parser logged `unknown`, and screenshot proved Home stayed visible with no navigation. Final matrix has real destination UI evidence for azkar section, whole-surah reciter, HadeethEnc category, nine-books book/chapter/spoken-number detail; nonexistent Bayhaqi and incomplete/internal-ID commands reject safely. `HadeethEncDetailScreen` is context-only through real category/Daily-Hadith items, not an undiscoverable internal-ID voice command. Final verification: analyze clean; 650 passed / 4 skipped / 0 failed; inventory 60 public screens, 49 route destinations, 44 enum destinations, zero unclassified/candidates; APK ORT 1.28.2 all ABIs + rotated signing. No release requested or performed. NEXT EXACT: checkpoint this completion. No further owner code item is queued after item 4; if the owner has his phone available, the only outstanding acceptance evidence is real-owner-voice latency/use on that phone. Otherwise wait for his next instruction; do not release autonomously.
+
 ~16:29 (09-28) FINAL ITEM-4 SIGNED BUILD SUCCEEDED WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `E6758ECEFAE3ED50A77619C9A3635A5053FB0D33A04209635741DE70A30FD60D`; sherpa ORT 1.28.2 verified for all three ABIs with the measured sizes, and rotated signing lineage verified. ADB remained empty; tree clean except the two pre-existing unrelated untracked outputs. NEXT EXACT: checkpoint, restart/install exact SHA, confirm listener, replay the HadeethEnc numeric/internal-ID audio and require unknown/no false navigation. Then record item 4 complete and identify the next owner item from the live task plan. No release requested.
 
 ~16:23 (09-28) FINAL BUILD ISOLATION CONFIRMED: ADB empty and no emulator/qemu process after clean shutdown. NEXT EXACT: checkpoint and run the final signed build alone, then install/replay the internal-ID rejection. No release requested.
@@ -818,6 +820,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 16:30 - Complete exhaustive Rafeeq assistant coverage
 - 2026-09-28 16:26 - Checkpoint final item four APK
 - 2026-09-28 16:20 - Confirm final contextual build isolation
 - 2026-09-28 16:18 - Verify final contextual assistant inventory
