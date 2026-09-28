@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:43 (09-28) V3.69.3 SIGNED GITHUB APK BUILT CLEANLY WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `D2A1CEB629CC2FB2E85F96D35C93740BF95CAD69416804338F5DF65C7E86F8A3`; aapt2 reports package `com.tito.rafeeq_aldarb`, versionCode `83`, versionName `3.69.3`. The release script verified sherpa ORT 1.28.2 in arm64-v8a (22,249,552 B), armeabi-v7a (15,359,576 B), and x86_64 (25,581,112 B), and verified the rotated signer: Rafeeq key on Android 9+, retained Android key on 7-8. Build exited 0; ADB remained empty and only the two pre-existing unrelated untracked script outputs remain. NEXT EXACT: checkpoint; write honest Arabic release notes from `v3.69.2..HEAD`; confirm clean tracked tree, pushed `master`, and absent `v3.69.3`; publish this exact APK as `RafeeqAlDarb-v3.69.3.apk` targeting `master`, then verify release JSON/tag SHA/range and re-download byte-identical before deleting `v3.69.2` and its tag.
+
 ~16:38 (09-28) V3.69.3 BUILD ISOLATION CONFIRMED: ADB was already empty and no `emulator` or `qemu-system-x86_64` process existed before or after the check. The conditional kill expression encountered a null because there was no device; no build or source action was affected. NEXT EXACT: checkpoint, run `build_github_release.bat` alone, then record APK bytes/SHA-256 and require the script's sherpa ORT checks for all three ABIs plus both rotated-signing checks to pass.
 
 ~16:37 (09-28) V3.69.3 RELEASE GATE CLEAN: `flutter analyze lib test` reported no issues; full `flutter test` passed 650 tests with the same 4 intentional skips and zero failures. The About-version regression confirms `3.69.3` matches pubspec `3.69.3+83`. NEXT EXACT: checkpoint, stop the currently running emulator cleanly, prove ADB and emulator/qemu processes are empty, then run `build_github_release.bat` alone. Do not run Flutter commands during that build.
@@ -826,6 +828,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 21:37 - Build and verify signed version 3.69.3 APK
 - 2026-09-28 21:32 - Confirm isolated release build state
 - 2026-09-28 21:32 - Verify version 3.69.3 release gate
 - 2026-09-28 16:35 - Prepare version 3.69.3 for GitHub release
