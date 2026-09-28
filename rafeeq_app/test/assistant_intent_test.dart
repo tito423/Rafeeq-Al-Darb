@@ -71,6 +71,10 @@ void main() {
     expect(of('افتح المستوى الأول تحفة الأطفال'), 'open tuhfa');
     expect(of('افتح المستوى الثاني المقدمة الجزرية'), 'open jazariyyah');
     expect(of('افتح المستوى الثالث التمهيد في علم التجويد'), 'open tamhid');
+    expect(of('افتح بحث في الموسوعات كلها'), 'open dorarSearch');
+    expect(of('افتح تخريج الأحاديث الدرر السنية'), 'open dorarHadith');
+    expect(of('افتح موسوعة التفسير'), 'open dorarTafseer');
+    expect(of('افتح الموسوعة التاريخية'), 'open dorarHistory');
   });
 
   test('a surah, with and without a reciter', () {

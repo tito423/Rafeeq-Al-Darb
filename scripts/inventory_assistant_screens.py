@@ -32,7 +32,8 @@ ENUM_RE = re.compile(r"enum\s+AssistantScreen\s*\{([\s\S]*?)\}")
 SUPPORTED = {
     "AboutScreen", "AdhanBackgroundScreen", "AdhanSettingsScreen",
     "AyahDownloadScreen", "AzkarScreen", "BooksSearchScreen",
-    "DedicationsScreen", "DownloadsScreen", "DorarHubScreen", "HajjScreen",
+    "DedicationsScreen", "DorarHistoryScreen", "DorarHubScreen", "DorarScreen",
+    "DorarSearchScreen", "DorarTafseerScreen", "DownloadsScreen", "HajjScreen",
     "HifzScreen", "HomeScreen", "KhatmaScreen", "LibraryScreen", "MoreScreen",
     "JazariyyahLevelScreen", "MakharijScreen", "PrayerAdjustmentsScreen",
     "PrayerLocationScreen", "QiblaScreen", "QuranAudioScreen", "QuranScreen",
@@ -41,7 +42,6 @@ SUPPORTED = {
     "TuhfaLevelScreen",
 }
 MISSING_TOP_LEVEL = {
-    "DorarHistoryScreen", "DorarScreen", "DorarSearchScreen", "DorarTafseerScreen",
     "OnboardingScreen", "RuqyahScreen", "SplashPreviewScreen",
 }
 NEEDS_DETAILS = {

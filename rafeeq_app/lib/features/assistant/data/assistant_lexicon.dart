@@ -307,7 +307,7 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.ruqyah: ['ruqyah.title', 'ruqyah.audio_title'],
   AssistantScreen.hajj: ['hajj.title'],
   AssistantScreen.tajweed: ['tajweed.title'],
-  AssistantScreen.dorar: ['dorar.hub_title', 'dorar.title'],
+  AssistantScreen.dorar: ['dorar.hub_title'],
   AssistantScreen.shamela: ['shamela.title'],
   AssistantScreen.dailyHadith: ['hadith_daily.title'],
   AssistantScreen.clockFaces: ['home.clock_gallery_title'],
@@ -326,6 +326,10 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.tuhfa: ['tajweed.level_one'],
   AssistantScreen.jazariyyah: ['tajweed.level_two'],
   AssistantScreen.tamhid: ['tajweed.level_three'],
+  AssistantScreen.dorarSearch: ['dorar.search_all'],
+  AssistantScreen.dorarHadith: ['dorar.title'],
+  AssistantScreen.dorarTafseer: ['dorar.enc_tafseer'],
+  AssistantScreen.dorarHistory: ['dorar.enc_history'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the

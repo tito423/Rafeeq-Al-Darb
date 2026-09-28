@@ -22,7 +22,11 @@ import '../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../adhan/presentation/screens/prayer_location_screen.dart';
 import '../../dedications/presentation/dedications_screen.dart';
+import '../../dorar/presentation/dorar_history_screen.dart';
 import '../../dorar/presentation/dorar_hub_screen.dart';
+import '../../dorar/presentation/dorar_screen.dart';
+import '../../dorar/presentation/dorar_search_screen.dart';
+import '../../dorar/presentation/dorar_tafseer_screen.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../downloads/presentation/screens/downloads_screen.dart';
 import '../../hajj/presentation/hajj_screen.dart';
@@ -435,6 +439,14 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           push(const JazariyyahLevelScreen());
         case AssistantScreen.tamhid:
           push(const TamhidLevelScreen());
+        case AssistantScreen.dorarSearch:
+          push(const DorarSearchScreen());
+        case AssistantScreen.dorarHadith:
+          push(const DorarScreen());
+        case AssistantScreen.dorarTafseer:
+          push(const DorarTafseerScreen());
+        case AssistantScreen.dorarHistory:
+          push(const DorarHistoryScreen());
       }
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,

@@ -50,6 +50,10 @@ enum AssistantScreen {
   tuhfa,
   jazariyyah,
   tamhid,
+  dorarSearch,
+  dorarHadith,
+  dorarTafseer,
+  dorarHistory,
 }
 
 sealed class AssistantIntent {
