@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:00 (09-28) POST-SPOKEN-NUMBER FULL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. NEXT EXACT: checkpoint, stop emulator and prove ADB/processes empty, run `build_github_release.bat` alone, verify new APK bytes/SHA/ORT/signing, reinstall exact APK, and replay the already measured exact `hadith_detail_hamed2.wav`. Then verify one unrelated unknown command and close the device matrix honestly. No release requested.
+
 ~15:55 (09-28) SPOKEN NINE-BOOKS DETAIL FIXED IN CODE: `_hadithNumberIn` still prefers explicit digits, then falls back to the existing normalized `_numberWords` values (1-30) only after a hadith marker and exact parent book have matched. All number words were added to the parser's protected vocabulary so spelling correction cannot rewrite them first. Exact measured ASR phrase «افتح الحديث واحد من صحيح البخاري» now resolves to real book 1 / hadith 1; numeric Abu Dawud 35 and unknown-book rejection remain. The first focused run usefully failed before number-word vocabulary protection; after adding that missing layer, focused analyze is clean and assistant + layout tests pass 24/24. Parser 796 lines under guard. NEXT EXACT: checkpoint, run full analyze/tests, stop emulator, rebuild signed APK alone, reinstall, and replay `hadith_detail_hamed2.wav` for real detail-screen evidence. Then one unrelated unknown rejection and final task documentation; HadeethEnc sparse-ID detail remains explicitly voice-unverified. No release requested.
 
 ~15:51 (09-28) NINE-BOOKS DEVICE CHECK PARTIAL; SPOKEN-NUMBER GAP FOUND: book voice command was heard exactly and opened real `صحيح البخاري` with its chapter catalogue; chapter command was heard exactly and opened real `كتاب بدء الوحي` with its seven hadith rows. Detail attempt «الحديث رقم واحد...» was heard once as «رقم واد» and safely rejected. A clearer male retry was heard exactly as «افتح الحديث واحد من صحيح البخاري» but still rejected because `_hadithNumberIn` accepts digits only even though the existing shared `_numberWords` map already understands spoken 1-30 for Hijri dates. This means the typed test with `1` did not prove the hands-free command. NEXT EXACT: add the exact measured spoken-one phrase as a regression and let nine-books hadith detail fall back to `_numberWords` only after a hadith marker and exact real parent book have already matched; preserve numeric 35 and all rejection tests. Focused checks, checkpoint, then full verify/rebuild/install again before claiming detail. No release requested.
@@ -802,6 +804,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 15:57 - Checkpoint full spoken hadith verification
 - 2026-09-28 15:53 - Support spoken numbers for hadith details
 - 2026-09-28 15:51 - Record spoken hadith number gap
 - 2026-09-28 15:48 - Verify assistant safety fix on installed APK
