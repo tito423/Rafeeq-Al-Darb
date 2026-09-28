@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~04:30 (09-28) ITEM 4 STEP 2 DONE AND SEEN. New signed APK installed over 3.69.2, AssistantListenService foreground. The same clip was again heard as `يار فيقطفيها فيديو البداية` (1385 ms); the fixed wake splitter accepted it and applied splash OFF. Opened Settings > Splash screen and both screenshot + UI semantics proved `فيديو الشاشة الافتتاحية` checked=false. Together with the 04:18 «فين الأذكار» success, both required Egyptian-lexicon voice groups are proven on emulator. NEXT EXACT: run full `flutter analyze lib test` and full `flutter test`; if clean, checkpoint step 2 complete and start item 4 step 3 screen inventory (script existing `MaterialPageRoute(builder: ... Screen(` calls, compare against `AssistantScreen`, classify only user-meaningful destinations before editing).
+
 ~04:28 (09-28) Signed release build of the glued-wake fix SUCCEEDED with emulator off: 314,034,223 B, SHA-256 `79E42013B661271944A9E013DFF93E6DB9B9F0700BD48A404E1BC779C38AA02E`; ORT 1.28.2 verified for arm64-v8a/armeabi-v7a/x86_64 and rotated signing lineage verified. NEXT EXACT: restart emulator, install this APK, wait for AssistantListenService foreground, replay the existing off clip, then open Settings > Splash screen and require `فيديو الشاشة الافتتاحية` checked=false.
 
 ~04:23 (09-28) Glued wake-command root cause FIXED in code: `afterWakeWord` already tolerated one ASR edit in a standalone wake word but required an exact wake prefix when the command was glued. It now tries prefix cuts at wake length -1/0/+1 with the same one-edit bound, so the device text `يار فيقطفيها فيديو البداية` yields `طفيها فيديو البدايه` and `toggle splash off`. Exact regression added; assistant tests 13/13 pass, focused analyze = No issues. NOT built/seen yet. NEXT EXACT: checkpoint, stop emulator, `build_github_release.bat` alone, restart/reinstall, replay the same off clip, open Settings > Splash screen and require the video switch checked=false.
@@ -732,6 +734,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:30 - Item 4 step 2 done: glued Egyptian off command disables splash on emulator and UI proves switch off
 - 2026-09-28 04:27 - Build signed glued-wake fix; verify all ORT ABIs and signing lineage
 - 2026-09-28 04:22 - Fix glued wake words with one ASR edit; exact device phrase now parses and 13 assistant tests pass
 - 2026-09-28 04:20 - Item 4 step 2 voice 2/2: capture glued wake-command failure and prove splash stayed enabled
