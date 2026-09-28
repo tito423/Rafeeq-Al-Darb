@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:38 (09-28) V3.69.3 BUILD ISOLATION CONFIRMED: ADB was already empty and no `emulator` or `qemu-system-x86_64` process existed before or after the check. The conditional kill expression encountered a null because there was no device; no build or source action was affected. NEXT EXACT: checkpoint, run `build_github_release.bat` alone, then record APK bytes/SHA-256 and require the script's sherpa ORT checks for all three ABIs plus both rotated-signing checks to pass.
+
 ~16:37 (09-28) V3.69.3 RELEASE GATE CLEAN: `flutter analyze lib test` reported no issues; full `flutter test` passed 650 tests with the same 4 intentional skips and zero failures. The About-version regression confirms `3.69.3` matches pubspec `3.69.3+83`. NEXT EXACT: checkpoint, stop the currently running emulator cleanly, prove ADB and emulator/qemu processes are empty, then run `build_github_release.bat` alone. Do not run Flutter commands during that build.
 
 ~16:34 (09-28) OWNER AUTHORIZED GITHUB RELEASE; VERSION BUMPED: preparing `v3.69.3` from the completed item-4 assistant work. `pubspec.yaml` is now `3.69.3+83` and the About card is `3.69.3`. Previous published release is `v3.69.2`; standing releases `v3.51.0` and `content-*` remain protected. NEXT EXACT: checkpoint, run the About-version regression plus full analyze/tests, stop the emulator and prove build isolation, then build only with `build_github_release.bat`; verify bytes/SHA/ORT/signing before publishing from `master` with honest Arabic notes.
@@ -824,6 +826,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 21:32 - Confirm isolated release build state
 - 2026-09-28 21:32 - Verify version 3.69.3 release gate
 - 2026-09-28 16:35 - Prepare version 3.69.3 for GitHub release
 - 2026-09-28 16:30 - Complete exhaustive Rafeeq assistant coverage
