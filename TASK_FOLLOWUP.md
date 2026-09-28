@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~05:11 (09-28) ITEM 4 STEP 4 inventory review + group 1 IN CODE: reviewed all 18 constructor-dependent classes and replaced the vague bucket with exhaustive classifications: 1 already supported by a detailed intent (`BookTextReaderScreen` via book title), 10 real detail-command candidates, 6 context-only children that cannot be opened honestly without parent state; `SearchScreen` was dependency-only, so added direct translated `quranSearch` route resolving `QuranRepository` at execution. AssistantScreen 43 -> 44; Arabic assertion added. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean. NEXT EXACT: checkpoint, then first catalogue-backed detail command: «احفظ/حفظ سورة …» must create a dedicated intent and open `HifzSessionScreen.surah` using the real Quran repository; add regression proving it no longer falls through to `PlaySurahIntent`, focused checks, reclassify, checkpoint.
+
 ~05:09 (09-28) ITEM 4 STEP 4 preparation COMPLETE: moved the destination/settings longest-title resolver unchanged into new data part `assistant_destination_match.dart` (85 lines); `assistant_intent.dart` is back from 800 to 731 lines. Focused assistant analyze clean; assistant+layout tests 15/15 pass. NEXT EXACT: checkpoint, then review the 18 `needs details` inventory classes constructor-by-constructor; document which are already reached by existing detailed intents, which can gain a real catalogue-backed spoken detail, and which are UI-internal/not valid direct commands. Implement the first proven small group only.
 
 ~05:06 (09-28) ITEM 4 STEP 3 group 5 IN CODE; TOP-LEVEL INVENTORY COMPLETE: AssistantScreen 40 -> 43 and `MISSING_TOP_LEVEL` is empty. Added text Ruqyah, audio Ruqyah, initial-downloads revisit, and splash-video preview routes (three new enum values because text Ruqyah replaces the old ambiguous audio route). Added four Arabic assertions. Fixed the proven parser collision where «الفيديو الافتتاحي» option matching intercepted the longer preview-screen title; on/off commands remain unchanged. Focused assistant analyze clean; assistant+layout tests 15/15 pass; exhaustive inventory clean (60 public screens: 38 supported classes, 18 need command details, 4 internal/lifecycle); intent file exactly 800 lines. NOT built/voiced yet. NEXT EXACT: checkpoint; split screen/settings resolution out of the now-full intent parser before adding detailed commands; then review the 18 parameter/detail screens one by one and map only destinations whose required detail can be spoken/resolved from real catalogues. After that, full analyze/test, one signed build with emulator OFF, reinstall, and representative voice/device checks across the new groups.
@@ -756,6 +758,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 05:12 - Item 4 step 4 review detailed screens and add Quran search
 - 2026-09-28 05:09 - Add extracted assistant destination matcher
 - 2026-09-28 05:09 - Refactor assistant destination matching before detailed commands
 - 2026-09-28 05:07 - Item 4 step 3 complete top-level assistant screen coverage

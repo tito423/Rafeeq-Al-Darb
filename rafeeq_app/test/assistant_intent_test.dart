@@ -79,6 +79,7 @@ void main() {
     expect(of('افتح الاستماع للرقية الشرعية'), 'open ruqyahAudio');
     expect(of('افتح التحميلات المبدئية'), 'open initialDownloads');
     expect(of('افتح معاينة الفيديو الافتتاحي'), 'open splashPreview');
+    expect(of('افتح البحث الموضوعي'), 'open quranSearch');
   });
 
   test('a surah, with and without a reciter', () {

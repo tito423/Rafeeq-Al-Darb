@@ -333,6 +333,7 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.ruqyahAudio: ['ruqyah.audio_title'],
   AssistantScreen.initialDownloads: ['onboarding.title'],
   AssistantScreen.splashPreview: ['settings.splash_preview'],
+  AssistantScreen.quranSearch: ['search.title'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the

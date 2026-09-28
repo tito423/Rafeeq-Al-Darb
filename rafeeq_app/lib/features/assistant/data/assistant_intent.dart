@@ -57,6 +57,7 @@ enum AssistantScreen {
   dorarTafseer,
   dorarHistory,
   ruqyahAudio, initialDownloads, splashPreview,
+  quranSearch,
 }
 
 sealed class AssistantIntent {

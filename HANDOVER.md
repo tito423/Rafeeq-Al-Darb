@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 05:09 — IN PROGRESS — resume here**
+**2026-09-28 05:12 — IN PROGRESS — resume here**
 
-Add extracted assistant destination matcher
+Item 4 step 4 review detailed screens and add Quran search
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -39,17 +39,20 @@ SUPPORTED = {
     "JazariyyahLevelScreen", "MakharijScreen", "PrayerAdjustmentsScreen",
     "PrayerLocationScreen", "QiblaScreen", "QuranAudioScreen", "QuranScreen",
     "RuqyahAudioScreen", "RuqyahScreen", "SciencesPackScreen", "ShamelaScreen",
-    "SourcesScreen", "SplashPreviewScreen", "SupportScreen", "TajweedLevelsScreen",
+    "SearchScreen", "SourcesScreen", "SplashPreviewScreen", "SupportScreen", "TajweedLevelsScreen",
     "TamhidLevelScreen", "TasbeehScreen", "TuhfaLevelScreen",
 }
 MISSING_TOP_LEVEL = set()
-NEEDS_DETAILS = {
-    "AyahReciterScreen", "AzanPlayerScreen", "AzkarSectionScreen",
-    "BookTextReaderScreen", "DorarChainScreen", "DorarSectionScreen",
-    "DorarTocScreen", "HadeethEncCategoryScreen", "HadeethEncDetailScreen",
+DETAIL_INTENT_SUPPORTED = {"BookTextReaderScreen"}
+DETAIL_COMMAND_CANDIDATES = {
+    "AyahReciterScreen", "AzkarSectionScreen",
+    "HadeethEncCategoryScreen", "HadeethEncDetailScreen",
     "HadithBookScreen", "HadithChapterScreen", "HadithDetailScreen",
-    "HifzSessionScreen", "LinkListManageScreen", "QuoteCardScreen",
-    "ReciterScreen", "SearchScreen", "SingleSurahScreen",
+    "HifzSessionScreen", "ReciterScreen", "SingleSurahScreen",
+}
+CONTEXT_ONLY = {
+    "AzanPlayerScreen", "DorarChainScreen", "DorarSectionScreen",
+    "DorarTocScreen", "LinkListManageScreen", "QuoteCardScreen",
 }
 INTERNAL_OR_LIFECYCLE = {
     "CardScreen", "PermissionsIntroScreen", "QuranAudioPlayerScreen",
@@ -84,7 +87,9 @@ def main() -> None:
     categories = {
         **{name: "supported" for name in SUPPORTED},
         **{name: "missing top-level" for name in MISSING_TOP_LEVEL},
-        **{name: "needs details" for name in NEEDS_DETAILS},
+        **{name: "supported by detailed intent" for name in DETAIL_INTENT_SUPPORTED},
+        **{name: "detail-command candidate" for name in DETAIL_COMMAND_CANDIDATES},
+        **{name: "context-only child" for name in CONTEXT_ONLY},
         **{name: "internal/lifecycle" for name in INTERNAL_OR_LIFECYCLE},
     }
     unclassified = sorted(set(declarations) - set(categories))

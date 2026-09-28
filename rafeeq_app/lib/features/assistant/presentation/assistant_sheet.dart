@@ -45,6 +45,7 @@ import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_screen.dart';
+import '../../search/presentation/screens/search_screen.dart';
 import '../../settings/data/transliteration_settings_provider.dart';
 import '../../settings/presentation/screens/about_screen.dart';
 import '../../settings/presentation/screens/settings_screen.dart'
@@ -456,6 +457,9 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           push(const OnboardingScreen(revisit: true));
         case AssistantScreen.splashPreview:
           push(const SplashPreviewScreen());
+        case AssistantScreen.quranSearch:
+          final repo = await ref.read(quranRepositoryProvider.future);
+          push(SearchScreen(repo: repo));
       }
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,
