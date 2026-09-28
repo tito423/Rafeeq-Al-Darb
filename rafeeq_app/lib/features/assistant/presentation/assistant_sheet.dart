@@ -47,6 +47,7 @@ import '../../library/presentation/screens/book_text_reader_screen.dart';
 import '../../library/presentation/screens/books_search_screen.dart';
 import '../../library/presentation/screens/hadith_book_screen.dart';
 import '../../library/presentation/screens/hadith_chapter_screen.dart';
+import '../../library/presentation/screens/hadith_detail_screen.dart';
 import '../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../../quran/presentation/screens/sciences_pack_screen.dart';
@@ -605,6 +606,19 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           .where((c) => c.chapterNo == chapterNo).firstOrNull;
       if (book != null && chapter != null) {
         push(HadithChapterScreen(book: book, chapter: chapter, repo: repo));
+      }
+    case OpenHadithDetailIntent(:final bookId, :final numberInBook):
+      final repo = await ref.read(hadithRepositoryProvider.future);
+      if (repo == null) return;
+      final book = (await repo.books()).where((b) => b.id == bookId).firstOrNull;
+      final item = await repo.hadithByNumber(bookId, numberInBook);
+      if (book == null || item == null) return;
+      final chapterItems = await repo.hadithsOfChapter(bookId, item.chapterNo);
+      final index = chapterItems.indexWhere((h) => h.id == item.id);
+      if (index >= 0) {
+        push(HadithDetailScreen(
+          book: book, chapterHadiths: chapterItems, initialIndex: index,
+        ));
       }
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);

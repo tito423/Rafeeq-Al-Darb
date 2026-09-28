@@ -88,7 +88,23 @@ class OpenHadithChapterIntent extends AssistantIntent {
   String toString() => 'hadith chapter $bookId/$chapterNo';
 }
 
+class OpenHadithDetailIntent extends AssistantIntent {
+  const OpenHadithDetailIntent(this.bookId, this.numberInBook);
+  final int bookId;
+  final int numberInBook;
+  @override
+  String toString() => 'hadith detail $bookId/$numberInBook';
+}
+
 extension on AssistantParser {
+  int? _hadithNumberIn(String clean) {
+    const markers = {'حديث', 'الحديث', 'hadith', 'hadeeth'};
+    if (!clean.split(' ').map(bare).any(markers.contains)) return null;
+    final match = RegExp(r'(?:رقم|number|no)?\s*(\d{1,6})(?:\s|$)')
+        .firstMatch(clean);
+    return int.tryParse(match?.group(1) ?? '');
+  }
+
   int? _azkarSectionIn(String clean) {
     int? best;
     var bestLen = 0;

@@ -47,10 +47,10 @@ DETAIL_INTENT_SUPPORTED = {
     "AyahReciterScreen", "AzkarSectionScreen", "BookTextReaderScreen",
     "HadeethEncCategoryScreen", "HifzSessionScreen", "ReciterScreen",
     "SingleSurahScreen", "HadithBookScreen", "HadithChapterScreen",
+    "HadithDetailScreen",
 }
 DETAIL_COMMAND_CANDIDATES = {
     "HadeethEncDetailScreen",
-    "HadithDetailScreen",
 }
 CONTEXT_ONLY = {
     "AzanPlayerScreen", "DorarChainScreen", "DorarSectionScreen",

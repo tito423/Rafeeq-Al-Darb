@@ -219,6 +219,13 @@ void main() {
         isA<UnknownIntent>());
   });
 
+  test('nine-books hadith detail requires a real parent book and number', () {
+    expect(of('افتح الحديث رقم 1 من صحيح البخاري'), 'hadith detail 1/1');
+    expect(of('وريني حديث 35 من سنن أبي داود'), 'hadith detail 3/35');
+    expect(p.parse('افتح الحديث رقم 1 من سنن البيهقي'),
+        isA<UnknownIntent>());
+  });
+
   test('whole-surah reciter uses only the mp3quran catalogue', () {
     expect(of('افتح مشغل التلاوات للحصري'), 'whole surah reciter 118');
     expect(of('وريني مشغل القرآن للطبلاوي'), 'whole surah reciter 106');

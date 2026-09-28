@@ -561,6 +561,12 @@ class AssistantParser {
           ? UnknownIntent(heard)
           : OpenHadithChapterIntent(chapterBook, chapter);
     }
+    if (chapterBook != null) {
+      final hadithNumber = _hadithNumberIn(clean);
+      if (hadithNumber != null) {
+        return OpenHadithDetailIntent(chapterBook, hadithNumber);
+      }
+    }
     final hadithBook = _hadithBookIn(words);
     if (hadithBook != null) return OpenHadithBookIntent(hadithBook);
     final bk = words.indexWhere(_bookWord.contains);
