@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:29 (09-28) FINAL ITEM-4 SIGNED BUILD SUCCEEDED WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `E6758ECEFAE3ED50A77619C9A3635A5053FB0D33A04209635741DE70A30FD60D`; sherpa ORT 1.28.2 verified for all three ABIs with the measured sizes, and rotated signing lineage verified. ADB remained empty; tree clean except the two pre-existing unrelated untracked outputs. NEXT EXACT: checkpoint, restart/install exact SHA, confirm listener, replay the HadeethEnc numeric/internal-ID audio and require unknown/no false navigation. Then record item 4 complete and identify the next owner item from the live task plan. No release requested.
+
 ~16:23 (09-28) FINAL BUILD ISOLATION CONFIRMED: ADB empty and no emulator/qemu process after clean shutdown. NEXT EXACT: checkpoint and run the final signed build alone, then install/replay the internal-ID rejection. No release requested.
 
 ~16:21 (09-28) FINAL CONTEXTUAL-DETAIL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. This is the final intended assistant behavior: all public screens classified, no invented/internal-ID voice route, real spoken numbers for nine-books details, and measured false-route protection. NEXT EXACT: checkpoint, stop emulator/prove isolation, final signed build, verify SHA/ORT/signing, reinstall exact APK, replay HadeethEnc internal-ID clip and require unknown/no navigation. Then mark owner item 4 complete; no release requested.
@@ -816,6 +818,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 16:26 - Checkpoint final item four APK
 - 2026-09-28 16:20 - Confirm final contextual build isolation
 - 2026-09-28 16:18 - Verify final contextual assistant inventory
 - 2026-09-28 16:14 - Keep HadeethEnc details contextual
