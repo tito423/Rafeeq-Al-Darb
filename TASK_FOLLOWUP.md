@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~15:43 (09-28) POST-FIX SIGNED BUILD SUCCEEDED WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `BB837A4939CCA025967A336831102FFCC28BA06791C7BE8488A807903E4EB2B7`; build script verified sherpa ORT 1.28.2 for arm64-v8a (22,249,552 B), armeabi-v7a (15,359,576 B), and x86_64 (25,581,112 B), plus rotated signing (Rafeeq key Android 9+, retained Android key 7-8). ADB remained empty after the build; tree remained clean except the two pre-existing unrelated untracked script outputs. NEXT EXACT: checkpoint, restart the known emulator, install this exact APK with `adb install -r`, confirm the foreground listener, and replay the measured incomplete HadeethEnc audio to prove it is rejected rather than opening ruqyah. Then complete nine-books book/chapter/detail voice/UI checks and one unrelated unknown rejection. Treat HadeethEnc detail itself as unverified unless ASR preserves a real ID. No release requested.
+
 ~15:41 (09-28) BUILD ISOLATION READY: emulator-5554 was stopped cleanly with `adb emu kill`; after shutdown settling, `adb devices` was empty and no emulator/qemu process remained. NEXT EXACT: checkpoint, run `build_github_release.bat` alone, then record APK bytes/SHA-256 and verify the script's ORT/signing checks before restarting any device. No release requested.
 
 ~15:39 (09-28) POST-FALSE-ROUTE FULL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. This includes the exact device-heard incomplete HadeethEnc phrase remaining unknown rather than opening ruqyah. Tree is otherwise clean except the two pre-existing unrelated untracked script outputs. NEXT EXACT: checkpoint, stop the emulator and prove ADB empty, then run `build_github_release.bat` alone. Record APK bytes/SHA-256 and verify ORT 1.28.2 for all three ABIs plus rotated signing; restart/install that exact APK and resume the voice/UI matrix. No release requested.
@@ -794,6 +796,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 15:43 - Checkpoint signed assistant safety build
 - 2026-09-28 15:36 - Confirm isolated signed build state
 - 2026-09-28 15:35 - Checkpoint full verification after assistant safety fix
 - 2026-09-28 15:31 - Prevent incomplete hadith command opening ruqyah
