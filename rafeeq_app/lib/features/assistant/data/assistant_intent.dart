@@ -315,6 +315,16 @@ String? afterWakeWord(String heard) {
       if (n.length >= 4 && t.length >= n.length + 2 && t.startsWith(n)) {
         return t.substring(n.length);
       }
+      // Apply the same one-edit tolerance used by [isName] when the
+      // recogniser glues the command to an imperfect wake word.  The cut can
+      // move by one because that edit may be an inserted or deleted letter:
+      // «فيقطفيها» = «رفيق طفيها» with the initial ر dropped.
+      for (final cut in [n.length - 1, n.length, n.length + 1]) {
+        if (n.length < 4 || cut <= 0 || t.length - cut < 2) continue;
+        if (editDistance(t.substring(0, cut), n, 1) <= 1) {
+          return t.substring(cut);
+        }
+      }
     }
     return null;
   }

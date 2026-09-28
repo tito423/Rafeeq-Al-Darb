@@ -121,6 +121,11 @@ void main() {
     // Egyptian, pronoun attached.
     expect(of('طفيها التأثيرات الحركية'), 'toggle motion off');
     expect(of('ولع فيديو البداية'), 'toggle splash on');
+    // As the recogniser wrote the spoken clip on emulator-5554: it dropped
+    // the first letter of «رفيق» and glued the command to the remainder.
+    const gluedOff = 'يار فيقطفيها فيديو البداية';
+    expect(afterWakeWord(gluedOff), 'طفيها فيديو البدايه');
+    expect(of(afterWakeWord(gluedOff)!), 'toggle splash off');
     expect(of('افتح شكل الساعة'), 'open clockFaces');
   });
 
