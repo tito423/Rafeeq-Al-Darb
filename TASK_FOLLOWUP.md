@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~04:18 (09-28) ITEM 4 STEP 2 voice check 1/2 PASSED on the freshly restarted emulator with the already-built signed APK: «يا رفيق فين الأذكار» was heard exactly as `يار فيق فين الأذكار` in 1431 ms and the app opened the Azkar tab; screenshot read and confirmed. Voice pack + enabled foreground listener survived reinstall. NEXT EXACT: push «يا رفيق طفيها فيديو البداية», confirm the splash-video setting is OFF in Settings (not only from the parsed intent), then record/commit the result.
+
 ~01:16 (09-28) STOPPING (weekly quota 99 percent). Step-2 build (01:1x, emulator was OFF during the build) INSTALLED 01:13:00, then the emulator CRASHED (exit 139, 9th time since 20:30) right after the app was opened - so the step-2 clip («يا رفيق فين الأذكار») was NOT heard. Tree clean, everything pushed. NEXT (Codex / next session): restart the emulator (NEXT_PROMPT.md flags), push that clip, expect the Azkar tab; then «يا رفيق طفيها فيديو البداية» -> splash switch off. The emulator crash pattern tonight: 139 after builds AND after app launches, swiftshader_indirect, with or without -no-audio - cause not found; if it keeps up, test on the owner's phone instead.
 
 ~01:10 (09-28) Step 2 continued: on/off verbs with the pronoun attached («شغلها، ولّع، ولعها، اقفلها، طفيها، وقفها، شيلها، عطلها»…); tests «طفيها التأثيرات الحركية» -> motion off, «ولع فيديو البداية» -> splash on. analyze 0, 641 pass. NOT built / NOT voiced. NEXT: «كبّر/صغّر الخط» needs an ACTION (font size) - that is step 4 (commands with details), not lexicon; then build (emulator OFF during build) + one clip for open («فين الأذكار») and one for off («طفيها فيديو البداية»).
@@ -724,6 +726,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:19 - Item 4 step 2 voice 1/2: Egyptian 'where are adhkar' opened the Azkar tab on emulator
 - 2026-09-28 01:15 - Stopping at weekly quota 99%: step-2 build installed but the emulator crashed (9th, exit 139) right after launch, so the Egyptian-verb clips were not heard; NEXT_PROMPT.md and TASK_FOLLOWUP say exactly what to run next
 - 2026-09-28 01:07 - Step 2: Egyptian on/off verbs with attached pronouns + tests; 641 pass; not built or voiced
 - 2026-09-28 01:04 - Item 4 step 2 start: Egyptian open verbs (incl. 'فتح' as the recogniser drops the alif, 'فين', 'خدني', 'اشوف') + tests; 641 pass; not built or voiced yet

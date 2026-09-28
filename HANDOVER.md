@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 01:15 — IN PROGRESS — resume here**
+**2026-09-28 04:19 — IN PROGRESS — resume here**
 
-Stopping at weekly quota 99%: step-2 build installed but the emulator crashed (9th, exit 139) right after launch, so the Egyptian-verb clips were not heard; NEXT_PROMPT.md and TASK_FOLLOWUP say exactly what to run next
+Item 4 step 2 voice 1/2: Egyptian 'where are adhkar' opened the Azkar tab on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
