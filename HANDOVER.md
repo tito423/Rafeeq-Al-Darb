@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 12:47 — IN PROGRESS — resume here**
+**2026-09-28 12:50 — IN PROGRESS — resume here**
 
-feat(assistant): open real hadeeth encyclopedia categories
+feat(assistant): open exact nine-books hadith collections
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -64,6 +64,16 @@ void main() {
         options: OpenDatabaseOptions(readOnly: true));
     final hadeethRows = await hadeethDb.query('categories',
         columns: ['id', 'title', 'title_ar'], orderBy: 'CAST(id AS INTEGER)');
+    final hadithArchive = ZipDecoder()
+        .decodeBytes(File('assets/data/hadith.zip').readAsBytesSync());
+    final hadithEntry = hadithArchive.files.firstWhere(
+        (entry) => entry.isFile && entry.name.toLowerCase().endsWith('.db'));
+    final hadithFile = File('${hadeethDir.path}/hadith.db')
+      ..writeAsBytesSync(hadithEntry.content as List<int>);
+    final hadithDb = await databaseFactory.openDatabase(hadithFile.path,
+        options: OpenDatabaseOptions(readOnly: true));
+    final hadithRows = await hadithDb.query('books',
+        columns: ['id', 'name_ar', 'name_en'], orderBy: 'sort_order');
     final localeData = [
       for (final l in ['ar', 'en', 'es', 'fr', 'pt', 'ru', 'ur'])
         jsonDecode(File('assets/translations/$l.json').readAsStringSync())
@@ -89,6 +99,11 @@ void main() {
             CatalogHadeethCategory(row['id'] as String,
                 [row['title'] as String, row['title_ar'] as String]),
         ],
+        hadithBooks: [
+          for (final row in hadithRows)
+            CatalogHadithBook(row['id'] as int,
+                [row['name_ar'] as String, row['name_en'] as String]),
+        ],
         reciters: reciters,
         books: books,
         screenLabels: labels.screens,
@@ -97,6 +112,7 @@ void main() {
         settingSections: labels.sections));
     await db.close();
     await hadeethDb.close();
+    await hadithDb.close();
     hadeethDir.deleteSync(recursive: true);
   });
   String of(String s) => p.parse(s).toString();
@@ -176,6 +192,13 @@ void main() {
     expect(of('وريني الفقه وأصوله'), 'hadeeth category 4');
     expect(p.parse('افتح قسم الطب في موسوعة الأحاديث النبوية'),
         isA<UnknownIntent>());
+  });
+
+  test('nine-books commands use exact real bundled book names', () {
+    expect(of('افتح كتاب صحيح البخاري'), 'hadith book 1');
+    expect(of('وريني سنن النسائي'), 'hadith book 5');
+    expect(of('افتح كتاب فتح الباري بشرح صحيح البخاري'), 'book fath_al_bari');
+    expect(p.parse('افتح سنن البيهقي'), isA<UnknownIntent>());
   });
 
   test('whole-surah reciter uses only the mp3quran catalogue', () {

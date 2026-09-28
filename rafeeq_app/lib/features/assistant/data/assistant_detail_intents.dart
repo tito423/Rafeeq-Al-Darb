@@ -18,6 +18,12 @@ class CatalogHadeethCategory {
   final List<String> names;
 }
 
+class CatalogHadithBook {
+  const CatalogHadithBook(this.id, this.names);
+  final int id;
+  final List<String> names;
+}
+
 class MemorizeSurahIntent extends AssistantIntent {
   const MemorizeSurahIntent(this.surah);
   final int surah;
@@ -60,7 +66,30 @@ class OpenHadeethCategoryIntent extends AssistantIntent {
   String toString() => 'hadeeth category $categoryId';
 }
 
+class OpenHadithBookIntent extends AssistantIntent {
+  const OpenHadithBookIntent(this.bookId);
+  final int bookId;
+  @override
+  String toString() => 'hadith book $bookId';
+}
+
 extension on AssistantParser {
+  int? _hadithBookIn(List<String> words) {
+    final title = words
+        .where((word) => !AssistantParser._open.contains(word) &&
+            !AssistantParser._bookWord.contains(word))
+        .map(bare)
+        .join(' ');
+    for (final book in catalog.hadithBooks) {
+      for (final name in book.names) {
+        if (title == AssistantParser._canon(name).split(' ').map(bare).join(' ')) {
+          return book.id;
+        }
+      }
+    }
+    return null;
+  }
+
   String? _hadeethCategoryIn(String clean) {
     String? best;
     var bestLength = 0;

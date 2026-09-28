@@ -185,6 +185,7 @@ class AssistantCatalog {
     this.azkarSections = const [],
     this.wholeSurahReciters = const [],
     this.hadeethCategories = const [],
+    this.hadithBooks = const [],
     this.reciters = const [],
     this.books = const [],
     this.screenLabels = const {},
@@ -206,6 +207,7 @@ class AssistantCatalog {
   final List<CatalogAzkarSection> azkarSections;
   final List<CatalogWholeReciter> wholeSurahReciters;
   final List<CatalogHadeethCategory> hadeethCategories;
+  final List<CatalogHadithBook> hadithBooks;
   final List<CatalogReciter> reciters;
   final List<CatalogBook> books;
 
@@ -417,6 +419,8 @@ class AssistantParser {
         for (final n in r.names) ...norm(n).split(' '),
       for (final c in catalog.hadeethCategories)
         for (final n in c.names) ...norm(n).split(' '),
+      for (final b in catalog.hadithBooks)
+        for (final n in b.names) ...norm(n).split(' '),
       for (final b in catalog.books) ...norm('${b.title} ${b.author}').split(' '),
     }..removeWhere((w) => w.length < 3 || v.contains(w));
     _tiers = [_byLen(v), _byLen(names)];
@@ -548,6 +552,8 @@ class AssistantParser {
       if (a != null) return AuthorBooksIntent(a);
     }
     // «كتاب الأذكار للنووي»
+    final hadithBook = _hadithBookIn(words);
+    if (hadithBook != null) return OpenHadithBookIntent(hadithBook);
     final bk = words.indexWhere(_bookWord.contains);
     if (bk >= 0 && bk < words.length - 1) {
       final b = _book(words.sublist(bk + 1).join(' '));
