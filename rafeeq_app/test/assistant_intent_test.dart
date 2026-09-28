@@ -56,6 +56,12 @@ void main() {
     expect(of('افتح المكتبة الشاملة'), 'open shamela');
     expect(of('افتح المكتبة'), 'open library');
     expect(of('اتجاه القبلة'), 'open qibla');
+    expect(of('افتح عن التطبيق'), 'open about');
+    expect(of('افتح المصادر والمراجع'), 'open sources');
+    expect(of('افتح ادعم التطبيق'), 'open support');
+    expect(of('افتح الإهداءات'), 'open dedications');
+    expect(of('افتح ختمة القرآن'), 'open khatma');
+    expect(of('افتح بحث في كل الكتب'), 'open bookSearch');
   });
 
   test('a surah, with and without a reciter', () {

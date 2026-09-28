@@ -17,6 +17,7 @@ import '../../../core/i18n/supported_locales.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_controller.dart';
+import '../../dedications/presentation/dedications_screen.dart';
 import '../../dorar/presentation/dorar_hub_screen.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../downloads/presentation/screens/downloads_screen.dart';
@@ -24,6 +25,7 @@ import '../../hajj/presentation/hajj_screen.dart';
 import '../../hifz/presentation/hifz_screen.dart';
 import '../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../home/presentation/widgets/on_this_day_sheet.dart';
+import '../../khatma/presentation/khatma_screen.dart';
 import '../../library/data/book_catalog.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
@@ -33,11 +35,14 @@ import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../settings/data/transliteration_settings_provider.dart';
+import '../../settings/presentation/screens/about_screen.dart';
 import '../../settings/presentation/screens/settings_screen.dart'
     show SettingsBody, SettingsPart;
+import '../../settings/presentation/screens/sources_screen.dart';
 import '../../shamela/data/shamela_library.dart';
 import '../../shamela/presentation/shamela_screen.dart';
 import '../../splash/data/splash_video_provider.dart';
+import '../../support/presentation/screens/support_screen.dart';
 import '../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import '../data/assistant_intent.dart';
 import '../data/assistant_lexicon.dart';
@@ -391,6 +396,18 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
         case AssistantScreen.clockFaces:
           tab(AppTab.home);
           await ClockGallerySheet.show(nav.context);
+        case AssistantScreen.about:
+          push(const AboutScreen());
+        case AssistantScreen.sources:
+          push(const SourcesScreen());
+        case AssistantScreen.support:
+          push(const SupportScreen());
+        case AssistantScreen.dedications:
+          push(const DedicationsScreen());
+        case AssistantScreen.khatma:
+          push(const KhatmaScreen());
+        case AssistantScreen.bookSearch:
+          push(const BooksSearchScreen());
       }
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,

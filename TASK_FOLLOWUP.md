@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~04:58 (09-28) ITEM 4 STEP 3 group 1 IN CODE: AssistantScreen 21 -> 27. Added direct, titled routes for About, Sources, Support, Dedications, Khatma, and all-books Search; each uses its existing translation key in all locales and has an Arabic parser assertion. Inventory reclassified these as supported and remains exhaustive. Focused assistant+layout tests 15/15 pass; assistant analyze clean; intent file 775 lines. NOT built/voiced yet. NEXT EXACT: group 2, the four prayer/adhan top-level screens (Adhan settings, adhan backgrounds, prayer adjustments, prayer location) using their existing title keys, tests + focused checks, checkpoint.
+
 ~04:53 (09-28) ITEM 4 STEP 3 inventory written as `scripts/inventory_assistant_screens.py`: live source scan finds 60 public `*Screen` classes, 49 `MaterialPageRoute` destinations, 21 current AssistantScreen values. Every class is explicitly classified and the script fails on a new/unclassified or stale class: 16 already supported classes, 22 missing zero-argument/user-meaningful top-level screens, 18 parameter/detail screens reserved for detailed commands, 4 internal/lifecycle screens. Inventory runs clean. NEXT EXACT: add the first small top-level group with existing translation titles and direct routes: About, Sources, Support, Dedications, Khatma, and all-books search; one parser test per destination, focused analyze/tests, then checkpoint before the next group.
 
 ~04:49 (09-28) ITEM 4 STEP 2 FINAL COMPLETE on the post-split build. Installed exact APK SHA-256 `969321...96C26`; foreground listener live. Because splash persisted OFF, first manually set `فيديو الشاشة الافتتاحية` to checked=true, returned to the app, then replayed the same clip. It was heard as `يار فيقطفيها فيديو البداية` in 1039 ms; re-opened Settings > Splash screen and UI semantics proved checked=false. Final evidence: analyze clean, 641 tests pass, signed build verified, both required Egyptian voice groups seen. NOT released (owner did not ask). NEXT EXACT: item 4 step 3, inventory user-meaningful screens from navigation constructors/routes and compare to the 21 `AssistantScreen` values; write the inventory first, then add missing destinations in small tested groups.
@@ -744,6 +746,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 04:54 - Item 4 step 3 group 1: add six titled top-level assistant destinations with tests
 - 2026-09-28 04:51 - Item 4 step 3 inventory: classify all 60 public screens and fail on omissions
 - 2026-09-28 04:49 - Item 4 step 2 final: post-split APK hears glued Egyptian command and disables splash on emulator
 - 2026-09-28 04:44 - Build final post-split signed APK and verify all native ABIs plus signing lineage

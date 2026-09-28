@@ -30,19 +30,19 @@ ENUM_RE = re.compile(r"enum\s+AssistantScreen\s*\{([\s\S]*?)\}")
 # Human classification is intentional: a constructor name cannot tell whether
 # a destination is useful on its own or needs a book, surah, reciter, etc.
 SUPPORTED = {
-    "AyahDownloadScreen", "AzkarScreen", "DownloadsScreen", "DorarHubScreen",
-    "HajjScreen", "HifzScreen", "HomeScreen", "LibraryScreen", "MoreScreen",
+    "AboutScreen", "AyahDownloadScreen", "AzkarScreen", "BooksSearchScreen",
+    "DedicationsScreen", "DownloadsScreen", "DorarHubScreen", "HajjScreen",
+    "HifzScreen", "HomeScreen", "KhatmaScreen", "LibraryScreen", "MoreScreen",
     "QiblaScreen", "QuranAudioScreen", "QuranScreen", "RuqyahAudioScreen",
-    "ShamelaScreen", "TajweedLevelsScreen", "TasbeehScreen",
+    "ShamelaScreen", "SourcesScreen", "SupportScreen", "TajweedLevelsScreen",
+    "TasbeehScreen",
 }
 MISSING_TOP_LEVEL = {
-    "AboutScreen", "AdhanBackgroundScreen", "AdhanSettingsScreen",
-    "BooksSearchScreen", "DedicationsScreen", "DorarHistoryScreen",
+    "AdhanBackgroundScreen", "AdhanSettingsScreen", "DorarHistoryScreen",
     "DorarScreen", "DorarSearchScreen", "DorarTafseerScreen",
-    "JazariyyahLevelScreen", "KhatmaScreen", "MakharijScreen",
+    "JazariyyahLevelScreen", "MakharijScreen",
     "OnboardingScreen", "PrayerAdjustmentsScreen", "PrayerLocationScreen",
-    "RuqyahScreen", "SciencesPackScreen", "SourcesScreen",
-    "SplashPreviewScreen", "SupportScreen", "TamhidLevelScreen",
+    "RuqyahScreen", "SciencesPackScreen", "SplashPreviewScreen", "TamhidLevelScreen",
     "TuhfaLevelScreen",
 }
 NEEDS_DETAILS = {

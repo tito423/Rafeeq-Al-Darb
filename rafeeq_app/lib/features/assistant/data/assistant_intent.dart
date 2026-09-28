@@ -35,6 +35,12 @@ enum AssistantScreen {
   onThisDay,
   dailyHadith,
   clockFaces,
+  about,
+  sources,
+  support,
+  dedications,
+  khatma,
+  bookSearch,
 }
 
 sealed class AssistantIntent {

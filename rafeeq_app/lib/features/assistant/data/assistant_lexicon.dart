@@ -311,6 +311,12 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.shamela: ['shamela.title'],
   AssistantScreen.dailyHadith: ['hadith_daily.title'],
   AssistantScreen.clockFaces: ['home.clock_gallery_title'],
+  AssistantScreen.about: ['settings.about'],
+  AssistantScreen.sources: ['settings.credits'],
+  AssistantScreen.support: ['support.title'],
+  AssistantScreen.dedications: ['dedication.title'],
+  AssistantScreen.khatma: ['khatma.title'],
+  AssistantScreen.bookSearch: ['library.search_all_books'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the
