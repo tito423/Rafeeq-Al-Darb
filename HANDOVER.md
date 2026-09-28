@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 04:49 — IN PROGRESS — resume here**
+**2026-09-28 04:51 — IN PROGRESS — resume here**
 
-Item 4 step 2 final: post-split APK hears glued Egyptian command and disables splash on emulator
+Item 4 step 3 inventory: classify all 60 public screens and fail on omissions
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
