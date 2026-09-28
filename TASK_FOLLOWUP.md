@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:23 (09-28) FINAL BUILD ISOLATION CONFIRMED: ADB empty and no emulator/qemu process after clean shutdown. NEXT EXACT: checkpoint and run the final signed build alone, then install/replay the internal-ID rejection. No release requested.
+
 ~16:21 (09-28) FINAL CONTEXTUAL-DETAIL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. This is the final intended assistant behavior: all public screens classified, no invented/internal-ID voice route, real spoken numbers for nine-books details, and measured false-route protection. NEXT EXACT: checkpoint, stop emulator/prove isolation, final signed build, verify SHA/ORT/signing, reinstall exact APK, replay HadeethEnc internal-ID clip and require unknown/no navigation. Then mark owner item 4 complete; no release requested.
 
 ~16:16 (09-28) HadeethEnc DETAIL HONESTLY RECLASSIFIED IN CODE: removed the undiscoverable `OpenHadeethEncDetailIntent`, numeric internal-ID parser, and direct execution branch. `HadeethEncDetailScreen` is now inventory-classified context-only because real callers already supply a real item from category lists or Daily Hadith. Regression requires «حديث رقم 1751 من موسوعة الأحاديث النبوية» to remain unknown, while the same number with exact `صحيح البخاري` remains the distinct nine-books detail route. Category voice routing is unchanged. Inventory clean (60 public screens / 49 MaterialPageRoute destinations / 44 AssistantScreen values; zero unclassified/candidates); focused analyze clean; assistant + layout tests 24/24 pass; parser/sheet 796/787 lines. NEXT EXACT: checkpoint, run final full analyze + full tests. Since runtime code changed, stop emulator, make one final signed build with emulator OFF, install it, replay the internal-ID clip to prove unknown/no false route, then item 4 is complete. No release requested.
@@ -814,6 +816,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 16:20 - Confirm final contextual build isolation
 - 2026-09-28 16:18 - Verify final contextual assistant inventory
 - 2026-09-28 16:14 - Keep HadeethEnc details contextual
 - 2026-09-28 16:11 - Classify internal HadeethEnc detail as contextual
