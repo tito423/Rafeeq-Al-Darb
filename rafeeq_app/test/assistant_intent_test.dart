@@ -213,6 +213,11 @@ void main() {
         'hadeethenc detail 1751');
     expect(of('افتح الحديث رقم 1751 من صحيح البخاري'),
         'hadith detail 1/1751');
+    // Measured ASR output after the spoken ID was swallowed. «رقمه» must
+    // never be spelling-corrected to «رقية» and open an unrelated screen.
+    expect(p.parse('من موسوعة الأحديث النبوية اذتح الحديث الذي رقمه'),
+        isA<UnknownIntent>());
+    expect(of('افتح الرقية الشرعية'), 'open ruqyah');
   });
 
   test('nine-books commands use exact real bundled book names', () {

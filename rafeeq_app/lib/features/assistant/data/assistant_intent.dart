@@ -400,6 +400,7 @@ class AssistantParser {
       ..._booksOf,
       ..._shamelaWord, ..._download,
       ..._change, ..._on, ..._off, ..._langWord, ..._themeWord,
+      'رقمه', // An incomplete numeric command must not autocorrect to «رقية».
       for (final l in _screens.values) for (final ph in l) ...ph.split(' '),
       for (final ph in _settings) ...ph.split(' '),
       for (final l in _sections.values) for (final ph in l) ...ph.split(' '),
