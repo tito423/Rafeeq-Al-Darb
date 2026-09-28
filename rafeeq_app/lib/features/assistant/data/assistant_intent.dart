@@ -3,6 +3,8 @@ import '../../../core/utils/digits.dart' show asciiDigits;
 import 'assistant_lexicon.dart' as lex;
 import 'assistant_wake_word.dart';
 
+part 'assistant_destination_match.dart';
+
 /// «رفيق» - the in-app assistant's understanding: an Arabic sentence (MSA or
 /// Egyptian, as speech recognition writes it) -> one action in the app.
 /// Owner, 2026-09-27: «مساعد آلي شخصي لكل ما هو في التطبيق».
@@ -573,87 +575,16 @@ class AssistantParser {
     if (_hasPhrase(clean, _screens[AssistantScreen.ayahPlayer] ?? const [])) {
       return const OpenScreenIntent(AssistantScreen.ayahPlayer);
     }
-    // A screen: the longest phrase that appears wins («مشغل التلاوه» beats
-    // «التلاوه», «المكتبه الشامله» beats «المكتبه»). It opens on a command
-    // («افتح …») or when the sentence is only its name. A question that
-    // merely mentions one («ما حكم صلاة الجمعة») is not a command - the
-    // assistant does not answer questions.
-    final commanded = words.any(_open.contains) || playing || changing;
-    AssistantScreen? best;
-    var bestLen = 0;
-    var bestWords = 0;
-    for (final e in _screens.entries) {
-      for (final p in e.value) {
-        if (p.length > bestLen && _hasPhrase(clean, [p])) {
-          best = e.key;
-          bestLen = p.length;
-          bestWords = p.split(' ').length;
-        }
-      }
-    }
-    // A settings section - by its title or anything named inside it -
-    // opened WHERE IT IS rather than on the settings list («في اي خرم
-    // ابرة», owner 2026-09-27).
-    String? section;
-    for (final e in _sections.entries) {
-      for (final p in e.value) {
-        if (p.length > bestLen && _hasPhrase(clean, [p])) {
-          section = e.key;
-          bestLen = p.length;
-          bestWords = p.split(' ').length;
-        }
-      }
-    }
-    // The existing command «افتح ضبط المواقيت والتاريخ» deliberately opens
-    // that settings section. Saying «شاشة» asks for its full-page editor.
-    if (best == AssistantScreen.prayerAdjustments &&
-        !words.any((w) => bare(w) == 'شاشه')) {
-      best = null;
-      section = 'prayer.adjustments';
-    }
-    // Any other setting, by its title in any language: open the settings.
-    for (final p in _settings) {
-      if (p.length > bestLen && _hasPhrase(clean, [p])) {
-        best = AssistantScreen.settings;
-        section = null;
-        bestLen = p.length;
-        bestWords = p.split(' ').length;
-      }
-    }
-    // Nothing matched whole: a section name of three words or more with
-    // all but one of its words said. On emulator-5554 (2026-09-28) «افتح
-    // ضبط المواقيت والتاريخ» came back as «فتحضط المواقيط والتاريخ» - the
-    // verb swallowed «ضبط»; the other two words still name one section.
-    if (section == null) {
-      final said = {for (final w in words) bare(w)};
-      // A screen matched on fewer words («المواقيت» alone) loses to it.
-      var bestHits = best == null ? 0 : bestWords;
-      for (final e in _sections.entries) {
-        for (final p in e.value) {
-          final pw = p.split(' ');
-          if (pw.length < 3) continue;
-          final hits = pw.where((w) => said.contains(bare(w))).length;
-          if (hits == pw.length - 1 && hits > bestHits) {
-            section = e.key;
-            best = null;
-            bestHits = hits;
-            bestLen = p.length;
-            bestWords = pw.length;
-          }
-        }
-      }
-    }
-    // A section's name of three words or more is specific enough to allow
-    // two stray words around it - «في تحلي» is how the recogniser broke
-    // «افتحلي» on emulator-5554 (2026-09-28).
-    final slack = bestWords >= 3 ? 2 : 1;
-    if (section != null && (commanded || words.length <= bestWords + slack)) {
-      return OpenSettingIntent(section);
-    }
-    if (best != null && (commanded || words.length <= bestWords + 1)) {
-      return OpenScreenIntent(best);
-    }
-    return UnknownIntent(heard);
+    return _matchDestination(
+      heard: heard,
+      clean: clean,
+      words: words,
+      commanded: words.any(_open.contains) || playing || changing,
+      screens: _screens,
+      sections: _sections,
+      settings: _settings,
+      hasPhrase: _hasPhrase,
+    );
   }
 
   bool _hasPhrase(String clean, Iterable<String> phrases) {
