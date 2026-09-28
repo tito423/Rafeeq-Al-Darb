@@ -38,11 +38,13 @@ import '../../library/data/book_catalog.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
 import '../../library/presentation/screens/books_search_screen.dart';
+import '../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../../quran/presentation/screens/sciences_pack_screen.dart';
 import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
+import '../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../settings/data/transliteration_settings_provider.dart';
 import '../../settings/presentation/screens/about_screen.dart';
 import '../../settings/presentation/screens/settings_screen.dart'
@@ -51,6 +53,7 @@ import '../../settings/presentation/screens/sources_screen.dart';
 import '../../shamela/data/shamela_library.dart';
 import '../../shamela/presentation/shamela_screen.dart';
 import '../../splash/data/splash_video_provider.dart';
+import '../../splash/presentation/screens/splash_preview_screen.dart';
 import '../../support/presentation/screens/support_screen.dart';
 import '../../tajweed/presentation/screens/jazariyyah_level_screen.dart';
 import '../../tajweed/presentation/screens/makharij_screen.dart';
@@ -395,7 +398,7 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
         case AssistantScreen.hifz:
           push(const HifzScreen());
         case AssistantScreen.ruqyah:
-          push(const RuqyahAudioScreen());
+          push(const RuqyahScreen());
         case AssistantScreen.hajj:
           push(const HajjScreen());
         case AssistantScreen.tajweed:
@@ -447,6 +450,12 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           push(const DorarTafseerScreen());
         case AssistantScreen.dorarHistory:
           push(const DorarHistoryScreen());
+        case AssistantScreen.ruqyahAudio:
+          push(const RuqyahAudioScreen());
+        case AssistantScreen.initialDownloads:
+          push(const OnboardingScreen(revisit: true));
+        case AssistantScreen.splashPreview:
+          push(const SplashPreviewScreen());
       }
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,

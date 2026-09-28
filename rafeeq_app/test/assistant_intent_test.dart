@@ -75,6 +75,10 @@ void main() {
     expect(of('افتح تخريج الأحاديث الدرر السنية'), 'open dorarHadith');
     expect(of('افتح موسوعة التفسير'), 'open dorarTafseer');
     expect(of('افتح الموسوعة التاريخية'), 'open dorarHistory');
+    expect(of('افتح الرقية الشرعية'), 'open ruqyah');
+    expect(of('افتح الاستماع للرقية الشرعية'), 'open ruqyahAudio');
+    expect(of('افتح التحميلات المبدئية'), 'open initialDownloads');
+    expect(of('افتح معاينة الفيديو الافتتاحي'), 'open splashPreview');
   });
 
   test('a surah, with and without a reciter', () {

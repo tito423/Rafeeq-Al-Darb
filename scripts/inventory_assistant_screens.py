@@ -35,15 +35,14 @@ SUPPORTED = {
     "DedicationsScreen", "DorarHistoryScreen", "DorarHubScreen", "DorarScreen",
     "DorarSearchScreen", "DorarTafseerScreen", "DownloadsScreen", "HajjScreen",
     "HifzScreen", "HomeScreen", "KhatmaScreen", "LibraryScreen", "MoreScreen",
+    "OnboardingScreen",
     "JazariyyahLevelScreen", "MakharijScreen", "PrayerAdjustmentsScreen",
     "PrayerLocationScreen", "QiblaScreen", "QuranAudioScreen", "QuranScreen",
-    "RuqyahAudioScreen", "SciencesPackScreen", "ShamelaScreen", "SourcesScreen",
-    "SupportScreen", "TajweedLevelsScreen", "TamhidLevelScreen", "TasbeehScreen",
-    "TuhfaLevelScreen",
+    "RuqyahAudioScreen", "RuqyahScreen", "SciencesPackScreen", "ShamelaScreen",
+    "SourcesScreen", "SplashPreviewScreen", "SupportScreen", "TajweedLevelsScreen",
+    "TamhidLevelScreen", "TasbeehScreen", "TuhfaLevelScreen",
 }
-MISSING_TOP_LEVEL = {
-    "OnboardingScreen", "RuqyahScreen", "SplashPreviewScreen",
-}
+MISSING_TOP_LEVEL = set()
 NEEDS_DETAILS = {
     "AyahReciterScreen", "AzanPlayerScreen", "AzkarSectionScreen",
     "BookTextReaderScreen", "DorarChainScreen", "DorarSectionScreen",

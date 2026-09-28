@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~05:06 (09-28) ITEM 4 STEP 3 group 5 IN CODE; TOP-LEVEL INVENTORY COMPLETE: AssistantScreen 40 -> 43 and `MISSING_TOP_LEVEL` is empty. Added text Ruqyah, audio Ruqyah, initial-downloads revisit, and splash-video preview routes (three new enum values because text Ruqyah replaces the old ambiguous audio route). Added four Arabic assertions. Fixed the proven parser collision where «الفيديو الافتتاحي» option matching intercepted the longer preview-screen title; on/off commands remain unchanged. Focused assistant analyze clean; assistant+layout tests 15/15 pass; exhaustive inventory clean (60 public screens: 38 supported classes, 18 need command details, 4 internal/lifecycle); intent file exactly 800 lines. NOT built/voiced yet. NEXT EXACT: checkpoint; split screen/settings resolution out of the now-full intent parser before adding detailed commands; then review the 18 parameter/detail screens one by one and map only destinations whose required detail can be spoken/resolved from real catalogues. After that, full analyze/test, one signed build with emulator OFF, reinstall, and representative voice/device checks across the new groups.
+
 ~05:03 (09-28) ITEM 4 STEP 3 group 4 IN CODE: AssistantScreen 36 -> 40. Added direct routes for all-Dorar search, hadith grading/search, tafseer encyclopedia, and history encyclopedia with their existing titles and four Arabic parser assertions. Split `dorar.title` away from the general Dorar hub label so «الدرر السنية» opens the hub while «تخريج الأحاديث» opens the dedicated screen. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean; intent file 795 lines. NOT built/voiced yet. NEXT EXACT: group 5, inspect and add the final three user-meaningful top-level screens (text Ruqyah distinct from audio Ruqyah, revisit/onboarding downloads, splash preview), tests + focused checks, checkpoint; then review the 18 parameter/detail screens as step 4 rather than inventing incomplete routes.
 
 ~05:01 (09-28) ITEM 4 STEP 3 group 3 IN CODE: AssistantScreen 31 -> 36. Added direct titled routes for Quran sciences, Makharij, Tuhfa level, Jazariyyah level, and Tamhid level using the screens' existing translation keys; five Arabic parser assertions; inventory reclassified all five as supported. Focused assistant analyze clean; assistant+layout tests 15/15 pass; inventory clean; intent file 791 lines. NOT built/voiced yet. NEXT EXACT: group 4, the four Dorar top-level screens (search, hadith verification, tafseer, history) after inspecting their constructors/title keys; tests + focused checks, checkpoint.
@@ -752,6 +754,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 05:07 - Item 4 step 3 complete top-level assistant screen coverage
 - 2026-09-28 05:03 - Item 4 step 3 group 4 add Dorar destinations
 - 2026-09-28 05:01 - Item 4 step 3 group 3 add tajweed and Quran sciences destinations
 - 2026-09-28 04:59 - checkpoint(wip): Item 4 step 3 group 2 add prayer and adhan destinations

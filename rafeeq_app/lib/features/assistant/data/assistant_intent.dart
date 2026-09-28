@@ -54,6 +54,7 @@ enum AssistantScreen {
   dorarHadith,
   dorarTafseer,
   dorarHistory,
+  ruqyahAudio, initialDownloads, splashPreview,
 }
 
 sealed class AssistantIntent {
@@ -549,6 +550,10 @@ class AssistantParser {
     // «اقفل التأثيرات الحركية» / "turn off animations"
     for (final e in _options.entries) {
       if (_hasPhrase(clean, e.value)) {
+        if (e.key == 'splash' && _hasPhrase(clean,
+            _screens[AssistantScreen.splashPreview] ?? const [])) {
+          continue;
+        }
         final off = said.any(_off.contains);
         final on = said.any(_on.contains);
         if (off || on) return ToggleOptionIntent(e.key, on: !off);

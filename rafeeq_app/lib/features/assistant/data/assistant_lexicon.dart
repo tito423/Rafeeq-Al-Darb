@@ -304,7 +304,7 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.downloads: ['nav.downloads', 'downloads.title'],
   AssistantScreen.recitationPlayer: ['quran_audio.title'],
   AssistantScreen.hifz: ['hifz.title'],
-  AssistantScreen.ruqyah: ['ruqyah.title', 'ruqyah.audio_title'],
+  AssistantScreen.ruqyah: ['ruqyah.title'],
   AssistantScreen.hajj: ['hajj.title'],
   AssistantScreen.tajweed: ['tajweed.title'],
   AssistantScreen.dorar: ['dorar.hub_title'],
@@ -330,6 +330,9 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.dorarHadith: ['dorar.title'],
   AssistantScreen.dorarTafseer: ['dorar.enc_tafseer'],
   AssistantScreen.dorarHistory: ['dorar.enc_history'],
+  AssistantScreen.ruqyahAudio: ['ruqyah.audio_title'],
+  AssistantScreen.initialDownloads: ['onboarding.title'],
+  AssistantScreen.splashPreview: ['settings.splash_preview'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the
