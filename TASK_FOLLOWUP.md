@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~16:46 (09-28) V3.69.3 PUBLISHED AND VERIFIED: GitHub release `v3.69.3` targets `master`; tag SHA `fb1ac269221060cf023ee2f18161a51cddb421b4` equalled HEAD at publish. Final asset is correctly named `RafeeqAlDarb-v3.69.3.apk`, 314,083,375 B, GitHub digest/local/redownload SHA-256 all `D2A1CEB629CC2FB2E85F96D35C93740BF95CAD69416804338F5DF65C7E86F8A3`; range request returned 206 with `bytes 0-0/314083375`, and the full redownload matched. Release is neither draft nor prerelease. Per project policy, previous `v3.69.2` release and tag were deleted after verification; GitHub ref API now returns 404. Protected `v3.51.0`, `content-mirror`, `content-mushaf`, and `content-surah` remain. NEXT EXACT: update HANDOVER with this final release state, checkpoint/push the post-release documentation, then report the release and direct APK links to the owner. No further code work is queued; real-owner-voice latency/use on his phone remains the only acceptance item not measured.
+
 ~16:43 (09-28) V3.69.3 SIGNED GITHUB APK BUILT CLEANLY WITH EMULATOR OFF: `app-release.apk` = 314,083,375 B, SHA-256 `D2A1CEB629CC2FB2E85F96D35C93740BF95CAD69416804338F5DF65C7E86F8A3`; aapt2 reports package `com.tito.rafeeq_aldarb`, versionCode `83`, versionName `3.69.3`. The release script verified sherpa ORT 1.28.2 in arm64-v8a (22,249,552 B), armeabi-v7a (15,359,576 B), and x86_64 (25,581,112 B), and verified the rotated signer: Rafeeq key on Android 9+, retained Android key on 7-8. Build exited 0; ADB remained empty and only the two pre-existing unrelated untracked script outputs remain. NEXT EXACT: checkpoint; write honest Arabic release notes from `v3.69.2..HEAD`; confirm clean tracked tree, pushed `master`, and absent `v3.69.3`; publish this exact APK as `RafeeqAlDarb-v3.69.3.apk` targeting `master`, then verify release JSON/tag SHA/range and re-download byte-identical before deleting `v3.69.2` and its tag.
 
 ~16:38 (09-28) V3.69.3 BUILD ISOLATION CONFIRMED: ADB was already empty and no `emulator` or `qemu-system-x86_64` process existed before or after the check. The conditional kill expression encountered a null because there was no device; no build or source action was affected. NEXT EXACT: checkpoint, run `build_github_release.bat` alone, then record APK bytes/SHA-256 and require the script's sherpa ORT checks for all three ABIs plus both rotated-signing checks to pass.
@@ -828,6 +830,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 21:53 - Record verified version 3.69.3 GitHub release
 - 2026-09-28 21:37 - Build and verify signed version 3.69.3 APK
 - 2026-09-28 21:32 - Confirm isolated release build state
 - 2026-09-28 21:32 - Verify version 3.69.3 release gate
