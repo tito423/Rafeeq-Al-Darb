@@ -45,13 +45,12 @@ SUPPORTED = {
 MISSING_TOP_LEVEL = set()
 DETAIL_INTENT_SUPPORTED = {
     "AyahReciterScreen", "AzkarSectionScreen", "BookTextReaderScreen",
-    "HifzSessionScreen",
+    "HifzSessionScreen", "ReciterScreen",
     "SingleSurahScreen",
 }
 DETAIL_COMMAND_CANDIDATES = {
     "HadeethEncCategoryScreen", "HadeethEncDetailScreen",
     "HadithBookScreen", "HadithChapterScreen", "HadithDetailScreen",
-    "ReciterScreen",
 }
 CONTEXT_ONLY = {
     "AzanPlayerScreen", "DorarChainScreen", "DorarSectionScreen",

@@ -44,9 +44,11 @@ import '../../library/presentation/screens/books_search_screen.dart';
 import '../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../../quran/presentation/screens/sciences_pack_screen.dart';
+import '../../quran_audio/data/mp3quran_api.dart';
 import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/ayah_reciter_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
+import '../../quran_audio/presentation/reciter_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../search/presentation/screens/search_screen.dart';
@@ -92,6 +94,12 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     for (final r in await ref.watch(recitersProvider.future))
       CatalogReciter(r.identifier, [r.nameAr, r.nameEn]),
   ];
+  var wholeSurahReciters = const <Mp3Reciter>[];
+  try {
+    wholeSurahReciters = await ref.watch(mp3RecitersProvider.future);
+  } catch (error) {
+    debugPrint('assistant catalogue: whole-surah reciters unavailable: $error');
+  }
   await ShamelaLibrary.instance.load();
   final books = [
     for (final b in libraryBookCatalog) CatalogBook(b.id, b.titleAr, b.authorAr),
@@ -123,6 +131,9 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     azkarSections: [
       for (final s in azkarSections)
         CatalogAzkarSection(s.id, _azkarSectionNames(locales, s.id, s.title)),
+    ],
+    wholeSurahReciters: [
+      for (final r in wholeSurahReciters) CatalogWholeReciter(r.id, [r.name]),
     ],
     reciters: reciters,
     books: books,
@@ -524,6 +535,10 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       final reciter =
           reciters.where((r) => r.identifier == reciterId).firstOrNull;
       if (reciter != null) push(AyahReciterScreen(reciter: reciter));
+    case OpenWholeSurahReciterIntent(:final reciterId):
+      final reciters = await ref.read(mp3RecitersProvider.future);
+      final reciter = reciters.where((r) => r.id == reciterId).firstOrNull;
+      if (reciter != null) push(ReciterScreen(reciter: reciter));
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
     case AuthorBooksIntent(:final author):

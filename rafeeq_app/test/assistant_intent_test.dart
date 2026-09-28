@@ -32,6 +32,11 @@ void main() {
     for (final b in libraryBookCatalog)
       CatalogBook(b.id, b.titleAr, b.authorAr),
   ];
+  final wholeSurahReciters = [
+    for (final r in jsonDecode(
+        File('assets/data/catalogs/reciters_full.json').readAsStringSync()) as List)
+      CatalogWholeReciter(r['id'] as int, [r['name'] as String]),
+  ];
   final latin = (jsonDecode(File('test/fixtures/surah_names_en.json')
           .readAsStringSync()) as List)
       .cast<String>();
@@ -66,6 +71,7 @@ void main() {
                     as String,
             ]),
         ],
+        wholeSurahReciters: wholeSurahReciters,
         reciters: reciters,
         books: books,
         screenLabels: labels.screens,
@@ -143,6 +149,15 @@ void main() {
     // Mohamed Hassan exists in the whole-surah catalogue only. The command
     // may open the picker, but must not invent a per-ayah reciter route.
     expect(of('افتح تلاوة آية بآية لمحمد حسان'), 'open ayahPlayer');
+  });
+
+  test('whole-surah reciter uses only the mp3quran catalogue', () {
+    expect(of('افتح مشغل التلاوات للحصري'), 'whole surah reciter 118');
+    expect(of('وريني مشغل القرآن للطبلاوي'), 'whole surah reciter 106');
+    // Parhizgar is verified per-ayah but absent from mp3quran's full-surah
+    // catalogue. Keep the catalogues separate and open only the general list.
+    expect(of('افتح مشغل التلاوات للقارئ شهریار پرهیزگار'),
+        'open recitationPlayer');
   });
 
   test('books and authors from the library', () {

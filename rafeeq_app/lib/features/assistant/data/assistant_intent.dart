@@ -182,6 +182,12 @@ class CatalogAzkarSection {
   final List<String> names;
 }
 
+class CatalogWholeReciter {
+  const CatalogWholeReciter(this.id, this.names);
+  final int id;
+  final List<String> names;
+}
+
 /// The names the assistant may act on - built from the app's own data.
 class AssistantCatalog {
   const AssistantCatalog({
@@ -189,6 +195,7 @@ class AssistantCatalog {
     this.surahsLatin = const [],
     this.sunanSurahIds = const {},
     this.azkarSections = const [],
+    this.wholeSurahReciters = const [],
     this.reciters = const [],
     this.books = const [],
     this.screenLabels = const {},
@@ -208,6 +215,7 @@ class AssistantCatalog {
   final List<String> surahsLatin;
   final Set<int> sunanSurahIds;
   final List<CatalogAzkarSection> azkarSections;
+  final List<CatalogWholeReciter> wholeSurahReciters;
   final List<CatalogReciter> reciters;
   final List<CatalogBook> books;
 
@@ -415,6 +423,8 @@ class AssistantParser {
     final names = <String>{
       for (final r in catalog.reciters)
         for (final n in r.names) ...norm(n).split(' '),
+      for (final r in catalog.wholeSurahReciters)
+        for (final n in r.names) ...norm(n).split(' '),
       for (final b in catalog.books) ...norm('${b.title} ${b.author}').split(' '),
     }..removeWhere((w) => w.length < 3 || v.contains(w));
     _tiers = [_byLen(v), _byLen(names)];
@@ -608,6 +618,12 @@ class AssistantParser {
       final reciterId = _reciterIn(clean);
       if (reciterId != null) return OpenAyahReciterIntent(reciterId);
       return const OpenScreenIntent(AssistantScreen.ayahPlayer);
+    }
+    if (_hasPhrase(
+        clean, _screens[AssistantScreen.recitationPlayer] ?? const [])) {
+      final reciterId = _wholeSurahReciterIn(clean);
+      if (reciterId != null) return OpenWholeSurahReciterIntent(reciterId);
+      return const OpenScreenIntent(AssistantScreen.recitationPlayer);
     }
     return _matchDestination(
       heard: heard,
