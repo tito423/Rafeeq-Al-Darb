@@ -1,5 +1,23 @@
 part of 'assistant_intent.dart';
 
+class CatalogAzkarSection {
+  const CatalogAzkarSection(this.id, this.names);
+  final int id;
+  final List<String> names;
+}
+
+class CatalogWholeReciter {
+  const CatalogWholeReciter(this.id, this.names);
+  final int id;
+  final List<String> names;
+}
+
+class CatalogHadeethCategory {
+  const CatalogHadeethCategory(this.id, this.names);
+  final String id;
+  final List<String> names;
+}
+
 class MemorizeSurahIntent extends AssistantIntent {
   const MemorizeSurahIntent(this.surah);
   final int surah;
@@ -35,7 +53,28 @@ class OpenWholeSurahReciterIntent extends AssistantIntent {
   String toString() => 'whole surah reciter $reciterId';
 }
 
+class OpenHadeethCategoryIntent extends AssistantIntent {
+  const OpenHadeethCategoryIntent(this.categoryId);
+  final String categoryId;
+  @override
+  String toString() => 'hadeeth category $categoryId';
+}
+
 extension on AssistantParser {
+  String? _hadeethCategoryIn(String clean) {
+    String? best;
+    var bestLength = 0;
+    for (final category in catalog.hadeethCategories) {
+      for (final name in category.names.map(AssistantParser._canon)) {
+        if (name.length > bestLength && _hasPhrase(clean, [name])) {
+          best = category.id;
+          bestLength = name.length;
+        }
+      }
+    }
+    return best;
+  }
+
   int? _wholeSurahReciterIn(String clean) {
     final said = clean.split(' ').map(bare).toSet();
     int? best;

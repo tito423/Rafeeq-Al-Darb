@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../app/navigation.dart';
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/db/azkar_repository.dart';
+import '../../../core/db/hadeethenc_repository.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/i18n/supported_locales.dart';
 import '../../../core/services/ayah_audio_service.dart';
@@ -31,6 +32,8 @@ import '../../dorar/presentation/dorar_search_screen.dart';
 import '../../dorar/presentation/dorar_tafseer_screen.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../downloads/presentation/screens/downloads_screen.dart';
+import '../../hadeethenc/data/hadeethenc_providers.dart';
+import '../../hadeethenc/presentation/screens/hadeethenc_category_screen.dart';
 import '../../hajj/presentation/hajj_screen.dart';
 import '../../hifz/presentation/hifz_screen.dart';
 import '../../hifz/presentation/hifz_session_screen.dart';
@@ -100,6 +103,13 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
   } catch (error) {
     debugPrint('assistant catalogue: whole-surah reciters unavailable: $error');
   }
+  var hadeethCategories = const <HadeethCategory>[];
+  try {
+    final hadeethRepo = await ref.watch(hadeethEncRepositoryProvider.future);
+    if (hadeethRepo != null) hadeethCategories = await hadeethRepo.categories();
+  } catch (error) {
+    debugPrint('assistant catalogue: hadeeth categories unavailable: $error');
+  }
   await ShamelaLibrary.instance.load();
   final books = [
     for (final b in libraryBookCatalog) CatalogBook(b.id, b.titleAr, b.authorAr),
@@ -134,6 +144,10 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     ],
     wholeSurahReciters: [
       for (final r in wholeSurahReciters) CatalogWholeReciter(r.id, [r.name]),
+    ],
+    hadeethCategories: [
+      for (final c in hadeethCategories)
+        CatalogHadeethCategory(c.id, [c.title, c.titleAr]),
     ],
     reciters: reciters,
     books: books,
@@ -539,6 +553,20 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       final reciters = await ref.read(mp3RecitersProvider.future);
       final reciter = reciters.where((r) => r.id == reciterId).firstOrNull;
       if (reciter != null) push(ReciterScreen(reciter: reciter));
+    case OpenHadeethCategoryIntent(:final categoryId):
+      final repo = await ref.read(hadeethEncRepositoryProvider.future);
+      final catalog = await ref.read(hadeethEncCatalogProvider.future);
+      final pack = catalog.forLocale(_appLanguage());
+      if (repo == null || pack == null) return;
+      final category =
+          (await repo.categories()).where((c) => c.id == categoryId).firstOrNull;
+      if (category != null) {
+        push(HadeethEncCategoryScreen(
+          repo: repo, category: category,
+          sourceName: catalog.nameFor(pack.lang),
+          sourceUrl: catalog.sourceUrl, rtl: pack.isRtl,
+        ));
+      }
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
     case AuthorBooksIntent(:final author):

@@ -176,18 +176,6 @@ class CatalogBook {
   final String author;
 }
 
-class CatalogAzkarSection {
-  const CatalogAzkarSection(this.id, this.names);
-  final int id;
-  final List<String> names;
-}
-
-class CatalogWholeReciter {
-  const CatalogWholeReciter(this.id, this.names);
-  final int id;
-  final List<String> names;
-}
-
 /// The names the assistant may act on - built from the app's own data.
 class AssistantCatalog {
   const AssistantCatalog({
@@ -196,6 +184,7 @@ class AssistantCatalog {
     this.sunanSurahIds = const {},
     this.azkarSections = const [],
     this.wholeSurahReciters = const [],
+    this.hadeethCategories = const [],
     this.reciters = const [],
     this.books = const [],
     this.screenLabels = const {},
@@ -216,6 +205,7 @@ class AssistantCatalog {
   final Set<int> sunanSurahIds;
   final List<CatalogAzkarSection> azkarSections;
   final List<CatalogWholeReciter> wholeSurahReciters;
+  final List<CatalogHadeethCategory> hadeethCategories;
   final List<CatalogReciter> reciters;
   final List<CatalogBook> books;
 
@@ -425,6 +415,8 @@ class AssistantParser {
         for (final n in r.names) ...norm(n).split(' '),
       for (final r in catalog.wholeSurahReciters)
         for (final n in r.names) ...norm(n).split(' '),
+      for (final c in catalog.hadeethCategories)
+        for (final n in c.names) ...norm(n).split(' '),
       for (final b in catalog.books) ...norm('${b.title} ${b.author}').split(' '),
     }..removeWhere((w) => w.length < 3 || v.contains(w));
     _tiers = [_byLen(v), _byLen(names)];
@@ -563,6 +555,8 @@ class AssistantParser {
     }
     final azkarSection = _azkarSectionIn(clean);
     if (azkarSection != null) return OpenAzkarSectionIntent(azkarSection);
+    final hadeethCategory = _hadeethCategoryIn(clean);
+    if (hadeethCategory != null) return OpenHadeethCategoryIntent(hadeethCategory);
     // «خلي اللغة إنجليزي» / "switch to English" / «поменяй язык на русский»
     if (changing || words.any(_langWord.contains)) {
       for (final e in lex.languageNames.entries) {

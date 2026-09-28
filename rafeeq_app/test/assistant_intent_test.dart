@@ -5,6 +5,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/core/services/recitation_source.dart';
 import 'package:rafeeq_app/features/assistant/data/assistant_intent.dart';
@@ -52,6 +53,17 @@ void main() {
         File('assets/data/azkar.db').absolute.path,
         options: OpenDatabaseOptions(readOnly: true));
     final rows = await db.query('azkar_sections', orderBy: 'id');
+    final hadeethDir = Directory.systemTemp.createTempSync('hadeethenc_test_');
+    final archive = ZipDecoder().decodeBytes(
+        File('assets/data/hadeethenc/hadeethenc_ar.zip').readAsBytesSync());
+    final dbEntry = archive.files.firstWhere(
+        (entry) => entry.isFile && entry.name.toLowerCase().endsWith('.db'));
+    final hadeethFile = File('${hadeethDir.path}/hadeethenc_ar.db')
+      ..writeAsBytesSync(dbEntry.content as List<int>);
+    final hadeethDb = await databaseFactory.openDatabase(hadeethFile.path,
+        options: OpenDatabaseOptions(readOnly: true));
+    final hadeethRows = await hadeethDb.query('categories',
+        columns: ['id', 'title', 'title_ar'], orderBy: 'CAST(id AS INTEGER)');
     final localeData = [
       for (final l in ['ar', 'en', 'es', 'fr', 'pt', 'ru', 'ur'])
         jsonDecode(File('assets/translations/$l.json').readAsStringSync())
@@ -72,6 +84,11 @@ void main() {
             ]),
         ],
         wholeSurahReciters: wholeSurahReciters,
+        hadeethCategories: [
+          for (final row in hadeethRows)
+            CatalogHadeethCategory(row['id'] as String,
+                [row['title'] as String, row['title_ar'] as String]),
+        ],
         reciters: reciters,
         books: books,
         screenLabels: labels.screens,
@@ -79,6 +96,8 @@ void main() {
         optionLabels: labels.options,
         settingSections: labels.sections));
     await db.close();
+    await hadeethDb.close();
+    hadeethDir.deleteSync(recursive: true);
   });
   String of(String s) => p.parse(s).toString();
 
@@ -149,6 +168,14 @@ void main() {
     // Mohamed Hassan exists in the whole-surah catalogue only. The command
     // may open the picker, but must not invent a per-ayah reciter route.
     expect(of('افتح تلاوة آية بآية لمحمد حسان'), 'open ayahPlayer');
+  });
+
+  test('hadeeth encyclopedia category uses only real bundled database rows', () {
+    expect(of('افتح قسم العقيدة في موسوعة الأحاديث النبوية'),
+        'hadeeth category 3');
+    expect(of('وريني الفقه وأصوله'), 'hadeeth category 4');
+    expect(p.parse('افتح قسم الطب في موسوعة الأحاديث النبوية'),
+        isA<UnknownIntent>());
   });
 
   test('whole-surah reciter uses only the mp3quran catalogue', () {
