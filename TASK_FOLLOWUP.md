@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~15:39 (09-28) POST-FALSE-ROUTE FULL VERIFICATION CLEAN: `flutter analyze lib test` = No issues; full `flutter test` = 650 passed, 4 intentionally skipped, 0 failed. This includes the exact device-heard incomplete HadeethEnc phrase remaining unknown rather than opening ruqyah. Tree is otherwise clean except the two pre-existing unrelated untracked script outputs. NEXT EXACT: checkpoint, stop the emulator and prove ADB empty, then run `build_github_release.bat` alone. Record APK bytes/SHA-256 and verify ORT 1.28.2 for all three ABIs plus rotated signing; restart/install that exact APK and resume the voice/UI matrix. No release requested.
+
 ~15:33 (09-28) FALSE-RUQYAH ROUTE FIXED IN CODE: protected the genuine identifier word «رقمه» in the parser vocabulary, so bounded spelling correction can no longer rewrite an incomplete numeric command into a ruqyah label. Added the exact measured ASR phrase as a regression: it is now `UnknownIntent`; genuine «افتح الرقية الشرعية» still opens ruqyah, and both HadeethEnc/nine-books numeric details remain correct. Focused analyze clean; assistant + layout tests 24/24 pass; parser 795 lines under the 800-line guard. The first immediate test rerun hit Flutter's Windows `PathExistsException` for the generated `build/native_assets/windows/sqlite3.dll`; no Dart/Flutter process was alive, so only that exact reproducible generated file was removed and the rerun passed. NEXT EXACT: checkpoint, then full `flutter analyze lib test` and full `flutter test` sequentially. Because runtime code changed, stop the emulator, rebuild signed APK alone, verify ORT/signing, reinstall exact APK, and resume voice/UI checks. No release requested.
 
 ~15:28 (09-28) DEVICE CHECK FOUND A REAL FALSE ROUTE: alternate male Saudi TTS moved the HadeethEnc domain before the ID, but ASR still dropped the entire spoken number and heard «من موسوعة الأحديث النبوية اذتح الحديث الذي رقمه». The parser then incorrectly opened `RuqyahScreen`; screenshot confirmed the actual الرقية الشرعية destination. Root cause is bounded spelling correction: the unknown four-letter «رقمه» is one edit from a ruqyah label token and was corrected to it before destination matching. This is unsafe: a missing identifier must be unknown, never another screen. NEXT EXACT: add the measured heard phrase as a regression, protect the Arabic number-marker word «رقمه» from spelling correction, and prove the incomplete command becomes `UnknownIntent` while genuine «افتح الرقية الشرعية» and numeric detail commands remain correct. Run focused analyze/tests, inventory guard, checkpoint, then full verification + rebuild/install because device code changed. No release requested.
@@ -790,6 +792,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-28 15:35 - Checkpoint full verification after assistant safety fix
 - 2026-09-28 15:31 - Prevent incomplete hadith command opening ruqyah
 - 2026-09-28 15:28 - Record unsafe assistant false route
 - 2026-09-28 15:26 - Record partial assistant device verification
