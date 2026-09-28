@@ -1,6 +1,7 @@
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/utils/digits.dart' show asciiDigits;
 import 'assistant_lexicon.dart' as lex;
+import 'assistant_wake_word.dart';
 
 /// «رفيق» - the in-app assistant's understanding: an Arabic sentence (MSA or
 /// Egyptian, as speech recognition writes it) -> one action in the app.
@@ -286,8 +287,6 @@ int editDistance(String a, String b, int max) {
   return prev[b.length];
 }
 
-final _wakeNorm = {for (final w in lex.wakeWords) norm(w)};
-
 /// What was said after «يا رفيق», or null when it was not called.
 ///
 /// The recogniser writes the name many ways - «يار فيق», «يارفيق», «رفيك»,
@@ -295,49 +294,12 @@ final _wakeNorm = {for (final w in lex.wakeWords) norm(w)};
 /// within one edit of a form of the name counts, and «يا» glued to it is
 /// taken off. An empty string means the name alone.
 String? afterWakeWord(String heard) {
-  final w = norm(heard).split(' ').where((x) => x.isNotEmpty).toList();
-  bool isName(String x) {
-    var t = x;
-    if (t.startsWith('يا') && t.length > 4) t = t.substring(2);
-    if (t.startsWith('ya') && t.length > 5) t = t.substring(2);
-    if (t.startsWith('hey') && t.length > 6) t = t.substring(3);
-    for (final n in _wakeNorm) {
-      if (editDistance(t, n, 1) <= 1) return true;
-    }
-    return false;
-  }
-
-  // The name glued to the next word («يارفيقورين» = «يا رفيق وريني»).
-  String? gluedRest(String x) {
-    var t = x;
-    if (t.startsWith('يا')) t = t.substring(2);
-    for (final n in _wakeNorm) {
-      if (n.length >= 4 && t.length >= n.length + 2 && t.startsWith(n)) {
-        return t.substring(n.length);
-      }
-      // Apply the same one-edit tolerance used by [isName] when the
-      // recogniser glues the command to an imperfect wake word.  The cut can
-      // move by one because that edit may be an inserted or deleted letter:
-      // «فيقطفيها» = «رفيق طفيها» with the initial ر dropped.
-      for (final cut in [n.length - 1, n.length, n.length + 1]) {
-        if (n.length < 4 || cut <= 0 || t.length - cut < 2) continue;
-        if (editDistance(t.substring(0, cut), n, 1) <= 1) {
-          return t.substring(cut);
-        }
-      }
-    }
-    return null;
-  }
-
-  for (var i = 0; i < w.length && i < 4; i++) {
-    if (isName(w[i])) return w.sublist(i + 1).join(' ');
-    final glued = gluedRest(w[i]);
-    if (glued != null) return [glued, ...w.sublist(i + 1)].join(' ');
-    if (i + 1 < w.length && isName(w[i] + w[i + 1])) {
-      return w.sublist(i + 2).join(' ');
-    }
-  }
-  return null;
+  return splitAfterWakeWord(
+    heard,
+    {for (final word in lex.wakeWords) norm(word)},
+    normalize: norm,
+    distance: editDistance,
+  );
 }
 
 /// Day numbers as they are said (Egyptian and MSA), normalised.

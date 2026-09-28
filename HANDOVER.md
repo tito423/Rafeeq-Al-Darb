@@ -2508,9 +2508,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-28 04:30 — IN PROGRESS — resume here**
+**2026-09-28 04:37 — IN PROGRESS — resume here**
 
-Item 4 step 2 done: glued Egyptian off command disables splash on emulator and UI proves switch off
+Split wake-word parsing after full suite caught the 800-line limit; focused checks pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
