@@ -35,6 +35,7 @@ import '../../downloads/data/reciters_provider.dart';
 import '../../downloads/presentation/screens/downloads_screen.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
 import '../../hadeethenc/presentation/screens/hadeethenc_category_screen.dart';
+import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
 import '../../hajj/presentation/hajj_screen.dart';
 import '../../hifz/presentation/hifz_screen.dart';
 import '../../hifz/presentation/hifz_session_screen.dart';
@@ -120,10 +121,8 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     final hadithRepo = await ref.watch(hadithRepositoryProvider.future);
     if (hadithRepo != null) {
       hadithBooks = await hadithRepo.books();
-      hadithChapters = [
-        for (final book in hadithBooks)
-          ...await hadithRepo.chaptersOfBook(book.id),
-      ];
+      hadithChapters = [for (final book in hadithBooks)
+        ...await hadithRepo.chaptersOfBook(book.id)];
     }
   } catch (error) {
     debugPrint('assistant catalogue: hadith books unavailable: $error');
@@ -163,18 +162,12 @@ final assistantParserProvider = FutureProvider<AssistantParser>((ref) async {
     wholeSurahReciters: [
       for (final r in wholeSurahReciters) CatalogWholeReciter(r.id, [r.name]),
     ],
-    hadeethCategories: [
-      for (final c in hadeethCategories)
-        CatalogHadeethCategory(c.id, [c.title, c.titleAr]),
-    ],
-    hadithBooks: [
-      for (final b in hadithBooks)
-        CatalogHadithBook(b.id, [b.nameAr, b.nameEn]),
-    ],
-    hadithChapters: [
-      for (final c in hadithChapters)
-        CatalogHadithChapter(c.bookId, c.chapterNo, [c.nameAr, c.nameEn]),
-    ],
+    hadeethCategories: [for (final c in hadeethCategories)
+      CatalogHadeethCategory(c.id, [c.title, c.titleAr])],
+    hadithBooks: [for (final b in hadithBooks)
+      CatalogHadithBook(b.id, [b.nameAr, b.nameEn])],
+    hadithChapters: [for (final c in hadithChapters)
+      CatalogHadithChapter(c.bookId, c.chapterNo, [c.nameAr, c.nameEn])],
     reciters: reciters,
     books: books,
     screenLabels: labels.screens,
@@ -593,6 +586,17 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           sourceUrl: catalog.sourceUrl, rtl: pack.isRtl,
         ));
       }
+    case OpenHadeethEncDetailIntent(:final itemId):
+      final repo = await ref.read(hadeethEncRepositoryProvider.future);
+      final catalog = await ref.read(hadeethEncCatalogProvider.future);
+      final pack = catalog.forLocale(_appLanguage());
+      final item = await repo?.byId(itemId);
+      if (item != null && pack != null) {
+        push(HadeethEncDetailScreen(
+          item: item, sourceName: catalog.nameFor(pack.lang),
+          sourceUrl: catalog.sourceUrl, rtl: pack.isRtl,
+        ));
+      }
     case OpenHadithBookIntent(:final bookId):
       final repo = await ref.read(hadithRepositoryProvider.future);
       if (repo == null) return;
@@ -616,9 +620,8 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       final chapterItems = await repo.hadithsOfChapter(bookId, item.chapterNo);
       final index = chapterItems.indexWhere((h) => h.id == item.id);
       if (index >= 0) {
-        push(HadithDetailScreen(
-          book: book, chapterHadiths: chapterItems, initialIndex: index,
-        ));
+        push(HadithDetailScreen(book: book,
+            chapterHadiths: chapterItems, initialIndex: index));
       }
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
@@ -643,7 +646,6 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       break;
   }
 }
-
 
 /// Opened if it is on the phone, otherwise downloaded first - the same
 /// path the library's search takes. A book imported from Shamela is always

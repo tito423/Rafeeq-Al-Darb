@@ -48,6 +48,7 @@ void main() {
           as Map<String, dynamic>,
   ]);
   late AssistantParser p;
+  late String firstHadeethEncId;
   setUpAll(() async {
     final db = await databaseFactory.openDatabase(
         File('assets/data/azkar.db').absolute.path,
@@ -64,6 +65,9 @@ void main() {
         options: OpenDatabaseOptions(readOnly: true));
     final hadeethRows = await hadeethDb.query('categories',
         columns: ['id', 'title', 'title_ar'], orderBy: 'CAST(id AS INTEGER)');
+    firstHadeethEncId = (await hadeethDb.query('hadeeths',
+        columns: ['id'], orderBy: 'CAST(id AS INTEGER)', limit: 1))
+        .single['id'] as String;
     final hadithArchive = ZipDecoder()
         .decodeBytes(File('assets/data/hadith.zip').readAsBytesSync());
     final hadithEntry = hadithArchive.files.firstWhere(
@@ -201,6 +205,14 @@ void main() {
     expect(of('وريني الفقه وأصوله'), 'hadeeth category 4');
     expect(p.parse('افتح قسم الطب في موسوعة الأحاديث النبوية'),
         isA<UnknownIntent>());
+  });
+
+  test('hadeeth encyclopedia detail requires its explicit domain and real id', () {
+    expect(firstHadeethEncId, '1751');
+    expect(of('افتح حديث رقم 1751 من موسوعة الأحاديث النبوية'),
+        'hadeethenc detail 1751');
+    expect(of('افتح الحديث رقم 1751 من صحيح البخاري'),
+        'hadith detail 1/1751');
   });
 
   test('nine-books commands use exact real bundled book names', () {

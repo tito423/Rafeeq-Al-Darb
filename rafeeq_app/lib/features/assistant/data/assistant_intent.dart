@@ -574,10 +574,8 @@ class AssistantParser {
       final b = _book(words.sublist(bk + 1).join(' '));
       if (b != null) return OpenBookIntent(b);
     }
-    final azkarSection = _azkarSectionIn(clean);
-    if (azkarSection != null) return OpenAzkarSectionIntent(azkarSection);
-    final hadeethCategory = _hadeethCategoryIn(clean);
-    if (hadeethCategory != null) return OpenHadeethCategoryIntent(hadeethCategory);
+    final collectionDetail = _collectionDetailIn(clean);
+    if (collectionDetail != null) return collectionDetail;
     // «خلي اللغة إنجليزي» / "switch to English" / «поменяй язык на русский»
     if (changing || words.any(_langWord.contains)) {
       for (final e in lex.languageNames.entries) {

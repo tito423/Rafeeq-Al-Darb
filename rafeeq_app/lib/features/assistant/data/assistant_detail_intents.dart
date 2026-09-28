@@ -73,6 +73,13 @@ class OpenHadeethCategoryIntent extends AssistantIntent {
   String toString() => 'hadeeth category $categoryId';
 }
 
+class OpenHadeethEncDetailIntent extends AssistantIntent {
+  const OpenHadeethEncDetailIntent(this.itemId);
+  final String itemId;
+  @override
+  String toString() => 'hadeethenc detail $itemId';
+}
+
 class OpenHadithBookIntent extends AssistantIntent {
   const OpenHadithBookIntent(this.bookId);
   final int bookId;
@@ -97,6 +104,26 @@ class OpenHadithDetailIntent extends AssistantIntent {
 }
 
 extension on AssistantParser {
+  AssistantIntent? _collectionDetailIn(String clean) {
+    final azkarSection = _azkarSectionIn(clean);
+    if (azkarSection != null) return OpenAzkarSectionIntent(azkarSection);
+    final encId = _hadeethEncNumberIn(clean);
+    if (encId != null) return OpenHadeethEncDetailIntent(encId);
+    final category = _hadeethCategoryIn(clean);
+    return category == null ? null : OpenHadeethCategoryIntent(category);
+  }
+
+  String? _hadeethEncNumberIn(String clean) {
+    final domains = const [
+      'موسوعة الأحاديث النبوية',
+      'hadeeth encyclopedia',
+      'hadith encyclopedia',
+    ].map(AssistantParser._canon);
+    if (!_hasPhrase(clean, domains)) return null;
+    return RegExp(r'(?:رقم|number|no)?\s*(\d{1,8})(?:\s|$)')
+        .firstMatch(clean)?.group(1);
+  }
+
   int? _hadithNumberIn(String clean) {
     const markers = {'حديث', 'الحديث', 'hadith', 'hadeeth'};
     if (!clean.split(' ').map(bare).any(markers.contains)) return null;
