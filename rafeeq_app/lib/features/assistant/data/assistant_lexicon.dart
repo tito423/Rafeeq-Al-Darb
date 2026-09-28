@@ -70,6 +70,11 @@ const playVerbs = <String>[
   'چلاؤ', 'چلائیں', 'سناؤ', 'سنائیں', 'پڑھو', 'لگاؤ',
 ];
 
+const memorizeVerbs = <String>[
+  'احفظ', 'حفظ', 'حفظني', 'ذاكر', 'memorize', 'memorise', 'memorizar',
+  'memoriser', 'заучить', 'выучить', 'حفظ کرو',
+];
+
 /// «سورة» in every language (Russian and Urdu go through `norm` too).
 const surahWords = <String>[
   'سوره', 'سورت', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',

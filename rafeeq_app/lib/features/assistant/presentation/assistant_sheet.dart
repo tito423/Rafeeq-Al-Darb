@@ -31,6 +31,7 @@ import '../../downloads/data/reciters_provider.dart';
 import '../../downloads/presentation/screens/downloads_screen.dart';
 import '../../hajj/presentation/hajj_screen.dart';
 import '../../hifz/presentation/hifz_screen.dart';
+import '../../hifz/presentation/hifz_session_screen.dart';
 import '../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../home/presentation/widgets/on_this_day_sheet.dart';
 import '../../khatma/presentation/khatma_screen.dart';
@@ -481,6 +482,10 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
         edition: reciterId ?? ref.read(selectedReciterProvider),
         wholeMushaf: false,
       );
+    case MemorizeSurahIntent(:final surah):
+      final repo = await ref.read(quranRepositoryProvider.future);
+      final item = (await repo.surahs()).where((s) => s.id == surah).firstOrNull;
+      if (item != null) push(HifzSessionScreen.surah(item));
     case OpenBookIntent(:final bookId):
       await _openBook(nav, bookId);
     case AuthorBooksIntent(:final author):

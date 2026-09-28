@@ -90,6 +90,8 @@ void main() {
     expect(of('شغل سورة آل عمران'), 'play surah 3 by -');
     expect(of('شغل سورة ١٨'), 'play surah 18 by -');
     expect(of('يا رفيق شغل البقرة بصوت الحصري'), startsWith('play surah 2 by ar.husary'));
+    expect(of('احفظ سورة الكهف'), 'memorize surah 18');
+    expect(of('حفظني البقرة'), 'memorize surah 2');
   });
 
   test('books and authors from the library', () {

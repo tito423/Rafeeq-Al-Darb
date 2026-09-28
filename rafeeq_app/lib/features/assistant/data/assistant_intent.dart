@@ -80,6 +80,13 @@ class PlaySurahIntent extends AssistantIntent {
   String toString() => 'play surah $surah by ${reciterId ?? '-'}';
 }
 
+class MemorizeSurahIntent extends AssistantIntent {
+  const MemorizeSurahIntent(this.surah);
+  final int surah;
+  @override
+  String toString() => 'memorize surah $surah';
+}
+
 class OpenBookIntent extends AssistantIntent {
   const OpenBookIntent(this.bookId);
   final String bookId;
@@ -379,7 +386,7 @@ class AssistantParser {
 
     // Every word the assistant can act on, for [_correct].
     final v = <String>{
-      ..._open, ..._play, ..._surahWord, ..._bookWord, ..._booksOf,
+      ..._open, ..._play, ..._memorize, ..._surahWord, ..._bookWord, ..._booksOf,
       ..._shamelaWord, ..._download,
       ..._change, ..._on, ..._off, ..._langWord, ..._themeWord,
       for (final l in _screens.values) for (final ph in l) ...ph.split(' '),
@@ -452,6 +459,7 @@ class AssistantParser {
   static final _fillers = {..._normSet(lex.fillerWords), ..._latinArticles};
   static final _open = _normSet(lex.openVerbs);
   static final _play = _normSet(lex.playVerbs);
+  static final _memorize = _normSet(lex.memorizeVerbs);
   static final _surahWord = _normSet(lex.surahWords);
   static final _bookWord = _normSet(lex.bookWords);
   static final _shamelaWord = _normSet(lex.shamelaWords);
@@ -493,6 +501,7 @@ class AssistantParser {
     final said = all.toSet();
 
     final playing = words.any(_play.contains);
+    final memorizing = words.any(_memorize.contains);
     final changing = words.any(_change.contains);
 
     // «حدث في مثل هذا اليوم [١٢ ربيع الأول]»
@@ -564,8 +573,9 @@ class AssistantParser {
       }
     }
     // «شغل سورة الكهف بصوت المنشاوي» / "play surah Kahf by Alafasy"
-    final surah = _surahIn(words, requireWord: !playing);
+    final surah = _surahIn(words, requireWord: !(playing || memorizing));
     if (surah != null) {
+      if (memorizing) return MemorizeSurahIntent(surah);
       // The surah's own words are not a reciter's name («آل عمران» is not
       // the reciter «عمران»).
       final sw = {for (final k in _surahKeys[surah - 1]) ...k.split(' ')};
