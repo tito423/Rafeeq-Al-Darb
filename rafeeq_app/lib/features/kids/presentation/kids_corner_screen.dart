@@ -12,7 +12,6 @@ import '../data/journey_store.dart';
 import '../data/kids_content.dart';
 import '../data/kids_stages.dart';
 import 'ayah_game_screen.dart';
-import 'journey_screen.dart';
 import 'kids_stage_screen.dart';
 
 /// «ركن الأطفال» (owner, 2026-09-29): big, bright, and only real content -
@@ -69,30 +68,15 @@ class KidsCornerScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: _BigTile(
-                  color: const Color(0xFFF79F1F),
-                  icon: Icons.extension_rounded,
-                  title: 'kids.game'.tr(),
-                  subtitle: 'kids.game_sub'.tr(),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                      builder: (_) => const AyahGameScreen())),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _BigTile(
-                  color: const Color(0xFF8854D0),
-                  icon: Icons.emoji_events_rounded,
-                  title: 'journey.title'.tr(),
-                  subtitle: 'kids.journey_sub'.tr(),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                      builder: (_) => const JourneyScreen())),
-                ),
-              ),
-            ],
+          // Only what is for children lives here; «رحلتي» is for every age
+          // and has its own entry in More (owner, 2026-09-29).
+          _BigTile(
+            color: const Color(0xFFF79F1F),
+            icon: Icons.extension_rounded,
+            title: 'kids.game'.tr(),
+            subtitle: 'kids.game_sub'.tr(),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const AyahGameScreen())),
           ),
           const SizedBox(height: 20),
           _Heading(icon: Icons.stairs_rounded, text: 'kids.path'.tr()),
@@ -192,6 +176,29 @@ class _Heading extends StatelessWidget {
       );
 }
 
+/// A coloured glow under a rounded card. It is painted OUTSIDE the Material:
+/// an `Ink` shadow is clipped to the Material's rectangle, which showed as a
+/// square block behind the rounded corners in the light theme.
+class _Shadowed extends StatelessWidget {
+  final Color color;
+  final Widget child;
+  const _Shadowed({required this.color, required this.child});
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+                color: color.withValues(alpha: 0.32),
+                blurRadius: 14,
+                offset: const Offset(0, 6)),
+          ],
+        ),
+        child: Material(color: Colors.transparent, child: child),
+      );
+}
+
 class _BigTile extends StatelessWidget {
   final Color color;
   final IconData icon;
@@ -207,8 +214,8 @@ class _BigTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Material(
-        color: Colors.transparent,
+  Widget build(BuildContext context) => _Shadowed(
+        color: color,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(24),
@@ -221,12 +228,6 @@ class _BigTile extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [color, Color.lerp(color, Colors.black, 0.28)!],
               ),
-              boxShadow: [
-                BoxShadow(
-                    color: color.withValues(alpha: 0.35),
-                    blurRadius: 14,
-                    offset: const Offset(0, 6)),
-              ],
             ),
             child: Row(
               children: [
@@ -285,8 +286,8 @@ class _StageCard extends StatelessWidget {
     final complete = done == total;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
+      child: _Shadowed(
+        color: color,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(24),
@@ -299,12 +300,6 @@ class _StageCard extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [color, Color.lerp(color, Colors.black, 0.3)!],
               ),
-              boxShadow: [
-                BoxShadow(
-                    color: color.withValues(alpha: 0.3),
-                    blurRadius: 12,
-                    offset: const Offset(0, 5)),
-              ],
             ),
             child: Row(
               children: [

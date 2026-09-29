@@ -2510,9 +2510,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 19:18 — IN PROGRESS — resume here**
+**2026-09-29 19:45 — IN PROGRESS — resume here**
 
-Handover: kids corner as a 5-stage age path (Juz Amma to half the Quran, pinned against the mushaf DB), stage screen, journey for all ages; HANDOVER/NEXT_PROMPT rewritten; 667 tests, hosted content 7/7
+Kids corner seen on emulator; kids-only (journey tile out), toast/remaining-count/stage-4/path-order texts fixed, rounded card shadows
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

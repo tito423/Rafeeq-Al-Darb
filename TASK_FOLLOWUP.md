@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~19:45 (09-29, Opus) KIDS PATH SEEN ON emulator-5554 (-gpu host, debug x64): 5 stage cards, stage screen, «حفظتها» (bar moved 0->1/11, review enabled), stage game (right answer green), review (memorised only), «سمّع» opens hifz, journey 50 pts = 2 surahs x20 + 2 answers x5, badge «أول سورة محفوظة», landscape (real user_rotation) + light + dark. FIXED after seeing: owner said kids corner = kids only -> «رحلتي» tile removed from it (stays in More, for all ages; kids.journey_sub dropped x7); toast said «حفظت سورة سُورَةُ…» (nameAr already has سورة in all 114 rows) -> template fixed; hifz «بقي» counted the current ayah (7 on ayah 1 of 7) -> list.length-_at-1; stage 4 text named adh-Dhariyat which is in stage 5 -> «من التحريم إلى الطور» x7; path_sub claimed shortest->longest, real order is mushaf backwards -> fixed x7; card shadows clipped square in light theme -> painted outside Material. Journey note now states surah = 20 pts. analyze clean, 667 tests pass. NEXT EXACT: owner's new Home order - ONE prayer photo covering the whole prayer card (next prayer + slides), backgrounds for the sunan, hadith-of-the-day and quote-of-the-day cards, legible, harmonious with every theme. Then ask about 3.71.0.
+
 ~19:10 (09-29) HANDOVER («جهّز الدنيا»). Kids path (5 age stages Juz ʿAmma -> Maryam, 97 surahs), stage screen, journey for all ages: IN CODE, analyze clean, 667 tests pass, NOT seen on a device. kids_stages_test caught adh-Dhariyat opening in Juz 26 (fixed). Verified now: hosted content 7/7 range 206, v3.70.0 published and verified earlier. NEXT EXACT: follow NEXT_PROMPT.md step 1 (emulator -gpu host, check the kids path), then ask the owner about 3.71.0.
 
 ~18:35 (09-29) V3.70.0 PUBLISHED AND VERIFIED: tag v3.70.0 = HEAD 1635579e (targets master), asset RafeeqAlDarb-v3.70.0.apk 314,772,227 B, SHA-256 91332452AE9094B12FF361F4C278B821CF991AA497B84A7D1DBA2A3B01C2EBF9 = GitHub digest = full re-download; range request 206; not draft/prerelease; aapt2: versionCode 84 / versionName 3.70.0; sherpa ORT 1.28.2 on all three ABIs; rotated signing verified. v3.69.3 release and tag deleted (ref API 404); v3.51.0 and content-* kept. NEXT: owner tries 3.70.0 on his phone - «يا رفيق» from outside the app (grant «الظهور فوق التطبيقات» first), the kids corner, «رحلتي». Real prizes for gamification are NOT built (need a server).
@@ -850,6 +852,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 19:45 - Kids corner seen on emulator; kids-only (journey tile out), toast/remaining-count/stage-4/path-order texts fixed, rounded card shadows
 - 2026-09-29 19:18 - Handover: kids corner as a 5-stage age path (Juz Amma to half the Quran, pinned against the mushaf DB), stage screen, journey for all ages; HANDOVER/NEXT_PROMPT rewritten; 667 tests, hosted content 7/7
 - 2026-09-29 18:29 - Record verified v3.70.0 GitHub release (tag == HEAD, SHA matches re-download); v3.69.3 removed
 - 2026-09-29 18:23 - Kids corner, game and My Journey seen working on the emulator; bump to 3.70.0+84 for release

@@ -291,7 +291,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
                 if (_crossesSurahs) _surahNames[ayah.surahId] ?? '',
                 trn(
                   'hifz.ayah_of',
-                  args: ['${ayah.ayahNumber}', '${list.length - _at}'],
+                  args: ['${ayah.ayahNumber}', '${list.length - _at - 1}'],
                 ),
               ].where((t) => t.isNotEmpty).join(' — '),
               style: TextStyle(color: scheme.onSurfaceVariant),

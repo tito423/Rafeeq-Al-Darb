@@ -9,8 +9,9 @@
 /// the end of every surah. So the path runs from the end of the mushaf
 /// backwards, juz by juz - Juz ʿAmma, Juz Tabārak, Juz 28 and 27 - to the
 /// first surah that opens inside Juz 16 (Maryam), where the second half of
-/// the Qur'an begins. Within a stage the surahs go from the shortest to the
-/// longest.
+/// the Qur'an begins. Within a stage the surahs follow the mushaf backwards
+/// (only al-Fātiḥah is placed first); that is broadly short to long but not
+/// strictly - adh-Dhāriyāt (60 ayahs) comes before Qāf (45).
 ///
 /// The juz ranges below are checked against `quran_local.db` by
 /// `test/kids_stages_test.dart`.
