@@ -12,6 +12,8 @@ import '../../../dedications/presentation/dedications_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../hajj/presentation/hajj_screen.dart';
 import '../../../hifz/presentation/hifz_screen.dart';
+import '../../../kids/presentation/journey_screen.dart';
+import '../../../kids/presentation/kids_corner_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/data/ruqyah_catalog.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
@@ -102,6 +104,8 @@ class MoreScreen extends ConsumerWidget {
               'tajweed.title',
               'hajj.title',
               'ruqyah.audio_title',
+              'kids.title',
+              'journey.title',
               'dedication.title',
             ]),
             icon: Icons.auto_awesome_rounded,
@@ -170,6 +174,27 @@ class MoreScreen extends ConsumerWidget {
                   MaterialPageRoute<void>(
                     builder: (_) => const RuqyahAudioScreen(),
                   ),
+                ),
+              ),
+
+              // Owner, 2026-09-29: a kids' corner and «رحلتي».
+              IslamicActionCard(
+                icon: Icons.child_care_rounded,
+                accent: const Color(0xFFF79F1F),
+                title: 'kids.title'.tr(),
+                subtitle: 'kids.card_sub'.tr(),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                      builder: (_) => const KidsCornerScreen()),
+                ),
+              ),
+              IslamicActionCard(
+                icon: Icons.emoji_events_rounded,
+                accent: const Color(0xFF8854D0),
+                title: 'journey.title'.tr(),
+                subtitle: 'journey.card_sub'.tr(),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const JourneyScreen()),
                 ),
               ),
 

@@ -16,6 +16,7 @@ import '../../../../core/utils/byte_formatter.dart' show ratio;
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../../core/widgets/remote_tap.dart';
+import '../../../kids/data/journey_store.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../data/tasbeeh_catalog.dart';
 
@@ -104,6 +105,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       (p) => p.setInt('tasbeeh_total', _total),
     );
     ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', 1);
+    JourneyStore.instance.record('tasbeeh');
     // Celebrate on a completed finite target of 1000, or every 1000 counts
     // in no-limit mode.
     final hitMilestone = _target == null

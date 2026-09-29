@@ -2220,5 +2220,43 @@
     "arafah": "Day of 'Arafah",
     "eid_adha": "Eid al-Adha",
     "tashreeq": "Days of Tashreeq (11–13 Dhul-Hijjah)"
+  },
+  "kids": {
+    "title": "Kids' corner",
+    "card_sub": "Short surahs, daily adhkar and “Complete the ayah”",
+    "hello": "Hello, champion!",
+    "hello_sub": "Learn, memorise and play",
+    "game": "Complete the ayah",
+    "game_sub": "Pick the missing word",
+    "journey_sub": "Your stars and badges",
+    "surahs": "My short surahs",
+    "azkar": "My everyday adhkar",
+    "note": "The {} surahs open in the memorisation screen; the adhkar are from Hisn al-Muslim.",
+    "score": "{} right out of {}",
+    "right": "Well done! ⭐",
+    "wrong": "Try again",
+    "next": "Next"
+  },
+  "journey": {
+    "title": "My journey",
+    "card_sub": "Your level, streak and badges",
+    "level": "Level {}",
+    "points": "{} points — next level at {}",
+    "streak": "Day streak",
+    "dhikr": "Adhkar",
+    "game": "Right answers",
+    "badges": "Badges",
+    "note": "Points come from what you actually do in the app: each dhikr and each tasbeeh is one point, each right answer in “Complete the ayah” five. Kept on your device only.",
+    "badge_first_dhikr": "First dhikr",
+    "badge_dhikr_100": "100 adhkar",
+    "badge_dhikr_1000": "1,000 adhkar",
+    "badge_tasbeeh_1000": "1,000 tasbeeh",
+    "badge_tasbeeh_10000": "10,000 tasbeeh",
+    "badge_streak_3": "3 days in a row",
+    "badge_streak_7": "A full week",
+    "badge_streak_30": "A full month",
+    "badge_game_1": "First right answer",
+    "badge_game_50": "50 right answers",
+    "badge_level_5": "Level 5"
   }
 }

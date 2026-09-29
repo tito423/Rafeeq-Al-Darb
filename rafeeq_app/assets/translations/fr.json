@@ -2220,5 +2220,43 @@
     "arafah": "Jour de 'Arafa",
     "eid_adha": "Aïd al-Adha",
     "tashreeq": "Jours de Tachrîq (11–13 Dhou al-Hijja)"
+  },
+  "kids": {
+    "title": "Coin des enfants",
+    "card_sub": "Sourates courtes, adhkâr quotidiens et « Complète le verset »",
+    "hello": "Salut, champion !",
+    "hello_sub": "Apprends, mémorise et joue",
+    "game": "Complète le verset",
+    "game_sub": "Choisis le mot manquant",
+    "journey_sub": "Tes étoiles et badges",
+    "surahs": "Mes sourates courtes",
+    "azkar": "Mes adhkâr de chaque jour",
+    "note": "Les {} sourates s’ouvrent dans l’écran de mémorisation ; les adhkâr viennent de Hisn al-Muslim.",
+    "score": "{} justes sur {}",
+    "right": "Bravo ! ⭐",
+    "wrong": "Essaie encore",
+    "next": "Suivant"
+  },
+  "journey": {
+    "title": "Mon parcours",
+    "card_sub": "Ton niveau, ta série et tes badges",
+    "level": "Niveau {}",
+    "points": "{} points — niveau suivant à {}",
+    "streak": "Jours d’affilée",
+    "dhikr": "Adhkâr",
+    "game": "Bonnes réponses",
+    "badges": "Badges",
+    "note": "Les points viennent de ce que tu fais vraiment dans l’app : chaque dhikr et chaque tasbîh vaut un point, chaque bonne réponse à « Complète le verset » cinq. Gardés sur ton appareil uniquement.",
+    "badge_first_dhikr": "Premier dhikr",
+    "badge_dhikr_100": "100 adhkâr",
+    "badge_dhikr_1000": "1 000 adhkâr",
+    "badge_tasbeeh_1000": "1 000 tasbîh",
+    "badge_tasbeeh_10000": "10 000 tasbîh",
+    "badge_streak_3": "3 jours d’affilée",
+    "badge_streak_7": "Une semaine entière",
+    "badge_streak_30": "Un mois entier",
+    "badge_game_1": "Première bonne réponse",
+    "badge_game_50": "50 bonnes réponses",
+    "badge_level_5": "Niveau 5"
   }
 }

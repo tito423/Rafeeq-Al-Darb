@@ -13,6 +13,7 @@ import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
+import '../../../kids/data/journey_store.dart';
 import '../../../quotes/data/quote_background_catalog.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
@@ -93,6 +94,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
       prefs.setInt('azkar_total', total + 1);
     });
     ref.read(syncServiceProvider).incrementCounter('azkar_total', 1);
+    JourneyStore.instance.record('dhikr');
 
     // Auto-advance once this dhikr's real repeat count is reached.
     if ((_counts[_index] ?? 0) >= target) {

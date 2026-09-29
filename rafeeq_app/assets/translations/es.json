@@ -2220,5 +2220,43 @@
     "arafah": "Día de Arafa",
     "eid_adha": "Eid al-Adha",
     "tashreeq": "Días de Tashrik (11–13 de Dhul Hiyya)"
+  },
+  "kids": {
+    "title": "Rincón infantil",
+    "card_sub": "Suras cortas, adhkar diarios y «Completa la aleya»",
+    "hello": "¡Hola, campeón!",
+    "hello_sub": "Aprende, memoriza y juega",
+    "game": "Completa la aleya",
+    "game_sub": "Elige la palabra que falta",
+    "journey_sub": "Tus estrellas e insignias",
+    "surahs": "Mis suras cortas",
+    "azkar": "Mis adhkar diarios",
+    "note": "Las {} suras se abren en la pantalla de memorización; los adhkar son de Hisn al-Muslim.",
+    "score": "{} correctas de {}",
+    "right": "¡Muy bien! ⭐",
+    "wrong": "Inténtalo otra vez",
+    "next": "Siguiente"
+  },
+  "journey": {
+    "title": "Mi camino",
+    "card_sub": "Tu nivel, racha e insignias",
+    "level": "Nivel {}",
+    "points": "{} puntos — siguiente nivel en {}",
+    "streak": "Días seguidos",
+    "dhikr": "Adhkar",
+    "game": "Respuestas correctas",
+    "badges": "Insignias",
+    "note": "Los puntos vienen de lo que haces en la app: cada dhikr y cada tasbih es un punto, cada respuesta correcta en «Completa la aleya» cinco. Se guardan solo en tu dispositivo.",
+    "badge_first_dhikr": "Primer dhikr",
+    "badge_dhikr_100": "100 adhkar",
+    "badge_dhikr_1000": "1.000 adhkar",
+    "badge_tasbeeh_1000": "1.000 tasbih",
+    "badge_tasbeeh_10000": "10.000 tasbih",
+    "badge_streak_3": "3 días seguidos",
+    "badge_streak_7": "Una semana entera",
+    "badge_streak_30": "Un mes entero",
+    "badge_game_1": "Primera respuesta correcta",
+    "badge_game_50": "50 respuestas correctas",
+    "badge_level_5": "Nivel 5"
   }
 }

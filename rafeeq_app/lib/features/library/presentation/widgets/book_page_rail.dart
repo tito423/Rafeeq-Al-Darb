@@ -76,7 +76,10 @@ class BookPageRail extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              // The top 30 dp is where the always-shown page bubble sits, so
+              // it does not cover the source line above the rail (seen on
+              // emulator-5554, 2026-09-29).
+              padding: const EdgeInsets.fromLTRB(8, 30, 8, 0),
               child: Row(
                 children: [
                   SizedBox(
