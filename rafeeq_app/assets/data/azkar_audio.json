@@ -1,6 +1,7 @@
 {
  "source": "https://www.hisnmuslim.com (api/ar)",
  "audio": {
+  "1": "https://www.hisnmuslim.com/audio/ar/1.mp3",
   "2": "https://www.hisnmuslim.com/audio/ar/3.mp3",
   "5": "https://www.hisnmuslim.com/audio/ar/5.mp3",
   "6": "https://www.hisnmuslim.com/audio/ar/6.mp3",
@@ -97,6 +98,7 @@
   "151": "https://www.hisnmuslim.com/audio/ar/120.mp3",
   "152": "https://www.hisnmuslim.com/audio/ar/121.mp3",
   "153": "https://www.hisnmuslim.com/audio/ar/122.mp3",
+  "154": "https://www.hisnmuslim.com/audio/ar/123.mp3",
   "155": "https://www.hisnmuslim.com/audio/ar/124.mp3",
   "156": "https://www.hisnmuslim.com/audio/ar/125.mp3",
   "157": "https://www.hisnmuslim.com/audio/ar/126.mp3",
@@ -119,6 +121,7 @@
   "179": "https://www.hisnmuslim.com/audio/ar/147.mp3",
   "180": "https://www.hisnmuslim.com/audio/ar/148.mp3",
   "182": "https://www.hisnmuslim.com/audio/ar/150.mp3",
+  "184": "https://www.hisnmuslim.com/audio/ar/152.mp3",
   "186": "https://www.hisnmuslim.com/audio/ar/154.mp3",
   "187": "https://www.hisnmuslim.com/audio/ar/155.mp3",
   "188": "https://www.hisnmuslim.com/audio/ar/156.mp3",
@@ -182,7 +185,9 @@
   "256": "https://www.hisnmuslim.com/audio/ar/221.mp3",
   "257": "https://www.hisnmuslim.com/audio/ar/222.mp3",
   "258": "https://www.hisnmuslim.com/audio/ar/223.mp3",
+  "259": "https://www.hisnmuslim.com/audio/ar/224.mp3",
   "260": "https://www.hisnmuslim.com/audio/ar/225.mp3",
+  "261": "https://www.hisnmuslim.com/audio/ar/226.mp3",
   "262": "https://www.hisnmuslim.com/audio/ar/227.mp3",
   "263": "https://www.hisnmuslim.com/audio/ar/228.mp3",
   "267": "https://www.hisnmuslim.com/audio/ar/232.mp3",
@@ -212,6 +217,7 @@
   "294": "https://www.hisnmuslim.com/audio/ar/259.mp3",
   "295": "https://www.hisnmuslim.com/audio/ar/260.mp3",
   "296": "https://www.hisnmuslim.com/audio/ar/261.mp3",
+  "297": "https://www.hisnmuslim.com/audio/ar/262.mp3",
   "298": "https://www.hisnmuslim.com/audio/ar/263.mp3",
   "299": "https://www.hisnmuslim.com/audio/ar/264.mp3"
  }

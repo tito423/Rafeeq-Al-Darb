@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 22:59 — IN PROGRESS — resume here**
+**2026-09-29 23:13 — IN PROGRESS — resume here**
 
-Adhkar audio stage A: 213 of 302 adhkar paired word-for-word with hisnmuslim.com recordings (all urls checked); owner queue logged
+Listen button on every dhikr with a word-for-word recording (219 of 302), shared player, credited; seen on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

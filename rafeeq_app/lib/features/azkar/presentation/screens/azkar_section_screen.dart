@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/db/azkar_repository.dart';
 import '../../../../core/db/models.dart';
+import '../../../../core/services/audio_exclusive.dart';
+import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/services/sync_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
@@ -15,6 +17,7 @@ import '../../../../core/widgets/remote_tap.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
 import '../../../kids/data/journey_store.dart';
 import '../../../quotes/data/quote_background_catalog.dart';
+import '../../data/azkar_audio.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
 ///
@@ -73,7 +76,37 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    // A dhikr's recording does not outlive its screen.
+    if (_listeningTo != null &&
+        AyahAudioService.instance.isTrack('dhikr:$_listeningTo')) {
+      AyahAudioService.instance.stop();
+    }
     super.dispose();
+  }
+
+  /// The dhikr whose recording was last started here.
+  int? _listeningTo;
+
+  /// Plays the current dhikr's hisnmuslim.com recording on the app's one
+  /// player (so the notification can stop it too), or stops it.
+  Future<void> _listen(AzkarItem item, String url) async {
+    final audio = AyahAudioService.instance;
+    if (audio.isTrack('dhikr:${item.id}') && audio.isPlaying) {
+      await audio.stop();
+      return;
+    }
+    await AudioExclusive.silenceSpeakers();
+    _listeningTo = item.id;
+    final ok = await audio.playTrack(
+      id: 'dhikr:${item.id}',
+      url: url,
+      title: widget.section.localizedTitle(),
+      artist: 'hisnmuslim.com',
+    );
+    if (!ok && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('azkar.listen_failed'.tr())));
+    }
   }
 
   Color get _accent => widget.accent ?? AppColors.gold;
@@ -124,7 +157,14 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
         : PageView.builder(
             controller: _pageController,
             itemCount: items.length + 1, // +1 → "section done"
-            onPageChanged: (i) => setState(() => _index = i),
+            onPageChanged: (i) {
+              // Swiping on stops the dhikr that was being listened to.
+              if (_listeningTo != null &&
+                  AyahAudioService.instance.isTrack('dhikr:$_listeningTo')) {
+                AyahAudioService.instance.stop();
+              }
+              setState(() => _index = i);
+            },
             itemBuilder: (context, i) {
               if (i == items.length) {
                 return _DonePage(
@@ -148,6 +188,15 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
             index: _index,
             total: items.length,
             onTap: _tapCount,
+            listen: switch (ref.watch(azkarAudioProvider).valueOrNull?[
+                items[_index].id]) {
+              final String url => _ListenButton(
+                  id: items[_index].id,
+                  accent: _accent,
+                  onTap: () => _listen(items[_index], url),
+                ),
+              _ => null,
+            },
           )
         : null;
 
@@ -341,6 +390,9 @@ class _BottomControls extends StatelessWidget {
   final int total;
   final VoidCallback onTap;
 
+  /// The listen button, when this dhikr has a recording.
+  final Widget? listen;
+
   const _BottomControls({
     required this.accent,
     required this.count,
@@ -348,6 +400,7 @@ class _BottomControls extends StatelessWidget {
     required this.index,
     required this.total,
     required this.onTap,
+    this.listen,
   });
 
   @override
@@ -361,6 +414,7 @@ class _BottomControls extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (listen != null) ...[listen!, const SizedBox(height: 10)],
           // Tappable countdown ring — shows repeats *remaining* (counts down),
           // with a check once complete. Tapping anywhere on it counts.
           RemoteTap(
@@ -428,6 +482,34 @@ class _BottomControls extends StatelessWidget {
       ),
     );
   }
+}
+
+/// «استمع» / «إيقاف» for one dhikr, following the shared player.
+class _ListenButton extends StatelessWidget {
+  final int id;
+  final Color accent;
+  final VoidCallback onTap;
+  const _ListenButton(
+      {required this.id, required this.accent, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => StreamBuilder<bool>(
+        stream: AyahAudioService.instance.isPlayingStream,
+        builder: (context, snap) {
+          final on = (snap.data ?? false) &&
+              AyahAudioService.instance.isTrack('dhikr:$id');
+          return FilledButton.tonalIcon(
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.white.withValues(alpha: 0.14),
+              foregroundColor: Colors.white,
+              side: BorderSide(color: accent.withValues(alpha: 0.8)),
+            ),
+            onPressed: onTap,
+            icon: Icon(on ? Icons.stop_rounded : Icons.headphones_rounded),
+            label: Text(on ? 'azkar.listen_stop'.tr() : 'azkar.listen'.tr()),
+          );
+        },
+      );
 }
 
 /// Page indicator: elongated-active dots when the section is short enough to

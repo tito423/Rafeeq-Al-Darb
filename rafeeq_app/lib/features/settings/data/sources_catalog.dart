@@ -99,6 +99,11 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // MIT-licensed transcription in scripts/azkar_hisn/.
       const SourceEntry('حصن المسلم — asellam/HisnElMuslim',
           'https://github.com/asellam/HisnElMuslim', 'about.src_hisn'),
+      // The adhkar recordings (2026-09-29): the book's own site, one mp3 per
+      // dhikr, streamed from it and paired word for word
+      // (scripts/hisnmuslim_audio_map.py). The site names no reciter.
+      const SourceEntry('حصن المسلم — hisnmuslim.com',
+          'https://www.hisnmuslim.com', 'about.src_hisn_audio'),
       // Named separately from Shamela itself: these are the two edited
       // editions the app's hadith gradings actually come from, and a grading
       // is only worth anything if the reader can see whose it is.

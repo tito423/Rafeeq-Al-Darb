@@ -152,6 +152,9 @@ flutter:
     - assets/data/azkar.db
     - assets/data/quotes.json
     - assets/data/quote_backgrounds.json
+    # One hisnmuslim.com recording per dhikr, paired word for word by
+    # scripts/hisnmuslim_audio_map.py (213 of 302); streamed, never rehosted.
+    - assets/data/azkar_audio.json
     # «في مثل هذا اليوم» — 366 days x 12 events, built by
     # scripts/fetch_on_this_day.py from Wikimedia's onthisday feed (CC BY-SA)
     # and stored gzipped, so the card works with no network at all.

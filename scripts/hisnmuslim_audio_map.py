@@ -71,13 +71,11 @@ def same_words(a, b):
     """True when [a] and [b] say the same words, ignoring spelling and the
     printed repetition counts. Word ORDER counts («بالماء والثلج» is not
     «بالثلج والماء»), and so does any word more or less."""
-    x = [skeleton(w) for w in a.split()]
-    y = [skeleton(w) for w in b.split()]
     extra = {skeleton(w) for w in COUNT_WORDS}
-    for op in difflib.ndiff(x, y):
-        if op[0] in "+-" and op[2:] not in extra:
-            return False
-    return True
+    # Spaces do not count either: «بعدما» and «بعد ما» are one text.
+    x = "".join(w for w in map(skeleton, a.split()) if w not in extra)
+    y = "".join(w for w in map(skeleton, b.split()) if w not in extra)
+    return x == y
 
 
 def main():
