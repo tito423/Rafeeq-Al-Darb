@@ -1043,6 +1043,13 @@
     "empty": "Nothing here"
   },
   "khatma": {
+    "plan_title": "Start your khatma",
+    "plan_7": "In a week",
+    "plan_30": "In a month",
+    "plan_60": "In two months",
+    "plan_365": "In a year",
+    "plan_pages": "about {} pages a day",
+    "plan_custom": "A khatma your own way",
     "title": "Quran Khatma",
     "start_invite": "Start a khatma and track your daily progress",
     "days_left": "{} days left",
@@ -2056,6 +2063,12 @@
     "t_mufarridun": "Remember Allah much"
   },
   "dedication": {
+    "start_title": "Give a good deed to someone you love",
+    "start_sub": "Choose what to give, write the name, and keep count of what you read or said for them.",
+    "kind_quran_desc": "Pages you read for them",
+    "kind_istighfar_desc": "Istighfar you count for them",
+    "kind_tasbih_desc": "Tasbih you count for them",
+    "kind_dua_desc": "A dua in your own words",
     "title": "Dedications",
     "card_subtitle": "Dedicate reading, istighfar or tasbih to someone you love, by name and in your own words",
     "add": "New dedication",

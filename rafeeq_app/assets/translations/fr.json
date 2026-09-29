@@ -1043,6 +1043,13 @@
     "empty": "Rien ici"
   },
   "khatma": {
+    "plan_title": "Commence ta khatma",
+    "plan_7": "En une semaine",
+    "plan_30": "En un mois",
+    "plan_60": "En deux mois",
+    "plan_365": "En un an",
+    "plan_pages": "environ {} pages par jour",
+    "plan_custom": "Une khatma à ta façon",
     "title": "Khatma du Coran",
     "start_invite": "Commencez une khatma et suivez votre progression quotidienne",
     "days_left": "{} jours restants",
@@ -2056,6 +2063,12 @@
     "t_mufarridun": "Invoquez Allah abondamment"
   },
   "dedication": {
+    "start_title": "Offre une bonne action à qui tu aimes",
+    "start_sub": "Choisis ce que tu offres, écris le nom, et suis ce que tu lis ou dis pour elle.",
+    "kind_quran_desc": "Des pages que tu lis pour elle",
+    "kind_istighfar_desc": "L’istighfâr que tu comptes pour elle",
+    "kind_tasbih_desc": "Le tasbîh que tu comptes pour elle",
+    "kind_dua_desc": "Une invocation avec tes mots",
     "title": "Dédicaces",
     "card_subtitle": "Dédiez une lecture, un istighfar ou un tasbih à un être cher, par son nom et avec vos mots",
     "add": "Nouvelle dédicace",

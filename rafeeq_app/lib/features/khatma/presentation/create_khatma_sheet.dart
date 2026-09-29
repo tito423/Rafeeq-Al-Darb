@@ -16,12 +16,14 @@ import '../data/khatma_store.dart';
 /// gesture bar, and a button laid out past its parent's bounds is painted
 /// but never hit-tested — so «إنشاء الختمة» showed and did nothing. It
 /// scrolls now, inside the safe area, and the keyboard inset is honoured.
-Future<void> showCreateKhatmaSheet(BuildContext context) {
+/// [days]: the duration the sheet opens with (a plan picked on the empty
+/// Khatma screen); everything stays editable in the sheet.
+Future<void> showCreateKhatmaSheet(BuildContext context, {int days = 30}) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (_) => const _CreateKhatmaSheet(),
+    builder: (_) => _CreateKhatmaSheet(days: days),
   );
 }
 
@@ -65,7 +67,8 @@ String _quarterLabel(int n) {
 /// used for tafsir/translations) — see `MushafData.rubElHizbPages`'s own
 /// doc.
 class _CreateKhatmaSheet extends ConsumerStatefulWidget {
-  const _CreateKhatmaSheet();
+  final int days;
+  const _CreateKhatmaSheet({required this.days});
 
   @override
   ConsumerState<_CreateKhatmaSheet> createState() => _CreateKhatmaSheetState();
@@ -86,7 +89,7 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   // didChangeDependencies below) rather than an arbitrary pair of numbers
   // that wouldn't actually multiply out to 604 pages.
   _AmountUnit _unit = _AmountUnit.pages;
-  int _durationDays = 30;
+  late int _durationDays = widget.days;
   int _dailyAmount = 21;
   bool _amountInitialized = false;
 
@@ -304,9 +307,7 @@ class _StartStep extends StatelessWidget {
             border: const OutlineInputBorder(),
           ),
           items: [
-            DropdownMenuItem(
-              child: Text('khatma.start_beginning'.tr()),
-            ),
+            DropdownMenuItem(child: Text('khatma.start_beginning'.tr())),
             for (var j = 1; j <= 30; j++)
               DropdownMenuItem(
                 value: 'j$j',
@@ -386,24 +387,24 @@ class _DurationStep extends StatelessWidget {
           children: [
             Expanded(
               child: SegmentedButton<_AmountUnit>(
-              showSelectedIcon: false,
-              segments: [
-                ButtonSegment(
-                  value: _AmountUnit.quarters,
-                  label: Text('khatma.unit_quarters'.tr()),
-                ),
-                ButtonSegment(
-                  value: _AmountUnit.pages,
-                  label: Text('khatma.unit_pages'.tr()),
-                ),
-                ButtonSegment(
-                  value: _AmountUnit.juz,
-                  label: Text('khatma.unit_juz'.tr()),
-                ),
-              ],
-              selected: {unit},
-              onSelectionChanged: (s) => onUnitChanged(s.first),
-            ),
+                showSelectedIcon: false,
+                segments: [
+                  ButtonSegment(
+                    value: _AmountUnit.quarters,
+                    label: Text('khatma.unit_quarters'.tr()),
+                  ),
+                  ButtonSegment(
+                    value: _AmountUnit.pages,
+                    label: Text('khatma.unit_pages'.tr()),
+                  ),
+                  ButtonSegment(
+                    value: _AmountUnit.juz,
+                    label: Text('khatma.unit_juz'.tr()),
+                  ),
+                ],
+                selected: {unit},
+                onSelectionChanged: (s) => onUnitChanged(s.first),
+              ),
             ),
           ],
         ),

@@ -27,11 +27,16 @@ class KhatmaScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('khatma.title'.tr())),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openCreateSheet(context, ref),
-        icon: const Icon(Icons.add),
-        label: Text('khatma.new'.tr()),
-      ),
+      // With no khatma yet the plans are on a large card in the middle
+      // (owner, 2026-09-30: «خلي كارت كبير يظهر في نص الشاشة مليان
+      // بالاختيارات»), so the corner button would only repeat it.
+      floatingActionButton: (active.isEmpty && done.isEmpty)
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: () => _openCreateSheet(context, ref),
+              icon: const Icon(Icons.add),
+              label: Text('khatma.new'.tr()),
+            ),
       body: (active.isEmpty && done.isEmpty)
           ? const _EmptyBody()
           : ListView(
@@ -116,31 +121,143 @@ class KhatmaScreen extends ConsumerWidget {
   }
 }
 
-/// P3‑6: this used to carry its own "+ ختمة جديدة" button, duplicating the
-/// Scaffold's own `FloatingActionButton.extended` (same label, same action)
-/// — both visible on screen at once whenever the list was empty. The FAB
-/// alone is enough; [onCreate] is kept unused-by-this-widget on purpose
-/// (nothing here needs it now), tapping the illustration area does nothing
-/// special, the FAB is the one and only "create" affordance.
+/// No khatma yet: a large card of plans - a week, a month, two months, a
+/// year - each with the pages a day it asks (604 pages, rounded up), and a
+/// «your own settings» way in. Each opens the create sheet at that length.
 class _EmptyBody extends StatelessWidget {
   const _EmptyBody();
 
+  static const _plans = [
+    (7, Icons.bolt_rounded, Color(0xFFEE5253)),
+    (30, Icons.calendar_month_rounded, Color(0xFF10AC84)),
+    (60, Icons.event_available_rounded, Color(0xFF2E86DE)),
+    (365, Icons.all_inclusive_rounded, Color(0xFF8854D0)),
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final lang = context.locale.languageCode;
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.auto_stories_outlined,
-              size: 56,
-              color: Theme.of(context).colorScheme.outline,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.alphaBlend(
+                    AppColors.gold.withValues(alpha: 0.16),
+                    scheme.surfaceContainerHighest,
+                  ),
+                  scheme.surfaceContainerHighest,
+                ],
+              ),
+              border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
             ),
-            const SizedBox(height: 14),
-            Text('khatma.start_invite'.tr(), textAlign: TextAlign.center),
-          ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Icon(
+                  Icons.auto_stories_rounded,
+                  size: 56,
+                  color: AppColors.gold,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'khatma.plan_title'.tr(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'khatma.start_invite'.tr(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: scheme.onSurfaceVariant, height: 1.5),
+                ),
+                const SizedBox(height: 18),
+                GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 1.15,
+                  children: [
+                    for (final (days, icon, color) in _plans)
+                      Material(
+                        borderRadius: BorderRadius.circular(20),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () =>
+                              showCreateKhatmaSheet(context, days: days),
+                          child: Ink(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  color,
+                                  Color.lerp(color, Colors.black, 0.3)!,
+                                ],
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(icon, color: Colors.white, size: 34),
+                                const SizedBox(height: 6),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'khatma.plan_$days'.tr(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'khatma.plan_pages'.tr(
+                                    args: [
+                                      localizeDigits(
+                                        '${(604 / days).ceil()}',
+                                        lang,
+                                      ),
+                                    ],
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => showCreateKhatmaSheet(context),
+                  icon: const Icon(Icons.tune_rounded),
+                  label: Text('khatma.plan_custom'.tr()),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -317,8 +434,9 @@ class _KhatmaTile extends ConsumerWidget {
   /// In the reader's digits - it was Latin inside the Arabic interface
   /// (found by a search for raw padded times, 2026-09-26).
   String _fmtTime(TimeOfDay t) => localizeDigits(
-      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
-      uiLanguageCode);
+    '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
+    uiLanguageCode,
+  );
 }
 
 class _CompletedTile extends StatelessWidget {

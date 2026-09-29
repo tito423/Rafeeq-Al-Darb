@@ -1043,6 +1043,13 @@
     "empty": "No hay nada aquí"
   },
   "khatma": {
+    "plan_title": "Empieza tu jatma",
+    "plan_7": "En una semana",
+    "plan_30": "En un mes",
+    "plan_60": "En dos meses",
+    "plan_365": "En un año",
+    "plan_pages": "unas {} páginas al día",
+    "plan_custom": "Una jatma a tu manera",
     "title": "Jatma del Corán",
     "start_invite": "Empieza una jatma y sigue tu progreso diario",
     "days_left": "Quedan {} días",
@@ -2056,6 +2063,12 @@
     "t_mufarridun": "Recuerda mucho a Allah"
   },
   "dedication": {
+    "start_title": "Regala una buena obra a quien quieres",
+    "start_sub": "Elige qué regalar, escribe el nombre y lleva la cuenta de lo que lees o dices por esa persona.",
+    "kind_quran_desc": "Páginas que lees por esa persona",
+    "kind_istighfar_desc": "Istighfar que cuentas por esa persona",
+    "kind_tasbih_desc": "Tasbih que cuentas por esa persona",
+    "kind_dua_desc": "Una súplica con tus palabras",
     "title": "Dedicatorias",
     "card_subtitle": "Dedica lectura, istighfar o tasbih a alguien querido, por su nombre y con tus palabras",
     "add": "Nueva dedicatoria",
