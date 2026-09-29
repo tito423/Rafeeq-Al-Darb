@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 01:51 — IN PROGRESS — resume here**
+**2026-09-30 01:57 — IN PROGRESS — resume here**
 
-Journey is interactive: points sheet with level ladder, 28-day calendar, memorised surahs, counts with next badge, badge dialogs, count-up and entrance animations; seen on emulator
+Journey points row built with ratio() (trap 16), full suite 674 pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

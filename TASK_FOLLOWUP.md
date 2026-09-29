@@ -888,6 +888,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 01:57 - Journey points row built with ratio() (trap 16), full suite 674 pass
 - 2026-09-30 01:51 - Journey is interactive: points sheet with level ladder, 28-day calendar, memorised surahs, counts with next badge, badge dialogs, count-up and entrance animations; seen on emulator
 - 2026-09-30 01:43 - Morning/evening reminder can open a chosen reciter playing; seen end to end on emulator (01:39 reminder -> Alafasy full screen)
 - 2026-09-29 23:36 - Listen to the complete morning / evening adhkar by six named reciters: stream full screen or in background, download per reciter; seen on emulator

@@ -2283,7 +2283,7 @@
     "kind_tasbeeh": "Tasbih",
     "kind_game": "Respuestas correctas en «Completa la aleya»",
     "kind_surah": "Suras memorizadas",
-    "row_points": "{} × {} puntos",
+    "row_points": "{} puntos",
     "levels": "Niveles",
     "level_row": "Nivel {} — desde {} puntos",
     "you_are_here": "Estás aquí",

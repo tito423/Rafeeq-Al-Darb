@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
+import '../../../core/utils/byte_formatter.dart' show ratio;
 import '../../../core/utils/digits.dart';
 import '../data/journey_store.dart';
 import 'ayah_game_screen.dart';
@@ -70,8 +71,12 @@ Future<void> showPointsSheet(BuildContext context, JourneySnapshot j) {
               subtitle: Text(
                 'journey.row_points'.tr(
                   args: [
-                    _n(context, j.counts[kind] ?? 0),
-                    _n(context, JourneyStore.weights[kind]!),
+                    // One argument, kept in order under RTL (trap #16).
+                    ratio(
+                      _n(context, j.counts[kind] ?? 0),
+                      _n(context, JourneyStore.weights[kind]!),
+                      separator: ' × ',
+                    ),
                   ],
                 ),
               ),
