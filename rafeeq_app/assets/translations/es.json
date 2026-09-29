@@ -1176,7 +1176,7 @@
     "src_quotes": "Citas y sus fondos",
     "src_commons": "Wikimedia Commons — los fondos de ornamento islámico, dominio público o CC0, con la licencia y el autor de cada archivo guardados en la app",
     "src_youtube": "Cada imagen de canal procede de la propia página de YouTube de ese canal y se replica en el servidor de la aplicación para funcionar sin conexión. Los canales se abren en YouTube; no se republica ningún vídeo.",
-    "src_unsplash": "Las fotografías de las tarjetas de Adhkar — bajo la licencia de Unsplash, obtenidas directamente de la fuente.",
+    "src_unsplash": "Fotografías de las tarjetas de adhkar y del fondo de la tarjeta de la próxima oración (mezquitas) — bajo la licencia de Unsplash; las de la tarjeta de oración vienen incluidas en la app.",
     "dedication": "Dedico este trabajo a mi esposa, compañera de mi camino",
     "src_geonames": "La lista de ciudades del mundo, con coordenadas y nombres, para fijar a mano la ubicación de la oración",
     "src_omnilingual": "Reconocimiento de voz sin conexión de Rafeeq (más de 1600 idiomas)",
@@ -2191,6 +2191,29 @@
     "pack_needed": "Descarga primero el paquete de voz; Rafeeq no funciona sin él.",
     "pack_failed": "No se pudo descargar el paquete de voz",
     "notif_text": "Escuchando «Rafeeq»",
-    "notif_stop": "Detener"
+    "notif_stop": "Detener",
+    "overlay_title": "Mostrar sobre otras apps",
+    "overlay_desc": "Permite que Rafeeq aparezca sobre cualquier app o la pantalla de inicio cuando lo llamas, y abra lo que pediste dentro de la app. Sin esto solo funciona con la app abierta.",
+    "overlay_grant": "Permitir"
+  },
+  "occasions": {
+    "title": "Fechas islámicas",
+    "subtitle": "Próximas fechas del año hegírico {}",
+    "today": "Hoy",
+    "in_days_one": "En {} día",
+    "in_days_two": "En {} días",
+    "in_days_few": "En {} días",
+    "in_days_many": "En {} días",
+    "source_online": "Fechas del calendario Umm al-Qura vía AlAdhan; pueden variar un día según la observación de la luna.",
+    "source_offline": "Fechas calculadas con el calendario Umm al-Qura guardado en tu dispositivo (sin conexión ahora); pueden variar un día según la observación de la luna.",
+    "new_year": "Año Nuevo islámico",
+    "ashura": "Día de Ashura",
+    "ramadan_start": "Primer día de Ramadán",
+    "last_ten": "Los últimos diez días de Ramadán",
+    "eid_fitr": "Eid al-Fitr",
+    "dhul_hijjah_start": "Primero de Dhul Hiyya (los diez primeros días)",
+    "arafah": "Día de Arafa",
+    "eid_adha": "Eid al-Adha",
+    "tashreeq": "Días de Tashrik (11–13 de Dhul Hiyya)"
   }
 }

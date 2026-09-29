@@ -1176,7 +1176,7 @@
     "src_quotes": "Citações e os seus fundos",
     "src_commons": "Wikimedia Commons — os fundos de ornamento islâmico, domínio público ou CC0, com a licença e o autor de cada ficheiro guardados na aplicação",
     "src_youtube": "Cada imagem de canal vem da própria página do YouTube desse canal e é replicada no servidor da aplicação para funcionar offline. Os canais abrem no YouTube; nenhum vídeo é republicado.",
-    "src_unsplash": "As fotografias dos cartões dos adhkar — sob a licença Unsplash, obtidas diretamente da fonte.",
+    "src_unsplash": "Fotografias dos cartões de adhkar e do fundo do cartão da próxima oração (mesquitas) — sob a Licença Unsplash; as do cartão de oração vêm incluídas no app.",
     "dedication": "Dedico este trabalho à minha esposa, companheira do meu caminho",
     "src_geonames": "A lista de cidades do mundo, com coordenadas e nomes, para definir à mão o local da oração",
     "src_omnilingual": "Reconhecimento de voz offline do Rafeeq (mais de 1600 idiomas)",
@@ -2191,6 +2191,29 @@
     "pack_needed": "Transfira primeiro o pacote de voz; o Rafeeq não funciona sem ele.",
     "pack_failed": "Não foi possível transferir o pacote de voz",
     "notif_text": "A ouvir «Rafeeq»",
-    "notif_stop": "Parar"
+    "notif_stop": "Parar",
+    "overlay_title": "Exibir sobre outros apps",
+    "overlay_desc": "Permite que o Rafeeq apareça sobre qualquer app ou a tela inicial quando você o chama e abra o que pediu dentro do app. Sem isso, só funciona com o app aberto.",
+    "overlay_grant": "Permitir"
+  },
+  "occasions": {
+    "title": "Datas islâmicas",
+    "subtitle": "Próximas datas do ano hegírico {}",
+    "today": "Hoje",
+    "in_days_one": "Em {} dia",
+    "in_days_two": "Em {} dias",
+    "in_days_few": "Em {} dias",
+    "in_days_many": "Em {} dias",
+    "source_online": "Datas do calendário Umm al-Qura via AlAdhan; podem variar um dia conforme a observação da lua.",
+    "source_offline": "Datas calculadas com o calendário Umm al-Qura guardado no seu aparelho (sem conexão agora); podem variar um dia conforme a observação da lua.",
+    "new_year": "Ano Novo islâmico",
+    "ashura": "Dia de Ashura",
+    "ramadan_start": "Primeiro dia do Ramadã",
+    "last_ten": "Os últimos dez dias do Ramadã",
+    "eid_fitr": "Eid al-Fitr",
+    "dhul_hijjah_start": "Início de Dhul Hijjah (os primeiros dez dias)",
+    "arafah": "Dia de Arafa",
+    "eid_adha": "Eid al-Adha",
+    "tashreeq": "Dias de Tashriq (11–13 de Dhul Hijjah)"
   }
 }

@@ -15,6 +15,7 @@ import '../../../../core/services/prayer_times_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/utils/digits.dart' as digits;
+import '../../../../core/widgets/islamic_scene.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
@@ -30,10 +31,12 @@ import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../data/clock_settings_provider.dart';
 import '../../data/on_this_day_repository.dart';
 import '../../data/prayer_controller.dart';
+import '../../data/prayer_hero_icons.dart';
 import '../widgets/analog_clock_faces.dart';
 import '../widgets/clock_gallery_sheet.dart';
 import '../widgets/digital_clock_faces.dart';
 import '../widgets/header_quick_actions.dart';
+import '../widgets/islamic_occasions_sheet.dart';
 import '../widgets/on_this_day_sheet.dart';
 import '../widgets/prayer_countdown.dart';
 import '../widgets/prayer_slides.dart';
@@ -51,6 +54,11 @@ class HomeScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
+
+/// Which painted scene sits behind the header card this time: drawn once per
+/// launch of the app (owner, 2026-09-29: a calm Islamic background that changes
+/// every time the app is opened). See [IslamicScene].
+final int _headerBackdropSeed = math.Random().nextInt(1 << 20);
 
 /// The home list's top + bottom padding (24 + 32), which the clock's size
 /// budget subtracts.
@@ -205,8 +213,10 @@ class _HeaderCard extends ConsumerWidget {
     HijriCalendar.setLocal(lang);
     // The declared calendar (see `OfficialHijri`), so the card and the
     // fasting reminders never name two different days.
-    final (hYear, hMonth, hDay) =
-        OfficialHijri.dateOf(DateTime.now(), offsetDays: offsetDays);
+    final (hYear, hMonth, hDay) = OfficialHijri.dateOf(
+      DateTime.now(),
+      offsetDays: offsetDays,
+    );
     // The month names and the era suffix come from the locale files, via
     // `hijriMonthName`. The two tables that used to sit here (and a second
     // copy in the prayer notification) covered Arabic and English only, so a
@@ -237,15 +247,14 @@ class _HeaderCard extends ConsumerWidget {
     // Redraws the Hijri line once the declared calendar has loaded.
     ref.watch(officialHijriProvider);
     final isLight = Theme.of(context).brightness == Brightness.light;
-    // Same teal/gold brand identity in both themes, just re-pitched: a
-    // parchment-toned gradient + dark ink text for Light, the original
-    // near-black/navy/violet + light text for Dark and RGB.
-    final gradient = isLight
-        ? const [Color(0xFFFBF6E9), Color(0xFFF3ECD8), Color(0xFFEFE6D2)]
-        : const [Color(0xFF0B0F1A), Color(0xFF102A3A), Color(0xFF1B1533)];
-    // Light values measured against the gradient's darkest stop #EFE6D2
-    // (2026-09-25): Hijri 4.11 : 1, Gregorian 3.27 : 1 - both under 4.5.
-    // readableOn deepens them just enough; the dark values already pass.
+    // The scene's own sky is the ground the ink is measured against.
+    final scene = IslamicScene(
+      variant: _headerBackdropSeed % IslamicScene.count,
+      dark: !isLight,
+    );
+    final gradient = [scene.ground];
+    // Light values measured against the scene's darkest stop; readableOn
+    // deepens them just enough, the dark values already pass.
     final hijriColor = isLight
         ? readableOn(const Color(0xFF0E7C6B), gradient.last)
         : const Color(0xFF7DEBDA);
@@ -256,15 +265,10 @@ class _HeaderCard extends ConsumerWidget {
         : const Color(0xFFD4AF37);
     return Container(
       // «وسّع كارت التاريخ ومرحبًا شوية».
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         // «ممكن تكوّر شكل الكارت ده».
         borderRadius: BorderRadius.circular(30),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: gradient,
-        ),
         border: Border.all(
           color: const Color(0xFF15C7B0).withValues(alpha: 0.35),
         ),
@@ -292,157 +296,184 @@ class _HeaderCard extends ConsumerWidget {
       // تاريخ اليوم الميلادي» — so the two dates are two controls now. They
       // used to share one InkWell over the whole card and open one sheet,
       // which meant tapping «١٧ رمضان» showed events keyed to 8 March.
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            flex: 3,
-            child: InkWell(
-              onTap: () => showHijriDaySheet(
-                context,
-                hijriOffset: ref
-                    .read(prayerAdjustmentsProvider)
-                    .hijriOffsetDays,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Both dates sit in a band of the same height, so the
-                  // buttons under them line up whether the Gregorian side
-                  // takes one line or two (English: «Saturday / Sep 19»).
-                  SizedBox(
-                    height: _dateBand,
-                    child: Align(
-                      alignment: AlignmentDirectional.bottomStart,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Text(
-                          _hijriLine(
-                            context.locale.languageCode,
-                            ref.watch(prayerAdjustmentsProvider).hijriOffsetDays,
-                          ),
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: hijriColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+          Positioned.fill(child: CustomPaint(painter: scene)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: InkWell(
+                    onTap: () => showHijriDaySheet(
+                      context,
+                      hijriOffset: ref
+                          .read(prayerAdjustmentsProvider)
+                          .hijriOffsetDays,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Both dates sit in a band of the same height, so the
+                        // buttons under them line up whether the Gregorian side
+                        // takes one line or two (English: «Saturday / Sep 19»).
+                        SizedBox(
+                          height: _dateBand,
+                          child: Align(
+                            alignment: AlignmentDirectional.bottomStart,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                _hijriLine(
+                                  context.locale.languageCode,
+                                  ref
+                                      .watch(prayerAdjustmentsProvider)
+                                      .hijriOffsetDays,
+                                ),
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: hijriColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ThemeQuickButton(color: hijriColor),
-                  const SizedBox(height: 6),
-                  SupportQuickButton(color: hijriColor),
-                ],
-              ),
-            ),
-          ),
-          // A gap on each side of the greeting. Without it the three cells
-          // are only separated by whatever slack the text leaves, and in
-          // Russian there is none: «27 Раби аль-авваль 1448 г.х.» filled its
-          // cell edge to edge and «Добро пожаловать» started against it with
-          // no space at all, seen on emulator-5554 during the Russian sweep.
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 4,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'home.welcome_guest'.tr(),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: welcomeColor,
-                      // The AmiriQuran calligraphy face is only right for the
-                      // Arabic "مرحبًا بك"; Latin locales use the app's normal
-                      // (narrower, Latin-tuned) font. FittedBox now guarantees no
-                      // overflow either way, but keeping the right face per script
-                      // still reads better than scaling a mismatched one down.
-                      fontFamily: context.locale.languageCode == 'ar'
-                          ? 'AmiriQuran'
-                          : null,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  // «ويتكتب الاسم ده بزخرفة جميلة جدًا جنب أو تحت مرحبًا بك».
-                  // Nothing is drawn for a reader who has not given one - the
-                  // greeting stays exactly as it always was rather than
-                  // inventing a name, which is what the comment above this
-                  // card warned against for as long as it has existed.
-                  if (readerName.isNotEmpty) ...[
-                    const SizedBox(height: 2),
-                    ReaderNameFlourish(name: readerName, fontSize: 19),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 3,
-            child: InkWell(
-              onTap: () => showGregorianDaySheet(
-                context,
-                hijriOffset: ref
-                    .read(prayerAdjustmentsProvider)
-                    .hijriOffsetDays,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: _dateBand,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Text(
-                      _weekdayLine(context),
-                      maxLines: 1,
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: gregorianColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Text(
-                      _gregorianLine(context),
-                      maxLines: 1,
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: gregorianColor.withValues(alpha: 0.9),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                        const SizedBox(height: 10),
+                        ThemeQuickButton(color: hijriColor),
+                        const SizedBox(height: 6),
+                        SupportQuickButton(color: hijriColor),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  LanguageQuickButton(color: gregorianColor),
-                  const SizedBox(height: 6),
-                  SettingsQuickButton(color: gregorianColor),
-                ],
-              ),
+                ),
+                // A gap on each side of the greeting. Without it the three cells
+                // are only separated by whatever slack the text leaves, and in
+                // Russian there is none: «27 Раби аль-авваль 1448 г.х.» filled its
+                // cell edge to edge and «Добро пожаловать» started against it with
+                // no space at all, seen on emulator-5554 during the Russian sweep.
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // The weekday's name, level with the two dates (owner,
+                      // 2026-09-29). A tap opens the Islamic occasions still to come
+                      // in this Hijri year.
+                      SizedBox(
+                        height: _dateBand,
+                        child: InkWell(
+                          onTap: () => showIslamicOccasionsSheet(context),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                _weekdayLine(context),
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: gregorianColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily:
+                                      context.locale.languageCode == 'ar'
+                                      ? 'AmiriQuran'
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'home.welcome_guest'.tr(),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: welcomeColor,
+                                // The AmiriQuran calligraphy face is only right for
+                                // the Arabic "مرحبًا بك"; Latin locales use the app's
+                                // normal font.
+                                fontFamily: context.locale.languageCode == 'ar'
+                                    ? 'AmiriQuran'
+                                    : null,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            // «ويتكتب الاسم ده بزخرفة جميلة جدًا جنب أو تحت مرحبًا
+                            // بك». Nothing is drawn for a reader who has not given
+                            // one - never an invented name.
+                            if (readerName.isNotEmpty) ...[
+                              const SizedBox(height: 2),
+                              ReaderNameFlourish(
+                                name: readerName,
+                                fontSize: 19,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 3,
+                  child: InkWell(
+                    onTap: () => showGregorianDaySheet(
+                      context,
+                      hijriOffset: ref
+                          .read(prayerAdjustmentsProvider)
+                          .hijriOffsetDays,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: _dateBand,
+                          child: Align(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: Text(
+                                _gregorianLine(context),
+                                maxLines: 1,
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                  color: gregorianColor.withValues(alpha: 0.9),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        LanguageQuickButton(color: gregorianColor),
+                        const SizedBox(height: 6),
+                        SettingsQuickButton(color: gregorianColor),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

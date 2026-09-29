@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
@@ -89,6 +91,23 @@ class RafeeqEar {
   /// microphone, followed by a second of silence so the VAD closes the
   /// utterance. For checking «رفيق» on a device that cannot be spoken to
   /// (the emulator): see `AssistantWakeListener._testClip`.
+  /// A 16 kHz mono WAV pushed to the app's external files folder as
+  /// `rafeeq_test.wav` is heard once, as if spoken, then deleted - how
+  /// «رفيق» is checked end to end on the emulator, which hears nothing from
+  /// the PC. Returns when it was fed (the time from feeding to text is
+  /// logged by the listener), or null when there is no such file.
+  Future<DateTime?> feedTestClip() async {
+    final dir = await getExternalStorageDirectory();
+    if (dir == null) return null;
+    final f = File('${dir.path}/rafeeq_test.wav');
+    if (!f.existsSync()) return null;
+    final b = await f.readAsBytes();
+    await f.delete();
+    final pcm = b.buffer.asInt16List(44, (b.length - 44) ~/ 2);
+    feed(Float32List.fromList([for (final v in pcm) v / 32768.0]));
+    return DateTime.now();
+  }
+
   void feed(Float32List samples) {
     final to = _toWorker;
     if (to == null) return;

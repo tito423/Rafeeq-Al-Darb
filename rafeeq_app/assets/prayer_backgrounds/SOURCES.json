@@ -1,0 +1,60 @@
+{
+ "licence": "Unsplash License (free for commercial use, no attribution required) - https://unsplash.com/license",
+ "downloaded": "2026-09-29 via unsplash.com/photos/<id>/download",
+ "images": {
+  "fajr": {
+   "unsplash_photo_id": "Ax4DZ5Lw5nY",
+   "page": "https://unsplash.com/photos/Ax4DZ5Lw5nY",
+   "bytes": 32641,
+   "size": [
+    750,
+    1000
+   ]
+  },
+  "sunrise": {
+   "unsplash_photo_id": "LwNNVgOmm84",
+   "page": "https://unsplash.com/photos/LwNNVgOmm84",
+   "bytes": 34219,
+   "size": [
+    662,
+    1000
+   ]
+  },
+  "dhuhr": {
+   "unsplash_photo_id": "n6s3sjWnab0",
+   "page": "https://unsplash.com/photos/n6s3sjWnab0",
+   "bytes": 83437,
+   "size": [
+    1000,
+    667
+   ]
+  },
+  "asr": {
+   "unsplash_photo_id": "5K549TS6F08",
+   "page": "https://unsplash.com/photos/5K549TS6F08",
+   "bytes": 69213,
+   "size": [
+    562,
+    1000
+   ]
+  },
+  "maghrib": {
+   "unsplash_photo_id": "Gbzv41PK76s",
+   "page": "https://unsplash.com/photos/Gbzv41PK76s",
+   "bytes": 19831,
+   "size": [
+    667,
+    1000
+   ]
+  },
+  "isha": {
+   "unsplash_photo_id": "GSblS7Alr1U",
+   "page": "https://unsplash.com/photos/GSblS7Alr1U",
+   "bytes": 35264,
+   "size": [
+    667,
+    1000
+   ]
+  }
+ }
+}

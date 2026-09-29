@@ -100,6 +100,10 @@ class HeroSurface {
 
   /// The palette for the theme in force. RGB is a dark theme and keeps the
   /// dark member — its neon look is the point of it.
+  /// The dark member on its own, for a panel that is dark whatever the theme
+  /// (the Home prayer card's photograph).
+  static HeroSurface get dark => _dark;
+
   static HeroSurface of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? _dark : _light;
 

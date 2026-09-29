@@ -168,6 +168,7 @@ flutter:
     # day pages. Arabic only: English Wikipedia has no such pages at all.
     - assets/data/on_this_day_hijri_ar.json
     - assets/quote_backgrounds/
+    - assets/prayer_backgrounds/
     - assets/data/mushaf/
     - assets/mushaf_covers/
     - assets/data/catalogs/

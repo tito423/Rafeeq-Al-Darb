@@ -2509,9 +2509,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 15:04 — IN PROGRESS — resume here**
+**2026-09-29 16:17 — IN PROGRESS — resume here**
 
-Owner batch 2026-09-29: Hisn al-Muslim azkar (asellam, MIT) with mushaf-verified Qur'an, prayer card out of Settings, library categories first, About rewritten, ornament backgrounds, page bubble on the book slider
+Owner batch 2026-09-29 part 3: painted Islamic scenes behind the Home header (random per launch), per-prayer photo slides, Rafeeq over other apps (overlay permission + AssistantOverlay, needs device test), landscape panel sizing
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

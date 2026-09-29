@@ -60,10 +60,37 @@ fun MainActivity.registerAssistantChannel(flutterEngine: FlutterEngine) {
                     AssistantListenService.stoppedByUser = false
                     result.success(v)
                 }
+                // Over other apps (owner, 2026-09-29): see AssistantOverlay.
+                "overlayCan" -> result.success(AssistantOverlay.canDraw(applicationContext))
+                "overlayRequest" -> {
+                    try {
+                        startActivity(AssistantOverlay.settingsIntent(applicationContext))
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+                "overlayShow" -> {
+                    AssistantOverlay.show(
+                        applicationContext,
+                        call.argument<String>("text") ?: "",
+                        call.argument<Int>("seconds") ?: 4,
+                        call.argument<Boolean>("rtl") ?: true,
+                    )
+                    result.success(null)
+                }
+                "overlayHide" -> {
+                    AssistantOverlay.hide()
+                    result.success(null)
+                }
                 "toFront" -> {
                     try {
-                        startActivity(
-                            Intent(this, MainActivity::class.java)
+                        // From the application context: with «Display over
+                        // other apps» granted Android lets this through from
+                        // the background; without it, it is refused and the
+                        // command has still run.
+                        applicationContext.startActivity(
+                            Intent(applicationContext, MainActivity::class.java)
                                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK),
                         )
                         result.success(true)

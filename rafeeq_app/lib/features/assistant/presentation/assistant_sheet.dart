@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app/navigation.dart';
@@ -313,22 +310,20 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     }
   }
 
-  /// A 16 kHz mono WAV pushed to the app's external files folder as
-  /// `rafeeq_test.wav` is heard once, as if spoken, then deleted - how
-  /// «رفيق» is checked end to end on the emulator, which hears nothing from
-  /// the PC. The time from feeding to text is logged.
   DateTime? _fedAt;
-  Future<void> _testClip() async {
-    final dir = await getExternalStorageDirectory();
-    if (dir == null) return;
-    final f = File('${dir.path}/rafeeq_test.wav');
-    if (!f.existsSync()) return;
-    final b = await f.readAsBytes();
-    await f.delete();
-    final pcm = b.buffer.asInt16List(44, (b.length - 44) ~/ 2);
-    _fedAt = DateTime.now();
-    _ear.feed(Float32List.fromList([for (final v in pcm) v / 32768.0]));
-  }
+  Future<void> _testClip() async => _fedAt = await _ear.feedTestClip() ?? _fedAt;
+
+  /// After a bare background call: the next sentence is the command.
+  DateTime? _awaitUntil;
+
+  Future<bool> _overlayCan() async =>
+      (await _channel.invokeMethod<bool>('overlayCan')) == true;
+
+  Future<void> _overlay(String text, {int seconds = 4}) =>
+      _channel.invokeMethod<void>('overlayShow', {
+        'text': text, 'seconds': seconds,
+        'rtl': const {'ar', 'ur'}.contains(_appLanguage()),
+      });
 
   Future<void> _onHeard(String text) async {
     if (_fedAt != null) {
@@ -336,15 +331,31 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       _fedAt = null;
     }
     if (assistantSheetOpen.value || !mounted) return; // the sheet takes it
-    final rest = afterWakeWord(text);
-    if (rest == null) return;
     final container = ProviderScope.containerOf(context, listen: false);
+    final waiting = _awaitUntil != null && DateTime.now().isBefore(_awaitUntil!);
+    var rest = afterWakeWord(text);
+    if (rest == null && waiting) rest = text;
+    if (rest == null) return;
+    _awaitUntil = null;
+    // Over another app: «رفيق» shows its own small card (AssistantOverlay.kt).
+    final overlay = !_foreground && await _overlayCan();
+    if (rest.isEmpty && overlay) {
+      _awaitUntil = DateTime.now().add(const Duration(seconds: 10));
+      await _overlay('assistant.listening'.tr(), seconds: 10);
+      return;
+    }
     if (rest.isNotEmpty) {
       final parser = await ref.read(assistantParserProvider.future);
       final intent = parser.parse(rest);
       debugPrint('rafeeq intent: "$rest" -> $intent');
       if (intent is! UnknownIntent) {
-        await _act(container, intent);
+        await _act(container, intent, overlay: overlay);
+        return;
+      }
+      if (overlay) {
+        await _overlay(
+            '${'assistant.heard'.tr(args: [rest])}\n${'assistant.not_understood'.tr()}',
+            seconds: 5);
         return;
       }
     }
@@ -352,8 +363,10 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     await showAssistantSheet(heard: rest.isEmpty ? null : text);
   }
 
-  Future<void> _act(ProviderContainer container, AssistantIntent intent) async {
+  Future<void> _act(ProviderContainer container, AssistantIntent intent,
+      {bool overlay = false}) async {
     final reply = await describeIntent(container, intent);
+    if (overlay) await _overlay(reply, seconds: 3);
     if (!_foreground && intent is! PlaySurahIntent &&
         intent is! SetThemeIntent && intent is! ToggleOptionIntent) {
       await _channel.invokeMethod('toFront');

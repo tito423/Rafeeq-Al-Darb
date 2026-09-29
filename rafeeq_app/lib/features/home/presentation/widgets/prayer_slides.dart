@@ -21,6 +21,7 @@ import '../../../adhan/data/prayer_adjustments_provider.dart';
 import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../data/prayer_controller.dart';
 import 'prayer_slide_adhan_extras.dart';
+import 'prayer_slide_chip.dart';
 
 /// The six timings, in the order they occur.
 const prayerSlideOrder = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -222,7 +223,8 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
                 scale: scale,
                 child: Opacity(
                   opacity: opacity,
-                  child: _PrayerSlide(
+                  child: PrayerSlideChip(
+                    prayerKey: key,
                     label: prayerSlideLabelKeys[key]!.tr(),
                     time: formatTime12h(
                       widget.times.byName(key),
@@ -242,129 +244,6 @@ class _PrayerSlidesState extends ConsumerState<PrayerSlides> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _PrayerSlide extends StatelessWidget {
-  final String label;
-  final String time;
-  final Color color;
-  final IconData icon;
-  final bool isNext;
-  final bool isFocused;
-  final int offsetMinutes;
-  final VoidCallback onTap;
-
-  const _PrayerSlide({
-    required this.label,
-    required this.time,
-    required this.color,
-    required this.icon,
-    required this.isNext,
-    required this.isFocused,
-    required this.offsetMinutes,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final filled = isNext || isFocused;
-    // The carousel sits on the Home card's ground, so it takes that ground's
-    // palette rather than assuming white-on-dark. `accent` is the measured,
-    // legible form of `color`; `color` itself stays the chip fill.
-    final hero = HeroSurface.of(context);
-    final accent = hero.accent(color);
-    return RemoteTap(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 320),
-        curve: Curves.easeOutCubic,
-        width: 96,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-        decoration: BoxDecoration(
-          gradient: filled
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [color, Color.lerp(color, Colors.black, 0.35)!],
-                )
-              : null,
-          color: filled ? null : color.withValues(alpha: 0.14),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: isFocused
-                ? hero.onSurface.withValues(alpha: 0.55)
-                : Colors.transparent,
-            width: 1.4,
-          ),
-          boxShadow: filled
-              ? [
-                  BoxShadow(
-                    color: color.withValues(alpha: 0.45),
-                    blurRadius: 16,
-                    spreadRadius: -2,
-                  ),
-                ]
-              : null,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 18, color: filled ? hero.onChip : accent),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: filled ? hero.onChip : accent,
-              ),
-            ),
-            const SizedBox(height: 3),
-            // Scaled down, not clipped: at the largest system font «12:11 PM»
-            // is wider than the 96 dp slide and maxLines cut the «PM» off
-            // (owner's phone, font scale 1.45, 2026-09-25). A one-digit hour
-            // fitted, so only some slides lost it.
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                time,
-                maxLines: 1,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: filled ? hero.onChip : hero.onSurfaceMuted,
-                ),
-              ),
-            ),
-            // An honest marker that this timing is not the calculated one.
-            if (offsetMinutes != 0) ...[
-              const SizedBox(height: 2),
-              Text(
-                offsetMinutes > 0 ? '+$offsetMinutes' : '$offsetMinutes',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: filled
-                      ? hero.onChip.withValues(alpha: 0.78)
-                      : hero.onSurfaceFaint,
-                ),
-              ),
-            ],
-            // The affordance that this slide opens into something. It is an
-            // "expand" glyph rather than a chevron because the card no longer
-            // unfolds downward — it opens as its own screen.
-            Icon(
-              Icons.open_in_full_rounded,
-              size: 13,
-              color: (filled ? hero.onChip : accent).withValues(alpha: 0.75),
-            ),
-          ],
-        ),
       ),
     );
   }

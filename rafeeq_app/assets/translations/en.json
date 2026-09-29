@@ -1176,7 +1176,7 @@
     "src_quotes": "Quotes and their backgrounds",
     "src_commons": "Wikimedia Commons — the Islamic-ornament backgrounds, public domain or CC0, each file’s licence and author kept in the app",
     "src_youtube": "Each channel picture is taken from that channel’s own YouTube page and mirrored on the app’s server so the grid works offline. The channels open in YouTube; no video is re-published.",
-    "src_unsplash": "The card photographs on the Azkar grid — under the Unsplash License, fetched straight from the source to your device.",
+    "src_unsplash": "Photographs on the Adhkar cards and behind the next-prayer card (mosques) — under the Unsplash License; the prayer-card photos are bundled in the app.",
     "dedication": "I dedicate this work to my wife, the companion of my road",
     "src_geonames": "The world city list, coordinates and names, for setting the prayer location by hand",
     "src_omnilingual": "Rafeeq’s offline speech recognition (1,600+ languages)",
@@ -2191,6 +2191,29 @@
     "pack_needed": "Download the voice pack first; Rafeeq does not work without it.",
     "pack_failed": "The voice pack could not be downloaded",
     "notif_text": "Listening for “Rafeeq”",
-    "notif_stop": "Stop"
+    "notif_stop": "Stop",
+    "overlay_title": "Display over other apps",
+    "overlay_desc": "Let Rafeeq appear over any app or the home screen when you call it, then open what you asked for inside the app. Without it, it works only while the app is open.",
+    "overlay_grant": "Allow"
+  },
+  "occasions": {
+    "title": "Islamic occasions",
+    "subtitle": "Coming up in the Hijri year {}",
+    "today": "Today",
+    "in_days_one": "In {} day",
+    "in_days_two": "In {} days",
+    "in_days_few": "In {} days",
+    "in_days_many": "In {} days",
+    "source_online": "Dates from the Umm al-Qura calendar via AlAdhan; they may move by a day with the moon sighting.",
+    "source_offline": "Dates computed from the Umm al-Qura calendar kept on your device (no connection right now); they may move by a day with the moon sighting.",
+    "new_year": "Islamic New Year",
+    "ashura": "Day of 'Ashura",
+    "ramadan_start": "First day of Ramadan",
+    "last_ten": "The last ten days of Ramadan",
+    "eid_fitr": "Eid al-Fitr",
+    "dhul_hijjah_start": "First of Dhul-Hijjah (the first ten days)",
+    "arafah": "Day of 'Arafah",
+    "eid_adha": "Eid al-Adha",
+    "tashreeq": "Days of Tashreeq (11–13 Dhul-Hijjah)"
   }
 }

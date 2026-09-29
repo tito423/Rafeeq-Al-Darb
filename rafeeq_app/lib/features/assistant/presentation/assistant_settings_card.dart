@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -22,11 +23,30 @@ class AssistantSettingsCard extends ConsumerStatefulWidget {
 
 class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
   final _pack = RafeeqVoicePack.instance;
+  static const _channel = MethodChannel('com.tito.rafeeq_aldarb/assistant');
+  bool? _overlayOk;
 
   @override
   void initState() {
     super.initState();
     _pack.check();
+    _readOverlay();
+  }
+
+  Future<void> _readOverlay() async {
+    try {
+      final ok = await _channel.invokeMethod<bool>('overlayCan');
+      if (mounted) setState(() => _overlayOk = ok);
+    } catch (_) {
+      // Not Android, or the channel is not up: no row.
+    }
+  }
+
+  Future<void> _grantOverlay() async {
+    await _channel.invokeMethod<void>('overlayRequest');
+    // The system screen returns to the app when the reader is done.
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (mounted) await _readOverlay();
   }
 
   Future<void> _download() async {
@@ -81,6 +101,18 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                             .set(v);
                       },
               ),
+              if (_overlayOk == false) ...[
+                const Divider(height: 1),
+                ListTile(
+                  leading: Icon(Icons.layers_rounded, color: scheme.primary),
+                  title: Text('assistant.overlay_title'.tr()),
+                  subtitle: Text('assistant.overlay_desc'.tr()),
+                  trailing: FilledButton(
+                    onPressed: _grantOverlay,
+                    child: Text('assistant.overlay_grant'.tr()),
+                  ),
+                ),
+              ],
               const Divider(height: 1),
               ListTile(
                 leading: Icon(Icons.download_for_offline_rounded,

@@ -39,32 +39,44 @@ void main() {
                     f.path.endsWith('.dart') || f.path.endsWith('.kt')),
       ].map((f) => f.readAsStringSync()).toList();
 
-  test('SYSTEM_ALERT_WINDOW is not declared', () {
-    expect(declared.contains('android.permission.SYSTEM_ALERT_WINDOW'), isFalse,
-        reason: 'it was removed on 2026-09-17 because nothing used it. If a '
-            'real overlay fallback is ever written, add the permission in '
-            'the SAME commit as the code and relax this test then — not '
-            'before.');
-  });
-
-  test('and nothing in the app tries to use an overlay window', () {
-    // The other half: the permission and the code have to agree. If someone
-    // adds the API without the permission the call fails silently at runtime,
-    // which is worse than a build error.
+  test('SYSTEM_ALERT_WINDOW is declared only together with its code', () {
+    // Re-declared on 2026-09-29 in the same commit as `AssistantOverlay.kt`
+    // (owner: «رفيق فوق أي تطبيق»), which is exactly what the 2026-09-17
+    // removal note asked for. The permission and the code must agree in both
+    // directions: no permission without the code that uses it, and no
+    // overlay API without the permission that gates it.
     const overlayApis = [
       'canDrawOverlays',
       'TYPE_APPLICATION_OVERLAY',
       'ACTION_MANAGE_OVERLAY_PERMISSION',
     ];
+    final used = sourceFiles()
+        .any((src) => overlayApis.any((api) => src.contains(api)));
+    final has = declared.contains('android.permission.SYSTEM_ALERT_WINDOW');
+    expect(has, used,
+        reason: 'declared=$has but overlay code present=$used - they must '
+            'agree (an unused permission is abusable; an ungated API fails '
+            'silently at runtime)');
+  });
+
+  test('only the assistant overlay draws over other apps', () {
+    // The permission is the most abusable one Android has; the only file that
+    // may use its APIs is the assistant's own small card.
+    const overlayApis = [
+      'TYPE_APPLICATION_OVERLAY',
+      'ACTION_MANAGE_OVERLAY_PERMISSION',
+    ];
     final offenders = <String>[];
-    for (final src in sourceFiles()) {
-      for (final api in overlayApis) {
-        if (src.contains(api)) offenders.add(api);
+    for (final dir in const ['android/app/src/main/kotlin', 'lib']) {
+      if (!Directory(dir).existsSync()) continue;
+      for (final f in Directory(dir).listSync(recursive: true).whereType<File>()) {
+        if (!(f.path.endsWith('.kt') || f.path.endsWith('.dart'))) continue;
+        if (f.path.endsWith('AssistantOverlay.kt')) continue;
+        final src = f.readAsStringSync();
+        if (overlayApis.any(src.contains)) offenders.add(f.path);
       }
     }
-    expect(offenders, isEmpty,
-        reason: 'these need SYSTEM_ALERT_WINDOW, which is no longer '
-            'declared, so they would fail at runtime: $offenders');
+    expect(offenders, isEmpty);
   });
 
   test('the adhan still has what it needs to cross the lock screen', () {
