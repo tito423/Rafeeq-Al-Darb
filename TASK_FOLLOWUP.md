@@ -13,6 +13,12 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~00:30 (09-30, Opus) STAGE C RESEARCH (checked live today, nothing built yet):
+ - Mishary Alafasy, morning and evening SEPARATE, on IslamHouse (islamhouse.com/ar/audios/92368/): d1.islamhouse.com/data/ar/ih_sounds/chain_01/Mishari_Raashid/Azkar_AlSba7_w_AlMsa/ar_{1434|1432|1419}_Azkar_{AlSba7|AlMsa}.mp3 - all six answered 206 audio/mpeg (1434 evening = 24,109,982 B; 1434 morning 31.8 MB per the page). No explicit licence on the page; IslamHouse's stated mission is free distribution - plan: stream/download from their host, credit, never rehost.
+ - hisnmuslim.com chapter 27 «أذكار الصباح والمساء» = ONE combined file (5,339,144 B), reader unnamed -> not separable.
+ - IslamWeb audio: «جميع الحقوق محفوظة» -> EXCLUDED.
+ - Still needed: at least one more named sheikh with separate morning/evening files and a clear right to use (try IslamHouse's other reciters, archive.org uploads by the reciter's own channel, mp3quran). Sleep adhkar complete recording: not searched yet.
+
 ~00:15 (09-30, Opus) ADHKAR AUDIO STAGE B DONE AND SEEN on emulator: «استمع» on every dhikr that has a recording (AzkarSectionScreen = Azkar tab AND kids corner), on the app's one player (playTrack, notification can stop it), turns to «إيقاف» while playing (seen, app AudioTrack started 24 kHz), stops on swipe and on leaving the screen. Pairing rule refined: letters compared without spaces or printed counts (so «بعدما» = «بعد ما»), order and any other word still refuse -> 219 of 302 paired. Credited on Sources (hisnmuslim.com, «the site names no reciter») x7. 674 tests pass. NEXT EXACT: stage C (morning / evening complete by named sheikhs, download per sheikh, full-screen calm player or background, option in the reminders list) - FIRST find and verify real complete recordings and their rights; then queue items 2 (Journey interactive), 3 (Dedications redesign), 4 (emulator checks).
 
 ~23:45 (09-29, Opus) OWNER QUEUE (all asked tonight, in this order; NO release until he looks himself):
@@ -876,6 +882,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 23:15 - Stage C research logged: Alafasy morning/evening verified on IslamHouse; IslamWeb excluded (all rights reserved)
 - 2026-09-29 23:13 - Listen button on every dhikr with a word-for-word recording (219 of 302), shared player, credited; seen on emulator
 - 2026-09-29 22:59 - Adhkar audio stage A: 213 of 302 adhkar paired word-for-word with hisnmuslim.com recordings (all urls checked); owner queue logged
 - 2026-09-29 22:40 - Kids game asks each ayah once then moves on; Rafeeq can listen through a Bluetooth headset (opt-in, call-route aware)
