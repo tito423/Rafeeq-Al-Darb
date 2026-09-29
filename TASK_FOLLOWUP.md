@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~23:15 (09-29, Opus) IN CODE, analyze clean, FULL SUITE 674 pass: (c) kids game no longer repeats: each ayah asked once per surah, then the game moves to the next surah of the stage (it drew with replacement from ONE surah, al-Fatihah = 6 usable ayahs); test in journey_store_test. (d) «رفيق» through a Bluetooth headset mic: new setting «اسمعني من سماعة البلوتوث» (assistant_bt_mic_v1, OFF by default because the phone must stay in communication mode while listening -> other headset sound at call quality) in the Rafeeq settings card x7 locales; rafeeq_ear opens the headset like the tasmee (routeTasmeeToBluetooth + voiceCommunication + named device) and restores the route on stop; busy() now returns the audio mode so our own IN_COMMUNICATION is not taken for a call; headset connect/disconnect re-checked every 5 s. NOT verifiable on the emulator (no Bluetooth headset): owner must try it. NEXT EXACT: build debug, emulator: kids names/tap/game, Rafeeq 2:255 with a TTS clip if the voice pack is on the emulator, compass sweep, adhan test vibration. No release.
+
 ~22:55 (09-29, Opus) IN CODE, analyze clean, assistant tests 25/25 (NOT yet run on the emulator, full suite not yet run): (a) new OpenQuranAyahIntent (assistant_ayah_ref.dart): «افتح … سورة البقرة آية ٢٥٥» / spoken numbers «مئتين وخمسة وخمسين» / «آية الكرسي» open the mushaf page and bring the app forward; «شغل البقرة من آية ٢٥٥» plays FROM that ayah (PlaySurahIntent.fromAyah); «افتح سورة الكهف» now opens instead of playing; «آية بآية لمحمد صديق» stays the ayah player. (b) kids: surah names via surahNamePlain (the Uthmani small marks drew «شورة» / broken glyphs on the owner's phone - the helper existed since 09-23 and was not used); the whole surah card opens the recitation. OWNER ALSO REPORTED, NOT YET DONE: «يا رفيق» does not hear his Bluetooth headset mic (under a helmet): rafeeq_ear.dart records with manageBluetooth:false from the phone mic; tasmee_mic.dart already routes a headset (setCommunicationDevice) - reuse it. And: why does the kids stage-1 game repeat questions (random with replacement over a small pool) - answer + fix.
 
 ~22:40 (09-29, Opus) OWNER BUG: «يا رفيق افتح التطبيق على القرآن سورة البقرة آية ٢٥٥» (said from outside the app) -> did NOT open the mushaf at 2:255; it started a recitation in al-Minshawi's voice (not chosen by him) from the START of the surah, in the background, and never brought the app to the screen. NEXT EXACT: find how this sentence parses (assistant_intent), fix to open the mushaf at 2:255 + bring the app forward, regression test with the exact words, emulator check.
@@ -864,6 +866,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 22:40 - Kids game asks each ayah once then moves on; Rafeeq can listen through a Bluetooth headset (opt-in, call-route aware)
 - 2026-09-29 22:33 - Rafeeq opens the mushaf on a said surah/ayah (and plays from it); kids surah names without Uthmani marks; whole surah card opens recitation
 - 2026-09-29 22:23 - Compass haptic only while its route is current; optional vibration with the full-screen adhan (off by default, stops with the adhan); owner's Rafeeq 2:255 bug logged
 - 2026-09-29 21:52 - HANDOVER state block for v3.71.0; 25/9 plan item 4 (silent text-mushaf play) re-checked: plays on emulator

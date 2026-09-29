@@ -2194,6 +2194,8 @@
     "pack_failed": "Le pack vocal n’a pas pu être téléchargé",
     "notif_text": "À l’écoute de « Rafeeq »",
     "notif_stop": "Arrêter",
+    "bt_mic": "M’écouter via le casque Bluetooth",
+    "bt_mic_desc": "Quand un casque Bluetooth est connecté, Rafeeq écoute par son micro (utile sous un casque de moto ou téléphone en poche). Le téléphone reste en mode appel pendant l’écoute : les autres sons du casque ont alors une qualité d’appel.",
     "overlay_title": "Affichage par-dessus les autres apps",
     "overlay_desc": "Permet à Rafeeq d'apparaître par-dessus n'importe quelle app ou l'écran d'accueil quand vous l'appelez, puis d'ouvrir dans l'application ce que vous demandez. Sans cela, il ne fonctionne que l'application ouverte.",
     "overlay_grant": "Autoriser",

@@ -2194,6 +2194,8 @@
     "pack_failed": "Não foi possível transferir o pacote de voz",
     "notif_text": "A ouvir «Rafeeq»",
     "notif_stop": "Parar",
+    "bt_mic": "Ouvir-me pelo fone Bluetooth",
+    "bt_mic_desc": "Com um fone Bluetooth conectado, o Rafeeq escuta pelo microfone dele (útil sob o capacete ou com o telefone no bolso). O telefone fica em modo de chamada enquanto o Rafeeq escuta, então os outros sons no fone ficam com qualidade de chamada.",
     "overlay_title": "Exibir sobre outros apps",
     "overlay_desc": "Permite que o Rafeeq apareça sobre qualquer app ou a tela inicial quando você o chama e abra o que pediu dentro do app. Sem isso, só funciona com o app aberto.",
     "overlay_grant": "Permitir",

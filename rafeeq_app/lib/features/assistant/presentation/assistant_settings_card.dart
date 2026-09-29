@@ -101,6 +101,18 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                             .set(v);
                       },
               ),
+              if (enabled && installed == true) ...[
+                const Divider(height: 1),
+                SwitchListTile(
+                  secondary:
+                      Icon(Icons.bluetooth_audio_rounded, color: scheme.primary),
+                  title: Text('assistant.bt_mic'.tr()),
+                  subtitle: Text('assistant.bt_mic_desc'.tr()),
+                  value: ref.watch(assistantBluetoothMicProvider),
+                  onChanged: (v) =>
+                      ref.read(assistantBluetoothMicProvider.notifier).set(v),
+                ),
+              ],
               if (_overlayOk == false) ...[
                 const Divider(height: 1),
                 ListTile(

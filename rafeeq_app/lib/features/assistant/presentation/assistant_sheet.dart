@@ -288,7 +288,19 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       }
       final busy = await _channel.invokeMapMethod<String, dynamic>('busy') ?? {};
       final ours = _ear.listening.value ? 1 : 0;
-      final quiet = busy['call'] != true &&
+      // Our own Bluetooth call route (MODE_IN_COMMUNICATION = 3) is not a
+      // call; ringing and a real call still are.
+      final call = busy['call'] == true &&
+          !(_ear.viaBluetooth && busy['mode'] == 3);
+      // The headset setting changed, or a headset came or went: reopen the
+      // microphone on the right source (checked every 5 s).
+      _ear.wantBluetooth = ref.read(assistantBluetoothMicProvider);
+      if (_ear.listening.value && ++_btTick % 5 == 0 &&
+          (_ear.wantBluetooth ? await _ear.bluetoothPresent() : false) !=
+              _ear.viaBluetooth) {
+        await _ear.stop();
+      }
+      final quiet = !call &&
           busy['playing'] != true &&
           ((busy['recording'] as int?) ?? 0) <= ours &&
           (_foreground || _serviceOn) &&
@@ -306,6 +318,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     }
   }
 
+  int _btTick = 0;
   DateTime? _fedAt;
   Future<void> _testClip() async => _fedAt = await _ear.feedTestClip() ?? _fedAt;
 
@@ -376,6 +389,10 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
   Widget build(BuildContext context) {
     ref.listen<bool>(assistantEnabledProvider, (_, _) => _check());
     ref.listen<bool>(assistantShellUpProvider, (_, _) => _check());
+    ref.listen<bool>(assistantBluetoothMicProvider, (_, _) async {
+      if (_ear.listening.value) await _ear.stop();
+      await _check();
+    });
     return const SizedBox.shrink();
   }
 }

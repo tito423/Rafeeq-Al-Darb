@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
+import '../../hifz/data/tasmee_mic.dart';
 import 'rafeeq_voice_pack.dart';
 
 /// «رفيق»'s ear: the microphone -> silero VAD -> omnilingual-asr, all on the
@@ -37,6 +38,19 @@ class RafeeqEar {
   final ValueNotifier<bool> listening = ValueNotifier(false);
 
   AudioRecorder? _mic;
+
+  /// Listen through a connected Bluetooth headset (set from the settings,
+  /// applied at the next [start]).
+  bool wantBluetooth = false;
+
+  /// True while the microphone is the headset's, with the call route that
+  /// needs; [stop] undoes it.
+  bool get viaBluetooth => _viaBluetooth;
+  bool _viaBluetooth = false;
+
+  /// Whether a Bluetooth headset microphone is connected now.
+  Future<bool> bluetoothPresent() async =>
+      (await TasmeeMics.find(_mic ??= AudioRecorder())).hasBluetooth;
   StreamSubscription<Uint8List>? _micSub;
   SendPort? _toWorker;
   ReceivePort? _fromWorker;
@@ -70,15 +84,28 @@ class RafeeqEar {
           await _ensureWorker();
           final mic = _mic ??= AudioRecorder();
           if (!await mic.hasPermission()) return;
-          final stream = await mic.startStream(const RecordConfig(
+          // A headset the way the tasmee opens one (tasmee_mic.dart): named,
+          // the call route moved to it, the voice-communication source.
+          final mics = wantBluetooth
+              ? await TasmeeMics.find(mic)
+              : const TasmeeMics(null, null);
+          final bt = mics.hasBluetooth && await routeTasmeeToBluetooth();
+          _viaBluetooth = bt;
+          final stream = await mic.startStream(RecordConfig(
             encoder: AudioEncoder.pcm16bits,
             sampleRate: 16000,
             numChannels: 1,
             audioInterruption: AudioInterruptionMode.none,
-            androidConfig: AndroidRecordConfig(
-              audioSource: AndroidAudioSource.voiceRecognition,
-              manageBluetooth: false,
-            ),
+            device: bt ? mics.bluetooth : null,
+            androidConfig: bt
+                ? const AndroidRecordConfig(
+                    audioSource: AndroidAudioSource.voiceCommunication,
+                    audioManagerMode: AudioManagerMode.modeInCommunication,
+                  )
+                : const AndroidRecordConfig(
+                    audioSource: AndroidAudioSource.voiceRecognition,
+                    manageBluetooth: false,
+                  ),
           ));
           _micSub = stream.listen((chunk) => _toWorker?.send(pcm16ToFloat(chunk)));
           listening.value = true;
@@ -124,6 +151,10 @@ class RafeeqEar {
     await _micSub?.cancel();
     _micSub = null;
     if (listening.value) await _mic?.stop();
+    if (_viaBluetooth) {
+      _viaBluetooth = false;
+      await restoreAudioRoute();
+    }
     listening.value = false;
     speaking.value = false;
     _toWorker?.send('reset');

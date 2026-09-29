@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 22:33 — IN PROGRESS — resume here**
+**2026-09-29 22:40 — IN PROGRESS — resume here**
 
-Rafeeq opens the mushaf on a said surah/ayah (and plays from it); kids surah names without Uthmani marks; whole surah card opens recitation
+Kids game asks each ayah once then moves on; Rafeeq can listen through a Bluetooth headset (opt-in, call-route aware)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

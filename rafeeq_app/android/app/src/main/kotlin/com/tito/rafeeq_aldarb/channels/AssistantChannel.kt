@@ -35,6 +35,10 @@ fun MainActivity.registerAssistantChannel(flutterEngine: FlutterEngine) {
                     result.success(
                         mapOf(
                             "call" to (mode != AudioManager.MODE_NORMAL),
+                            // The exact mode, so Dart can tell its OWN
+                            // Bluetooth call route (IN_COMMUNICATION) from
+                            // a ringing phone or a real call.
+                            "mode" to mode,
                             "playing" to am.isMusicActive,
                             "recording" to recording,
                         ),

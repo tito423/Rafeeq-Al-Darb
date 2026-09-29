@@ -19,6 +19,27 @@ class AssistantEnabled extends StateNotifier<bool> {
   }
 }
 
+/// «رفيق» hears through a Bluetooth headset's microphone when one is
+/// connected (owner, 2026-09-29: «السماعة البلوتوث في وداني تحت الخوذة»).
+/// Off by default, because a headset microphone needs the phone in
+/// communication mode for as long as «رفيق» listens, and in that mode other
+/// sound in the headset plays at call quality.
+class AssistantBluetoothMic extends StateNotifier<bool> {
+  AssistantBluetoothMic(this._prefs) : super(_prefs.getBool(_key) ?? false);
+
+  final SharedPreferences _prefs;
+  static const _key = 'assistant_bt_mic_v1';
+
+  Future<void> set(bool on) async {
+    state = on;
+    await _prefs.setBool(_key, on);
+  }
+}
+
+final assistantBluetoothMicProvider =
+    StateNotifierProvider<AssistantBluetoothMic, bool>(
+        (ref) => AssistantBluetoothMic(ref.watch(sharedPrefsProvider)));
+
 final assistantEnabledProvider =
     StateNotifierProvider<AssistantEnabled, bool>(
         (ref) => AssistantEnabled(ref.watch(sharedPrefsProvider)));

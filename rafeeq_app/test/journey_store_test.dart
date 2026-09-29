@@ -61,4 +61,26 @@ void main() {
       expect(q.choices, contains(q.answer));
     }
   });
+
+  // «ليه بيعيد الاسئلة» (owner, 2026-09-29): an ayah is not asked twice
+  // until the surah has none left.
+  test('no ayah is asked twice before the surah runs out', () async {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+    final repo = QuranRepository(await databaseFactory.openDatabase(
+        File('assets/data/quran_local.db').absolute.path,
+        options: OpenDatabaseOptions(readOnly: true)));
+    final ayahs = await repo.ayahsOfSurah(1);
+    final asked = <int>{};
+    final rnd = Random(3);
+    while (true) {
+      final q = makeAyahQuestion(ayahs, rnd, exclude: asked);
+      if (q == null) break;
+      expect(asked.add(q.ayah.ayahNumber), isTrue,
+          reason: 'ayah ${q.ayah.ayahNumber} asked twice');
+    }
+    // al-Fatihah: 7 ayahs; only 1:3 «الرحمن الرحيم» is too short (2 words).
+    expect(asked.length, 6);
+    expect(asked.contains(3), isFalse);
+  });
 }

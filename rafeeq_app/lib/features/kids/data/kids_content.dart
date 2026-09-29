@@ -31,9 +31,15 @@ List<String> _words(String text) =>
 
 /// Builds a question from [ayahs] (one surah): an ayah of at least three
 /// words, its last word as the answer, and two other words of the same surah
-/// that differ from it. Null when the surah cannot make one (too short).
-AyahQuestion? makeAyahQuestion(List<Ayah> ayahs, Random rnd) {
-  final usable = [for (final a in ayahs) if (_words(a.textUthmani).length >= 3) a];
+/// that differ from it. Ayahs whose numbers are in [exclude] (already asked)
+/// are skipped. Null when the surah has no ayah left to ask.
+AyahQuestion? makeAyahQuestion(List<Ayah> ayahs, Random rnd,
+    {Set<int> exclude = const {}}) {
+  final usable = [
+    for (final a in ayahs)
+      if (_words(a.textUthmani).length >= 3 && !exclude.contains(a.ayahNumber))
+        a,
+  ];
   if (usable.isEmpty) return null;
   final pool = <String>{for (final a in ayahs) ..._words(a.textUthmani)};
   for (var tries = 0; tries < 10; tries++) {

@@ -2194,6 +2194,8 @@
     "pack_failed": "No se pudo descargar el paquete de voz",
     "notif_text": "Escuchando «Rafeeq»",
     "notif_stop": "Detener",
+    "bt_mic": "Escúchame por los auriculares Bluetooth",
+    "bt_mic_desc": "Con unos auriculares Bluetooth conectados, Rafeeq escucha por su micrófono (útil bajo el casco o con el teléfono en el bolsillo). El teléfono queda en modo llamada mientras Rafeeq escucha, así que el resto del sonido en los auriculares suena con calidad de llamada.",
     "overlay_title": "Mostrar sobre otras apps",
     "overlay_desc": "Permite que Rafeeq aparezca sobre cualquier app o la pantalla de inicio cuando lo llamas, y abra lo que pediste dentro de la app. Sin esto solo funciona con la app abierta.",
     "overlay_grant": "Permitir",

@@ -35,6 +35,13 @@ class _AyahGameScreenState extends ConsumerState<AyahGameScreen> {
   int _score = 0;
   int _asked = 0;
 
+  /// Ayahs of [_surahId] already asked. Owner, 2026-09-29: «ليه بيعيد
+  /// الاسئلة»: the game drew a random ayah each time from ONE surah (the
+  /// stage's first, al-Fatihah: five usable ayahs) and forgot what it had
+  /// asked, so questions came back within a few turns. Now each ayah is
+  /// asked once, and when a surah runs out the game moves to the next one.
+  final Set<int> _done = {};
+
   @override
   void initState() {
     super.initState();
@@ -44,10 +51,21 @@ class _AyahGameScreenState extends ConsumerState<AyahGameScreen> {
   Future<void> _next() async {
     final repo = await ref.read(quranRepositoryProvider.future);
     _surahs ??= await repo.surahs();
-    final ayahs = await repo.ayahsOfSurah(_surahId);
+    AyahQuestion? q;
+    // Every surah in the list at most once, then start the round again.
+    for (var tries = 0; tries <= widget.surahIds.length && q == null; tries++) {
+      final ayahs = await repo.ayahsOfSurah(_surahId);
+      q = makeAyahQuestion(ayahs, _rnd, exclude: _done);
+      if (q == null) {
+        final i = widget.surahIds.indexOf(_surahId);
+        _surahId = widget.surahIds[(i + 1) % widget.surahIds.length];
+        _done.clear();
+      }
+    }
     if (!mounted) return;
+    if (q != null) _done.add(q.ayah.ayahNumber);
     setState(() {
-      _q = makeAyahQuestion(ayahs, _rnd);
+      _q = q;
       _picked = null;
     });
   }
@@ -89,7 +107,10 @@ class _AyahGameScreenState extends ConsumerState<AyahGameScreen> {
                             : surahs[id - 1].nameEn),
                         selected: id == _surahId,
                         onSelected: (_) {
-                          setState(() => _surahId = id);
+                          setState(() {
+                            _surahId = id;
+                            _done.clear();
+                          });
                           _next();
                         },
                       ),
