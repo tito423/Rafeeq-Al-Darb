@@ -858,6 +858,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 21:52 - HANDOVER state block for v3.71.0; 25/9 plan item 4 (silent text-mushaf play) re-checked: plays on emulator
 - 2026-09-29 21:43 - Record verified v3.71.0 GitHub release (tag == HEAD, SHA matches re-download); v3.70.0 removed
 - 2026-09-29 21:37 - Bump to 3.71.0+85 for release (pubspec + About); analyze clean, 667 tests
 - 2026-09-29 20:20 - Hadith card: calm ground instead of the rejected star-panel photo; calm ground on continue-reading, khatma, selected-surahs; sunan and quote kept
