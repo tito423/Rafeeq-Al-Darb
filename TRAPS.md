@@ -599,6 +599,27 @@ Do not rediscover these.
     installed again. `-gpu swiftshader_indirect` has run without a crash
     since. Launch: `emulator -avd Medium_Phone_API_36.1 -no-window -no-audio
     -gpu swiftshader_indirect`.
+    Update (2026-09-29, measured): SWIFTSHADER now crashes too - 9 times
+    between 15:41 and 16:34, every 3-10 minutes. The minidumps
+    (`%LOCALAPPDATA%\CrashDumps\qemu-system-x86_64-headless.exe.*.dmp`,
+    read with `py -3 -m pip install minidump`) all fault on a
+    `gles_swiftshader\libGLESv2.dll` worker thread (stack
+    `libGLESv2.dll+0x207aba ... +0x2083c0`) executing SwiftShader's JIT
+    code, so the host software renderer is what dies, not the app, WHPX or
+    Avast (no Avast module in the process). `-gpu guest` and
+    `-gpu angle_indirect` are NOT alternatives on this emulator (36.3.10,
+    gfxstream): the log says `gpu mode swiftshader_indirect` for both. What
+    works: `-gpu host` (NVIDIA RTX 3050, driver 32.0.15.5597) booted in 43 s
+    and ran app installs, rotation and navigation for 10+ minutes with no
+    crash. Launch: `emulator -avd Medium_Phone_API_36.1 -no-window -no-audio
+    -no-snapshot -gpu host`. If host crashes again, reach for a driver
+    update before going back to swiftshader.
+    Also: `adb shell wm size 2400x1080` is NOT landscape - it only stretches
+    the display and persists across app restarts. Rotate with
+    `adb shell settings put system accelerometer_rotation 0` +
+    `adb shell settings put system user_rotation 1`; undo `wm size` with
+    `adb shell wm size reset`. Checked «landscape» with wm size missed a
+    61 px overflow on the Home prayer card that real rotation showed.
 
 58. **Two plugins, one `libonnxruntime.so`: `pickFirsts` picks per ABI, and it
     picked the wrong one.** `onnxruntime` (the book reader's voice) ships ORT

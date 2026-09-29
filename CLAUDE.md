@@ -364,7 +364,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 54. Never run `flutter test` or edit `lib/` while a release build is running.
 55. `cp.bat` commits tracked files only - `git add` every new file (it now warns).
 56. Restarting the emulator resumes an OLD snapshot - reinstall and re-check `lastUpdateTime` every time.
-57. The emulator window hangs the emulator here since 2026-09-26 - launch with `-no-window -no-audio -gpu swiftshader_indirect` (host GPU crashed headless too).
+57. The emulator window hangs the emulator here since 2026-09-26 - launch headless with `-no-window -no-audio -no-snapshot -gpu host`; swiftshader's JIT crashed qemu every 3-10 min on 2026-09-29 (read the minidump), and `wm size` is not landscape.
 58. Two plugins ship `libonnxruntime.so` and `pickFirsts` chose the OLD one for ARM only - the emulator (x86_64) hid it; `check_apk_native.py` now fails the build.
 59. A platform-channel `Uint8List` is a view at byte 5 - `asInt16List` on it throws; a test clip fed past the mic path hid it (v3.69.0 «رفيق» heard nothing).
 

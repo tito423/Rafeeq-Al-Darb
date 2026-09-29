@@ -2509,9 +2509,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 16:32 — IN PROGRESS — resume here**
+**2026-09-29 17:02 — IN PROGRESS — resume here**
 
-Rafeeq answers Quran word questions by voice (one hit opens the mushaf, many hits give a pickable list), tests on the real corpus
+Emulator crashes root-caused from minidumps (SwiftShader JIT; -gpu host is stable); real-rotation check found and fixed a 61px overflow on the Home prayer card; library, book slider bubble and dark Home seen
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

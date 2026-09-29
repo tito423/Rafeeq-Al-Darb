@@ -80,13 +80,13 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
     // and 26 dp of air. Everything inside it scales down to fit.
     final panelHeight = twoPane
         ? (media.size.height -
-                media.padding.vertical -
-                _homeListVertical -
-                126 -
-                12 -
-                36 -
-                26)
-            .clamp(150.0, 340.0)
+                  media.padding.vertical -
+                  _homeListVertical -
+                  126 -
+                  12 -
+                  36 -
+                  26)
+              .clamp(150.0, 340.0)
         : 236.0;
     final analogSize = twoPane ? (panelHeight - 44).clamp(90.0, 240.0) : 132.0;
 
@@ -214,8 +214,7 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                         children: [
                           _PrayerBadge(
                             icon: prayerHeroIcons[shown.$1]!,
-                            color:
-                                onPhoto.accent(prayerSlideColors[shown.$1]!),
+                            color: onPhoto.accent(prayerSlideColors[shown.$1]!),
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -273,8 +272,11 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.location_on,
-                          size: 14, color: onPhoto.onSurfaceMuted),
+                      Icon(
+                        Icons.location_on,
+                        size: 14,
+                        color: onPhoto.onSurfaceMuted,
+                      ),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
@@ -293,99 +295,121 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                 );
 
           // The panel: photograph, scrim, then the two sides.
-          final Widget panel = ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: panelHeight,
-                maxHeight: twoPane ? panelHeight : double.infinity,
-              ),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 700),
-                      child: SizedBox.expand(
-                        key: ValueKey(shown?.$1 ?? 'none'),
-                        child: shown == null
-                            ? const ColoredBox(color: Color(0xFF0B0F1A))
-                            : Image.asset(
-                                'assets/prayer_backgrounds/${shown.$1}.jpg',
-                                fit: BoxFit.cover,
-                                cacheWidth: 1000,
-                                errorBuilder: (_, _, _) =>
-                                    const ColoredBox(color: Color(0xFF0B0F1A)),
-                              ),
-                      ),
-                    ),
-                  ),
-                  // 0.6 - 0.72 black: measured against each photograph's
-                  // brightest 0.5 % (worst: Asr 5.7 : 1 for white text).
-                  Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black.withValues(alpha: 0.6),
-                            Colors.black.withValues(alpha: 0.72),
-                          ],
+          final Widget panel = SizedBox(
+            // Full width even when the content inside scales down.
+            width: double.infinity,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: panelHeight,
+                  maxHeight: twoPane ? panelHeight : double.infinity,
+                ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 700),
+                        child: SizedBox.expand(
+                          key: ValueKey(shown?.$1 ?? 'none'),
+                          child: shown == null
+                              ? const ColoredBox(color: Color(0xFF0B0F1A))
+                              : Image.asset(
+                                  'assets/prayer_backgrounds/${shown.$1}.jpg',
+                                  fit: BoxFit.cover,
+                                  cacheWidth: 1000,
+                                  errorBuilder: (_, _, _) => const ColoredBox(
+                                    color: Color(0xFF0B0F1A),
+                                  ),
+                                ),
                         ),
                       ),
                     ),
-                  ),
-                  // Everything on the photograph is drawn with the dark theme,
-                  // whatever the app's own is: the countdown and the clock
-                  // faces read `Theme` for their tones.
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      brightness: Brightness.dark,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              if (nameBlock != null)
-                                Expanded(
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    alignment: AlignmentDirectional.centerStart,
-                                    child: nameBlock,
-                                  ),
-                                ),
-                              const SizedBox(width: 10),
-                              // The clock takes what it needs but never more
-                              // than 46 % of the panel, so a wide digital face
-                              // scales down instead of crowding the name.
-                              Flexible(
-                                flex: 0,
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth:
-                                        (media.size.width - 36 - 32) * 0.46,
-                                    maxHeight: panelHeight - 50,
-                                  ),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: clockBlock,
-                                  ),
-                                ),
-                              ),
+                    // 0.6 - 0.72 black: measured against each photograph's
+                    // brightest 0.5 % (worst: Asr 5.7 : 1 for white text).
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.6),
+                              Colors.black.withValues(alpha: 0.72),
                             ],
                           ),
-                          if (locationBlock != null) ...[
-                            const SizedBox(height: 10),
-                            locationBlock,
-                          ],
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    // Everything on the photograph is drawn with the dark theme,
+                    // whatever the app's own is: the countdown and the clock
+                    // faces read `Theme` for their tones.
+                    Theme(
+                      data: Theme.of(
+                        context,
+                      ).copyWith(brightness: Brightness.dark),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                        // Sideways the panel's height is fixed to what the column
+                        // has, so its content scales down as one piece instead of
+                        // overflowing (seen on emulator-5554 rotated, 2026-09-29:
+                        // «BOTTOM OVERFLOWED BY 61 PIXELS» over the countdown).
+                        child: LayoutBuilder(
+                          builder: (context, box) {
+                            final Widget content = Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    if (nameBlock != null)
+                                      Expanded(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          alignment:
+                                              AlignmentDirectional.centerStart,
+                                          child: nameBlock,
+                                        ),
+                                      ),
+                                    const SizedBox(width: 10),
+                                    // The clock takes what it needs but never more
+                                    // than 46 % of the panel, so a wide digital face
+                                    // scales down instead of crowding the name.
+                                    Flexible(
+                                      flex: 0,
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          maxWidth: box.maxWidth * 0.46,
+                                          maxHeight: panelHeight - 50,
+                                        ),
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: clockBlock,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (locationBlock != null) ...[
+                                  const SizedBox(height: 10),
+                                  locationBlock,
+                                ],
+                              ],
+                            );
+                            return twoPane
+                                ? FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: SizedBox(
+                                      width: box.maxWidth,
+                                      child: content,
+                                    ),
+                                  )
+                                : content;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -416,16 +440,16 @@ class _PrayerBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: 46,
-        height: 46,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.black.withValues(alpha: 0.35),
-          border: Border.all(color: color.withValues(alpha: 0.7), width: 1.5),
-          boxShadow: [
-            BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 14),
-          ],
-        ),
-        child: Icon(icon, color: color, size: 26),
-      );
+    width: 46,
+    height: 46,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: Colors.black.withValues(alpha: 0.35),
+      border: Border.all(color: color.withValues(alpha: 0.7), width: 1.5),
+      boxShadow: [
+        BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 14),
+      ],
+    ),
+    child: Icon(icon, color: color, size: 26),
+  );
 }
