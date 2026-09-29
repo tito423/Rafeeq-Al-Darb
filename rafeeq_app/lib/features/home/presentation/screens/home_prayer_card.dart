@@ -90,18 +90,33 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
         : 236.0;
     final analogSize = twoPane ? (panelHeight - 44).clamp(90.0, 240.0) : 132.0;
 
+    // ONE photograph under the whole card - the next prayer and the slides
+    // (owner, 2026-09-29: «الخلفية دي تغطي الكارت الأكبر … مش يبقى كل واحد
+    // فيهم منفرد»). It is washed in the theme's own hero colours: deep in the
+    // dark and RGB themes with white text, paper-pale in the light theme with
+    // dark text, the same way the header's painted scene follows the theme.
+    // The wash strengths are the ones scripts/check_prayer_card_contrast.py
+    // measured against every photograph.
+    final wash = hero.isDark
+        ? [
+            hero.gradient[0].withValues(alpha: 0.76),
+            hero.gradient[1].withValues(alpha: 0.83),
+            hero.gradient[2].withValues(alpha: 0.87),
+          ]
+        : [
+            hero.gradient[0].withValues(alpha: 0.80),
+            hero.gradient[1].withValues(alpha: 0.84),
+            hero.gradient[2].withValues(alpha: 0.88),
+          ];
+    final photoKey = shown?.$1 ?? next?.$1;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeInOut,
       clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: hero.gradient,
-        ),
+        color: hero.gradient[1],
         border: Border.all(color: hero.border),
         // A cast under the card so it lifts off the page instead of sitting
         // flat on it — the clock is the first thing on the screen and should
@@ -115,317 +130,334 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
           ),
         ],
       ),
-      child: Builder(
-        builder: (context) {
-          // The clock and the next prayer stand on a photograph of a mosque
-          // at the hour of that prayer (owner, 2026-09-29): the prayer's name
-          // and countdown at the start side, the clock at the other. The
-          // photograph is always darkened, so the panel reads the same in
-          // every theme and takes the DARK hero palette (`onPhoto`).
-          final onPhoto = HeroSurface.dark;
-          final Widget clockBlock = TutorialAnchor(
-            id: TourAnchor.homeClock,
-            child: Builder(
-              builder: (clockContext) => InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () =>
-                    ClockGallerySheet.show(context, origin: clockContext),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 420),
-                    switchInCurve: Curves.easeOutBack,
-                    switchOutCurve: Curves.easeIn,
-                    transitionBuilder: (child, anim) => FadeTransition(
-                      opacity: anim,
-                      child: ScaleTransition(scale: anim, child: child),
-                    ),
-                    child: KeyedSubtree(
-                      key: ValueKey(
-                        '${clock.style}-${clock.digitalFace}-${clock.analogFace}-'
-                        '${clock.use12Hour}-${clock.showSeconds}',
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 700),
+              child: SizedBox.expand(
+                key: ValueKey(photoKey ?? 'none'),
+                child: photoKey == null
+                    ? const SizedBox.shrink()
+                    : Image.asset(
+                        'assets/prayer_backgrounds/$photoKey.jpg',
+                        fit: BoxFit.cover,
+                        cacheWidth: 1000,
+                        errorBuilder: (_, _, _) => const SizedBox.shrink(),
                       ),
-                      child: clock.style == ClockStyle.digital
-                          ? DigitalClockFaceView(
-                              face: clock.digitalFace,
-                              use12Hour: clock.use12Hour,
-                              showSeconds: clock.showSeconds,
-                              arabicDigits: arabic,
-                              meridiem: _meridiem(clock),
-                              height: 78,
-                              ink: onPhoto.onSurface,
-                            )
-                          : AnalogClockFaceView(
-                              face: clock.analogFace,
-                              size: analogSize,
-                              meridiem: _meridiem(clock),
-                              arabicDigits: arabic,
-                              ink: onPhoto.onSurface,
-                            ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: wash,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18),
+            child: _content(
+              context,
+              hero: hero,
+              shown: shown,
+              previous: previous,
+              next: next,
+              showingPrevious: showingPrevious,
+              clock: clock,
+              arabic: arabic,
+              location: location,
+              twoPane: twoPane,
+              panelHeight: panelHeight,
+              analogSize: analogSize,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _content(
+    BuildContext context, {
+    required HeroSurface hero,
+    required (String, DateTime)? shown,
+    required (String, DateTime)? previous,
+    required (String, DateTime)? next,
+    required bool showingPrevious,
+    required ClockSettings clock,
+    required bool arabic,
+    required String location,
+    required bool twoPane,
+    required double panelHeight,
+    required double analogSize,
+  }) {
+    return Builder(
+      builder: (context) {
+        // The prayer's name and countdown at the start side, the clock at
+        // the other, all in the theme's hero tones.
+        final onPhoto = hero;
+        final photoShadow = hero.isDark ? _photoShadow : null;
+        final Widget clockBlock = TutorialAnchor(
+          id: TourAnchor.homeClock,
+          child: Builder(
+            builder: (clockContext) => InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () =>
+                  ClockGallerySheet.show(context, origin: clockContext),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 420),
+                  switchInCurve: Curves.easeOutBack,
+                  switchOutCurve: Curves.easeIn,
+                  transitionBuilder: (child, anim) => FadeTransition(
+                    opacity: anim,
+                    child: ScaleTransition(scale: anim, child: child),
+                  ),
+                  child: KeyedSubtree(
+                    key: ValueKey(
+                      '${clock.style}-${clock.digitalFace}-${clock.analogFace}-'
+                      '${clock.use12Hour}-${clock.showSeconds}',
                     ),
+                    child: clock.style == ClockStyle.digital
+                        ? DigitalClockFaceView(
+                            face: clock.digitalFace,
+                            use12Hour: clock.use12Hour,
+                            showSeconds: clock.showSeconds,
+                            arabicDigits: arabic,
+                            meridiem: _meridiem(clock),
+                            height: 78,
+                            ink: onPhoto.onSurface,
+                          )
+                        : AnalogClockFaceView(
+                            face: clock.analogFace,
+                            size: analogSize,
+                            meridiem: _meridiem(clock),
+                            arabicDigits: arabic,
+                            ink: onPhoto.onSurface,
+                          ),
                   ),
                 ),
               ),
             ),
-          );
+          ),
+        );
 
-          // The name block: the prayer's icon, «الصلاة القادمة», its name and
-          // the live counter. One tap turns it over to the PREVIOUS prayer
-          // (kept from the earlier card, see [_showPrevious]).
-          final Widget? nameBlock = shown == null
-              ? null
-              : TutorialAnchor(
-                  id: TourAnchor.homeCountdown,
-                  child: RemoteTap(
-                    onTap: previous == null
-                        ? null
-                        : () => setState(() => _showPrevious = !_showPrevious),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 420),
-                      switchInCurve: Curves.easeOutCubic,
-                      switchOutCurve: Curves.easeInCubic,
-                      transitionBuilder: (child, animation) {
-                        final incoming =
-                            (child.key as ValueKey<bool>).value ==
-                            showingPrevious;
-                        return AnimatedBuilder(
-                          animation: animation,
-                          builder: (context, _) {
-                            final t = incoming
-                                ? (1 - animation.value) * -0.5
-                                : (1 - animation.value) * 0.5;
-                            return Transform(
-                              alignment: Alignment.center,
-                              transform: Matrix4.identity()
-                                ..setEntry(3, 2, 0.0012)
-                                ..rotateY(t * math.pi),
-                              child: Opacity(
-                                opacity: animation.value.clamp(0.0, 1.0),
-                                child: child,
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Column(
-                        key: ValueKey<bool>(showingPrevious),
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _PrayerBadge(
-                            icon: prayerHeroIcons[shown.$1]!,
-                            color: onPhoto.accent(prayerSlideColors[shown.$1]!),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            showingPrevious
-                                ? 'home.previous_prayer'.tr()
-                                : 'home.next_prayer'.tr(),
-                            style: TextStyle(
-                              color: onPhoto.onSurfaceMuted,
-                              fontSize: 13,
-                              shadows: _photoShadow,
+        // The name block: the prayer's icon, «الصلاة القادمة», its name and
+        // the live counter. One tap turns it over to the PREVIOUS prayer
+        // (kept from the earlier card, see [_showPrevious]).
+        final Widget? nameBlock = shown == null
+            ? null
+            : TutorialAnchor(
+                id: TourAnchor.homeCountdown,
+                child: RemoteTap(
+                  onTap: previous == null
+                      ? null
+                      : () => setState(() => _showPrevious = !_showPrevious),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 420),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    transitionBuilder: (child, animation) {
+                      final incoming =
+                          (child.key as ValueKey<bool>).value ==
+                          showingPrevious;
+                      return AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, _) {
+                          final t = incoming
+                              ? (1 - animation.value) * -0.5
+                              : (1 - animation.value) * 0.5;
+                          return Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.identity()
+                              ..setEntry(3, 2, 0.0012)
+                              ..rotateY(t * math.pi),
+                            child: Opacity(
+                              opacity: animation.value.clamp(0.0, 1.0),
+                              child: child,
                             ),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              prayerSlideLabelKeys[shown.$1]!.tr(),
-                              maxLines: 1,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: arabic ? 'AmiriQuran' : null,
-                                shadows: _photoShadow,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(10, 6, 10, 5),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.35),
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: onPhoto.hairline),
-                            ),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: PrayerCountdown(
-                                target: shown.$2,
-                                accent: prayerSlideColors[shown.$1]!,
-                                arabicDigits: arabic,
-                                elapsed: showingPrevious,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-          final Widget? locationBlock = location.isEmpty
-              ? null
-              : TutorialAnchor(
-                  id: TourAnchor.homeLocation,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        size: 14,
-                        color: onPhoto.onSurfaceMuted,
-                      ),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          location,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          );
+                        },
+                      );
+                    },
+                    child: Column(
+                      key: ValueKey<bool>(showingPrevious),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _PrayerBadge(
+                          icon: prayerHeroIcons[shown.$1]!,
+                          color: onPhoto.accent(prayerSlideColors[shown.$1]!),
+                          dark: onPhoto.isDark,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          showingPrevious
+                              ? 'home.previous_prayer'.tr()
+                              : 'home.next_prayer'.tr(),
                           style: TextStyle(
                             color: onPhoto.onSurfaceMuted,
-                            fontSize: 12,
-                            shadows: _photoShadow,
+                            fontSize: 13,
+                            shadows: photoShadow,
                           ),
                         ),
-                      ),
-                    ],
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(
+                            prayerSlideLabelKeys[shown.$1]!.tr(),
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: onPhoto.onSurface,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: arabic ? 'AmiriQuran' : null,
+                              shadows: photoShadow,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(10, 6, 10, 5),
+                          decoration: BoxDecoration(
+                            color: onPhoto.isDark
+                                ? Colors.black.withValues(alpha: 0.45)
+                                : Colors.white.withValues(alpha: 0.6),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: onPhoto.hairline),
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: PrayerCountdown(
+                              target: shown.$2,
+                              accent: prayerSlideColors[shown.$1]!,
+                              arabicDigits: arabic,
+                              elapsed: showingPrevious,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                );
-
-          // The panel: photograph, scrim, then the two sides.
-          final Widget panel = SizedBox(
-            // Full width even when the content inside scales down.
-            width: double.infinity,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: panelHeight,
-                  maxHeight: twoPane ? panelHeight : double.infinity,
                 ),
-                child: Stack(
+              );
+        final Widget? locationBlock = location.isEmpty
+            ? null
+            : TutorialAnchor(
+                id: TourAnchor.homeLocation,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Positioned.fill(
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 700),
-                        child: SizedBox.expand(
-                          key: ValueKey(shown?.$1 ?? 'none'),
-                          child: shown == null
-                              ? const ColoredBox(color: Color(0xFF0B0F1A))
-                              : Image.asset(
-                                  'assets/prayer_backgrounds/${shown.$1}.jpg',
-                                  fit: BoxFit.cover,
-                                  cacheWidth: 1000,
-                                  errorBuilder: (_, _, _) => const ColoredBox(
-                                    color: Color(0xFF0B0F1A),
-                                  ),
-                                ),
-                        ),
-                      ),
+                    Icon(
+                      Icons.location_on,
+                      size: 14,
+                      color: onPhoto.onSurfaceMuted,
                     ),
-                    // 0.6 - 0.72 black: measured against each photograph's
-                    // brightest 0.5 % (worst: Asr 5.7 : 1 for white text).
-                    Positioned.fill(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withValues(alpha: 0.6),
-                              Colors.black.withValues(alpha: 0.72),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Everything on the photograph is drawn with the dark theme,
-                    // whatever the app's own is: the countdown and the clock
-                    // faces read `Theme` for their tones.
-                    Theme(
-                      data: Theme.of(
-                        context,
-                      ).copyWith(brightness: Brightness.dark),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                        // Sideways the panel's height is fixed to what the column
-                        // has, so its content scales down as one piece instead of
-                        // overflowing (seen on emulator-5554 rotated, 2026-09-29:
-                        // «BOTTOM OVERFLOWED BY 61 PIXELS» over the countdown).
-                        child: LayoutBuilder(
-                          builder: (context, box) {
-                            final Widget content = Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    if (nameBlock != null)
-                                      Expanded(
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          alignment:
-                                              AlignmentDirectional.centerStart,
-                                          child: nameBlock,
-                                        ),
-                                      ),
-                                    const SizedBox(width: 10),
-                                    // The clock takes what it needs but never more
-                                    // than 46 % of the panel, so a wide digital face
-                                    // scales down instead of crowding the name.
-                                    Flexible(
-                                      flex: 0,
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxWidth: box.maxWidth * 0.46,
-                                          maxHeight: panelHeight - 50,
-                                        ),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: clockBlock,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                if (locationBlock != null) ...[
-                                  const SizedBox(height: 10),
-                                  locationBlock,
-                                ],
-                              ],
-                            );
-                            return twoPane
-                                ? FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: SizedBox(
-                                      width: box.maxWidth,
-                                      child: content,
-                                    ),
-                                  )
-                                : content;
-                          },
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        location,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: onPhoto.onSurfaceMuted,
+                          fontSize: 12,
+                          shadows: photoShadow,
                         ),
                       ),
                     ),
                   ],
                 ),
+              );
+
+        // The panel: the two sides, straight on the card's photograph.
+        final Widget panel = SizedBox(
+          // Full width even when the content inside scales down.
+          width: double.infinity,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: panelHeight,
+              maxHeight: twoPane ? panelHeight : double.infinity,
+            ),
+            child: Align(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                // Sideways the panel's height is fixed to what the column
+                // has, so its content scales down as one piece instead of
+                // overflowing (seen on emulator-5554 rotated, 2026-09-29:
+                // «BOTTOM OVERFLOWED BY 61 PIXELS» over the countdown).
+                child: LayoutBuilder(
+                  builder: (context, box) {
+                    final Widget content = Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            if (nameBlock != null)
+                              Expanded(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: nameBlock,
+                                ),
+                              ),
+                            const SizedBox(width: 10),
+                            // The clock takes what it needs but never more
+                            // than 46 % of the panel, so a wide digital face
+                            // scales down instead of crowding the name.
+                            Flexible(
+                              flex: 0,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: box.maxWidth * 0.46,
+                                  maxHeight: panelHeight - 50,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: clockBlock,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (locationBlock != null) ...[
+                          const SizedBox(height: 10),
+                          locationBlock,
+                        ],
+                      ],
+                    );
+                    return twoPane
+                        ? FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: SizedBox(
+                              width: box.maxWidth,
+                              child: content,
+                            ),
+                          )
+                        : content;
+                  },
+                ),
               ),
             ),
-          );
+          ),
+        );
 
-          return Column(
-            children: [
-              panel,
-              const SizedBox(height: 12),
-              TutorialAnchor(
-                id: TourAnchor.homeSlides,
-                child: PrayerSlides(times: widget.times, nextKey: next?.$1),
-              ),
-            ],
-          );
-        },
-      ),
+        return Column(
+          children: [
+            panel,
+            const SizedBox(height: 12),
+            TutorialAnchor(
+              id: TourAnchor.homeSlides,
+              child: PrayerSlides(times: widget.times, nextKey: next?.$1),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -436,7 +468,12 @@ const _photoShadow = [Shadow(color: Color(0xCC000000), blurRadius: 6)];
 class _PrayerBadge extends StatelessWidget {
   final IconData icon;
   final Color color;
-  const _PrayerBadge({required this.icon, required this.color});
+  final bool dark;
+  const _PrayerBadge({
+    required this.icon,
+    required this.color,
+    required this.dark,
+  });
 
   @override
   Widget build(BuildContext context) => Container(
@@ -444,7 +481,9 @@ class _PrayerBadge extends StatelessWidget {
     height: 46,
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      color: Colors.black.withValues(alpha: 0.35),
+      color: dark
+          ? Colors.black.withValues(alpha: 0.35)
+          : Colors.white.withValues(alpha: 0.6),
       border: Border.all(color: color.withValues(alpha: 0.7), width: 1.5),
       boxShadow: [
         BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 14),

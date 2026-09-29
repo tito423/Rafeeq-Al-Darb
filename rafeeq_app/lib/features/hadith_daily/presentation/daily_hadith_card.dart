@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/widgets/arabic_text.dart';
+import '../../../core/widgets/ornament_backdrop.dart';
 import '../../dorar/presentation/dorar_check_sheet.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
 import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
@@ -45,6 +46,7 @@ class _OrnateFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.gold.withValues(alpha: 0.55)),
@@ -56,30 +58,44 @@ class _OrnateFrame extends StatelessWidget {
               : [AppColors.lightScaffold, Colors.white],
         ),
       ),
-      child: Stack(
-        children: [
-          const Positioned(top: 6, left: 6, child: _CornerFlourish()),
-          Positioned(
-            top: 6,
-            right: 6,
-            child: Transform.flip(flipX: true, child: const _CornerFlourish()),
-          ),
-          Positioned(
-            bottom: 6,
-            left: 6,
-            child: Transform.flip(flipY: true, child: const _CornerFlourish()),
-          ),
-          Positioned(
-            bottom: 6,
-            right: 6,
-            child: Transform.flip(
-              flipX: true,
-              flipY: true,
-              child: const _CornerFlourish(),
+      // A geometric star panel, faint, under the frame's ornaments (owner,
+      // 2026-09-29).
+      child: OrnamentBackdrop(
+        asset: OrnamentBackdrop.hadith,
+        radius: BorderRadius.circular(20),
+        darkStrength: OrnamentBackdrop.hadithDark,
+        lightStrength: OrnamentBackdrop.hadithLight,
+        child: Stack(
+          children: [
+            const Positioned(top: 6, left: 6, child: _CornerFlourish()),
+            Positioned(
+              top: 6,
+              right: 6,
+              child: Transform.flip(
+                flipX: true,
+                child: const _CornerFlourish(),
+              ),
             ),
-          ),
-          Padding(padding: const EdgeInsets.all(18), child: child),
-        ],
+            Positioned(
+              bottom: 6,
+              left: 6,
+              child: Transform.flip(
+                flipY: true,
+                child: const _CornerFlourish(),
+              ),
+            ),
+            Positioned(
+              bottom: 6,
+              right: 6,
+              child: Transform.flip(
+                flipX: true,
+                flipY: true,
+                child: const _CornerFlourish(),
+              ),
+            ),
+            Padding(padding: const EdgeInsets.all(18), child: child),
+          ],
+        ),
       ),
     );
   }
@@ -425,11 +441,7 @@ class _PickedHadithState extends ConsumerState<_PickedHadith> {
                               // §1.2: never a bare «صحيح». The detail screen
                               // says whose verdict it is, and so does this.
                               if (daily.encyclopaedia.gradeAr.isNotEmpty)
-                                '${'hadeethenc.grade_inline'.tr(namedArgs: {
-                                      'grade': daily.encyclopaedia.gradeAr
-                                    })} — ${'hadeethenc.grade_by'.tr(namedArgs: {
-                                      'source': _gradeSource()
-                                    })}',
+                                '${'hadeethenc.grade_inline'.tr(namedArgs: {'grade': daily.encyclopaedia.gradeAr})} — ${'hadeethenc.grade_by'.tr(namedArgs: {'source': _gradeSource()})}',
                             ].join(' · '),
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: scheme.onSurfaceVariant,

@@ -29,6 +29,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../../core/widgets/ornament_backdrop.dart';
 import '../../data/quote_background_catalog.dart';
 import '../../data/quote_reminder_provider.dart';
 import '../../data/quote_repository.dart';
@@ -126,14 +127,18 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
       children: [
         Row(
           children: [
-            Icon(Icons.format_quote_rounded,
-                size: 18, color: scheme.onSurfaceVariant),
+            Icon(
+              Icons.format_quote_rounded,
+              size: 18,
+              color: scheme.onSurfaceVariant,
+            ),
             const SizedBox(width: 6),
             Expanded(
               child: Text(
                 'quotes.home_title'.tr(),
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             // Arrows as well as the swipe: the owner asked for both, and an
@@ -150,8 +155,7 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
             ),
             IconButton(
               visualDensity: VisualDensity.compact,
-              onPressed:
-                  _page >= picks.length - 1 ? null : () => _step(1),
+              onPressed: _page >= picks.length - 1 ? null : () => _step(1),
               icon: const Icon(Icons.chevron_right, size: 22),
               tooltip: 'quotes.next'.tr(),
             ),
@@ -166,14 +170,19 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
             onPageChanged: (i) => setState(() => _page = i),
             itemBuilder: (context, i) {
               final (b, q) = picks[i];
-              final quote =
-                  library.at(b, q, locale: context.locale.languageCode);
+              final quote = library.at(
+                b,
+                q,
+                locale: context.locale.languageCode,
+              );
               if (quote == null) return const SizedBox.shrink();
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: _QuoteMiniature(
                   quote: quote,
                   accent: _accents[i % _accents.length],
+                  ornament: OrnamentBackdrop
+                      .quotes[i % OrnamentBackdrop.quotes.length],
                   onTap: () => _open(quote),
                 ),
               );
@@ -190,11 +199,13 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
 class _QuoteMiniature extends StatelessWidget {
   final Quote quote;
   final Color accent;
+  final String ornament;
   final VoidCallback onTap;
 
   const _QuoteMiniature({
     required this.quote,
     required this.accent,
+    required this.ornament,
     required this.onTap,
   });
 
@@ -217,56 +228,66 @@ class _QuoteMiniature extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       clipBehavior: Clip.antiAlias,
       color: ground,
-      child: InkWell(
-        onTap: onTap,
-        child: Ink(
-          decoration: BoxDecoration(
-            border: Border.all(color: accent.withValues(alpha: 0.35)),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Gold on its cream ground measured 1.96 : 1 (light theme).
-                Icon(Icons.format_quote_rounded,
-                    size: 18, color: readableOn(accent, ground, min: 3)),
-                const SizedBox(height: 4),
-                Expanded(
-                  child: ScriptText(
-                    quote.text,
-                    arabic: isArabicUi,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: ink,
-                      height: 1.75,
-                      fontSize: 14.5,
-                    ),
+      // A faint ornament scan per quote (owner, 2026-09-29), fainter than on
+      // the other Home cards because this ground is tinted.
+      child: OrnamentBackdrop(
+        asset: ornament,
+        radius: BorderRadius.circular(16),
+        darkStrength: OrnamentBackdrop.quoteDark,
+        lightStrength: OrnamentBackdrop.quoteLight,
+        child: InkWell(
+          onTap: onTap,
+          child: Ink(
+            decoration: BoxDecoration(
+              border: Border.all(color: accent.withValues(alpha: 0.35)),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Gold on its cream ground measured 1.96 : 1 (light theme).
+                  Icon(
+                    Icons.format_quote_rounded,
+                    size: 18,
+                    color: readableOn(accent, ground, min: 3),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ArabicText(
-                        quote.bookTitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: muted,
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.w600,
-                        ),
+                  const SizedBox(height: 4),
+                  Expanded(
+                    child: ScriptText(
+                      quote.text,
+                      arabic: isArabicUi,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: ink,
+                        height: 1.75,
+                        fontSize: 14.5,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Icon(Icons.open_in_full_rounded,
-                        size: 14, color: muted),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ArabicText(
+                          quote.bookTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: muted,
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(Icons.open_in_full_rounded, size: 14, color: muted),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

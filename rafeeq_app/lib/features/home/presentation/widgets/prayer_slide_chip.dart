@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/widgets/remote_tap.dart';
 
-/// One prayer's chip in the Home carousel: a photograph of a mosque at that
-/// prayer's hour, darkened and tinted with the prayer's colour. Split out of
-/// `prayer_slides.dart` to keep both under the file-size ceiling.
+/// One prayer's chip in the Home carousel. Split out of `prayer_slides.dart`
+/// to keep both under the file-size ceiling.
+///
+/// The chips have no photograph of their own any more: the whole prayer card
+/// stands on ONE photograph (owner, 2026-09-29: «الخلفية دي تغطي الكارت
+/// الأكبر … مش يبقى كل واحد فيهم منفرد»), so a chip is a pane of glass on
+/// it - dark glass in the dark themes, frosted white in the light one - and
+/// the next / focused prayer is filled with its own colour.
 class PrayerSlideChip extends StatelessWidget {
-  /// Which prayer: its photograph (`assets/prayer_backgrounds/<key>.jpg`) is
-  /// the slide's ground, so the slide says which prayer it is before it is
-  /// read (owner, 2026-09-29).
   final String prayerKey;
   final String label;
   final String time;
@@ -36,12 +38,17 @@ class PrayerSlideChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filled = isNext || isFocused;
-    // The slide stands on a photograph of a mosque at that prayer's hour,
-    // darkened by a scrim (measured: white text >= 5.7 : 1 on every one, see
-    // the prayer card) and tinted with the prayer's own colour - stronger on
-    // the next and the focused slide. So the text is white whatever the theme.
-    final onPhoto = HeroSurface.dark;
-    final accent = onPhoto.accent(color);
+    final hero = HeroSurface.of(context);
+    // Filled: the prayer's colour with white on it (hero.chipFill/onChip).
+    // Glass: the card's own foreground tones, measured on the washed photo
+    // by scripts/check_prayer_card_contrast.py.
+    final ground = filled
+        ? hero.chipFill(color)
+        : (hero.isDark
+              ? Colors.black.withValues(alpha: 0.32)
+              : Colors.white.withValues(alpha: 0.62));
+    final ink = filled ? hero.onChip : hero.onSurface;
+    final muted = filled ? hero.onChip : hero.onSurfaceMuted;
     final radius = BorderRadius.circular(18);
     return RemoteTap(
       onTap: onTap,
@@ -50,22 +57,16 @@ class PrayerSlideChip extends StatelessWidget {
         duration: const Duration(milliseconds: 320),
         curve: Curves.easeOutCubic,
         width: 96,
-        clipBehavior: Clip.antiAlias,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/prayer_backgrounds/$prayerKey.jpg'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withValues(alpha: filled ? 0.58 : 0.68),
-              BlendMode.srcOver,
-            ),
-          ),
+          color: ground,
           borderRadius: radius,
           border: Border.all(
             color: isFocused
-                ? Colors.white.withValues(alpha: 0.7)
-                : Colors.white.withValues(alpha: 0.12),
+                ? ink.withValues(alpha: 0.75)
+                : (hero.isDark
+                      ? Colors.white.withValues(alpha: 0.16)
+                      : hero.border),
             width: 1.4,
           ),
           boxShadow: filled
@@ -78,30 +79,18 @@ class PrayerSlideChip extends StatelessWidget {
                 ]
               : null,
         ),
-        foregroundDecoration: BoxDecoration(
-          borderRadius: radius,
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              color.withValues(alpha: filled ? 0.42 : 0.2),
-              Colors.transparent,
-            ],
-          ),
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 18, color: filled ? Colors.white : accent),
+            Icon(icon, size: 18, color: filled ? ink : hero.accent(color)),
             const SizedBox(height: 4),
             Text(
               label,
               maxLines: 1,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
-                shadows: [Shadow(color: Color(0xCC000000), blurRadius: 4)],
+                color: ink,
               ),
             ),
             const SizedBox(height: 3),
@@ -117,10 +106,7 @@ class PrayerSlideChip extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white.withValues(alpha: 0.92),
-                  shadows: const [
-                    Shadow(color: Color(0xCC000000), blurRadius: 4),
-                  ],
+                  color: muted,
                 ),
               ),
             ),
@@ -132,18 +118,14 @@ class PrayerSlideChip extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white.withValues(alpha: 0.8),
+                  color: muted,
                 ),
               ),
             ],
             // The affordance that this slide opens into something. It is an
             // "expand" glyph rather than a chevron because the card no longer
             // unfolds downward — it opens as its own screen.
-            Icon(
-              Icons.open_in_full_rounded,
-              size: 13,
-              color: Colors.white.withValues(alpha: 0.75),
-            ),
+            Icon(Icons.open_in_full_rounded, size: 13, color: muted),
           ],
         ),
       ),

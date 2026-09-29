@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/digits.dart' show localizeDigits;
 import '../../../core/widgets/fitted_sheet.dart';
+import '../../../core/widgets/ornament_backdrop.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/sunan_suwar_catalog.dart';
 import '../data/sunan_suwar_store.dart';
@@ -39,25 +41,35 @@ class SunanSuwarCard extends ConsumerWidget {
     final mushaf = ref.watch(mushafDataProvider).valueOrNull;
     final theme = Theme.of(context);
 
+    // A mosque's muqarnas dome, faint, behind the four surahs (owner,
+    // 2026-09-29).
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('sunan_suwar.title'.tr(), style: theme.textTheme.titleMedium),
-            const SizedBox(height: 10),
-            for (final s in sunanSuwarCatalog)
-              _SurahRow(
-                surah: s,
-                name: mushaf?.surahNameAr(s.surahId) ?? '',
-                onOpen: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => SingleSurahScreen(surahId: s.surahId),
+      clipBehavior: Clip.antiAlias,
+      child: OrnamentBackdrop(
+        asset: OrnamentBackdrop.sunan,
+        radius: BorderRadius.circular(AppSpacing.radiusMd),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'sunan_suwar.title'.tr(),
+                style: theme.textTheme.titleMedium,
+              ),
+              const SizedBox(height: 10),
+              for (final s in sunanSuwarCatalog)
+                _SurahRow(
+                  surah: s,
+                  name: mushaf?.surahNameAr(s.surahId) ?? '',
+                  onOpen: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => SingleSurahScreen(surahId: s.surahId),
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -75,11 +87,8 @@ Future<void> pickSunanReminder(
 ) async {
   await showFittedSheet<void>(
     context: context,
-    builder: (_) => SunanReminderSheet(
-      surahId: surahId,
-      label: label,
-      existing: existing,
-    ),
+    builder: (_) =>
+        SunanReminderSheet(surahId: surahId, label: label, existing: existing),
   );
 }
 
@@ -105,16 +114,20 @@ class _SurahRow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(name.isEmpty ? '…' : name,
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(fontFamily: 'AmiriQuran')),
+            Text(
+              name.isEmpty ? '…' : name,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontFamily: 'AmiriQuran',
+              ),
+            ),
             const SizedBox(height: 2),
             Text(
               '${surah.virtueNoteKey.tr()} — ${surah.sourceKey.tr()}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -144,7 +157,8 @@ class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
     ...?widget.existing?.weekdays,
     if (widget.existing == null) DateTime.friday,
   };
-  late TimeOfDay _time = widget.existing?.time ?? const TimeOfDay(hour: 20, minute: 0);
+  late TimeOfDay _time =
+      widget.existing?.time ?? const TimeOfDay(hour: 20, minute: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -180,17 +194,22 @@ class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
           const SizedBox(height: 14),
           OutlinedButton.icon(
             onPressed: () async {
-              final t = await showTimePicker(context: context, initialTime: _time);
+              final t = await showTimePicker(
+                context: context,
+                initialTime: _time,
+              );
               if (t != null) setState(() => _time = t);
             },
             icon: const Icon(Icons.schedule),
             label: Text(
-                // In the reader's digits: «20:00» in Latin in the Arabic
-                // interface, which writes ٢٠:٠٠ everywhere else
-                // (emulator-5554, 2026-09-26).
-                localizeDigits(
-                    '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
-                    context.locale.languageCode)),
+              // In the reader's digits: «20:00» in Latin in the Arabic
+              // interface, which writes ٢٠:٠٠ everywhere else
+              // (emulator-5554, 2026-09-26).
+              localizeDigits(
+                '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
+                context.locale.languageCode,
+              ),
+            ),
           ),
           const SizedBox(height: 16),
           Row(
@@ -213,13 +232,18 @@ class _SunanReminderSheetState extends ConsumerState<SunanReminderSheet> {
                   onPressed: _weekdays.isEmpty
                       ? null
                       : () async {
-                    await ref.read(sunanSuwarStoreProvider.notifier).setReminder(
-                          widget.surahId,
-                          widget.label,
-                          SunanReminder(weekdays: {..._weekdays}, time: _time),
-                        );
-                    if (context.mounted) Navigator.of(context).pop();
-                  },
+                          await ref
+                              .read(sunanSuwarStoreProvider.notifier)
+                              .setReminder(
+                                widget.surahId,
+                                widget.label,
+                                SunanReminder(
+                                  weekdays: {..._weekdays},
+                                  time: _time,
+                                ),
+                              );
+                          if (context.mounted) Navigator.of(context).pop();
+                        },
                   child: Text('sunan_suwar.save_reminder'.tr()),
                 ),
               ),
