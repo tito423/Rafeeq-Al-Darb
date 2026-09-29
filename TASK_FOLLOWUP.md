@@ -856,6 +856,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 21:37 - Bump to 3.71.0+85 for release (pubspec + About); analyze clean, 667 tests
 - 2026-09-29 20:20 - Hadith card: calm ground instead of the rejected star-panel photo; calm ground on continue-reading, khatma, selected-surahs; sunan and quote kept
 - 2026-09-29 19:45 - Kids corner seen on emulator; kids-only (journey tile out), toast/remaining-count/stage-4/path-order texts fixed, rounded card shadows
 - 2026-09-29 19:18 - Handover: kids corner as a 5-stage age path (Juz Amma to half the Quran, pinned against the mushaf DB), stage screen, journey for all ages; HANDOVER/NEXT_PROMPT rewritten; 667 tests, hosted content 7/7
