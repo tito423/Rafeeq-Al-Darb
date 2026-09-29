@@ -84,7 +84,7 @@ extension DownloadCategoryX on DownloadCategory {
   /// two sources are added together below.
   List<String> get managerCategories => switch (this) {
         DownloadCategory.mushafs => const [],
-        DownloadCategory.recitations => const ['ruqyah'],
+        DownloadCategory.recitations => const ['ruqyah', 'adhkar_audio'],
         DownloadCategory.ayahRecitations => const [],
         // `hadith` rides here: see the note on the enum.
         DownloadCategory.books => const ['books', 'books_text', 'hadith'],

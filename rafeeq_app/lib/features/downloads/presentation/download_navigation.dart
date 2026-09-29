@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/navigation.dart';
+import '../../azkar/data/adhkar_recitations.dart';
+import '../../azkar/presentation/screens/adhkar_listen_screen.dart';
 import '../../quran_audio/presentation/ayah_download_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
@@ -27,6 +29,9 @@ Future<void> openDownloadFromPayload(String what) async {
     // 2026-09-26): straight to the per-ayah page, not the Downloads hub.
     'ayah' => (BuildContext _) => const AyahDownloadScreen(),
     'ruqyah' => (BuildContext _) => const RuqyahAudioScreen(),
+    'adhkar_audio' => (BuildContext _) => const AdhkarListenScreen(
+      time: AdhkarTime.morning,
+    ),
     // A mushaf's pages and a book's file both land on the Downloads hub: it
     // is the screen that lists what is on the device, per edition and per
     // book, with its size and a way to remove it.

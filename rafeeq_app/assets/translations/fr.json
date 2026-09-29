@@ -543,6 +543,15 @@
     "shamela_card_sub": "Importez n’importe lequel des 8 598 livres"
   },
   "azkar": {
+    "track_morning": "Adhkâr du matin",
+    "track_evening": "Adhkâr du soir",
+    "listen_morning": "Écouter les adhkâr du matin",
+    "listen_evening": "Écouter les adhkâr du soir",
+    "listen_intro": "Enregistrements complets par des récitateurs connus. Touche pour écouter en plein écran, laisse-le jouer en arrière-plan, ou télécharge-le pour l’écouter hors ligne.",
+    "listen_minutes": "{n} min",
+    "listen_both": "matin et soir en un enregistrement",
+    "listen_delete": "Supprimer le téléchargement",
+    "listen_delete_ask": "Supprimer l’enregistrement de {} de l’appareil ?",
     "title": "Adhkar",
     "sections": "Sections",
     "tasbeeh": "Tasbeeh numérique",
@@ -1128,6 +1137,8 @@
     "explain_none": "Rien de proche n’a été trouvé dans l’Encyclopédie."
   },
   "about": {
+    "src_adhkar_ih": "Les adhkâr complets du matin et du soir par Mishary Alafasy, chacun dans son fichier, lus et téléchargés directement depuis IslamHouse.",
+    "src_adhkar_ia": "Les adhkâr complets du matin et du soir par Idrees Abkar, Saad Al-Ghamdi, Salman Al-Utaybi, Fares Abbad et Hani Ar-Rifai, chaque voix en un enregistrement, depuis l’Internet Archive tels que publiés par la personne qui les a déposés (aucune licence indiquée).",
     "blurb": "Rafeeq Al-Darb est une application islamique complète, bâtie sur des sources fiables et librement accessibles aux développeurs. Chaque mushaf, chaque traduction et chaque adhan a été vérifié à la source avant d’être ajouté, et toutes les sources sont indiquées. Les chiffres de cette page sont comptés à partir du contenu même de l’application, et non saisis à la main.",
     "developed_by": "Développé par",
     "capabilities": "Ce que propose l'application",

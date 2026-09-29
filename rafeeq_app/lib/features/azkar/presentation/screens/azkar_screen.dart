@@ -12,8 +12,10 @@ import '../../../../core/widgets/mirrored_network_image.dart';
 import '../../../../core/widgets/paired_list_view.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../data/adhkar_recitations.dart';
 import '../../data/azkar_backgrounds.dart';
 import '../../data/azkar_categories.dart';
+import 'adhkar_listen_screen.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
 
@@ -90,7 +92,6 @@ const _categoryOrder = [
   AzkarCategory.narrated,
 ];
 
-
 class _SectionsTab extends ConsumerWidget {
   const _SectionsTab();
 
@@ -100,56 +101,152 @@ class _SectionsTab extends ConsumerWidget {
     // the cards kept the old language until a restart (Arabic -> Urdu on
     // emulator-5554, 2026-09-24). Reading the locale makes it depend on it.
     context.locale;
-    return LayoutBuilder(builder: (context, box) {
-    // Where height is short (a phone sideways), each row is half of what
-    // the grid has, so both rows of sections are whole on screen - the
-    // second row was cut at the bottom (owner's Xiaomi, 2026-09-26).
-    final rowHeight = ScreenClass.shortHeight(context)
-        ? ((box.maxHeight - 32 - 14) / 2).clamp(120.0, 220.0)
-        : null;
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      // By card width, not a fixed 2: in landscape two columns made each
-      // card taller than the screen and its title fell below the fold
-      // (emulator-5554, 2026-09-24). A phone held upright still gets 2.
-      //
-      // Sideways that still left one row of tall cards on the owner's Xiaomi
-      // (2026-09-26), three sections of nine in view. Sideways the
-      // cards are smaller and wider than tall, like a tablet's tiles: four
-      // across on that phone (788 dp / 214), two rows and more in view.
-      gridDelegate: ScreenClass.twoColumns(context)
-          ? SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200,
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 14,
-              childAspectRatio: 1.2,
-              mainAxisExtent: rowHeight,
-            )
-          : const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 260,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              childAspectRatio: 0.9,
+    return LayoutBuilder(
+      builder: (context, box) {
+        // Where height is short (a phone sideways), each row is half of what
+        // the grid has, so both rows of sections are whole on screen - the
+        // second row was cut at the bottom (owner's Xiaomi, 2026-09-26).
+        final rowHeight = ScreenClass.shortHeight(context)
+            ? ((box.maxHeight - 32 - 14) / 2).clamp(120.0, 220.0)
+            : null;
+        return Column(
+          children: [
+            // «كارت الاستماع لأذكار الصباح والاستماع لأذكار المساء» (owner,
+            // 2026-09-29): complete recordings by named reciters.
+            const _ListenRow(),
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                // By card width, not a fixed 2: in landscape two columns made each
+                // card taller than the screen and its title fell below the fold
+                // (emulator-5554, 2026-09-24). A phone held upright still gets 2.
+                //
+                // Sideways that still left one row of tall cards on the owner's Xiaomi
+                // (2026-09-26), three sections of nine in view. Sideways the
+                // cards are smaller and wider than tall, like a tablet's tiles: four
+                // across on that phone (788 dp / 214), two rows and more in view.
+                gridDelegate: ScreenClass.twoColumns(context)
+                    ? SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        mainAxisSpacing: 14,
+                        crossAxisSpacing: 14,
+                        childAspectRatio: 1.2,
+                        mainAxisExtent: rowHeight,
+                      )
+                    : const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 260,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        childAspectRatio: 0.9,
+                      ),
+                itemCount: _categoryOrder.length,
+                itemBuilder: (context, i) {
+                  final category = _categoryOrder[i];
+                  final info = azkarCategoryInfo[category]!;
+                  final bgUrl = azkarCategoryBackgrounds[category];
+
+                  final card = _CategoryCard(
+                    category: category,
+                    info: info,
+                    bgUrl: bgUrl,
+                  );
+                  // The tour explains the grid through its first card.
+                  return i == 0
+                      ? TutorialAnchor(
+                          id: TourAnchor.azkarCategory,
+                          child: card,
+                        )
+                      : card;
+                },
+              ),
             ),
-      itemCount: _categoryOrder.length,
-      itemBuilder: (context, i) {
-        final category = _categoryOrder[i];
-        final info = azkarCategoryInfo[category]!;
-        final bgUrl = azkarCategoryBackgrounds[category];
-        
-        final card = _CategoryCard(
-          category: category,
-          info: info,
-          bgUrl: bgUrl,
+          ],
         );
-        // The tour explains the grid through its first card.
-        return i == 0
-            ? TutorialAnchor(id: TourAnchor.azkarCategory, child: card)
-            : card;
       },
     );
-    });
   }
+}
+
+class _ListenRow extends StatelessWidget {
+  const _ListenRow();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+    child: Row(
+      children: [
+        Expanded(
+          child: _ListenCard(
+            time: AdhkarTime.morning,
+            icon: Icons.wb_sunny_rounded,
+            colors: const [Color(0xFFF7B733), Color(0xFFD35400)],
+            label: 'azkar.listen_morning'.tr(),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _ListenCard(
+            time: AdhkarTime.evening,
+            icon: Icons.nights_stay_rounded,
+            colors: const [Color(0xFF3A4F9C), Color(0xFF1E2A5A)],
+            label: 'azkar.listen_evening'.tr(),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _ListenCard extends StatelessWidget {
+  final AdhkarTime time;
+  final IconData icon;
+  final List<Color> colors;
+  final String label;
+  const _ListenCard({
+    required this.time,
+    required this.icon,
+    required this.colors,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) => Material(
+    borderRadius: BorderRadius.circular(18),
+    clipBehavior: Clip.antiAlias,
+    child: InkWell(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => AdhkarListenScreen(time: time)),
+      ),
+      child: Ink(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: colors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 26),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 2,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            const Icon(Icons.headphones_rounded, color: Colors.white, size: 20),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 class _CategoryCard extends ConsumerWidget {
@@ -182,31 +279,38 @@ class _CategoryCard extends ConsumerWidget {
           final repo = await ref.read(azkarRepositoryProvider.future);
           final allSections = await repo.sections();
           final sections = allSections.where((s) {
-            final cats = azkarSectionCategories[s.id] ?? const [AzkarCategory.narrated];
+            final cats =
+                azkarSectionCategories[s.id] ?? const [AzkarCategory.narrated];
             return cats.contains(category) && s.title != 'المقدمة';
           }).toList();
-          
+
           if (!context.mounted) return;
-          
-          if (sections.length == 1 || category == AzkarCategory.morning || category == AzkarCategory.evening) {
-            unawaited(Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => AzkarSectionScreen(
-                  section: sections.first,
-                  accent: info.gradient.last,
+
+          if (sections.length == 1 ||
+              category == AzkarCategory.morning ||
+              category == AzkarCategory.evening) {
+            unawaited(
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => AzkarSectionScreen(
+                    section: sections.first,
+                    accent: info.gradient.last,
+                  ),
                 ),
               ),
-            ));
+            );
           } else {
-            unawaited(Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => _CategorySectionsListScreen(
-                  categoryInfo: info,
-                  sections: sections,
-                  bgUrl: bgUrl,
+            unawaited(
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => _CategorySectionsListScreen(
+                    categoryInfo: info,
+                    sections: sections,
+                    bgUrl: bgUrl,
+                  ),
                 ),
               ),
-            ));
+            );
           }
         },
         child: Container(
@@ -260,11 +364,7 @@ class _CategoryCard extends ConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        info.icon,
-                        size: 40,
-                        color: Colors.white,
-                      ),
+                      Icon(info.icon, size: 40, color: Colors.white),
                       const SizedBox(height: 8),
                       Text(
                         info.titleKey.tr(),
@@ -314,10 +414,9 @@ class _CategorySectionsListScreen extends StatelessWidget {
         // drew dark icons on the dark clip. So white is given outright.
         iconTheme: const IconThemeData(color: Colors.white),
         actionsIconTheme: const IconThemeData(color: Colors.white),
-        titleTextStyle: Theme.of(context)
-            .appBarTheme
-            .titleTextStyle
-            ?.copyWith(color: Colors.white),
+        titleTextStyle: Theme.of(
+          context,
+        ).appBarTheme.titleTextStyle?.copyWith(color: Colors.white),
       ),
       // The owner found these lists bare next to the rest of the app — «فيه
       // في الأذكار شاشات مالهاش خلفيات زي مثلا أذكار السفر» — and asked
@@ -329,40 +428,45 @@ class _CategorySectionsListScreen extends StatelessWidget {
         colors: categoryInfo.gradient,
         // Sideways two a row (`PairedListView`).
         child: PairedListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: sections.length,
-        itemBuilder: (context, i) {
-          final s = sections[i];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            // Slightly translucent so the ground reads through it without
-            // costing the dark-on-light contrast the list depends on.
-            color: scheme.surface.withValues(alpha: 0.92),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: BorderSide(
-                color: categoryInfo.gradient.first.withValues(alpha: 0.18),
+          padding: const EdgeInsets.all(16),
+          itemCount: sections.length,
+          itemBuilder: (context, i) {
+            final s = sections[i];
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              // Slightly translucent so the ground reads through it without
+              // costing the dark-on-light contrast the list depends on.
+              color: scheme.surface.withValues(alpha: 0.92),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(
+                  color: categoryInfo.gradient.first.withValues(alpha: 0.18),
+                ),
               ),
-            ),
-            child: ListTile(
-              leading: Icon(categoryInfo.icon, color: categoryInfo.gradient.first),
-              title: Text(s.localizedTitle(),
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => AzkarSectionScreen(
-                      section: s,
-                      accent: categoryInfo.gradient.last,
+              child: ListTile(
+                leading: Icon(
+                  categoryInfo.icon,
+                  color: categoryInfo.gradient.first,
+                ),
+                title: Text(
+                  s.localizedTitle(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => AzkarSectionScreen(
+                        section: s,
+                        accent: categoryInfo.gradient.last,
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                  );
+                },
+              ),
+            );
+          },
         ),
       ),
     );
@@ -395,7 +499,9 @@ class _CategoryGround extends StatelessWidget {
           colors: [
             Color.alphaBlend(tint.withValues(alpha: 0.16), scheme.surface),
             Color.alphaBlend(
-                colors.last.withValues(alpha: 0.06), scheme.surface),
+              colors.last.withValues(alpha: 0.06),
+              scheme.surface,
+            ),
             scheme.surface,
           ],
           stops: const [0, 0.45, 1],

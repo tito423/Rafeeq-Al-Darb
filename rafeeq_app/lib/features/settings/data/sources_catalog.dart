@@ -104,6 +104,13 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // (scripts/hisnmuslim_audio_map.py). The site names no reciter.
       const SourceEntry('حصن المسلم — hisnmuslim.com',
           'https://www.hisnmuslim.com', 'about.src_hisn_audio'),
+      // Complete morning / evening recordings (2026-09-30), streamed or
+      // downloaded from where they are published: adhkar_recitations.dart.
+      const SourceEntry('IslamHouse — مشاري العفاسي',
+          'https://islamhouse.com/ar/audios/92368/', 'about.src_adhkar_ih'),
+      const SourceEntry('Internet Archive — adhkar-alsabah-walmasa',
+          'https://archive.org/details/adhkar-alsabah-walmasa',
+          'about.src_adhkar_ia'),
       // Named separately from Shamela itself: these are the two edited
       // editions the app's hadith gradings actually come from, and a grading
       // is only worth anything if the reader can see whose it is.

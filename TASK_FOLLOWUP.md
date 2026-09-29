@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~00:55 (09-30, Opus) ADHKAR STAGE C (part 1) DONE AND SEEN: Azkar tab has two cards on top «استمع لأذكار الصباح» / «استمع لأذكار المساء» -> AdhkarListenScreen: reciters with a COMPLETE recording (owner: need not match the app's text, must be complete): Alafasy morning / evening separate (IslamHouse, 832 s 33,333,722 B / 602 s 24,109,982 B, ffmpeg + Content-Length), Idrees Abkar, Saad Al-Ghamdi, Salman Al-Utaybi, Fares Abbad, Hani Ar-Rifai (archive.org item adhkar-alsabah-walmasa, morning+evening in ONE file each, labelled so, not cut). All 8 urls 206 audio/mpeg. Play = the Qur'an player full screen (seen: Alafasy playing, -13:45 left, app AudioTrack started), background via its mini player/notification; download/pause/resume/cancel/delete (with confirm) through DownloadManager category adhkar_audio (under Recitations in Downloads). Credited on Sources x7. 674 tests. NOT DONE: the option in the REMINDERS list (morning/evening/sleep reminder -> play a chosen reciter); sleep adhkar complete recording not found yet. NEXT EXACT: reminders option, then Journey interactive, then Dedications redesign.
+
 ~00:30 (09-30, Opus) STAGE C RESEARCH (checked live today, nothing built yet):
  - Mishary Alafasy, morning and evening SEPARATE, on IslamHouse (islamhouse.com/ar/audios/92368/): d1.islamhouse.com/data/ar/ih_sounds/chain_01/Mishari_Raashid/Azkar_AlSba7_w_AlMsa/ar_{1434|1432|1419}_Azkar_{AlSba7|AlMsa}.mp3 - all six answered 206 audio/mpeg (1434 evening = 24,109,982 B; 1434 morning 31.8 MB per the page). No explicit licence on the page; IslamHouse's stated mission is free distribution - plan: stream/download from their host, credit, never rehost.
  - hisnmuslim.com chapter 27 «أذكار الصباح والمساء» = ONE combined file (5,339,144 B), reader unnamed -> not separable.
@@ -882,6 +884,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 23:36 - Listen to the complete morning / evening adhkar by six named reciters: stream full screen or in background, download per reciter; seen on emulator
 - 2026-09-29 23:15 - Stage C research logged: Alafasy morning/evening verified on IslamHouse; IslamWeb excluded (all rights reserved)
 - 2026-09-29 23:13 - Listen button on every dhikr with a word-for-word recording (219 of 302), shared player, credited; seen on emulator
 - 2026-09-29 22:59 - Adhkar audio stage A: 213 of 302 adhkar paired word-for-word with hisnmuslim.com recordings (all urls checked); owner queue logged
