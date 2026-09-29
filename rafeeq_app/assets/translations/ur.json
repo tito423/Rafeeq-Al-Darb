@@ -543,6 +543,9 @@
     "shamela_card_sub": "۸۵۹۸ کتابوں میں سے کوئی بھی درآمد کریں"
   },
   "azkar": {
+    "reminder_opens": "یاد دہانی کھولنے پر",
+    "reminder_opens_text": "لکھے ہوئے اذکار",
+    "reminder_opens_voice": "{} کی آواز میں سنیں",
     "track_morning": "صبح کے اذکار",
     "track_evening": "شام کے اذکار",
     "listen_morning": "صبح کے اذکار سنیں",

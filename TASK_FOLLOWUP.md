@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~01:45 (09-30, Opus) REMINDER -> RECITER DONE AND SEEN END TO END on emulator-5554: in the Azkar reminders sheet, under the morning and evening reminder (when set), «عند فتح التذكير»: the written adhkar (default) or «الاستماع بصوت <reciter>» (the reciters that fit that time). Prefs azkar_morning_voice_v1 / azkar_evening_voice_v1. Tapping the reminder (payload azkar_morning) opens AdhkarListenScreen(autoplay) which plays that reciter full screen. Seen: reminder set 01:39 with Alafasy, the notification «أذكار الصباح» fired at 01:39, tap -> full-screen player «أذكار الصباح / مشاري راشد العفاسي» playing (app AudioTrack started). Test reminder removed. Sleep adhkar: no complete recording found -> no option there. 674 tests. NEXT EXACT: queue item 2, «رحلتي» interactive; then 3 Dedications redesign; then 4 emulator checks (Rafeeq 2:255 clip, compass sweep, adhan-test vibration).
+
 ~00:55 (09-30, Opus) ADHKAR STAGE C (part 1) DONE AND SEEN: Azkar tab has two cards on top «استمع لأذكار الصباح» / «استمع لأذكار المساء» -> AdhkarListenScreen: reciters with a COMPLETE recording (owner: need not match the app's text, must be complete): Alafasy morning / evening separate (IslamHouse, 832 s 33,333,722 B / 602 s 24,109,982 B, ffmpeg + Content-Length), Idrees Abkar, Saad Al-Ghamdi, Salman Al-Utaybi, Fares Abbad, Hani Ar-Rifai (archive.org item adhkar-alsabah-walmasa, morning+evening in ONE file each, labelled so, not cut). All 8 urls 206 audio/mpeg. Play = the Qur'an player full screen (seen: Alafasy playing, -13:45 left, app AudioTrack started), background via its mini player/notification; download/pause/resume/cancel/delete (with confirm) through DownloadManager category adhkar_audio (under Recitations in Downloads). Credited on Sources x7. 674 tests. NOT DONE: the option in the REMINDERS list (morning/evening/sleep reminder -> play a chosen reciter); sleep adhkar complete recording not found yet. NEXT EXACT: reminders option, then Journey interactive, then Dedications redesign.
 
 ~00:30 (09-30, Opus) STAGE C RESEARCH (checked live today, nothing built yet):
@@ -884,6 +886,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 01:43 - Morning/evening reminder can open a chosen reciter playing; seen end to end on emulator (01:39 reminder -> Alafasy full screen)
 - 2026-09-29 23:36 - Listen to the complete morning / evening adhkar by six named reciters: stream full screen or in background, download per reciter; seen on emulator
 - 2026-09-29 23:15 - Stage C research logged: Alafasy morning/evening verified on IslamHouse; IslamWeb excluded (all rights reserved)
 - 2026-09-29 23:13 - Listen button on every dhikr with a word-for-word recording (219 of 302), shared player, credited; seen on emulator

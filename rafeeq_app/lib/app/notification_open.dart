@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/db/azkar_repository.dart';
+import '../features/azkar/data/adhkar_recitations.dart';
 import '../features/azkar/data/azkar_categories.dart';
+import '../features/azkar/data/azkar_settings_provider.dart';
+import '../features/azkar/presentation/screens/adhkar_listen_screen.dart';
 import '../features/azkar/presentation/screens/azkar_section_screen.dart';
 import '../features/azkar/presentation/screens/tasbeeh_screen.dart';
 import '../features/khatma/presentation/khatma_screen.dart';
@@ -24,8 +27,24 @@ Future<void> openScreenFromPayload(String what) async {
         'azkar_evening' => AzkarCategory.evening,
         _ => AzkarCategory.sleep,
       };
-      final repo = await ProviderScope.containerOf(navigator.context)
-          .read(azkarRepositoryProvider.future);
+      final container = ProviderScope.containerOf(navigator.context);
+      // A reciter chosen for this reminder: open that recording, playing.
+      final settings = container.read(azkarSettingsProvider);
+      final voice = switch (what) {
+        'azkar_morning' => settings.morningVoice,
+        'azkar_evening' => settings.eveningVoice,
+        _ => null,
+      };
+      if (voice != null && adhkarRecitations.any((r) => r.id == voice)) {
+        screen = AdhkarListenScreen(
+          time: what == 'azkar_evening'
+              ? AdhkarTime.evening
+              : AdhkarTime.morning,
+          autoplay: voice,
+        );
+        break;
+      }
+      final repo = await container.read(azkarRepositoryProvider.future);
       // The same filter the Adhkar hub applies when its card is tapped.
       final sections = (await repo.sections()).where((s) {
         final cats =

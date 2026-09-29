@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/fitted_sheet.dart';
+import '../../data/adhkar_recitations.dart';
 import '../../data/azkar_settings_provider.dart';
 
 /// Shared settings entry point (haptics, + morning/evening reminders on
@@ -68,67 +69,157 @@ class _AzkarSettingsSheet extends ConsumerWidget {
             // removed at the owner's request — count vibration is gone from
             // both the Azkar and Tasbeeh counters entirely.
             if (showReminders) ...[
-              Text('azkar.reminders'.tr(),
-                  style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                'azkar.reminders'.tr(),
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
               ListTile(
                 title: Text('azkar.morning_reminder'.tr()),
-                subtitle: Text(settings.morningReminder == null
-                    ? 'azkar.reminder_off'.tr()
-                    : settings.morningReminder!.format(context)),
-                trailing: Wrap(children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => _pickTime(context, ref, settings.morningReminder,
-                        notifier.setMorningReminder),
-                  ),
-                  if (settings.morningReminder != null)
+                subtitle: Text(
+                  settings.morningReminder == null
+                      ? 'azkar.reminder_off'.tr()
+                      : settings.morningReminder!.format(context),
+                ),
+                trailing: Wrap(
+                  children: [
                     IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => notifier.setMorningReminder(null),
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => _pickTime(
+                        context,
+                        ref,
+                        settings.morningReminder,
+                        notifier.setMorningReminder,
+                      ),
                     ),
-                ]),
+                    if (settings.morningReminder != null)
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => notifier.setMorningReminder(null),
+                      ),
+                  ],
+                ),
               ),
+              if (settings.morningReminder != null)
+                _VoicePicker(
+                  time: AdhkarTime.morning,
+                  value: settings.morningVoice,
+                  onChanged: notifier.setMorningVoice,
+                ),
               ListTile(
                 title: Text('azkar.evening_reminder'.tr()),
-                subtitle: Text(settings.eveningReminder == null
-                    ? 'azkar.reminder_off'.tr()
-                    : settings.eveningReminder!.format(context)),
-                trailing: Wrap(children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => _pickTime(context, ref, settings.eveningReminder,
-                        notifier.setEveningReminder),
-                  ),
-                  if (settings.eveningReminder != null)
+                subtitle: Text(
+                  settings.eveningReminder == null
+                      ? 'azkar.reminder_off'.tr()
+                      : settings.eveningReminder!.format(context),
+                ),
+                trailing: Wrap(
+                  children: [
                     IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => notifier.setEveningReminder(null),
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => _pickTime(
+                        context,
+                        ref,
+                        settings.eveningReminder,
+                        notifier.setEveningReminder,
+                      ),
                     ),
-                ]),
+                    if (settings.eveningReminder != null)
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => notifier.setEveningReminder(null),
+                      ),
+                  ],
+                ),
               ),
+              if (settings.eveningReminder != null)
+                _VoicePicker(
+                  time: AdhkarTime.evening,
+                  value: settings.eveningVoice,
+                  onChanged: notifier.setEveningVoice,
+                ),
               // The third one, asked for on 2026-09-17. Same shape as the
               // other two: no default time, off until the reader sets one.
               ListTile(
                 title: Text('azkar.sleep_reminder'.tr()),
-                subtitle: Text(settings.sleepReminder == null
-                    ? 'azkar.reminder_off'.tr()
-                    : settings.sleepReminder!.format(context)),
-                trailing: Wrap(children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => _pickTime(context, ref,
-                        settings.sleepReminder, notifier.setSleepReminder),
-                  ),
-                  if (settings.sleepReminder != null)
+                subtitle: Text(
+                  settings.sleepReminder == null
+                      ? 'azkar.reminder_off'.tr()
+                      : settings.sleepReminder!.format(context),
+                ),
+                trailing: Wrap(
+                  children: [
                     IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => notifier.setSleepReminder(null),
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => _pickTime(
+                        context,
+                        ref,
+                        settings.sleepReminder,
+                        notifier.setSleepReminder,
+                      ),
                     ),
-                ]),
+                    if (settings.sleepReminder != null)
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => notifier.setSleepReminder(null),
+                      ),
+                  ],
+                ),
               ),
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// What a morning / evening reminder opens: the written adhkar, or one
+/// reciter's complete recording, played at once.
+class _VoicePicker extends StatelessWidget {
+  final AdhkarTime time;
+  final String? value;
+  final ValueChanged<String?> onChanged;
+  const _VoicePicker({
+    required this.time,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ar =
+        context.locale.languageCode == 'ar' ||
+        context.locale.languageCode == 'ur';
+    final options = [
+      for (final r in adhkarRecitations)
+        if (r.fits(time)) r,
+    ];
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(start: 16, end: 16, bottom: 8),
+      child: DropdownButtonFormField<String?>(
+        initialValue: options.any((r) => r.id == value) ? value : null,
+        isExpanded: true,
+        decoration: InputDecoration(
+          labelText: 'azkar.reminder_opens'.tr(),
+          prefixIcon: const Icon(Icons.headphones_rounded),
+          border: const OutlineInputBorder(),
+          isDense: true,
+        ),
+        items: [
+          DropdownMenuItem<String?>(
+            child: Text('azkar.reminder_opens_text'.tr()),
+          ),
+          for (final r in options)
+            DropdownMenuItem<String?>(
+              value: r.id,
+              child: Text(
+                'azkar.reminder_opens_voice'.tr(
+                  args: [ar ? r.reciterAr : r.reciterEn],
+                ),
+              ),
+            ),
+        ],
+        onChanged: onChanged,
       ),
     );
   }

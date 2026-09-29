@@ -543,6 +543,9 @@
     "shamela_card_sub": "Importe cualquiera de 8598 libros"
   },
   "azkar": {
+    "reminder_opens": "Al abrir el recordatorio",
+    "reminder_opens_text": "Los adhkar escritos",
+    "reminder_opens_voice": "Escuchar, en la voz de {}",
     "track_morning": "Adhkar de la mañana",
     "track_evening": "Adhkar de la tarde",
     "listen_morning": "Escuchar los adhkar de la mañana",

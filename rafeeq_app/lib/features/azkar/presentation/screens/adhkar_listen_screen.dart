@@ -23,7 +23,11 @@ import '../../data/adhkar_recitations.dart';
 /// notification) - the «شاشة كاملة أو الذهاب إلى الخلفية» the owner asked for.
 class AdhkarListenScreen extends StatefulWidget {
   final AdhkarTime time;
-  const AdhkarListenScreen({super.key, required this.time});
+
+  /// A recitation id to start playing as soon as the screen opens - a
+  /// reminder set to a reciter lands here.
+  final String? autoplay;
+  const AdhkarListenScreen({super.key, required this.time, this.autoplay});
 
   @override
   State<AdhkarListenScreen> createState() => _AdhkarListenScreenState();
@@ -43,7 +47,12 @@ class _AdhkarListenScreenState extends State<AdhkarListenScreen> {
   @override
   void initState() {
     super.initState();
-    _loadPaths();
+    _loadPaths().then((_) {
+      final id = widget.autoplay;
+      if (id == null || !mounted) return;
+      final r = _list.where((x) => x.id == id).firstOrNull;
+      if (r != null) _play(r);
+    });
     _downloads = DownloadManager.instance.stream.listen((_) => _loadPaths());
   }
 

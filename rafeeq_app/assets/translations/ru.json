@@ -543,6 +543,9 @@
     "shamela_card_sub": "Импорт любой из 8598 книг"
   },
   "azkar": {
+    "reminder_opens": "При открытии напоминания",
+    "reminder_opens_text": "Азкары текстом",
+    "reminder_opens_voice": "Слушать в исполнении {}",
     "track_morning": "Утренние азкары",
     "track_evening": "Вечерние азкары",
     "listen_morning": "Слушать утренние азкары",

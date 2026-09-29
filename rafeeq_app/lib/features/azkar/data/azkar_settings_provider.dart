@@ -17,11 +17,19 @@ class AzkarSettings {
   /// Asked for on 2026-09-17, alongside the other two.
   final TimeOfDay? sleepReminder;
 
+  /// The recording a morning / evening reminder opens and plays, by
+  /// `AdhkarRecitation.id`; null = the written adhkar, as before (owner,
+  /// 2026-09-29: «حط الاختيار ده في نفس قايمة التذكيرات»).
+  final String? morningVoice;
+  final String? eveningVoice;
+
   const AzkarSettings({
     required this.haptics,
     required this.morningReminder,
     required this.eveningReminder,
     required this.sleepReminder,
+    this.morningVoice,
+    this.eveningVoice,
   });
 
   AzkarSettings copyWith({
@@ -29,39 +37,53 @@ class AzkarSettings {
     TimeOfDay? Function()? morningReminder,
     TimeOfDay? Function()? eveningReminder,
     TimeOfDay? Function()? sleepReminder,
-  }) =>
-      AzkarSettings(
-        haptics: haptics ?? this.haptics,
-        morningReminder:
-            morningReminder != null ? morningReminder() : this.morningReminder,
-        eveningReminder:
-            eveningReminder != null ? eveningReminder() : this.eveningReminder,
-        sleepReminder:
-            sleepReminder != null ? sleepReminder() : this.sleepReminder,
-      );
+    String? Function()? morningVoice,
+    String? Function()? eveningVoice,
+  }) => AzkarSettings(
+    haptics: haptics ?? this.haptics,
+    morningReminder: morningReminder != null
+        ? morningReminder()
+        : this.morningReminder,
+    eveningReminder: eveningReminder != null
+        ? eveningReminder()
+        : this.eveningReminder,
+    sleepReminder: sleepReminder != null ? sleepReminder() : this.sleepReminder,
+    morningVoice: morningVoice != null ? morningVoice() : this.morningVoice,
+    eveningVoice: eveningVoice != null ? eveningVoice() : this.eveningVoice,
+  );
 }
 
 class AzkarSettingsNotifier extends StateNotifier<AzkarSettings> {
   AzkarSettingsNotifier(this._prefs)
-      : super(AzkarSettings(
+    : super(
+        AzkarSettings(
           haptics: _prefs.getBool(_hapticsKey) ?? true,
           morningReminder: _parse(_prefs.getString(_morningKey)),
           eveningReminder: _parse(_prefs.getString(_eveningKey)),
           sleepReminder: _parse(_prefs.getString(_sleepKey)),
-        )) {
+          morningVoice: _prefs.getString(_morningVoiceKey),
+          eveningVoice: _prefs.getString(_eveningVoiceKey),
+        ),
+      ) {
     // Re-arm any reminder that was already set, in case the app was
     // reinstalled or the exact alarm was lost — harmless no-op otherwise.
     if (state.morningReminder != null) {
       AzkarReminderService.instance.scheduleMorning(
-          state.morningReminder!.hour, state.morningReminder!.minute);
+        state.morningReminder!.hour,
+        state.morningReminder!.minute,
+      );
     }
     if (state.eveningReminder != null) {
       AzkarReminderService.instance.scheduleEvening(
-          state.eveningReminder!.hour, state.eveningReminder!.minute);
+        state.eveningReminder!.hour,
+        state.eveningReminder!.minute,
+      );
     }
     if (state.sleepReminder != null) {
       AzkarReminderService.instance.scheduleSleep(
-          state.sleepReminder!.hour, state.sleepReminder!.minute);
+        state.sleepReminder!.hour,
+        state.sleepReminder!.minute,
+      );
     }
   }
 
@@ -71,6 +93,22 @@ class AzkarSettingsNotifier extends StateNotifier<AzkarSettings> {
   static const _morningKey = 'azkar_morning_reminder_v1';
   static const _eveningKey = 'azkar_evening_reminder_v1';
   static const _sleepKey = 'azkar_sleep_reminder_v1';
+  static const _morningVoiceKey = 'azkar_morning_voice_v1';
+  static const _eveningVoiceKey = 'azkar_evening_voice_v1';
+
+  Future<void> setMorningVoice(String? id) async {
+    state = state.copyWith(morningVoice: () => id);
+    id == null
+        ? await _prefs.remove(_morningVoiceKey)
+        : await _prefs.setString(_morningVoiceKey, id);
+  }
+
+  Future<void> setEveningVoice(String? id) async {
+    state = state.copyWith(eveningVoice: () => id);
+    id == null
+        ? await _prefs.remove(_eveningVoiceKey)
+        : await _prefs.setString(_eveningVoiceKey, id);
+  }
 
   static TimeOfDay? _parse(String? raw) {
     if (raw == null || raw.isEmpty) return null;
@@ -97,7 +135,10 @@ class AzkarSettingsNotifier extends StateNotifier<AzkarSettings> {
       await AzkarReminderService.instance.cancelMorning();
     } else {
       await _prefs.setString(_morningKey, _fmt(time));
-      await AzkarReminderService.instance.scheduleMorning(time.hour, time.minute);
+      await AzkarReminderService.instance.scheduleMorning(
+        time.hour,
+        time.minute,
+      );
     }
   }
 
@@ -108,7 +149,10 @@ class AzkarSettingsNotifier extends StateNotifier<AzkarSettings> {
       await AzkarReminderService.instance.cancelEvening();
     } else {
       await _prefs.setString(_eveningKey, _fmt(time));
-      await AzkarReminderService.instance.scheduleEvening(time.hour, time.minute);
+      await AzkarReminderService.instance.scheduleEvening(
+        time.hour,
+        time.minute,
+      );
     }
   }
 
@@ -126,5 +170,5 @@ class AzkarSettingsNotifier extends StateNotifier<AzkarSettings> {
 
 final azkarSettingsProvider =
     StateNotifierProvider<AzkarSettingsNotifier, AzkarSettings>((ref) {
-  return AzkarSettingsNotifier(ref.watch(sharedPrefsProvider));
-});
+      return AzkarSettingsNotifier(ref.watch(sharedPrefsProvider));
+    });
