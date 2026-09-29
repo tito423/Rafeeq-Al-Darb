@@ -205,6 +205,16 @@ void main() {
     expect(f.take('مئتين وخمسة وخمسين'), isNull, reason: 'used once');
   });
 
+  // The Arabic pack (NVIDIA FastConformer) on the owner's sentence, measured
+  // on the PC 2026-09-30: numbers in MSA words, «صورة» for «سورة».
+  test('the Arabic pack wording', () {
+    expect(of('يا رفيق افتح التطبيق على القرآن سورة البقرة آية مئتان وخمسة وخمسون'),
+        'open quran 2:255');
+    expect(of('افتح صورة البقرة آية مئتان وخمسة وخمسين'), 'open quran 2:255');
+    expect(spokenNumber('مئتان وخمسة وخمسون'), 255);
+    expect(spokenNumber('الآية مئة وخمسة وخمسون'), 155);
+  });
+
   test('a surah with no play word opens, it does not play', () {
     expect(of('القرآن سورة البقرة'), 'open quran 2:1');
     expect(of('سورة الكهف'), 'open quran 18:1');

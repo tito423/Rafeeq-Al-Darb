@@ -10,7 +10,6 @@ import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import '../../hifz/data/tasmee_mic.dart';
 import '../presentation/assistant_describe.dart' show assistantLanguage;
-import 'assistant_intent.dart' show afterWakeWord;
 import 'rafeeq_voice_pack.dart';
 
 /// «رفيق»'s ear: the microphone -> silero VAD -> omnilingual-asr, all on the
@@ -43,9 +42,7 @@ class RafeeqEar {
 
   /// Drops the worker so the next [start] loads the models again - after
   /// the «دقة أعلى» pack is downloaded or deleted.
-  Future<void> reload() async {
-    await shutdown();
-  }
+  Future<void> reload() => shutdown();
 
   /// Listen through a connected Bluetooth headset (set from the settings,
   /// applied at the next [start]).
@@ -67,8 +64,10 @@ class RafeeqEar {
   Future<void> _ensureWorker() async {
     if (_toWorker != null) return;
     final dir = (await RafeeqVoicePack.instance.dir()).path;
-    // The «دقة أعلى» pack, when the reader downloaded it.
-    final turbo = await RafeeqVoicePack.accurate.check()
+    // «دقة أعلى في العربية»: in Arabic, when downloaded, it replaces the base
+    // model (faster, and it hears numbers the base model loses).
+    final arDir = assistantLanguage() == 'ar' &&
+            await RafeeqVoicePack.accurate.check()
         ? (await RafeeqVoicePack.accurate.dir()).path
         : '';
     final inbox = ReceivePort();
@@ -86,7 +85,7 @@ class RafeeqEar {
         ready.completeError(StateError('${m.first}'));
       }
     });
-    await Isolate.spawn(_workerMain, [inbox.sendPort, dir, turbo, assistantLanguage()]);
+    await Isolate.spawn(_workerMain, [inbox.sendPort, dir, arDir]);
     _toWorker = await ready.future;
   }
 
@@ -187,11 +186,9 @@ class RafeeqEar {
   static void _workerMain(List<Object> args) {
     final out = args[0] as SendPort;
     final dir = args[1] as String;
-    final turboDir = args[2] as String;
-    final lang = args[3] as String;
+    final arDir = args[2] as String;
     so.VoiceActivityDetector vad;
     so.OfflineRecognizer rec;
-    so.OfflineRecognizer? turbo;
     try {
       so.initBindings();
       vad = so.VoiceActivityDetector(
@@ -207,9 +204,15 @@ class RafeeqEar {
       );
       rec = so.OfflineRecognizer(so.OfflineRecognizerConfig(
         model: so.OfflineModelConfig(
-          omnilingual: so.OfflineOmnilingualAsrCtcModelConfig(
-              model: p.join(dir, 'model.int8.onnx')),
-          tokens: p.join(dir, 'tokens.txt'),
+          omnilingual: arDir.isNotEmpty
+              ? const so.OfflineOmnilingualAsrCtcModelConfig()
+              : so.OfflineOmnilingualAsrCtcModelConfig(
+                  model: p.join(dir, 'model.int8.onnx')),
+          nemoCtc: arDir.isNotEmpty
+              ? so.OfflineNemoEncDecCtcModelConfig(
+                  model: p.join(arDir, 'model.int8.onnx'))
+              : const so.OfflineNemoEncDecCtcModelConfig(),
+          tokens: p.join(arDir.isNotEmpty ? arDir : dir, 'tokens.txt'),
           numThreads: 2,
           debug: false,
         ),
@@ -218,36 +221,6 @@ class RafeeqEar {
       out.send(['$e']);
       return;
     }
-    // A call to «رفيق» opens a 12-second window: that phrase and what comes
-    // after it (a command said in the next breath, an ayah number) are read
-    // again by whisper. Everything else stays with the fast model.
-    var refineUntil = DateTime.fromMillisecondsSinceEpoch(0);
-    // Whisper is loaded only when «رفيق» is called and let go after five
-    // minutes of not being needed. Measured on emulator-5554 (2026-09-30):
-    // 0.85 GB at rest, 2.2 GB with both models held (more than a 4 GB phone
-    // can spare), back to 0.89 GB once let go; loading it costs ~15 s, so a
-    // conversation of several commands pays that once.
-    var turboUsed = DateTime.fromMillisecondsSinceEpoch(0);
-    so.OfflineRecognizer? loadTurbo() {
-      if (turboDir.isEmpty) return null;
-      try {
-        return turbo ??= so.OfflineRecognizer(so.OfflineRecognizerConfig(
-          model: so.OfflineModelConfig(
-            whisper: so.OfflineWhisperModelConfig(
-              encoder: p.join(turboDir, 'turbo-encoder.int8.onnx'),
-              decoder: p.join(turboDir, 'turbo-decoder.int8.onnx'),
-              language: lang,
-              task: 'transcribe',
-            ),
-            tokens: p.join(turboDir, 'turbo-tokens.txt'),
-            numThreads: 4,
-            debug: false,
-          ),
-        ));
-      } catch (_) {
-        return null; // the fast model's text stands
-      }
-    }
     final inbox = ReceivePort();
     out.send(inbox.sendPort);
     const window = 512;
@@ -255,11 +228,6 @@ class RafeeqEar {
     var wasSpeaking = false;
     inbox.listen((m) {
       if (m is Float32List) {
-        if (turbo != null &&
-            DateTime.now().difference(turboUsed).inMinutes >= 5) {
-          turbo!.free();
-          turbo = null;
-        }
         final all = Float32List(pending.length + m.length)
           ..setAll(0, pending)
           ..setAll(pending.length, m);
@@ -278,30 +246,8 @@ class RafeeqEar {
             final s = rec.createStream();
             s.acceptWaveform(samples: seg.samples, sampleRate: 16000);
             rec.decode(s);
-            var text = rec.getResult(s).text;
+            out.send(rec.getResult(s).text);
             s.free();
-            final called = afterWakeWord(text) != null;
-            if (turboDir.isNotEmpty &&
-                (called || DateTime.now().isBefore(refineUntil))) {
-              if (called) {
-                refineUntil = DateTime.now().add(const Duration(seconds: 12));
-              }
-              final t = loadTurbo();
-              turboUsed = DateTime.now();
-              if (t != null) {
-                final w = t.createStream();
-                // Whisper wants a little silence after the speech.
-                w.acceptWaveform(
-                    samples: Float32List(seg.samples.length + 8000)
-                      ..setAll(0, seg.samples),
-                    sampleRate: 16000);
-                t.decode(w);
-                final better = t.getResult(w).text.trim();
-                w.free();
-                if (better.isNotEmpty) text = better;
-              }
-            }
-            out.send(text);
           }
         }
         pending = Float32List.fromList(all.sublist(i));
@@ -312,7 +258,6 @@ class RafeeqEar {
       } else if (m == 'exit') {
         vad.free();
         rec.free();
-        turbo?.free();
         inbox.close();
       }
     });

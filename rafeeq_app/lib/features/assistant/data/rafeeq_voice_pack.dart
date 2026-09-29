@@ -41,24 +41,23 @@ const voicePackFiles = <VoicePackFile>[
 
 int get voicePackBytes => voicePackFiles.fold(0, (s, f) => s + f.bytes);
 
-/// «دقة أعلى» - an optional second pack (owner, 2026-09-30: «مفيش عندي مشكلة
-/// في الويسبر … هيبقى كمالي على حسب مزاج المستخدم»): OpenAI's Whisper
-/// large-v3-turbo, int8, as sherpa-onnx converts it (MIT). Measured on this
-/// PC on the owner's own sentence as the recogniser heard it: the base pack
-/// wrote «…سورة البقرة آية٥» and lost «مئتين وخمسة وخمسين» entirely; this one
-/// wrote «…سورة البقرة آية 255» and every number clip right - at ~5-7 s a
-/// command on the PC's CPU, so it only re-reads what was said to «رفيق»
-/// (rafeeq_ear.dart), never every sound.
+/// «دقة أعلى في العربية» - an optional second pack (owner, 2026-09-30:
+/// «كمالي على حسب مزاج المستخدم» … «إلا البطء»): NVIDIA's Arabic
+/// FastConformer (stt_ar_fastconformer_hybrid_large_pcd_v1.0, CC BY 4.0),
+/// CTC head, int8, as packaged for sherpa-onnx by krut42 on Hugging Face.
+/// Measured on this PC on the same clips (E:\DevEnv\asr\num_test.py):
+/// the base pack wrote the owner's sentence as «…سورة البقرة آية٥» and lost
+/// «مئتين وخمسة وخمسين» entirely; whisper-turbo (1 GB) got it at 4-7 s; this
+/// one wrote «…سورة البقرة آية مئتان وخمسة وخمسون» and every number clip right
+/// in 0.1 s. Arabic only, so it is used when the app is in Arabic, in place
+/// of the base model (rafeeq_ear.dart).
 const accuratePackFiles = <VoicePackFile>[
-  VoicePackFile('turbo-encoder.int8.onnx', 674716297,
-      'b02dcdf54f348741e93fe732b67d933c8dcb6735655f710640143081db38878b',
-      folder: 'rafeeq_turbo_v1'),
-  VoicePackFile('turbo-decoder.int8.onnx', 361080764,
-      '20accd02388482eb3a46bd615631adfdc85e1eb2c7db9ea3f02a40ffe6b81547',
-      folder: 'rafeeq_turbo_v1'),
-  VoicePackFile('turbo-tokens.txt', 816730,
-      'b34b360dbb493e781e479794586d661700670d65564001f23024971d1f2fa126',
-      folder: 'rafeeq_turbo_v1'),
+  VoicePackFile('model.int8.onnx', 173888072,
+      '714fc79628cff1916194337117579167b32385dcaf70d4b525805f4fdf07913f',
+      folder: 'rafeeq_ar_v1'),
+  VoicePackFile('tokens.txt', 12858,
+      '9b938381a19a69bb279cdcfc299419f25a049ea1de192e0d10317274a0f20074',
+      folder: 'rafeeq_ar_v1'),
 ];
 
 /// «رفيق» works only with this pack on the phone - owner, 2026-09-27: «لو
@@ -71,7 +70,7 @@ class RafeeqVoicePack {
 
   /// The optional higher-accuracy pack ([accuratePackFiles]).
   static final accurate =
-      RafeeqVoicePack._(accuratePackFiles, 'rafeeq_turbo_v1');
+      RafeeqVoicePack._(accuratePackFiles, 'rafeeq_ar_v1');
 
   final List<VoicePackFile> files;
   final String _folder;

@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~03:55 (09-30, Opus) OWNER: «إلا البطء، اقلب النت على حل». FOUND + MEASURED: NVIDIA stt_ar_fastconformer_hybrid_large_pcd_v1.0 (CC BY 4.0), CTC int8 for sherpa-onnx (huggingface.co/krut42/voice-fastconformer-ar-ctc-int8, 173,888,072 B): on the PC 0.1 s per clip vs whisper-turbo 4-7 s, EVERY number right in words («…آية مئتان وخمسة وخمسون»), 6 earlier Arabic commands equal or better than the base model (only «صورة» for «سورة» -> «صوره» added as a surah word). REPLACED whisper-turbo as the optional pack «دقة أعلى في العربية» (asr/rafeeq_ar_v1/, R2 + mirror 206); in Arabic it REPLACES the base recogniser in the worker (base pack still needed for the VAD); row shown only when the app is in Arabic. whisper-turbo files DELETED from R2 (404) and content-mirror (0 assets) - never shipped; local copy kept in E:\DevEnvsr. 677 tests. In-app download of the Arabic pack RUNNING on the emulator (50 MB at 03:53). NEXT EXACT: when it completes, restart app, feed the owner sentence clip from the home screen, expect open quran 2:255 fast; measure delay and memory.
+
 ~03:30 (09-30, Opus) «دقة أعلى» (whisper-turbo) SEEN WORKING on emulator-5554: owner sentence clip from the phone HOME SCREEN -> segment «يا رفيق افتح التطبيق على القرن سورة البقرة آية 255» -> «open quran 2:255», app came to front on page 42 with Ayat al-Kursi. Hosted: R2 + content-mirror, 3 files 206 each. In-app download STARTED and progressed (98.8 MB / 1.0 GB shown) but the emulator network is ~0.15 MB/s, so it was cancelled and the same files (sha256 checked on device) were copied in with adb; the full in-app download to completion is NOT seen. Measured: PSS 0.85 GB at rest, 2.2 GB with whisper loaded, 0.89 GB after release -> whisper now loads only on a call and is released after 5 min idle; recognition 12.7 s with whisper loaded, 27.9 s for the first call (load ~15 s) on the emulator. Phone speed/memory NOT measured. 676 tests. NEXT EXACT: report to owner (speed cost, memory, needs his phone test); then remaining queue: nothing else from tonight except owner review. No release.
 
 ~03:10 (09-30, Opus) OWNER DECISION: no Google recogniser (no beep); whisper OK as an optional pack. MEASURED on PC (E:\DevEnvsr
@@ -897,6 +899,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 03:54 - Arabic pack: NVIDIA FastConformer replaces whisper-turbo (0.1 s vs 4-7 s, numbers right, 174 MB); used as the recogniser in Arabic; turbo removed from hosting
 - 2026-09-30 03:28 - Sharper-hearing pack seen working (owner sentence -> 2:255 from the home screen); whisper loaded only on a call and released after 5 min idle (2.2 GB -> 0.89 GB measured)
 - 2026-09-30 02:57 - Optional sharper-hearing pack for Rafeeq: whisper-turbo re-reads only what is said to Rafeeq (measured: gets numbers the base model loses); upload running
 - 2026-09-30 02:38 - Rafeeq: a surah said without a play word opens it (was: played in background); glued open verb, cut ayah word, spoken-number follow-up; recogniser drops numbers - logged

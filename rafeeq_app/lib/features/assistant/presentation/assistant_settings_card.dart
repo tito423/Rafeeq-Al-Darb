@@ -174,7 +174,9 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                         child: Text('assistant.pack_download'.tr()),
                       ),
               ),
-              if (installed == true) ...[
+              // Arabic only: the model hears Arabic alone.
+              if (installed == true &&
+                  context.locale.languageCode == 'ar') ...[
                 const Divider(height: 1),
                 const _AccuratePackTile(),
               ],
@@ -186,9 +188,9 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
   }
 }
 
-/// «دقة أعلى»: the optional whisper pack (RafeeqVoicePack.accurate). Offered
-/// only once the base pack is on the phone - it re-reads what the base pack
-/// heard, it does not replace it.
+/// «دقة أعلى في العربية»: the optional Arabic pack (RafeeqVoicePack.accurate).
+/// Offered once the base pack is on the phone (its voice detector is still
+/// used); in Arabic it then takes the base model's place.
 class _AccuratePackTile extends StatefulWidget {
   const _AccuratePackTile();
 
@@ -208,7 +210,7 @@ class _AccuratePackTileState extends State<_AccuratePackTile> {
   Future<void> _download() async {
     try {
       await _pack.download();
-      await RafeeqEar.instance.reload(); // load it now
+      await RafeeqEar.instance.reload(); // use it from the next phrase
     } catch (e) {
       debugPrint('rafeeq accurate pack: $e');
       rootScaffoldMessengerKey.currentState?.showSnackBar(

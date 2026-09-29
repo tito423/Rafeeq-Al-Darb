@@ -81,7 +81,7 @@ const sunanWords = <String>['سنن'];
 
 /// «سورة» in every language (Russian and Urdu go through `norm` too).
 const surahWords = <String>[
-  'سوره', 'سورت', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',
+  'سوره', 'سورت', 'صوره', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',
   'chapter', 'сура', 'суру', 'суры',
 ];
 
