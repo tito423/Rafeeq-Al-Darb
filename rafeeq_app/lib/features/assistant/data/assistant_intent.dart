@@ -532,6 +532,8 @@ class AssistantParser {
     if (_hasPhrase(clean, lex.onThisDayPhrases.map(_canon))) {
       return _onThisDay(clean);
     }
+    final wordQuery = _quranWordQuery(heard);
+    if (wordQuery != null) return QuranWordIntent(wordQuery);
     // «دورلي في الشاملة على …» / «نزلي كتاب … من الشاملة». Before the
     // library's own books: said with «الشاملة», it is Shamela that is meant.
     final raw = norm(asciiDigits(heard)).split(' ').where((w) => w.isNotEmpty);

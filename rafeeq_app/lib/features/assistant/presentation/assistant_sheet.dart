@@ -79,6 +79,8 @@ import '../data/assistant_settings.dart';
 import '../data/assistant_settings_map.dart';
 import '../data/rafeeq_ear.dart';
 import '../data/rafeeq_voice_pack.dart';
+import 'assistant_describe.dart';
+import 'assistant_quran_word.dart';
 
 /// True once `AppShell` is on screen - there is nowhere to take the reader
 /// before that (splash, onboarding).
@@ -185,12 +187,6 @@ List<String> _azkarSectionNames(
     if (title is String && title.trim().isNotEmpty) names.add(title);
   }
   return names.toList();
-}
-
-/// The app's language code now («ar», «en», …).
-String _appLanguage() {
-  final ctx = rootNavigatorKey.currentContext;
-  return ctx == null ? 'ar' : ctx.locale.languageCode;
 }
 
 /// True while «رفيق»'s sheet is open - it takes what is said next.
@@ -322,7 +318,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
   Future<void> _overlay(String text, {int seconds = 4}) =>
       _channel.invokeMethod<void>('overlayShow', {
         'text': text, 'seconds': seconds,
-        'rtl': const {'ar', 'ur'}.contains(_appLanguage()),
+        'rtl': const {'ar', 'ur'}.contains(assistantLanguage()),
       });
 
   Future<void> _onHeard(String text) async {
@@ -398,36 +394,6 @@ Future<void> showAssistantSheet({String? heard}) async {
     );
   } finally {
     assistantSheetOpen.value = false;
-  }
-}
-
-/// What the reader is told before it happens - short, on screen.
-Future<String> describeIntent(
-    ProviderContainer ref, AssistantIntent intent) async {
-  switch (intent) {
-    case PlaySurahIntent(:final surah, :final reciterId):
-      final repo = await ref.read(quranRepositoryProvider.future);
-      final s = (await repo.surahs())[surah - 1];
-      final ar = _appLanguage() == 'ar' || _appLanguage() == 'ur';
-      final id = reciterId ?? ref.read(selectedReciterProvider);
-      final reciters = await ref.read(recitersProvider.future);
-      final r = reciters.where((x) => x.identifier == id).firstOrNull;
-      return 'assistant.playing'.tr(args: [
-        ar ? s.nameAr : s.nameEn,
-        r == null ? '' : (ar ? r.nameAr : r.nameEn),
-      ]);
-    case OpenBookIntent(:final bookId):
-      final b = libraryBookCatalog.where((x) => x.id == bookId).firstOrNull ??
-          ShamelaLibrary.instance.byId(bookId);
-      return 'assistant.opening'.tr(args: [b?.titleAr ?? '']);
-    case AuthorBooksIntent(:final author):
-      return 'assistant.opening'.tr(args: [author]);
-    case ShamelaSearchIntent(:final title):
-      return 'assistant.opening'.tr(args: [title]);
-    case OpenSettingIntent(:final section):
-      return 'assistant.opening'.tr(args: [section.tr()]);
-    default:
-      return 'assistant.ok'.tr();
   }
 }
 
@@ -544,6 +510,8 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           final repo = await ref.read(quranRepositoryProvider.future);
           push(SearchScreen(repo: repo));
       }
+    case QuranWordIntent(:final query):
+      await runQuranWord(ref, query);
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,
           day: day != null && month != null ? (month, day) : null);
@@ -587,7 +555,7 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
     case OpenHadeethCategoryIntent(:final categoryId):
       final repo = await ref.read(hadeethEncRepositoryProvider.future);
       final catalog = await ref.read(hadeethEncCatalogProvider.future);
-      final pack = catalog.forLocale(_appLanguage());
+      final pack = catalog.forLocale(assistantLanguage());
       if (repo == null || pack == null) return;
       final category =
           (await repo.categories()).where((c) => c.id == categoryId).firstOrNull;

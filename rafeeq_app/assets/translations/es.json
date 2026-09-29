@@ -2194,7 +2194,12 @@
     "notif_stop": "Detener",
     "overlay_title": "Mostrar sobre otras apps",
     "overlay_desc": "Permite que Rafeeq aparezca sobre cualquier app o la pantalla de inicio cuando lo llamas, y abra lo que pediste dentro de la app. Sin esto solo funciona con la app abierta.",
-    "overlay_grant": "Permitir"
+    "overlay_grant": "Permitir",
+    "word_found": "«{}» — aparece en {} lugares",
+    "word_hint": "Toca una aleya, o di su número o su sura",
+    "word_limit": "Solo se muestran las primeras {}: di una palabra más exacta o una frase más larga",
+    "word_none": "Ninguna aleya contiene «{}»",
+    "word_searching": "Buscando «{}» en el Corán"
   },
   "occasions": {
     "title": "Fechas islámicas",

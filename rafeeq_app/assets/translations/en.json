@@ -2194,7 +2194,12 @@
     "notif_stop": "Stop",
     "overlay_title": "Display over other apps",
     "overlay_desc": "Let Rafeeq appear over any app or the home screen when you call it, then open what you asked for inside the app. Without it, it works only while the app is open.",
-    "overlay_grant": "Allow"
+    "overlay_grant": "Allow",
+    "word_found": "“{}” — found in {} places",
+    "word_hint": "Tap an ayah, or say its number or its surah",
+    "word_limit": "Showing only the first {} — say a more exact word or a longer phrase",
+    "word_none": "No ayah contains “{}”",
+    "word_searching": "Looking for “{}” in the Qur’an"
   },
   "occasions": {
     "title": "Islamic occasions",

@@ -424,3 +424,13 @@ const wakeWords = <String>[
   // As omnilingual-asr wrote it on the measured clips (2026-09-27).
   'rafek', 'rafec', 'rafeek', 'رفيك', 'رافك',
 ];
+
+/// Spoken ordinals, in the normalised spelling the recogniser's text takes
+/// (`norm`): «التاسعة» is «التاسعه». Used to pick a row from a spoken list.
+const spokenOrdinals = <String, int>{
+  'الاول': 1, 'الاولي': 1, 'اولا': 1, 'الثاني': 2, 'الثانيه': 2,
+  'الثالث': 3, 'الثالثه': 3, 'الرابع': 4, 'الرابعه': 4, 'الخامس': 5,
+  'الخامسه': 5, 'السادس': 6, 'السادسه': 6, 'السابع': 7, 'السابعه': 7,
+  'الثامن': 8, 'الثامنه': 8, 'التاسع': 9, 'التاسعه': 9, 'العاشر': 10,
+  'العاشره': 10,
+};

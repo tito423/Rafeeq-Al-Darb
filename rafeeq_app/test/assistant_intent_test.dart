@@ -189,6 +189,17 @@ void main() {
     expect(p.parse('افتح ما يقال قبل المذاكرة'), isA<UnknownIntent>());
   });
 
+  test('every Quran word can be asked for by voice (owner, 2026-09-29)', () {
+    expect(of('فين كلمة الرحمن في القرآن'), 'quran word الرحمن');
+    expect(of('كلمة رحمة ذكرت في ايه'), 'quran word رحمه');
+    expect(of('دورلي على كلمة الصبر في القران'), 'quran word الصبر');
+    expect(of('اعرضلي آية فيها كلمة عسعس'), 'quran word عسعس');
+    expect(of('where is the word mercy in the quran'), 'quran word mercy');
+    // Not a word question: screens and books that merely contain «كلمات».
+    expect(of('افتح معاني الكلمات'), isNot(startsWith('quran word')));
+    expect(of('فين الاذكار'), 'open azkar');
+  });
+
   test('ayah-by-ayah reciter uses only its verified provider catalogue', () {
     expect(of('افتح تلاوة آية بآية للحصري'), 'ayah reciter ar.husary');
     expect(of('وريني آية بآية بصوت الطبلاوي'),

@@ -45,6 +45,17 @@ class OpenSunanSurahIntent extends AssistantIntent {
   String toString() => 'sunan surah $surah';
 }
 
+/// «فين كلمة الرحمن في القرآن» / «where is the word mercy in the Qur'an»
+/// (owner, 2026-09-29): every word of the Qur'an is findable by voice. The
+/// search itself is `QuranRepository.searchQuran` - the same index the search
+/// screen uses - so a word, its derivatives and a whole phrase all work.
+class QuranWordIntent extends AssistantIntent {
+  const QuranWordIntent(this.query);
+  final String query;
+  @override
+  String toString() => 'quran word $query';
+}
+
 class OpenAzkarSectionIntent extends AssistantIntent {
   const OpenAzkarSectionIntent(this.sectionId);
   final int sectionId;
@@ -97,6 +108,44 @@ class OpenHadithDetailIntent extends AssistantIntent {
 }
 
 extension on AssistantParser {
+  /// The word or phrase asked for in «فين كلمة X في القرآن», or null when the
+  /// sentence is not that question. It reads the RAW words, not the corrected
+  /// ones: spelling correction pulls unknown words toward the command
+  /// vocabulary, and a Qur'anic word must reach the search exactly as heard.
+  String? _quranWordQuery(String heard) {
+    final raw = norm(asciiDigits(heard)).split(' ').where((w) => w.isNotEmpty).toList();
+    const marker = {'كلمه', 'لفظ', 'لفظه', 'word', 'palabra', 'mot', 'palavra', 'слово'};
+    const context = {
+      'القران', 'قران', 'ذكرت', 'وردت', 'ورد', 'ذكر', 'فين', 'اين', 'وين', 'امتي',
+      'فيها', 'فيه', 'ايه', 'اية', 'where', 'donde', 'onde', 'quran', 'coran',
+      'koran', 'где', 'коране',
+    };
+    const noise = {
+      'في', 'ف', 'القران', 'قران', 'ذكرت', 'وردت', 'ورد', 'ذكر', 'فين', 'اين',
+      'وين', 'دي', 'ده', 'هذه', 'هذا', 'هذي', 'مره', 'كام', 'ايه', 'اية', 'اي',
+      'سوره', 'موضع', 'مواضع', 'امتي', 'وريني', 'اعرض', 'اعرضلي', 'جيب', 'هات',
+      'فيها', 'فيه', 'لي', 'ليا', 'the', 'in', 'quran', 'where', 'is', 'was',
+      'mentioned', 'of', 'de', 'en', 'el', 'la', 'le', 'les', 'du', 'dans', 'где',
+      'в', 'коране', 'donde', 'onde', 'coran', 'koran',
+    };
+    final i = raw.indexWhere(marker.contains);
+    if (i < 0 || !raw.any(context.contains)) return null;
+    final taken = <String>[];
+    for (var k = i + 1; k < raw.length; k++) {
+      if (noise.contains(raw[k])) {
+        if (taken.isEmpty) continue;
+        break;
+      }
+      taken.add(raw[k]);
+    }
+    if (taken.isEmpty) {
+      for (var k = 0; k < i; k++) {
+        if (!noise.contains(raw[k]) && !raw[k].startsWith('دور')) taken.add(raw[k]);
+      }
+    }
+    return taken.isEmpty ? null : taken.join(' ');
+  }
+
   AssistantIntent? _collectionDetailIn(String clean) {
     final azkarSection = _azkarSectionIn(clean);
     if (azkarSection != null) return OpenAzkarSectionIntent(azkarSection);
