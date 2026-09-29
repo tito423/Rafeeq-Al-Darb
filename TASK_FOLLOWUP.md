@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~19:10 (09-29) HANDOVER («جهّز الدنيا»). Kids path (5 age stages Juz ʿAmma -> Maryam, 97 surahs), stage screen, journey for all ages: IN CODE, analyze clean, 667 tests pass, NOT seen on a device. kids_stages_test caught adh-Dhariyat opening in Juz 26 (fixed). Verified now: hosted content 7/7 range 206, v3.70.0 published and verified earlier. NEXT EXACT: follow NEXT_PROMPT.md step 1 (emulator -gpu host, check the kids path), then ask the owner about 3.71.0.
+
 ~18:35 (09-29) V3.70.0 PUBLISHED AND VERIFIED: tag v3.70.0 = HEAD 1635579e (targets master), asset RafeeqAlDarb-v3.70.0.apk 314,772,227 B, SHA-256 91332452AE9094B12FF361F4C278B821CF991AA497B84A7D1DBA2A3B01C2EBF9 = GitHub digest = full re-download; range request 206; not draft/prerelease; aapt2: versionCode 84 / versionName 3.70.0; sherpa ORT 1.28.2 on all three ABIs; rotated signing verified. v3.69.3 release and tag deleted (ref API 404); v3.51.0 and content-* kept. NEXT: owner tries 3.70.0 on his phone - «يا رفيق» from outside the app (grant «الظهور فوق التطبيقات» first), the kids corner, «رحلتي». Real prizes for gamification are NOT built (need a server).
 
 ~18:22 (09-29) SEEN on emulator: More shows «ركن الأطفال» and «رحلتي»; kids corner (scene greeting, 23 surah chips, game + journey tiles); «أكمل الآية» on an-Nas (right answer turned green «أحسنت ⭐», score 1/1); «رحلتي» then showed 5 points, streak 1, badge «أول إجابة صحيحة» earned; About screen (Madinah wording, Hisn, Rafeeq, hifz, tajweed, hajj rows). Game ayah text made full-contrast. Version bumped 3.70.0+84 (pubspec + About). analyze clean, 664 tests. NEXT EXACT: checkpoint, stop emulator, build_github_release.bat alone, verify ORT/signing, publish v3.70.0 from master, delete v3.69.3 release+tag, verify.
@@ -848,6 +850,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 19:18 - Handover: kids corner as a 5-stage age path (Juz Amma to half the Quran, pinned against the mushaf DB), stage screen, journey for all ages; HANDOVER/NEXT_PROMPT rewritten; 667 tests, hosted content 7/7
 - 2026-09-29 18:29 - Record verified v3.70.0 GitHub release (tag == HEAD, SHA matches re-download); v3.69.3 removed
 - 2026-09-29 18:23 - Kids corner, game and My Journey seen working on the emulator; bump to 3.70.0+84 for release
 - 2026-09-29 18:16 - Kids corner (short surahs, Hisn adhkar for children, Complete-the-ayah game on the mushaf text) and My Journey (points, level, streak, badges from real counted acts) in More; book-slider bubble clears the source line; 664 tests

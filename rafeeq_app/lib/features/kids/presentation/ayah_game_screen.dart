@@ -16,7 +16,10 @@ import '../data/kids_content.dart';
 /// (`quran_local.db`), shown as it is written; a right answer counts in
 /// «رحلتي».
 class AyahGameScreen extends ConsumerStatefulWidget {
-  const AyahGameScreen({super.key});
+  /// The surahs to ask from - a stage's, or the reader's memorised ones for
+  /// a review.
+  final List<int> surahIds;
+  const AyahGameScreen({super.key, this.surahIds = kidsSurahIds});
 
   @override
   ConsumerState<AyahGameScreen> createState() => _AyahGameScreenState();
@@ -25,7 +28,7 @@ class AyahGameScreen extends ConsumerStatefulWidget {
 class _AyahGameScreenState extends ConsumerState<AyahGameScreen> {
   final _rnd = Random();
   List<Surah>? _surahs;
-  int _surahId = kidsSurahIds[1];
+  late int _surahId = widget.surahIds.first;
   AyahQuestion? _q;
   String? _picked;
   int _score = 0;
@@ -76,7 +79,7 @@ class _AyahGameScreenState extends ConsumerState<AyahGameScreen> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  for (final id in kidsSurahIds)
+                  for (final id in widget.surahIds)
                     Padding(
                       padding: const EdgeInsetsDirectional.only(end: 8),
                       child: ChoiceChip(

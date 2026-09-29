@@ -4,15 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/db/azkar_repository.dart';
 import '../../../core/db/models.dart';
-import '../../../core/db/quran_repository.dart';
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/islamic_scene.dart';
 import '../../../core/widgets/readable_insets.dart';
 import '../../azkar/presentation/screens/azkar_section_screen.dart';
-import '../../hifz/presentation/hifz_session_screen.dart';
+import '../data/journey_store.dart';
 import '../data/kids_content.dart';
+import '../data/kids_stages.dart';
 import 'ayah_game_screen.dart';
 import 'journey_screen.dart';
+import 'kids_stage_screen.dart';
 
 /// «ركن الأطفال» (owner, 2026-09-29): big, bright, and only real content -
 /// the short surahs in the app's memorisation screen, the everyday adhkar of
@@ -29,7 +30,6 @@ class KidsCornerScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final lang = context.locale.languageCode;
-    final surahs = ref.watch(quranRepositoryProvider).whenData((r) => r.surahs());
     return Scaffold(
       appBar: AppBar(title: Text('kids.title'.tr())),
       body: ListView(
@@ -95,30 +95,31 @@ class KidsCornerScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 20),
-          _Heading(icon: Icons.menu_book_rounded, text: 'kids.surahs'.tr()),
-          const SizedBox(height: 8),
-          surahs.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, _) => const SizedBox.shrink(),
-            data: (future) => FutureBuilder<List<Surah>>(
-              future: future,
+          _Heading(icon: Icons.stairs_rounded, text: 'kids.path'.tr()),
+          const SizedBox(height: 4),
+          Text('kids.path_sub'.tr(),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          const SizedBox(height: 10),
+          ValueListenableBuilder<int>(
+            valueListenable: JourneyStore.instance.changes,
+            builder: (context, _, _) => FutureBuilder<Set<int>>(
+              future: JourneyStore.instance.memorized(),
               builder: (context, snap) {
-                final all = snap.data;
-                if (all == null) return const SizedBox(height: 60);
-                return Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
+                final done = snap.data ?? const <int>{};
+                return Column(
                   children: [
-                    for (var i = 0; i < kidsSurahIds.length; i++)
-                      _Chip(
-                        color: _palette[i % _palette.length],
-                        label: lang == 'ar' || lang == 'ur'
-                            ? all[kidsSurahIds[i] - 1].nameAr
-                            : all[kidsSurahIds[i] - 1].nameEn,
+                    for (var i = 0; i < kidsStages.length; i++)
+                      _StageCard(
+                        step: i + 1,
+                        stage: kidsStages[i],
+                        done: kidsStages[i].surahs.where(done.contains).length,
+                        lang: lang,
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute<void>(
-                            builder: (_) => HifzSessionScreen.surah(
-                                all[kidsSurahIds[i] - 1]),
+                            builder: (_) =>
+                                KidsStageScreen(stage: kidsStages[i]),
                           ),
                         ),
                       ),
@@ -164,7 +165,7 @@ class KidsCornerScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'kids.note'.tr(args: [localizeDigits('${kidsSurahIds.length}', lang)]),
+            'kids.note'.tr(args: [localizeDigits('${kidsStages.fold<int>(0, (n, st) => n + st.surahs.length)}', lang)]),
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -263,25 +264,109 @@ class _BigTile extends StatelessWidget {
       );
 }
 
-class _Chip extends StatelessWidget {
-  final Color color;
-  final String label;
+class _StageCard extends StatelessWidget {
+  final int step;
+  final KidsStage stage;
+  final int done;
+  final String lang;
   final VoidCallback onTap;
-  const _Chip({required this.color, required this.label, required this.onTap});
+  const _StageCard({
+    required this.step,
+    required this.stage,
+    required this.done,
+    required this.lang,
+    required this.onTap,
+  });
 
   @override
-  Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(18),
+  Widget build(BuildContext context) {
+    final color = Color(stage.color);
+    final total = stage.surahs.length;
+    final complete = done == total;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24),
+          child: Ink(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [color, Color.lerp(color, Colors.black, 0.3)!],
+              ),
+              boxShadow: [
+                BoxShadow(
+                    color: color.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 5)),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 54,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.22),
+                    border: Border.all(color: Colors.white54, width: 2),
+                  ),
+                  alignment: Alignment.center,
+                  child: complete
+                      ? const Icon(Icons.emoji_events_rounded,
+                          color: Color(0xFFFFD166), size: 30)
+                      : Text(localizeDigits('$step', lang),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w900)),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('kids.stage_${stage.id}'.tr(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 19,
+                              fontWeight: FontWeight.w900)),
+                      Text('kids.stage_${stage.id}_ages'.tr(),
+                          style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 13)),
+                      const SizedBox(height: 8),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: LinearProgressIndicator(
+                          value: done / total,
+                          minHeight: 7,
+                          color: const Color(0xFFFFD166),
+                          backgroundColor: Colors.white24,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'kids.stage_progress'.tr(args: [
+                          localizeDigits('$done', lang),
+                          localizeDigits('$total', lang),
+                        ]),
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          child: Text(label,
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
         ),
-      );
+      ),
+    );
+  }
 }

@@ -18,8 +18,35 @@ class JourneyStore {
   static const _kDays = 'journey_days_v1';
   static String _kCount(String kind) => 'journey_count_${kind}_v1';
 
-  /// The kinds of act that are counted, and what each is worth.
-  static const weights = {'dhikr': 1, 'tasbeeh': 1, 'game': 5};
+  /// The kinds of act that are counted, and what each is worth. `surah` is a
+  /// surah the reader marked as memorised - one count per surah, ever
+  /// ([setMemorized] keeps the set; unmarking takes the count back).
+  static const weights = {'dhikr': 1, 'tasbeeh': 1, 'game': 5, 'surah': 20};
+
+  static const _kMemorized = 'journey_memorized_v1';
+
+  Future<Set<int>> memorized() async {
+    final p = await SharedPreferences.getInstance();
+    return {
+      for (final s in p.getStringList(_kMemorized) ?? const <String>[])
+        ?int.tryParse(s),
+    };
+  }
+
+  /// Marks or unmarks [surah] as memorised; the `surah` count always equals
+  /// the size of the set, so marking twice never earns twice.
+  Future<void> setMemorized(int surah, bool on, {DateTime? now}) async {
+    final p = await SharedPreferences.getInstance();
+    final set = await memorized();
+    final changed = on ? set.add(surah) : set.remove(surah);
+    if (!changed) return;
+    await p.setStringList(_kMemorized, [for (final s in set) '$s']);
+    await p.setInt(_kCount('surah'), set.length);
+    if (on) {
+      await record('surah', count: 0, now: now);
+    }
+    changes.value++;
+  }
 
   /// Ticks on every record, for screens that show the numbers.
   final changes = ValueNotifier<int>(0);
@@ -28,9 +55,11 @@ class JourneyStore {
       '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
   Future<void> record(String kind, {int count = 1, DateTime? now}) async {
-    if (!weights.containsKey(kind) || count <= 0) return;
+    if (!weights.containsKey(kind) || count < 0) return;
     final p = await SharedPreferences.getInstance();
-    await p.setInt(_kCount(kind), (p.getInt(_kCount(kind)) ?? 0) + count);
+    if (count > 0) {
+      await p.setInt(_kCount(kind), (p.getInt(_kCount(kind)) ?? 0) + count);
+    }
     final days = (p.getStringList(_kDays) ?? const <String>[]).toSet()
       ..add(dayKey(now ?? DateTime.now()));
     // Only the last 400 days are needed for any streak or badge shown.
@@ -132,4 +161,10 @@ const journeyBadges = <JourneyBadge>[
   JourneyBadge('game_1', 'game', 1),
   JourneyBadge('game_50', 'game', 50),
   JourneyBadge('level_5', 'level', 5),
+  JourneyBadge('surah_1', 'surah', 1),
+  JourneyBadge('surah_10', 'surah', 10),
+  // 37 = the number of surahs in Juz ʿAmma; 97 = the whole path of the
+  // kids' corner, al-Fātiḥah and Maryam to an-Nās (kids_stages_test pins it).
+  JourneyBadge('surah_37', 'surah', 37),
+  JourneyBadge('surah_97', 'surah', 97),
 ];

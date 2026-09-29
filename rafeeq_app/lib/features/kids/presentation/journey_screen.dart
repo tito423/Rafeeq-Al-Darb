@@ -15,6 +15,7 @@ class JourneyScreen extends StatelessWidget {
         'tasbeeh' => Icons.radio_button_checked_rounded,
         'streak' => Icons.local_fire_department_rounded,
         'game' => Icons.extension_rounded,
+        'surah' => Icons.menu_book_rounded,
         _ => Icons.workspace_premium_rounded,
       };
 
@@ -93,6 +94,19 @@ class JourneyScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    Expanded(
+                      child: _Stat(
+                        icon: Icons.menu_book_rounded,
+                        color: const Color(0xFF2E86DE),
+                        value: n(j.counts['surah'] ?? 0),
+                        label: 'journey.surahs'.tr(),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
                     Expanded(
                       child: _Stat(
                         icon: Icons.spa_rounded,
