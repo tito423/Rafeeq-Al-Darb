@@ -515,9 +515,16 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,
           day: day != null && month != null ? (month, day) : null);
-    case PlaySurahIntent(:final surah, :final reciterId):
+    case OpenQuranAyahIntent(:final surah, :final ayah):
       final repo = await ref.read(quranRepositoryProvider.future);
-      final first = await repo.ayah(surah, 1);
+      final a = await repo.ayah(surah, ayah) ?? await repo.ayah(surah, 1);
+      if (a == null) return;
+      ref.read(quranJumpRequestProvider.notifier).state = a.pageNumber;
+      tab(AppTab.quran);
+    case PlaySurahIntent(:final surah, :final reciterId, :final fromAyah):
+      final repo = await ref.read(quranRepositoryProvider.future);
+      final first = await repo.ayah(surah, fromAyah ?? 1) ??
+          await repo.ayah(surah, 1);
       if (first == null) return;
       // Saying a reciter chooses him, as picking him in the list does, so
       // the mushaf's own play button goes on with the same voice.

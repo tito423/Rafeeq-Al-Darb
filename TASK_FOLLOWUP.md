@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~22:55 (09-29, Opus) IN CODE, analyze clean, assistant tests 25/25 (NOT yet run on the emulator, full suite not yet run): (a) new OpenQuranAyahIntent (assistant_ayah_ref.dart): «افتح … سورة البقرة آية ٢٥٥» / spoken numbers «مئتين وخمسة وخمسين» / «آية الكرسي» open the mushaf page and bring the app forward; «شغل البقرة من آية ٢٥٥» plays FROM that ayah (PlaySurahIntent.fromAyah); «افتح سورة الكهف» now opens instead of playing; «آية بآية لمحمد صديق» stays the ayah player. (b) kids: surah names via surahNamePlain (the Uthmani small marks drew «شورة» / broken glyphs on the owner's phone - the helper existed since 09-23 and was not used); the whole surah card opens the recitation. OWNER ALSO REPORTED, NOT YET DONE: «يا رفيق» does not hear his Bluetooth headset mic (under a helmet): rafeeq_ear.dart records with manageBluetooth:false from the phone mic; tasmee_mic.dart already routes a headset (setCommunicationDevice) - reuse it. And: why does the kids stage-1 game repeat questions (random with replacement over a small pool) - answer + fix.
+
 ~22:40 (09-29, Opus) OWNER BUG: «يا رفيق افتح التطبيق على القرآن سورة البقرة آية ٢٥٥» (said from outside the app) -> did NOT open the mushaf at 2:255; it started a recitation in al-Minshawi's voice (not chosen by him) from the START of the surah, in the background, and never brought the app to the screen. NEXT EXACT: find how this sentence parses (assistant_intent), fix to open the mushaf at 2:255 + bring the app forward, regression test with the exact words, emulator check.
 
 ~22:20 (09-29, Opus) OWNER: (1) compass keeps buzzing while adhan/timings settings are open over the Prayer tab; (2) add «vibrate with the full-screen adhan»; DO NOT PUBLISH until he has looked for anything missing himself. IN CODE, analyze clean, new test/adhan_full_vibrate_test.dart 4/4, debug build installed: (1) qibla_screen.dart skips haptic+rebuild unless its ModalRoute isCurrent (one root navigator, checked); (2) AdhanSettings.vibrateWithFull (pref adhan_full_vibrate_v1, off by default) -> AdhanSpec.vibrate (Dart+Kotlin, full mode only) -> AdhanVibration.startRepeating in AdhanService.fire, stopped on Mute, finish, onDestroy; USAGE_ALARM attributes; settings switch «اهتزاز مع الأذان بالشاشة الكاملة» x7 locales. NOT YET SEEN on emulator: compass sweep with settings open, «تجربة» adhan vibration. No release.
@@ -862,6 +864,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 22:33 - Rafeeq opens the mushaf on a said surah/ayah (and plays from it); kids surah names without Uthmani marks; whole surah card opens recitation
 - 2026-09-29 22:23 - Compass haptic only while its route is current; optional vibration with the full-screen adhan (off by default, stops with the adhan); owner's Rafeeq 2:255 bug logged
 - 2026-09-29 21:52 - HANDOVER state block for v3.71.0; 25/9 plan item 4 (silent text-mushaf play) re-checked: plays on emulator
 - 2026-09-29 21:43 - Record verified v3.71.0 GitHub release (tag == HEAD, SHA matches re-download); v3.70.0 removed

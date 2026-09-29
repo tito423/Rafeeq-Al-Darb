@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/navigation.dart';
 import '../../../core/db/quran_repository.dart';
+import '../../../core/utils/digits.dart' show localizeDigits;
 import '../../downloads/data/reciters_provider.dart';
 import '../../library/data/book_catalog.dart';
 import '../../shamela/data/shamela_library.dart';
@@ -44,6 +45,13 @@ Future<String> describeIntent(
       return 'assistant.opening'.tr(args: [title]);
     case OpenSettingIntent(:final section):
       return 'assistant.opening'.tr(args: [section.tr()]);
+    case OpenQuranAyahIntent(:final surah, :final ayah):
+      final s = (await (await ref.read(quranRepositoryProvider.future))
+          .surahs())[surah - 1];
+      final ar = assistantLanguage() == 'ar' || assistantLanguage() == 'ur';
+      return 'assistant.opening'.tr(args: [
+        '${ar ? s.nameAr : s.nameEn} ${localizeDigits('$ayah', assistantLanguage())}',
+      ]);
     case QuranWordIntent(:final query):
       return 'assistant.word_searching'.tr(args: [query]);
     default:

@@ -3,6 +3,7 @@ import '../../../core/utils/digits.dart' show asciiDigits;
 import 'assistant_lexicon.dart' as lex;
 import 'assistant_wake_word.dart';
 
+part 'assistant_ayah_ref.dart';
 part 'assistant_destination_match.dart';
 part 'assistant_detail_intents.dart';
 
@@ -72,13 +73,16 @@ class OpenScreenIntent extends AssistantIntent {
   String toString() => 'open ${screen.name}';
 }
 
-/// Play a surah, by a named reciter when one was said.
+/// Play a surah, by a named reciter when one was said, from [fromAyah]
+/// when one was said («شغل البقرة من آية ٢٥٥»).
 class PlaySurahIntent extends AssistantIntent {
-  const PlaySurahIntent(this.surah, {this.reciterId});
+  const PlaySurahIntent(this.surah, {this.reciterId, this.fromAyah});
   final int surah;
   final String? reciterId;
+  final int? fromAyah;
   @override
-  String toString() => 'play surah $surah by ${reciterId ?? '-'}';
+  String toString() => 'play surah $surah by ${reciterId ?? '-'}'
+      '${fromAyah == null ? '' : ' from $fromAyah'}';
 }
 
 class OpenBookIntent extends AssistantIntent {
@@ -338,24 +342,6 @@ String? afterWakeWord(String heard) {
   );
 }
 
-/// Day numbers as they are said (Egyptian and MSA), normalised.
-final _numberWords = <String, int>{
-  for (final e in const {
-    1: ['واحد', 'وحده', 'الاول'], 2: ['اتنين', 'اثنين', 'اثنان', 'تاني'],
-    3: ['تلاته', 'ثلاثه', 'تالت'], 4: ['اربعه', 'اربع', 'رابع'],
-    5: ['خمسه', 'خمس', 'خامس'], 6: ['سته', 'ست', 'سادس'],
-    7: ['سبعه', 'سبع', 'سابع'], 8: ['تمانيه', 'ثمانيه', 'تامن'],
-    9: ['تسعه', 'تسع', 'تاسع'], 10: ['عشره', 'عاشر'],
-    11: ['حداشر', 'احداشر', 'احدعشر'], 12: ['اتناشر', 'اتناش', 'اثناعشر', 'اطناشر'],
-    13: ['تلتاشر', 'تلطاشر', 'ثلاثهعشر'], 14: ['اربعتاشر', 'اربعطاشر'],
-    15: ['خمستاشر', 'خمسطاشر'], 16: ['ستاشر', 'سطاشر'],
-    17: ['سبعتاشر', 'سبعطاشر'], 18: ['تمنتاشر', 'طمنطاشر'],
-    19: ['تسعتاشر', 'تسعطاشر'], 20: ['عشرين', 'عشرون'],
-    30: ['تلاتين', 'ثلاثين', 'ثلاثون'],
-  }.entries)
-    for (final w in e.value) norm(w): e.key,
-};
-
 class AssistantParser {
   AssistantParser(this.catalog) {
     _surahKeys = [
@@ -408,7 +394,7 @@ class AssistantParser {
       for (final k in _surahKeys) for (final ph in k) ...ph.split(' '),
       for (final names in _azkarSectionKeys.values)
         for (final ph in names) ...ph.split(' '),
-      ..._numberWords.keys,
+      ..._numberWords.keys, ..._bigNumberWords.keys, ..._ayahWords, 'الكرسي',
       for (final m in lex.hijriMonthWords) for (final w in m) ...norm(w).split(' '),
       for (final l in lex.languageNames.values) for (final w in l) ...norm(w).split(' '),
       for (final l in lex.themeValueWords.values) for (final w in l) ...norm(w).split(' '),
@@ -615,6 +601,9 @@ class AssistantParser {
         return const OpenScreenIntent(AssistantScreen.settings);
       }
     }
+    final ayahRef = _ayahRef(words,
+        playing: playing, memorizing: memorizing, sunan: openingSunan);
+    if (ayahRef != null) return ayahRef;
     // «شغل سورة الكهف بصوت المنشاوي» / "play surah Kahf by Alafasy"
     final surah = _surahIn(words, requireWord: !(playing || memorizing));
     if (surah != null) {

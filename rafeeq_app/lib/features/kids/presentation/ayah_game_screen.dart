@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
+import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/readable_insets.dart';
 import '../data/journey_store.dart';
@@ -84,7 +85,7 @@ class _AyahGameScreenState extends ConsumerState<AyahGameScreen> {
                       padding: const EdgeInsetsDirectional.only(end: 8),
                       child: ChoiceChip(
                         label: Text(lang == 'ar' || lang == 'ur'
-                            ? surahs[id - 1].nameAr
+                            ? surahNamePlain(surahs[id - 1].nameAr)
                             : surahs[id - 1].nameEn),
                         selected: id == _surahId,
                         onSelected: (_) {

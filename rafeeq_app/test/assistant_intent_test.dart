@@ -174,6 +174,30 @@ void main() {
     expect(of('حفظني البقرة'), 'memorize surah 2');
   });
 
+  // Owner, 2026-09-29: this sentence, said from outside the app, started a
+  // recitation of al-Baqarah from ayah 1 in the background instead of
+  // opening the mushaf on the ayah.
+  test('open the mushaf on a surah and an ayah', () {
+    expect(of('يا رفيق افتح التطبيق على القرآن سورة البقرة آية ٢٥٥'),
+        'open quran 2:255');
+    expect(of('افتح سورة البقرة الاية 255'), 'open quran 2:255');
+    expect(of('افتح سوره البقره ايه مئتين وخمسه وخمسين'), 'open quran 2:255');
+    expect(of('افتح البقرة آية ميتين خمسة وخمسين'), 'open quran 2:255');
+    expect(of('وريني آية الكرسي'), 'open quran 2:255');
+    expect(of('افتح سورة الكهف'), 'open quran 18:1');
+    expect(of('افتح سورة يس آية عشرين'), 'open quran 36:20');
+    expect(of('open surah Al Kahf verse 10'), 'open quran 18:10');
+  });
+
+  test('play a surah from the ayah that was said', () {
+    expect(of('شغل سورة البقرة من آية ٢٥٥'), 'play surah 2 by - from 255');
+    expect(of('شغل آية الكرسي'), 'play surah 2 by - from 255');
+    expect(of('شغل سورة الكهف من الآية عشرة بصوت الحصري'),
+        startsWith('play surah 18 by ar.husary'));
+    // Without an ayah the old reading stands.
+    expect(of('شغل سورة الكهف'), 'play surah 18 by -');
+  });
+
   test('sunan surah commands use only the real four-surah catalogue', () {
     expect(of('افتح سنن سورة الكهف'), 'sunan surah 18');
     expect(of('وريني سنن سورة الملك'), 'sunan surah 67');
