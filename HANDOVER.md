@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 02:57 — IN PROGRESS — resume here**
+**2026-09-30 03:28 — IN PROGRESS — resume here**
 
-Optional sharper-hearing pack for Rafeeq: whisper-turbo re-reads only what is said to Rafeeq (measured: gets numbers the base model loses); upload running
+Sharper-hearing pack seen working (owner sentence -> 2:255 from the home screen); whisper loaded only on a call and released after 5 min idle (2.2 GB -> 0.89 GB measured)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

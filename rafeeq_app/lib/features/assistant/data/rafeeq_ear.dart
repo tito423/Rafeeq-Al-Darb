@@ -214,8 +214,24 @@ class RafeeqEar {
           debug: false,
         ),
       ));
-      if (turboDir.isNotEmpty) {
-        turbo = so.OfflineRecognizer(so.OfflineRecognizerConfig(
+    } catch (e) {
+      out.send(['$e']);
+      return;
+    }
+    // A call to «رفيق» opens a 12-second window: that phrase and what comes
+    // after it (a command said in the next breath, an ayah number) are read
+    // again by whisper. Everything else stays with the fast model.
+    var refineUntil = DateTime.fromMillisecondsSinceEpoch(0);
+    // Whisper is loaded only when «رفيق» is called and let go after five
+    // minutes of not being needed. Measured on emulator-5554 (2026-09-30):
+    // 0.85 GB at rest, 2.2 GB with both models held (more than a 4 GB phone
+    // can spare), back to 0.89 GB once let go; loading it costs ~15 s, so a
+    // conversation of several commands pays that once.
+    var turboUsed = DateTime.fromMillisecondsSinceEpoch(0);
+    so.OfflineRecognizer? loadTurbo() {
+      if (turboDir.isEmpty) return null;
+      try {
+        return turbo ??= so.OfflineRecognizer(so.OfflineRecognizerConfig(
           model: so.OfflineModelConfig(
             whisper: so.OfflineWhisperModelConfig(
               encoder: p.join(turboDir, 'turbo-encoder.int8.onnx'),
@@ -228,15 +244,10 @@ class RafeeqEar {
             debug: false,
           ),
         ));
+      } catch (_) {
+        return null; // the fast model's text stands
       }
-    } catch (e) {
-      out.send(['$e']);
-      return;
     }
-    // A call to «رفيق» opens a 12-second window: that phrase and what comes
-    // after it (a command said in the next breath, an ayah number) are read
-    // again by whisper. Everything else stays with the fast model.
-    var refineUntil = DateTime.fromMillisecondsSinceEpoch(0);
     final inbox = ReceivePort();
     out.send(inbox.sendPort);
     const window = 512;
@@ -244,6 +255,11 @@ class RafeeqEar {
     var wasSpeaking = false;
     inbox.listen((m) {
       if (m is Float32List) {
+        if (turbo != null &&
+            DateTime.now().difference(turboUsed).inMinutes >= 5) {
+          turbo!.free();
+          turbo = null;
+        }
         final all = Float32List(pending.length + m.length)
           ..setAll(0, pending)
           ..setAll(pending.length, m);
@@ -264,13 +280,15 @@ class RafeeqEar {
             rec.decode(s);
             var text = rec.getResult(s).text;
             s.free();
-            final t = turbo;
-            if (t != null) {
-              final called = afterWakeWord(text) != null;
-              if (called || DateTime.now().isBefore(refineUntil)) {
-                if (called) {
-                  refineUntil = DateTime.now().add(const Duration(seconds: 12));
-                }
+            final called = afterWakeWord(text) != null;
+            if (turboDir.isNotEmpty &&
+                (called || DateTime.now().isBefore(refineUntil))) {
+              if (called) {
+                refineUntil = DateTime.now().add(const Duration(seconds: 12));
+              }
+              final t = loadTurbo();
+              turboUsed = DateTime.now();
+              if (t != null) {
                 final w = t.createStream();
                 // Whisper wants a little silence after the speech.
                 w.acceptWaveform(

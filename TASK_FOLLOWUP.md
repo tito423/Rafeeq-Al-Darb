@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~03:30 (09-30, Opus) «دقة أعلى» (whisper-turbo) SEEN WORKING on emulator-5554: owner sentence clip from the phone HOME SCREEN -> segment «يا رفيق افتح التطبيق على القرن سورة البقرة آية 255» -> «open quran 2:255», app came to front on page 42 with Ayat al-Kursi. Hosted: R2 + content-mirror, 3 files 206 each. In-app download STARTED and progressed (98.8 MB / 1.0 GB shown) but the emulator network is ~0.15 MB/s, so it was cancelled and the same files (sha256 checked on device) were copied in with adb; the full in-app download to completion is NOT seen. Measured: PSS 0.85 GB at rest, 2.2 GB with whisper loaded, 0.89 GB after release -> whisper now loads only on a call and is released after 5 min idle; recognition 12.7 s with whisper loaded, 27.9 s for the first call (load ~15 s) on the emulator. Phone speed/memory NOT measured. 676 tests. NEXT EXACT: report to owner (speed cost, memory, needs his phone test); then remaining queue: nothing else from tonight except owner review. No release.
+
 ~03:10 (09-30, Opus) OWNER DECISION: no Google recogniser (no beep); whisper OK as an optional pack. MEASURED on PC (E:\DevEnvsr
 um_test.py, same clips): omnilingual (current) loses numbers («مئتين وخمسة وخمسين» -> "", sentence -> «…آية٥»); whisper-small 374 MB gets numbers but garbles words; whisper-turbo int8 1,036 MB gets ALL right («…سورة البقرة آية 255») at 4-7 s/clip on PC. BUILT (in code, analyze clean): RafeeqVoicePack.accurate (asr/rafeeq_turbo_v1/: turbo-encoder 674,716,297 / decoder 361,080,764 / tokens 816,730, sha256 in rafeeq_voice_pack.dart); rafeeq_ear worker loads whisper when installed and re-decodes ONLY the wake phrase and phrases in the 12 s after it; row «دقة أعلى في السماع (اختياري)» in Rafeeq settings (x7). Upload to R2 + content-mirror RUNNING (scripts/publish_rafeeq_voice_pack.py turbo). NEXT EXACT: when upload ends, range-check the 3 urls (206) on R2 and the mirror; download the pack in-app on the emulator; feed the owner sentence clip from the home screen; expect «open quran 2:255»; measure the delay on the emulator; report (phone speed/memory unmeasured).
 
@@ -895,6 +897,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 03:28 - Sharper-hearing pack seen working (owner sentence -> 2:255 from the home screen); whisper loaded only on a call and released after 5 min idle (2.2 GB -> 0.89 GB measured)
 - 2026-09-30 02:57 - Optional sharper-hearing pack for Rafeeq: whisper-turbo re-reads only what is said to Rafeeq (measured: gets numbers the base model loses); upload running
 - 2026-09-30 02:38 - Rafeeq: a surah said without a play word opens it (was: played in background); glued open verb, cut ayah word, spoken-number follow-up; recogniser drops numbers - logged
 - 2026-09-30 02:09 - Dedications and Khatma empty states are a large card of options (kinds / plans) instead of a line of text and a corner button; seen on emulator
