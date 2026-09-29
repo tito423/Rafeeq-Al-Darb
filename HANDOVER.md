@@ -2509,9 +2509,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 18:23 — IN PROGRESS — resume here**
+**2026-09-29 18:29 — IN PROGRESS — resume here**
 
-Kids corner, game and My Journey seen working on the emulator; bump to 3.70.0+84 for release
+Record verified v3.70.0 GitHub release (tag == HEAD, SHA matches re-download); v3.69.3 removed
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

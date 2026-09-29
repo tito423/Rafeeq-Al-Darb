@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~18:35 (09-29) V3.70.0 PUBLISHED AND VERIFIED: tag v3.70.0 = HEAD 1635579e (targets master), asset RafeeqAlDarb-v3.70.0.apk 314,772,227 B, SHA-256 91332452AE9094B12FF361F4C278B821CF991AA497B84A7D1DBA2A3B01C2EBF9 = GitHub digest = full re-download; range request 206; not draft/prerelease; aapt2: versionCode 84 / versionName 3.70.0; sherpa ORT 1.28.2 on all three ABIs; rotated signing verified. v3.69.3 release and tag deleted (ref API 404); v3.51.0 and content-* kept. NEXT: owner tries 3.70.0 on his phone - «يا رفيق» from outside the app (grant «الظهور فوق التطبيقات» first), the kids corner, «رحلتي». Real prizes for gamification are NOT built (need a server).
+
 ~18:22 (09-29) SEEN on emulator: More shows «ركن الأطفال» and «رحلتي»; kids corner (scene greeting, 23 surah chips, game + journey tiles); «أكمل الآية» on an-Nas (right answer turned green «أحسنت ⭐», score 1/1); «رحلتي» then showed 5 points, streak 1, badge «أول إجابة صحيحة» earned; About screen (Madinah wording, Hisn, Rafeeq, hifz, tajweed, hajj rows). Game ayah text made full-contrast. Version bumped 3.70.0+84 (pubspec + About). analyze clean, 664 tests. NEXT EXACT: checkpoint, stop emulator, build_github_release.bat alone, verify ORT/signing, publish v3.70.0 from master, delete v3.69.3 release+tag, verify.
 
 ~17:40 (09-29) OWNER ORDER: finish everything, build a Kids' corner and a gamification («رحلتي») of my own design, both in More, then RELEASE (current published v3.69.3 -> new version 3.70.0+84). Plan in order: (a) book-slider bubble overlap; (b) Kids' corner (real content only: short surahs via HifzSessionScreen, Hisn adhkar chapters for children, «أكمل الآية» game from quran_local.db); (c) «رحلتي»: local streak/points/badges from real actions (adhkar counted, game answers); (d) 7 locales, tests, emulator check; (e) bump 3.70.0+84, analyze/test, emulator OFF, build_github_release.bat, verify ORT/signing, publish v3.70.0 from master, delete v3.69.3 release+tag, verify tag==HEAD, give links. Real prizes need a server - told to owner, not built.
@@ -846,6 +848,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 18:29 - Record verified v3.70.0 GitHub release (tag == HEAD, SHA matches re-download); v3.69.3 removed
 - 2026-09-29 18:23 - Kids corner, game and My Journey seen working on the emulator; bump to 3.70.0+84 for release
 - 2026-09-29 18:16 - Kids corner (short surahs, Hisn adhkar for children, Complete-the-ayah game on the mushaf text) and My Journey (points, level, streak, badges from real counted acts) in More; book-slider bubble clears the source line; 664 tests
 - 2026-09-29 17:25 - Rafeeq over other apps and the Quran word command verified end to end on the emulator from the phone home screen; two real recogniser spellings (glued/open-ta) fixed with regressions
