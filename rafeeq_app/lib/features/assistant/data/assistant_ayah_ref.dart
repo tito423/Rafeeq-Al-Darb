@@ -8,11 +8,51 @@ part of 'assistant_intent.dart';
 /// selected reciter's voice, in the background. «افتح» and «آية» now mean
 /// what they say.
 class OpenQuranAyahIntent extends AssistantIntent {
-  const OpenQuranAyahIntent(this.surah, this.ayah);
+  const OpenQuranAyahIntent(this.surah, this.ayah, {this.numberPending = false});
   final int surah;
   final int ayah;
+
+  /// «… سورة البقرة آية» with the number not in this utterance: the
+  /// recogniser closes a phrase at a breath, and on the owner's sentence
+  /// (emulator, 2026-09-30) it cut right after «آي». The number said next
+  /// moves the mushaf to it (assistant_sheet.dart, `_ayahPending`).
+  final bool numberPending;
   @override
-  String toString() => 'open quran $surah:$ayah';
+  String toString() =>
+      'open quran $surah:$ayah${numberPending ? ' (number pending)' : ''}';
+}
+
+/// After «… سورة X آية» with the number cut off, the number said next
+/// (within 12 s) moves the mushaf to that ayah.
+class AyahFollowUp {
+  (int, DateTime)? _pending;
+
+  void arm(AssistantIntent intent) {
+    _pending = intent is OpenQuranAyahIntent && intent.numberPending
+        ? (intent.surah, DateTime.now().add(const Duration(seconds: 12)))
+        : null;
+  }
+
+  /// The ayah to open when [heard] is that number; null otherwise.
+  OpenQuranAyahIntent? take(String heard) {
+    final p = _pending;
+    if (p == null || DateTime.now().isAfter(p.$2)) return null;
+    final n = spokenNumber(heard);
+    if (n == null) return null;
+    _pending = null;
+    return OpenQuranAyahIntent(p.$1, n);
+  }
+}
+
+/// Just a number, as a follow-up to [OpenQuranAyahIntent.numberPending]:
+/// «مئتين وخمسة وخمسين», «٢٥٥», «الآية ٢٥٥».
+int? spokenNumber(String heard) {
+  final ws = [
+    for (final w in norm(asciiDigits(heard)).split(' '))
+      if (w.isNotEmpty && !_ayahWords.contains(w) && w != 'رقم') w,
+  ];
+  final n = _numberAt(ws);
+  return n != null && n >= 1 && n <= 286 ? n : null;
 }
 
 /// Numbers as they are said (Egyptian and MSA), normalised: 1-20 and 30 for
@@ -52,6 +92,15 @@ final _ayahWords = _normSet(const [
   'verse', 'verset', 'versiculo', 'versículo', 'aleya', 'аят',
 ]);
 
+/// «آي» - «آية» with its last letter lost when the phrase is cut; an ayah
+/// word only at the END of what was heard.
+final _ayahCut = norm('آي');
+
+/// «افتح» glued to the next word by the recogniser: «افتحتطبيق» (heard on
+/// the emulator, 2026-09-30, for «افتح التطبيق»).
+bool _gluedOpen(String w) =>
+    w.length > 5 && (w.startsWith('افتح') || w.startsWith('فتحل'));
+
 int? _numberValue(String w) => _numberWords[w] ?? _bigNumberWords[w];
 
 /// «مئتين وخمسة وخمسين» -> 255, «255» -> 255; null when [ws] does not start
@@ -83,13 +132,17 @@ extension _AyahRef on AssistantParser {
   AssistantIntent? _ayahRef(List<String> words,
       {required bool playing, required bool memorizing, required bool sunan}) {
     if (memorizing || sunan) return null;
-    final at = words.indexWhere(_ayahWords.contains);
+    var at = words.indexWhere(_ayahWords.contains);
+    if (at < 0 && words.isNotEmpty && words.last == _ayahCut) {
+      at = words.length - 1;
+    }
     if (at >= 0 && at + 1 < words.length && bare(words[at + 1]) == 'كرسي') {
       return playing
           ? const PlaySurahIntent(2, fromAyah: 255)
           : const OpenQuranAyahIntent(2, 255);
     }
-    final opening = words.any(AssistantParser._open.contains);
+    final opening =
+        words.any((w) => AssistantParser._open.contains(w) || _gluedOpen(w));
     if (at < 0 && (playing || !opening)) return null;
     final n = at >= 0 ? _numberAt(words.sublist(at + 1)) : null;
     // Without «سورة», a surah name counts only beside an ayah NUMBER:
@@ -97,7 +150,10 @@ extension _AyahRef on AssistantParser {
     final surah = _surahIn(words, requireWord: n == null);
     if (surah == null) return null;
     final ayah = n != null && n >= 1 ? n : 1;
-    if (!playing) return OpenQuranAyahIntent(surah, ayah);
+    if (!playing) {
+      return OpenQuranAyahIntent(surah, ayah,
+          numberPending: at >= 0 && n == null);
+    }
     final sw = {for (final k in _surahKeys[surah - 1]) ...k.split(' ')};
     final rest = [
       for (final w in words)

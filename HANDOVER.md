@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 02:09 — IN PROGRESS — resume here**
+**2026-09-30 02:38 — IN PROGRESS — resume here**
 
-Dedications and Khatma empty states are a large card of options (kinds / plans) instead of a line of text and a corner button; seen on emulator
+Rafeeq: a surah said without a play word opens it (was: played in background); glued open verb, cut ayah word, spoken-number follow-up; recogniser drops numbers - logged
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

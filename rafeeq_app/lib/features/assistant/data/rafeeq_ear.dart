@@ -66,6 +66,7 @@ class RafeeqEar {
       if (m is SendPort) {
         ready.complete(m);
       } else if (m is String) {
+        debugPrint('rafeeq segment: "$m"');
         if (m.trim().isNotEmpty) _heard.add(m.trim());
       } else if (m is bool) {
         speaking.value = m;

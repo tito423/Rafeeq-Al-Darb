@@ -617,7 +617,12 @@ class AssistantParser {
       // the reciter «عمران»).
       final sw = {for (final k in _surahKeys[surah - 1]) ...k.split(' ')};
       final rest = words.where((w) => !sw.contains(bare(w))).join(' ');
-      return PlaySurahIntent(surah, reciterId: _reciterIn(rest));
+      final reciter = _reciterIn(rest);
+      // Only «شغّل» (or a reciter's name) means play. A surah said with no
+      // play word OPENS: «… القرآن سورة البقرة» started a recitation in the
+      // background on the owner's phone (2026-09-29).
+      if (!playing && reciter == null) return OpenQuranAyahIntent(surah, 1);
+      return PlaySurahIntent(surah, reciterId: reciter);
     }
     // «آية بآية» names the ayah player even inside «مشغل التلاوة آية بآية».
     if (_hasPhrase(clean, _screens[AssistantScreen.ayahPlayer] ?? const [])) {

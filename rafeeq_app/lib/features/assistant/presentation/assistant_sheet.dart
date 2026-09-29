@@ -232,7 +232,10 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     WidgetsBinding.instance.addObserver(this);
     RafeeqVoicePack.instance.check();
     ShamelaLibrary.instance.addListener(_booksChanged);
-    _heard = _ear.heard.listen(_onHeard);
+    // One phrase at a time: «… سورة البقرة آية» and the number said in the
+    // next breath arrive milliseconds apart, and the number must see what the
+    // first phrase armed (emulator, 2026-09-30).
+    _heard = _ear.heard.listen((t) => _queue = _queue.then((_) => _onHeard(t)));
     _tick = Timer.periodic(const Duration(seconds: 1), (_) => _check());
   }
 
@@ -324,6 +327,8 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
 
   /// After a bare background call: the next sentence is the command.
   DateTime? _awaitUntil;
+  final _ayahFollow = AyahFollowUp();
+  Future<void> _queue = Future.value();
 
   Future<bool> _overlayCan() async =>
       (await _channel.invokeMethod<bool>('overlayCan')) == true;
@@ -341,6 +346,8 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     }
     if (assistantSheetOpen.value || !mounted) return; // the sheet takes it
     final container = ProviderScope.containerOf(context, listen: false);
+    final followUp = _ayahFollow.take(afterWakeWord(text) ?? text);
+    if (followUp != null) return _act(container, followUp);
     final waiting = _awaitUntil != null && DateTime.now().isBefore(_awaitUntil!);
     var rest = afterWakeWord(text);
     if (rest == null && waiting) rest = text;
@@ -358,6 +365,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       final intent = parser.parse(rest);
       debugPrint('rafeeq intent: "$rest" -> $intent');
       if (intent is! UnknownIntent) {
+        _ayahFollow.arm(intent);
         await _act(container, intent, overlay: overlay);
         return;
       }

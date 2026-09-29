@@ -189,6 +189,29 @@ void main() {
     expect(of('open surah Al Kahf verse 10'), 'open quran 18:10');
   });
 
+  // What the recogniser REALLY wrote for the owner's sentence, said from the
+  // phone's home screen on emulator-5554 (2026-09-30): the verb glued to
+  // «التطبيق», the phrase cut after «آي», the number in the next breath.
+  // It used to become «play surah 2» in the background.
+  test('the owner sentence as the recogniser heard it', () {
+    expect(of('افتحتطبيق علي القران سوره البقره اي'),
+        'open quran 2:1 (number pending)');
+    expect(spokenNumber('مئتين وخمسه وخمسين'), 255);
+    expect(spokenNumber('الآية ٢٥٥'), 255);
+    expect(spokenNumber('افتح الأذكار'), isNull);
+    final f = AyahFollowUp()
+      ..arm(p.parse('افتحتطبيق علي القران سوره البقره اي'));
+    expect(f.take('مئتين وخمسة وخمسين').toString(), 'open quran 2:255');
+    expect(f.take('مئتين وخمسة وخمسين'), isNull, reason: 'used once');
+  });
+
+  test('a surah with no play word opens, it does not play', () {
+    expect(of('القرآن سورة البقرة'), 'open quran 2:1');
+    expect(of('سورة الكهف'), 'open quran 18:1');
+    // A reciter's name still means play.
+    expect(of('سورة الكهف بصوت الحصري'), startsWith('play surah 18 by ar.husary'));
+  });
+
   test('play a surah from the ayah that was said', () {
     expect(of('شغل سورة البقرة من آية ٢٥٥'), 'play surah 2 by - from 255');
     expect(of('شغل آية الكرسي'), 'play surah 2 by - from 255');
