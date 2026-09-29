@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 21:52 — IN PROGRESS — resume here**
+**2026-09-29 22:23 — IN PROGRESS — resume here**
 
-HANDOVER state block for v3.71.0; 25/9 plan item 4 (silent text-mushaf play) re-checked: plays on emulator
+Compass haptic only while its route is current; optional vibration with the full-screen adhan (off by default, stops with the adhan); owner's Rafeeq 2:255 bug logged
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

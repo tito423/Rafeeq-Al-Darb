@@ -194,6 +194,11 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
   }
 
+  Future<void> _saveVibrate(bool on) async {
+    await ref.read(adhanSettingsProvider.notifier).setVibrateWithFull(on);
+    await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
+  }
+
   Future<void> _saveChoice(String prayerKey, String? adhanId) async {
     await ref.read(adhanSettingsProvider.notifier).setAdhanFor(prayerKey, adhanId);
     await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
@@ -359,6 +364,18 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                 value: ref.watch(prayerStatusEnabledProvider),
                 onChanged: (v) =>
                     ref.read(prayerStatusEnabledProvider.notifier).set(v),
+              ),
+            ),
+            // «ضيف اختيار هزاز مع الاذان الشاشة الكاملة» (owner,
+            // 2026-09-29): the phone vibrates for as long as a full-screen
+            // adhan plays, and stops with it (Stop, Mute or its natural end).
+            Card(
+              child: SwitchListTile(
+                secondary: const Icon(Icons.vibration),
+                title: Text('prayer.full_vibrate'.tr()),
+                subtitle: Text('prayer.full_vibrate_desc'.tr()),
+                value: settings.vibrateWithFull,
+                onChanged: _saveVibrate,
               ),
             ),
             // «موقع الصلاة» and its auto-update moved to «المواقيت والتاريخ»

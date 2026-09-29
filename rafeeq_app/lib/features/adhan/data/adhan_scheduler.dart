@@ -71,6 +71,7 @@ AdhanSpec _specFor({
     // the other modes would be a promise the alert never keeps.
     hour: hour,
     minute: minute,
+    vibrate: settings.vibrateWithFull,
   );
 }
 

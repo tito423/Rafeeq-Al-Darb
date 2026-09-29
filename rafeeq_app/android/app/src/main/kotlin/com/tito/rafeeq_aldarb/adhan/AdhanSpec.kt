@@ -39,6 +39,11 @@ data class AdhanSpec(
     val minute: Int,
     /** False for a one-shot "تجربة" firing, which must not re-arm for tomorrow. */
     val daily: Boolean,
+    /**
+     * Vibrate for as long as the adhan plays. Dart only sets it for the
+     * full-screen mode (owner, 2026-09-29: «هزاز مع الاذان الشاشة الكاملة»).
+     */
+    val vibrate: Boolean = false,
 ) {
     val isFullScreen: Boolean get() = mode == MODE_FULL
     val hasSound: Boolean get() = (mode == MODE_FULL || mode == MODE_AUDIO) && soundType != SOUND_NONE
@@ -67,6 +72,7 @@ data class AdhanSpec(
         put("hour", hour)
         put("minute", minute)
         put("daily", daily)
+        put("vibrate", vibrate)
     }
 
     fun writeTo(intent: Intent): Intent = intent.apply {
@@ -79,6 +85,7 @@ data class AdhanSpec(
         putExtra(EXTRA_HOUR, hour)
         putExtra(EXTRA_MINUTE, minute)
         putExtra(EXTRA_DAILY, daily)
+        putExtra(EXTRA_VIBRATE, vibrate)
     }
 
     companion object {
@@ -101,6 +108,7 @@ data class AdhanSpec(
         const val EXTRA_HOUR = "rafeeq.adhan.hour"
         const val EXTRA_MINUTE = "rafeeq.adhan.minute"
         const val EXTRA_DAILY = "rafeeq.adhan.daily"
+        const val EXTRA_VIBRATE = "rafeeq.adhan.vibrate"
 
         fun fromIntent(intent: Intent): AdhanSpec? {
             val key = intent.getStringExtra(EXTRA_PRAYER_KEY) ?: return null
@@ -114,6 +122,7 @@ data class AdhanSpec(
                 hour = intent.getIntExtra(EXTRA_HOUR, 0),
                 minute = intent.getIntExtra(EXTRA_MINUTE, 0),
                 daily = intent.getBooleanExtra(EXTRA_DAILY, true),
+                vibrate = intent.getBooleanExtra(EXTRA_VIBRATE, false),
             )
         }
 
@@ -127,6 +136,7 @@ data class AdhanSpec(
             hour = o.optInt("hour"),
             minute = o.optInt("minute"),
             daily = o.optBoolean("daily", true),
+            vibrate = o.optBoolean("vibrate", false),
         )
 
         /** Builds one from the map Dart sends over the method channel. */
@@ -140,6 +150,7 @@ data class AdhanSpec(
             hour = (map["hour"] as? Number)?.toInt() ?: 0,
             minute = (map["minute"] as? Number)?.toInt() ?: 0,
             daily = map["daily"] as? Boolean ?: true,
+            vibrate = map["vibrate"] as? Boolean ?: false,
         )
     }
 }

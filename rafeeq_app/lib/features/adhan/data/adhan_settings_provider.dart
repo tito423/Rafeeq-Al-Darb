@@ -52,6 +52,13 @@ class AdhanSettings {
   final int reminderAfterMinutes;
   final int reminderIqamaMinutes;
 
+  /// Vibrate the phone for as long as a FULL-SCREEN adhan plays (owner,
+  /// 2026-09-29: «ضيف اختيار هزاز مع الاذان الشاشة الكاملة»). Off by
+  /// default, so nothing changes for an install until it is asked for. The
+  /// other modes are untouched: `vibrate` already vibrates, and the quiet
+  /// ones stay quiet.
+  final bool vibrateWithFull;
+
   const AdhanSettings({
     required this.defaultAdhanId,
     required this.modeByPrayer,
@@ -64,6 +71,7 @@ class AdhanSettings {
     required this.highLatitudeRule,
     required this.autoLocationUpdate,
     required this.locationUpdateMinutes,
+    this.vibrateWithFull = false,
   });
 
   String adhanIdFor(String prayerKey) =>
@@ -84,6 +92,7 @@ class AdhanSettings {
     adhan.HighLatitudeRule? highLatitudeRule,
     bool? autoLocationUpdate,
     int? locationUpdateMinutes,
+    bool? vibrateWithFull,
   }) =>
       AdhanSettings(
         defaultAdhanId: defaultAdhanId ?? this.defaultAdhanId,
@@ -101,6 +110,7 @@ class AdhanSettings {
         autoLocationUpdate: autoLocationUpdate ?? this.autoLocationUpdate,
         locationUpdateMinutes:
             locationUpdateMinutes ?? this.locationUpdateMinutes,
+        vibrateWithFull: vibrateWithFull ?? this.vibrateWithFull,
       );
 }
 
@@ -135,6 +145,7 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
           autoLocationUpdate: _prefs.getBool(_autoLocationKey) ?? false,
           locationUpdateMinutes:
               _prefs.getInt(_locationIntervalKey) ?? 60,
+          vibrateWithFull: _prefs.getBool(_vibrateWithFullKey) ?? false,
           modeByPrayer: {
             for (final k in adhanPrayerKeys)
               k: AdhanMode.fromName(_prefs.getString('$_modePrefix$k')),
@@ -156,6 +167,7 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
   static const _highLatitudeKey = 'prayer_high_latitude_rule_v1';
   static const _autoLocationKey = 'prayer_auto_location_v1';
   static const _locationIntervalKey = 'prayer_location_interval_min_v1';
+  static const _vibrateWithFullKey = 'adhan_full_vibrate_v1';
   static const _modePrefix = 'adhan_mode_v1_';
   static const _choicePrefix = 'adhan_choice_v1_';
 
@@ -212,6 +224,11 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
   Future<void> setLocationUpdateMinutes(int minutes) async {
     state = state.copyWith(locationUpdateMinutes: minutes);
     await _prefs.setInt(_locationIntervalKey, minutes);
+  }
+
+  Future<void> setVibrateWithFull(bool on) async {
+    state = state.copyWith(vibrateWithFull: on);
+    await _prefs.setBool(_vibrateWithFullKey, on);
   }
 
   Future<void> setModeFor(String prayerKey, AdhanMode mode) async {

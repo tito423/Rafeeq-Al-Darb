@@ -802,6 +802,8 @@
     "no_custom_adhans": "Ainda não há adhan personalizado",
     "status_notification": "Cartão de oração fixo",
     "status_notification_desc": "Um cartão fixo na barra de status com a próxima oração, a data híjri e uma contagem regressiva — funciona offline",
+    "full_vibrate": "Vibrar com o adhan em tela cheia",
+    "full_vibrate_desc": "O telefone vibra enquanto o adhan toca e para junto com ele ao tocar em Parar ou Silenciar, ou quando termina",
     "adhan_limit_reached": "Você atingiu o limite (30 adhans)",
     "per_prayer_desc": "Um modo e muezim por oração",
     "azan_of": "Adhan — oração do {}",

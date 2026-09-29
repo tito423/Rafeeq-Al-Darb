@@ -803,6 +803,8 @@
     "no_custom_adhans": "No custom adhan yet",
     "status_notification": "Persistent prayer card",
     "status_notification_desc": "An ongoing status-bar card with the next prayer, the Hijri date and a live countdown — works offline",
+    "full_vibrate": "Vibrate with the full-screen adhan",
+    "full_vibrate_desc": "The phone vibrates for as long as the adhan plays, and stops with it on Stop, Mute or when it ends",
     "adhan_limit_reached": "You've reached the limit (30 adhans)",
     "per_prayer_desc": "A separate mode and muezzin per prayer",
     "azan_of": "Adhan — {} prayer",

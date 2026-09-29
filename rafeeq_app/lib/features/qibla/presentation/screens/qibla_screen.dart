@@ -47,6 +47,13 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
   /// background — the "random haptic" the owner couldn't source.
   bool _screenActive = true;
 
+  /// The route this screen is on. When another screen is pushed over it -
+  /// adhan settings, prayer adjustments, any sheet - it is no longer the
+  /// current route and the compass must stop buzzing, even though the tab
+  /// and the app are both still "active" (owner, 2026-09-29: «لما بكون فاتح
+  /// اعدادات … بتفضل البوصلة تعمل هزة في الخلفية»).
+  ModalRoute<dynamic>? _route;
+
   _LocationState _locationState = _LocationState.loading;
   double? _qiblaBearing; // great-circle bearing from the user to the Kaaba
   double? _heading; // device compass heading, 0-360, 0 = true north
@@ -61,6 +68,12 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     ManualLocationStore.instance.changes.addListener(_resolveLocation);
     _resolveLocation();
     _listenCompass();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _route = ModalRoute.of(context);
   }
 
   @override
@@ -135,6 +148,8 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     // actually on screen and the app is foregrounded — the compass stream
     // keeps emitting from the kept-alive tab otherwise.
     if (!_screenActive) return;
+    // Covered by another screen: no haptic, no rebuild.
+    if (!(_route?.isCurrent ?? true)) return;
     final bearing = _qiblaBearing;
     var wasAligned = _wasAligned;
     if (bearing != null) {

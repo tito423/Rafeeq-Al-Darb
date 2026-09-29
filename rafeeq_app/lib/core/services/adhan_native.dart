@@ -41,6 +41,11 @@ class AdhanSpec {
   final int hour;
   final int minute;
 
+  /// Vibrate while the adhan plays. Only ever true in [AdhanMode.full]
+  /// ([AdhanNative.specFor] enforces it); the native service owns the
+  /// vibration and stops it with the sound.
+  final bool vibrate;
+
   const AdhanSpec({
     required this.prayerKey,
     required this.prayerLabel,
@@ -50,6 +55,7 @@ class AdhanSpec {
     this.assetPath,
     this.hour = 0,
     this.minute = 0,
+    this.vibrate = false,
   });
 
   Map<String, Object?> toMap() => {
@@ -62,6 +68,7 @@ class AdhanSpec {
     'hour': hour,
     'minute': minute,
     'daily': true,
+    'vibrate': vibrate,
   };
 
   /// Rebuilt from the route `AdhanActivity` hands the `adhanMain` entrypoint.
@@ -77,6 +84,7 @@ class AdhanSpec {
     assetPath: m['assetPath'] as String?,
     hour: (m['hour'] as num?)?.toInt() ?? 0,
     minute: (m['minute'] as num?)?.toInt() ?? 0,
+    vibrate: m['vibrate'] as bool? ?? false,
   );
 }
 
@@ -154,6 +162,7 @@ class AdhanNative {
     required AdhanOption option,
     int hour = 0,
     int minute = 0,
+    bool vibrate = false,
   }) {
     final silentMode = mode == AdhanMode.vibrate || mode == AdhanMode.silent;
     final AdhanSoundType type;
@@ -182,6 +191,7 @@ class AdhanNative {
       assetPath: asset,
       hour: hour,
       minute: minute,
+      vibrate: vibrate && mode == AdhanMode.full,
     );
   }
 

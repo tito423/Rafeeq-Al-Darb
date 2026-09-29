@@ -13,6 +13,10 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~22:40 (09-29, Opus) OWNER BUG: «يا رفيق افتح التطبيق على القرآن سورة البقرة آية ٢٥٥» (said from outside the app) -> did NOT open the mushaf at 2:255; it started a recitation in al-Minshawi's voice (not chosen by him) from the START of the surah, in the background, and never brought the app to the screen. NEXT EXACT: find how this sentence parses (assistant_intent), fix to open the mushaf at 2:255 + bring the app forward, regression test with the exact words, emulator check.
+
+~22:20 (09-29, Opus) OWNER: (1) compass keeps buzzing while adhan/timings settings are open over the Prayer tab; (2) add «vibrate with the full-screen adhan»; DO NOT PUBLISH until he has looked for anything missing himself. IN CODE, analyze clean, new test/adhan_full_vibrate_test.dart 4/4, debug build installed: (1) qibla_screen.dart skips haptic+rebuild unless its ModalRoute isCurrent (one root navigator, checked); (2) AdhanSettings.vibrateWithFull (pref adhan_full_vibrate_v1, off by default) -> AdhanSpec.vibrate (Dart+Kotlin, full mode only) -> AdhanVibration.startRepeating in AdhanService.fire, stopped on Mute, finish, onDestroy; USAGE_ALARM attributes; settings switch «اهتزاز مع الأذان بالشاشة الكاملة» x7 locales. NOT YET SEEN on emulator: compass sweep with settings open, «تجربة» adhan vibration. No release.
+
 ~21:45 (09-29, Opus) V3.71.0 PUBLISHED AND VERIFIED: tag v3.71.0 = HEAD 9fd3d04b (targets master), asset RafeeqAlDarb-v3.71.0.apk 315,087,828 B, SHA-256 4985311F02A41AAF13494BECF403C6BE37F3402D6BD282BF93684D3EC36CE957 = GitHub digest = full re-download; range 206; not draft/prerelease; aapt2 versionCode 85 / versionName 3.71.0; sherpa ORT 1.28.2 on all three ABIs; rotated signing verified. Built with the emulator OFF. v3.70.0 release and tag deleted (ref API 404); v3.51.0 and content-* kept. NEXT: owner tries 3.71.0 on his phone (kids path, Home backgrounds). Not yet run on a real phone.
 
 ~20:20 (09-29, Opus) OWNER REJECTED the star-panel photo behind the hadith text («سيئة جدا … منغمشة») and said keep sunan/quote as they were, fix only hadith, and give EVERY Home card a calm background. Done + SEEN light and dark: new core/widgets/calm_card_ground.dart (accent wash, faint corner khatam fading toward text, star band along the top edge, nothing under words) on hadith, continue-reading, khatma, selected-surahs; sunan (muqarnas band) and quote (ornament scans) unchanged. Worst secondary-text contrast on the calm ground 5.08 : 1 (light). analyze clean, 667 tests. NEXT EXACT: owner reviews the screenshots sent; then ask about 3.71.0.
@@ -858,6 +862,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 22:23 - Compass haptic only while its route is current; optional vibration with the full-screen adhan (off by default, stops with the adhan); owner's Rafeeq 2:255 bug logged
 - 2026-09-29 21:52 - HANDOVER state block for v3.71.0; 25/9 plan item 4 (silent text-mushaf play) re-checked: plays on emulator
 - 2026-09-29 21:43 - Record verified v3.71.0 GitHub release (tag == HEAD, SHA matches re-download); v3.70.0 removed
 - 2026-09-29 21:37 - Bump to 3.71.0+85 for release (pubspec + About); analyze clean, 667 tests

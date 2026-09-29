@@ -58,6 +58,8 @@ class AdhanService : Service() {
             ACTION_MUTE -> {
                 muted = true
                 AdhanPlayer.mute()
+                // Mute means "quiet now": the vibration goes with the sound.
+                AdhanVibration.stop(this)
                 spec?.let { updateNotification(it) }
             }
             ACTION_STOP -> finish()
@@ -87,6 +89,10 @@ class AdhanService : Service() {
             // the Stop button would, so the alert never outlives the adhan.
             handler.post { finish() }
         }
+
+        // 3b) The vibration the user asked for with the full-screen adhan.
+        //     It lasts exactly as long as the adhan: finish() cancels it.
+        if (s.isFullScreen && s.vibrate) AdhanVibration.startRepeating(this)
 
         // 4) The screen. Two independent paths on purpose - see AdhanActivity.
         if (s.isFullScreen) {
@@ -136,6 +142,7 @@ class AdhanService : Service() {
     private fun finish() {
         handler.removeCallbacks(autoStop)
         AdhanPlayer.stop()
+        AdhanVibration.stop(this)
         AdhanActivity.finishIfShowing()
         current = null
         releaseWakeLock()
@@ -168,6 +175,7 @@ class AdhanService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacks(autoStop)
+        AdhanVibration.stop(this)
         releaseWakeLock()
         current = null
         super.onDestroy()

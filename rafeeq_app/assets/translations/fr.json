@@ -802,6 +802,8 @@
     "no_custom_adhans": "Aucun adhan personnalisé pour l'instant",
     "status_notification": "Carte de prière persistante",
     "status_notification_desc": "Une carte permanente dans la barre d'état avec la prochaine prière, la date hégirienne et un compte à rebours en direct — fonctionne hors ligne",
+    "full_vibrate": "Vibrer avec l’adhan en plein écran",
+    "full_vibrate_desc": "Le téléphone vibre tant que l’adhan retentit, et s’arrête avec lui (Arrêter, Muet ou à la fin)",
     "adhan_limit_reached": "Vous avez atteint la limite (30 adhans)",
     "per_prayer_desc": "Un mode et un muezzin par prière",
     "azan_of": "Adhan — prière du {}",

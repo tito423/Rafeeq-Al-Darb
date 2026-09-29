@@ -3,10 +3,6 @@ package com.tito.rafeeq_aldarb.adhan
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 
@@ -41,7 +37,7 @@ class AdhanAlarmReceiver : BroadcastReceiver() {
         when (spec.mode) {
             AdhanSpec.MODE_FULL, AdhanSpec.MODE_AUDIO -> AdhanService.fire(context, spec)
             AdhanSpec.MODE_VIBRATE -> {
-                vibrate(context)
+                AdhanVibration.once(context)
                 postQuietAlert(context, spec)
             }
             else -> postQuietAlert(context, spec)
@@ -62,24 +58,6 @@ class AdhanAlarmReceiver : BroadcastReceiver() {
             )
         } catch (e: SecurityException) {
             Log.w(TAG, "POST_NOTIFICATIONS not granted - quiet adhan alert dropped", e)
-        }
-    }
-
-    private fun vibrate(context: Context) {
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            (context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager)
-                ?.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
-        } ?: return
-
-        val pattern = longArrayOf(0, 700, 300, 700, 300, 700)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1))
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(pattern, -1)
         }
     }
 
