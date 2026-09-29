@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/calm_card_ground.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import 'single_surah_screen.dart';
 
@@ -52,8 +53,10 @@ class SelectedSurahsCard extends ConsumerWidget {
                         // light theme (emulator-5554, 2026-09-25).
                         color: readableOn(
                           gold,
-                          Color.alphaBlend(gold.withValues(alpha: 0.08),
-                              theme.colorScheme.surface),
+                          Color.alphaBlend(
+                            gold.withValues(alpha: 0.08),
+                            theme.colorScheme.surface,
+                          ),
                         ),
                       ),
                     ),
@@ -67,26 +70,33 @@ class SelectedSurahsCard extends ConsumerWidget {
     );
 
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                'selected_surahs.title'.tr(),
-                style: theme.textTheme.titleMedium,
+      clipBehavior: Clip.antiAlias,
+      child: CalmCardGround(
+        // A calm ground behind the card (owner, 2026-09-29: «اي كارت في
+        // الرئيسية حطله خلفية … هادية»); nothing is drawn under the text.
+        color: AppColors.primarySoft,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(
+                  'selected_surahs.title'.tr(),
+                  style: theme.textTheme.titleMedium,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            for (var row = 0; row < selectedSurahIds.length; row += 3)
-              Row(
-                children: [
-                  for (final id in selectedSurahIds.skip(row).take(3)) tile(id),
-                ],
-              ),
-          ],
+              const SizedBox(height: 8),
+              for (var row = 0; row < selectedSurahIds.length; row += 3)
+                Row(
+                  children: [
+                    for (final id in selectedSurahIds.skip(row).take(3))
+                      tile(id),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );

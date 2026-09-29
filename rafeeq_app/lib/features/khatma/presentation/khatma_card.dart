@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/arabic_text.dart';
+import '../../../core/widgets/calm_card_ground.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../data/ayah_opening.dart';
@@ -30,19 +31,24 @@ class KhatmaCard extends ConsumerWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => Navigator.of(
-          context,
-        ).push(MaterialPageRoute<void>(builder: (_) => const KhatmaScreen())),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: active.isEmpty
-              ? _EmptyState(theme: theme, gold: gold)
-              : _ActiveKhatmaRow(
-                  khatma: active.first,
-                  theme: theme,
-                  gold: gold,
-                ),
+      child: CalmCardGround(
+        // A calm ground behind the card (owner, 2026-09-29: «اي كارت في
+        // الرئيسية حطله خلفية … هادية»); nothing is drawn under the text.
+        color: AppColors.primarySoft,
+        child: InkWell(
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute<void>(builder: (_) => const KhatmaScreen())),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: active.isEmpty
+                ? _EmptyState(theme: theme, gold: gold)
+                : _ActiveKhatmaRow(
+                    khatma: active.first,
+                    theme: theme,
+                    gold: gold,
+                  ),
+          ),
         ),
       ),
     );
@@ -525,8 +531,11 @@ class _FinishedWirdLineState extends ConsumerState<_FinishedWirdLine> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.check_circle_rounded,
-                        size: 18, color: widget.gold),
+                    Icon(
+                      Icons.check_circle_rounded,
+                      size: 18,
+                      color: widget.gold,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -539,7 +548,9 @@ class _FinishedWirdLineState extends ConsumerState<_FinishedWirdLine> {
                         _timer?.cancel();
                         ref.read(lastFinishedWirdProvider.notifier).state =
                             null;
-                        ref.read(khatmaStoreProvider.notifier).undoLastWird(
+                        ref
+                            .read(khatmaStoreProvider.notifier)
+                            .undoLastWird(
                               widget.khatmaId,
                               widget.mushaf.juzStartPages,
                               widget.mushaf.rubElHizbPages,

@@ -19,22 +19,13 @@ class OrnamentBackdrop extends StatelessWidget {
   /// (assets/card_ornaments/SOURCES.json).
   static const sunan = 'assets/card_ornaments/muqarnas_band.jpg';
 
-  /// A geometric star panel, for the hadith of the day.
-  static const hadith = '$_dir/dado_panel2.jpg';
-
-  /// Cycled through the quote-of-the-day pages (not the star panel: the
-  /// hadith card just below already has it).
+  /// Cycled through the quote-of-the-day pages (not the star panel, whose
+  /// pale strapwork was too busy behind text on the hadith card).
   static const quotes = [
     '$_dir/l_ornement_polychrome_met_dp146521.jpg',
     '$_dir/ornament_sborn_k_slohov_ch_ozdob_v_ech_obdob_um_.jpg',
     '$_dir/turquoise_muqarna_mba_lyon_1969_331.jpg',
   ];
-
-  /// The hadith card carries the longest text on Home, and the star panel's
-  /// pale strapwork crossed it busily at full strength (emulator-5554,
-  /// 2026-09-29), so it is drawn calmer.
-  static const hadithDark = 0.13;
-  static const hadithLight = 0.11;
 
   /// The quote card's grounds are tinted, which leaves less room, so its
   /// scans are drawn fainter.

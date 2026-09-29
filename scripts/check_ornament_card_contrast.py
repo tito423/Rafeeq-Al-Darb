@@ -1,6 +1,6 @@
 """Contrast of the Home cards' text over their faint ornament photograph.
 
-The sunnah-surahs, hadith-of-the-day and quote-of-the-day cards
+The sunnah-surahs and quote-of-the-day cards
 (core/widgets/ornament_backdrop.dart) paint one of the bundled ornament
 scans over the card's OWN theme ground at a low opacity, and the text keeps
 the theme's own tones. This composites that (sRGB srcOver, as Flutter blends)
@@ -21,7 +21,6 @@ SCANS = ROOT / "rafeeq_app/assets/quote_backgrounds"
 # Which scans each card uses (ornament_backdrop.dart).
 CARDS = {
     "sunan": ["../card_ornaments/muqarnas_band.jpg"],
-    "hadith": ["dado_panel2.jpg"],
     "quote": [
         "l_ornement_polychrome_met_dp146521.jpg",
         "ornament_sborn_k_slohov_ch_ozdob_v_ech_obdob_um_.jpg",
@@ -79,8 +78,6 @@ ACCENTS = [h(a) for a in ("D4AF37", "16A085", "6C5FBC", "3F7A8C", "D4785A",
 # The quote card draws its scan fainter (OrnamentBackdrop.quoteDark/Light):
 # its tinted grounds leave less room.
 QUOTE_STRENGTH = {"dark": 0.16, "rgb": 0.16, "light": 0.13}
-# The hadith card is drawn calmer still (OrnamentBackdrop.hadithDark/Light).
-HADITH_STRENGTH = {"dark": 0.13, "rgb": 0.13, "light": 0.11}
 
 
 def grounds(t, card):
@@ -99,8 +96,7 @@ def main():
     bad = 0
     for card, scans in CARDS.items():
         for name, t in THEMES.items():
-            k = (QUOTE_STRENGTH[name] if card == "quote" else
-                 HADITH_STRENGTH[name] if card == "hadith" else t["strength"])
+            k = QUOTE_STRENGTH[name] if card == "quote" else t["strength"]
             for tone, c in t["tones"].items():
                 worst = (99.0, "")
                 for scan in scans:

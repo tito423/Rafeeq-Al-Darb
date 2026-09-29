@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/calm_card_ground.dart';
 import '../../../khatma/presentation/khatma_card.dart' show HomeNavigate;
 import '../../data/mushaf_data_provider.dart';
 import '../../data/quran_jump_provider.dart';
@@ -89,61 +90,71 @@ class _ContinueReadingBodyState extends ConsumerState<_ContinueReadingBody> {
 
         return Card(
           clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () {
-              ref.read(quranJumpRequestProvider.notifier).state = widget.page;
-              HomeNavigate.of(context)?.call(1);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  const Icon(Icons.menu_book_outlined, color: gold, size: 32),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('home.continue_reading_title'.tr(),
+          child: CalmCardGround(
+            // A calm ground behind the card (owner, 2026-09-29: «اي كارت في
+            // الرئيسية حطله خلفية … هادية»); nothing is drawn under the text.
+            color: AppColors.gold,
+            child: InkWell(
+              onTap: () {
+                ref.read(quranJumpRequestProvider.notifier).state = widget.page;
+                HomeNavigate.of(context)?.call(1);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.menu_book_outlined, color: gold, size: 32),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'home.continue_reading_title'.tr(),
                             style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant)),
-                        const SizedBox(height: 2),
-                        // «في آخر سورة بص على كلمة سورة الرحمن مكتوبة غلط».
-                        // The name was not wrong — the font was. `name_ar`
-                        // holds the mushaf's own spelling, which for سُورَةُ
-                        // الرَّحۡمَٰن carries U+06E1 (small high dotless head of
-                        // khah, the Uthmani sukun) and U+0670 (dagger alef).
-                        // Cairo, the app's UI face, has no glyph for either,
-                        // so they landed on the baseline as stray marks and
-                        // the word read as nonsense — while every other place
-                        // that shows a surah name (the jump sheet, the khatma
-                        // picker, the mushaf header) already asks for
-                        // AmiriQuran and renders it correctly. This is the
-                        // one that had been missed.
-                        Text(
-                          surah.nameAr,
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontFamily: 'AmiriQuran'),
-                        ),
-                        const SizedBox(height: 2),
-                        // Every other number on the Home screen is
-                        // Arabic-Indic in Arabic - the Hijri date, the clock,
-                        // the countdown, the prayer times - and this line was
-                        // the one printing Latin «6» and «579» next to them.
-                        // Seen on emulator-5554, not deduced.
-                        Text(
-                          localizeDigits(
-                            '${'quran.ayah'.tr()} ${first.ayahNumber} · '
-                            '${'quran.page'.tr()} ${widget.page}',
-                            context.locale.languageCode,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant),
-                        ),
-                      ],
+                          const SizedBox(height: 2),
+                          // «في آخر سورة بص على كلمة سورة الرحمن مكتوبة غلط».
+                          // The name was not wrong — the font was. `name_ar`
+                          // holds the mushaf's own spelling, which for سُورَةُ
+                          // الرَّحۡمَٰن carries U+06E1 (small high dotless head of
+                          // khah, the Uthmani sukun) and U+0670 (dagger alef).
+                          // Cairo, the app's UI face, has no glyph for either,
+                          // so they landed on the baseline as stray marks and
+                          // the word read as nonsense — while every other place
+                          // that shows a surah name (the jump sheet, the khatma
+                          // picker, the mushaf header) already asks for
+                          // AmiriQuran and renders it correctly. This is the
+                          // one that had been missed.
+                          Text(
+                            surah.nameAr,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontFamily: 'AmiriQuran',
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          // Every other number on the Home screen is
+                          // Arabic-Indic in Arabic - the Hijri date, the clock,
+                          // the countdown, the prayer times - and this line was
+                          // the one printing Latin «6» and «579» next to them.
+                          // Seen on emulator-5554, not deduced.
+                          Text(
+                            localizeDigits(
+                              '${'quran.ayah'.tr()} ${first.ayahNumber} · '
+                              '${'quran.page'.tr()} ${widget.page}',
+                              context.locale.languageCode,
+                            ),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

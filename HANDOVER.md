@@ -2510,9 +2510,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-29 20:07 — IN PROGRESS — resume here**
+**2026-09-29 20:20 — IN PROGRESS — resume here**
 
-Home: one prayer photo under the whole prayer card (theme-washed, glass slides); faint ornament scans behind sunan/hadith/quote cards; contrast measured by two scripts
+Hadith card: calm ground instead of the rejected star-panel photo; calm ground on continue-reading, khatma, selected-surahs; sunan and quote kept
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

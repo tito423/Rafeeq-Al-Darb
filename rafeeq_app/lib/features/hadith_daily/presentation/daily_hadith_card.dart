@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/widgets/arabic_text.dart';
-import '../../../core/widgets/ornament_backdrop.dart';
+import '../../../core/widgets/calm_card_ground.dart';
 import '../../dorar/presentation/dorar_check_sheet.dart';
 import '../../hadeethenc/data/hadeethenc_providers.dart';
 import '../../hadeethenc/presentation/screens/hadeethenc_detail_screen.dart';
@@ -58,13 +58,11 @@ class _OrnateFrame extends StatelessWidget {
               : [AppColors.lightScaffold, Colors.white],
         ),
       ),
-      // A geometric star panel, faint, under the frame's ornaments (owner,
-      // 2026-09-29).
-      child: OrnamentBackdrop(
-        asset: OrnamentBackdrop.hadith,
-        radius: BorderRadius.circular(20),
-        darkStrength: OrnamentBackdrop.hadithDark,
-        lightStrength: OrnamentBackdrop.hadithLight,
+      // A calm ground: nothing is drawn behind the text (owner, 2026-09-29,
+      // who rejected the star-panel photograph that was here).
+      child: CalmCardGround(
+        color: AppColors.gold,
+        inset: 40,
         child: Stack(
           children: [
             const Positioned(top: 6, left: 6, child: _CornerFlourish()),
