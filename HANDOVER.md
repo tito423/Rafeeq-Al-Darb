@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 01:43 — IN PROGRESS — resume here**
+**2026-09-30 01:51 — IN PROGRESS — resume here**
 
-Morning/evening reminder can open a chosen reciter playing; seen end to end on emulator (01:39 reminder -> Alafasy full screen)
+Journey is interactive: points sheet with level ladder, 28-day calendar, memorised surahs, counts with next badge, badge dialogs, count-up and entrance animations; seen on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
