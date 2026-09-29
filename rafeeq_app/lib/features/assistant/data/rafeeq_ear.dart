@@ -9,6 +9,8 @@ import 'package:record/record.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import '../../hifz/data/tasmee_mic.dart';
+import '../presentation/assistant_describe.dart' show assistantLanguage;
+import 'assistant_intent.dart' show afterWakeWord;
 import 'rafeeq_voice_pack.dart';
 
 /// «رفيق»'s ear: the microphone -> silero VAD -> omnilingual-asr, all on the
@@ -39,6 +41,12 @@ class RafeeqEar {
 
   AudioRecorder? _mic;
 
+  /// Drops the worker so the next [start] loads the models again - after
+  /// the «دقة أعلى» pack is downloaded or deleted.
+  Future<void> reload() async {
+    await shutdown();
+  }
+
   /// Listen through a connected Bluetooth headset (set from the settings,
   /// applied at the next [start]).
   bool wantBluetooth = false;
@@ -59,6 +67,10 @@ class RafeeqEar {
   Future<void> _ensureWorker() async {
     if (_toWorker != null) return;
     final dir = (await RafeeqVoicePack.instance.dir()).path;
+    // The «دقة أعلى» pack, when the reader downloaded it.
+    final turbo = await RafeeqVoicePack.accurate.check()
+        ? (await RafeeqVoicePack.accurate.dir()).path
+        : '';
     final inbox = ReceivePort();
     _fromWorker = inbox;
     final ready = Completer<SendPort>();
@@ -74,7 +86,7 @@ class RafeeqEar {
         ready.completeError(StateError('${m.first}'));
       }
     });
-    await Isolate.spawn(_workerMain, [inbox.sendPort, dir]);
+    await Isolate.spawn(_workerMain, [inbox.sendPort, dir, turbo, assistantLanguage()]);
     _toWorker = await ready.future;
   }
 
@@ -175,8 +187,11 @@ class RafeeqEar {
   static void _workerMain(List<Object> args) {
     final out = args[0] as SendPort;
     final dir = args[1] as String;
+    final turboDir = args[2] as String;
+    final lang = args[3] as String;
     so.VoiceActivityDetector vad;
     so.OfflineRecognizer rec;
+    so.OfflineRecognizer? turbo;
     try {
       so.initBindings();
       vad = so.VoiceActivityDetector(
@@ -199,10 +214,29 @@ class RafeeqEar {
           debug: false,
         ),
       ));
+      if (turboDir.isNotEmpty) {
+        turbo = so.OfflineRecognizer(so.OfflineRecognizerConfig(
+          model: so.OfflineModelConfig(
+            whisper: so.OfflineWhisperModelConfig(
+              encoder: p.join(turboDir, 'turbo-encoder.int8.onnx'),
+              decoder: p.join(turboDir, 'turbo-decoder.int8.onnx'),
+              language: lang,
+              task: 'transcribe',
+            ),
+            tokens: p.join(turboDir, 'turbo-tokens.txt'),
+            numThreads: 4,
+            debug: false,
+          ),
+        ));
+      }
     } catch (e) {
       out.send(['$e']);
       return;
     }
+    // A call to «رفيق» opens a 12-second window: that phrase and what comes
+    // after it (a command said in the next breath, an ayah number) are read
+    // again by whisper. Everything else stays with the fast model.
+    var refineUntil = DateTime.fromMillisecondsSinceEpoch(0);
     final inbox = ReceivePort();
     out.send(inbox.sendPort);
     const window = 512;
@@ -228,8 +262,28 @@ class RafeeqEar {
             final s = rec.createStream();
             s.acceptWaveform(samples: seg.samples, sampleRate: 16000);
             rec.decode(s);
-            out.send(rec.getResult(s).text);
+            var text = rec.getResult(s).text;
             s.free();
+            final t = turbo;
+            if (t != null) {
+              final called = afterWakeWord(text) != null;
+              if (called || DateTime.now().isBefore(refineUntil)) {
+                if (called) {
+                  refineUntil = DateTime.now().add(const Duration(seconds: 12));
+                }
+                final w = t.createStream();
+                // Whisper wants a little silence after the speech.
+                w.acceptWaveform(
+                    samples: Float32List(seg.samples.length + 8000)
+                      ..setAll(0, seg.samples),
+                    sampleRate: 16000);
+                t.decode(w);
+                final better = t.getResult(w).text.trim();
+                w.free();
+                if (better.isNotEmpty) text = better;
+              }
+            }
+            out.send(text);
           }
         }
         pending = Float32List.fromList(all.sublist(i));
@@ -240,6 +294,7 @@ class RafeeqEar {
       } else if (m == 'exit') {
         vad.free();
         rec.free();
+        turbo?.free();
         inbox.close();
       }
     });

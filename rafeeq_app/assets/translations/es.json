@@ -2204,6 +2204,8 @@
     "search_all_failed": "No se pudieron cargar {} enciclopedias"
   },
   "assistant": {
+    "accurate_title": "Oído más fino (opcional)",
+    "accurate_desc": "Un modelo adicional ({}) que vuelve a leer con más precisión lo que dices a Rafeeq, sobre todo números y nombres de suras. Varios segundos más lento y necesita más memoria.",
     "name": "Rafeeq",
     "listening": "Escuchando… di lo que quieres",
     "heard": "Oído: «{}»",

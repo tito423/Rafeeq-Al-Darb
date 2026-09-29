@@ -22,6 +22,13 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = r"E:\DevEnv\asr"
 OMNI = os.path.join(SRC, "sherpa-onnx-omnilingual-asr-1600-languages-300M-ctc-v2-int8-2026-02-05")
+TURBO = os.path.join(SRC, "sherpa-onnx-whisper-turbo")
+# «دقة أعلى» (2026-09-30): Whisper large-v3-turbo int8 (MIT), published with
+#     py -3 scripts/publish_rafeeq_voice_pack.py turbo
+TURBO_FILES = {
+    f"asr/rafeeq_turbo_v1/{n}": os.path.join(TURBO, n)
+    for n in ("turbo-encoder.int8.onnx", "turbo-decoder.int8.onnx", "turbo-tokens.txt")
+}
 FILES = {
     "asr/rafeeq_v1/model.int8.onnx": os.path.join(OMNI, "model.int8.onnx"),
     "asr/rafeeq_v1/tokens.txt": os.path.join(OMNI, "tokens.txt"),
@@ -44,7 +51,8 @@ def main():
     r2 = r2_client()
     out = os.path.join(HERE, "out", "rafeeq_voice_pack")
     os.makedirs(out, exist_ok=True)
-    for key, path in FILES.items():
+    files = TURBO_FILES if sys.argv[1:] == ["turbo"] else FILES
+    for key, path in files.items():
         size = os.path.getsize(path)
         print(key, size, sha256(path))
         r2.upload_file(path, BUCKET, key, ExtraArgs={

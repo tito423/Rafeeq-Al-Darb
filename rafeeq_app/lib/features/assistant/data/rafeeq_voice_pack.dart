@@ -12,12 +12,15 @@ import '../../../core/config/content_mirrors.dart';
 
 /// One file of «رفيق»'s voice pack, as it is on the bucket.
 class VoicePackFile {
-  const VoicePackFile(this.name, this.bytes, this.sha256);
+  const VoicePackFile(this.name, this.bytes, this.sha256,
+      {this.folder = 'rafeeq_v1'});
   final String name;
   final int bytes;
   final String sha256;
 
-  String get url => '${AppConfig.contentBaseUrl}/asr/rafeeq_v1/$name';
+  /// The pack's folder under `asr/` on the host.
+  final String folder;
+  String get url => '${AppConfig.contentBaseUrl}/asr/$folder/$name';
 }
 
 /// Chosen by measurement on 2026-09-27 (TASK_FOLLOWUP 18:50): Meta's
@@ -38,13 +41,41 @@ const voicePackFiles = <VoicePackFile>[
 
 int get voicePackBytes => voicePackFiles.fold(0, (s, f) => s + f.bytes);
 
+/// «دقة أعلى» - an optional second pack (owner, 2026-09-30: «مفيش عندي مشكلة
+/// في الويسبر … هيبقى كمالي على حسب مزاج المستخدم»): OpenAI's Whisper
+/// large-v3-turbo, int8, as sherpa-onnx converts it (MIT). Measured on this
+/// PC on the owner's own sentence as the recogniser heard it: the base pack
+/// wrote «…سورة البقرة آية٥» and lost «مئتين وخمسة وخمسين» entirely; this one
+/// wrote «…سورة البقرة آية 255» and every number clip right - at ~5-7 s a
+/// command on the PC's CPU, so it only re-reads what was said to «رفيق»
+/// (rafeeq_ear.dart), never every sound.
+const accuratePackFiles = <VoicePackFile>[
+  VoicePackFile('turbo-encoder.int8.onnx', 674716297,
+      'b02dcdf54f348741e93fe732b67d933c8dcb6735655f710640143081db38878b',
+      folder: 'rafeeq_turbo_v1'),
+  VoicePackFile('turbo-decoder.int8.onnx', 361080764,
+      '20accd02388482eb3a46bd615631adfdc85e1eb2c7db9ea3f02a40ffe6b81547',
+      folder: 'rafeeq_turbo_v1'),
+  VoicePackFile('turbo-tokens.txt', 816730,
+      'b34b360dbb493e781e479794586d661700670d65564001f23024971d1f2fa126',
+      folder: 'rafeeq_turbo_v1'),
+];
+
 /// «رفيق» works only with this pack on the phone - owner, 2026-09-27: «لو
 /// منزلوش الأفضل مايشتغلش بدل ما يشتغل بسوء». Downloaded once, checked by
 /// byte count and SHA-256, kept in its own folder (not the tasmee model's,
 /// which is deleted whole when that model is removed).
 class RafeeqVoicePack {
-  RafeeqVoicePack._();
-  static final instance = RafeeqVoicePack._();
+  RafeeqVoicePack._(this.files, this._folder);
+  static final instance = RafeeqVoicePack._(voicePackFiles, 'rafeeq_voice_v1');
+
+  /// The optional higher-accuracy pack ([accuratePackFiles]).
+  static final accurate =
+      RafeeqVoicePack._(accuratePackFiles, 'rafeeq_turbo_v1');
+
+  final List<VoicePackFile> files;
+  final String _folder;
+  int get totalBytes => files.fold(0, (s, f) => s + f.bytes);
 
   static const _verified = '.verified';
 
@@ -60,12 +91,12 @@ class RafeeqVoicePack {
 
   Future<Directory> dir() async {
     final base = await getApplicationSupportDirectory();
-    return Directory(p.join(base.path, 'rafeeq_voice_v1'));
+    return Directory(p.join(base.path, _folder));
   }
 
   Future<bool> check() async {
     final d = await dir();
-    for (final f in voicePackFiles) {
+    for (final f in files) {
       final file = File(p.join(d.path, f.name));
       final mark = File('${file.path}$_verified');
       if (!file.existsSync() ||
@@ -89,7 +120,7 @@ class RafeeqVoicePack {
           final d = await dir();
           await d.create(recursive: true);
           var done = 0;
-          for (final f in voicePackFiles) {
+          for (final f in files) {
             final path = p.join(d.path, f.name);
             if (File('$path$_verified').existsSync() &&
                 File(path).existsSync() &&
@@ -106,7 +137,7 @@ class RafeeqVoicePack {
                 await _dio.download(url, tmp,
                   cancelToken: _cancel,
                   onReceiveProgress: (got, _) =>
-                      progress.value = (done + got) / voicePackBytes);
+                      progress.value = (done + got) / totalBytes);
               }
               final got = await File(tmp).length();
               final hash = await _sha256(tmp);
@@ -119,7 +150,7 @@ class RafeeqVoicePack {
             await File(tmp).rename(path);
             await File('$path$_verified').writeAsString(f.sha256);
             done += f.bytes;
-            progress.value = done / voicePackBytes;
+            progress.value = done / totalBytes;
           }
           installed.value = true;
         } finally {

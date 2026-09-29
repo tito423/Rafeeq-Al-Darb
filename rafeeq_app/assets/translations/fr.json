@@ -2204,6 +2204,8 @@
     "search_all_failed": "{} encyclopédies n’ont pas pu être chargées"
   },
   "assistant": {
+    "accurate_title": "Écoute plus précise (facultatif)",
+    "accurate_desc": "Un modèle supplémentaire ({}) qui relit plus précisément ce que tu dis à Rafeeq, surtout les nombres et les noms de sourates. Plus lent de quelques secondes, et demande plus de mémoire.",
     "name": "Rafeeq",
     "listening": "J’écoute… dites ce que vous voulez",
     "heard": "Entendu : « {} »",

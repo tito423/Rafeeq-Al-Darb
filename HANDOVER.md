@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 02:38 — IN PROGRESS — resume here**
+**2026-09-30 02:57 — IN PROGRESS — resume here**
 
-Rafeeq: a surah said without a play word opens it (was: played in background); glued open verb, cut ayah word, spoken-number follow-up; recogniser drops numbers - logged
+Optional sharper-hearing pack for Rafeeq: whisper-turbo re-reads only what is said to Rafeeq (measured: gets numbers the base model loses); upload running
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

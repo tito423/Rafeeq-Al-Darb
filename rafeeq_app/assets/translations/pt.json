@@ -2204,6 +2204,8 @@
     "search_all_failed": "Não foi possível carregar {} enciclopédias"
   },
   "assistant": {
+    "accurate_title": "Audição mais precisa (opcional)",
+    "accurate_desc": "Um modelo extra ({}) que relê com mais precisão o que você diz ao Rafeeq, principalmente números e nomes de suras. Alguns segundos mais lento e precisa de mais memória.",
     "name": "Rafeeq",
     "listening": "A ouvir… diga o que quer",
     "heard": "Ouvido: «{}»",

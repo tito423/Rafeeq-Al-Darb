@@ -2204,6 +2204,8 @@
     "search_all_failed": "{} encyclopedias could not be loaded"
   },
   "assistant": {
+    "accurate_title": "Sharper hearing (optional)",
+    "accurate_desc": "An extra model ({}) that re-reads what you say to Rafeeq more accurately, especially numbers and surah names. Several seconds slower, and needs more memory.",
     "name": "Rafeeq",
     "listening": "Listening… say what you want",
     "heard": "Heard: “{}”",
