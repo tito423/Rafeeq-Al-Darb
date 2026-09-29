@@ -107,14 +107,33 @@ class OpenHadithDetailIntent extends AssistantIntent {
   String toString() => 'hadith detail $bookId/$numberInBook';
 }
 
+/// «فينكلمة» / «فينكلمت» -> «فين» «كلمه»: the marker word split out of the
+/// word the recogniser glued it to.
+List<String> _splitGlued(String w) {
+  for (final m in const ['كلمه', 'كلمت']) {
+    if (w != m && w.contains(m)) {
+      return w.replaceFirst(m, ' كلمه ').trim().split(RegExp(r'\s+'));
+    }
+  }
+  return [w];
+}
+
 extension on AssistantParser {
   /// The word or phrase asked for in «فين كلمة X في القرآن», or null when the
   /// sentence is not that question. It reads the RAW words, not the corrected
   /// ones: spelling correction pulls unknown words toward the command
   /// vocabulary, and a Qur'anic word must reach the search exactly as heard.
   String? _quranWordQuery(String heard) {
-    final raw = norm(asciiDigits(heard)).split(' ').where((w) => w.isNotEmpty).toList();
-    const marker = {'كلمه', 'لفظ', 'لفظه', 'word', 'palabra', 'mot', 'palavra', 'слово'};
+    // «كلمت»: the recogniser also writes the closing ta as an open one.
+    const marker = {'كلمه', 'كلمت', 'لفظ', 'لفظه', 'word', 'palabra', 'mot', 'palavra', 'слово'};
+    // The recogniser glues short words to their neighbour: on emulator-5554
+    // «فين كلمة عسعس» came out «فينكلمة عسعس». A word that carries «كلمه»
+    // inside it is split around it.
+    final raw = <String>[
+      for (final w in norm(asciiDigits(heard)).split(' '))
+        if (w.isNotEmpty)
+          ..._splitGlued(w),
+    ];
     const context = {
       'القران', 'قران', 'ذكرت', 'وردت', 'ورد', 'ذكر', 'فين', 'اين', 'وين', 'امتي',
       'فيها', 'فيه', 'ايه', 'اية', 'where', 'donde', 'onde', 'quran', 'coran',

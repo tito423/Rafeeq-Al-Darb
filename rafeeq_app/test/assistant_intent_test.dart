@@ -195,6 +195,9 @@ void main() {
     expect(of('دورلي على كلمة الصبر في القران'), 'quran word الصبر');
     expect(of('اعرضلي آية فيها كلمة عسعس'), 'quran word عسعس');
     expect(of('where is the word mercy in the quran'), 'quran word mercy');
+    // Exactly as the recogniser wrote it on emulator-5554 (2026-09-29).
+    expect(of('فينكلمة عسعس في القرآن'), 'quran word عسعس');
+    expect(of('فينكلمت الصابرين في القرآن'), 'quran word الصابرين');
     // Not a word question: screens and books that merely contain «كلمات».
     expect(of('افتح معاني الكلمات'), isNot(startsWith('quran word')));
     expect(of('فين الاذكار'), 'open azkar');
