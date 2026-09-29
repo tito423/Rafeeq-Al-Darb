@@ -120,8 +120,11 @@ class _AyahGameScreenState extends ConsumerState<AyahGameScreen> {
                 '${q.prompt} …',
                 textAlign: TextAlign.center,
                 textDirection: TextDirection.rtl,
-                style: const TextStyle(
-                    fontFamily: 'AmiriQuran', fontSize: 26, height: 2.1),
+                style: TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: 26,
+                    height: 2.1,
+                    color: scheme.onSurface),
               ),
             ),
             const SizedBox(height: 18),
