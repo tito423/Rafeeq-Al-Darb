@@ -106,30 +106,26 @@ const ruqyahGroups = <RuqyahGroup>[
 /// Each row carries its own footnote (البخاري، مسلم، أبو داود…), which the
 /// screen renders as-is.
 ///
-/// **2026-09-17: the source book changed and so did these ids.** `azkar_items`
-/// was rebuilt from an-Nawawi's «الأذكار» (d. 676 AH) because the previous
-/// corpus, حصن المسلم, is a *selection* by a man who died in 2018 — and UAE
-/// Federal Decree-Law 38/2021 Article 3 protects a collection of free works
-/// «إذا تميز جمعها أو ترتيبها أو أي مجهود فيها بالابتكار». See
-/// `CONTENT-LICENSES.md`.
+/// **2026-09-29: the source book changed again, and so did these ids.**
+/// `azkar_items` is «حصن المسلم» once more (owner's order; the edition is in
+/// `scripts/azkar_hisn/`), built by `scripts/build_azkar_hisn.py`, and its row
+/// ids are simply the book's own order. Each id below was found by searching
+/// the rebuilt table for the dua's text, and `test/ruqyah_duas_test.dart` pins
+/// the TEXT each one resolves to, so a number alone can never go quietly wrong:
+/// a rebuild that shifts a row fails that test instead of showing a wrong dua
+/// on the screen people open when they are ill.
 ///
-/// A rebuild renumbers rows, and the old comment — «a mis-typed id shows up as
-/// a missing dua, not a wrong one» — stops being true the moment it does: id
-/// 176 would have pointed at whatever landed on row 176. So each of these
-/// carries an **explicit** id, assigned in `scripts/azkar_curated.json` and
-/// written verbatim by `scripts/rebuild_azkar_tables.py`, outside the range the
-/// sequential numbering uses. `test/ruqyah_duas_test.dart` pins the TEXT each
-/// one resolves to, so a number alone can never go quietly wrong again.
-///
-/// **Five, not six.** «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر»
-/// returns zero hits across all 338 chapters of al-Adhkar, so it is gone rather
-/// than reconstructed — the same rule as the paragraph above.
+/// Six again: «أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر» is in this
+/// book (chapter «ما يقول لرد كيد مردة الشياطين»), which al-Adhkar did not
+/// carry. The wording of the last dua here is this book's («من غضبه وعقابه
+/// وشر عباده»), not al-Adhkar's.
 const ruqyahDuaItemIds = <int>[
-  1001, // لا بأس طهور إن شاء الله — البخاري
-  1002, // أسأل الله العظيم رب العرش العظيم أن يشفيك — الترمذي، حسن
-  1003, // بسم الله (ثلاثاً) … أعوذ بعزة الله وقدرته من شر ما أجد وأحاذر — مسلم
-  1004, // أعوذ بكلمات الله التامات من شر ما خلق — موطأ مالك
-  1005, // أعوذ بكلمات الله التامة من غضبه وشر عباده … — الترمذي، حسن
+  179, // لا بأس طهور إن شاء الله — البخاري
+  180, // أسأل الله العظيم رب العرش العظيم أن يشفيك — عيادة المريض
+  278, // بسم الله (ثلاثاً) … أعوذ بعزة الله وقدرته من شر ما أجد وأحاذر — مسلم
+  251, // أعوذ بكلمات الله التامات من شر ما خلق — مسلم
+  282, // أعوذ بكلمات الله التامات التي لا يجاوزهن بر ولا فاجر — أحمد
+  141, // أعوذ بكلمات الله التامة من غضبه وعقابه وشر عباده … — أبو داود
 ];
 
 /// One full recorded ruqyah.

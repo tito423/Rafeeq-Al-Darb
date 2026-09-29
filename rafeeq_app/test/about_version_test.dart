@@ -68,8 +68,8 @@ void main() {
       ) as Map<String, dynamic>;
       final about = json['about'] as Map<String, dynamic>;
       for (final key in const [
-        'f_quran',
-        'f_quran_desc',
+        // `f_quran` states no number any more: the app ships one printing
+        // (owner, 2026-09-29).
         'f_translations',
         'f_audio_desc',
         'f_prayer_desc',

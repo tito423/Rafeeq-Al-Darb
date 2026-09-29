@@ -129,7 +129,33 @@ extension on AssistantParser {
         }
       }
     }
-    return best;
+    if (best != null) return best;
+
+    // The book's own titles are long («الأذكار بعد السلام من الصلاة») and
+    // people say them short («الأذكار بعد الصلاة»). A title of three or more
+    // content words still matches when exactly one of them was not said, and
+    // only when that reading is unique.
+    const filler = {'من', 'في', 'عن', 'على', 'الى', 'ما', 'اذا', 'عند', 'او'};
+    final said = clean.split(' ').map(bare).toSet();
+    var bestHits = 0;
+    var ambiguous = false;
+    for (final e in _azkarSectionKeys.entries) {
+      for (final name in e.value) {
+        final content =
+            name.split(' ').map(bare).where((w) => !filler.contains(w)).toList();
+        if (content.length < 3) continue;
+        final hits = content.where(said.contains).length;
+        if (hits != content.length - 1) continue;
+        if (hits > bestHits) {
+          best = e.key;
+          bestHits = hits;
+          ambiguous = false;
+        } else if (hits == bestHits && best != e.key) {
+          ambiguous = true;
+        }
+      }
+    }
+    return ambiguous ? null : best;
   }
 
   bool _hasHadithChapterWord(List<String> words) => words

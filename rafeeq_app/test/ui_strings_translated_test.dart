@@ -51,8 +51,6 @@ void main() {
         'the same two anchors, for the same reason',
     'lib/features/home/presentation/screens/home_prayer_card.dart':
         'the Arabic comma used as a separator',
-    'lib/features/settings/presentation/screens/about_screen.dart':
-        'the Arabic comma used as a separator',
     'lib/features/sunan_suwar/presentation/sunan_suwar_reminders_section.dart':
         'the Arabic comma used as a separator',
   };

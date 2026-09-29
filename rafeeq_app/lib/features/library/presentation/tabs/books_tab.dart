@@ -199,8 +199,8 @@ class _BooksTabState extends State<BooksTab> {
                   // The longest label sets the size; FittedBox stays as the
                   // guard against clipping.
                   const keys = [
-                    'library.sub_authors',
                     'library.sub_categories',
+                    'library.sub_authors',
                     'library.sub_spoken',
                     'library.sub_mine',
                   ];
@@ -276,12 +276,12 @@ class _BooksTabState extends State<BooksTab> {
           Expanded(
             child: TabBarView(
               children: [
-                _AuthorsView(
+                _CategoriesView(
                   paths: _paths,
                   onDownload: _download,
                   onOpen: _open,
                 ),
-                _CategoriesView(
+                _AuthorsView(
                   paths: _paths,
                   onDownload: _download,
                   onOpen: _open,
@@ -485,8 +485,8 @@ class _CategoriesView extends StatelessWidget {
       ..sort((a, b) => a.index.compareTo(b.index));
     // P3‑54: each category is now a collapsible `ExpansionTile` — tap the
     // header to expand its books, tap again to collapse — instead of one long
-    // always-open list. The first category opens by default so the tab never
-    // looks empty on entry. `PageStorageKey` keeps each tile's open/closed
+    // always-open list. All start collapsed (owner, 2026-09-29), and this
+    // view now comes before the authors view. `PageStorageKey` keeps each tile's open/closed
     // state across rebuilds (locale/theme changes, scrolling far away and
     // back) so the user's expand/collapse choices don't reset under them.
     // Sideways two shelves a row (`PairedListView`).
@@ -510,7 +510,7 @@ class _CategoriesView extends StatelessWidget {
                 final byShelf = x.shelfOrder.compareTo(y.shelfOrder);
                 return byShelf != 0 ? byShelf : x.sortKey.compareTo(y.sortKey);
               }),
-            initiallyExpanded: i == 0,
+            initiallyExpanded: false,
             paths: paths,
             onDownload: onDownload,
             onOpen: onOpen,

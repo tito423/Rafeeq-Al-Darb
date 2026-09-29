@@ -265,12 +265,14 @@ class MoreScreen extends ConsumerWidget {
           MoreGroup(
             title: 'settings.about'.tr(),
             subtitle: _names([
-              'support.title',
               'settings.credits',
               'settings.privacy_policy',
+              'support.title',
             ]),
             icon: Icons.info_outline_rounded,
             children: [
+              const SettingsBody(part: SettingsPart.about),
+              // Last card of the group (owner, 2026-09-29).
               IslamicActionCard(
                 icon: Icons.volunteer_activism_outlined,
                 title: 'support.title'.tr(),
@@ -281,8 +283,6 @@ class MoreScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-
-              const SettingsBody(part: SettingsPart.about),
             ],
           ),
             ],

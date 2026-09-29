@@ -20,17 +20,8 @@ void main() {
 
   /// Books removed from the app, in every spelling the locale files use.
   const removed = <String, List<String>>{
-    'Hisn al-Muslim': [
-      'حصن المسلم',
-      'Hisn al-Muslim',
-      'Hisn al-Muslim',
-      'Крепости мусульманина',
-      'Крепость мусульманина',
-      'Fortaleza del musulmán',
-      'Forteresse du musulman',
-      'Fortaleza do muçulmano',
-      'حصن المسلم',
-    ],
+    // Hisn al-Muslim was removed on 2026-09-17 and restored on 2026-09-29
+    // (owner's order), so it is no longer listed here.
     'Ibn Baz\'s Hajj manual': ['ابن باز', 'Ibn Baz'],
   };
 

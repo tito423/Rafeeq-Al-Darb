@@ -17,9 +17,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 /// they are ill. `flutter analyze` has no opinion about that, and neither did
 /// any test.
 ///
-/// So the ids are explicit now (1001–1005, written verbatim by
-/// `scripts/rebuild_azkar_tables.py`) and this checks what they actually
-/// resolve to in the bundled database.
+/// So this checks what the ids actually resolve to in the bundled database.
+/// (2026-09-29: the book is «حصن المسلم» again; the ids are its row numbers.)
 void main() {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
@@ -30,10 +29,10 @@ void main() {
     // An ABSOLUTE path: sqflite_common_ffi resolves a relative one under
     // `.dart_tool/sqflite_common_ffi/databases/`, not the working directory,
     // and reports the miss as «file not found» somewhere nobody would look.
-    final path = File('assets/data/quran_sciences.db').absolute.path;
+    final path = File('assets/data/azkar.db').absolute.path;
     expect(File(path).existsSync(), isTrue,
-        reason: 'the bundled sciences DB is gitignored and regenerable — '
-            'rebuild it before running this');
+        reason: 'the bundled azkar DB is missing — '
+            'rebuild it with scripts/build_azkar_hisn.py');
     db = await databaseFactory.openDatabase(path,
         options: OpenDatabaseOptions(readOnly: true));
   });
@@ -44,11 +43,12 @@ void main() {
   /// them. Diacritics are stripped on both sides before comparing, because the
   /// source is fully vocalised and these fragments are not.
   const expected = [
-    'لا باس طهور',
+    'لا باس، طهور ان شاء الله',
     'رب العرش العظيم ان يشفيك',
     'من شر ما اجد واحاذر',
     'التامات من شر ما خلق',
-    'من غضبه وشر عباده',
+    'التامات التي لا يجاوزهن بر ولا فاجر',
+    'من غضبه وعقابه، وشر عباده',
   ];
 
   String bare(String s) => s
@@ -83,15 +83,5 @@ void main() {
       final note = (rows.first['footnote'] as String?) ?? '';
       expect(note.trim(), isNotEmpty, reason: 'id $id has no takhrij');
     }
-  });
-
-  test('no row in the rebuilt tables still names the previous compiler',
-      () async {
-    // The old corpus carried «الؤلف: سعيد بن علي بن وهف القحطاني» in row 2's
-    // footnote — which is how it was identified in the first place.
-    final hits = await db.rawQuery(
-        'SELECT COUNT(*) c FROM azkar_items '
-        "WHERE body LIKE '%القحطاني%' OR footnote LIKE '%القحطاني%'");
-    expect(hits.first['c'], 0);
   });
 }

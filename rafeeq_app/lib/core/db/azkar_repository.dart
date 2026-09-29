@@ -68,6 +68,6 @@ class AzkarRepository {
 /// re-copy of content it has.
 final azkarRepositoryProvider = FutureProvider<AzkarRepository>((ref) async {
   final db = await DbHelper.instance.openBundled('data/azkar.db',
-      stamp: 'azkar-v1');
+      stamp: 'azkar-v2');
   return AzkarRepository(db);
 });

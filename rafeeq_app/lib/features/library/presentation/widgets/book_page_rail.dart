@@ -92,10 +92,17 @@ class BookPageRail extends StatelessWidget {
                             const RoundSliderThumbShape(enabledThumbRadius: 7),
                         overlayShape:
                             const RoundSliderOverlayShape(overlayRadius: 16),
+                        // A 797-page book moves the thumb ~0.7 px a page, so
+                        // the bubble (always shown) is what says where you are: the printed
+                        // page at the thumb, updating on every turn (owner, 2026-09-29).
+                        showValueIndicator: ShowValueIndicator.alwaysVisible,
                       ),
                       child: Slider(
                         max: (doc.pages.length - 1).toDouble(),
                         value: pageIndex.toDouble(),
+                        label: localizeDigits(
+                            '${doc.printedPageAt(pageIndex) ?? pageIndex + 1}',
+                            uiLanguageCode),
                         divisions:
                             doc.pages.length > 1 ? doc.pages.length - 1 : null,
                         onChanged: (v) => onChanged(v.round()),

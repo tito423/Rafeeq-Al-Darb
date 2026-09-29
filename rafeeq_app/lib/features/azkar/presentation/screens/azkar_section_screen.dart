@@ -13,7 +13,7 @@ import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
-import '../../data/azkar_repeat.dart';
+import '../../../quotes/data/quote_background_catalog.dart';
 
 /// One section's adhkar, one full-screen card at a time (P3‑54 redesign).
 ///
@@ -78,7 +78,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
   Color get _accent => widget.accent ?? AppColors.gold;
 
   int _targetFor(int i) =>
-      _items == null ? 1 : parseAzkarRepeatCount(_items![i].body);
+      _items == null ? 1 : _items![i].repeat;
 
   void _tapCount() {
     final items = _items;
@@ -158,7 +158,9 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
           ? const Center(child: CircularProgressIndicator())
           : Stack(
               children: [
-                const Positioned.fill(child: _CardBackground()),
+                Positioned.fill(
+                  child: _CardBackground(seed: widget.section.id + _index),
+                ),
                 if (sideways)
                   Row(
                     children: [
@@ -187,14 +189,37 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
   }
 }
 
-/// The layered Islamic ground shared by every card: a deep gradient, the app's
-/// own ornamental mark as a low-opacity centred watermark, and a dark scrim so
-/// the white dhikr text always stays readable.
-class _CardBackground extends StatelessWidget {
-  const _CardBackground();
+/// The layered Islamic ground behind every card: one of the bundled ornament
+/// photographs (public-domain / CC0 Commons scans, the same set the quote
+/// cards use), the scrim those images were contrast-measured through, and a
+/// deeper scrim toward the bottom for the controls.
+///
+/// **2026-09-29:** the ground used to be a plain green gradient with the app's
+/// own mark faintly in the middle, which read as the old app icon on every
+/// card (owner: «خلفيات للأذكار بصورة أيقونة التطبيق القديمة … غيرها لصور
+/// إسلامية حلوة»). The picture changes with the card, so a chapter of several
+/// adhkar is not one static wall.
+class _CardBackground extends ConsumerWidget {
+  /// Picks the photograph: the chapter and the card together.
+  final int seed;
+  const _CardBackground({required this.seed});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final set = ref.watch(quoteBackgroundsProvider).valueOrNull;
+    final scrim = Color(set?.scrimArgb ?? 0xCC071626);
+    final images = set?.images ?? const <QuoteBackground>[];
+    final Widget photo = images.isEmpty
+        ? const SizedBox.expand(key: ValueKey('none'))
+        : Image.asset(
+            images[seed % images.length].asset,
+            key: ValueKey(seed % images.length),
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+            cacheWidth: 900,
+            errorBuilder: (_, _, _) => const SizedBox.expand(),
+          );
     return DecoratedBox(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -208,19 +233,13 @@ class _CardBackground extends StatelessWidget {
         ),
       ),
       child: Stack(
+        fit: StackFit.expand,
         children: [
-          // First-party watermark — the app's own mark, faint and centred.
-          Center(
-            child: Opacity(
-              opacity: 0.05,
-              child: Image.asset(
-                'assets/branding/app_mark.png',
-                width: 320,
-                fit: BoxFit.contain,
-                errorBuilder: (_, _, _) => const SizedBox.shrink(),
-              ),
-            ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 600),
+            child: photo,
           ),
+          ColoredBox(color: scrim),
           // Extra scrim toward the bottom for the controls' legibility.
           const DecoratedBox(
             decoration: BoxDecoration(
@@ -230,7 +249,6 @@ class _CardBackground extends StatelessWidget {
                 colors: [Colors.transparent, Color(0x66000000)],
               ),
             ),
-            child: SizedBox.expand(),
           ),
         ],
       ),
@@ -261,7 +279,9 @@ class _DhikrPage extends StatelessWidget {
             // build «Fonte:» sat at the left of the first line instead of
             // leading the citation.
             ArabicText(
-              item.body,
+              // Qur'an quoted in the book is braced; the ornate brackets are
+              // the mushaf's own way of setting a verse apart.
+              item.body.replaceAll('{ ', '﴿').replaceAll(' }', '﴾'),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontFamily: 'AmiriQuran',
@@ -284,8 +304,7 @@ class _DhikrPage extends StatelessWidget {
                 ),
               ),
               // The hadith this dhikr comes from, graded by name on Dorar
-              // (GitHub build; owner, 2026-09-26). Only a dhikr with a hadith
-              // source gets it: 97 of the 98 in azkar.db, none a bare ayah.
+              // (GitHub build; owner, 2026-09-26).
               DorarCheckButton(
                 text: item.body,
                 color: Colors.white,

@@ -13,7 +13,6 @@ import '../../../adhan/data/adhan_catalog_provider.dart';
 import '../../../channels/data/islamic_channels.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../library/data/book_catalog.dart';
-import '../../../quran/data/mushaf_edition.dart';
 import '../../../quran/data/quran_translation_catalog.dart';
 
 /// The "about" page: who built the app, what version this is, and what it can
@@ -148,27 +147,19 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
   /// The capability list, each line carrying the count its own catalogue
   /// reports right now.
   List<Widget> _capabilityRows() {
-    final editions = ref.watch(mushafEditionsProvider).valueOrNull;
     final translations =
         ref.watch(quranTranslationCatalogProvider).valueOrNull;
     final reciters = ref.watch(recitersProvider).valueOrNull;
     final adhans = ref.watch(adhanCatalogProvider).valueOrNull;
 
-    // The scanned printings, named as their own catalogue names them, so the
-    // sentence can never list a printing the app does not carry.
-    final raster = editions?.where((e) => e.isRaster).toList();
-    final printings = raster
-        ?.map((e) => e.namesByLocale[context.locale.languageCode] ?? e.nameAr)
-        .join('، ');
-
     return [
+      // No count and no list of printings: the app ships one printing, the
+      // Madinah mushaf, and «١ مصاحف / ١ طبعات مصوّرة» read as nonsense
+      // (owner, 2026-09-29).
       _FeatureRow(
         icon: Icons.menu_book_rounded,
-        title: 'about.f_quran'.tr(args: [_n(editions?.length) ?? '—']),
-        subtitle: printings == null
-            ? 'about.f_quran_desc_loading'.tr()
-            : 'about.f_quran_desc'
-                .tr(args: [_n(raster!.length) ?? '—', printings]),
+        title: 'about.f_quran'.tr(),
+        subtitle: 'about.f_quran_desc'.tr(),
       ),
       _FeatureRow(
         icon: Icons.translate_rounded,
@@ -193,6 +184,26 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
         icon: Icons.spa_rounded,
         title: 'about.f_azkar'.tr(),
         subtitle: 'about.f_azkar_desc'.tr(),
+      ),
+      _FeatureRow(
+        icon: Icons.mic_rounded,
+        title: 'about.f_assistant'.tr(),
+        subtitle: 'about.f_assistant_desc'.tr(),
+      ),
+      _FeatureRow(
+        icon: Icons.school_rounded,
+        title: 'about.f_hifz'.tr(),
+        subtitle: 'about.f_hifz_desc'.tr(),
+      ),
+      _FeatureRow(
+        icon: Icons.record_voice_over_rounded,
+        title: 'about.f_tajweed'.tr(),
+        subtitle: 'about.f_tajweed_desc'.tr(),
+      ),
+      _FeatureRow(
+        icon: Icons.mosque_outlined,
+        title: 'about.f_hajj'.tr(),
+        subtitle: 'about.f_hajj_desc'.tr(),
       ),
       _FeatureRow(
         icon: Icons.local_library_rounded,

@@ -953,6 +953,41 @@ device.
 `sciences-v4` → `v5`, so every existing install re-copies the file instead of
 keeping the old one.
 
+## The azkar — «حصن المسلم» is back (owner's order, 2026-09-29)
+
+The owner reversed the 2026-09-17 replacement: «استخدم كتاب حصن المسلم للأذكار
+كلها لأنه شامل أكثر وابقى حطه في المصادر». The reasoning above (the UAE law on
+protected *collections*) is unchanged and is **not** re-litigated here: this is
+the same rights exposure the owner accepted for the personal, sideloaded build
+(see the library ruling of 2026-09-22 in the memory notes: the exposure lives in
+the content, and a Play build would ship without it). Recorded so the next
+session sees that the choice was made knowingly, and by him.
+
+* **Source:** `scripts/azkar_hisn/hisn_elmuslim_asellam.json` =
+  <https://github.com/asellam/HisnElMuslim> `hisn.json`, MIT licence, commit
+  `872764ca013116c905f7fc9c3dc972c27cd37d4a`, SHA-256
+  `b30a448ef40184b0422c40bd3c372bf2b25bfb5b0539fd3699e6b4fba9459d80`. Its README:
+  typed from the printed edition (دار السجلات) and compared with an internet
+  copy by Levenshtein distance. 133 chapters, 302 adhkar, each with `Count` and
+  `Reference`. Credited on the Sources screen.
+* **Why not the older `temp_phase1/hisn_almuslim.json` (rn0x):** its notes sit in
+  a separate array whose length differs from the text array (25 texts, 35
+  notes in the morning chapter), so a reference cannot be paired with its dhikr
+  without guessing. It also has no morning/evening split.
+* **Qur'an inside it (CLAUDE.md 1.2):** 25 braced passages. Each is located in
+  the mushaf by consonant skeleton and written from `quran_local.db`; two that
+  only *name* a surah by its opening («ألم * تنزيل ...») are kept as printed.
+  Book spelling -> mushaf spelling is listed word by word in
+  `scripts/azkar_hisn/quran_orthography_report.txt`; the only non-orthographic
+  difference is «يا أيها» (two words) against the mushaf's «يٰٓأَيُّهَا» (one).
+  `test/azkar_hisn_test.dart` fails the build if a braced passage is not the
+  mushaf's own words.
+* **Rebuild:** `py -3 scripts/build_azkar_hisn.py`, then
+  `py -3 scripts/apply_azkar_titles.py` (chapter titles, 7 languages).
+  The database stamp is `azkar-v2`.
+* **Ruqyah** addresses six adhkar by row id (179, 180, 278, 251, 282, 141) in
+  this table; `test/ruqyah_duas_test.dart` pins their text.
+
 ## How to re-run the measurements in this file
 
 ```bash

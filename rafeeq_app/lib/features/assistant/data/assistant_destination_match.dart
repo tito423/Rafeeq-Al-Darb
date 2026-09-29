@@ -37,13 +37,6 @@ AssistantIntent _matchDestination({
       }
     }
   }
-  // Preserve the owner's earlier command; «شاشة» requests the full editor.
-  if (best == AssistantScreen.prayerAdjustments &&
-      !words.any((w) => bare(w) == 'شاشه')) {
-    best = null;
-    section = 'prayer.adjustments';
-  }
-
   // Any other setting, by its title in any language, opens settings.
   for (final p in settings) {
     if (p.length > bestLen && hasPhrase(clean, [p])) {
@@ -67,6 +60,25 @@ AssistantIntent _matchDestination({
         if (hits == phraseWords.length - 1 && hits > bestHits) {
           section = e.key;
           best = null;
+          bestHits = hits;
+          bestWords = phraseWords.length;
+        }
+      }
+    }
+  }
+
+  // The same tolerance for a screen title: «ضبط المواقيت والتاريخ» is now a
+  // screen only (its settings card was removed on 2026-09-29).
+  if (section == null) {
+    final said = {for (final w in words) bare(w)};
+    var bestHits = best == null ? 0 : bestWords;
+    for (final e in screens.entries) {
+      for (final p in e.value) {
+        final phraseWords = p.split(' ');
+        if (phraseWords.length < 3) continue;
+        final hits = phraseWords.where((w) => said.contains(bare(w))).length;
+        if (hits == phraseWords.length - 1 && hits > bestHits) {
+          best = e.key;
           bestHits = hits;
           bestWords = phraseWords.length;
         }

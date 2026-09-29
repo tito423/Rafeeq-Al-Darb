@@ -28,7 +28,7 @@ void main() {
   late List<int> sectionIds;
 
   setUpAll(() async {
-    final path = File('assets/data/quran_sciences.db').absolute.path;
+    final path = File('assets/data/azkar.db').absolute.path;
     final db = await databaseFactory.openDatabase(path,
         options: OpenDatabaseOptions(readOnly: true));
     final rows = await db.query('azkar_sections', columns: ['id'],
@@ -41,10 +41,8 @@ void main() {
       jsonDecode(File('assets/translations/$loc.json').readAsStringSync())
           as Map<String, dynamic>;
 
-  test('the database has chapters, and not the old book\'s 134', () {
-    expect(sectionIds, isNotEmpty);
-    expect(sectionIds.length, lessThan(134),
-        reason: 'still looks like the Hisn al-Muslim corpus');
+  test('the database holds the 133 chapters of Hisn al-Muslim', () {
+    expect(sectionIds.length, 133);
   });
 
   test('every chapter is named in every locale', () {
@@ -76,9 +74,9 @@ void main() {
   });
 
   test('no locale holds a title for a chapter that no longer exists', () {
-    // The rebuild went from 134 chapters to 18. Keys left behind for the other
-    // 116 would be dead weight shipped to every device, and the next person to
-    // read the file would think those chapters were still there.
+    // Keys left behind by an earlier book would be dead weight shipped to
+    // every device, and the next person to read the file would think those
+    // chapters were still there.
     for (final loc in locales) {
       final sections = (load(loc)['azkar'] as Map<String, dynamic>)['section']
           as Map<String, dynamic>;

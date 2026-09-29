@@ -136,7 +136,7 @@ class IrabReference {
 class AzkarSection {
   final int id;
 
-  /// an-Nawawi's own chapter heading, verbatim, in Arabic.
+  /// The book's own chapter heading, verbatim, in Arabic.
   final String title;
 
   const AzkarSection({required this.id, required this.title});
@@ -156,9 +156,9 @@ class AzkarSection {
   /// passes never reached, and it stayed there because fixing it meant
   /// translating 134 titles of a book that was about to be replaced.
   ///
-  /// The book is replaced now: 18 chapters, keyed `azkar.section.<id>`. A
+  /// The book is «حصن المسلم» now: 133 chapters, keyed `azkar.section.<id>`. A
   /// missing key would render as the raw key on screen (CLAUDE.md trap #8), so
-  /// this falls back to an-Nawawi's Arabic rather than to «azkar.section.7» —
+  /// this falls back to the book's Arabic rather than to «azkar.section.7» —
   /// and `azkar_section_titles_test.dart` fails the build if a key is absent
   /// from any of the seven locales, so the fallback should never be reached.
   String localizedTitle() {
@@ -174,11 +174,15 @@ class AzkarItem {
   final String body;
   final String footnote;
 
+  /// How many times the book says to repeat it (its own `Count`).
+  final int repeat;
+
   const AzkarItem({
     required this.id,
     required this.sectionId,
     required this.body,
     required this.footnote,
+    this.repeat = 1,
   });
 
   factory AzkarItem.fromRow(Map<String, Object?> row) => AzkarItem(
@@ -186,6 +190,7 @@ class AzkarItem {
         sectionId: row['section_id'] as int,
         body: row['body'] as String? ?? '',
         footnote: row['footnote'] as String? ?? '',
+        repeat: (row['repeat'] as int?) ?? 1,
       );
 }
 

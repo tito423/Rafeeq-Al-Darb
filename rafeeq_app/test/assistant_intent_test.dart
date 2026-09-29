@@ -181,8 +181,11 @@ void main() {
   });
 
   test('azkar section commands resolve only real database sections', () {
-    expect(of('افتح الأذكار بعد الصلاة'), 'azkar section 20');
-    expect(of('وريني ما يقول إذا رجع من سفره'), 'azkar section 26');
+    // Hisn al-Muslim's chapters (2026-09-29): 25 is «الأذكار بعد السلام من
+    // الصلاة», 106 is «ذكر الرجوع من السفر».
+    expect(of('افتح الأذكار بعد السلام من الصلاة'), 'azkar section 25');
+    expect(of('افتح الأذكار بعد الصلاة'), 'azkar section 25');
+    expect(of('وريني ذكر الرجوع من السفر'), 'azkar section 106');
     expect(p.parse('افتح ما يقال قبل المذاكرة'), isA<UnknownIntent>());
   });
 
@@ -264,7 +267,7 @@ void main() {
   });
 
   test('a setting opens its own section (owner, 2026-09-27)', () {
-    expect(of('افتح ضبط المواقيت والتاريخ'), 'setting prayer.adjustments');
+    expect(of('افتح ضبط المواقيت والتاريخ'), 'open prayerAdjustments');
     expect(of('يا رفيق افتحلي تذكير صيام السنن'), 'setting fasting.section_title');
     expect(of('افتح لي تذكير صيام السنن'), 'setting fasting.section_title');
     expect(of('ساعة الشاشة الرئيسية'), 'setting home.clock_section');
@@ -279,7 +282,7 @@ void main() {
     expect(of('خدني علي القبله'), 'open qibla');
     // «افتح ضبط المواقيت والتاريخ», as it was heard the same night.
     expect(of(afterWakeWord('يار فيق فتحضط المواقيط والتاريخ')!),
-        'setting prayer.adjustments');
+        'open prayerAdjustments');
   });
 
   test('on this day, today or a hijri date', () {

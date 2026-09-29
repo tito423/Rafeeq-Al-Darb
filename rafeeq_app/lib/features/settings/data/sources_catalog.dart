@@ -95,6 +95,10 @@ final sourceGroups = <(String, List<SourceEntry>)>[
     [
       const SourceEntry('sunnah.com', 'https://sunnah.com', 'about.src_sunnah'),
       const SourceEntry('المكتبة الشاملة', 'https://shamela.ws', 'about.src_shamela'),
+      // The adhkar (owner, 2026-09-29): the whole of Hisn al-Muslim, from the
+      // MIT-licensed transcription in scripts/azkar_hisn/.
+      const SourceEntry('حصن المسلم — asellam/HisnElMuslim',
+          'https://github.com/asellam/HisnElMuslim', 'about.src_hisn'),
       // Named separately from Shamela itself: these are the two edited
       // editions the app's hadith gradings actually come from, and a grading
       // is only worth anything if the reader can see whose it is.

@@ -117,56 +117,151 @@ const azkarCategoryInfo = <AzkarCategory, AzkarCategoryInfo>{
 
 /// Section id → the tiles it appears under.
 ///
-/// **Rewritten 2026-09-17, and the rewrite was overdue by one screen.** This
-/// map used to hold **134** entries — the section numbering of «حصن المسلم»,
-/// with al-Qahtani's own chapter titles as its comments. When `azkar_sections`
-/// was rebuilt from an-Nawawi's «الأذكار» the numbering became 1–18, so every
-/// id from 19 up pointed at nothing and most tiles would have opened **empty**.
+/// **Rebuilt 2026-09-29 on «حصن المسلم»** (owner's order: «استخدم كتاب حصن
+/// المسلم للأذكار كلها لأنه شامل أكثر»), from the 133 chapters of the edition
+/// in `scripts/azkar_hisn/`. The ids are that edition's own order. The book
+/// prints morning and evening as separate chapters (27, 28), so each tile
+/// opens its own list, as the owner asked on 2026-09-17.
 ///
-/// Nothing caught that. `flutter analyze` sees a valid `Map<int, …>`, the test
-/// suite had no opinion, and the ids are plain integers with no referent to
-/// check against. It was found by opening the Adhkar tab and looking, which is
-/// the only thing that ever finds this class of defect.
+/// The grouping is the one the 2026-09-05 pass made by reading every chapter
+/// title (prayer-internal duas under «بعد الصلاة»; clothes, wudu, home,
+/// eating, greetings and the rest under «أدعية مأثورة»), carried over by
+/// title, not by number.
 ///
-/// It was also a **second copy of al-Qahtani's arrangement**, living in Dart
-/// rather than in the database — the thing the whole replacement was for. See
-/// `CONTENT-LICENSES.md`.
-///
-/// `azkar_categories_cover_sections_test.dart` now fails the build when an id
-/// here is absent from the database, or when a chapter in the database appears
-/// under no tile at all.
+/// `azkar_categories_cover_sections_test.dart` fails the build when an id
+/// here is absent from the database, or when a chapter appears under no tile.
 const Map<int, List<AzkarCategory>> azkarSectionCategories = {
-  1: [AzkarCategory.waking], // ما يقول إذا استيقظ من منامه
-  2: [AzkarCategory.narrated], // ما يقول إذا لبس ثوبه
-  3: [AzkarCategory.narrated], // ما يقول إذا لبس ثوبا جديدا
-  4: [AzkarCategory.narrated], // ما يقول لصاحبه إذا رأى عليه ثوبا جديدا
-  5: [AzkarCategory.narrated], // ما يقول عند الخروج من البيت
-  6: [AzkarCategory.narrated], // ما يقول إذا دخل بيته
-  7: [AzkarCategory.narrated], // ما يقول عند دخول الخلاء
-  8: [AzkarCategory.narrated], // ما يقول إذا خرج من الخلاء
-  9: [AzkarCategory.narrated], // ما يقول على وضوئه
-  10: [AzkarCategory.mosque], // ما يقول إذا توجه إلى المسجد
-  11: [AzkarCategory.mosque], // ما يقوله عند دخول المسجد والخروج منه
-  12: [AzkarCategory.narrated], // ما يقوله المريض ويقال عنده
-  13: [AzkarCategory.travel], // ما يقول إذا نزل منزلا
-  14: [AzkarCategory.narrated], // ما يقوله إذا راعه شيء أو فزع
-  // Split in two on 2026-09-17 at the owner's request. an-Nawawi keeps them
-  // in one bab; the morning list opens on «أصبحنا وأصبح الملك لله» and the
-  // evening list on «أمسينا وأمسى الملك لله», and what he says at both times
-  // stands in both lists because that is what his narrations instruct.
-  15: [AzkarCategory.morning], // ما يقال عند الصباح
-  16: [AzkarCategory.evening], // ما يقال عند المساء
-  17: [AzkarCategory.sleep], // ما يقول إذا أراد النوم
-  18: [AzkarCategory.narrated], // ما يقول إذا نزل المطر
-  19: [AzkarCategory.narrated], // التسمية عند الأكل والشرب
-  20: [AzkarCategory.afterPrayer], // الأذكار بعد الصلاة
-  // 2026-09-19, «أدعية السفر قليلة جدًا»: an-Nawawi's travel chapters, each
-  // item with a named source or his grading (Ibn al-Sunni's ungraded ones
-  // left out).
-  21: [AzkarCategory.travel], // ما يقوله إذا ركب دابته
-  22: [AzkarCategory.travel], // أذكاره إذا خرج (التوديع)
-  23: [AzkarCategory.travel], // استحباب طلبه الوصية من أهل الخير
-  24: [AzkarCategory.travel], // تكبير المسافر إذا صعد وتسبيحه إذا هبط
-  25: [AzkarCategory.travel], // ما يدعو به إذا خاف ناسًا
-  26: [AzkarCategory.travel], // ما يقول إذا رجع من سفره
+  1: [AzkarCategory.waking], // أذكار الاستيقاظ من النوم
+  2: [AzkarCategory.narrated], // دعاء لبس الثوب
+  3: [AzkarCategory.narrated], // دعاء لبس الثوب الجديد
+  4: [AzkarCategory.narrated], // الدعاء لمن لبس ثوبا جديدا
+  5: [AzkarCategory.narrated], // ما يقول إذا وضع ثوبه
+  6: [AzkarCategory.narrated], // دعاء دخول الخلاء
+  7: [AzkarCategory.narrated], // دعاء الخروج من الخلاء
+  8: [AzkarCategory.narrated], // الذكر قبل الوضوء
+  9: [AzkarCategory.narrated], // الذكر بعد الفراغ من الوضوء
+  10: [AzkarCategory.narrated], // الذكر عند الخروج من المنزل
+  11: [AzkarCategory.narrated], // الذكر عند دخول المنزل
+  12: [AzkarCategory.mosque], // دعاء الذهاب إلى المسجد
+  13: [AzkarCategory.mosque], // دعاء دخول المسجد
+  14: [AzkarCategory.mosque], // دعاء الخروج من المسجد
+  15: [AzkarCategory.mosque], // أذكار الأذان
+  16: [AzkarCategory.afterPrayer], // دعاء الاستفتاح
+  17: [AzkarCategory.afterPrayer], // دعاء الركوع
+  18: [AzkarCategory.afterPrayer], // دعاء الرفع من الركوع
+  19: [AzkarCategory.afterPrayer], // دعاء السجود
+  20: [AzkarCategory.afterPrayer], // دعاء الجلسة بين السجدتين
+  21: [AzkarCategory.afterPrayer], // دعاء سجود التلاوة
+  22: [AzkarCategory.afterPrayer], // التشهد
+  23: [AzkarCategory.afterPrayer], // الصلاة على النبي صلى الله عليه وسلم بعد التشهد
+  24: [AzkarCategory.afterPrayer], // الدعاء بعد التشهد الأخير وقبل السلام
+  25: [AzkarCategory.afterPrayer], // الأذكار بعد السلام من الصلاة
+  26: [AzkarCategory.afterPrayer], // دعاء صلاة الاستخارة
+  27: [AzkarCategory.morning], // أذكار الصباح
+  28: [AzkarCategory.evening], // أذكار المساء
+  29: [AzkarCategory.sleep], // أذكار النوم
+  30: [AzkarCategory.sleep], // الدعاء إذا تقلب ليلا
+  31: [AzkarCategory.sleep], // دعاء الفزع في النوم ومن بلي بالوحشة
+  32: [AzkarCategory.sleep], // ما يفعل من رأى الرؤيا أو الحلم
+  33: [AzkarCategory.afterPrayer], // دعاء قنوت الوتر
+  34: [AzkarCategory.afterPrayer], // الذكر عقب السلام من الوتر
+  35: [AzkarCategory.narrated], // دعاء الهم والحزن
+  36: [AzkarCategory.narrated], // دعاء الكرب
+  37: [AzkarCategory.narrated], // دعاء لقاء العدو وذي السلطان
+  38: [AzkarCategory.narrated], // دعاء من خاف ظلم السلطان
+  39: [AzkarCategory.narrated], // الدعاء على العدو
+  40: [AzkarCategory.narrated], // ما يقول من خاف قوما
+  41: [AzkarCategory.narrated], // دعاء من أصابه شك في الإيمان
+  42: [AzkarCategory.narrated], // دعاء قضاء الدين
+  43: [AzkarCategory.afterPrayer], // دعاء الوسوسة في الصلاة والقراءة
+  44: [AzkarCategory.narrated], // دعاء من استصعب عليه أمر
+  45: [AzkarCategory.narrated], // ما يقول ويفعل من أذنب ذنبا
+  46: [AzkarCategory.narrated], // دعاء طرد الشيطان ووساوسه
+  47: [AzkarCategory.narrated], // الدعاء حينما يقع ما لا يرضاه أو غلب على أمره
+  48: [AzkarCategory.narrated], // تهنئة المولود له وجوابه
+  49: [AzkarCategory.narrated], // ما يعوذ به الأولاد
+  50: [AzkarCategory.narrated], // الدعاء للمريض في عيادته
+  51: [AzkarCategory.narrated], // فضل عيادة المريض
+  52: [AzkarCategory.narrated], // دعاء المريض الذي يئس من حياته
+  53: [AzkarCategory.narrated], // تلقين المحتضر
+  54: [AzkarCategory.narrated], // دعاء من أصيب بمصيبة
+  55: [AzkarCategory.narrated], // الدعاء عند إغماض الميت
+  56: [AzkarCategory.narrated], // الدعاء للميت في الصلاة عليه
+  57: [AzkarCategory.narrated], // الدعاء للفرط في الصلاة عليه
+  58: [AzkarCategory.narrated], // دعاء التعزية
+  59: [AzkarCategory.narrated], // الدعاء عند إدخال الميت القبر
+  60: [AzkarCategory.narrated], // الدعاء بعد دفن الميت
+  61: [AzkarCategory.narrated], // دعاء زيارة القبور
+  62: [AzkarCategory.narrated], // دعاء الريح
+  63: [AzkarCategory.narrated], // دعاء الرعد
+  64: [AzkarCategory.narrated], // من أدعية الاستسقاء
+  65: [AzkarCategory.narrated], // الدعاء إذا نزل المطر
+  66: [AzkarCategory.narrated], // الذكر بعد نزول المطر
+  67: [AzkarCategory.narrated], // من أدعية الاستصحاء
+  68: [AzkarCategory.narrated], // دعاء رؤية الهلال
+  69: [AzkarCategory.narrated], // الدعاء عند إفطار الصائم
+  70: [AzkarCategory.narrated], // الدعاء قبل الطعام
+  71: [AzkarCategory.narrated], // الدعاء عند الفراغ من الطعام
+  72: [AzkarCategory.narrated], // دعاء الضيف لصاحب الطعام
+  73: [AzkarCategory.narrated], // الدعاء لمن سقاه أو إذا أراد ذلك
+  74: [AzkarCategory.narrated], // الدعاء إذا أفطر عند أهل بيت
+  75: [AzkarCategory.narrated], // دعاء الصائم إذا حضر الطعام ولم يفطر
+  76: [AzkarCategory.narrated], // ما يقول الصائم إذا سابه أحد
+  77: [AzkarCategory.narrated], // الدعاء عند رؤية باكورة الثمر
+  78: [AzkarCategory.narrated], // دعاء العطاس
+  79: [AzkarCategory.narrated], // ما يقال للكافر إذا عطس فحمد الله
+  80: [AzkarCategory.narrated], // الدعاء للمتزوج
+  81: [AzkarCategory.narrated], // دعاء المتزوج وشراء الدابة
+  82: [AzkarCategory.narrated], // الدعاء قبل إتيان الزوجة
+  83: [AzkarCategory.narrated], // دعاء الغضب
+  84: [AzkarCategory.narrated], // دعاء من رأى مبتلى
+  85: [AzkarCategory.narrated], // ما يقال في المجلس
+  86: [AzkarCategory.narrated], // كفارة المجلس
+  87: [AzkarCategory.narrated], // الدعاء لمن قال غفر الله لك
+  88: [AzkarCategory.narrated], // الدعاء لمن صنع إليك معروفا
+  89: [AzkarCategory.narrated], // ما يعصم الله به من الدجال
+  90: [AzkarCategory.narrated], // الدعاء لمن قال إني أحبك في الله
+  91: [AzkarCategory.narrated], // الدعاء لمن عرض عليك ماله
+  92: [AzkarCategory.narrated], // الدعاء لمن أقرض عند القضاء
+  93: [AzkarCategory.narrated], // دعاء الخوف من الشرك
+  94: [AzkarCategory.narrated], // الدعاء لمن قال بارك الله فيك
+  95: [AzkarCategory.narrated], // دعاء كراهية الطيرة
+  96: [AzkarCategory.travel], // دعاء الركوب
+  97: [AzkarCategory.travel], // دعاء السفر
+  98: [AzkarCategory.travel], // دعاء دخول القرية أو البلدة
+  99: [AzkarCategory.travel], // دعاء دخول السوق
+  100: [AzkarCategory.travel], // الدعاء إذا تعس المركوب
+  101: [AzkarCategory.travel], // دعاء المسافر للمقيم
+  102: [AzkarCategory.travel], // دعاء المقيم للمسافر
+  103: [AzkarCategory.travel], // التكبير والتسبيح في سير السفر
+  104: [AzkarCategory.travel], // دعاء المسافر إذا أسحر
+  105: [AzkarCategory.travel], // الدعاء إذا نزل منزلا في سفر أو غيره
+  106: [AzkarCategory.travel], // ذكر الرجوع من السفر
+  107: [AzkarCategory.narrated], // ما يقول من أتاه أمر يسره أو يكرهه
+  108: [AzkarCategory.narrated], // فضل الصلاة على النبي صلى الله عليه وسلم
+  109: [AzkarCategory.narrated], // إفشاء السلام
+  110: [AzkarCategory.narrated], // كيف يرد السلام على الكافر إذا سلم
+  111: [AzkarCategory.narrated], // الدعاء عند صياح الديك ونهيق الحمار
+  112: [AzkarCategory.narrated], // الدعاء عند سماع نباح الكلاب بالليل
+  113: [AzkarCategory.narrated], // الدعاء لمن سببته
+  114: [AzkarCategory.narrated], // ما يقول المسلم إذا مدح المسلم
+  115: [AzkarCategory.narrated], // ما يقول المسلم إذا زكي
+  116: [AzkarCategory.narrated], // كيف يلبي المحرم في الحج أو العمرة
+  117: [AzkarCategory.narrated], // التكبير إذا أتى الركن الأسود
+  118: [AzkarCategory.narrated], // الدعاء بين الركن اليماني والحجر الأسود
+  119: [AzkarCategory.narrated], // دعاء الوقوف على الصفا والمروة
+  120: [AzkarCategory.narrated], // الدعاء يوم عرفة
+  121: [AzkarCategory.narrated], // الذكر عند المشعر الحرام
+  122: [AzkarCategory.narrated], // التكبير عند رمي الجمار مع كل حصاة
+  123: [AzkarCategory.narrated], // دعاء التعجب والأمر السار
+  124: [AzkarCategory.narrated], // ما يفعل من أتاه أمر يسره
+  125: [AzkarCategory.narrated], // ما يقول من أحس وجعا في جسده
+  126: [AzkarCategory.narrated], // دعاء من خشي أن يصيب شيئا بعينه
+  127: [AzkarCategory.narrated], // ما يقال عند الفزع
+  128: [AzkarCategory.narrated], // ما يقول عند الذبح أو النحر
+  129: [AzkarCategory.narrated], // ما يقول لرد كيد مردة الشياطين
+  130: [AzkarCategory.narrated], // الاستغفار والتوبة
+  131: [AzkarCategory.narrated], // فضل التسبيح والتحميد، والتهليل، والتكبير
+  132: [AzkarCategory.narrated], // كيف كان النبي صلى الله عليه وسلم يسبح؟
+  133: [AzkarCategory.narrated], // من أنواع الخير والآداب الجامعة
 };

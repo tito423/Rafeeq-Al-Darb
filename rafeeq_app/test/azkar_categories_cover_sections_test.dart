@@ -26,7 +26,7 @@ void main() {
   late Set<int> inDb;
 
   setUpAll(() async {
-    final path = File('assets/data/quran_sciences.db').absolute.path;
+    final path = File('assets/data/azkar.db').absolute.path;
     final db = await databaseFactory.openDatabase(path,
         options: OpenDatabaseOptions(readOnly: true));
     final rows = await db.query('azkar_sections', columns: ['id']);
