@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~21:45 (09-29, Opus) V3.71.0 PUBLISHED AND VERIFIED: tag v3.71.0 = HEAD 9fd3d04b (targets master), asset RafeeqAlDarb-v3.71.0.apk 315,087,828 B, SHA-256 4985311F02A41AAF13494BECF403C6BE37F3402D6BD282BF93684D3EC36CE957 = GitHub digest = full re-download; range 206; not draft/prerelease; aapt2 versionCode 85 / versionName 3.71.0; sherpa ORT 1.28.2 on all three ABIs; rotated signing verified. Built with the emulator OFF. v3.70.0 release and tag deleted (ref API 404); v3.51.0 and content-* kept. NEXT: owner tries 3.71.0 on his phone (kids path, Home backgrounds). Not yet run on a real phone.
+
 ~20:20 (09-29, Opus) OWNER REJECTED the star-panel photo behind the hadith text («سيئة جدا … منغمشة») and said keep sunan/quote as they were, fix only hadith, and give EVERY Home card a calm background. Done + SEEN light and dark: new core/widgets/calm_card_ground.dart (accent wash, faint corner khatam fading toward text, star band along the top edge, nothing under words) on hadith, continue-reading, khatma, selected-surahs; sunan (muqarnas band) and quote (ornament scans) unchanged. Worst secondary-text contrast on the calm ground 5.08 : 1 (light). analyze clean, 667 tests. NEXT EXACT: owner reviews the screenshots sent; then ask about 3.71.0.
 
 ~20:05 (09-29, Opus) HOME BACKGROUNDS DONE AND SEEN (dark, RGB, light, landscape): prayer card = ONE photo of the shown prayer under the whole card (next prayer + slides), washed in the theme's hero colours (dark 0.76/0.83/0.87 + white text; light 0.80/0.84/0.88 paper wash + dark text); slides are glass chips (no per-slide photo), next/focused filled with the prayer colour. scripts/check_prayer_card_contrast.py: every tone >= 4.5 (icons 3) on all 6 photos. Sunan, hadith-of-the-day, quote-of-the-day cards: faint ornament scans (core/widgets/ornament_backdrop.dart) over the theme's own ground; muqarnas top band cropped to assets/card_ornaments/ (chain read as a crack; CC0, SOURCES.json); hadith drawn calmer; scripts/check_ornament_card_contrast.py all >= 4.5. analyze clean, 667 tests. NEXT EXACT: report to owner, ask about release 3.71.0.
@@ -856,6 +858,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-29 21:43 - Record verified v3.71.0 GitHub release (tag == HEAD, SHA matches re-download); v3.70.0 removed
 - 2026-09-29 21:37 - Bump to 3.71.0+85 for release (pubspec + About); analyze clean, 667 tests
 - 2026-09-29 20:20 - Hadith card: calm ground instead of the rejected star-panel photo; calm ground on continue-reading, khatma, selected-surahs; sunan and quote kept
 - 2026-09-29 19:45 - Kids corner seen on emulator; kids-only (journey tile out), toast/remaining-count/stage-4/path-order texts fixed, rounded card shadows
