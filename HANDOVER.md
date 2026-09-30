@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 20:39 — IN PROGRESS — resume here**
+**2026-09-30 20:51 — IN PROGRESS — resume here**
 
-Ayah by voice: marked + whole verse scrolled on screen; card opens on tafsir/translation; ordinal/article numbers; seen on emulator
+Tasmee with headset: Rafeeq releases the mic and route BEFORE the tasmee routes, and stays off while it records (it used to restore the route mid-ayah); ordering seen on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

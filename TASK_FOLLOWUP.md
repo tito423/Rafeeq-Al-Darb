@@ -13,6 +13,9 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~20:50 (09-30) (A) TASMEE+HEADSET: cause found in code - Rafeeq (headset option on) noticed the tasmee recording within ~1 s, stopped itself and restoreAudioRoute() cleared the call route under the tasmee -> only the first word recorded («فيه» of 43:6). FIX: tasmee sets tasmeeRecordingProvider + awaits RafeeqEar.stop() BEFORE routing; wake listener never reopens while that flag is set. SEEN on emulator (dumpsys audio): Rafeeq stop 20:48:51.350 -> tasmee MIC 20:48:51.599, no overlap for 38 s; Rafeeq back 0.9 s after tasmee ended. A real Bluetooth headset is NOT testable here (no BT on the emulator) - owner to re-test.
+NEXT: (B) kids corner whole Qur'an + «أشبال الحفاظ» + 3 named stages; (C) owner's newest: hifz/tasmee overhaul - progressive hiding / first-letter hints, evidence-based memorization methods (research online), and re-evaluate the tasmee model (tarteel whisper-tiny) against better ones.
+
 ~20:40 (09-30) DONE + SEEN (emulator, signed debug): «افتح سورة الإسراء آية سبعة» -> 17:7 marked; paper view highlighted; text view scrolls so the WHOLE verse shows (new end-of-verse check, measured top 697/bottom 889/viewport 814 -> scrolled). «افتح تفسير آية الكرسي» -> card on التفسير; «ترجمة الآية خمسة من سورة البقرة» -> card on الترجمة (2:5). Numbers with ال and ordinals («آية السبع», «العاشرة»); «الكرسيي/الكرس/الكورسي». 684 tests pass.
 NEW FROM OWNER (queued, in order): (A) tasmee with HEADSET mic heard only «فيه» of 43:6's six words (his screenshot, v3.73.0, real phone) - investigate tasmee Bluetooth path; (B) kids corner: extend to the whole Qur'an, rename «الحفاظ» track to e.g. «أشبال الحفاظ», then 3 more named stages covering to the end.
 
@@ -931,6 +934,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 20:51 - Tasmee with headset: Rafeeq releases the mic and route BEFORE the tasmee routes, and stays off while it records (it used to restore the route mid-ayah); ordering seen on emulator
 - 2026-09-30 20:39 - Ayah by voice: marked + whole verse scrolled on screen; card opens on tafsir/translation; ordinal/article numbers; seen on emulator
 - 2026-09-30 20:22 - Rafeeq: an ayah asked for is marked and scrolled to; ayah card opens on tafsir/translation/irab by voice; dialect verbs/fillers (Gulf/Levant/Maghreb/Iraq); 15 phrasings tested; NOT yet seen on emulator
 - 2026-09-30 20:12 - Rafeeq survives the app being closed: listen service holds AudioService so audio_service stops destroying the engine; mic permission via permission_handler; seen after Back-exit and recents swipe

@@ -25,6 +25,7 @@ import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/user_error.dart';
 import '../../../../core/widgets/arabic_text.dart';
+import '../../../assistant/data/rafeeq_ear.dart';
 import '../../data/hifz_store.dart';
 import '../../data/tasmee_engine.dart';
 import '../../data/tasmee_mic.dart';
@@ -163,7 +164,16 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     // its listeners), the Qur'an player and the book reader were left
     // sounding into the microphone (`AudioExclusive`).
     await AudioExclusive.silenceAll();
+    // «رفيق» off the microphone FIRST, and kept off (the flag) until this
+    // recording ends. With its headset option on it holds the call route, and
+    // when it noticed this recording a second later it closed itself and
+    // RESTORED the route - pulling the headset out from under the tasmee'
+    // mid-ayah: «نطقت الاية كاملة من ميكروفون السماعه ومش لقطت الا ايه
+    // وحدة» (owner, v3.73.0, 43:6 - one word of six heard, 2026-09-30).
+    _setRecording(true);
+    await RafeeqEar.instance.stop();
     if (!await _recorder.hasPermission()) {
+      _setRecording(false);
       if (mounted) setState(() => _error = 'tasmee.needs_mic'.tr());
       return;
     }

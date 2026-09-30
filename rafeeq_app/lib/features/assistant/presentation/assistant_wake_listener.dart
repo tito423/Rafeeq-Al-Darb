@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app/navigation.dart';
+import '../../hifz/presentation/widgets/tasmee_panel.dart'
+    show tasmeeRecordingProvider;
 import '../../shamela/data/shamela_library.dart';
 import '../data/assistant_intent.dart';
 import '../data/assistant_settings.dart';
@@ -135,7 +137,9 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
               _ear.viaBluetooth) {
         await _ear.stop();
       }
-      final others = ((busy['recording'] as int?) ?? 0) > ours;
+      // The tasmee' is recording (or about to): never reopen under it.
+      final others = ((busy['recording'] as int?) ?? 0) > ours ||
+          ref.read(tasmeeRecordingProvider);
       final allowed = await Permission.microphone.isGranted;
       final quiet = !call && busy['playing'] != true && !others &&
           (_foreground || _serviceOn) && allowed;
