@@ -80,6 +80,11 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   Timer? _adhanWatch;
   String? _wavPath;
 
+  /// Words already heard while the reader is still reciting.
+  List<bool> _live = const [];
+  List<String> _liveWords = const [];
+  Timer? _liveTick;
+
   _Phase _phase = _Phase.idle;
   String? _error;
   String? _heard;
@@ -138,6 +143,8 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     }
     _cap?.cancel();
     _adhanWatch?.cancel();
+    _liveTick?.cancel();
+    _engine.stopLive();
     _amp?.cancel();
     _recorder.dispose();
     // Never leave the phone on the call route behind a closed screen.
@@ -233,6 +240,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _adhanWatch = Timer.periodic(const Duration(seconds: 1), (_) async {
       if ((await AdhanNative.state()).playing) await _cancelRecording();
     });
+    unawaited(_startLive(path));
     _setRecording(true);
     widget.onRecording?.call(true);
     setState(() {
@@ -242,11 +250,46 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     });
   }
 
+  Future<void> _startLive(String recPath) async {
+    // The emulator's microphone hears nothing: a pushed test clip stands in
+    // for the growing recording (see _testClip).
+    var path = recPath;
+    try {
+      final d = await getExternalStorageDirectory();
+      final t = d == null ? null : File(p.join(d.path, 'tasmee_test.wav'));
+      if (t != null && t.existsSync()) path = t.path;
+    } catch (_) {}
+    _liveWords = tasmeeWords(widget.ayahText);
+    _live = List<bool>.filled(_liveWords.length, false);
+    _liveTick?.cancel();
+    unawaited(_engine.startLive());
+    _liveTick = Timer.periodic(const Duration(milliseconds: 1200), (_) async {
+      if (_phase != _Phase.recording) return;
+      final heard = await _engine.liveTail(path);
+      if (heard == null || !mounted || _phase != _Phase.recording) return;
+      final flags = [..._live];
+      TasmeeEngine.liveMerge(
+        ayahText: widget.ayahText,
+        heard: heard,
+        flags: flags,
+        surahId: widget.surahId,
+        ayahNumber: widget.ayahNumber,
+      );
+      setState(() => _live = flags);
+    });
+  }
+
+  void _endLive() {
+    _liveTick?.cancel();
+    _engine.stopLive();
+  }
+
   /// Mic closed, recording discarded, nothing marked.
   Future<void> _cancelRecording() async {
     if (_phase != _Phase.recording) return;
     _cap?.cancel();
     _adhanWatch?.cancel();
+    _endLive();
     await _recorder.stop();
     await _amp?.cancel();
     _amp = null;
@@ -272,6 +315,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     setState(() => _phase = _Phase.thinking);
     _cap?.cancel();
     _adhanWatch?.cancel();
+    _endLive();
     await _recorder.stop();
     await _amp?.cancel();
     _amp = null;
@@ -462,6 +506,40 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              if (_live.isNotEmpty)
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    runSpacing: 6,
+                    children: [
+                      for (var i = 0; i < _liveWords.length; i++)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: _live[i]
+                                ? Colors.green.withValues(alpha: 0.18)
+                                : null,
+                          ),
+                          child: ArabicText(
+                            _liveWords[i],
+                            style: TextStyle(
+                              fontFamily: 'KFGQPCHafs',
+                              fontSize: 19,
+                              height: 1.8,
+                              // a word appears only once it is heard, so the
+                              // screen never gives the ayah away
+                              color: _live[i] ? null : Colors.transparent,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               const SizedBox(height: 8),
             ],
             switch (_phase) {

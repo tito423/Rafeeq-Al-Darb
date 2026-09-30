@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 21:59 — IN PROGRESS — resume here**
+**2026-09-30 22:13 — IN PROGRESS — resume here**
 
-Handover 2026-09-30 ~22:10: verified (689 tests, hosted 9/9, 2,256 keys x7), NEXT_PROMPT/NEXT_SESSION_PROMPT rewritten; master unreleased past v3.73.0 by owner order
+Live tasmee: persistent sherpa worker decodes the tail of the growing WAV every 1.2 s and words light as heard (emulator 222-249 ms per 4.4 s clip, 4/4 green; growth of the file on a real phone unverified)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

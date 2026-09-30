@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~22:25 (09-30, Sonnet) LIVE TASMEE built + SEEN on emulator: TasmeeEngine.startLive/liveTail/stopLive = ONE long-lived sherpa worker isolate; every 1.2 s the panel decodes the last 10 s of the WAV the recorder is still writing (no second recorder, headset route untouched) and TasmeeEngine.liveMerge lights words (monotone, only words from last-heard-3 on). Words appear only once heard (ayah stays hidden in hifz). Emulator with tasmee_test.wav (Abdulbasit 1:1): decode 222-249 ms for 4.4 s clip, 4/4 words green live. UNVERIFIED: a clip that GROWS (emulator mic is silent) - whether record's WAV file is flushed to disk mid-recording on a real phone, and decode time of a 10 s window on a phone. Test: test/tasmee_live_test.dart; 691 tests. NEXT: FSRS in hifz_store.dart; ask owner to test live tasmee on his phone.
+
 ~22:10 (09-30, Opus) HANDOVER («جهّز الدنيا»; owner: «مش تنشر»). Verified now: analyze clean, 689 tests, hosted 9/9 206, 7 x 2,256 keys, 239 books, hadith 67,153/45,219 graded. v3.73.0 published = 190a5403; master unreleased past it. NEXT EXACT: NEXT_PROMPT.md step 1 (live tasmee), then FSRS, then kids stories (licensed sources only).
 
 ~21:45 (09-30) (C2) TASMEE MODEL SWAPPED, SEEN: benchmark (scripts/asr_candidates_2026-09-30.txt, 750 words, 6 reciters): tiny 89.3% clean / 84.9% phone band (Banna 2:255 band 3/50); FastConformer 91.3 / 97.1 (48/50); omnilingual 80.9 / 80.1. Cause of FC's band gain = 3.4 kHz low-pass (fc_band_cause_2026-09-30.txt: 97.6%); the app's own RBJ biquad measured 97.5% (measure_fc_biquad.py). TasmeeEngine now = sherpa FastConformer + lowPass3400 (tasmee_audio.dart), on RafeeqVoicePack.accurate (174 MB, shared with Rafeeq); old 78 MB whisper model deleted from the phone on first check; whisper_flutter_new REMOVED from pubspec. Test hook: tasmee_test.wav in external files replaces the recording. Emulator: Sudais 112:1 phone band -> 4/4 green, level stepped up to «أوائل الكلمات». 689 tests.
@@ -947,6 +949,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 22:13 - Live tasmee: persistent sherpa worker decodes the tail of the growing WAV every 1.2 s and words light as heard (emulator 222-249 ms per 4.4 s clip, 4/4 green; growth of the file on a real phone unverified)
 - 2026-09-30 21:59 - Handover 2026-09-30 ~22:10: verified (689 tests, hosted 9/9, 2,256 keys x7), NEXT_PROMPT/NEXT_SESSION_PROMPT rewritten; master unreleased past v3.73.0 by owner order
 - 2026-09-30 21:44 - Tasmee recogniser: whisper-tiny -> FastConformer + 3.4 kHz low-pass (97.5% vs 89.3% of 750 words; headset band 97.1% vs 84.9%); shares Rafeeq's Arabic pack; whisper_flutter_new removed; seen on emulator
 - 2026-09-30 21:24 - Hifz: diminishing-cues levels (first letters, every other word, first word, from memory), hint, ayah hidden while reciting, level follows the tasmee score; seen on emulator

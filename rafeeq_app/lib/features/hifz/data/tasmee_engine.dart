@@ -106,6 +106,115 @@ class TasmeeEngine {
     return Isolate.run(() => _decode(wavPath, dir));
   }
 
+  // ---- live following -------------------------------------------------
+  //
+  // While the reader recites, the WAV file the recorder is writing is read
+  // from its tail every second or so and decoded by ONE long-lived worker
+  // isolate that keeps the recogniser loaded (building it per call costs more
+  // than decoding). The final score is still computed from the whole file
+  // after «stop»; this only lets the words light up while he recites.
+
+  Isolate? _liveIso;
+  SendPort? _liveSend;
+  ReceivePort? _liveRecv;
+  Completer<String>? _liveWait;
+
+  Future<void> startLive() async {
+    if (_liveIso != null) return;
+    if (!await isInstalled()) return;
+    final dir = (await _pack.dir()).path;
+    final recv = ReceivePort();
+    final ready = Completer<SendPort>();
+    recv.listen((m) {
+      if (m is SendPort) {
+        ready.complete(m);
+      } else if (m is String) {
+        _liveWait?.complete(m);
+        _liveWait = null;
+      }
+    });
+    _liveRecv = recv;
+    _liveIso = await Isolate.spawn(_liveMain, (recv.sendPort, dir));
+    _liveSend = await ready.future;
+  }
+
+  /// Text heard in the last [seconds] of the growing WAV at [wavPath]; null
+  /// when a previous request is still running (the caller skips the tick).
+  Future<String?> liveTail(String wavPath, {int seconds = 10}) async {
+    final send = _liveSend;
+    if (send == null || _liveWait != null) return null;
+    final c = _liveWait = Completer<String>();
+    send.send((wavPath, seconds));
+    return c.future;
+  }
+
+  void stopLive() {
+    _liveIso?.kill(priority: Isolate.immediate);
+    _liveIso = null;
+    _liveSend = null;
+    _liveRecv?.close();
+    _liveRecv = null;
+    if (_liveWait?.isCompleted == false) _liveWait!.complete('');
+    _liveWait = null;
+  }
+
+  static void _liveMain((SendPort, String) a) {
+    so.initBindings();
+    final rp = ReceivePort();
+    a.$1.send(rp.sendPort);
+    final rec = so.OfflineRecognizer(so.OfflineRecognizerConfig(
+      model: so.OfflineModelConfig(
+        nemoCtc: so.OfflineNemoEncDecCtcModelConfig(
+            model: p.join(a.$2, 'model.int8.onnx')),
+        tokens: p.join(a.$2, 'tokens.txt'),
+        numThreads: 2,
+        debug: false,
+      ),
+    ));
+    rp.listen((m) {
+      final (path, seconds) = m as (String, int);
+      var text = '';
+      try {
+        text = _decodeTail(rec, path, seconds);
+      } catch (_) {}
+      a.$1.send(text);
+    });
+  }
+
+  /// The PCM after the header, cut to the last [seconds]; a half-written
+  /// sample at the end is ignored.
+  static String _decodeTail(so.OfflineRecognizer rec, String path, int seconds) {
+    final f = File(path);
+    final len = f.lengthSync();
+    if (len < 44 + 16000) return ''; // under half a second
+    final want = seconds * 32000;
+    final from = len - 44 > want ? 44 + ((len - 44 - want) ~/ 2) * 2 : 44;
+    final raf = f.openSync();
+    final Uint8List bytes;
+    try {
+      raf.setPositionSync(from);
+      bytes = raf.readSync(len - from);
+    } finally {
+      raf.closeSync();
+    }
+    final n = bytes.length ~/ 2;
+    final bd = ByteData.sublistView(bytes);
+    final x = Float32List(n);
+    for (var i = 0; i < n; i++) {
+      x[i] = bd.getInt16(i * 2, Endian.little) / 32768.0;
+    }
+    final y = lowPass3400(x);
+    final padded = Float32List(y.length + 12000)..setAll(4000, y);
+    final s = rec.createStream();
+    try {
+      s.acceptWaveform(samples: padded, sampleRate: 16000);
+      rec.decode(s);
+      return rec.getResult(s).text;
+    } finally {
+      s.free();
+    }
+  }
+
   static String _decode(String wavPath, String dir) {
     so.initBindings();
     final x = lowPass3400(wavSamples(File(wavPath).readAsBytesSync()));
@@ -129,6 +238,38 @@ class TasmeeEngine {
       s.free();
       rec.free();
     }
+  }
+
+  /// Live marking: [flags] (one per ayah word, never turned off) gains the
+  /// words found in [heard], the text of the last seconds. Only the words from
+  /// a little before the last one already heard are compared, so what has
+  /// scrolled out of the window cannot be marked missed or re-matched to
+  /// something later. Returns the number of words heard so far.
+  static int liveMerge({
+    required String ayahText,
+    required String heard,
+    required List<bool> flags,
+    int surahId = 0,
+    int ayahNumber = 0,
+  }) {
+    final expected = tasmeeWords(ayahText);
+    if (flags.length != expected.length) return 0;
+    final last = flags.lastIndexOf(true);
+    final start = last < 0 ? 0 : (last - 3 < 0 ? 0 : last - 3);
+    final said = tasmeeWords(heard);
+    if (said.isEmpty) return flags.where((f) => f).length;
+    final letters = start == 0 && expected.isNotEmpty
+        ? _asRecited(expected[0], surahId, ayahNumber)
+        : null;
+    final (got, _) = _align(
+      [for (final w in expected.sublist(start)) _fold(w)],
+      [for (final w in said) _fold(w)],
+      letterNames: letters?.split(' ').map(_fold).toList(),
+    );
+    for (var i = 0; i < got.length; i++) {
+      if (got[i]) flags[start + i] = true;
+    }
+    return flags.where((f) => f).length;
   }
 
   /// Compares what was heard with the ayah, word by word.
