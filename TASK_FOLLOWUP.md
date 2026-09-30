@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~22:10 (09-30, Opus) HANDOVER («جهّز الدنيا»; owner: «مش تنشر»). Verified now: analyze clean, 689 tests, hosted 9/9 206, 7 x 2,256 keys, 239 books, hadith 67,153/45,219 graded. v3.73.0 published = 190a5403; master unreleased past it. NEXT EXACT: NEXT_PROMPT.md step 1 (live tasmee), then FSRS, then kids stories (licensed sources only).
+
 ~21:45 (09-30) (C2) TASMEE MODEL SWAPPED, SEEN: benchmark (scripts/asr_candidates_2026-09-30.txt, 750 words, 6 reciters): tiny 89.3% clean / 84.9% phone band (Banna 2:255 band 3/50); FastConformer 91.3 / 97.1 (48/50); omnilingual 80.9 / 80.1. Cause of FC's band gain = 3.4 kHz low-pass (fc_band_cause_2026-09-30.txt: 97.6%); the app's own RBJ biquad measured 97.5% (measure_fc_biquad.py). TasmeeEngine now = sherpa FastConformer + lowPass3400 (tasmee_audio.dart), on RafeeqVoicePack.accurate (174 MB, shared with Rafeeq); old 78 MB whisper model deleted from the phone on first check; whisper_flutter_new REMOVED from pubspec. Test hook: tasmee_test.wav in external files replaces the recording. Emulator: Sudais 112:1 phone band -> 4/4 green, level stepped up to «أوائل الكلمات». 689 tests.
 NEXT: live word-by-word following (persistent worker), FSRS; then (D) kids stories (sources research).
 
@@ -945,6 +947,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 21:59 - Handover 2026-09-30 ~22:10: verified (689 tests, hosted 9/9, 2,256 keys x7), NEXT_PROMPT/NEXT_SESSION_PROMPT rewritten; master unreleased past v3.73.0 by owner order
 - 2026-09-30 21:44 - Tasmee recogniser: whisper-tiny -> FastConformer + 3.4 kHz low-pass (97.5% vs 89.3% of 750 words; headset band 97.1% vs 84.9%); shares Rafeeq's Arabic pack; whisper_flutter_new removed; seen on emulator
 - 2026-09-30 21:24 - Hifz: diminishing-cues levels (first letters, every other word, first word, from memory), hint, ayah hidden while reciting, level follows the tasmee score; seen on emulator
 - 2026-09-30 21:11 - Kids corner to the whole Qur'an (8 stages, «طلائع الحفّاظ», 114 badge); Rafeeq opens kids corner/journey/game/adhkar listening/diag/stages by voice
