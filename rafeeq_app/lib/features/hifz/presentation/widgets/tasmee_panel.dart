@@ -143,8 +143,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     }
     _cap?.cancel();
     _adhanWatch?.cancel();
-    _liveTick?.cancel();
-    _engine.stopLive();
+    _endLive();
     _amp?.cancel();
     _recorder.dispose();
     // Never leave the phone on the call route behind a closed screen.
@@ -240,7 +239,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _adhanWatch = Timer.periodic(const Duration(seconds: 1), (_) async {
       if ((await AdhanNative.state()).playing) await _cancelRecording();
     });
-    unawaited(_startLive(path));
+    _startLive(path);
     _setRecording(true);
     widget.onRecording?.call(true);
     setState(() {
@@ -250,38 +249,71 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     });
   }
 
-  Future<void> _startLive(String recPath) async {
-    // The emulator's microphone hears nothing: a pushed test clip stands in
-    // for the growing recording (see _testClip).
+  /// Starts following the recitation. Everything that must be undone is
+  /// set up synchronously, so a «stop» a moment later always finds it.
+  void _startLive(String recPath) {
+    _liveWords = tasmeeDisplayWords(widget.ayahText);
+    _live = List<bool>.filled(tasmeeWords(widget.ayahText).length, false);
+    if (_liveWords.length != _live.length) _live = const [];
     var path = recPath;
-    try {
-      final d = await getExternalStorageDirectory();
-      final t = d == null ? null : File(p.join(d.path, 'tasmee_test.wav'));
-      if (t != null && t.existsSync()) path = t.path;
-    } catch (_) {}
-    _liveWords = tasmeeWords(widget.ayahText);
-    _live = List<bool>.filled(_liveWords.length, false);
     _liveTick?.cancel();
+    _feed?.cancel();
     unawaited(_engine.startLive());
+    unawaited(_feedTestClip().then((f) {
+      if (f != null && _phase == _Phase.recording) path = f;
+    }));
     _liveTick = Timer.periodic(const Duration(milliseconds: 1200), (_) async {
-      if (_phase != _Phase.recording) return;
+      if (_phase != _Phase.recording || _live.isEmpty) return;
       final heard = await _engine.liveTail(path);
       if (heard == null || !mounted || _phase != _Phase.recording) return;
-      final flags = [..._live];
-      TasmeeEngine.liveMerge(
+      final r = TasmeeEngine.compare(
         ayahText: widget.ayahText,
         heard: heard,
-        flags: flags,
         surahId: widget.surahId,
         ayahNumber: widget.ayahNumber,
       );
-      setState(() => _live = flags);
+      if (r.heardWord.length == _live.length) {
+        setState(() => _live = r.heardWord);
+      }
     });
   }
 
-  void _endLive() {
+  /// The emulator's microphone hears nothing. A pushed `tasmee_test.wav`
+  /// (see [_testClip]) is written into a second file at the pace it was
+  /// recited - header first, then a quarter second of samples at a time -
+  /// so the live path reads a file that GROWS, as the recorder's does.
+  Timer? _feed;
+  Future<String?> _feedTestClip() async {
+    try {
+      final d = await getExternalStorageDirectory();
+      final t = d == null ? null : File(p.join(d.path, 'tasmee_test.wav'));
+      if (t == null || !t.existsSync()) return null;
+      final bytes = await t.readAsBytes();
+      final out = File(p.join((await getTemporaryDirectory()).path,
+          'tasmee_live_feed.wav'));
+      await out.writeAsBytes(bytes.sublist(0, 44));
+      var at = 44;
+      _feed = Timer.periodic(const Duration(milliseconds: 250), (tm) {
+        if (at >= bytes.length || _phase != _Phase.recording) {
+          tm.cancel();
+          return;
+        }
+        final end = (at + 8000).clamp(0, bytes.length);
+        out.writeAsBytesSync(bytes.sublist(at, end), mode: FileMode.append);
+        at = end;
+      });
+      return out.path;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// [keepWorker]: after «stop» the final decode reuses the live worker,
+  /// which then lets itself go; on a cancel it is let go here.
+  void _endLive({bool keepWorker = false}) {
     _liveTick?.cancel();
-    _engine.stopLive();
+    _feed?.cancel();
+    if (!keepWorker) unawaited(_engine.stopLive());
   }
 
   /// Mic closed, recording discarded, nothing marked.
@@ -315,7 +347,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     setState(() => _phase = _Phase.thinking);
     _cap?.cancel();
     _adhanWatch?.cancel();
-    _endLive();
+    _endLive(keepWorker: true);
     await _recorder.stop();
     await _amp?.cancel();
     _amp = null;
@@ -507,39 +539,6 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                 ],
               ),
               const SizedBox(height: 8),
-              if (_live.isNotEmpty)
-                Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    runSpacing: 6,
-                    children: [
-                      for (var i = 0; i < _liveWords.length; i++)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: _live[i]
-                                ? Colors.green.withValues(alpha: 0.18)
-                                : null,
-                          ),
-                          child: ArabicText(
-                            _liveWords[i],
-                            style: TextStyle(
-                              fontFamily: 'KFGQPCHafs',
-                              fontSize: 19,
-                              height: 1.8,
-                              // a word appears only once it is heard, so the
-                              // screen never gives the ayah away
-                              color: _live[i] ? null : Colors.transparent,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
               const SizedBox(height: 8),
             ],
             switch (_phase) {
@@ -559,6 +558,45 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                 label: Text('tasmee.start'.tr()),
               ),
             },
+              // Tarteel-style: each word appears once it is heard, in the
+              // ayah's own spelling. Nothing past the furthest word heard is
+              // drawn - not even its width - so the covered ayah is not
+              // given away; a word skipped before it shows as «…». Below
+              // «تم», so the words never push the stop button down.
+              if (_phase == _Phase.recording && _live.contains(true)) ...[
+                const SizedBox(height: 12),
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    runSpacing: 6,
+                    children: [
+                      for (var i = 0; i <= _live.lastIndexOf(true); i++)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: _live[i]
+                                ? Colors.green.withValues(alpha: 0.12)
+                                : null,
+                          ),
+                          child: ArabicText(
+                            _live[i] ? _liveWords[i] : '…',
+                            style: const TextStyle(
+                              fontFamily: 'KFGQPCHafs',
+                              fontSize: 19,
+                              height: 1.8,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             if (_result case final r?) ...[
               const SizedBox(height: 12),
               Text(

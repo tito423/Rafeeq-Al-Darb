@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 22:13 — IN PROGRESS — resume here**
+**2026-09-30 22:39 — IN PROGRESS — resume here**
 
-Live tasmee: persistent sherpa worker decodes the tail of the growing WAV every 1.2 s and words light as heard (emulator 222-249 ms per 4.4 s clip, 4/4 green; growth of the file on a real phone unverified)
+Tasmee live review - show the ayah as printed not the folded text, stop the worker by message so the model is freed, commit the transcript by token timestamps so no gaps, bounded decode span, words below the stop button. 2-255 live 49 of 50, final 50 of 50 on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

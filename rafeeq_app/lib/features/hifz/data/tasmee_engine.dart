@@ -33,6 +33,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import '../../assistant/data/rafeeq_voice_pack.dart';
+import 'hifz_mask.dart';
 import 'tasmee_audio.dart';
 
 /// What the recogniser costs to download: the Arabic FastConformer pack.
@@ -43,7 +44,8 @@ int get tasmeeDownloadBytes => RafeeqVoicePack.accurate.totalBytes;
 const tasmeeMaxSeconds = 120;
 
 class TasmeeResult {
-  /// The ayah's own words, in order — what the panel prints back.
+  /// The ayah's own words as printed (diacritics, pause marks and all), one
+  /// per compared word - what the panel prints back.
   final List<String> words;
 
   /// One flag per word of [words]: was it heard?
@@ -102,114 +104,159 @@ class TasmeeEngine {
     if (!await isInstalled()) {
       throw StateError('the recogniser is not downloaded yet');
     }
+    // The live worker already has (or is loading) the model: use it, then
+    // let it go - never a second copy of the model beside it.
+    await _liveStarting;
+    if (liveRunning) {
+      final text = await _ask(wavPath, 0);
+      await stopLive();
+      return text;
+    }
     final dir = (await _pack.dir()).path;
     return Isolate.run(() => _decode(wavPath, dir));
   }
 
   // ---- live following -------------------------------------------------
   //
-  // While the reader recites, the WAV file the recorder is writing is read
-  // from its tail every second or so and decoded by ONE long-lived worker
-  // isolate that keeps the recogniser loaded (building it per call costs more
-  // than decoding). The final score is still computed from the whole file
-  // after «stop»; this only lets the words light up while he recites.
+  // While the reader recites, the WAV the recorder is writing is read from
+  // its tail every second or so and decoded by ONE long-lived worker isolate
+  // that keeps the recogniser loaded. `record` (record_android 1.5.2,
+  // WaveContainer.kt) seeks past a 44-byte header, writes every buffer with
+  // an unbuffered `Os.write`, and fills the header in only at stop - so the
+  // PCM is on disk as it is heard and starts at byte 44.
+  //
+  // The worker is stopped by a message, never killed: the recogniser holds
+  // the model in native memory that nothing frees but `free()` (sherpa_onnx
+  // 1.13.8 has no finalizer), and a killed isolate would leave ~170 MB
+  // behind on every recitation. The final decode after «stop» goes to the
+  // same worker, so two copies of the model are never loaded at once.
 
-  Isolate? _liveIso;
   SendPort? _liveSend;
   ReceivePort? _liveRecv;
-  Completer<String>? _liveWait;
+  Future<void>? _liveStarting;
+  final _pending = <int, Completer<String>>{};
+  int _nextId = 0;
+  bool _liveBusy = false;
 
-  Future<void> startLive() async {
-    if (_liveIso != null) return;
-    if (!await isInstalled()) return;
-    final dir = (await _pack.dir()).path;
-    final recv = ReceivePort();
-    final ready = Completer<SendPort>();
-    recv.listen((m) {
-      if (m is SendPort) {
-        ready.complete(m);
-      } else if (m is String) {
-        _liveWait?.complete(m);
-        _liveWait = null;
+  bool get liveRunning => _liveSend != null;
+
+  Future<void> startLive() => _liveStarting ??= () async {
+        if (!await isInstalled()) return;
+        final dir = (await _pack.dir()).path;
+        final recv = ReceivePort();
+        final ready = Completer<SendPort>();
+        final exited = ReceivePort();
+        recv.listen((m) {
+          if (m is SendPort) {
+            ready.complete(m);
+          } else if (m is (int, String)) {
+            _pending.remove(m.$1)?.complete(m.$2);
+          }
+        });
+        _liveRecv = recv;
+        await Isolate.spawn(_liveMain, (recv.sendPort, dir),
+            onExit: exited.sendPort);
+        unawaited(exited.first.then((_) => _liveGone(recv, exited)));
+        _liveSend = await ready.future;
+      }();
+
+  void _liveGone(ReceivePort recv, ReceivePort exited) {
+    exited.close();
+    recv.close();
+    if (identical(_liveRecv, recv)) {
+      // A worker that died mid-request (not one that was stopped: that one
+      // answers everything it was sent before it exits) must not leave the
+      // panel waiting.
+      for (final c in _pending.values) {
+        if (!c.isCompleted) c.complete('');
       }
-    });
-    _liveRecv = recv;
-    _liveIso = await Isolate.spawn(_liveMain, (recv.sendPort, dir));
-    _liveSend = await ready.future;
+      _pending.clear();
+      _liveSend = null;
+      _liveRecv = null;
+      _liveStarting = null;
+      _liveBusy = false;
+    }
   }
 
-  /// Text heard in the last [seconds] of the growing WAV at [wavPath]; null
-  /// when a previous request is still running (the caller skips the tick).
-  Future<String?> liveTail(String wavPath, {int seconds = 10}) async {
+  /// [mode] 1: the live transcript so far; 0: the whole, finished file.
+  Future<String> _ask(String path, int mode) async {
+    await _liveStarting;
     final send = _liveSend;
-    if (send == null || _liveWait != null) return null;
-    final c = _liveWait = Completer<String>();
-    send.send((wavPath, seconds));
+    if (send == null) return '';
+    final id = _nextId++;
+    final c = _pending[id] = Completer<String>();
+    send.send((id, path, mode));
     return c.future;
   }
 
-  void stopLive() {
-    _liveIso?.kill(priority: Isolate.immediate);
-    _liveIso = null;
+  /// Everything heard so far in the growing WAV at [wavPath]. Null while
+  /// the previous request is still decoding (the tick is skipped, so a slow
+  /// phone falls behind by skipping, never by queueing).
+  Future<String?> liveTail(String wavPath) async {
+    if (_liveBusy || _liveSend == null) return null;
+    _liveBusy = true;
+    try {
+      return await _ask(wavPath, 1);
+    } finally {
+      _liveBusy = false;
+    }
+  }
+
+  /// Asks the worker to free the recogniser and exit, after whatever it is
+  /// decoding now.
+  Future<void> stopLive() async {
+    await _liveStarting;
+    _liveSend?.send(null);
     _liveSend = null;
-    _liveRecv?.close();
-    _liveRecv = null;
-    if (_liveWait?.isCompleted == false) _liveWait!.complete('');
-    _liveWait = null;
+    // The next recitation starts a worker of its own, even while this one
+    // is still finishing its last decode.
+    _liveStarting = null;
   }
 
   static void _liveMain((SendPort, String) a) {
     so.initBindings();
     final rp = ReceivePort();
+    final rec = _recognizer(a.$2);
+    final live = <String, _LiveText>{};
     a.$1.send(rp.sendPort);
-    final rec = so.OfflineRecognizer(so.OfflineRecognizerConfig(
-      model: so.OfflineModelConfig(
-        nemoCtc: so.OfflineNemoEncDecCtcModelConfig(
-            model: p.join(a.$2, 'model.int8.onnx')),
-        tokens: p.join(a.$2, 'tokens.txt'),
-        numThreads: 2,
-        debug: false,
-      ),
-    ));
     rp.listen((m) {
-      final (path, seconds) = m as (String, int);
+      if (m == null) {
+        rec.free();
+        rp.close();
+        Isolate.exit();
+      }
+      final (id, path, mode) = m as (int, String, int);
       var text = '';
       try {
-        text = _decodeTail(rec, path, seconds);
+        text = mode <= 0
+            ? _run(rec, wavSamples(File(path).readAsBytesSync())).text
+            : (live[path] ??= _LiveText()).update(rec, path);
       } catch (_) {}
-      a.$1.send(text);
+      a.$1.send((id, text));
     });
   }
 
-  /// The PCM after the header, cut to the last [seconds]; a half-written
-  /// sample at the end is ignored.
-  static String _decodeTail(so.OfflineRecognizer rec, String path, int seconds) {
-    final f = File(path);
-    final len = f.lengthSync();
-    if (len < 44 + 16000) return ''; // under half a second
-    final want = seconds * 32000;
-    final from = len - 44 > want ? 44 + ((len - 44 - want) ~/ 2) * 2 : 44;
-    final raf = f.openSync();
-    final Uint8List bytes;
-    try {
-      raf.setPositionSync(from);
-      bytes = raf.readSync(len - from);
-    } finally {
-      raf.closeSync();
-    }
-    final n = bytes.length ~/ 2;
-    final bd = ByteData.sublistView(bytes);
-    final x = Float32List(n);
-    for (var i = 0; i < n; i++) {
-      x[i] = bd.getInt16(i * 2, Endian.little) / 32768.0;
-    }
+  static so.OfflineRecognizer _recognizer(String dir) =>
+      so.OfflineRecognizer(so.OfflineRecognizerConfig(
+        model: so.OfflineModelConfig(
+          nemoCtc: so.OfflineNemoEncDecCtcModelConfig(
+              model: p.join(dir, 'model.int8.onnx')),
+          tokens: p.join(dir, 'tokens.txt'),
+          numThreads: 2,
+          debug: false,
+        ),
+      ));
+
+  static so.OfflineRecognizerResult _run(
+      so.OfflineRecognizer rec, Float32List x) {
     final y = lowPass3400(x);
+    // A quarter second of silence either side, as the measurement fed it.
     final padded = Float32List(y.length + 12000)..setAll(4000, y);
     final s = rec.createStream();
     try {
       s.acceptWaveform(samples: padded, sampleRate: 16000);
       rec.decode(s);
-      return rec.getResult(s).text;
+      return rec.getResult(s);
     } finally {
       s.free();
     }
@@ -217,59 +264,12 @@ class TasmeeEngine {
 
   static String _decode(String wavPath, String dir) {
     so.initBindings();
-    final x = lowPass3400(wavSamples(File(wavPath).readAsBytesSync()));
-    // A quarter second of silence either side, as the measurement fed it.
-    final padded = Float32List(x.length + 12000)..setAll(4000, x);
-    final rec = so.OfflineRecognizer(so.OfflineRecognizerConfig(
-      model: so.OfflineModelConfig(
-        nemoCtc: so.OfflineNemoEncDecCtcModelConfig(
-            model: p.join(dir, 'model.int8.onnx')),
-        tokens: p.join(dir, 'tokens.txt'),
-        numThreads: 2,
-        debug: false,
-      ),
-    ));
-    final s = rec.createStream();
+    final rec = _recognizer(dir);
     try {
-      s.acceptWaveform(samples: padded, sampleRate: 16000);
-      rec.decode(s);
-      return rec.getResult(s).text;
+      return _run(rec, wavSamples(File(wavPath).readAsBytesSync())).text;
     } finally {
-      s.free();
       rec.free();
     }
-  }
-
-  /// Live marking: [flags] (one per ayah word, never turned off) gains the
-  /// words found in [heard], the text of the last seconds. Only the words from
-  /// a little before the last one already heard are compared, so what has
-  /// scrolled out of the window cannot be marked missed or re-matched to
-  /// something later. Returns the number of words heard so far.
-  static int liveMerge({
-    required String ayahText,
-    required String heard,
-    required List<bool> flags,
-    int surahId = 0,
-    int ayahNumber = 0,
-  }) {
-    final expected = tasmeeWords(ayahText);
-    if (flags.length != expected.length) return 0;
-    final last = flags.lastIndexOf(true);
-    final start = last < 0 ? 0 : (last - 3 < 0 ? 0 : last - 3);
-    final said = tasmeeWords(heard);
-    if (said.isEmpty) return flags.where((f) => f).length;
-    final letters = start == 0 && expected.isNotEmpty
-        ? _asRecited(expected[0], surahId, ayahNumber)
-        : null;
-    final (got, _) = _align(
-      [for (final w in expected.sublist(start)) _fold(w)],
-      [for (final w in said) _fold(w)],
-      letterNames: letters?.split(' ').map(_fold).toList(),
-    );
-    for (var i = 0; i < got.length; i++) {
-      if (got[i]) flags[start + i] = true;
-    }
-    return flags.where((f) => f).length;
   }
 
   /// Compares what was heard with the ayah, word by word.
@@ -308,8 +308,11 @@ class TasmeeEngine {
       [for (final w in said) _fold(w)],
       letterNames: letters?.split(' ').map(_fold).toList(),
     );
+    final shown = tasmeeDisplayWords(ayahText);
     return TasmeeResult(
-      words: expected,
+      // The ayah's own words, as printed; the folded forms are for comparing
+      // only and are never shown (§1.2).
+      words: shown.length == expected.length ? shown : expected,
       heardWord: flags,
       saidWords: said,
       matched: matched,
@@ -485,6 +488,19 @@ double tasmeeCloseness(String a, String b) => _closeness(_fold(a), _fold(b));
 final _marks = RegExp('[ً-ٰٟۖ-ۭـ]');
 final _notArabic = RegExp('[^ء-ي\\s]');
 
+/// The ayah's words exactly as printed, one per word of [tasmeeWords]:
+/// [ayahWords] (a pause mark stays with its word), with a leading «۞» - 199
+/// verses of quran_local.db open with one, and it is no word - kept on the
+/// word after it. `tasmee_display_words_test.dart` holds the one-to-one
+/// match over all 6,236 verses.
+List<String> tasmeeDisplayWords(String text) {
+  final w = ayahWords(text);
+  if (w.length > 1 && tasmeeWords(w[0]).isEmpty) {
+    return ['${w[0]} ${w[1]}', ...w.skip(2)];
+  }
+  return w;
+}
+
 /// The ayah's words, normalised for comparison only — the ayah itself is
 /// never rewritten (§1.2).
 List<String> tasmeeWords(String text) {
@@ -508,3 +524,70 @@ String _skeleton(String w) => w.replaceAll(RegExp('[اوي]'), '');
 
 @visibleForTesting
 String tasmeeSkeleton(String w) => _skeleton(w);
+
+/// The live transcript of one recording, kept by the worker.
+///
+/// Each call decodes the audio from [_fromSec] to the end of the file. Once
+/// that span passes [_spanSec], the words that started more than [_keepSec]
+/// before its end are COMMITTED: appended to [_done] and cut off the next
+/// decode, which starts where the first uncommitted word starts (the model
+/// timestamps every token - measured on the PC, 175 tokens, 175 times, for
+/// as-Sudais' 2:255). So the whole recitation so far is always compared,
+/// yet a decode never covers much more than [_spanSec] seconds, however long
+/// the ayah or the silence.
+class _LiveText {
+  static const _spanSec = 16.0, _keepSec = 8.0, _padSec = 0.25;
+  final _done = <String>[];
+  double _fromSec = 0;
+
+  String update(so.OfflineRecognizer rec, String path) {
+    final f = File(path);
+    final len = f.lengthSync();
+    final from = 44 + (_fromSec * 16000).round() * 2;
+    if (len - from < 16000) return _done.join(' '); // under half a second
+    final raf = f.openSync();
+    final Uint8List bytes;
+    try {
+      raf.setPositionSync(from);
+      bytes = raf.readSync(len - from);
+    } finally {
+      raf.closeSync();
+    }
+    final bd = ByteData.sublistView(bytes);
+    final x = Float32List(bytes.length ~/ 2);
+    for (var i = 0; i < x.length; i++) {
+      x[i] = bd.getInt16(i * 2, Endian.little) / 32768.0;
+    }
+    final r = TasmeeEngine._run(rec, x);
+    // Words from tokens: a token that starts with a space starts a word.
+    final words = <String>[];
+    final starts = <double>[];
+    for (var i = 0; i < r.tokens.length; i++) {
+      final t = r.tokens[i];
+      if (words.isEmpty || t.startsWith(' ')) {
+        words.add(t.trim());
+        starts.add(i < r.timestamps.length ? r.timestamps[i] - _padSec : 0);
+      } else {
+        words[words.length - 1] += t;
+      }
+    }
+    final span = x.length / 16000;
+    if (span > _spanSec) {
+      // Commit every word that started before the cut. The next decode
+      // starts where the first word after it starts - or at the cut itself
+      // when there is none (silence, or one long last word). The decoded span
+      // is bounded EITHER way: with nothing committed during a silent minute
+      // it once grew to the whole recording, and onnxruntime's memory with
+      // it (emulator, 2026-09-30: native heap 400 -> 810 MB in 50 s).
+      final cut = span - _keepSec;
+      var k = 0;
+      while (k < words.length && starts[k] < cut) {
+        k++;
+      }
+      _done.addAll(words.take(k));
+      _fromSec += k < words.length && starts[k] > 0 ? starts[k] : cut;
+      words.removeRange(0, k);
+    }
+    return [..._done, ...words].join(' ');
+  }
+}
