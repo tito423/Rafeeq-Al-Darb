@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~07:10 (09-30, Opus) HANDOVER («جهّز الدنيا»). Verified now: analyze clean, 677 tests, hosted 9/9 206, 7 x 2,191 keys, v3.72.0 draft (private) intact, v3.71.0 public. OWNER PHONE REPORT on 3.72.0: (1) text-mode continuous recitation from an opened surah (Ya-Sin) starts at the PAGE top (end of Fatir) - must start at the opened surah; (2) Rafeeq: no background listening, broken speech over Bluetooth, «افتح سورة يوسف» not understood. NEXT EXACT: NEXT_PROMPT.md item 1 (recitation start), then item 2 after the owner answers the three questions.
+
 ~06:55 (09-30, Opus) v3.72.0 UPLOADED AS A DRAFT (private: owner asked for private downloads until done; GitHub docs checked live - drafts listed only to users with push access; anonymous page = 404, anonymous API lists no drafts). Asset RafeeqAlDarb-v3.72.0.apk 315,329,588 B, SHA-256 55f3b042bbf41789fd87100bb7a95af76597126b1579443cc64a5a26c95fc048 = GitHub digest; aapt2 versionCode 86 / versionName 3.72.0; ORT 1.28.2 all ABIs; rotated signing; built with emulator off; HEAD 57fde06a pushed. Owner asked to make the repo private and delete releases, was told content-* are the app's fallback source, then said: leave EVERYTHING as it is, delete nothing, just upload. So v3.71.0 was NOT deleted (exception to the one-release rule, by his order). NEXT: when the owner says to publish: `gh release edit v3.72.0 --draft=false --latest`, then verify tag == HEAD (the tag is created only at publish), and ask whether to delete v3.71.0 then.
 
 ~06:35 (09-30, Opus) NVIDIA model credited on the Sources screen (x7) and CONTENT-LICENSES.md section added (hisnmuslim audio, Alafasy/IslamHouse, archive.org reciters with no licence stated, NVIDIA CC BY 4.0, whisper withdrawn). 677 tests. Everything from the owner's queue is done and seen on the emulator. NEXT: owner reviews; release only when he asks.
@@ -905,6 +907,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 13:20 - Handover 2026-09-30: v3.72.0 private draft, owner phone report (Rafeeq on real phone; continuous recitation starts at page top) queued first
 - 2026-09-30 07:06 - v3.72.0 uploaded as a private draft (verified invisible to the public); v3.71.0 kept by owner order
 - 2026-09-30 06:56 - Bump to 3.72.0+86 for release; analyze clean, 677 tests
 - 2026-09-30 06:32 - Credit NVIDIA FastConformer (CC BY 4.0) on Sources; licence record for adhkar audio and the Arabic voice model
