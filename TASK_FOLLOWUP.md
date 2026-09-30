@@ -903,6 +903,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 06:56 - Bump to 3.72.0+86 for release; analyze clean, 677 tests
 - 2026-09-30 06:32 - Credit NVIDIA FastConformer (CC BY 4.0) on Sources; licence record for adhkar audio and the Arabic voice model
 - 2026-09-30 06:23 - Arabic pack seen end to end: in-app download, owner sentence heard in 341 ms, opened 2:255 from the home screen; 0.67 GB at rest
 - 2026-09-30 03:54 - Arabic pack: NVIDIA FastConformer replaces whisper-turbo (0.1 s vs 4-7 s, numbers right, 174 MB); used as the recogniser in Arabic; turbo removed from hosting
