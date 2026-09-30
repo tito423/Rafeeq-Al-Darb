@@ -84,6 +84,10 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       const SourceEntry('Omnilingual ASR — Meta',
           'https://github.com/facebookresearch/omnilingual-asr',
           'about.src_omnilingual'),
+      // «دقة أعلى في العربية» (2026-09-30), CC BY 4.0 - attribution required.
+      const SourceEntry('NVIDIA FastConformer Arabic (CC BY 4.0)',
+          'https://huggingface.co/nvidia/stt_ar_fastconformer_hybrid_large_pcd_v1.0',
+          'about.src_fastconformer_ar'),
       const SourceEntry('Silero VAD', 'https://github.com/snakers4/silero-vad',
           'about.src_silero'),
       const SourceEntry('sherpa-onnx', 'https://github.com/k2-fsa/sherpa-onnx',

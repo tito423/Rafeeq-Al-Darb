@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 06:23 — IN PROGRESS — resume here**
+**2026-09-30 06:32 — IN PROGRESS — resume here**
 
-Arabic pack seen end to end: in-app download, owner sentence heard in 341 ms, opened 2:255 from the home screen; 0.67 GB at rest
+Credit NVIDIA FastConformer (CC BY 4.0) on Sources; licence record for adhkar audio and the Arabic voice model
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

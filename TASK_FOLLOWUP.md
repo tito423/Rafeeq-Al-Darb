@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~06:35 (09-30, Opus) NVIDIA model credited on the Sources screen (x7) and CONTENT-LICENSES.md section added (hisnmuslim audio, Alafasy/IslamHouse, archive.org reciters with no licence stated, NVIDIA CC BY 4.0, whisper withdrawn). 677 tests. Everything from the owner's queue is done and seen on the emulator. NEXT: owner reviews; release only when he asks.
+
 ~06:25 (09-30, Opus) ARABIC PACK SEEN END TO END on emulator-5554: downloaded IN-APP to completion (2 files, .verified, 173,888,072 + 12,858 B); app restarted; owner sentence clip from the phone HOME SCREEN -> «يا رفيق افتح التطبيق على القرآن سورة البقرة آية مئتان وخمسة وخمسون» heard in 341 ms (whisper: 12,700 / 27,900 ms), -> open quran 2:255, app came to front on Ayat al-Kursi. Memory at rest 0.67 GB (base model alone was 0.85 GB; whisper held 2.2 GB). 677 tests. Phone speed not measured (owner). NEXT: report to owner; no release until he says.
 
 ~03:55 (09-30, Opus) OWNER: «إلا البطء، اقلب النت على حل». FOUND + MEASURED: NVIDIA stt_ar_fastconformer_hybrid_large_pcd_v1.0 (CC BY 4.0), CTC int8 for sherpa-onnx (huggingface.co/krut42/voice-fastconformer-ar-ctc-int8, 173,888,072 B): on the PC 0.1 s per clip vs whisper-turbo 4-7 s, EVERY number right in words («…آية مئتان وخمسة وخمسون»), 6 earlier Arabic commands equal or better than the base model (only «صورة» for «سورة» -> «صوره» added as a surah word). REPLACED whisper-turbo as the optional pack «دقة أعلى في العربية» (asr/rafeeq_ar_v1/, R2 + mirror 206); in Arabic it REPLACES the base recogniser in the worker (base pack still needed for the VAD); row shown only when the app is in Arabic. whisper-turbo files DELETED from R2 (404) and content-mirror (0 assets) - never shipped; local copy kept in E:\DevEnvsr. 677 tests. In-app download of the Arabic pack RUNNING on the emulator (50 MB at 03:53). NEXT EXACT: when it completes, restart app, feed the owner sentence clip from the home screen, expect open quran 2:255 fast; measure delay and memory.
@@ -901,6 +903,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 06:32 - Credit NVIDIA FastConformer (CC BY 4.0) on Sources; licence record for adhkar audio and the Arabic voice model
 - 2026-09-30 06:23 - Arabic pack seen end to end: in-app download, owner sentence heard in 341 ms, opened 2:255 from the home screen; 0.67 GB at rest
 - 2026-09-30 03:54 - Arabic pack: NVIDIA FastConformer replaces whisper-turbo (0.1 s vs 4-7 s, numbers right, 174 MB); used as the recogniser in Arabic; turbo removed from hosting
 - 2026-09-30 03:28 - Sharper-hearing pack seen working (owner sentence -> 2:255 from the home screen); whisper loaded only on a call and released after 5 min idle (2.2 GB -> 0.89 GB measured)

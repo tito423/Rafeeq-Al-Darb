@@ -1147,6 +1147,7 @@
     "explain_none": "No se encontró nada parecido en la Enciclopedia."
   },
   "about": {
+    "src_fastconformer_ar": "El modelo «oído más fino en árabe» de Rafeeq: FastConformer árabe de NVIDIA bajo CC BY 4.0, exportado a ONNX (OpenVoiceOS) y cuantizado a int8 para sherpa-onnx (krut42); descarga opcional que funciona en el dispositivo sin internet.",
     "src_adhkar_ih": "Los adhkar completos de la mañana y de la tarde por Mishary Alafasy, cada uno en su archivo, reproducidos y descargados directamente de IslamHouse.",
     "src_adhkar_ia": "Los adhkar completos de la mañana y de la tarde por Idrees Abkar, Saad Al-Ghamdi, Salman Al-Utaybi, Fares Abbad y Hani Ar-Rifai, cada voz en una grabación, del Internet Archive tal como los publicó quien los subió (sin licencia indicada).",
     "blurb": "Rafeeq Al-Darb es una aplicación islámica completa, construida sobre fuentes fiables y de libre acceso para desarrolladores. Cada mushaf, cada traducción y cada adhan se verificó en su fuente antes de añadirse, y todas las fuentes están indicadas. Las cifras de esta página se cuentan del propio contenido de la aplicación, no se escriben a mano.",

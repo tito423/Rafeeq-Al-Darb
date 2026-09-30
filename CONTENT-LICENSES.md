@@ -1092,3 +1092,32 @@ positions are in his own hamesh, so `scripts/build_hajj_madhahib.py` keeps
 the hamesh (the book builder drops it) and ties every note to its section by
 the note's own number in the body: 49 notes, none unlinked, 147 school
 statements. Pages crawled verbatim to `scripts/jaziri_raw/` (569-640).
+
+## 2026-09-30 — adhkar audio, and «رفيق»'s Arabic voice model
+
+**Adhkar, one recording per dhikr — hisnmuslim.com.** The book's own site
+publishes an mp3 per dhikr through a public JSON API (raw responses kept in
+`scripts/azkar_hisn/hisnmuslim_api/`). The site states no licence and names no
+reciter; the recordings are streamed from it, never rehosted, credited on the
+Sources screen with «the site names no reciter». A dhikr gets a recording
+only when the recording says the same words (`scripts/hisnmuslim_audio_map.py`,
+219 of 302; report in `scripts/azkar_hisn/azkar_audio_report.txt`).
+
+**Complete morning / evening adhkar by named reciters.**
+- Mishary Alafasy — IslamHouse (islamhouse.com/ar/audios/92368/), streamed
+  and downloaded from d1.islamhouse.com. No licence on the page; IslamHouse's
+  stated purpose is free distribution.
+- Idrees Abkar, Saad Al-Ghamdi, Salman Al-Utaybi, Fares Abbad, Hani Ar-Rifai —
+  Internet Archive item `adhkar-alsabah-walmasa`, uploaded by a private
+  person, **no licence stated**. Streamed/downloaded from archive.org, not
+  rehosted; said plainly on the Sources screen. IslamWeb's copies were NOT
+  used («جميع الحقوق محفوظة»).
+
+**«دقة أعلى في العربية» — NVIDIA stt_ar_fastconformer_hybrid_large_pcd_v1.0,
+CC BY 4.0.** Exported to ONNX by OpenVoiceOS (CC BY 4.0), metadata added and
+int8-quantised for sherpa-onnx by krut42 (huggingface.co/krut42/voice-
+fastconformer-ar-ctc-int8, CC BY 4.0, changes listed in its README). Hosted on
+R2 `asr/rafeeq_ar_v1/` + content-mirror, optional download. Attribution on
+the Sources screen with a link to NVIDIA's card, as CC BY requires.
+whisper-turbo (MIT) was tried the same day and withdrawn for speed; its
+hosted copies were deleted.
