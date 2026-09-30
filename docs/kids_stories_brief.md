@@ -5,11 +5,13 @@ the kids-corner prophet stories. The narration text is written and sourced
 by the local session and is not yours to write or change.
 
 ## Hard rules (owner + Islamic content standard)
-1. **No depiction of any prophet, companion, angel, or any human figure at
-   all** — no faces, bodies, silhouettes, hands. Tell the story with
-   scenery, objects, weather, water, light, animals. (Al-Azhar / Dar al-Ifta
-   forbid depicting prophets and companions; avoiding all human figures
-   removes every doubt.)
+1. **Who may be drawn** (owner's decision in chat, 2026-09-30, after being
+   shown the Dar al-Ifta / Majma' al-Buhuth rulings: «انت رايك صح»):
+   - ordinary people MAY appear, flat kids style, faces NOT fully featured
+     (no detailed eyes or mouth);
+   - a **prophet or companion is NEVER drawn** - no body, silhouette, shadow
+     or hands; his presence is only a soft warm glow in the scene;
+   - angels are never drawn.
 2. **No music.** Natural sound effects only, and only if they come from a
    source whose licence you record (CC0 preferred). None is fine.
 3. **No Qur'an text drawn in the video.** On-screen text is added later by
