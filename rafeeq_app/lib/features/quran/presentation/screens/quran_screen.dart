@@ -13,6 +13,7 @@ import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../data/ayah_coords_repository.dart';
+import '../../data/continuous_start.dart';
 import '../../data/mushaf_data_provider.dart';
 import '../../data/mushaf_edition.dart';
 import '../../data/mushaf_frame.dart';
@@ -215,8 +216,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
         onToggleRecite: () => _toggleContinuousRecitation(d),
         onTogglePageFill: _togglePageFillScreen,
         onGoToPage: _goToPage,
-        onNavigateFromIndex: (page, {surahStart = false}) =>
-            _navigateFromIndex(page, d, surahStart: surahStart),
+        onNavigateFromIndex: (page, {surahId}) =>
+            _navigateFromIndex(page, d, surahId: surahId),
         onEnterImageView: _enterImageView,
         onLeaveImageView: _leaveImageView,
       );
@@ -486,19 +487,20 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// A jump from the surah, juz or page index. While the reciter is reading,
   /// the recitation goes with it — to the surah's first verse when a surah was
   /// picked, otherwise to the page's first verse. Swiping pages by hand does
-  /// not move it: that is looking around, not choosing.
+  /// not move it: that is looking around, not choosing. A picked surah is
+  /// also remembered, so the play button pressed later starts at it too.
   Future<void> _navigateFromIndex(
     int page,
     MushafData data, {
-    bool surahStart = false,
+    int? surahId,
   }) async {
+    final opened = ref.read(quranOpenedAyahProvider.notifier).state =
+        surahId == null ? null : (surah: surahId, ayah: 1, page: page);
     _goToPage(page, animate: false);
     if (!_recite.active) return;
     final ayahs = await _ayahsOfPage(page, data);
     if (ayahs.isEmpty || !mounted) return;
-    final start = surahStart
-        ? ayahs.firstWhere((a) => a.ayahNumber == 1, orElse: () => ayahs.first)
-        : ayahs.first;
+    final start = continuousStartOnPage(ayahs, page: page, opened: opened);
     _followedPage = page;
     await AyahAudioService.instance.startContinuous(
       from: start,
@@ -521,8 +523,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return r?.displayName(context.locale.languageCode) ?? '';
   }
 
-  /// Starts continuous recitation from the current page (or from the verse
-  /// the reader has selected, if any), and reads on through the mushaf.
+  /// Starts continuous recitation from the verse the reader has selected, else
+  /// from the surah (or verse) opened by name if its page is still open, else
+  /// from the top of the page, and reads on through the mushaf.
   Future<void> _toggleContinuousRecitation(MushafData data) async {
     final audio = AyahAudioService.instance;
     if (_recite.active) {
@@ -545,9 +548,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (await resumeContinuousIfPicked(pick, data.repo)) return;
     final ayahs = await _ayahsOfPage(_current, data);
     if (ayahs.isEmpty || !mounted) return;
-    final start = ayahs.firstWhere(
-      (a) => a.surahId == _highlightSurah && a.ayahNumber == _highlightAyah,
-      orElse: () => ayahs.first,
+    final start = continuousStartOnPage(
+      ayahs,
+      page: _current,
+      selectedSurah: _highlightSurah,
+      selectedAyah: _highlightAyah,
+      opened: ref.read(quranOpenedAyahProvider),
     );
     await audio.startContinuous(from: start, repo: data.repo, edition: pick.id);
   }

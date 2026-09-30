@@ -8,3 +8,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// specific page sets this, then switches to the Quran tab; `QuranScreen`
 /// consumes it via `ref.listen` and resets it to null so it only fires once.
 final quranJumpRequestProvider = StateProvider<int?>((ref) => null);
+
+/// The verse the reader last opened BY NAME — a surah picked in the jump
+/// sheet, or «افتح سورة يس» said to Rafeeq — and the page it sits on.
+///
+/// Continuous recitation starts from here while that page is still open.
+/// Without it the play button began at the top of the page: the owner opened
+/// Ya-Sin (page 440), pressed it, and heard the end of Fatir first
+/// (2026-09-30, on his phone, v3.72.0).
+typedef OpenedAyah = ({int surah, int ayah, int page});
+
+final quranOpenedAyahProvider = StateProvider<OpenedAyah?>((ref) => null);

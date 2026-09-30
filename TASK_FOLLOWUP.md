@@ -909,6 +909,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 13:42 - Continuous recitation starts at the surah opened by name (jump sheet / Rafeeq), not the page top; unit test; emulator check next
 - 2026-09-30 13:27 - Owner answers: Honor phone, Arabic pack was on when Rafeeq failed
 - 2026-09-30 13:20 - Handover 2026-09-30: v3.72.0 private draft, owner phone report (Rafeeq on real phone; continuous recitation starts at page top) queued first
 - 2026-09-30 07:06 - v3.72.0 uploaded as a private draft (verified invisible to the public); v3.71.0 kept by owner order

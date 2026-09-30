@@ -68,7 +68,7 @@ class MushafToolbar extends ConsumerWidget {
   final VoidCallback onToggleRecite;
   final VoidCallback onTogglePageFill;
   final void Function(int page) onGoToPage;
-  final void Function(int page, {bool surahStart}) onNavigateFromIndex;
+  final void Function(int page, {int? surahId}) onNavigateFromIndex;
   final VoidCallback onEnterImageView;
   final VoidCallback onLeaveImageView;
 
@@ -124,8 +124,8 @@ class MushafToolbar extends ConsumerWidget {
               juzStartPages: data.juzStartPages,
               current: current,
               totalPages: totalPages,
-              onSurahPage: (page) =>
-                  onNavigateFromIndex(page, surahStart: true),
+              onSurahPage: (surahId, page) =>
+                  onNavigateFromIndex(page, surahId: surahId),
               onPage: onNavigateFromIndex,
             ),
           ),

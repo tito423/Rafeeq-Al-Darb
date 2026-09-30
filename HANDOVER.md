@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 13:27 — IN PROGRESS — resume here**
+**2026-09-30 13:42 — IN PROGRESS — resume here**
 
-Owner answers: Honor phone, Arabic pack was on when Rafeeq failed
+Continuous recitation starts at the surah opened by name (jump sheet / Rafeeq), not the page top; unit test; emulator check next
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

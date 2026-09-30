@@ -67,7 +67,7 @@ void showJumpSheet(
   required Map<int, int> juzStartPages,
   required int current,
   required int totalPages,
-  required ValueChanged<int> onSurahPage,
+  required void Function(int surahId, int page) onSurahPage,
   required ValueChanged<int> onPage,
 }) {
   showModalBottomSheet<void>(
@@ -92,7 +92,7 @@ class _JumpSheet extends StatefulWidget {
   final Map<int, int> juzStartPages;
   final int current;
   final int totalPages;
-  final ValueChanged<int> onSurahPage;
+  final void Function(int surahId, int page) onSurahPage;
   final ValueChanged<int> onPage;
 
   const _JumpSheet({
@@ -207,7 +207,7 @@ class _JumpSheetState extends State<_JumpSheet> {
                 title: Text(s.nameAr,
                     style: const TextStyle(fontFamily: 'AmiriQuran')),
                 trailing: Text('${'quran.page'.tr()} $start'),
-                onTap: () => _go(widget.onSurahPage, start),
+                onTap: () => _go((p) => widget.onSurahPage(s.id, p), start),
               );
             },
           ),
