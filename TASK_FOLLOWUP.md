@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~06:55 (09-30, Opus) v3.72.0 UPLOADED AS A DRAFT (private: owner asked for private downloads until done; GitHub docs checked live - drafts listed only to users with push access; anonymous page = 404, anonymous API lists no drafts). Asset RafeeqAlDarb-v3.72.0.apk 315,329,588 B, SHA-256 55f3b042bbf41789fd87100bb7a95af76597126b1579443cc64a5a26c95fc048 = GitHub digest; aapt2 versionCode 86 / versionName 3.72.0; ORT 1.28.2 all ABIs; rotated signing; built with emulator off; HEAD 57fde06a pushed. Owner asked to make the repo private and delete releases, was told content-* are the app's fallback source, then said: leave EVERYTHING as it is, delete nothing, just upload. So v3.71.0 was NOT deleted (exception to the one-release rule, by his order). NEXT: when the owner says to publish: `gh release edit v3.72.0 --draft=false --latest`, then verify tag == HEAD (the tag is created only at publish), and ask whether to delete v3.71.0 then.
+
 ~06:35 (09-30, Opus) NVIDIA model credited on the Sources screen (x7) and CONTENT-LICENSES.md section added (hisnmuslim audio, Alafasy/IslamHouse, archive.org reciters with no licence stated, NVIDIA CC BY 4.0, whisper withdrawn). 677 tests. Everything from the owner's queue is done and seen on the emulator. NEXT: owner reviews; release only when he asks.
 
 ~06:25 (09-30, Opus) ARABIC PACK SEEN END TO END on emulator-5554: downloaded IN-APP to completion (2 files, .verified, 173,888,072 + 12,858 B); app restarted; owner sentence clip from the phone HOME SCREEN -> «يا رفيق افتح التطبيق على القرآن سورة البقرة آية مئتان وخمسة وخمسون» heard in 341 ms (whisper: 12,700 / 27,900 ms), -> open quran 2:255, app came to front on Ayat al-Kursi. Memory at rest 0.67 GB (base model alone was 0.85 GB; whisper held 2.2 GB). 677 tests. Phone speed not measured (owner). NEXT: report to owner; no release until he says.
@@ -903,6 +905,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 07:06 - v3.72.0 uploaded as a private draft (verified invisible to the public); v3.71.0 kept by owner order
 - 2026-09-30 06:56 - Bump to 3.72.0+86 for release; analyze clean, 677 tests
 - 2026-09-30 06:32 - Credit NVIDIA FastConformer (CC BY 4.0) on Sources; licence record for adhkar audio and the Arabic voice model
 - 2026-09-30 06:23 - Arabic pack seen end to end: in-app download, owner sentence heard in 341 ms, opened 2:255 from the home screen; 0.67 GB at rest

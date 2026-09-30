@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 06:56 — IN PROGRESS — resume here**
+**2026-09-30 07:06 — IN PROGRESS — resume here**
 
-Bump to 3.72.0+86 for release; analyze clean, 677 tests
+v3.72.0 uploaded as a private draft (verified invisible to the public); v3.71.0 kept by owner order
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
