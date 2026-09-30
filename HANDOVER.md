@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 00:33 — IN PROGRESS — resume here**
+**2026-10-01 00:50 — IN PROGRESS — resume here**
 
-Nuh audio v6 accepted, visuals v2 spec with word timings pushed for a cloud session, Gemini TTS pending the owner key
+Gemini voice lines 1-8 done, 9-12 after the free daily quota resets at 11:00 Dubai
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
