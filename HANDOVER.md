@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 13:20 — IN PROGRESS — resume here**
+**2026-09-30 13:27 — IN PROGRESS — resume here**
 
-Handover 2026-09-30: v3.72.0 private draft, owner phone report (Rafeeq on real phone; continuous recitation starts at page top) queued first
+Owner answers: Honor phone, Arabic pack was on when Rafeeq failed
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
