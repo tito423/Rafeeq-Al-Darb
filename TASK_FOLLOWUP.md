@@ -13,6 +13,9 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~20:40 (09-30) DONE + SEEN (emulator, signed debug): «افتح سورة الإسراء آية سبعة» -> 17:7 marked; paper view highlighted; text view scrolls so the WHOLE verse shows (new end-of-verse check, measured top 697/bottom 889/viewport 814 -> scrolled). «افتح تفسير آية الكرسي» -> card on التفسير; «ترجمة الآية خمسة من سورة البقرة» -> card on الترجمة (2:5). Numbers with ال and ordinals («آية السبع», «العاشرة»); «الكرسيي/الكرس/الكورسي». 684 tests pass.
+NEW FROM OWNER (queued, in order): (A) tasmee with HEADSET mic heard only «فيه» of 43:6's six words (his screenshot, v3.73.0, real phone) - investigate tasmee Bluetooth path; (B) kids corner: extend to the whole Qur'an, rename «الحفاظ» track to e.g. «أشبال الحفاظ», then 3 more named stages covering to the end.
+
 ~20:12 (09-30) OWNER (v3.73.0 on Honor): speed OK, but with the app CLOSED «يا رفيق» does nothing. REPRODUCED on emulator: Back-exit -> audio_service unbinds -> AudioService.onDestroy -> disposeFlutterEngine -> Dart (Rafeeq) dead, `rec stop`, notification still up. FIX: AssistantListenService binds AudioService (MediaBrowserService action) while listening; RafeeqEar uses permission_handler (record.hasPermission is false without an activity). SEEN: after Back-exit and after swiping every task from recents, «افتح سورة يوسف» heard in ~0.11 s and the app came up on Yusuf. Honor may still kill the process on swipe (OEM) - unverified; «تشخيص رفيق» will show.
 NEXT (owner, same message): «افتح سورة X آية Y» must scroll to the ayah and HIGHLIGHT it even when off-screen; commands to open the ayah card on tafsir / translation («افتح تفسير آية الكرسي», «ترجمة آية ٥ من البقرة»); all Arabic dialect phrasings.
 
@@ -928,6 +931,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 20:39 - Ayah by voice: marked + whole verse scrolled on screen; card opens on tafsir/translation; ordinal/article numbers; seen on emulator
 - 2026-09-30 20:22 - Rafeeq: an ayah asked for is marked and scrolled to; ayah card opens on tafsir/translation/irab by voice; dialect verbs/fillers (Gulf/Levant/Maghreb/Iraq); 15 phrasings tested; NOT yet seen on emulator
 - 2026-09-30 20:12 - Rafeeq survives the app being closed: listen service holds AudioService so audio_service stops destroying the engine; mic permission via permission_handler; seen after Back-exit and recents swipe
 - 2026-09-30 17:27 - Released v3.73.0 (tag = HEAD, asset 206 on range); owner to test on Honor + Xiaomi

@@ -275,7 +275,16 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
           ? pageBox.localToGlobal(Offset.zero).dy
           : 0.0;
       final verseTop = top + dy - pageTop;
-      if (verseTop >= 0 && verseTop <= viewport * 0.8) return;
+      // ...and its END on screen too: a verse starting on the last line ran
+      // off the bottom, half of it unseen (owner, 2026-09-30: «حتى لو الاية
+      // في اخر الصفحة ومش ظاهرة ع الشاشة انا عايزه يروح عليها»).
+      final end = state?.bottomOfAyah(index);
+      final verseBottom = end == null ? verseTop : top + end - pageTop;
+      if (verseTop >= 0 &&
+          verseTop <= viewport * 0.8 &&
+          verseBottom <= viewport) {
+        return;
+      }
       final target = _scroll.offset + top + dy - viewport / 3;
       _scroll.animateTo(
         target.clamp(
@@ -778,6 +787,22 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
       return boxes.first.top;
     }
     return null;
+  }
+
+  /// Where the verse at [ayahIndex] ENDS inside this paragraph - its last
+  /// line's bottom.
+  double? bottomOfAyah(int ayahIndex) {
+    final p = _paragraph;
+    if (p == null) return null;
+    double? bottom;
+    for (final r in _ranges) {
+      if (r.$3 != ayahIndex) continue;
+      for (final b in p.getBoxesForSelection(
+          TextSelection(baseOffset: r.$1, extentOffset: r.$2))) {
+        if (bottom == null || b.bottom > bottom) bottom = b.bottom;
+      }
+    }
+    return bottom;
   }
 
   /// The verse under [local], or null when the tap landed on empty space.

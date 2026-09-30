@@ -74,11 +74,15 @@ int? spokenNumber(String heard) {
 /// needs (the longest surah has 286).
 final _numberWords = <String, int>{
   for (final e in const {
-    1: ['واحد', 'وحده', 'الاول'], 2: ['اتنين', 'اثنين', 'اثنان', 'تاني'],
-    3: ['تلاته', 'ثلاثه', 'تالت'], 4: ['اربعه', 'اربع', 'رابع'],
-    5: ['خمسه', 'خمس', 'خامس'], 6: ['سته', 'ست', 'سادس'],
-    7: ['سبعه', 'سبع', 'سابع'], 8: ['تمانيه', 'ثمانيه', 'تامن'],
-    9: ['تسعه', 'تسع', 'تاسع'], 10: ['عشره', 'عاشر'],
+    // Ordinals too, masculine and feminine («الآية السابعة»).
+    1: ['واحد', 'وحده', 'الاول', 'اول', 'اولي'],
+    2: ['اتنين', 'اثنين', 'اثنان', 'تاني', 'ثاني', 'تانيه', 'ثانيه'],
+    3: ['تلاته', 'ثلاثه', 'تالت', 'ثالث', 'تالته', 'ثالثه'],
+    4: ['اربعه', 'اربع', 'رابع', 'رابعه'],
+    5: ['خمسه', 'خمس', 'خامس', 'خامسه'], 6: ['سته', 'ست', 'سادس', 'سادسه'],
+    7: ['سبعه', 'سبع', 'سابع', 'سابعه'],
+    8: ['تمانيه', 'ثمانيه', 'تامن', 'ثامن', 'تامنه', 'ثامنه'],
+    9: ['تسعه', 'تسع', 'تاسع', 'تاسعه'], 10: ['عشره', 'عاشر', 'عاشره'],
     11: ['حداشر', 'احداشر', 'احدعشر'], 12: ['اتناشر', 'اتناش', 'اثناعشر', 'اطناشر'],
     13: ['تلتاشر', 'تلطاشر', 'ثلاثهعشر'], 14: ['اربعتاشر', 'اربعطاشر'],
     15: ['خمستاشر', 'خمسطاشر'], 16: ['ستاشر', 'سطاشر'],
@@ -115,7 +119,14 @@ final _ayahCut = norm('آي');
 bool _gluedOpen(String w) =>
     w.length > 5 && (w.startsWith('افتح') || w.startsWith('فتحل'));
 
-int? _numberValue(String w) => _numberWords[w] ?? _bigNumberWords[w];
+/// «السبع» (the model wrote «آية السبع» for «آية سبعة», 2026-09-30):
+/// a number word with the article is still that number.
+int? _numberValue(String w) =>
+    _numberWords[w] ??
+    _bigNumberWords[w] ??
+    (w.startsWith('ال') && w.length > 3
+        ? _numberWords[w.substring(2)] ?? _bigNumberWords[w.substring(2)]
+        : null);
 
 /// «مئتين وخمسة وخمسين» -> 255, «255» -> 255; null when [ws] does not start
 /// with a number.
@@ -167,7 +178,11 @@ extension _AyahRef on AssistantParser {
       at = words.length - 1;
     }
     final card = _cardIn(words);
-    if (at >= 0 && at + 1 < words.length && bare(words[at + 1]) == 'كرسي') {
+    // «الكرسيي» is how the model wrote it on the emulator; «الكورسي» is how
+    // Egyptians say it.
+    if (at >= 0 &&
+        at + 1 < words.length &&
+        RegExp(r'^كو?رسي*$').hasMatch(bare(words[at + 1]))) {
       return playing
           ? const PlaySurahIntent(2, fromAyah: 255)
           : OpenQuranAyahIntent(2, 255, marked: true, card: card);
