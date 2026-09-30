@@ -1,0 +1,2054 @@
+[
+{
+"surah": 1,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الفاتحة",
+"phone": "يا رفيق افتح صورة الفاتحة"
+},
+{
+"surah": 1,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الفاتحة",
+"phone": "يا رفيق افتح صورة الفاتحة"
+},
+{
+"surah": 1,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الفاتحة",
+"phone": "يا رفيق افتح صورة الفاتحة"
+},
+{
+"surah": 2,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة البقرة",
+"phone": "يا رفيق افتح صورة البقرة"
+},
+{
+"surah": 2,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة البقرة",
+"phone": "يا رفيق افتح صورة البقرة"
+},
+{
+"surah": 2,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة البقرة",
+"phone": "يا رفيق افتح صورة البقرة"
+},
+{
+"surah": 3,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة العمران",
+"phone": "يا رفيق افتح صورة العمران"
+},
+{
+"surah": 3,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة العمران",
+"phone": "يا رفيق افتح صورة العمران"
+},
+{
+"surah": 3,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة العمران",
+"phone": "يا رفيق افتح صورة العمران"
+},
+{
+"surah": 4,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة النساء.",
+"phone": "يا رفيق افتح صورة النساء"
+},
+{
+"surah": 4,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة النساء.",
+"phone": "يا رفيق افتح صورة النساء"
+},
+{
+"surah": 4,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النساء",
+"phone": "يا رفيق افتح صورة النساء"
+},
+{
+"surah": 5,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة المائدة",
+"phone": "يا رفيق افتح صورة المائدة"
+},
+{
+"surah": 5,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المائدة",
+"phone": "يا رفيق افتح صورة المائدة"
+},
+{
+"surah": 5,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المائدة",
+"phone": "يا رفيق افتح صورة المائدة"
+},
+{
+"surah": 6,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الأنعام.",
+"phone": "يا رفيق افتح صورة الأنعام"
+},
+{
+"surah": 6,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الأنعام",
+"phone": "يا رفيق افتح صورة الأنعام"
+},
+{
+"surah": 6,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الأنعام",
+"phone": "يا رفيق افتح صورة الأنعام"
+},
+{
+"surah": 7,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الأعراف",
+"phone": "يا رفيق افتح صورة الأعراف"
+},
+{
+"surah": 7,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الأعراف",
+"phone": "ياارفيق افتح صورة الأعراف"
+},
+{
+"surah": 7,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الأعراف",
+"phone": "يا رفيق افتح صورة الأعراف"
+},
+{
+"surah": 8,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الأمثال",
+"phone": "يا رفيق افتح صورة الأمثال"
+},
+{
+"surah": 8,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الأنفال",
+"phone": "يا رفيق افتح صورة الأنفال"
+},
+{
+"surah": 8,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الأنف",
+"phone": "يا رفيق افتح صورة الأمثال"
+},
+{
+"surah": 9,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الطوبة",
+"phone": "يا رفيق افتح صورة التوبة"
+},
+{
+"surah": 9,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة التوبة",
+"phone": "يا رفيق افتح صورة التوبة"
+},
+{
+"surah": 9,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة التوبه",
+"phone": "يا رفيق افتح صورة التوبة"
+},
+{
+"surah": 10,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة يونس",
+"phone": "يا رفيق افتح صورة يونس"
+},
+{
+"surah": 10,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة يونس",
+"phone": "يا رفيق افتح صورة يونس"
+},
+{
+"surah": 10,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة يونس",
+"phone": "يا رفيق افتح صورة يونس"
+},
+{
+"surah": 11,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة هود",
+"phone": "يا رفيق افتح صورة هود"
+},
+{
+"surah": 11,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة هود",
+"phone": "يا رفيق افتح صورة هود"
+},
+{
+"surah": 11,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورةتهد",
+"phone": "يا رفيق افتح صورةته"
+},
+{
+"surah": 12,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة يوسف",
+"phone": "يا رفيق افتح صورة يوسف"
+},
+{
+"surah": 12,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة يوسف",
+"phone": "يا رفيق افتح صورة يوسف"
+},
+{
+"surah": 12,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة يوسف",
+"phone": "يا رفيق افتح صورة يوسف"
+},
+{
+"surah": 13,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الرعد",
+"phone": "يا رفيق افتح صورة الرعد"
+},
+{
+"surah": 13,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الرعد",
+"phone": "يا رفيق افتح صورة الرعد"
+},
+{
+"surah": 13,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة رعده",
+"phone": "يا رفيق افتح صورة رعده"
+},
+{
+"surah": 14,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة ابراهيم",
+"phone": "يا رفيق افتح صورة إبراهيم"
+},
+{
+"surah": 14,
+"voice": "ar-SA-HamedNeural",
+"wide": "يارفيق افتح صورة ابراهيم",
+"phone": "ياارفيق افتح صورة إبراهيم"
+},
+{
+"surah": 14,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح سورة إبراهيم",
+"phone": "يا رفيق افتح سورة إبراهيم"
+},
+{
+"surah": 15,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الحجر",
+"phone": "يا رفيق افتح صورة الحجر"
+},
+{
+"surah": 15,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الحجر",
+"phone": "يا رفيق افتح صورة الحجر"
+},
+{
+"surah": 15,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الحجر",
+"phone": "يا رفيق افتح صورة الحجر"
+},
+{
+"surah": 16,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة النحل",
+"phone": "يا رفيق افتح صورة النحل"
+},
+{
+"surah": 16,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة النحل",
+"phone": "يا رفيق افتح صورة النحل"
+},
+{
+"surah": 16,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النحل",
+"phone": "يا رفيق افتح صورة النحل"
+},
+{
+"surah": 17,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الإسراء",
+"phone": "يا رفيق افتح صورة الإسراء."
+},
+{
+"surah": 17,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الإسراء",
+"phone": "يا رفيق افتح صورة الإسراء"
+},
+{
+"surah": 17,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الإسراء",
+"phone": "يا رفيق افتح سورة الإسراء"
+},
+{
+"surah": 18,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الكهف",
+"phone": "يا رفيق افتح صورة الكهف"
+},
+{
+"surah": 18,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الكهف",
+"phone": "يا رفيق افتح صورة الكهف"
+},
+{
+"surah": 18,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الكهف",
+"phone": "يا رفيق افتح صورة الكهف"
+},
+{
+"surah": 19,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة مريم",
+"phone": "يا رفيق افتح صورة مريم"
+},
+{
+"surah": 19,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة مريم",
+"phone": "يا رفيق افتح صورة مريم"
+},
+{
+"surah": 19,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة مريم.",
+"phone": "يا رفيق افتح صورة مريم."
+},
+{
+"surah": 20,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة طه",
+"phone": "يا رفيق افتح صورة طه"
+},
+{
+"surah": 20,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة طه",
+"phone": "يا رفيق افتح صورة طه"
+},
+{
+"surah": 20,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة طه",
+"phone": "يا رفيق افتحح صورة طه"
+},
+{
+"surah": 21,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الأنبياء",
+"phone": "يا رفيق افتح صورة الأنبياء"
+},
+{
+"surah": 21,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الأنبياء",
+"phone": "يا رفيق افتح صورة الأنبياء"
+},
+{
+"surah": 21,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الأنبياء",
+"phone": "يا رفيق افتح صورة الأنبياء"
+},
+{
+"surah": 22,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الحج",
+"phone": "يا رفيق افتح صورة الحج"
+},
+{
+"surah": 22,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الحج",
+"phone": "يا رفيق افتح صورة الحج"
+},
+{
+"surah": 22,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الحج",
+"phone": "يا رفيق افتح صورة الحج"
+},
+{
+"surah": 23,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة المؤمنون",
+"phone": "يا رفيق افتح صورة المؤمنون"
+},
+{
+"surah": 23,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المؤمنون",
+"phone": "يا رفيق افتح صورة المؤمنون"
+},
+{
+"surah": 23,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح سورة المؤمنون",
+"phone": "يا رفيق افتح سورة المؤمنون"
+},
+{
+"surah": 24,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة النور",
+"phone": "يا رفيق افتح صورة النور"
+},
+{
+"surah": 24,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة النور",
+"phone": "يا رفيق افتح صورة النور"
+},
+{
+"surah": 24,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النور",
+"phone": "يا رفيق افتح صورة النور"
+},
+{
+"surah": 25,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الفرقان",
+"phone": "يا رفيق افتح صورة الفرقان"
+},
+{
+"surah": 25,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الفرقان",
+"phone": "يا رفيق افتح صورة الفرقان"
+},
+{
+"surah": 25,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الفرقان",
+"phone": "يا رفيق افتح صورة الفرقان"
+},
+{
+"surah": 26,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الشعراء",
+"phone": "يا رفيق افتح صورة الشعراء"
+},
+{
+"surah": 26,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الشعراء",
+"phone": "يا رفيق افتح صورة الشعراء"
+},
+{
+"surah": 26,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الشعراء",
+"phone": "يا رفيق افتح صورة شعراء"
+},
+{
+"surah": 27,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة النمل",
+"phone": "يا رفيق افتح صورة النمل"
+},
+{
+"surah": 27,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة النمل",
+"phone": "يا رفيق افتح صورة النمل"
+},
+{
+"surah": 27,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النمل.",
+"phone": "يا رفيق افتح صورة النمل"
+},
+{
+"surah": 28,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة القصص",
+"phone": "يا رفيق افتح صورة القصص"
+},
+{
+"surah": 28,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة القصص",
+"phone": "يا رفيق افتح صورة القفص"
+},
+{
+"surah": 28,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة القصص",
+"phone": "يا رفيق افتح صورة القفص"
+},
+{
+"surah": 29,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة العنكبوت",
+"phone": "يا رفيق افتح صورة العنكبوت"
+},
+{
+"surah": 29,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة العنكبوت",
+"phone": "يا رفيق افتح صورة العنكبوت"
+},
+{
+"surah": 29,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة العنكبوت",
+"phone": "يا رفيق افتح صورة العنكبوت"
+},
+{
+"surah": 30,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الروم",
+"phone": "يا رفيق افتح صورة الروم"
+},
+{
+"surah": 30,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الروم",
+"phone": "يا رفيق افتح صورة الروم"
+},
+{
+"surah": 30,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الروم",
+"phone": "يا رفيق افتح صورة الروم"
+},
+{
+"surah": 31,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة لقمان",
+"phone": "يا رفيق افتح صورة لقمان"
+},
+{
+"surah": 31,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة لقمان",
+"phone": "يا رفيق افتح صورة لقمان"
+},
+{
+"surah": 31,
+"voice": "ar-EG-SalmaNeural",
+"wide": "ياارفيق افتح صورة لقمان",
+"phone": "يا رفيق افتح صورة لقمان"
+},
+{
+"surah": 32,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة السكة",
+"phone": "يا رفيق افتح صورة السج"
+},
+{
+"surah": 32,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة السجدة",
+"phone": "يا رفيق افتح صورة السجدة"
+},
+{
+"surah": 32,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة السجدة",
+"phone": "يا رفيق افتح صورة السجده"
+},
+{
+"surah": 33,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الأحزاب",
+"phone": "يا رفيق افتح صورة الأحزاب"
+},
+{
+"surah": 33,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتحكح صورة الأحزاب.",
+"phone": "يا رفيق افتح صورة الأحزاب"
+},
+{
+"surah": 33,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الأحزاب",
+"phone": "يا رفيق افتح صورة الأحز"
+},
+{
+"surah": 34,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة سما",
+"phone": "يا رفيق افتح صورة سم"
+},
+{
+"surah": 34,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة السبأ",
+"phone": "يا رفيق افتح صورة السبأ"
+},
+{
+"surah": 34,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة سسبب",
+"phone": "يا رفيق افتح صورة سبت"
+},
+{
+"surah": 35,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة فاطر",
+"phone": "يا رفيق افتح صورة فاطر"
+},
+{
+"surah": 35,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة فطر",
+"phone": "يا رفيق افتح صورة فطر"
+},
+{
+"surah": 35,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الفطر",
+"phone": "يا رفيق افتح صورة فااطر"
+},
+{
+"surah": 36,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة يس",
+"phone": "يا رفيق افتح صورة يسين"
+},
+{
+"surah": 36,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة يس",
+"phone": "يا رفيق افتح صورة يسين"
+},
+{
+"surah": 36,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة يسين",
+"phone": "يا رفيق افتح صورة ياسنا"
+},
+{
+"surah": 37,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الصائف",
+"phone": "يا رفيق افتح صورة الصاف"
+},
+{
+"surah": 37,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الصافات",
+"phone": "يا رفيق افتح صورة الصافات"
+},
+{
+"surah": 37,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الصافات",
+"phone": "يا رفيق افتح صورة الصفات"
+},
+{
+"surah": 38,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة صاد",
+"phone": "يا رفيق افتح صورة صاد"
+},
+{
+"surah": 38,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة صد",
+"phone": "يا رفيق افتح صورة صد"
+},
+{
+"surah": 38,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة صدا",
+"phone": "يا رفيق افتح صورة صدا"
+},
+{
+"surah": 39,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الزمر",
+"phone": "يا رفيق افتح صورة الزمر"
+},
+{
+"surah": 39,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الزمر",
+"phone": "يا رفيق افتح صورة سمر"
+},
+{
+"surah": 39,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الزمر",
+"phone": "يا رفيق افتح صورة تم"
+},
+{
+"surah": 40,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة غافر",
+"phone": "يا رفيق افتح صورة غافر"
+},
+{
+"surah": 40,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة غافر",
+"phone": "يا رفيق افتح صورة غافر"
+},
+{
+"surah": 40,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة غافر",
+"phone": "يا رفيق افتحح سورة ت غافر"
+},
+{
+"surah": 41,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة فصلة",
+"phone": "يا رفيق افتح صور فصلا"
+},
+{
+"surah": 41,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق إذ تحصور فصلت",
+"phone": "يا رفيق افتح صورة فصلت"
+},
+{
+"surah": 41,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح سور فاصلت",
+"phone": "يا رفيق افتح سور فاصلت"
+},
+{
+"surah": 42,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الشور",
+"phone": "يا رفيق افتح صورة الشور"
+},
+{
+"surah": 42,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورةشور",
+"phone": "يا رفيق افتح صورة أشور"
+},
+{
+"surah": 42,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة شور",
+"phone": "يا رفيق افتح صورة شور"
+},
+{
+"surah": 43,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الزخرف",
+"phone": "يا رفيق افتح صورة الزخرف"
+},
+{
+"surah": 43,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الزخرف",
+"phone": "يا رفيق افتح صورة الزخرف"
+},
+{
+"surah": 43,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الزخرف",
+"phone": "يا رفيق افتح صورة الزخرف"
+},
+{
+"surah": 44,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الدخان",
+"phone": "يا رفيق افتح صورة الدخان"
+},
+{
+"surah": 44,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الدخان.",
+"phone": "يا رفيق افتح صورة الدخان"
+},
+{
+"surah": 44,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الدخان",
+"phone": "يا رفيق افتح صورة الدخان"
+},
+{
+"surah": 45,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الجاثية",
+"phone": "يا رفيق افتح صورة الجااسية"
+},
+{
+"surah": 45,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الجافية",
+"phone": "يا رفيق افتح صورة الجافية"
+},
+{
+"surah": 45,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الجاثية",
+"phone": "يا رفيق افتح صورة الجثية"
+},
+{
+"surah": 46,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الأحقاف",
+"phone": "يا رفيق افتح صورة الأحقاف"
+},
+{
+"surah": 46,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الأحقاف",
+"phone": "يا رفيق افتح صورة الأحقاف"
+},
+{
+"surah": 46,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الأحقاف",
+"phone": "يا رفيق افتح سورة الأحقاف"
+},
+{
+"surah": 47,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة محمد",
+"phone": "يا رفيق افتح صورة محمد"
+},
+{
+"surah": 47,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة محمد",
+"phone": "ياارفيق افتح صورة محمد"
+},
+{
+"surah": 47,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة محمد",
+"phone": "يا رفيق افتحح صورة محمد"
+},
+{
+"surah": 48,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الفتح",
+"phone": "يا رفيق افتح صورة الفتح"
+},
+{
+"surah": 48,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الفتح.",
+"phone": "يا رفيق افتح صورة الفتح"
+},
+{
+"surah": 48,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الفتح",
+"phone": "يا رفيق افتح صورة الفتح"
+},
+{
+"surah": 49,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الحجرة",
+"phone": "يا رفيق افتح صورة الحجرة"
+},
+{
+"surah": 49,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الحجرات",
+"phone": "يا رفيق افتح صورة الحجرات"
+},
+{
+"surah": 49,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الحجرات",
+"phone": "يا رفيق افتح صورة الحجرات"
+},
+{
+"surah": 50,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة ق",
+"phone": "يا رفيق افتح صور ق"
+},
+{
+"surah": 50,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق التحس قف",
+"phone": "يا رفيق استحسور قف"
+},
+{
+"surah": 50,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صور قف.",
+"phone": "يا رفيق افتح صور قف"
+},
+{
+"surah": 51,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الارية",
+"phone": "يا رفيق افتح صورة الارية"
+},
+{
+"surah": 51,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الاريات.",
+"phone": "يا رفيق افتح صورة الزاريات"
+},
+{
+"surah": 51,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الرياريات",
+"phone": "يا رفيق افتح صورة زارياته"
+},
+{
+"surah": 52,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يارفيق افتح صورة الطور",
+"phone": "يا رفيق افتح صورة الطور"
+},
+{
+"surah": 52,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الطور",
+"phone": "يا رفيق افتح صورة الطور"
+},
+{
+"surah": 52,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الطور",
+"phone": "يا رفيق افتح صورة الطور"
+},
+{
+"surah": 53,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة النجم",
+"phone": "يا رفيق افتح صورة النجم"
+},
+{
+"surah": 53,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة النجم",
+"phone": "يا رفيق افتح صورة النجم"
+},
+{
+"surah": 53,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النجم",
+"phone": "يا رفيق افتح صورة النجم"
+},
+{
+"surah": 54,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة القمر",
+"phone": "يا رفيق افتح صورة القمر"
+},
+{
+"surah": 54,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة القمر",
+"phone": "يا رفيق افتح صورة القمر"
+},
+{
+"surah": 54,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة القمر",
+"phone": "يا رفيق افتح صورة القمر"
+},
+{
+"surah": 55,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الرحمنان",
+"phone": "يا رفيق افتح صورة الرحمن"
+},
+{
+"surah": 55,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الرحمن",
+"phone": "يا رفيق افتح صورة الرحمن"
+},
+{
+"surah": 55,
+"voice": "ar-EG-SalmaNeural",
+"wide": "ياارفيق افتح صورة الرحمن",
+"phone": "يا رفيق افتح صورة الرحمن"
+},
+{
+"surah": 56,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الواقعة",
+"phone": "يا رفيق افتح صورة الواقعة"
+},
+{
+"surah": 56,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الواقعة",
+"phone": "يا رفيق افتح صورة الواقعة"
+},
+{
+"surah": 56,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الواقعة",
+"phone": "يا رفيق افتح صورة الواقعة"
+},
+{
+"surah": 57,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الحديد",
+"phone": "يا رفيق افتح صورة الحديد"
+},
+{
+"surah": 57,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الحديد",
+"phone": "يا رفيق افتح صورة الحديد"
+},
+{
+"surah": 57,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الحديد",
+"phone": "يا رفيق افتح صورة الحديد"
+},
+{
+"surah": 58,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة المجادلة",
+"phone": "يا رفيق افتح صورة المجادلة."
+},
+{
+"surah": 58,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المجادلة",
+"phone": "يا رفيق افتح صورة المجادلة"
+},
+{
+"surah": 58,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المجادلة",
+"phone": "يا رفيق افتح صورة المجادلة"
+},
+{
+"surah": 59,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الحشر",
+"phone": "يا رفيق افتح صورة الحشف"
+},
+{
+"surah": 59,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الحشر",
+"phone": "يا رفيق افتح صورة الحشر"
+},
+{
+"surah": 59,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الحشر",
+"phone": "يا رفيق افتح صورة الحشر"
+},
+{
+"surah": 60,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الممتحنة.",
+"phone": "يا رفيق افتح صورة الممتحنة"
+},
+{
+"surah": 60,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الممتحنة",
+"phone": "يا رفيق افتح صورة الممتحنة"
+},
+{
+"surah": 60,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الممتحنة",
+"phone": "يا رفيق افتح صورة ممتحنه"
+},
+{
+"surah": 61,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الصف",
+"phone": "يا رفيق افتح صورة الصف"
+},
+{
+"surah": 61,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الصف",
+"phone": "يا رفيق افتح صورة الصف"
+},
+{
+"surah": 61,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الصف.",
+"phone": "يا رفيق افتح صورة الصف"
+},
+{
+"surah": 62,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الجمعة",
+"phone": "يا رفيق افتح صورة الجمعة"
+},
+{
+"surah": 62,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الجمعة",
+"phone": "يا رفيق افتح صورة الجمعة"
+},
+{
+"surah": 62,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الجمعة",
+"phone": "يا رفيق افتح صورة الجمعة"
+},
+{
+"surah": 63,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة المنافقون",
+"phone": "يا رفيق افتح صورة المنافقون"
+},
+{
+"surah": 63,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المنافقون",
+"phone": "يا رفيق افتح صورة المنافقون"
+},
+{
+"surah": 63,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المنافقون",
+"phone": "يا رفيق افتح سورة المنافقون"
+},
+{
+"surah": 64,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة التغابن",
+"phone": "يا رفيق افتح صورة التغابن"
+},
+{
+"surah": 64,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة التغابن",
+"phone": "يا رفيق افتح صورة التغابن"
+},
+{
+"surah": 64,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة التغابن",
+"phone": "يا رفيق افتح صورة التغابن"
+},
+{
+"surah": 65,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الطلاق",
+"phone": "يا رفيق افتح صورة الطلاق"
+},
+{
+"surah": 65,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الطلاق",
+"phone": "يا رفيق افتح صورة الطلاق"
+},
+{
+"surah": 65,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الطلاق",
+"phone": "يا رفيق افتح صورة الطلاق"
+},
+{
+"surah": 66,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة التحريم",
+"phone": "يا رفيق افتح صورة التحريم"
+},
+{
+"surah": 66,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة التحريم",
+"phone": "يا رفيق افتح صورة التحريم"
+},
+{
+"surah": 66,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة التحريم",
+"phone": "يا رفيق افتح صورة التحريم"
+},
+{
+"surah": 67,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الملك",
+"phone": "يا رفيق افتح صورة الملك"
+},
+{
+"surah": 67,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الملك",
+"phone": "يا رفيق افتح صورة الملك"
+},
+{
+"surah": 67,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الملك",
+"phone": "يا رفيق افتح صورة الملك"
+},
+{
+"surah": 68,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة القلم",
+"phone": "يا رفيق افتح صورة القلم"
+},
+{
+"surah": 68,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة القلم",
+"phone": "يا رفيق افتح صورة القلم"
+},
+{
+"surah": 68,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة القلم",
+"phone": "يا رفيق افتح صورة القلم"
+},
+{
+"surah": 69,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الحق",
+"phone": "يا رفيق افتح صورة الحق"
+},
+{
+"surah": 69,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الحق",
+"phone": "يا رفيق افتح صورة الحق"
+},
+{
+"surah": 69,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الحقه",
+"phone": "يا رفيق افتح صورة الحقه"
+},
+{
+"surah": 70,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة المعارد",
+"phone": "يا رفيق افتح صورة المعارد"
+},
+{
+"surah": 70,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المعارج",
+"phone": "يا رفيق افتح صورة المعارج"
+},
+{
+"surah": 70,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المعارج",
+"phone": "يا رفيق افتح صورة المعارج"
+},
+{
+"surah": 71,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة نوح",
+"phone": "يا رفيق افتح صورة نوح"
+},
+{
+"surah": 71,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة نوح",
+"phone": "يا رفيق افتح صورة نوح"
+},
+{
+"surah": 71,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة نوح",
+"phone": "يا رفيق افتح صورة نوحة"
+},
+{
+"surah": 72,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الجن",
+"phone": "يا رفيق افتح صورة الجن"
+},
+{
+"surah": 72,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الجن",
+"phone": "يا رفيق افتح صورة الجن"
+},
+{
+"surah": 72,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الجن",
+"phone": "يا رفيق افتح صورة الجن"
+},
+{
+"surah": 73,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة المزمل",
+"phone": "يا رفيق افتح صورة المزل"
+},
+{
+"surah": 73,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المزمل",
+"phone": "يا رفيق افتح صورة المزمل"
+},
+{
+"surah": 73,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المزمل",
+"phone": "يا رفيق افتح صورة المزمل"
+},
+{
+"surah": 74,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة المدثر",
+"phone": "يا رفيق افتح صورة المدثر"
+},
+{
+"surah": 74,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المدثر.",
+"phone": "يا رفيق افتح صورة المدثر"
+},
+{
+"surah": 74,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المدثر",
+"phone": "يا رفيق افتح صورة المدثر"
+},
+{
+"surah": 75,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة القيامة",
+"phone": "يا رفيق افتح صورة القة"
+},
+{
+"surah": 75,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة القيامة",
+"phone": "يا رفيق افتح صورة القيامة"
+},
+{
+"surah": 75,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة القيامة",
+"phone": "يا رفيق افتح صورة القيامة"
+},
+{
+"surah": 76,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الإنسان.",
+"phone": "يا رفيق افتح صورة الإنسان."
+},
+{
+"surah": 76,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الإنسان",
+"phone": "يا رفيق افتح صورة الإنسان"
+},
+{
+"surah": 76,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الإنسان",
+"phone": "يا رفيق افتح صورة الإنسان"
+},
+{
+"surah": 77,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة المرسلة",
+"phone": "يا رفيق افتح صورة المرسلات"
+},
+{
+"surah": 77,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المرسلات.",
+"phone": "يا رفيق افتح صورة المرسلات"
+},
+{
+"surah": 77,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح سورة المرسلات",
+"phone": "يا رفيق استفسح سورة المرسلات"
+},
+{
+"surah": 78,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة النبأ",
+"phone": "يا رفيق افتح صورة النبأ"
+},
+{
+"surah": 78,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة النبأ",
+"phone": "يا رفيق افتح صورة النبأ"
+},
+{
+"surah": 78,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النبي",
+"phone": "يا رفيق افتح صورة النبأ"
+},
+{
+"surah": 79,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة النازازعة",
+"phone": "يا رفيق افتح صورة النازازعة"
+},
+{
+"surah": 79,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة النازازعات",
+"phone": "يا رفيق افتح صورة الناززعات"
+},
+{
+"surah": 79,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النززعات",
+"phone": "يا رفيق افتح صورة النززعات"
+},
+{
+"surah": 80,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة عبس",
+"phone": "يا رفيق افتح صورة عبث"
+},
+{
+"surah": 80,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق اذك سورة عبس",
+"phone": "يا رفيق افتح صورة عبس"
+},
+{
+"surah": 80,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة عبس",
+"phone": "يا رفيق افتح صورة عبس"
+},
+{
+"surah": 81,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة التكوير",
+"phone": "يا رفيق افتح صورة التكوير"
+},
+{
+"surah": 81,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة التكوير.",
+"phone": "يا رفيق افتح صورة التكوير"
+},
+{
+"surah": 81,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة التكوير",
+"phone": "يا رفيق افتح صورة التكوير"
+},
+{
+"surah": 82,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الانفطار",
+"phone": "يا رفيق افتح صورة الانفطار"
+},
+{
+"surah": 82,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الانفطار",
+"phone": "يا رفيق افتح صورة الانفطار"
+},
+{
+"surah": 82,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الانفطار",
+"phone": "يا رفيق افتح صورة الانفطار"
+},
+{
+"surah": 83,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة المطففين",
+"phone": "يا رفيق افتح صورة المطففين"
+},
+{
+"surah": 83,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة المطففين",
+"phone": "يا رفيق افتح صورة المطففين"
+},
+{
+"surah": 83,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المطففين",
+"phone": "يا رفيق افتح صورة المتصفين"
+},
+{
+"surah": 84,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الانشقاق",
+"phone": "يا رفيق افتح صورة الانشقاق"
+},
+{
+"surah": 84,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الانشقاق",
+"phone": "يا رفيق افتح صورة الانشقاق"
+},
+{
+"surah": 84,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الانشقاق",
+"phone": "يا رفيق افتح سورة الانشقاق"
+},
+{
+"surah": 85,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة البرود",
+"phone": "يا رفيق افتح صورة البرود"
+},
+{
+"surah": 85,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة البروج",
+"phone": "يا رفيق افتح صورة البروج"
+},
+{
+"surah": 85,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة البروج",
+"phone": "يا رفيق افتح صورة البروج"
+},
+{
+"surah": 86,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الطارئ",
+"phone": "يا رفيق افتح صورة الطارئ"
+},
+{
+"surah": 86,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الطارق",
+"phone": "يا رفيق افتح صورة الطارق"
+},
+{
+"surah": 86,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الطارق",
+"phone": "يا رفيق افتح صورة الطارق"
+},
+{
+"surah": 87,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الأعل",
+"phone": "يا رفيق افتح صورة الأعلى"
+},
+{
+"surah": 87,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الأعلى",
+"phone": "يا رفيق افتح صورة الأعلى"
+},
+{
+"surah": 87,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق، افتح صورة الأعلى",
+"phone": "يا رفيق، افتح صورة الأعلى"
+},
+{
+"surah": 88,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الغاشية",
+"phone": "يا رفيق افتح صورة الغاشية"
+},
+{
+"surah": 88,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الغاشية",
+"phone": "يا رفيق افتح صورة الغاشية"
+},
+{
+"surah": 88,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الغاشية",
+"phone": "يا رفيق افتح صورة الغاشية"
+},
+{
+"surah": 89,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الفجر",
+"phone": "يا رفيق افتح صورة الفجر"
+},
+{
+"surah": 89,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الفجر",
+"phone": "يا رفيق افتح صورة الفجر"
+},
+{
+"surah": 89,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الفجر",
+"phone": "يا رفيق افتح صورة الفجر"
+},
+{
+"surah": 90,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة البلد",
+"phone": "يا رفيق افتح صورة البلد"
+},
+{
+"surah": 90,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة البلد",
+"phone": "يا رفيق افتح صورة البلد"
+},
+{
+"surah": 90,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة البلد",
+"phone": "يا رفيق افتح صورة البَلَد"
+},
+{
+"surah": 91,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الشمس",
+"phone": "يا رفيق افتح صورة الشمس"
+},
+{
+"surah": 91,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الشمس.",
+"phone": "يا رفيق افتح سورة الشمس"
+},
+{
+"surah": 91,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الشمس",
+"phone": "يا رفيق افتح صورة الشمس"
+},
+{
+"surah": 92,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الليل",
+"phone": "يا رفيق افتح صورة الليل"
+},
+{
+"surah": 92,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الليل",
+"phone": "يا رفيق افتح صورة الليل"
+},
+{
+"surah": 92,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الليل",
+"phone": "يا رفيق افتح صورة الليل"
+},
+{
+"surah": 93,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة تأضح",
+"phone": "يا رفيق افتح صورة أضح"
+},
+{
+"surah": 93,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة أضح",
+"phone": "يا رفيق افتح صورة أضح"
+},
+{
+"surah": 93,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الضحى",
+"phone": "يا رفيق افتح صورة الضحى"
+},
+{
+"surah": 94,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الشرح",
+"phone": "يا رفيق افتح صورة الشرح"
+},
+{
+"surah": 94,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الشر",
+"phone": "يا رفيق افتح صورة الش"
+},
+{
+"surah": 94,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الشرح.",
+"phone": "يا رفيق افتح صورة الشرح"
+},
+{
+"surah": 95,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة التين",
+"phone": "يا رفيق افتح صورة التين"
+},
+{
+"surah": 95,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة التين",
+"phone": "يا رفيق افتح صورة التين"
+},
+{
+"surah": 95,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة التين",
+"phone": "يا رفيق افتح سورة التين"
+},
+{
+"surah": 96,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة العلى",
+"phone": "يا رفيق افتح صورة العلى"
+},
+{
+"surah": 96,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة العلق",
+"phone": "يا رفيق افتح صورة العق"
+},
+{
+"surah": 96,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة العلق",
+"phone": "يا رفيق افتح صورة العلق"
+},
+{
+"surah": 97,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة القدر",
+"phone": "يا رفيق افتح صورة القدر"
+},
+{
+"surah": 97,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة القدر",
+"phone": "يا رفيق افتح صورة القدر"
+},
+{
+"surah": 97,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة القدر",
+"phone": "يا رفيق افتح صورة القدر"
+},
+{
+"surah": 98,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة البينة",
+"phone": "يا رفيق افتح صورة البينة"
+},
+{
+"surah": 98,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة البينة",
+"phone": "يا رفيق افتح صورة البينة"
+},
+{
+"surah": 98,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة البينه",
+"phone": "يا رفيق افتح صورة البينه"
+},
+{
+"surah": 99,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الزلزلة",
+"phone": "يا رفيق افتح صورة الزلزلة"
+},
+{
+"surah": 99,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الزلزلة",
+"phone": "يا رفيق افتح صورة الزلزلة"
+},
+{
+"surah": 99,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة زلزله",
+"phone": "يا رفيق افتح صورة زلزلة"
+},
+{
+"surah": 100,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة العادية",
+"phone": "يا رفيق افتح صورة العادية"
+},
+{
+"surah": 100,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة العاديات.",
+"phone": "يا رفيق افتح صورة العاديات"
+},
+{
+"surah": 100,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة العاديات",
+"phone": "يا رفيق افتحح صورة العاديات"
+},
+{
+"surah": 101,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة القارعة",
+"phone": "يا رفيق افتح صورة القارعة"
+},
+{
+"surah": 101,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة القارعة",
+"phone": "يا رفيق افتح صورة القارعة"
+},
+{
+"surah": 101,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة القارعه",
+"phone": "يا رفيق افتح صورة القارعه"
+},
+{
+"surah": 102,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة التكاثر.",
+"phone": "يا رفيق افتح صورة التكاثر."
+},
+{
+"surah": 102,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة التكاثر",
+"phone": "يا رفيق افتح صورة التكاثر"
+},
+{
+"surah": 102,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة التكاثر",
+"phone": "يا رفيق افتح صورة التكاثر"
+},
+{
+"surah": 103,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة العصر",
+"phone": "يا رفيق افتح صورة العصر"
+},
+{
+"surah": 103,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة العصر",
+"phone": "يا رفيق افتح صورة العصر"
+},
+{
+"surah": 103,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة العصر",
+"phone": "يا رفيق افتح صورة العصر"
+},
+{
+"surah": 104,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الهمزه",
+"phone": "يا رفيق افتح صورة الهمزة"
+},
+{
+"surah": 104,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق اذكح صورة الهمسة",
+"phone": "يا رفيق ا استحصورورة الهمسة"
+},
+{
+"surah": 104,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الهمزه",
+"phone": "يا رفيق افتح صورة الهمزه"
+},
+{
+"surah": 105,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الفيل",
+"phone": "يا رفيق افتح صورة الفيل"
+},
+{
+"surah": 105,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الفيل",
+"phone": "يا رفيق افتح صورة الفيل"
+},
+{
+"surah": 105,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الفيل",
+"phone": "يا رفيق افتح صورة الفيل"
+},
+{
+"surah": 106,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة قريش",
+"phone": "يا رفيق افتح صورة قريش"
+},
+{
+"surah": 106,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة قريش",
+"phone": "يا رفيق افتح صورة قريش"
+},
+{
+"surah": 106,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة قريش",
+"phone": "يا رفيق افتح صورة قريش"
+},
+{
+"surah": 107,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة المعون",
+"phone": "يا رفيق افتح صورة المعون"
+},
+{
+"surah": 107,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المعون",
+"phone": "يا رفيق افتح صورة المعون"
+},
+{
+"surah": 107,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المعون",
+"phone": "يا رفيق افتح سورة المعون"
+},
+{
+"surah": 108,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الكوثر",
+"phone": "يا رفيق افتح صورة الكوفر"
+},
+{
+"surah": 108,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الكوثر",
+"phone": "يا رفيق افتح صورة الكوثر"
+},
+{
+"surah": 108,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الكوثر",
+"phone": "يا رفيق افتح صورة الكوثر"
+},
+{
+"surah": 109,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الكافرون",
+"phone": "يا رفيق افتح صورة الكافرون"
+},
+{
+"surah": 109,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الكافرون",
+"phone": "يا رفيق افتح صورة الكافرون"
+},
+{
+"surah": 109,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الكافرون",
+"phone": "يا رفيق افتح سورة الكافرون"
+},
+{
+"surah": 110,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة النصر",
+"phone": "يا رفيق افتح صورة النصر"
+},
+{
+"surah": 110,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة النصر",
+"phone": "يا رفيق افتح صورة النصر"
+},
+{
+"surah": 110,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة النصر",
+"phone": "يا رفيق افتح صورة النصر"
+},
+{
+"surah": 111,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة المسد",
+"phone": "يا رفيق افتح صورة المد"
+},
+{
+"surah": 111,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة المسد",
+"phone": "يا رفيق افتح صورة المد"
+},
+{
+"surah": 111,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة المسد",
+"phone": "يا رفيق افتح صورة المفد"
+},
+{
+"surah": 112,
+"voice": "ar-EG-ShakirNeural",
+"wide": "ياارفيق افتح صورة الإخلاص",
+"phone": "يا رفيق افتح صورة الإخلاص"
+},
+{
+"surah": 112,
+"voice": "ar-SA-HamedNeural",
+"wide": "ياارفيق افتح صورة الإخلاص",
+"phone": "يا رفيق افتح صورة الإخلاص"
+},
+{
+"surah": 112,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح سورة الإخلاص",
+"phone": "يا رفيق افتح سورة الإخلاص"
+},
+{
+"surah": 113,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الفل",
+"phone": "يا رفيق افتح صورة الفل"
+},
+{
+"surah": 113,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الفلق",
+"phone": "يا رفيق افتح صورة الفلق"
+},
+{
+"surah": 113,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة الفلق",
+"phone": "يا رفيق افتح صورة الفلق"
+},
+{
+"surah": 114,
+"voice": "ar-EG-ShakirNeural",
+"wide": "يا رفيق افتح صورة الناس",
+"phone": "يا رفيق افتح صورة الناس"
+},
+{
+"surah": 114,
+"voice": "ar-SA-HamedNeural",
+"wide": "يا رفيق افتح صورة الناس",
+"phone": "يا رفيق افتح صورة الناس"
+},
+{
+"surah": 114,
+"voice": "ar-EG-SalmaNeural",
+"wide": "يا رفيق افتح صورة أناس",
+"phone": "يا رفيق افتح صورة أناس"
+}
+]

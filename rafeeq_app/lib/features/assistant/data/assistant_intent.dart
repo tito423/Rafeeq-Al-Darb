@@ -1,7 +1,10 @@
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/utils/digits.dart' show asciiDigits;
+import 'assistant_distance.dart';
 import 'assistant_lexicon.dart' as lex;
 import 'assistant_wake_word.dart';
+
+export 'assistant_distance.dart';
 
 part 'assistant_ayah_ref.dart';
 part 'assistant_destination_match.dart';
@@ -307,25 +310,6 @@ Set<String> _normSet(Iterable<String> words) =>
 /// like fillers.
 const _latinArticles = {'al', 'el', 'ul', 'ar', 'ash', 'as', 'az', 'ad', 'at', 'an', 'i'};
 
-/// Levenshtein distance, giving up (returning [max] + 1) once it must
-/// exceed [max].
-int editDistance(String a, String b, int max) {
-  if ((a.length - b.length).abs() > max) return max + 1;
-  var prev = List<int>.generate(b.length + 1, (i) => i);
-  for (var i = 1; i <= a.length; i++) {
-    final cur = List<int>.filled(b.length + 1, 0)..[0] = i;
-    var rowMin = cur[0];
-    for (var j = 1; j <= b.length; j++) {
-      final cost = a.codeUnitAt(i - 1) == b.codeUnitAt(j - 1) ? 0 : 1;
-      cur[j] = [prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost]
-          .reduce((x, y) => x < y ? x : y);
-      if (cur[j] < rowMin) rowMin = cur[j];
-    }
-    if (rowMin > max) return max + 1;
-    prev = cur;
-  }
-  return prev[b.length];
-}
 
 /// What was said after «يا رفيق», or null when it was not called.
 ///
@@ -348,7 +332,10 @@ class AssistantParser {
       for (var i = 0; i < catalog.surahs.length; i++)
         {
           _surahKey(catalog.surahs[i]),
+          // «الرَّحۡمَٰن» as people write it, without the dagger alif.
+          _surahKey(normalizeArabicLoose(catalog.surahs[i])),
           if (i < catalog.surahsLatin.length) _surahKey(catalog.surahsLatin[i]),
+          ...?lex.surahSpokenNames[i + 1],
         }..remove(''),
     ];
     _azkarSectionKeys = {
@@ -434,6 +421,21 @@ class AssistantParser {
   /// from 7; shorter words and ties are left alone rather than guessed.
   String _correct(String w) {
     if (w.length < 4 || _vocab.contains(w) || _fillers.contains(w)) return w;
+    // Surah names are kept bare («نحل»), so «النحل» itself is not in the
+    // vocabulary and was "corrected" into another word: 247 of 684 spoken
+    // surah commands lost that way (asr_surah_transcripts.json, 2026-09-30).
+    // The article is kept and only the word after it is looked at.
+    final b = bare(w);
+    if (b != w) {
+      if (_vocab.contains(b)) return w;
+      final c = _nearest(b);
+      return c == b ? w : '${w.substring(0, w.length - b.length)}$c';
+    }
+    return _nearest(w);
+  }
+
+  String _nearest(String w) {
+    if (w.length < 4) return w;
     final max = w.length >= 7 ? 2 : 1;
     for (final tier in _tiers) {
       String? best;
@@ -690,8 +692,10 @@ class AssistantParser {
       final n = int.tryParse(m?.group(1) ?? '');
       if (n != null && n >= 1 && n <= 114) best = n;
     }
+    if (best == null && at >= 0) best = nearestSurah(_surahKeys, ws.sublist(at + 1));
     return best;
   }
+
 
   /// A reciter named after «بصوت / للشيخ / الشيخ / القارئ / لل…» or
   /// anywhere: the one whose name shares the most words with the sentence.

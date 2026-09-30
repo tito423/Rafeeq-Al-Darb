@@ -453,4 +453,32 @@ void main() {
     expect(call('rafiek abre as configurações'), 'open settings');
     expect(call('رفيق ترتيبت کولو'), 'open settings');
   });
+
+  // «يا رفيق افتح سورة …» for all 114 surahs, three TTS voices, spoken to
+  // the app's own Arabic model (FastConformer, the same file byte for byte)
+  // at full quality and through a phone-call band (8 kHz, 300-3400 Hz, what
+  // a Bluetooth headset carries): E:/DevEnv/asr/surah_audit.py, 2026-09-30.
+  // What the model WROTE must open the surah that was said. The owner's
+  // «افتح سورة يوسف» came back «مش لاقي» on his phone.
+  test('every surah, as the Arabic model writes it', () {
+    final rows = jsonDecode(
+        File('test/fixtures/asr_surah_transcripts.json').readAsStringSync()) as List;
+    final missed = <String>[];
+    for (final r in rows) {
+      for (final k in ['wide', 'phone']) {
+        final heard = r[k] as String;
+        final rest = afterWakeWord(heard) ?? heard;
+        final i = p.parse(rest);
+        if (i is! OpenQuranAyahIntent || i.surah != r['surah'] || i.ayah != 1) {
+          missed.add('${r['surah']} $k "$heard" -> $i');
+        }
+      }
+    }
+    File('build/asr_surah_missed.txt').writeAsStringSync(missed.join('\n'));
+    // 247 of 684 missed before «النحل» stopped being "corrected" away and
+    // the near-miss match existed. The 29 left are the model's own garble
+    // («صورةتهد», «تم» for الزمر) or spell another surah («العلى» is
+    // الأعلى); a ceiling, so it can only go down.
+    expect(missed.length, lessThanOrEqualTo(29), reason: missed.join('\n'));
+  });
 }

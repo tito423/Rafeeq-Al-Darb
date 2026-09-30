@@ -81,9 +81,20 @@ const sunanWords = <String>['سنن'];
 
 /// «سورة» in every language (Russian and Urdu go through `norm` too).
 const surahWords = <String>[
-  'سوره', 'سورت', 'صوره', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',
+  // «سور» / «صور»: the Arabic model often drops the ة (surah_audit.py).
+  'سوره', 'سورت', 'صوره', 'سور', 'صور', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',
   'chapter', 'сура', 'суру', 'суры',
 ];
+
+/// Surah names as they are SAID where the mushaf writes letters («يسٓ» is
+/// said «ياسين»), and «آل عمران» run together («العمران») - by surah number.
+const surahSpokenNames = <int, List<String>>{
+  3: ['عمران'],
+  20: ['طاها'],
+  36: ['ياسين', 'يسين'],
+  38: ['صاد'],
+  50: ['قاف'],
+};
 
 /// «كتاب X» / «كتب X».
 const bookWords = <String>['كتاب', 'book', 'libro', 'livre', 'livro', 'книга', 'книгу'];

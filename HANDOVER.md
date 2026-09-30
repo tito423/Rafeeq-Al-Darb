@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 14:29 — IN PROGRESS — resume here**
+**2026-09-30 14:41 — IN PROGRESS — resume here**
 
-Rafeeq diagnostics screen (service/mic state/silenced/model/last sentence+clip share/battery/bg-restricted/bucket/autostart/overlay); wake listener split out of assistant_sheet; 45 keys x7; NOT yet seen on emulator
+Rafeeq surah names: 684 real model transcripts (114 surahs x3 voices x wide/phone band) - parser missed 247, now 29: article-stripped correction, dagger-alif keys, spoken muqattaat names, vowel-weighted near match after the surah word, صور/سور
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
