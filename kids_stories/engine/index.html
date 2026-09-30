@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kids stories renderer</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="cv" width="1280" height="720"></canvas>
+<script src="lib.js"></script>
+<script>
+'use strict';
+// Timeline: scene i occupies exactly [start_i, start_i + seconds_i) from
+// timing.json, so the narration can be laid on scene boundaries unchanged.
+// Cross-fades straddle a boundary (half before, half after) and never move it.
+const XF = 0.35;         // half of a cross-fade, seconds
+const FADE_IN = 0.7, FADE_OUT = 1.0;
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const mk = () => { const b = document.createElement('canvas'); b.width = K.W; b.height = K.H; return b; };
+const bufA = mk(), bufB = mk();
+let SCENES = null, T = null, starts = [], total = 0;
+
+window.loadStory = (story) => new Promise((resolve, reject) => {
+  const s = document.createElement('script');
+  s.src = `../${story}/scenes.js`;
+  s.onload = () => { SCENES = window.STORY_SCENES; resolve(SCENES.length); };
+  s.onerror = () => reject(new Error('cannot load ' + s.src));
+  document.head.appendChild(s);
+});
+
+window.init = (timing) => {
+  if (!SCENES) throw new Error('story not loaded');
+  if (timing.length !== SCENES.length) throw new Error(`timing.json has ${timing.length} entries, story has ${SCENES.length} scenes`);
+  T = timing.map((e, i) => {
+    if (e.scene !== i + 1) throw new Error(`timing.json entry ${i} is scene ${e.scene}, expected ${i + 1}`);
+    if (!(e.seconds > 0)) throw new Error(`scene ${e.scene}: seconds must be > 0`);
+    return e.seconds;
+  });
+  starts = []; total = 0;
+  for (const d of T) { starts.push(total); total += d; }
+  return total;
+};
+
+function drawScene(c, i, t) {
+  const sc = SCENES[i], d = T[i], p = K.clamp(t / d);
+  c.save();
+  c.fillStyle = '#000'; c.fillRect(0, 0, K.W, K.H);
+  if (sc.cam) {
+    let [z, x, y] = sc.cam(p, t, d);
+    z = Math.max(1, z);
+    const hw = K.W / (2 * z), hh = K.H / (2 * z);
+    x = K.clamp(x, hw, K.W - hw); y = K.clamp(y, hh, K.H - hh);
+    c.translate(K.W / 2, K.H / 2); c.scale(z, z); c.translate(-x, -y);
+  }
+  sc.draw(c, t, d, p);
+  c.restore();
+}
+
+function vignette(c) {
+  const g = c.createRadialGradient(K.W / 2, K.H / 2, K.H * 0.45, K.W / 2, K.H / 2, K.H * 0.95);
+  g.addColorStop(0, 'rgba(20,10,20,0)'); g.addColorStop(1, 'rgba(20,10,20,0.22)');
+  c.fillStyle = g; c.fillRect(0, 0, K.W, K.H);
+}
+
+// Global time -> frame. Returns a PNG data URL when asked for one.
+window.renderAt = (g, png = true) => {
+  const n = T.length;
+  let i = 0;
+  while (i < n - 1 && g >= starts[i] + T[i]) i++;
+  const end = starts[i] + T[i];
+  let A = i, B = -1, a = 0;
+  if (i < n - 1 && g > end - XF) { B = i + 1; a = K.smooth((g - (end - XF)) / (2 * XF)); }
+  else if (i > 0 && g < starts[i] + XF) { A = i - 1; B = i; a = K.smooth((g - (starts[i] - XF)) / (2 * XF)); }
+  const ca = bufA.getContext('2d');
+  drawScene(ca, A, g - starts[A]);
+  ctx.globalAlpha = 1;
+  ctx.drawImage(bufA, 0, 0);
+  if (B >= 0) {
+    const cb = bufB.getContext('2d');
+    drawScene(cb, B, g - starts[B]);
+    ctx.globalAlpha = a; ctx.drawImage(bufB, 0, 0); ctx.globalAlpha = 1;
+  }
+  vignette(ctx);
+  const f = Math.min(K.smooth(g / FADE_IN), K.smooth((total - g) / FADE_OUT));
+  if (f < 1) { ctx.fillStyle = `rgba(0,0,0,${1 - f})`; ctx.fillRect(0, 0, K.W, K.H); }
+  return png ? cv.toDataURL('image/png') : null;
+};
+window.__engineReady = true;
+</script>
+</body>
+</html>
