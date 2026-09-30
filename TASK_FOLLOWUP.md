@@ -953,6 +953,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-01 00:33 - Nuh audio v6 accepted, visuals v2 spec with word timings pushed for a cloud session, Gemini TTS pending the owner key
 - 2026-09-30 23:43 - Nuh narration voiced in the owner own voice with full tashkeel, audio track 146.6 s, render with real timings running
 - 2026-09-30 22:53 - Kids stories started - brief for cloud visuals session, voice plan with SILMA TTS on the owner own recorded voice
 - 2026-09-30 22:39 - Tasmee live review - show the ayah as printed not the folded text, stop the worker by message so the model is freed, commit the transcript by token timestamps so no gaps, bounded decode span, words below the stop button. 2-255 live 49 of 50, final 50 of 50 on emulator
