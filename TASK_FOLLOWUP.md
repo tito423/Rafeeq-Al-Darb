@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~14:10 (09-30, Opus) ITEM 1 DONE + SEEN: continuous recitation starts at the surah opened by name. `quranOpenedAyahProvider` (jump sheet surah tap, Rafeeq «افتح سورة…», Quran-word result) + `continuousStartOnPage` (selected verse > opened verse on this page > page top). Emulator (debug x64): text mode Ya-Sin via jump sheet -> play -> media session 36:1, queue 84; paper mode same 36:1 highlighted; jump by PAGE 440 -> 35:45, queue 46 (unchanged behaviour). test/continuous_start_test.dart 4/4; full suite 681 pass; analyze clean. Rafeeq path NOT yet seen: FOUND the Arabic model writes «صورتي يس» / «صورة ياسين» for «سورة يس» -> intent unknown (log 14:08). NEXT: item 2 - audit all 114 surah names through TTS -> the same FastConformer on PC -> parser; fix aliases (ياسين, صورتي, ...); then re-feed E:/DevEnv/asr/yasin*.wav via rafeeq_test.wav and see 36:1 on play.
+
 ~07:15 (09-30) OWNER ANSWERED: phone = HONOR; the Arabic pack («دقة أعلى في العربية») WAS enabled when Rafeeq failed (so the failures are with the Arabic model, over Bluetooth / in the background). Still unanswered: battery exemption + overlay permission. NEXT_PROMPT.md updated.
 
 ~07:10 (09-30, Opus) HANDOVER («جهّز الدنيا»). Verified now: analyze clean, 677 tests, hosted 9/9 206, 7 x 2,191 keys, v3.72.0 draft (private) intact, v3.71.0 public. OWNER PHONE REPORT on 3.72.0: (1) text-mode continuous recitation from an opened surah (Ya-Sin) starts at the PAGE top (end of Fatir) - must start at the opened surah; (2) Rafeeq: no background listening, broken speech over Bluetooth, «افتح سورة يوسف» not understood. NEXT EXACT: NEXT_PROMPT.md item 1 (recitation start), then item 2 after the owner answers the three questions.
@@ -909,6 +911,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 14:09 - Item 1 verified on emulator (text+paper, 36:1); Rafeeq requestQuranAyah helper; line ceilings kept
 - 2026-09-30 13:42 - Continuous recitation starts at the surah opened by name (jump sheet / Rafeeq), not the page top; unit test; emulator check next
 - 2026-09-30 13:27 - Owner answers: Honor phone, Arabic pack was on when Rafeeq failed
 - 2026-09-30 13:20 - Handover 2026-09-30: v3.72.0 private draft, owner phone report (Rafeeq on real phone; continuous recitation starts at page top) queued first

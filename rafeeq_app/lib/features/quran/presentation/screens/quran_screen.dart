@@ -486,14 +486,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   /// A jump from the surah, juz or page index. While the reciter is reading,
   /// the recitation goes with it — to the surah's first verse when a surah was
-  /// picked, otherwise to the page's first verse. Swiping pages by hand does
-  /// not move it: that is looking around, not choosing. A picked surah is
-  /// also remembered, so the play button pressed later starts at it too.
-  Future<void> _navigateFromIndex(
-    int page,
-    MushafData data, {
-    int? surahId,
-  }) async {
+  /// picked (remembered for a later press of play too), otherwise to the
+  /// page's first verse. Swiping pages by hand does not move it.
+  Future<void> _navigateFromIndex(int page, MushafData data,
+      {int? surahId}) async {
     final opened = ref.read(quranOpenedAyahProvider.notifier).state =
         surahId == null ? null : (surah: surahId, ayah: 1, page: page);
     _goToPage(page, animate: false);
@@ -523,9 +519,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     return r?.displayName(context.locale.languageCode) ?? '';
   }
 
-  /// Starts continuous recitation from the verse the reader has selected, else
-  /// from the surah (or verse) opened by name if its page is still open, else
-  /// from the top of the page, and reads on through the mushaf.
+  /// Starts continuous recitation where `continuousStartOnPage` says, and
+  /// reads on through the mushaf.
   Future<void> _toggleContinuousRecitation(MushafData data) async {
     final audio = AyahAudioService.instance;
     if (_recite.active) {
@@ -548,13 +543,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (await resumeContinuousIfPicked(pick, data.repo)) return;
     final ayahs = await _ayahsOfPage(_current, data);
     if (ayahs.isEmpty || !mounted) return;
-    final start = continuousStartOnPage(
-      ayahs,
-      page: _current,
-      selectedSurah: _highlightSurah,
-      selectedAyah: _highlightAyah,
-      opened: ref.read(quranOpenedAyahProvider),
-    );
+    final start = continuousStartOnPage(ayahs,
+        page: _current,
+        selectedSurah: _highlightSurah,
+        selectedAyah: _highlightAyah,
+        opened: ref.read(quranOpenedAyahProvider));
     await audio.startContinuous(from: start, repo: data.repo, edition: pick.id);
   }
 

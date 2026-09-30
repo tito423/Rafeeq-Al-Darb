@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 13:42 — IN PROGRESS — resume here**
+**2026-09-30 14:09 — IN PROGRESS — resume here**
 
-Continuous recitation starts at the surah opened by name (jump sheet / Rafeeq), not the page top; unit test; emulator check next
+Item 1 verified on emulator (text+paper, 36:1); Rafeeq requestQuranAyah helper; line ceilings kept
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

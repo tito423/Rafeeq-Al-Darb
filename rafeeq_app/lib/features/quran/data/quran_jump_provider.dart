@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/db/models.dart';
+
 /// `QuranScreen` and `HomeScreen` are siblings kept alive together in
 /// `AppShell`'s `IndexedStack` — there's no push/pop relationship between
 /// them for a "jump to page X then switch tabs" request (e.g. a khatma
@@ -19,3 +21,11 @@ final quranJumpRequestProvider = StateProvider<int?>((ref) => null);
 typedef OpenedAyah = ({int surah, int ayah, int page});
 
 final quranOpenedAyahProvider = StateProvider<OpenedAyah?>((ref) => null);
+
+/// Opens the mushaf on [a]'s page with [a] as the opened verse — for callers
+/// outside the widget tree (Rafeeq), which hold a [ProviderContainer].
+void requestQuranAyah(ProviderContainer c, Ayah a) {
+  c.read(quranOpenedAyahProvider.notifier).state =
+      (surah: a.surahId, ayah: a.ayahNumber, page: a.pageNumber);
+  c.read(quranJumpRequestProvider.notifier).state = a.pageNumber;
+}

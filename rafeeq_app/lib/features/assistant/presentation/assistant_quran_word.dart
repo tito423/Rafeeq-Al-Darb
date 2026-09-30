@@ -36,7 +36,7 @@ Future<void> runQuranWord(ProviderContainer ref, String query) async {
 
   void open(Ayah a) {
     nav.popUntil((r) => r.isFirst);
-    ref.read(quranJumpRequestProvider.notifier).state = a.pageNumber;
+    requestQuranAyah(ref, a);
     ref.read(requestedTabProvider.notifier).state = AppTab.quran;
   }
 

@@ -544,9 +544,7 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
       final repo = await ref.read(quranRepositoryProvider.future);
       final a = await repo.ayah(surah, ayah) ?? await repo.ayah(surah, 1);
       if (a == null) return;
-      ref.read(quranOpenedAyahProvider.notifier).state =
-          (surah: a.surahId, ayah: a.ayahNumber, page: a.pageNumber);
-      ref.read(quranJumpRequestProvider.notifier).state = a.pageNumber;
+      requestQuranAyah(ref, a);
       tab(AppTab.quran);
     case PlaySurahIntent(:final surah, :final reciterId, :final fromAyah):
       final repo = await ref.read(quranRepositoryProvider.future);
