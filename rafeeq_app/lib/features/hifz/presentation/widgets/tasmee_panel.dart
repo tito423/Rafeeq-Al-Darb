@@ -48,12 +48,20 @@ class TasmeePanel extends ConsumerStatefulWidget {
   /// offers to mark it memorized — the offer is his to take.
   final VoidCallback? onMastered;
 
+  /// The microphone opened (true) or closed without a score (false).
+  final ValueChanged<bool>? onRecording;
+
+  /// The share of the ayah's words heard, once a recitation is scored.
+  final ValueChanged<double>? onScored;
+
   const TasmeePanel({
     super.key,
     required this.ayahText,
     required this.surahId,
     required this.ayahNumber,
     this.onMastered,
+    this.onRecording,
+    this.onScored,
   });
 
   @override
@@ -226,6 +234,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
       if ((await AdhanNative.state()).playing) await _cancelRecording();
     });
     _setRecording(true);
+    widget.onRecording?.call(true);
     setState(() {
       _phase = _Phase.recording;
       _error = null;
@@ -244,6 +253,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _level = 0;
     await restoreAudioRoute();
     _setRecording(false);
+    widget.onRecording?.call(false);
     if (mounted) setState(() => _phase = _Phase.idle);
   }
 
@@ -295,8 +305,10 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
           _result = result;
           _phase = _Phase.done;
         });
+        widget.onScored?.call(result.ratio);
       }
     } catch (e) {
+      widget.onRecording?.call(false);
       if (mounted) {
         setState(() {
           _error = userErrorText(e);

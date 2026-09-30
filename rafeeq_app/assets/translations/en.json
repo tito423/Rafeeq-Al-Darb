@@ -1876,7 +1876,17 @@
     "prev_ayah": "Previous ayah",
     "next_ayah": "Next ayah",
     "nav_number": "Ayah no.",
-    "nav_go": "Go"
+    "nav_go": "Go",
+    "cue_title": "How much is hidden",
+    "cue_full": "Whole text",
+    "cue_firstLetters": "First letters",
+    "cue_alternate": "Every other word",
+    "cue_firstWord": "First word only",
+    "cue_none": "From memory",
+    "hint": "Hint",
+    "level_up": "Well done! Next level: {}",
+    "level_down": "No problem, back to: {}",
+    "cue_note": "The help shrinks step by step until you recite from memory. During the check the whole ayah is hidden, then the level goes up or down with your score. Tap any hidden word to see it."
   },
   "hajj": {
     "mawaqit_today_title": "The miqats today",

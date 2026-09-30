@@ -1876,7 +1876,17 @@
     "prev_ayah": "Aleya anterior",
     "next_ayah": "Aleya siguiente",
     "nav_number": "N.º de aleya",
-    "nav_go": "Ir"
+    "nav_go": "Ir",
+    "cue_title": "Cuánto se oculta",
+    "cue_full": "Texto completo",
+    "cue_firstLetters": "Primeras letras",
+    "cue_alternate": "Una palabra sí y otra no",
+    "cue_firstWord": "Solo la primera palabra",
+    "cue_none": "De memoria",
+    "hint": "Pista",
+    "level_up": "¡Muy bien! Siguiente nivel: {}",
+    "level_down": "No pasa nada, volvemos a: {}",
+    "cue_note": "La ayuda disminuye paso a paso hasta que recitas de memoria. Al comprobar, la aleya entera se oculta y luego el nivel sube o baja según tu resultado. Toca una palabra oculta para verla."
   },
   "hajj": {
     "mawaqit_today_title": "Los miqat hoy",

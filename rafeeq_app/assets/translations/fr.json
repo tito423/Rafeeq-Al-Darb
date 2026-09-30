@@ -1876,7 +1876,17 @@
     "prev_ayah": "Verset précédent",
     "next_ayah": "Verset suivant",
     "nav_number": "N° du verset",
-    "nav_go": "Aller"
+    "nav_go": "Aller",
+    "cue_title": "Ce qui est caché",
+    "cue_full": "Texte entier",
+    "cue_firstLetters": "Premières lettres",
+    "cue_alternate": "Un mot sur deux",
+    "cue_firstWord": "Premier mot seulement",
+    "cue_none": "De mémoire",
+    "hint": "Indice",
+    "level_up": "Bravo ! Niveau suivant : {}",
+    "level_down": "Pas de souci, retour à : {}",
+    "cue_note": "L’aide diminue pas à pas jusqu’à ce que vous récitiez de mémoire. Pendant la vérification, tout le verset est caché, puis le niveau monte ou descend selon votre score. Touchez un mot caché pour le voir."
   },
   "hajj": {
     "mawaqit_today_title": "Les miqats aujourd'hui",

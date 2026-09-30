@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 21:11 — IN PROGRESS — resume here**
+**2026-09-30 21:24 — IN PROGRESS — resume here**
 
-Kids corner to the whole Qur'an (8 stages, «طلائع الحفّاظ», 114 badge); Rafeeq opens kids corner/journey/game/adhkar listening/diag/stages by voice
+Hifz: diminishing-cues levels (first letters, every other word, first word, from memory), hint, ayah hidden while reciting, level follows the tasmee score; seen on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

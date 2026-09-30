@@ -23,13 +23,13 @@ import '../../../core/utils/digits.dart';
 import '../../../core/utils/user_error.dart';
 import '../../../core/widgets/arabic_text.dart';
 import '../../../core/widgets/recitation_failure_snackbar.dart';
-import '../../../core/widgets/remote_tap.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../quran/data/basmala.dart';
 import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
 import '../data/hifz_mask.dart';
 import '../data/hifz_plans.dart';
 import '../data/hifz_store.dart';
+import 'widgets/hifz_ayah_view.dart';
 import 'widgets/hifz_navigator.dart';
 import 'widgets/tasmee_panel.dart';
 
@@ -69,7 +69,13 @@ class HifzSessionScreen extends ConsumerStatefulWidget {
 class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
   List<Ayah>? _ayahs;
   int _at = 0;
-  int _step = 0;
+  /// The help left on the ayah (hifz_mask.dart) - kept from ayah to ayah,
+  /// since it is the reader's level; [_peeked] are words he asked back.
+  HifzCue _cue = HifzCue.full;
+  final Set<int> _peeked = {};
+
+  /// The level before the tasmee' hid the ayah, to come back to.
+  HifzCue? _cueBeforeTasmee;
   int _repeats = 3;
   bool _playing = false;
   String? _error;
@@ -157,13 +163,47 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     }
     setState(() {
       _at++;
-      _step = 0;
+      _peeked.clear();
     });
   }
 
   String get _name => _titleOverride ?? widget.title;
 
   /// One ayah back or forward within the session — the swipe.
+  void _onTasmeeRecording(bool on) {
+    if (!mounted) return;
+    setState(() {
+      if (on) {
+        _cueBeforeTasmee ??= _cue;
+        _cue = HifzCue.none;
+        _peeked.clear();
+      } else if (_cueBeforeTasmee != null) {
+        // Stopped without a score (cancelled, or an adhan started).
+        _cue = _cueBeforeTasmee!;
+        _cueBeforeTasmee = null;
+      }
+    });
+  }
+
+  void _onTasmeeScored(double ratio) {
+    if (!mounted) return;
+    final before = _cueBeforeTasmee ?? _cue;
+    final after = hifzCueAfter(before, ratio);
+    setState(() {
+      _cue = after;
+      _cueBeforeTasmee = null;
+      _peeked.clear();
+    });
+    if (after != before) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text((after.index > before.index
+                ? 'hifz.level_up'
+                : 'hifz.level_down')
+            .tr(args: ['hifz.cue_${after.name}'.tr()])),
+      ));
+    }
+  }
+
   void _step1(int delta) {
     final list = _ayahs!;
     final to = _at + delta;
@@ -171,7 +211,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     AyahAudioService.instance.stopQueue();
     setState(() {
       _at = to;
-      _step = 0;
+      _peeked.clear();
     });
   }
 
@@ -187,7 +227,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     if (i >= 0) {
       setState(() {
         _at = i;
-        _step = 0;
+        _peeked.clear();
       });
       return;
     }
@@ -197,7 +237,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
     setState(() {
       _ayahs = all;
       _at = (ayah - 1).clamp(0, all.length - 1);
-      _step = 0;
+      _peeked.clear();
       _titleOverride = _surahNames[surah];
     });
   }
@@ -314,60 +354,17 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
             SwipeableAyah(
               onNext: _at + 1 < list.length ? () => _step1(1) : null,
               onPrev: _at > 0 ? () => _step1(-1) : null,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.gold.withValues(alpha: 0.07),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppColors.gold.withValues(alpha: 0.25),
-                  ),
-                ),
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    runSpacing: 10,
-                    children: [
-                      for (var i = 0; i < words.length; i++)
-                        _Word(
-                          word: words[i],
-                          hidden: hifzWordHidden(i, words.length, _step),
-                          onTap: () => setState(() {
-                            // Tapping a hidden word brings that word back.
-                            final hiddenCount = words.length - i;
-                            _step = (hiddenCount - 1).clamp(0, words.length);
-                          }),
-                        ),
-                    ],
-                  ),
-                ),
+              child: HifzAyahView(
+                words: words,
+                cue: _cue,
+                peeked: _peeked,
+                locked: ref.watch(tasmeeRecordingProvider),
+                onPeek: (i) => setState(() => _peeked.add(i)),
+                onCue: (c) => setState(() {
+                  _cue = c;
+                  _peeked.clear();
+                }),
               ),
-            ),
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: _step >= words.length - 1
-                        ? null
-                        : () => setState(() => _step++),
-                    icon: const Icon(Icons.visibility_off_outlined),
-                    label: Text('hifz.hide_one'.tr()),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: _step == 0
-                        ? null
-                        : () => setState(() => _step = 0),
-                    icon: const Icon(Icons.visibility_outlined),
-                    label: Text('hifz.show_all'.tr()),
-                  ),
-                ),
-              ],
             ),
             const Divider(height: 28),
             Row(
@@ -434,6 +431,10 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
               ayahText: body,
               surahId: ayah.surahId,
               ayahNumber: ayah.ayahNumber,
+              // Reciting is from memory: the ayah is covered while the
+              // microphone is open, and the level moves with the score after.
+              onRecording: _onTasmeeRecording,
+              onScored: _onTasmeeScored,
               // «أتقنتها»: the same step «حفظتها» takes, offered where the
               // reader just proved it — never taken for him.
               onMastered: () async {
@@ -472,48 +473,6 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
                   ),
                 ),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Word extends StatelessWidget {
-  final String word;
-  final bool hidden;
-  final VoidCallback onTap;
-
-  const _Word({required this.word, required this.hidden, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    const style = TextStyle(
-      fontFamily: 'KFGQPCHafs',
-      fontSize: 24,
-      height: 1.9,
-    );
-    if (!hidden) {
-      return ArabicText(word, style: style);
-    }
-    return RemoteTap(
-      onTap: onTap,
-      child: Opacity(
-        opacity: 0.25,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // The word keeps its own width, so the line does not jump when it
-            // comes back.
-            Opacity(opacity: 0, child: ArabicText(word, style: style)),
-            Container(
-              height: 3,
-              width: 26.0 + word.length * 6,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface,
-                borderRadius: BorderRadius.circular(2),
-              ),
             ),
           ],
         ),

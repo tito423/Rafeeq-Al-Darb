@@ -1876,7 +1876,17 @@
     "prev_ayah": "Versículo anterior",
     "next_ayah": "Próximo versículo",
     "nav_number": "N.º do versículo",
-    "nav_go": "Ir"
+    "nav_go": "Ir",
+    "cue_title": "Quanto fica oculto",
+    "cue_full": "Texto inteiro",
+    "cue_firstLetters": "Primeiras letras",
+    "cue_alternate": "Uma palavra sim, outra não",
+    "cue_firstWord": "Só a primeira palavra",
+    "cue_none": "De memória",
+    "hint": "Dica",
+    "level_up": "Muito bem! Próximo nível: {}",
+    "level_down": "Tudo bem, voltamos a: {}",
+    "cue_note": "A ajuda diminui passo a passo até você recitar de memória. Durante a verificação o versículo inteiro fica oculto e depois o nível sobe ou desce conforme o resultado. Toque numa palavra oculta para vê-la."
   },
   "hajj": {
     "mawaqit_today_title": "Os miqats hoje",

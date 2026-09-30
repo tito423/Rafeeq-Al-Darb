@@ -13,6 +13,10 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~21:25 (09-30) (C) STAGE 1 DONE + SEEN: diminishing-cues levels in the hifz session (hifz_mask.dart HifzCue: full / first letters / every other word / first word / from memory; tap a word or «تلميح» to reveal; the ayah is fully hidden while the tasmee records; the level steps up at >=90%, down at <60%). Emulator: first-letters shows «قُ هُ ٱ أَ» + lines; hint reveals in reading order; recording hid all; silent recording -> «لا بأس، نعود إلى: كلمة وكلمة». Research: Fiechter & Benjamin 2018 (diminishing cues), FSRS in QuranH, Tarteel live checking.
+RUNNING: scripts/measure_asr_candidates.py (tiny vs FastConformer vs omnilingual, 6 reciters, clean + phone band) -> scripts/asr_candidates_2026-09-30.txt. tiny clean = 89.3% (minshawi 79, sudais 81).
+QUEUED: (C2) pick the model by numbers; live word-by-word checking if fast enough; FSRS review schedule. (D) owner's newest: kids «قصص الأنبياء والصالحين والصحابة» section with child-friendly audio/video - needs REAL licensed sources (research first, §1.1/§1.8).
+
 ~21:12 (09-30) (B) KIDS DONE + SEEN: 8 stages to the whole Qur'an - «الحفّاظ» renamed «طلائع الحفّاظ» («أشبال» already = stage 2); new «السابقون» (18..10, juz 15-11), «حملة القرآن» (9..5, juz 10-6), «أهل القرآن» (4..2, juz 4-1); badge surah_114; path_sub «ثماني مراحل … إلى القرآن كاملًا»; x7 locales; kids_stages_test pins juz ranges from quran_local.db, 114 total, 97 half. Emulator: 8 cards, stage 8 lists النساء/آل عمران/البقرة, game runs on 4:147.
 ALSO: Rafeeq could not open the kids corner - audited every *Screen class vs AssistantScreen: added kidsCorner, journey, ayahGame, adhkarListenMorning/Evening («اسمع أذكار الصباح» -> recordings, not the text), rafeeqDiag, the 8 stages by name, with dialect words; enum moved to assistant_screen.dart. Voice «افتح ركن الأطفال» SEEN opening it. Still not reachable by voice: the quotes card (needs a quote), library channels/websites manage lists.
 NEXT: (C) hifz/tasmee overhaul (owner's newest).
@@ -938,6 +942,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 21:24 - Hifz: diminishing-cues levels (first letters, every other word, first word, from memory), hint, ayah hidden while reciting, level follows the tasmee score; seen on emulator
 - 2026-09-30 21:11 - Kids corner to the whole Qur'an (8 stages, «طلائع الحفّاظ», 114 badge); Rafeeq opens kids corner/journey/game/adhkar listening/diag/stages by voice
 - 2026-09-30 20:51 - Tasmee with headset: Rafeeq releases the mic and route BEFORE the tasmee routes, and stays off while it records (it used to restore the route mid-ayah); ordering seen on emulator
 - 2026-09-30 20:39 - Ayah by voice: marked + whole verse scrolled on screen; card opens on tafsir/translation; ordinal/article numbers; seen on emulator
