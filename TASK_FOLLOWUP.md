@@ -911,6 +911,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 14:29 - Rafeeq diagnostics screen (service/mic state/silenced/model/last sentence+clip share/battery/bg-restricted/bucket/autostart/overlay); wake listener split out of assistant_sheet; 45 keys x7; NOT yet seen on emulator
 - 2026-09-30 14:09 - Item 1 verified on emulator (text+paper, 36:1); Rafeeq requestQuranAyah helper; line ceilings kept
 - 2026-09-30 13:42 - Continuous recitation starts at the surah opened by name (jump sheet / Rafeeq), not the page top; unit test; emulator check next
 - 2026-09-30 13:27 - Owner answers: Honor phone, Arabic pack was on when Rafeeq failed

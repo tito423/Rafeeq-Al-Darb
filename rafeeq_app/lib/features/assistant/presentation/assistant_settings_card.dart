@@ -9,6 +9,7 @@ import '../../../core/utils/byte_formatter.dart';
 import '../data/assistant_settings.dart';
 import '../data/rafeeq_ear.dart';
 import '../data/rafeeq_voice_pack.dart';
+import 'rafeeq_diag_screen.dart';
 
 /// «رفيق» in the settings (and from its row in the downloads): the voice pack
 /// - downloaded once, deleted here - and the switch, which does nothing until
@@ -118,6 +119,17 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                   value: ref.watch(assistantBluetoothMicProvider),
                   onChanged: (v) =>
                       ref.read(assistantBluetoothMicProvider.notifier).set(v),
+                ),
+              ],
+              if (installed == true) ...[
+                const Divider(height: 1),
+                ListTile(
+                  leading: Icon(Icons.troubleshoot_rounded, color: scheme.primary),
+                  title: Text('assistant.diag_title'.tr()),
+                  subtitle: Text('assistant.diag_desc'.tr()),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) => const RafeeqDiagScreen())),
                 ),
               ],
               if (_overlayOk == false) ...[

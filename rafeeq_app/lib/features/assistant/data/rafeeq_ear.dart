@@ -10,6 +10,7 @@ import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import '../../hifz/data/tasmee_mic.dart';
 import '../presentation/assistant_describe.dart' show assistantLanguage;
+import 'rafeeq_diag.dart';
 import 'rafeeq_voice_pack.dart';
 
 /// «رفيق»'s ear: the microphone -> silero VAD -> omnilingual-asr, all on the
@@ -56,6 +57,10 @@ class RafeeqEar {
   /// Whether a Bluetooth headset microphone is connected now.
   Future<bool> bluetoothPresent() async =>
       (await TasmeeMics.find(_mic ??= AudioRecorder())).hasBluetooth;
+  /// Which model the worker loaded: true for «دقة أعلى في العربية», false for
+  /// the base one, null before the first [start].
+  bool? get accurateModel => _accurate;
+  bool? _accurate;
   StreamSubscription<Uint8List>? _micSub;
   SendPort? _toWorker;
   ReceivePort? _fromWorker;
@@ -70,6 +75,7 @@ class RafeeqEar {
             await RafeeqVoicePack.accurate.check()
         ? (await RafeeqVoicePack.accurate.dir()).path
         : '';
+    _accurate = arDir.isNotEmpty;
     final inbox = ReceivePort();
     _fromWorker = inbox;
     final ready = Completer<SendPort>();
@@ -79,6 +85,8 @@ class RafeeqEar {
       } else if (m is String) {
         debugPrint('rafeeq segment: "$m"');
         if (m.trim().isNotEmpty) _heard.add(m.trim());
+      } else if (m is Float32List) {
+        RafeeqDiag.instance.clip(m);
       } else if (m is bool) {
         speaking.value = m;
       } else if (m is List && !ready.isCompleted) {
@@ -179,6 +187,7 @@ class RafeeqEar {
     _mic = null;
     _toWorker?.send('exit');
     _toWorker = null;
+    _accurate = null;
     _fromWorker?.close();
     _fromWorker = null;
   }
@@ -243,6 +252,7 @@ class RafeeqEar {
           while (!vad.isEmpty()) {
             final seg = vad.front();
             vad.pop();
+            out.send(Float32List.fromList(seg.samples));
             final s = rec.createStream();
             s.acceptWaveform(samples: seg.samples, sampleRate: 16000);
             rec.decode(s);

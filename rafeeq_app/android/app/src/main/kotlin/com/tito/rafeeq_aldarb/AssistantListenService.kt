@@ -38,6 +38,10 @@ class AssistantListenService : Service() {
         /** Set when the reader pressed «إيقاف»; Dart reads and clears it. */
         @Volatile var stoppedByUser = false
 
+        /** For «تشخيص رفيق»: whether Android accepted the service, and why not. */
+        @Volatile var running = false
+        @Volatile var refusedBecause: String? = null
+
         fun start(context: Context, title: String, text: String, stop: String, channel: String) {
             val i = Intent(context, AssistantListenService::class.java)
                 .putExtra(EXTRA_TITLE, title)
@@ -61,6 +65,7 @@ class AssistantListenService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
             stoppedByUser = true
+            running = false
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             return START_NOT_STICKY
@@ -103,11 +108,20 @@ class AssistantListenService : Service() {
             } else {
                 startForeground(NOTIFICATION_ID, n)
             }
+            running = true
+            refusedBecause = null
         } catch (e: Exception) {
             // Android 14 refuses a microphone service started from the
             // background; the app then listens only while it is open.
+            running = false
+            refusedBecause = e.javaClass.simpleName + ": " + (e.message ?: "")
             stopSelf()
         }
         return START_NOT_STICKY
+    }
+
+    override fun onDestroy() {
+        running = false
+        super.onDestroy()
     }
 }

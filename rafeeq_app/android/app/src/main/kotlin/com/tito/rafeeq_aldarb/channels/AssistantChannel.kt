@@ -1,8 +1,12 @@
 package com.tito.rafeeq_aldarb
 
+import android.app.ActivityManager
+import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
+import android.media.MediaRecorder
+import android.os.PowerManager
 import android.os.Build
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -54,6 +58,34 @@ fun MainActivity.registerAssistantChannel(flutterEngine: FlutterEngine) {
                         call.argument<String>("channel") ?: "",
                     )
                     result.success(null)
+                }
+                // «تشخيص رفيق»: what the phone is doing to the listening.
+                "diag" -> {
+                    val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+                    val act = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    // Only our own voice sources: the list can hold another
+                    // app's recording, and its client details are hidden.
+                    val silenced = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+                        am.activeRecordingConfigurations.any {
+                            it.isClientSilenced && (it.clientAudioSource == MediaRecorder.AudioSource.VOICE_RECOGNITION ||
+                                it.clientAudioSource == MediaRecorder.AudioSource.VOICE_COMMUNICATION)
+                        }
+                    result.success(
+                        mapOf(
+                            "service" to AssistantListenService.running,
+                            "refused" to AssistantListenService.refusedBecause,
+                            "silenced" to silenced,
+                            "batteryExempt" to (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                                pm.isIgnoringBatteryOptimizations(packageName)),
+                            "bgRestricted" to (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+                                act.isBackgroundRestricted),
+                            "bucket" to (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                                (getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager).appStandbyBucket else 0),
+                            "maker" to Build.MANUFACTURER,
+                            "model" to Build.MODEL,
+                            "sdk" to Build.VERSION.SDK_INT,
+                        ),
+                    )
                 }
                 "stopService" -> {
                     AssistantListenService.stop(this)

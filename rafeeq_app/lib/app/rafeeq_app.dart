@@ -15,7 +15,7 @@ import '../core/utils/screen_class.dart';
 import '../core/widgets/arrow_scrollbar.dart';
 import '../core/widgets/focus_ring_overlay.dart';
 import '../features/adhan/data/prayer_adjustments_provider.dart';
-import '../features/assistant/presentation/assistant_sheet.dart';
+import '../features/assistant/presentation/assistant_wake_listener.dart';
 import '../features/fasting/data/fasting_reminder_provider.dart';
 import '../features/home/data/prayer_controller.dart';
 import '../features/quotes/data/quote_reminder_provider.dart';
