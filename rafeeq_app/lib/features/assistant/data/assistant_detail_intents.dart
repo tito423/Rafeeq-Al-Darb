@@ -167,10 +167,25 @@ extension on AssistantParser {
 
   AssistantIntent? _collectionDetailIn(String clean) {
     final azkarSection = _azkarSectionIn(clean);
+    // «اسمع أذكار الصباح»: the recorded adhkar, not the written list
+    // (sections 27 and 28 of azkar.db are the morning and the evening).
+    if ((azkarSection == 27 || azkarSection == 28) &&
+        clean.split(' ').any(_listenWords.contains)) {
+      return OpenScreenIntent(azkarSection == 27
+          ? AssistantScreen.adhkarListenMorning
+          : AssistantScreen.adhkarListenEvening);
+    }
     if (azkarSection != null) return OpenAzkarSectionIntent(azkarSection);
     final category = _hadeethCategoryIn(clean);
     return category == null ? null : OpenHadeethCategoryIntent(category);
   }
+
+  static final _listenWords = _normSet(const [
+    'اسمع', 'استمع', 'اسمعني', 'سمعني', 'اسمعلي', 'شغل', 'شغلي', 'شغللي',
+    'شغلها', 'سمعها', 'بصوت', 'صوت', 'صوتي', 'listen', 'play', 'audio',
+    'escuchar', 'escucha', 'ecouter', 'ecoute', 'ouvir', 'слушать', 'послушать',
+    'سنو', 'سناؤ',
+  ]);
 
   int? _hadithNumberIn(String clean) {
     const markers = {'حديث', 'الحديث', 'hadith', 'hadeeth'};

@@ -163,8 +163,10 @@ const journeyBadges = <JourneyBadge>[
   JourneyBadge('level_5', 'level', 5),
   JourneyBadge('surah_1', 'surah', 1),
   JourneyBadge('surah_10', 'surah', 10),
-  // 37 = the number of surahs in Juz ʿAmma; 97 = the whole path of the
-  // kids' corner, al-Fātiḥah and Maryam to an-Nās (kids_stages_test pins it).
+  // 37 = the number of surahs in Juz ʿAmma; 97 = al-Fātiḥah and Maryam to
+  // an-Nās, half the Qur'an; 114 = the whole path, the whole Qur'an
+  // (kids_stages_test pins both).
   JourneyBadge('surah_37', 'surah', 37),
   JourneyBadge('surah_97', 'surah', 97),
+  JourneyBadge('surah_114', 'surah', 114),
 ];

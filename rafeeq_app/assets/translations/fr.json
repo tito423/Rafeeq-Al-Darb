@@ -2322,7 +2322,7 @@
     "wrong": "Essaie encore",
     "next": "Suivant",
     "path": "Le parcours de mémorisation",
-    "path_sub": "Cinq étapes de Juz ʿAmma à la moitié du Coran, de la fin du mushaf vers le début",
+    "path_sub": "Huit étapes de Juz ʿAmma au Coran entier, de la fin du mushaf vers le début",
     "stage_buds": "Bourgeons",
     "stage_buds_ages": "Maternelle, 3–5 ans · al-Fâtiha et les sourates courtes",
     "stage_cubs": "Oursons",
@@ -2331,7 +2331,7 @@
     "stage_knights_ages": "8–9 ans · Juz Tabârak",
     "stage_stars": "Étoiles",
     "stage_stars_ages": "10–11 ans · d’at-Tahrîm à at-Tûr",
-    "stage_hafiz": "Huffâdh",
+    "stage_hafiz": "Avant-garde des Huffâdh",
     "stage_hafiz_ages": "12–14 ans · d’adh-Dhâriyât à Maryam — la moitié du Coran",
     "stage_progress": "{} sourates mémorisées sur {}",
     "stage_tip": "Écoute la sourate chaque jour, répète avec le récitateur et révise ce que tu sais avant d’aborder du nouveau.",
@@ -2339,7 +2339,13 @@
     "recite": "Réciter",
     "memorized": "Mémorisée",
     "memorized_toast": "Mâ shâ’ Allâh ! Tu as mémorisé {} ⭐",
-    "ayahs": "{} versets"
+    "ayahs": "{} versets",
+    "stage_sabiqun": "Les Devanciers (as-Sâbiqûn)",
+    "stage_sabiqun_ages": "15–16 ans · d’al-Kahf à Yûnus",
+    "stage_hamala": "Porteurs du Coran",
+    "stage_hamala_ages": "16–17 ans · d’at-Tawba à al-Mâʾida",
+    "stage_ahl": "Gens du Coran",
+    "stage_ahl_ages": "17 ans et plus · d’an-Nisâʾ à al-Baqara — le Coran entier"
   },
   "journey": {
     "how_title": "Comment gagner des points",
@@ -2394,6 +2400,7 @@
     "badge_surah_1": "Première sourate mémorisée",
     "badge_surah_10": "10 sourates mémorisées",
     "badge_surah_37": "37 sourates — tout Juz ʿAmma",
-    "badge_surah_97": "97 sourates — la moitié du Coran"
+    "badge_surah_97": "97 sourates — la moitié du Coran",
+    "badge_surah_114": "114 sourates — le Coran entier"
   }
 }

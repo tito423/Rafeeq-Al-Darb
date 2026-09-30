@@ -2,9 +2,11 @@ import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/utils/digits.dart' show asciiDigits;
 import 'assistant_distance.dart';
 import 'assistant_lexicon.dart' as lex;
+import 'assistant_screen.dart';
 import 'assistant_wake_word.dart';
 
 export 'assistant_distance.dart';
+export 'assistant_screen.dart';
 
 part 'assistant_ayah_ref.dart';
 part 'assistant_destination_match.dart';
@@ -19,51 +21,6 @@ part 'assistant_detail_intents.dart';
 /// never invents a surah, a reciter or a book - and it never answers a
 /// religious question itself, it only opens where the answer is.
 
-/// What the app can do, by name.
-enum AssistantScreen {
-  home,
-  quran,
-  prayer,
-  azkar,
-  tasbeeh,
-  library,
-  more,
-  settings,
-  downloads,
-  recitationPlayer,
-  ayahPlayer,
-  qibla,
-  hifz,
-  ruqyah,
-  hajj,
-  tajweed,
-  dorar,
-  shamela,
-  onThisDay,
-  dailyHadith,
-  clockFaces,
-  about,
-  sources,
-  support,
-  dedications,
-  khatma,
-  bookSearch,
-  adhanSettings,
-  adhanBackgrounds,
-  prayerAdjustments,
-  prayerLocation,
-  quranSciences,
-  makharij,
-  tuhfa,
-  jazariyyah,
-  tamhid,
-  dorarSearch,
-  dorarHadith,
-  dorarTafseer,
-  dorarHistory,
-  ruqyahAudio, initialDownloads, splashPreview,
-  quranSearch,
-}
 
 sealed class AssistantIntent {
   const AssistantIntent();

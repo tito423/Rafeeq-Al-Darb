@@ -13,6 +13,10 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~21:12 (09-30) (B) KIDS DONE + SEEN: 8 stages to the whole Qur'an - «الحفّاظ» renamed «طلائع الحفّاظ» («أشبال» already = stage 2); new «السابقون» (18..10, juz 15-11), «حملة القرآن» (9..5, juz 10-6), «أهل القرآن» (4..2, juz 4-1); badge surah_114; path_sub «ثماني مراحل … إلى القرآن كاملًا»; x7 locales; kids_stages_test pins juz ranges from quran_local.db, 114 total, 97 half. Emulator: 8 cards, stage 8 lists النساء/آل عمران/البقرة, game runs on 4:147.
+ALSO: Rafeeq could not open the kids corner - audited every *Screen class vs AssistantScreen: added kidsCorner, journey, ayahGame, adhkarListenMorning/Evening («اسمع أذكار الصباح» -> recordings, not the text), rafeeqDiag, the 8 stages by name, with dialect words; enum moved to assistant_screen.dart. Voice «افتح ركن الأطفال» SEEN opening it. Still not reachable by voice: the quotes card (needs a quote), library channels/websites manage lists.
+NEXT: (C) hifz/tasmee overhaul (owner's newest).
+
 ~20:50 (09-30) (A) TASMEE+HEADSET: cause found in code - Rafeeq (headset option on) noticed the tasmee recording within ~1 s, stopped itself and restoreAudioRoute() cleared the call route under the tasmee -> only the first word recorded («فيه» of 43:6). FIX: tasmee sets tasmeeRecordingProvider + awaits RafeeqEar.stop() BEFORE routing; wake listener never reopens while that flag is set. SEEN on emulator (dumpsys audio): Rafeeq stop 20:48:51.350 -> tasmee MIC 20:48:51.599, no overlap for 38 s; Rafeeq back 0.9 s after tasmee ended. A real Bluetooth headset is NOT testable here (no BT on the emulator) - owner to re-test.
 NEXT: (B) kids corner whole Qur'an + «أشبال الحفاظ» + 3 named stages; (C) owner's newest: hifz/tasmee overhaul - progressive hiding / first-letter hints, evidence-based memorization methods (research online), and re-evaluate the tasmee model (tarteel whisper-tiny) against better ones.
 
@@ -934,6 +938,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 21:11 - Kids corner to the whole Qur'an (8 stages, «طلائع الحفّاظ», 114 badge); Rafeeq opens kids corner/journey/game/adhkar listening/diag/stages by voice
 - 2026-09-30 20:51 - Tasmee with headset: Rafeeq releases the mic and route BEFORE the tasmee routes, and stays off while it records (it used to restore the route mid-ayah); ordering seen on emulator
 - 2026-09-30 20:39 - Ayah by voice: marked + whole verse scrolled on screen; card opens on tafsir/translation; ordinal/article numbers; seen on emulator
 - 2026-09-30 20:22 - Rafeeq: an ayah asked for is marked and scrolled to; ayah card opens on tafsir/translation/irab by voice; dialect verbs/fillers (Gulf/Levant/Maghreb/Iraq); 15 phrasings tested; NOT yet seen on emulator

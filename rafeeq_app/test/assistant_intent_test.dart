@@ -501,6 +501,29 @@ void main() {
     }
   });
 
+  test('the kids corner and what is in it, as people say it', () {
+    final cases = {
+      'افتح ركن الأطفال': 'open kidsCorner',
+      'وديني ركن الاطفال': 'open kidsCorner',
+      'بدي ركن الصغار': 'open kidsCorner',
+      'افتح رحلتي': 'open journey',
+      'وريني نقاطي': 'open journey',
+      'افتح لعبة أكمل الآية': 'open ayahGame',
+      'اسمع اذكار الصباح': 'open adhkarListenMorning',
+      'استمع لأذكار المساء': 'open adhkarListenEvening',
+      'افتح تشخيص رفيق': 'open rafeeqDiag',
+      'افتح مرحلة السابقون': 'open kidsSabiqun',
+      'افتح طلائع الحفاظ': 'open kidsHafiz',
+      'افتح أهل القرآن': 'open kidsAhl',
+      'افتح حملة القرآن': 'open kidsHamala',
+      'افتح البراعم': 'open kidsBuds',
+      'open kids corner': 'open kidsCorner',
+    };
+    for (final e in cases.entries) {
+      expect('${p.parse(e.key)}', e.value, reason: e.key);
+    }
+  });
+
   test('every surah, as the Arabic model writes it', () {
     final rows = jsonDecode(
         File('test/fixtures/asr_surah_transcripts.json').readAsStringSync()) as List;

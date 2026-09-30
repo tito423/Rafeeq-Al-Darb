@@ -2322,7 +2322,7 @@
     "wrong": "Tente de novo",
     "next": "Próximo",
     "path": "O caminho da memorização",
-    "path_sub": "Cinco etapas do Juz ʿAmma até a metade do Alcorão, do fim do mushaf para trás",
+    "path_sub": "Oito etapas do Juz ʿAmma até o Alcorão inteiro, do fim do mushaf para trás",
     "stage_buds": "Brotos",
     "stage_buds_ages": "Pré-escola, 3–5 · al-Fátiha e as suras curtas",
     "stage_cubs": "Filhotes",
@@ -2331,7 +2331,7 @@
     "stage_knights_ages": "8–9 anos · Juz Tabárak",
     "stage_stars": "Estrelas",
     "stage_stars_ages": "10–11 anos · de at-Tahrím a at-Túr",
-    "stage_hafiz": "Huffáz",
+    "stage_hafiz": "Vanguarda dos Huffáz",
     "stage_hafiz_ages": "12–14 anos · de adh-Dháriyát a Maryam — metade do Alcorão",
     "stage_progress": "{} de {} suras memorizadas",
     "stage_tip": "Ouça a sura todo dia, repita com o recitador e revise o que já sabe antes de começar algo novo.",
@@ -2339,7 +2339,13 @@
     "recite": "Recitar",
     "memorized": "Memorizada",
     "memorized_toast": "Má shá’ Alláh! Você memorizou {} ⭐",
-    "ayahs": "{} versículos"
+    "ayahs": "{} versículos",
+    "stage_sabiqun": "Os Precursores (as-Sábiqún)",
+    "stage_sabiqun_ages": "15–16 anos · de al-Kahf a Yúnus",
+    "stage_hamala": "Portadores do Alcorão",
+    "stage_hamala_ages": "16–17 anos · de at-Tawbah a al-Máʾidah",
+    "stage_ahl": "Gente do Alcorão",
+    "stage_ahl_ages": "17 anos ou mais · de an-Nisáʾ a al-Baqarah — o Alcorão inteiro"
   },
   "journey": {
     "how_title": "Como ganhar pontos",
@@ -2394,6 +2400,7 @@
     "badge_surah_1": "Primeira sura memorizada",
     "badge_surah_10": "10 suras memorizadas",
     "badge_surah_37": "37 suras — todo o Juz ʿAmma",
-    "badge_surah_97": "97 suras — metade do Alcorão"
+    "badge_surah_97": "97 suras — metade do Alcorão",
+    "badge_surah_114": "114 suras — o Alcorão inteiro"
   }
 }

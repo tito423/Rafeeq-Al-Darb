@@ -8,8 +8,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 /// The kids' path is checked against the mushaf, not written from memory:
 /// every surah of a stage opens inside the juz range the stage names, the
-/// path has no gap or repeat, and it ends where the second half of the Qur'an
-/// begins (Juz 16).
+/// path has no gap or repeat, its fifth stage ends where the second half of
+/// the Qur'an begins (Juz 16), and the whole path is the whole Qur'an.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -31,17 +31,22 @@ void main() {
                 '${st.juzLow}-${st.juzHigh}');
       }
     }
-    // The last surah of the path is the first to open in Juz 16.
-    final last = kidsStages.last.surahs.last;
+    // The half-way stage ends on the first surah to open in Juz 16.
+    final last = kidsStages.firstWhere((s) => s.id == 'hafiz').surahs.last;
     expect(juzOf[last], 16);
     expect(juzOf[last - 1]! < 16, isTrue);
   });
 
-  test('the path covers 19..114 and al-Fatihah once each', () {
+  test('the path covers every surah once, and half of it is 97', () {
     final all = [for (final st in kidsStages) ...st.surahs];
     expect(all.toSet().length, all.length);
-    expect(all.toSet(), {1, for (var s = 19; s <= 114; s++) s});
-    expect(all.length, 97); // the «٩٧ سورة» badge
+    expect(all.toSet(), {for (var s = 1; s <= 114; s++) s});
+    expect(all.length, 114); // the «١١٤ سورة» badge
+    final half = [
+      for (final st in kidsStages.takeWhile((s) => s.id != 'sabiqun'))
+        ...st.surahs,
+    ];
+    expect(half.length, 97); // the «٩٧ سورة — نصف القرآن» badge
   });
 
   test('marking a surah twice earns once; unmarking takes it back', () async {

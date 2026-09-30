@@ -2322,7 +2322,7 @@
     "wrong": "Try again",
     "next": "Next",
     "path": "The memorisation path",
-    "path_sub": "Five stages from Juz ʿAmma to half the Qur’an, from the end of the mushaf backwards",
+    "path_sub": "Eight stages from Juz ʿAmma to the whole Qur’an, from the end of the mushaf backwards",
     "stage_buds": "Buds",
     "stage_buds_ages": "Nursery, 3–5 · al-Fātiḥah and the short surahs",
     "stage_cubs": "Cubs",
@@ -2331,7 +2331,7 @@
     "stage_knights_ages": "Ages 8–9 · Juz Tabārak",
     "stage_stars": "Stars",
     "stage_stars_ages": "Ages 10–11 · at-Taḥrīm back to aṭ-Ṭūr",
-    "stage_hafiz": "Ḥuffāẓ",
+    "stage_hafiz": "Vanguard of the Ḥuffāẓ",
     "stage_hafiz_ages": "Ages 12–14 · adh-Dhāriyāt back to Maryam — half the Qur’an",
     "stage_progress": "{} of {} surahs memorised",
     "stage_tip": "Listen to the surah every day, repeat with the reciter, and review what you know before starting something new.",
@@ -2339,7 +2339,13 @@
     "recite": "Recite",
     "memorized": "Memorised",
     "memorized_toast": "Mā shā’ Allāh! You memorised {} ⭐",
-    "ayahs": "{} ayahs"
+    "ayahs": "{} ayahs",
+    "stage_sabiqun": "The Foremost (as-Sābiqūn)",
+    "stage_sabiqun_ages": "Ages 15–16 · al-Kahf back to Yūnus",
+    "stage_hamala": "Bearers of the Qur’an",
+    "stage_hamala_ages": "Ages 16–17 · at-Tawbah back to al-Māʾidah",
+    "stage_ahl": "People of the Qur’an",
+    "stage_ahl_ages": "Ages 17+ · an-Nisāʾ back to al-Baqarah — the whole Qur’an"
   },
   "journey": {
     "how_title": "How points are earned",
@@ -2394,6 +2400,7 @@
     "badge_surah_1": "First surah memorised",
     "badge_surah_10": "10 surahs memorised",
     "badge_surah_37": "37 surahs — all of Juz ʿAmma",
-    "badge_surah_97": "97 surahs — half the Qur’an"
+    "badge_surah_97": "97 surahs — half the Qur’an",
+    "badge_surah_114": "114 surahs — the whole Qur’an"
   }
 }

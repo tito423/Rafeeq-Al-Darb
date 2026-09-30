@@ -1,6 +1,6 @@
-/// The kids' corner as a graded path, from nursery to about 14 (owner,
-/// 2026-09-29: «متدرج من الحضانة لحد ١٣ أو ١٤ سنة … من أول جزء عم لحد نص
-/// القرآن»).
+/// The kids' corner as a graded path, from nursery to the whole Qur'an
+/// (owner, 2026-09-29: «متدرج من الحضانة لحد ١٣ أو ١٤ سنة … من أول جزء عم لحد
+/// نص القرآن»; 2026-09-30: «كمل للقران كله … ٣ مراحل … يغطوا لاخر القران»).
 ///
 /// Built on what children's Qur'an programmes recommend (checked online on
 /// 2026-09-29, furqan.academy and others): start between 4 and 6, begin with
@@ -45,6 +45,13 @@ final kidsStages = <KidsStage>[
   // which the stages test caught when it was placed here).
   KidsStage('stars', _desc(66, 52), 28, 27, 0xFF8854D0),
   // 12-14: adh-Dhāriyāt back to the surahs that open in Juz 16 - half the
-  // Qur'an.
+  // Qur'an. «طلائع الحفّاظ» (was «الحفّاظ»; the owner offered «أشبال الحفاظ»,
+  // but «الأشبال» is already the second stage).
   KidsStage('hafiz', _desc(51, 19), 26, 16, 0xFFEE5253),
+  // The second half, in three stages of about five juz each (boundaries
+  // from quran_local.db: al-Kahf opens Juz 15, Yūnus 11, at-Tawbah 10,
+  // al-Māʾidah 6, an-Nisāʾ 4, al-Baqarah 1).
+  KidsStage('sabiqun', _desc(18, 10), 15, 11, 0xFF0ABDE3),
+  KidsStage('hamala', _desc(9, 5), 10, 6, 0xFFB8860B),
+  KidsStage('ahl', _desc(4, 2), 4, 1, 0xFF1E8449),
 ];

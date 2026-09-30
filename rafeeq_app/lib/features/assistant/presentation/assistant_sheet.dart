@@ -20,6 +20,8 @@ import '../../adhan/presentation/screens/adhan_background_screen.dart';
 import '../../adhan/presentation/screens/adhan_settings_screen.dart';
 import '../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../adhan/presentation/screens/prayer_location_screen.dart';
+import '../../azkar/data/adhkar_recitations.dart';
+import '../../azkar/presentation/screens/adhkar_listen_screen.dart';
 import '../../azkar/presentation/screens/azkar_section_screen.dart';
 import '../../dedications/presentation/dedications_screen.dart';
 import '../../dorar/presentation/dorar_history_screen.dart';
@@ -37,6 +39,11 @@ import '../../hifz/presentation/hifz_session_screen.dart';
 import '../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../home/presentation/widgets/on_this_day_sheet.dart';
 import '../../khatma/presentation/khatma_screen.dart';
+import '../../kids/data/kids_stages.dart';
+import '../../kids/presentation/ayah_game_screen.dart';
+import '../../kids/presentation/journey_screen.dart';
+import '../../kids/presentation/kids_corner_screen.dart';
+import '../../kids/presentation/kids_stage_screen.dart';
 import '../../library/data/book_catalog.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
@@ -78,6 +85,7 @@ import '../data/assistant_settings_map.dart';
 import '../data/rafeeq_ear.dart';
 import 'assistant_describe.dart';
 import 'assistant_quran_word.dart';
+import 'rafeeq_diag_screen.dart';
 
 /// True once `AppShell` is on screen - there is nowhere to take the reader
 /// before that (splash, onboarding).
@@ -319,6 +327,25 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
         case AssistantScreen.quranSearch:
           final repo = await ref.read(quranRepositoryProvider.future);
           push(SearchScreen(repo: repo));
+        case AssistantScreen.kidsCorner:
+          push(const KidsCornerScreen());
+        case AssistantScreen.journey:
+          push(const JourneyScreen());
+        case AssistantScreen.ayahGame:
+          push(const AyahGameScreen());
+        case AssistantScreen.adhkarListenMorning:
+          push(const AdhkarListenScreen(time: AdhkarTime.morning));
+        case AssistantScreen.adhkarListenEvening:
+          push(const AdhkarListenScreen(time: AdhkarTime.evening));
+        case AssistantScreen.rafeeqDiag:
+          push(const RafeeqDiagScreen());
+        case AssistantScreen.kidsBuds || AssistantScreen.kidsCubs ||
+              AssistantScreen.kidsKnights || AssistantScreen.kidsStars ||
+              AssistantScreen.kidsHafiz || AssistantScreen.kidsSabiqun ||
+              AssistantScreen.kidsHamala || AssistantScreen.kidsAhl:
+          final id = screen.name.substring(4).toLowerCase();
+          push(KidsStageScreen(
+              stage: kidsStages.firstWhere((s) => s.id == id)));
       }
     case QuranWordIntent(:final query):
       await runQuranWord(ref, query);
