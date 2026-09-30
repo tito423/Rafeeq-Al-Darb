@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~17:30 (09-30) RELEASED v3.73.0 (owner asked; versionCode 87, APK 315,513,908 B, tag = HEAD 190a5403, public asset range -> 206). Installed as an update on emulator; voice «افتح سورة يوسف» opened Yusuf on the release build; Support shows «ادعم التطبيق». v3.71.0 and the v3.72.0 draft LEFT in place (owner's standing «متمسحش حاجة») - ask him whether to delete them. NEXT: owner tests on his Honor AND a Xiaomi; wait for «تشخيص رفيق» screenshots (service, silenced, decode ms, command ms) + shared clip.
+
 ~15:05 (09-30) OWNER: battery exemption + overlay WERE already on; complaint is SLOW response. Measured on emulator: first command 7.5 s (lazy parser) -> fixed (prebuilt). Added to «تشخيص رفيق»: model decode ms + command ms (emulator: 106 ms / 76 ms for «افتح سورة يوسف», SEEN). Phone numbers unknown until the owner installs a build and reads the screen. NEXT: ask him to release/install; no release unless he says.
 
 ~14:55 (09-30, Opus) ITEM 2 PROGRESS, all SEEN on emulator (debug x64):
@@ -923,6 +925,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 17:27 - Released v3.73.0 (tag = HEAD, asset 206 on range); owner to test on Honor + Xiaomi
 - 2026-09-30 16:28 - Rafeeq diag: model decode ms + command ms (owner: response slow even with battery exemption and overlay on); seen on emulator 106/76 ms
 - 2026-09-30 14:54 - Rafeeq: parser prebuilt (first command 7.5 s -> 0.16 s), صورتي, diag shows the Arabic reply, bt_mic strings MSA; Yusuf/Ya-Sin by voice seen on emulator; diag screen + share verified
 - 2026-09-30 14:41 - Rafeeq surah names: 684 real model transcripts (114 surahs x3 voices x wide/phone band) - parser missed 247, now 29: article-stripped correction, dagger-alif keys, spoken muqattaat names, vowel-weighted near match after the surah word, صور/سور

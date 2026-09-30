@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 16:28 — IN PROGRESS — resume here**
+**2026-09-30 17:27 — IN PROGRESS — resume here**
 
-Rafeeq diag: model decode ms + command ms (owner: response slow even with battery exemption and overlay on); seen on emulator 106/76 ms
+Released v3.73.0 (tag = HEAD, asset 206 on range); owner to test on Honor + Xiaomi
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
