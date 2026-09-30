@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 14:54 — IN PROGRESS — resume here**
+**2026-09-30 16:28 — IN PROGRESS — resume here**
 
-Rafeeq: parser prebuilt (first command 7.5 s -> 0.16 s), صورتي, diag shows the Arabic reply, bt_mic strings MSA; Yusuf/Ya-Sin by voice seen on emulator; diag screen + share verified
+Rafeeq diag: model decode ms + command ms (owner: response slow even with battery exemption and overlay on); seen on emulator 106/76 ms
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

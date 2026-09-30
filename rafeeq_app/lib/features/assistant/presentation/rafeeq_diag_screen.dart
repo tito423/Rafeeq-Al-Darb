@@ -177,6 +177,10 @@ class _RafeeqDiagScreenState extends State<RafeeqDiagScreen>
                           'assistant.diag_understood'.tr(args: [h.intent!]),
                         'assistant.diag_level'.tr(
                             args: ['${(_diag.lastPeak * 100).round()}']),
+                        if (_diag.decodeMs != null)
+                          'assistant.diag_decode_ms'.tr(args: ['${_diag.decodeMs}']),
+                        if (_diag.actMs.value != null)
+                          'assistant.diag_act_ms'.tr(args: ['${_diag.actMs.value}']),
                       ].join('\n')),
                     ),
                     Padding(

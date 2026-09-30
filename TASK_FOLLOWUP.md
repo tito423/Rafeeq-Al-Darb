@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~15:05 (09-30) OWNER: battery exemption + overlay WERE already on; complaint is SLOW response. Measured on emulator: first command 7.5 s (lazy parser) -> fixed (prebuilt). Added to «تشخيص رفيق»: model decode ms + command ms (emulator: 106 ms / 76 ms for «افتح سورة يوسف», SEEN). Phone numbers unknown until the owner installs a build and reads the screen. NEXT: ask him to release/install; no release unless he says.
+
 ~14:55 (09-30, Opus) ITEM 2 PROGRESS, all SEEN on emulator (debug x64):
 - Rafeeq path of item 1: fed «يا رفيق افتح سورة يس» -> open quran 36:1 -> play -> 36:1, queue 84.
 - Surah-name audit: 114 surahs x 3 edge-tts voices, through the app's own FastConformer (sha256 714fc796… same file) at 16 kHz and at phone band (8 kHz 300-3400 Hz): E:/DevEnv/asr/surah_audit.py -> test/fixtures/asr_surah_transcripts.json. Parser missed 247/684; now 29 (ceiling test). Causes fixed: _correct rewrote «النحل» (bare key only), dagger-alif keys (الرحمن/الأعلى/الضحى), muqattaat spoken names (lexicon.surahSpokenNames), vowel-weighted near match after the surah word (assistant_distance.dart), صور/سور/صورتي.
@@ -921,6 +923,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 16:28 - Rafeeq diag: model decode ms + command ms (owner: response slow even with battery exemption and overlay on); seen on emulator 106/76 ms
 - 2026-09-30 14:54 - Rafeeq: parser prebuilt (first command 7.5 s -> 0.16 s), صورتي, diag shows the Arabic reply, bt_mic strings MSA; Yusuf/Ya-Sin by voice seen on emulator; diag screen + share verified
 - 2026-09-30 14:41 - Rafeeq surah names: 684 real model transcripts (114 surahs x3 voices x wide/phone band) - parser missed 247, now 29: article-stripped correction, dagger-alif keys, spoken muqattaat names, vowel-weighted near match after the surah word, صور/سور
 - 2026-09-30 14:29 - Rafeeq diagnostics screen (service/mic state/silenced/model/last sentence+clip share/battery/bg-restricted/bucket/autostart/overlay); wake listener split out of assistant_sheet; 45 keys x7; NOT yet seen on emulator

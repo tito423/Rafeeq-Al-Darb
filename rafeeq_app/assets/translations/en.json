@@ -2283,7 +2283,9 @@
     "diag_device": "Device",
     "diag_yes": "Yes",
     "diag_no": "No",
-    "diag_model_accurate": "«Higher accuracy in Arabic»"
+    "diag_model_accurate": "«Higher accuracy in Arabic»",
+    "diag_decode_ms": "Speech recognition time: {} ms",
+    "diag_act_ms": "Time to carry out the command: {} ms"
   },
   "occasions": {
     "title": "Islamic occasions",

@@ -2283,7 +2283,9 @@
     "diag_device": "Dispositivo",
     "diag_yes": "Sí",
     "diag_no": "No",
-    "diag_model_accurate": "«Más precisión en árabe»"
+    "diag_model_accurate": "«Más precisión en árabe»",
+    "diag_decode_ms": "Tiempo de reconocimiento: {} ms",
+    "diag_act_ms": "Tiempo para ejecutar la orden: {} ms"
   },
   "occasions": {
     "title": "Fechas islámicas",

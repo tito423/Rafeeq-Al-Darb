@@ -226,6 +226,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
 
   Future<void> _act(ProviderContainer container, AssistantIntent intent,
       {bool overlay = false}) async {
+    final t = Stopwatch()..start();
     final reply = await describeIntent(container, intent);
     RafeeqDiag.instance.understood(reply);
     if (overlay) await _overlay(reply, seconds: 3);
@@ -236,6 +237,8 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     rootScaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
         content: Text(reply), duration: const Duration(seconds: 2)));
     await runIntent(container, intent);
+    // From the parsed text to the command done (the parse itself is ~0.1 s).
+    RafeeqDiag.instance.actMs.value = t.elapsedMilliseconds;
   }
 
   @override

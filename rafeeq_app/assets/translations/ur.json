@@ -2283,7 +2283,9 @@
     "diag_device": "آلہ",
     "diag_yes": "ہاں",
     "diag_no": "نہیں",
-    "diag_model_accurate": "«عربی میں زیادہ درستی»"
+    "diag_model_accurate": "«عربی میں زیادہ درستی»",
+    "diag_decode_ms": "آواز پہچاننے کا وقت: {} ملی سیکنڈ",
+    "diag_act_ms": "حکم پر عمل کا وقت: {} ملی سیکنڈ"
   },
   "occasions": {
     "title": "اسلامی مواقع",

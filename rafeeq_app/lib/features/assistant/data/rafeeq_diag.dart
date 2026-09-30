@@ -30,6 +30,11 @@ class RafeeqDiag {
   /// The audio of that sentence exactly as the model received it (16 kHz).
   Float32List? lastClip;
 
+  /// How long the model took to write it, and how long from the text to
+  /// the command done (owner, 2026-09-30: «استجابته بطيئة» on his Honor).
+  int? decodeMs;
+  final actMs = ValueNotifier<int?>(null);
+
   /// Its loudest sample, 0..1 - a Bluetooth link that delivers near-silence
   /// shows here.
   double lastPeak = 0;
@@ -44,8 +49,10 @@ class RafeeqDiag {
     lastPeak = p;
   }
 
-  void sentence(String text) =>
-      heard.value = (text: text, at: DateTime.now(), intent: null);
+  void sentence(String text) {
+    actMs.value = null;
+    heard.value = (text: text, at: DateTime.now(), intent: null);
+  }
 
   void understood(String intent) {
     final h = heard.value;

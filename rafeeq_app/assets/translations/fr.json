@@ -2283,7 +2283,9 @@
     "diag_device": "Appareil",
     "diag_yes": "Oui",
     "diag_no": "Non",
-    "diag_model_accurate": "«Plus de précision en arabe»"
+    "diag_model_accurate": "«Plus de précision en arabe»",
+    "diag_decode_ms": "Temps de reconnaissance : {} ms",
+    "diag_act_ms": "Temps d’exécution de la commande : {} ms"
   },
   "occasions": {
     "title": "Fêtes et dates islamiques",

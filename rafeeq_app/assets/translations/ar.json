@@ -2283,7 +2283,9 @@
     "diag_device": "الجهاز",
     "diag_yes": "نعم",
     "diag_no": "لا",
-    "diag_model_accurate": "«دقة أعلى في العربية»"
+    "diag_model_accurate": "«دقة أعلى في العربية»",
+    "diag_decode_ms": "زمن التعرّف على الكلام: {} ملّي ثانية",
+    "diag_act_ms": "زمن تنفيذ الأمر: {} ملّي ثانية"
   },
   "occasions": {
     "title": "المناسبات الإسلامية",

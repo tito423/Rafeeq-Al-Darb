@@ -2283,7 +2283,9 @@
     "diag_device": "Устройство",
     "diag_yes": "Да",
     "diag_no": "Нет",
-    "diag_model_accurate": "«Выше точность на арабском»"
+    "diag_model_accurate": "«Выше точность на арабском»",
+    "diag_decode_ms": "Время распознавания: {} мс",
+    "diag_act_ms": "Время выполнения команды: {} мс"
   },
   "occasions": {
     "title": "Исламские даты",

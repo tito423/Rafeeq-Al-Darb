@@ -85,6 +85,8 @@ class RafeeqEar {
       } else if (m is String) {
         debugPrint('rafeeq segment: "$m"');
         if (m.trim().isNotEmpty) _heard.add(m.trim());
+      } else if (m is int) {
+        RafeeqDiag.instance.decodeMs = m;
       } else if (m is Float32List) {
         RafeeqDiag.instance.clip(m);
       } else if (m is bool) {
@@ -255,7 +257,9 @@ class RafeeqEar {
             out.send(Float32List.fromList(seg.samples));
             final s = rec.createStream();
             s.acceptWaveform(samples: seg.samples, sampleRate: 16000);
+            final t = Stopwatch()..start();
             rec.decode(s);
+            out.send(t.elapsedMilliseconds);
             out.send(rec.getResult(s).text);
             s.free();
           }
