@@ -1,0 +1,7 @@
+clean              685/750 = 91.3%   husary 97 alafasy 91 minshawi 95 banna 95 abdulbasit 94 sudais 76
+lowpass3400        732/750 = 97.6%   husary 98 alafasy 98 minshawi 98 banna 95 abdulbasit 98 sudais 98
+highpass200        682/750 = 90.9%   husary 98 alafasy 89 minshawi 96 banna 95 abdulbasit 90 sudais 78
+band_no_resample   731/750 = 97.5%   husary 98 alafasy 98 minshawi 97 banna 95 abdulbasit 98 sudais 98
+resample8k_only    729/750 = 97.2%   husary 98 alafasy 98 minshawi 97 banna 95 abdulbasit 98 sudais 98
+volume0.6_only     690/750 = 92.0%   husary 96 alafasy 92 minshawi 96 banna 94 abdulbasit 94 sudais 79
+full_band          728/750 = 97.1%   husary 97 alafasy 98 minshawi 98 banna 95 abdulbasit 98 sudais 97

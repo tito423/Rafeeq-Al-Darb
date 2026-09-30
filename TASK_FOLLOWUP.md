@@ -13,6 +13,9 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~21:45 (09-30) (C2) TASMEE MODEL SWAPPED, SEEN: benchmark (scripts/asr_candidates_2026-09-30.txt, 750 words, 6 reciters): tiny 89.3% clean / 84.9% phone band (Banna 2:255 band 3/50); FastConformer 91.3 / 97.1 (48/50); omnilingual 80.9 / 80.1. Cause of FC's band gain = 3.4 kHz low-pass (fc_band_cause_2026-09-30.txt: 97.6%); the app's own RBJ biquad measured 97.5% (measure_fc_biquad.py). TasmeeEngine now = sherpa FastConformer + lowPass3400 (tasmee_audio.dart), on RafeeqVoicePack.accurate (174 MB, shared with Rafeeq); old 78 MB whisper model deleted from the phone on first check; whisper_flutter_new REMOVED from pubspec. Test hook: tasmee_test.wav in external files replaces the recording. Emulator: Sudais 112:1 phone band -> 4/4 green, level stepped up to «أوائل الكلمات». 689 tests.
+NEXT: live word-by-word following (persistent worker), FSRS; then (D) kids stories (sources research).
+
 ~21:25 (09-30) (C) STAGE 1 DONE + SEEN: diminishing-cues levels in the hifz session (hifz_mask.dart HifzCue: full / first letters / every other word / first word / from memory; tap a word or «تلميح» to reveal; the ayah is fully hidden while the tasmee records; the level steps up at >=90%, down at <60%). Emulator: first-letters shows «قُ هُ ٱ أَ» + lines; hint reveals in reading order; recording hid all; silent recording -> «لا بأس، نعود إلى: كلمة وكلمة». Research: Fiechter & Benjamin 2018 (diminishing cues), FSRS in QuranH, Tarteel live checking.
 RUNNING: scripts/measure_asr_candidates.py (tiny vs FastConformer vs omnilingual, 6 reciters, clean + phone band) -> scripts/asr_candidates_2026-09-30.txt. tiny clean = 89.3% (minshawi 79, sudais 81).
 QUEUED: (C2) pick the model by numbers; live word-by-word checking if fast enough; FSRS review schedule. (D) owner's newest: kids «قصص الأنبياء والصالحين والصحابة» section with child-friendly audio/video - needs REAL licensed sources (research first, §1.1/§1.8).
@@ -942,6 +945,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 21:44 - Tasmee recogniser: whisper-tiny -> FastConformer + 3.4 kHz low-pass (97.5% vs 89.3% of 750 words; headset band 97.1% vs 84.9%); shares Rafeeq's Arabic pack; whisper_flutter_new removed; seen on emulator
 - 2026-09-30 21:24 - Hifz: diminishing-cues levels (first letters, every other word, first word, from memory), hint, ayah hidden while reciting, level follows the tasmee score; seen on emulator
 - 2026-09-30 21:11 - Kids corner to the whole Qur'an (8 stages, «طلائع الحفّاظ», 114 badge); Rafeeq opens kids corner/journey/game/adhkar listening/diag/stages by voice
 - 2026-09-30 20:51 - Tasmee with headset: Rafeeq releases the mic and route BEFORE the tasmee routes, and stays off while it records (it used to restore the route mid-ayah); ordering seen on emulator

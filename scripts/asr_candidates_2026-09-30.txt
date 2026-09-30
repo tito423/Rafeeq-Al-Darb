@@ -1,0 +1,33 @@
+
+=== tiny ===
+clean      words 750: matched 670 (89.3%)  0.156 s per audio second
+   husary 98%  alafasy 85%  minshawi 79%  banna 95%  abdulbasit 98%  sudais 81%
+PHONE BAND words 750: matched 637 (84.9%)  0.205 s per audio second
+   husary 96%  alafasy 96%  minshawi 78%  banna 87%  abdulbasit 80%  sudais 72%
+  hard: phone-like band (husary 18:1)          11/11 = 100%
+  hard: phone-like band (banna 2:255)          3/50 = 6%
+  hard: stopped after 12 s (husary 2:255)      10/50 = 20%
+  hard: WRONG ayah: 112:1 against 18:1         1/11 = 9%
+  hard: WRONG ayah: 67:1 against 2:255         1/50 = 2%
+
+=== fastconformer ===
+clean      words 750: matched 685 (91.3%)  0.025 s per audio second
+   husary 97%  alafasy 91%  minshawi 95%  banna 95%  abdulbasit 94%  sudais 76%
+PHONE BAND words 750: matched 728 (97.1%)  0.024 s per audio second
+   husary 97%  alafasy 98%  minshawi 98%  banna 95%  abdulbasit 98%  sudais 97%
+  hard: phone-like band (husary 18:1)          11/11 = 100%
+  hard: phone-like band (banna 2:255)          48/50 = 96%
+  hard: stopped after 12 s (husary 2:255)      9/50 = 18%
+  hard: WRONG ayah: 112:1 against 18:1         1/11 = 9%
+  hard: WRONG ayah: 67:1 against 2:255         1/50 = 2%
+
+=== omnilingual ===
+clean      words 750: matched 607 (80.9%)  0.205 s per audio second
+   husary 90%  alafasy 93%  minshawi 87%  banna 73%  abdulbasit 66%  sudais 77%
+PHONE BAND words 750: matched 601 (80.1%)  0.202 s per audio second
+   husary 90%  alafasy 93%  minshawi 84%  banna 71%  abdulbasit 88%  sudais 54%
+  hard: phone-like band (husary 18:1)          10/11 = 91%
+  hard: phone-like band (banna 2:255)          42/50 = 84%
+  hard: stopped after 12 s (husary 2:255)      9/50 = 18%
+  hard: WRONG ayah: 112:1 against 18:1         1/11 = 9%
+  hard: WRONG ayah: 67:1 against 2:255         1/50 = 2%

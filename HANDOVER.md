@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 21:24 — IN PROGRESS — resume here**
+**2026-09-30 21:44 — IN PROGRESS — resume here**
 
-Hifz: diminishing-cues levels (first letters, every other word, first word, from memory), hint, ayah hidden while reciting, level follows the tasmee score; seen on emulator
+Tasmee recogniser: whisper-tiny -> FastConformer + 3.4 kHz low-pass (97.5% vs 89.3% of 750 words; headset band 97.1% vs 84.9%); shares Rafeeq's Arabic pack; whisper_flutter_new removed; seen on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

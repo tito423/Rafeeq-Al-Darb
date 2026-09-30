@@ -8,17 +8,14 @@ environment:
   sdk: ^3.10.7
 
 dependencies:
-  # Offline speech recognition for «التسميع»: whisper.cpp with the
-  # Quran-tuned ggml model (scripts/export_quran_asr_onnx.py). NOT
-  # onnxruntime - the app already ships one for the reading voice, and two
-  # ONNX Runtimes in one app collide (see HANDOVER, 2026-09-23).
-  whisper_flutter_new: ^1.0.1
-  # «رفيق»: offline speech (silero VAD + omnilingual-asr CTC), Apache-2.0.
-  # 1.13.8 checked on pub.dev 2026-09-27 (flutter >=3.10).
+  # «رفيق» AND «التسميع»: offline speech, Apache-2.0. The tasmee' moved from
+  # whisper.cpp (whisper_flutter_new, removed) to sherpa's FastConformer on
+  # 2026-09-30: 97.5 % of words against 89.3 %, measured
+  # (scripts/asr_candidates_2026-09-30.txt). 1.13.8 checked on pub.dev
+  # 2026-09-27 (flutter >=3.10).
   sherpa_onnx: 1.13.8
-  # SHA-256 of the tasmee model, to tell ours from whisper.cpp's generic
-  # ggml-tiny.bin - the two are the same size to the byte. Already in the
-  # tree through just_audio; declared because it is now imported directly.
+  # SHA-256 of downloaded packs (rafeeq_voice_pack.dart, dorar_check.dart).
+  # Already in the tree through just_audio; imported directly.
   crypto: ^3.0.0
   # The microphone for «التسميع» — raw PCM straight into the recogniser.
   record: ^6.2.1

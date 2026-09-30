@@ -1,85 +1,45 @@
 /// «التسميع»: listening to a recitation and saying which words were missed.
 ///
-/// The recogniser is a Whisper fine-tuned on Qur'an recitation
-/// (`tarteel-ai/whisper-tiny-ar-quran`, Apache-2.0), converted to whisper.cpp's
-/// ggml format by `scripts/export_quran_asr_onnx.py` and hosted on the content
-/// bucket. It runs **on the device, offline**, once downloaded.
+/// THE RECOGNISER (since 2026-09-30): NVIDIA's Arabic FastConformer CTC,
+/// int8, through sherpa-onnx - the same file as Rafeeq's «دقة أعلى في
+/// العربية» pack (`RafeeqVoicePack.accurate`), so it is downloaded once for
+/// both. It runs **on the device, offline**.
 ///
-/// WHY whisper.cpp AND NOT sherpa-onnx (2026-09-23, found on the owner's
-/// phone): sherpa ships its own onnxruntime, the app already ships another
-/// for the book reading voice, and two ONNX Runtimes in one APK collide —
-/// «cannot locate symbol OrtGetApiBase». whisper.cpp needs no onnxruntime,
-/// and its ggml tiny model measured the SAME 95.9% as the base one at three
-/// times the speed and half the size.
+/// WHY IT REPLACED tarteel whisper-tiny-ar-quran (whisper.cpp), measured on
+/// the same 750 words, six reciters (scripts/asr_candidates_2026-09-30.txt,
+/// fc_band_cause_2026-09-30.txt):
 ///
-/// WHAT IT CAN AND CANNOT DO — measured on a desktop before any of this was
-/// written (`scripts/measure_quran_asr.py`, and sherpa's own recognizer on
-/// the exported model):
+///  * clean recordings: tiny 89.3 %, FastConformer 91.3 %, and 97.5 % after
+///    the 3.4 kHz low-pass `tasmee_audio.dart` applies (al-Minshawi 79 -> 98,
+///    as-Sudais 81 -> 98);
+///  * through a phone / Bluetooth-headset band: tiny 84.9 %, FastConformer
+///    97.1 %; al-Banna's 2:255 on that band: tiny 3/50, FastConformer 48/50 -
+///    the owner's «ميكروفون السماعة» case;
+///  * 6 times faster (0.025 s per second of audio against 0.156 on the PC);
+///  * a recitation stopped half-way and the wrong ayah still show up as a
+///    plain drop in matched words (9/50, 1/11, 1/50), as with tiny.
 ///
-///  * ayahs under 30 s: 23/23 words, and it is not tied to one reciter
-///    (Alafasy 11/11 and 49/50) nor broken by a narrow-band microphone;
-///  * a skipped tail and a wrong ayah both show up as a plain drop in
-///    matched words — 9/50 and 1/11;
-///  * **an ayah longer than 30 s does not fit whisper's window**, so this
-///    class refuses it rather than reporting half of it as «missed»;
 ///  * **tajweed is not checked.** A wrong madd or a missed ghunnah is not a
 ///    wrong WORD, and nothing here would catch it. The screen must say so.
 library;
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:crypto/crypto.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart'; // Float32List, @visibleForTesting
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:whisper_flutter_new/whisper_flutter_new.dart';
+import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
-import '../../../core/config/app_config.dart';
-import '../../../core/config/content_mirrors.dart';
+import '../../assistant/data/rafeeq_voice_pack.dart';
+import 'tasmee_audio.dart';
 
-/// One file of the recogniser: where it lives on the bucket, and the exact
-/// number of bytes it must be once downloaded (a truncated model loads and
-/// then hears nothing).
-class TasmeeAsset {
-  /// The object's name on the bucket.
-  final String name;
-  final int bytes;
+/// What the recogniser costs to download: the Arabic FastConformer pack.
+int get tasmeeDownloadBytes => RafeeqVoicePack.accurate.totalBytes;
 
-  /// The name it must have on the device: whisper_flutter_new opens
-  /// `<dir>/ggml-<model>.bin` and, when that file is missing, DOWNLOADS
-  /// whisper.cpp's generic model from HuggingFace under that name, silently.
-  final String localName;
-
-  /// SHA-256 of the bucket object. The generic `ggml-tiny.bin` is
-  /// 77,691,713 bytes too - HuggingFace's own size header says so - so the
-  /// size alone cannot tell the two apart; this can (theirs is be07e048…).
-  final String sha256;
-
-  const TasmeeAsset(this.name, this.bytes, this.localName, this.sha256);
-
-  String get url =>
-      '${AppConfig.contentBaseUrl}/asr/whisper-tiny-ar-quran/$name';
-}
-
-/// Size measured with a HEAD, hash with sha256sum on the downloaded object,
-/// both on 2026-09-23.
-const tasmeeAssets = <TasmeeAsset>[
-  TasmeeAsset(
-    'ggml-model.bin',
-    77691713,
-    'ggml-tiny.bin',
-    '5a9a479f9ec6b192ba6860801fca70b69f10b9f8a9b876422990562521bf7a11',
-  ),
-];
-
-int get tasmeeDownloadBytes => tasmeeAssets.fold(0, (sum, a) => sum + a.bytes);
-
-/// How long one recitation may run. whisper.cpp slides its own 30-second
-/// window, so a longer ayah is handled — this is a cap on the recording, so a
-/// forgotten «stop» does not fill the disk. Al-Baqarah 255 runs 60 s and
-/// measured 47/50 words, which is why it is not 30.
+/// How long one recitation may run - a cap, so a forgotten «stop» does not
+/// fill the disk. Al-Baqarah 255 runs 60 s (48/50 words on the headset band).
 const tasmeeMaxSeconds = 120;
 
 class TasmeeResult {
@@ -106,175 +66,69 @@ class TasmeeEngine {
   TasmeeEngine._();
   static final TasmeeEngine instance = TasmeeEngine._();
 
-  Whisper? _whisper;
-  Directory? _dir;
+  final _pack = RafeeqVoicePack.accurate;
 
-  /// The model directory. whisper_flutter_new reads `ggml-tiny.bin` from
-  /// here - see [TasmeeAsset.localName] for why that name matters.
-  ///
-  /// WHAT WENT WRONG UNTIL 2026-09-23: the model was saved as
-  /// `ggml-model.bin`, the package did not find `ggml-tiny.bin`, and on the
-  /// first recitation it fetched whisper.cpp's GENERIC tiny model from
-  /// HuggingFace with no progress shown. The owner saw «ابدأ التسميع» hang;
-  /// and every recitation on his phone had been heard by that generic model,
-  /// not the Quran-tuned one that was measured and uploaded.
-  Future<Directory> _modelDir() async {
-    final base = await getApplicationSupportDirectory();
-    return _dir ??= Directory(p.join(base.path, 'asr'));
-  }
+  /// The pack's own progress and state, so every button that offers the
+  /// recogniser - here, the onboarding, the downloads panel, Rafeeq's
+  /// settings - shows the same download.
+  ValueNotifier<double?> get downloadProgress => _pack.progress;
+  ValueNotifier<bool?> get installed => _pack.installed;
 
-  /// Written beside the model once its hash has been checked, so the 78 MB
-  /// are hashed once per install rather than on every screen.
-  static const _verifiedSuffix = '.quran-verified';
-
-  /// True only when OUR model sits where the package will read it. A file
-  /// under that name that is not ours (the generic download) is deleted,
-  /// and a copy of ours left under its old name is moved into place.
   Future<bool> isInstalled() async {
-    final dir = await _modelDir();
-    for (final a in tasmeeAssets) {
-      final local = File(p.join(dir.path, a.localName));
-      final marker = File('${local.path}$_verifiedSuffix');
-      if (local.existsSync() &&
-          marker.existsSync() &&
-          marker.readAsStringSync().trim() == a.sha256 &&
-          await local.length() == a.bytes) {
-        continue;
-      }
-      // Installs before the fix: ours under the bucket's name, possibly
-      // with the generic one beside it under the name that is read.
-      final old = File(p.join(dir.path, a.name));
-      if (old.existsSync() &&
-          await old.length() == a.bytes &&
-          await _sha256(old.path) == a.sha256) {
-        if (local.existsSync()) await local.delete();
-        await old.rename(local.path);
-        await marker.writeAsString(a.sha256);
-        continue;
-      }
-      if (local.existsSync() && await _sha256(local.path) == a.sha256) {
-        await marker.writeAsString(a.sha256);
-        continue;
-      }
-      if (local.existsSync()) await local.delete(); // not ours
-      _whisper = null;
-      installed.value = false;
-      return false;
-    }
-    installed.value = true;
-    return true;
+    final ok = await _pack.check();
+    if (ok) unawaited(_dropOldWhisperModel());
+    return ok;
   }
 
-  static Future<String> _sha256(String path) => Isolate.run(() async {
-    final digest = await sha256.bind(File(path).openRead()).first;
-    return digest.toString();
-  });
-
-  /// 0..1 while the model is downloading, null otherwise. Held HERE, not in
-  /// a widget: the download used to live in the tasmee panel's state, so
-  /// leaving the panel cancelled it and coming back showed «نزّل النموذج»
-  /// again (owner, 2026-09-24). Every button that offers the model watches
-  /// this and [installed].
-  final ValueNotifier<double?> downloadProgress = ValueNotifier(null);
-
-  /// Last known install state; null until [isInstalled] has run once.
-  final ValueNotifier<bool?> installed = ValueNotifier(null);
-
-  final Dio _dio = Dio();
-  CancelToken? _cancelToken;
-  Future<void>? _inFlight;
-
-  /// Starts the download, or joins the one already running - so two
-  /// buttons never start two transfers of the same 78 MB.
-  Future<void> startDownload() => _inFlight ??= () async {
-    _cancelToken = CancelToken();
-    downloadProgress.value = 0;
+  /// The 78 MB whisper-tiny model an older version downloaded is no longer
+  /// read; it is taken off the phone.
+  Future<void> _dropOldWhisperModel() async {
     try {
-      await download(
-        dio: _dio,
-        cancelToken: _cancelToken,
-        onProgress: (v) => downloadProgress.value = v,
-      );
-      installed.value = true;
-    } finally {
-      downloadProgress.value = null;
-      _cancelToken = null;
-      _inFlight = null;
-    }
-  }();
-
-  void cancelDownload() => _cancelToken?.cancel();
-
-  /// Downloads the model, verifying its exact byte count and hash before it
-  /// counts as installed. [onProgress] gets 0..1. UI goes through
-  /// [startDownload]; this is the transfer itself.
-  Future<void> download({
-    required Dio dio,
-    void Function(double progress)? onProgress,
-    CancelToken? cancelToken,
-  }) async {
-    final dir = await _modelDir();
-    await dir.create(recursive: true);
-    final total = tasmeeDownloadBytes;
-    var done = 0;
-    for (final a in tasmeeAssets) {
-      final path = p.join(dir.path, a.localName);
-      final tmp = '$path.part';
-      // R2, then its mirror; each must pass the byte count AND the hash.
-      await ContentMirrors.fetchFirst<void>(a.url, (url) async {
-        await dio.download(
-          url,
-          tmp,
-          cancelToken: cancelToken,
-          onReceiveProgress: (got, _) =>
-              onProgress?.call((done + got) / total),
-        );
-        final got = await File(tmp).length();
-        final hash = await _sha256(tmp);
-        if (got != a.bytes || hash != a.sha256) {
-          await File(tmp).delete();
-          throw StateError(
-            '${a.name} came back $got bytes with sha256 $hash; expected '
-            '${a.bytes} bytes with sha256 ${a.sha256}',
-          );
-        }
-      });
-      if (File(path).existsSync()) await File(path).delete();
-      await File(tmp).rename(path);
-      await File('$path$_verifiedSuffix').writeAsString(a.sha256);
-      done += a.bytes;
-      onProgress?.call(done / total);
-    }
-    _whisper = null;
+      final base = await getApplicationSupportDirectory();
+      final old = Directory(p.join(base.path, 'asr'));
+      if (old.existsSync()) await old.delete(recursive: true);
+    } catch (_) {}
   }
 
-  Future<void> deleteModel() async {
-    _whisper = null;
-    final dir = await _modelDir();
-    if (dir.existsSync()) await dir.delete(recursive: true);
-    installed.value = false;
-  }
+  /// Starts the download, or joins the one already running (the pack's own
+  /// guard) - byte count and SHA-256 checked before it counts.
+  Future<void> startDownload() => _pack.download();
 
-  /// Transcribes a 16 kHz mono WAV file recorded from the microphone.
-  ///
-  /// Refuses unless [isInstalled] has seen our model where the package reads
-  /// it: the package's own fallback is a silent download of another model.
+  void cancelDownload() => _pack.cancel();
+
+  /// Transcribes a 16 kHz mono WAV recorded from the microphone, on a worker
+  /// isolate so no frame waits for it.
   Future<String> transcribeFile(String wavPath) async {
     if (!await isInstalled()) {
       throw StateError('the recogniser is not downloaded yet');
     }
-    final dir = await _modelDir();
-    _whisper ??= Whisper(model: WhisperModel.tiny, modelDir: dir.path);
-    final res = await _whisper!.transcribe(
-      transcribeRequest: TranscribeRequest(
-        audio: wavPath,
-        language: 'ar',
-        threads: 4,
-        isNoTimestamps: true,
-        noFallback: true,
+    final dir = (await _pack.dir()).path;
+    return Isolate.run(() => _decode(wavPath, dir));
+  }
+
+  static String _decode(String wavPath, String dir) {
+    so.initBindings();
+    final x = lowPass3400(wavSamples(File(wavPath).readAsBytesSync()));
+    // A quarter second of silence either side, as the measurement fed it.
+    final padded = Float32List(x.length + 12000)..setAll(4000, x);
+    final rec = so.OfflineRecognizer(so.OfflineRecognizerConfig(
+      model: so.OfflineModelConfig(
+        nemoCtc: so.OfflineNemoEncDecCtcModelConfig(
+            model: p.join(dir, 'model.int8.onnx')),
+        tokens: p.join(dir, 'tokens.txt'),
+        numThreads: 2,
+        debug: false,
       ),
-    );
-    return res.text;
+    ));
+    final s = rec.createStream();
+    try {
+      s.acceptWaveform(samples: padded, sampleRate: 16000);
+      rec.decode(s);
+      return rec.getResult(s).text;
+    } finally {
+      s.free();
+      rec.free();
+    }
   }
 
   /// Compares what was heard with the ayah, word by word.

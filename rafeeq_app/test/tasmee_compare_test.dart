@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rafeeq_app/features/assistant/data/rafeeq_voice_pack.dart';
 import 'package:rafeeq_app/features/hifz/data/hifz_mask.dart';
 import 'package:rafeeq_app/features/hifz/data/tasmee_engine.dart';
-import 'package:whisper_flutter_new/whisper_flutter_new.dart';
 
 /// The word-by-word comparison «التسميع» reports with. The recogniser itself
 /// is measured outside the app (`scripts/measure_quran_asr.py`); what is
@@ -180,32 +180,13 @@ void main() {
     expect(words.where((w) => !RegExp('[ء-ي]').hasMatch(w)), isEmpty);
   });
 
-  test('the model is saved under the name the package opens', () {
-    // whisper_flutter_new reads <dir>/ggml-<model>.bin and, when it is not
-    // there, downloads whisper.cpp's GENERIC model under that name. Saved as
-    // ggml-model.bin, ours was never read (2026-09-23).
-    expect(
-      tasmeeAssets.single.localName,
-      'ggml-${WhisperModel.tiny.modelName}.bin',
-    );
-    expect(
-      WhisperModel.tiny.getPath('/d'),
-      '/d/${tasmeeAssets.single.localName}',
-    );
-    // Same size as the generic one, so only the hash can tell them apart.
-    expect(tasmeeAssets.single.sha256, hasLength(64));
-    expect(
-      tasmeeAssets.single.sha256,
-      isNot('be07e048e1e599ad46341c8d2a135645097a538221678b7acdd1b1919c6e1b21'),
-    );
-  });
-
-  test('the model download is the measured size, not a guess', () {
-    expect(tasmeeAssets.length, 1);
-    expect(tasmeeDownloadBytes, 77691713);
-    for (final a in tasmeeAssets) {
-      expect(a.url, contains('/asr/whisper-tiny-ar-quran/'));
-      expect(a.url, startsWith('https://'));
+  test('the recogniser is the Arabic FastConformer pack, sized and hashed', () {
+    // Measured to beat whisper-tiny on 750 words (tasmee_engine.dart).
+    expect(tasmeeDownloadBytes, RafeeqVoicePack.accurate.totalBytes);
+    expect(tasmeeDownloadBytes, 173888072 + 12858);
+    for (final f in RafeeqVoicePack.accurate.files) {
+      expect(f.sha256, hasLength(64));
+      expect(f.url, startsWith('https://'));
     }
   });
 }

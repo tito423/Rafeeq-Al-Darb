@@ -277,7 +277,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _amp = null;
     _level = 0;
     await restoreAudioRoute();
-    final path = _wavPath;
+    final path = await _testClip() ?? _wavPath;
     try {
       if (path == null || !File(path).existsSync()) {
         throw StateError('nothing was recorded');
@@ -315,6 +315,26 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
           _phase = _Phase.idle;
         });
       }
+    }
+  }
+
+  /// A 16 kHz mono WAV pushed to the app's external files folder as
+  /// `tasmee_test.wav` is scored instead of the recording, once, then
+  /// deleted - how a real reciter's audio is checked end to end on the
+  /// emulator, whose microphone hears nothing (as `rafeeq_test.wav` is for
+  /// Rafeeq). Null when there is no such file.
+  Future<String?> _testClip() async {
+    try {
+      final dir = await getExternalStorageDirectory();
+      if (dir == null) return null;
+      final f = File(p.join(dir.path, 'tasmee_test.wav'));
+      if (!f.existsSync()) return null;
+      final copy = p.join((await getTemporaryDirectory()).path, 'tasmee_fed.wav');
+      await f.copy(copy);
+      await f.delete();
+      return copy;
+    } catch (_) {
+      return null;
     }
   }
 
