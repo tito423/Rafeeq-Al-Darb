@@ -5,12 +5,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.ryanheise.audioservice.AudioService
 
 /**
  * «رفيق» listening while the app is in the background.
@@ -62,10 +65,45 @@ class AssistantListenService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
+    /**
+     * The Dart side of «رفيق» runs in audio_service's cached FlutterEngine,
+     * and audio_service DESTROYS that engine when its own AudioService is
+     * destroyed - which happens as soon as the activity closes (Back out of
+     * the app, or swiped from recents) and nothing is playing. Seen on
+     * emulator-5554, 2026-09-30: after Back, `rec stop` at once, the service
+     * notification still up, a command heard by nobody (owner's Honor: «لما
+     * التطبيق بقفله وانده مش بيظهر ولا بيتفاعل»). A binding from here keeps
+     * AudioService - and with it the engine - alive while listening is on.
+     */
+    private var engineHold: ServiceConnection? = null
+
+    private fun holdEngine() {
+        if (engineHold != null) return
+        val c = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {}
+            override fun onServiceDisconnected(name: ComponentName?) {}
+        }
+        val ok = try {
+            bindService(
+                Intent(this, AudioService::class.java).setAction("android.media.browse.MediaBrowserService"),
+                c, Context.BIND_AUTO_CREATE,
+            )
+        } catch (e: Exception) {
+            false
+        }
+        if (ok) engineHold = c
+    }
+
+    private fun releaseEngine() {
+        engineHold?.let { try { unbindService(it) } catch (_: Exception) {} }
+        engineHold = null
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
             stoppedByUser = true
             running = false
+            releaseEngine()
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             return START_NOT_STICKY
@@ -110,6 +148,7 @@ class AssistantListenService : Service() {
             }
             running = true
             refusedBecause = null
+            holdEngine()
         } catch (e: Exception) {
             // Android 14 refuses a microphone service started from the
             // background; the app then listens only while it is open.
@@ -122,6 +161,7 @@ class AssistantListenService : Service() {
 
     override fun onDestroy() {
         running = false
+        releaseEngine()
         super.onDestroy()
     }
 }

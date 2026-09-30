@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 17:27 — IN PROGRESS — resume here**
+**2026-09-30 20:12 — IN PROGRESS — resume here**
 
-Released v3.73.0 (tag = HEAD, asset 206 on range); owner to test on Honor + Xiaomi
+Rafeeq survives the app being closed: listen service holds AudioService so audio_service stops destroying the engine; mic permission via permission_handler; seen after Back-exit and recents swipe
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

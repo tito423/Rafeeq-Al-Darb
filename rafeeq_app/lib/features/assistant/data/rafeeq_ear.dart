@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
@@ -105,7 +106,10 @@ class RafeeqEar {
           if (listening.value) return;
           await _ensureWorker();
           final mic = _mic ??= AudioRecorder();
-          if (!await mic.hasPermission()) return;
+          // Not `mic.hasPermission()`: the record plugin answers false
+          // whenever no activity is attached, so after the app was closed
+          // the microphone could never open again.
+          if (!await Permission.microphone.isGranted) return;
           // A headset the way the tasmee opens one (tasmee_mic.dart): named,
           // the call route moved to it, the voice-communication source.
           final mics = wantBluetooth
