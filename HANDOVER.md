@@ -2511,9 +2511,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 03:54 — IN PROGRESS — resume here**
+**2026-09-30 06:23 — IN PROGRESS — resume here**
 
-Arabic pack: NVIDIA FastConformer replaces whisper-turbo (0.1 s vs 4-7 s, numbers right, 174 MB); used as the recogniser in Arabic; turbo removed from hosting
+Arabic pack seen end to end: in-app download, owner sentence heard in 341 ms, opened 2:255 from the home screen; 0.67 GB at rest
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
