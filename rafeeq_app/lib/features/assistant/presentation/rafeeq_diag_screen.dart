@@ -158,7 +158,7 @@ class _RafeeqDiagScreenState extends State<RafeeqDiagScreen>
             model == null
                 ? 'assistant.diag_model_none'.tr()
                 : model
-                ? 'assistant.accurate_title'.tr()
+                ? 'assistant.diag_model_accurate'.tr()
                 : 'assistant.diag_model_base'.tr(),
           ),
           head('assistant.diag_last'),

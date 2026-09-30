@@ -81,8 +81,9 @@ const sunanWords = <String>['سنن'];
 
 /// «سورة» in every language (Russian and Urdu go through `norm` too).
 const surahWords = <String>[
-  // «سور» / «صور»: the Arabic model often drops the ة (surah_audit.py).
-  'سوره', 'سورت', 'صوره', 'سور', 'صور', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',
+  // «سور» / «صور»: the Arabic model often drops the ة (surah_audit.py);
+  // «صورتي يس» is how it wrote «سورة يس» on the emulator (2026-09-30).
+  'سوره', 'سورت', 'صوره', 'سور', 'صور', 'صورت', 'صورتي', 'سورتي', 'surah', 'sura', 'surat', 'soura', 'sourate', 'surata',
   'chapter', 'сура', 'суру', 'суры',
 ];
 

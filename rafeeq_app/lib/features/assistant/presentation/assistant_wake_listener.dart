@@ -106,6 +106,10 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
         }
         return;
       }
+      // The parser is built from every catalogue: 7.5 s for the first command
+      // on the emulator (heard 14:42:58, acted 14:43:06), 0.1 s after. Built
+      // now, not when the owner is waiting on «افتح سورة يوسف».
+      unawaited(ref.read(assistantParserProvider.future));
       // Started only while the app is on screen: Android refuses a
       // microphone service started from the background.
       if (!_serviceOn && _foreground) {
@@ -203,12 +207,12 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       final parser = await ref.read(assistantParserProvider.future);
       final intent = parser.parse(rest);
       debugPrint('rafeeq intent: "$rest" -> $intent');
-      RafeeqDiag.instance.understood('$intent');
       if (intent is! UnknownIntent) {
         _ayahFollow.arm(intent);
         await _act(container, intent, overlay: overlay);
         return;
       }
+      RafeeqDiag.instance.understood('assistant.not_understood'.tr());
       if (overlay) {
         await _overlay(
             '${'assistant.heard'.tr(args: [rest])}\n${'assistant.not_understood'.tr()}',
@@ -223,6 +227,7 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
   Future<void> _act(ProviderContainer container, AssistantIntent intent,
       {bool overlay = false}) async {
     final reply = await describeIntent(container, intent);
+    RafeeqDiag.instance.understood(reply);
     if (overlay) await _overlay(reply, seconds: 3);
     if (!_foreground && intent is! PlaySurahIntent &&
         intent is! SetThemeIntent && intent is! ToggleOptionIntent) {

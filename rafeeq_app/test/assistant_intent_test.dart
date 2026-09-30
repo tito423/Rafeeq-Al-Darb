@@ -460,6 +460,12 @@ void main() {
   // a Bluetooth headset carries): E:/DevEnv/asr/surah_audit.py, 2026-09-30.
   // What the model WROTE must open the surah that was said. The owner's
   // «افتح سورة يوسف» came back «مش لاقي» on his phone.
+  test('«صورتي يس», as the model wrote «سورة يس» on the emulator', () {
+    final i = p.parse('افتح صورتي يس');
+    expect(i, isA<OpenQuranAyahIntent>());
+    expect((i as OpenQuranAyahIntent).surah, 36);
+  });
+
   test('every surah, as the Arabic model writes it', () {
     final rows = jsonDecode(
         File('test/fixtures/asr_surah_transcripts.json').readAsStringSync()) as List;

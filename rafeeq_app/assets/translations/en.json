@@ -2282,7 +2282,8 @@
     "diag_open": "Open",
     "diag_device": "Device",
     "diag_yes": "Yes",
-    "diag_no": "No"
+    "diag_no": "No",
+    "diag_model_accurate": "«Higher accuracy in Arabic»"
   },
   "occasions": {
     "title": "Islamic occasions",

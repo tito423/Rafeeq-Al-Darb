@@ -13,6 +13,16 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~14:55 (09-30, Opus) ITEM 2 PROGRESS, all SEEN on emulator (debug x64):
+- Rafeeq path of item 1: fed «يا رفيق افتح سورة يس» -> open quran 36:1 -> play -> 36:1, queue 84.
+- Surah-name audit: 114 surahs x 3 edge-tts voices, through the app's own FastConformer (sha256 714fc796… same file) at 16 kHz and at phone band (8 kHz 300-3400 Hz): E:/DevEnv/asr/surah_audit.py -> test/fixtures/asr_surah_transcripts.json. Parser missed 247/684; now 29 (ceiling test). Causes fixed: _correct rewrote «النحل» (bare key only), dagger-alif keys (الرحمن/الأعلى/الضحى), muqattaat spoken names (lexicon.surahSpokenNames), vowel-weighted near match after the surah word (assistant_distance.dart), صور/سور/صورتي.
+- Phone band vs wide: nearly identical transcripts -> Bluetooth narrowband is NOT what breaks names (measured on TTS voices; real headset still unmeasured).
+- First command was 7.5 s (parser built lazily); now prebuilt while listening: «افتح سورة يوسف» acted 164 ms after the text.
+- Background on stock Android 16 emulator: mic keeps recording, not silenced, and reopens in background after other audio (dumpsys audio 14:12). So the owner's Honor failure is OEM-side -> diagnostics screen now shows it.
+- «تشخيص رفيق» screen (Settings > رفيق): service running/refused, mic state+reason, silenced by system, BT vs phone mic, model, last sentence + Rafeeq's reply + peak level, share last clip (WAV verified = what the model heard), battery exemption (+button), bg-restricted, standby bucket, OEM autostart (+button), overlay, device.
+- bt_mic strings were dialect -> MSA.
+NEXT: owner to install a build and open «تشخيص رفيق» on the Honor; answer still pending: battery exemption + overlay. No release unless he asks.
+
 ~14:10 (09-30, Opus) ITEM 1 DONE + SEEN: continuous recitation starts at the surah opened by name. `quranOpenedAyahProvider` (jump sheet surah tap, Rafeeq «افتح سورة…», Quran-word result) + `continuousStartOnPage` (selected verse > opened verse on this page > page top). Emulator (debug x64): text mode Ya-Sin via jump sheet -> play -> media session 36:1, queue 84; paper mode same 36:1 highlighted; jump by PAGE 440 -> 35:45, queue 46 (unchanged behaviour). test/continuous_start_test.dart 4/4; full suite 681 pass; analyze clean. Rafeeq path NOT yet seen: FOUND the Arabic model writes «صورتي يس» / «صورة ياسين» for «سورة يس» -> intent unknown (log 14:08). NEXT: item 2 - audit all 114 surah names through TTS -> the same FastConformer on PC -> parser; fix aliases (ياسين, صورتي, ...); then re-feed E:/DevEnv/asr/yasin*.wav via rafeeq_test.wav and see 36:1 on play.
 
 ~07:15 (09-30) OWNER ANSWERED: phone = HONOR; the Arabic pack («دقة أعلى في العربية») WAS enabled when Rafeeq failed (so the failures are with the Arabic model, over Bluetooth / in the background). Still unanswered: battery exemption + overlay permission. NEXT_PROMPT.md updated.
@@ -911,6 +921,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 14:54 - Rafeeq: parser prebuilt (first command 7.5 s -> 0.16 s), صورتي, diag shows the Arabic reply, bt_mic strings MSA; Yusuf/Ya-Sin by voice seen on emulator; diag screen + share verified
 - 2026-09-30 14:41 - Rafeeq surah names: 684 real model transcripts (114 surahs x3 voices x wide/phone band) - parser missed 247, now 29: article-stripped correction, dagger-alif keys, spoken muqattaat names, vowel-weighted near match after the surah word, صور/سور
 - 2026-09-30 14:29 - Rafeeq diagnostics screen (service/mic state/silenced/model/last sentence+clip share/battery/bg-restricted/bucket/autostart/overlay); wake listener split out of assistant_sheet; 45 keys x7; NOT yet seen on emulator
 - 2026-09-30 14:09 - Item 1 verified on emulator (text+paper, 36:1); Rafeeq requestQuranAyah helper; line ceilings kept

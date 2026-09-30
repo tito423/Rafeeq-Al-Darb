@@ -2282,7 +2282,8 @@
     "diag_open": "Открыть",
     "diag_device": "Устройство",
     "diag_yes": "Да",
-    "diag_no": "Нет"
+    "diag_no": "Нет",
+    "diag_model_accurate": "«Выше точность на арабском»"
   },
   "occasions": {
     "title": "Исламские даты",

@@ -2282,7 +2282,8 @@
     "diag_open": "Abrir",
     "diag_device": "Dispositivo",
     "diag_yes": "Sí",
-    "diag_no": "No"
+    "diag_no": "No",
+    "diag_model_accurate": "«Más precisión en árabe»"
   },
   "occasions": {
     "title": "Fechas islámicas",
