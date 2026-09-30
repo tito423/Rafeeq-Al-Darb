@@ -928,6 +928,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 20:22 - Rafeeq: an ayah asked for is marked and scrolled to; ayah card opens on tafsir/translation/irab by voice; dialect verbs/fillers (Gulf/Levant/Maghreb/Iraq); 15 phrasings tested; NOT yet seen on emulator
 - 2026-09-30 20:12 - Rafeeq survives the app being closed: listen service holds AudioService so audio_service stops destroying the engine; mic permission via permission_handler; seen after Back-exit and recents swipe
 - 2026-09-30 17:27 - Released v3.73.0 (tag = HEAD, asset 206 on range); owner to test on Honor + Xiaomi
 - 2026-09-30 16:28 - Rafeeq diag: model decode ms + command ms (owner: response slow even with battery exemption and overlay on); seen on emulator 106/76 ms

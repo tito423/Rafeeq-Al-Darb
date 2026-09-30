@@ -22,6 +22,10 @@ const fillerWords = <String>[
   'يا', 'رفيق', 'لو', 'سمحت', 'سمحتي', 'من', 'فضلك', 'عايز', 'عاوز', 'عايزه',
   'عاوزه', 'اريد', 'ابغي', 'ابي', 'ممكن', 'بالله', 'عليك', 'لي', 'ليا', 'لى',
   'دلوقتي', 'الان', 'حالا', 'بسرعه', 'بقي', 'طيب', 'هو', 'هي',
+  // «I want / please» across the dialects: Levant, Gulf, Maghreb, Iraq.
+  'بدي', 'بدنا', 'ابغا', 'ابغى', 'نبغي', 'نبي', 'ابا', 'بغيت', 'نبغيك', 'حاب',
+  'حابب', 'ودي', 'يخليك', 'يعطيك', 'العافيه', 'شويه', 'شوي', 'اريدك',
+  'اريد', 'رجاء', 'ارجوك', 'لوسمحت', 'تكرم', 'تكرمي', 'اذا', 'ممكنك',
   // en
   'hey', 'hi', 'ok', 'okay', 'rafeeq', 'rafiq', 'rafik', 'refik', 'please',
   'can', 'could', 'would', 'you', 'i', 'want', 'wanna', 'to', 'the', 'me', 'my',
@@ -50,6 +54,10 @@ const openVerbs = <String>[
   // Egyptian, and «افتح» as the recogniser drops its alif (2026-09-28).
   'فتح', 'فتحلي', 'افتحهولي', 'اشوف', 'شوف', 'شوفلي', 'خدني', 'دخلني',
   'فين', 'عرضلي',
+  // Gulf, Levantine, Maghrebi and Iraqi forms of «افتح / خذني / أرني».
+  'خذني', 'وديني', 'ودنا', 'فرجيني', 'ورجيني', 'فرجينا', 'ورجينا', 'اعطيني',
+  'عطني', 'عطيني', 'حل', 'حللي', 'حلي', 'وريلي', 'جيب', 'هاتي', 'طلع', 'طالعلي',
+  'نروح', 'روحي', 'انتقل', 'اذهب', 'اعرضها', 'افتحها', 'افتحه', 'دزني',
   'open', 'show', 'go', 'take', 'launch', 'bring', 'see', 'view', 'display',
   'abre', 'abrir', 'muestra', 'muestrame', 've', 'ir', 'llevame', 'ensename',
   'ouvre', 'ouvrir', 'montre', 'affiche', 'va', 'aller', 'emmene',
@@ -95,6 +103,35 @@ const surahSpokenNames = <int, List<String>>{
   36: ['ياسين', 'يسين'],
   38: ['صاد'],
   50: ['قاف'],
+};
+
+/// The ayah card, and which of its tabs, as people ask for it in the seven
+/// languages and the Arabic dialects (owner, 2026-09-30: «افتح كارت الاية كذا
+/// ع التفسير او الترجمه … ضيف كل الاحتمالات خاصة بلكنات العرب»).
+/// 0 tafsir, 1 translation, 2 i'rab.
+const ayahCardWords = <int, List<String>>{
+  0: [
+    'تفسير', 'التفسير', 'تفسيرها', 'تفسيره', 'بتفسير', 'بالتفسير', 'فسر',
+    'فسرلي', 'فسرها', 'فسري', 'فسرهالي', 'معني', 'معنى', 'معناها',
+    'كارت', 'الكارت', 'كرت', 'بطاقه', 'البطاقه', 'خيارات', 'علوم',
+    'tafsir', 'tafseer', 'tafsiir', 'explain', 'explanation', 'meaning', 'card',
+    'tafsir', 'explicacion', 'explica', 'significado', 'tarjeta',
+    'explication', 'explique', 'sens', 'carte', 'explicacao', 'cartao',
+    'тафсир', 'толкование', 'объясни', 'смысл', 'карточку', 'карточка',
+    'تفسیر', 'مطلب', 'کارڈ',
+  ],
+  1: [
+    'ترجمه', 'الترجمه', 'ترجمتها', 'ترجمته', 'بالترجمه', 'ترجم', 'ترجملي',
+    'ترجمها', 'ترجمهالي',
+    'translation', 'translate', 'traduccion', 'traduce', 'traducir',
+    'traduction', 'traduis', 'traduire', 'traducao', 'traduz', 'traduzir',
+    'перевод', 'переведи', 'ترجمہ', 'ترجمے',
+  ],
+  2: [
+    'اعراب', 'الاعراب', 'اعرابها', 'اعرابه', 'بالاعراب', 'اعرب', 'اعربلي',
+    'اعربها', 'irab', 'grammar', 'gramatica', 'grammaire',
+    'грамматика', 'разбор',
+  ],
 };
 
 /// «كتاب X» / «كتب X».

@@ -197,4 +197,14 @@ class AyahCoordsRepository {
     }
     return null;
   }
+
+  /// The region of [surah]:[ayah] on [page], in the polygon layer's own space
+  /// (`MushafPageView` applies the printing's fit when it paints it).
+  AyahRegion? regionOf(String assetPath, int page, int? surah, int? ayah) {
+    if (surah == null || ayah == null) return null;
+    for (final r in regionsForPage(assetPath, page)) {
+      if (r.surah == surah && r.ayah == ayah) return r;
+    }
+    return null;
+  }
 }

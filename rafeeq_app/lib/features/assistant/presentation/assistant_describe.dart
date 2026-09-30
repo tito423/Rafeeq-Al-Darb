@@ -45,12 +45,15 @@ Future<String> describeIntent(
       return 'assistant.opening'.tr(args: [title]);
     case OpenSettingIntent(:final section):
       return 'assistant.opening'.tr(args: [section.tr()]);
-    case OpenQuranAyahIntent(:final surah, :final ayah):
+    case OpenQuranAyahIntent(:final surah, :final ayah, :final card):
       final s = (await (await ref.read(quranRepositoryProvider.future))
           .surahs())[surah - 1];
       final ar = assistantLanguage() == 'ar' || assistantLanguage() == 'ur';
+      final tab = card == null
+          ? ''
+          : '${['quran.tafseer', 'quran.translation', 'quran.irab'][card].tr()}: ';
       return 'assistant.opening'.tr(args: [
-        '${ar ? s.nameAr : s.nameEn} ${localizeDigits('$ayah', assistantLanguage())}',
+        '$tab${ar ? s.nameAr : s.nameEn} ${localizeDigits('$ayah', assistantLanguage())}',
       ]);
     case QuranWordIntent(:final query):
       return 'assistant.word_searching'.tr(args: [query]);

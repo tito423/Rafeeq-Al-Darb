@@ -325,11 +325,11 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
     case OnThisDayIntent(:final day, :final month):
       await showHijriDaySheet(nav.context,
           day: day != null && month != null ? (month, day) : null);
-    case OpenQuranAyahIntent(:final surah, :final ayah):
+    case OpenQuranAyahIntent(:final surah, :final ayah, :final marked, :final card):
       final repo = await ref.read(quranRepositoryProvider.future);
       final a = await repo.ayah(surah, ayah) ?? await repo.ayah(surah, 1);
       if (a == null) return;
-      requestQuranAyah(ref, a);
+      requestQuranAyah(ref, a, mark: marked, card: card);
       tab(AppTab.quran);
     case PlaySurahIntent(:final surah, :final reciterId, :final fromAyah):
       final repo = await ref.read(quranRepositoryProvider.future);

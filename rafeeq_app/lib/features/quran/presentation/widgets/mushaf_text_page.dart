@@ -175,6 +175,9 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     super.initState();
     _zoom.addListener(_onZoom);
     _syncAutoScroll();
+    // Opened ON a marked verse (Rafeeq's «افتح سورة … آية …» lands on a new
+    // page): bring it on screen, as a verse marked later would be.
+    _scrollToPlayingAyah();
   }
 
   @override
@@ -187,7 +190,8 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     }
     _syncAutoScroll();
     if (old.playingSurah != widget.playingSurah ||
-        old.playingAyah != widget.playingAyah) {
+        old.playingAyah != widget.playingAyah ||
+        (!old.isActive && widget.isActive)) {
       _scrollToPlayingAyah();
     }
   }

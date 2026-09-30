@@ -20,7 +20,7 @@ void main() {
 
   test('opening Ya-Sin by name starts at Ya-Sin 1, not the end of Fatir', () {
     final s = continuousStartOnPage(page440,
-        page: 440, opened: (surah: 36, ayah: 1, page: 440));
+        page: 440, opened: (surah: 36, ayah: 1, page: 440, mark: false, card: null));
     expect((s.surahId, s.ayahNumber), (36, 1));
   });
 
@@ -29,13 +29,13 @@ void main() {
         page: 440,
         selectedSurah: 35,
         selectedAyah: 45,
-        opened: (surah: 36, ayah: 1, page: 440));
+        opened: (surah: 36, ayah: 1, page: 440, mark: false, card: null));
     expect((s.surahId, s.ayahNumber), (35, 45));
   });
 
   test('an opened verse on another page is ignored', () {
     final s = continuousStartOnPage(page440,
-        page: 440, opened: (surah: 36, ayah: 1, page: 441));
+        page: 440, opened: (surah: 36, ayah: 1, page: 441, mark: false, card: null));
     expect((s.surahId, s.ayahNumber), (35, 45));
   });
 

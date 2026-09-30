@@ -8,9 +8,19 @@ part of 'assistant_intent.dart';
 /// selected reciter's voice, in the background. «افتح» and «آية» now mean
 /// what they say.
 class OpenQuranAyahIntent extends AssistantIntent {
-  const OpenQuranAyahIntent(this.surah, this.ayah, {this.numberPending = false});
+  const OpenQuranAyahIntent(this.surah, this.ayah,
+      {this.numberPending = false, this.marked = false, this.card});
   final int surah;
   final int ayah;
+
+  /// An ayah was asked for by number or name («آية ٢٥٥», «آية الكرسي»):
+  /// the mushaf marks it and brings it on screen (owner, 2026-09-30: «حتى لو
+  /// الاية في اخر الصفحة ومش ظاهرة ع الشاشة انا عايزه يروح عليها ويظللها»).
+  final bool marked;
+
+  /// Its card opened on this tab: 0 tafsir, 1 translation, 2 i'rab
+  /// («افتح تفسير آية الكرسي», «ترجمة الآية ٥ من البقرة»).
+  final int? card;
 
   /// «… سورة البقرة آية» with the number not in this utterance: the
   /// recogniser closes a phrase at a breath, and on the owner's sentence
@@ -18,8 +28,9 @@ class OpenQuranAyahIntent extends AssistantIntent {
   /// moves the mushaf to it (assistant_sheet.dart, `_ayahPending`).
   final bool numberPending;
   @override
-  String toString() =>
-      'open quran $surah:$ayah${numberPending ? ' (number pending)' : ''}';
+  String toString() => 'open quran $surah:$ayah'
+      '${numberPending ? ' (number pending)' : ''}'
+      '${marked ? ' marked' : ''}${card != null ? ' card $card' : ''}';
 }
 
 /// After «… سورة X آية» with the number cut off, the number said next
@@ -31,7 +42,10 @@ class AyahFollowUp {
     _pending = intent is OpenQuranAyahIntent && intent.numberPending
         ? (intent.surah, DateTime.now().add(const Duration(seconds: 12)))
         : null;
+    _card = intent is OpenQuranAyahIntent ? intent.card : null;
   }
+
+  int? _card;
 
   /// The ayah to open when [heard] is that number; null otherwise.
   OpenQuranAyahIntent? take(String heard) {
@@ -40,7 +54,7 @@ class AyahFollowUp {
     final n = spokenNumber(heard);
     if (n == null) return null;
     _pending = null;
-    return OpenQuranAyahIntent(p.$1, n);
+    return OpenQuranAyahIntent(p.$1, n, marked: true, card: _card);
   }
 }
 
@@ -124,6 +138,22 @@ int? _numberAt(List<String> ws) {
   return any ? total : null;
 }
 
+/// The ayah card's tab a word asks for (0 tafsir, 1 translation, 2 i'rab),
+/// the card alone («كارت الآية») being its first tab.
+int? _cardIn(List<String> words) {
+  for (final w in words) {
+    final b = bare(w);
+    for (final e in _cardWords.entries) {
+      if (e.value.contains(w) || e.value.contains(b)) return e.key;
+    }
+  }
+  return null;
+}
+
+final _cardWords = <int, Set<String>>{
+  for (final e in lex.ayahCardWords.entries) e.key: _normSet(e.value),
+};
+
 extension _AyahRef on AssistantParser {
   /// «افتح سورة البقرة آية ٢٥٥» -> open 2:255; «افتح سورة الكهف» -> open
   /// 18:1; «آية الكرسي» -> 2:255; «شغل البقرة من آية ٢٥٥» -> play from
@@ -136,12 +166,13 @@ extension _AyahRef on AssistantParser {
     if (at < 0 && words.isNotEmpty && words.last == _ayahCut) {
       at = words.length - 1;
     }
+    final card = _cardIn(words);
     if (at >= 0 && at + 1 < words.length && bare(words[at + 1]) == 'كرسي') {
       return playing
           ? const PlaySurahIntent(2, fromAyah: 255)
-          : const OpenQuranAyahIntent(2, 255);
+          : OpenQuranAyahIntent(2, 255, marked: true, card: card);
     }
-    final opening =
+    final opening = card != null ||
         words.any((w) => AssistantParser._open.contains(w) || _gluedOpen(w));
     if (at < 0 && (playing || !opening)) return null;
     final n = at >= 0 ? _numberAt(words.sublist(at + 1)) : null;
@@ -152,7 +183,9 @@ extension _AyahRef on AssistantParser {
     final ayah = n != null && n >= 1 ? n : 1;
     if (!playing) {
       return OpenQuranAyahIntent(surah, ayah,
-          numberPending: at >= 0 && n == null);
+          numberPending: at >= 0 && n == null,
+          marked: n != null || card != null,
+          card: card);
     }
     final sw = {for (final k in _surahKeys[surah - 1]) ...k.split(' ')};
     final rest = [

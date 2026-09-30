@@ -18,14 +18,22 @@ final quranJumpRequestProvider = StateProvider<int?>((ref) => null);
 /// Without it the play button began at the top of the page: the owner opened
 /// Ya-Sin (page 440), pressed it, and heard the end of Fatir first
 /// (2026-09-30, on his phone, v3.72.0).
-typedef OpenedAyah = ({int surah, int ayah, int page});
+/// [mark]: the verse was asked for, so it is marked and brought on screen;
+/// [card]: its card opened on that tab (0 tafsir, 1 translation, 2 i'rab).
+typedef OpenedAyah = ({int surah, int ayah, int page, bool mark, int? card});
 
 final quranOpenedAyahProvider = StateProvider<OpenedAyah?>((ref) => null);
 
 /// Opens the mushaf on [a]'s page with [a] as the opened verse — for callers
 /// outside the widget tree (Rafeeq), which hold a [ProviderContainer].
-void requestQuranAyah(ProviderContainer c, Ayah a) {
-  c.read(quranOpenedAyahProvider.notifier).state =
-      (surah: a.surahId, ayah: a.ayahNumber, page: a.pageNumber);
+void requestQuranAyah(ProviderContainer c, Ayah a,
+    {bool mark = false, int? card}) {
+  c.read(quranOpenedAyahProvider.notifier).state = (
+    surah: a.surahId,
+    ayah: a.ayahNumber,
+    page: a.pageNumber,
+    mark: mark,
+    card: card,
+  );
   c.read(quranJumpRequestProvider.notifier).state = a.pageNumber;
 }

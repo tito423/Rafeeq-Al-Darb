@@ -179,14 +179,14 @@ void main() {
   // opening the mushaf on the ayah.
   test('open the mushaf on a surah and an ayah', () {
     expect(of('يا رفيق افتح التطبيق على القرآن سورة البقرة آية ٢٥٥'),
-        'open quran 2:255');
-    expect(of('افتح سورة البقرة الاية 255'), 'open quran 2:255');
-    expect(of('افتح سوره البقره ايه مئتين وخمسه وخمسين'), 'open quran 2:255');
-    expect(of('افتح البقرة آية ميتين خمسة وخمسين'), 'open quran 2:255');
-    expect(of('وريني آية الكرسي'), 'open quran 2:255');
+        'open quran 2:255 marked');
+    expect(of('افتح سورة البقرة الاية 255'), 'open quran 2:255 marked');
+    expect(of('افتح سوره البقره ايه مئتين وخمسه وخمسين'), 'open quran 2:255 marked');
+    expect(of('افتح البقرة آية ميتين خمسة وخمسين'), 'open quran 2:255 marked');
+    expect(of('وريني آية الكرسي'), 'open quran 2:255 marked');
     expect(of('افتح سورة الكهف'), 'open quran 18:1');
-    expect(of('افتح سورة يس آية عشرين'), 'open quran 36:20');
-    expect(of('open surah Al Kahf verse 10'), 'open quran 18:10');
+    expect(of('افتح سورة يس آية عشرين'), 'open quran 36:20 marked');
+    expect(of('open surah Al Kahf verse 10'), 'open quran 18:10 marked');
   });
 
   // What the recogniser REALLY wrote for the owner's sentence, said from the
@@ -201,7 +201,7 @@ void main() {
     expect(spokenNumber('افتح الأذكار'), isNull);
     final f = AyahFollowUp()
       ..arm(p.parse('افتحتطبيق علي القران سوره البقره اي'));
-    expect(f.take('مئتين وخمسة وخمسين').toString(), 'open quran 2:255');
+    expect(f.take('مئتين وخمسة وخمسين').toString(), 'open quran 2:255 marked');
     expect(f.take('مئتين وخمسة وخمسين'), isNull, reason: 'used once');
   });
 
@@ -209,8 +209,8 @@ void main() {
   // on the PC 2026-09-30: numbers in MSA words, «صورة» for «سورة».
   test('the Arabic pack wording', () {
     expect(of('يا رفيق افتح التطبيق على القرآن سورة البقرة آية مئتان وخمسة وخمسون'),
-        'open quran 2:255');
-    expect(of('افتح صورة البقرة آية مئتان وخمسة وخمسين'), 'open quran 2:255');
+        'open quran 2:255 marked');
+    expect(of('افتح صورة البقرة آية مئتان وخمسة وخمسين'), 'open quran 2:255 marked');
     expect(spokenNumber('مئتان وخمسة وخمسون'), 255);
     expect(spokenNumber('الآية مئة وخمسة وخمسون'), 155);
   });
@@ -464,6 +464,34 @@ void main() {
     final i = p.parse('افتح صورتي يس');
     expect(i, isA<OpenQuranAyahIntent>());
     expect((i as OpenQuranAyahIntent).surah, 36);
+  });
+
+  // Owner, 2026-09-30: «افتح سورة كذا آية كذا» must MARK the ayah (and go
+  // to it), and «افتح كارت الآية … ع التفسير او الترجمه», in every dialect.
+  test('an ayah asked for: marked, and its card on the tab asked for', () {
+    final cases = <String, (int, int, bool, int?)>{
+      'افتح سورة البقرة آية ٢٥٥': (2, 255, true, null),
+      'افتح سورة يوسف': (12, 1, false, null),
+      'حل سورة يوسف': (12, 1, false, null),
+      'افتح تفسير آية الكرسي': (2, 255, true, 0),
+      'ابغى ترجمة آية الكرسي': (2, 255, true, 1),
+      'ترجمة الآية خمسة من سورة البقرة': (2, 5, true, 1),
+      'اعراب آية ٣ سورة الفاتحة': (1, 3, true, 2),
+      'فسرلي آية ١٠ من سورة يس': (36, 10, true, 0),
+      'بدي تفسير سورة الملك آية ١': (67, 1, true, 0),
+      'افتح كارت الاية ٢٠ من سورة مريم': (19, 20, true, 0),
+      'ودني على سورة الكهف آية عشرة': (18, 10, true, null),
+      'فرجيني سورة النور آية ٣٥': (24, 35, true, null),
+      'عايز معنى آية ٥ من سورة الفاتحة': (1, 5, true, 0),
+      'open the tafsir of surah al baqarah verse 255': (2, 255, true, 0),
+      'translation of surah yasin ayah 3': (36, 3, true, 1),
+    };
+    for (final e in cases.entries) {
+      final i = p.parse(e.key);
+      expect(i, isA<OpenQuranAyahIntent>(), reason: '${e.key} -> $i');
+      final o = i as OpenQuranAyahIntent;
+      expect((o.surah, o.ayah, o.marked, o.card), e.value, reason: e.key);
+    }
   });
 
   test('every surah, as the Arabic model writes it', () {

@@ -490,8 +490,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// page's first verse. Swiping pages by hand does not move it.
   Future<void> _navigateFromIndex(int page, MushafData data,
       {int? surahId}) async {
-    final opened = ref.read(quranOpenedAyahProvider.notifier).state =
-        surahId == null ? null : (surah: surahId, ayah: 1, page: page);
+    final opened = ref.read(quranOpenedAyahProvider.notifier).state = surahId ==
+            null
+        ? null
+        : (surah: surahId, ayah: 1, page: page, mark: false, card: null);
     _goToPage(page, animate: false);
     if (!_recite.active) return;
     final ayahs = await _ayahsOfPage(page, data);
@@ -582,16 +584,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     _persistPage();
   }
 
-  // P3‑41: real-device feedback — "use logic... if I use navigation
-  // gesture or option for back just unselect the ayah". The highlight
-  // used to just be set and never cleared; `AyahSciencesSheet.show`
-  // already returns a future that resolves on *any* dismissal (the
-  // system back gesture, tapping the scrim, or an explicit close — all
-  // of them go through `Navigator.pop` under a `showModalBottomSheet`).
+  // P3‑41: «if I use navigation gesture or option for back just unselect the
+  // ayah» - `AyahSciencesSheet.show` resolves on ANY dismissal of the sheet.
   Future<void> _openSciences(
     Ayah ayah,
     MushafData data, {
     bool sciencesAvailable = true,
+    int tab = 0,
   }) async {
     setState(() {
       _highlightSurah = ayah.surahId;
@@ -603,6 +602,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       surahNameAr: data.surahNameAr(ayah.surahId),
       quranRepo: data.repo,
       sciencesAvailable: sciencesAvailable,
+      initialTab: tab,
     );
     // The verse STAYS selected after its card closes, so «التلاوة المستمرة»
     // starts from it: «لما أكون فاتح صفحة وأضغط على آية وأضغط تلاوة تلقائية
@@ -610,23 +610,25 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // clears the selection.
   }
 
+  /// «افتح سورة X آية Y»: the verse marked - and so scrolled to, as a recited
+  /// one is - and, when asked for, its card opened on that tab.
+  Future<void> _markOpened(int page, MushafData? data) async {
+    final o = ref.read(quranOpenedAyahProvider);
+    if (o == null || o.page != page || !o.mark) return;
+    setState(() {
+      _highlightSurah = o.surah;
+      _highlightAyah = o.ayah;
+    });
+    final tab = o.card;
+    if (tab == null || data == null) return;
+    final a = (await _ayahsOfPage(page, data))
+        .where((x) => x.surahId == o.surah && x.ayahNumber == o.ayah)
+        .firstOrNull;
+    if (a != null && mounted) await _openSciences(a, data, tab: tab);
+  }
+
   Future<List<Ayah>> _ayahsOfPage(int page, MushafData data) =>
       _pageFutures.putIfAbsent(page, () => data.repo.ayahsOfPage(page));
-
-  AyahRegion? _highlightRegion(MushafEdition edition, int page) {
-    if (_current != page) return null;
-    // While reciting, the verse being read wins over a tap selection — it is
-    // the one the reader is actually following.
-    final surah = _recite.active ? _recite.surahId : _highlightSurah;
-    final ayah = _recite.active ? _recite.ayahNumber : _highlightAyah;
-    if (surah == null || ayah == null) return null;
-    // The regions are in the polygon layer's own space; `MushafPageView`
-    // applies the printing's fit when it paints them.
-    for (final r in _coords.regionsForPage(edition.polygonsAsset, page)) {
-      if (r.surah == surah && r.ayah == ayah) return r;
-    }
-    return null;
-  }
 
   /// The surahs on the page being read — see `page_surahs.dart` for the rule
   /// and for the defect that made it necessary.
@@ -664,21 +666,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // `_applyImmersive` for the flicker this was.
     ref.listen<int>(activeTabProvider, (_, tab) => _syncImmersiveToTab(tab));
     final mushaf = ref.watch(mushafDataProvider);
-    // `isRaster` means "this printing ships page images", nothing more. It
-    // also coerced image mode until 3.44.0 (P3‑53) — harmless beside a vector
-    // printing, fatal once 3.43.0 left `madinah_qc` as the only one: always
-    // true, so the text mushaf and everything in it became unreachable.
+    // `isRaster` means "this printing ships page images", nothing more (until
+    // 3.44.0 it forced image mode, and the text mushaf became unreachable).
     final edition = ref.watch(currentMushafEditionProvider).valueOrNull;
     final textLayout = ref.watch(quranTextLayoutProvider);
     final isRaster = edition?.isRaster ?? false;
-    // Three of the nine printings paginate their own way — Shamarly's 521
-    // pages, the Indo-Pak 564, the Nastaliq 611 — and the app's surah->page
-    // and juz->page tables are the Madinah 604-page layout's. On those three,
-    // picking «سورة يوسف» jumps to Madinah page 235, which in that printing
-    // is some other surah entirely. That is the owner's «عدم اتساق بين اسم
-    // السورة اللي بختاره والسورة اللي بتطلع على الشاشة فعليا». The running header is
-    // already hidden on them for the same reason; the two indexes that would
-    // navigate wrong are withheld here rather than silently missing.
+    // Printings that paginate their own way (Shamarly 521, Indo-Pak 564,
+    // Nastaliq 611) would land a surah picked by name on Madinah's page -
+    // «عدم اتساق بين اسم السورة … والسورة اللي بتطلع» - so those indexes are
+    // withheld there, as the running header is.
     final canIndexBySurah = edition?.hafsPagination ?? true;
     // Recitation stops only on a printing that is not the Madinah layout;
     // madinah_qc recites (owner 2026-09-26; this used to stop ALL image mode).
@@ -708,6 +704,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     ref.listen<int?>(quranJumpRequestProvider, (_, page) {
       if (page != null) {
         _goToPage(page, animate: false);
+        _markOpened(page, mushaf.valueOrNull);
         Future.microtask(
           () => ref.read(quranJumpRequestProvider.notifier).state = null,
         );
@@ -723,11 +720,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               ? opaqueMushafGround(Theme.of(context).colorScheme.surface,
                   Theme.of(context).brightness)
               : null),
-      // P3‑43 #6: "ملء الشاشة" now hides the AppBar entirely (not just its
-      // own toolbar row) plus this screen's own bottom bar below, and
-      // (via `quranFullScreenProvider`) `AppShell`'s bottom nav bar too —
-      // a tap on the page (`_onBackgroundTap`) is the only way back once
-      // the button that turned this on is itself off-screen.
+      // P3‑43 #6: "ملء الشاشة" hides the AppBar, this screen's bottom bar and
+      // (`quranFullScreenProvider`) the nav bar; a page tap brings them back.
       appBar: _pageFillScreen
           ? null
           : AppBar(
@@ -976,7 +970,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
               return MushafPageView(
                 edition: edition,
                 page: page,
-                highlight: _highlightRegion(edition, page),
+                // While reciting, the verse being read wins over a tap
+                // selection — it is the one the reader is following.
+                highlight: _current != page
+                    ? null
+                    : _coords.regionOf(edition.polygonsAsset, page,
+                        _recite.active ? _recite.surahId : _highlightSurah,
+                        _recite.active ? _recite.ayahNumber : _highlightAyah),
                 onAyahLongPress: (region) =>
                     _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: edition.isRaster

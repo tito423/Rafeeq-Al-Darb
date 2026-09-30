@@ -2512,9 +2512,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 20:12 — IN PROGRESS — resume here**
+**2026-09-30 20:22 — IN PROGRESS — resume here**
 
-Rafeeq survives the app being closed: listen service holds AudioService so audio_service stops destroying the engine; mic permission via permission_handler; seen after Back-exit and recents swipe
+Rafeeq: an ayah asked for is marked and scrolled to; ayah card opens on tafsir/translation/irab by voice; dialect verbs/fillers (Gulf/Levant/Maghreb/Iraq); 15 phrasings tested; NOT yet seen on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

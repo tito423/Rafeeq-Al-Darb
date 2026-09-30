@@ -43,7 +43,12 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
     required this.surahNameAr,
     required this.quranRepo,
     this.sciencesAvailable = true,
+    this.initialTab = 0,
   });
+
+  /// The tab it opens on (0 tafsir, 1 translation, 2 i'rab) - Rafeeq's
+  /// «افتح ترجمة الآية …».
+  final int initialTab;
 
   static Future<void> show(
     BuildContext context, {
@@ -51,6 +56,7 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
     required String surahNameAr,
     required QuranRepository quranRepo,
     bool sciencesAvailable = true,
+    int initialTab = 0,
   }) {
     return showModalBottomSheet<void>(
       context: context,
@@ -69,6 +75,7 @@ class AyahSciencesSheet extends ConsumerStatefulWidget {
         surahNameAr: surahNameAr,
         quranRepo: quranRepo,
         sciencesAvailable: sciencesAvailable,
+        initialTab: initialTab,
       ),
     );
   }
@@ -82,7 +89,8 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   // 4 tabs: Tafseer, Translation, I'rab, Gharib al-Quran (word meanings).
   // The 4th tab (Gharib al-Quran) uses Quran.com API v4 word-by-word data
   // to show each word's Arabic meaning alongside the Uthmani script.
-  late final TabController _tabs = TabController(length: 3, vsync: this);
+  late final TabController _tabs = TabController(
+      length: 3, vsync: this, initialIndex: widget.initialTab.clamp(0, 2));
 
   /// Built once, the first frame on which the pack is actually open. They
   /// stay null while it is missing, which is what the gate renders.
