@@ -953,6 +953,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-09-30 23:43 - Nuh narration voiced in the owner own voice with full tashkeel, audio track 146.6 s, render with real timings running
 - 2026-09-30 22:53 - Kids stories started - brief for cloud visuals session, voice plan with SILMA TTS on the owner own recorded voice
 - 2026-09-30 22:39 - Tasmee live review - show the ayah as printed not the folded text, stop the worker by message so the model is freed, commit the transcript by token timestamps so no gaps, bounded decode span, words below the stop button. 2-255 live 49 of 50, final 50 of 50 on emulator
 - 2026-09-30 22:13 - Live tasmee: persistent sherpa worker decodes the tail of the growing WAV every 1.2 s and words light as heard (emulator 222-249 ms per 4.4 s clip, 4/4 green; growth of the file on a real phone unverified)

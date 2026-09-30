@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-09-30 22:53 — IN PROGRESS — resume here**
+**2026-09-30 23:43 — IN PROGRESS — resume here**
 
-Kids stories started - brief for cloud visuals session, voice plan with SILMA TTS on the owner own recorded voice
+Nuh narration voiced in the owner own voice with full tashkeel, audio track 146.6 s, render with real timings running
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
