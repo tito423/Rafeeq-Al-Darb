@@ -207,6 +207,8 @@ const s3 = {
 // pile and stack; «ومسامير» -> pegs tap in with puffs of dust; «برعاية الله
 // وحفظه» -> soft rays over it.
 const ARK4 = { x: 640, y: 452, s: 0.8 };
+// scene 4 stops on a whole plank (no plank frozen in mid-air); scene 5 goes on from there
+const ARK_STOP4 = Math.floor(0.9 * K.arkPlankCount) / K.arkPlankCount;
 const openLand = (c, t, light) => {
   K.par(c, 0, () => {
     K.sky(c, ['#78B6D6', '#B9DDEA', '#F6E7C6'], 0, 520);
@@ -236,7 +238,7 @@ const s4 = {
     K.par(c, 1, () => {
       for (const [x, s] of [[120, 1.3], [260, 0.9], [1180, 1.1], [980, 0.7]]) K.shrub(c, x, 600, s, '#8E9A55');
       const n0 = 4 / K.arkPlankCount;
-      const build = n0 * A(t, 0.5, Math.max(0.6, sf - 0.7), (x) => x) + (1 - n0) * A(t, al - 0.1, ri + 0.5 - al, (x) => x);
+      const build = n0 * A(t, 0.5, Math.max(0.6, sf - 0.7), (x) => x) + (ARK_STOP4 - n0) * A(t, al - 0.1, ri + 0.5 - al, (x) => x);
       c.fillStyle = K.rgba('#6B4A2E', 0.18); c.beginPath(); c.ellipse(640, 612, 300, 14, 0, 0, TAU); c.fill();
       // the outline in light, drawn on as the ark is named
       const ol = A(t, sf - 0.15, 0.9, (x) => x), olA = A(t, sf - 0.15, 0.3) * (1 - A(t, ri, 1.0));
@@ -248,7 +250,7 @@ const s4 = {
         c.restore();
       }
       K.ark(c, ARK4.x, ARK4.y, ARK4.s, { build, blocks: true, door: 'none', from: [525, 220], pegs: K.clamp((t - ms) / 1.7) });
-      plankPile(c, 1000, 640, Math.round((1 - build) * 14) + 2, 1);
+      plankPile(c, 1000, 640, Math.round((1 - build) * 14) + 3, 1);
       K.presence(c, 300, 588, 28, t, A(t, 0.2, 1.0));
     });
     K.par(c, 1, () => K.rays(c, 1120, -140, 8, 1100, 2.05, 2.55, '#FFF0C8', 0.14 * A(t, ri - 0.1, 1.2), t));
@@ -287,11 +289,12 @@ const s5 = {
       ground(c, 540, light);
       K.town(c, 33, 16, -140, 470, 556, 1.0, light, 0);
       palm(c, 505, 600, 150, light, t, 1);
-      // the ark keeps growing, plank by plank, all through the mocking
-      const build = K.lerp(0.74, 0.93, p);
+      // the ark keeps growing - scene 4 left it at 0.9, the roof goes on
+      // plank by plank all through the mocking
+      const build = K.lerp(ARK_STOP4, 1, K.seg(p, 0.05, 0.95));
       c.fillStyle = K.rgba('#6B4A2E', 0.18); c.beginPath(); c.ellipse(930, 612, 240, 11, 0, 0, TAU); c.fill();
       K.ark(c, 930, 612 - 200 * 0.64, 0.64, { build, blocks: true, light, door: 'none' });
-      plankPile(c, 1150, 640, 6, light);
+      plankPile(c, 1150, 640, Math.round((1 - build) * 14) + 3, light);
       K.presence(c, 1205, 590, 26, t, 1);
       for (const [x, s] of [[640, 1.2], [700, 0.8], [1260, 1.0]]) K.shrub(c, x, 650, s, K.tone('#8E9A55', light));
       // the passers-by: walk up, stop, point and laugh, then walk away
