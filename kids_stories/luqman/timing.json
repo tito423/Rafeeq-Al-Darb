@@ -1,0 +1,62 @@
+[
+ {
+  "scene": 1,
+  "seconds": 9.77,
+  "estimated": true
+ },
+ {
+  "scene": 2,
+  "seconds": 8.12,
+  "estimated": true
+ },
+ {
+  "scene": 3,
+  "seconds": 10.33,
+  "estimated": true
+ },
+ {
+  "scene": 4,
+  "seconds": 21.9,
+  "estimated": true
+ },
+ {
+  "scene": 5,
+  "seconds": 10.33,
+  "estimated": true
+ },
+ {
+  "scene": 6,
+  "seconds": 4.82,
+  "estimated": true
+ },
+ {
+  "scene": 7,
+  "seconds": 14.18,
+  "estimated": true
+ },
+ {
+  "scene": 8,
+  "seconds": 4.82,
+  "estimated": true
+ },
+ {
+  "scene": 9,
+  "seconds": 10.33,
+  "estimated": true
+ },
+ {
+  "scene": 10,
+  "seconds": 10.88,
+  "estimated": true
+ },
+ {
+  "scene": 11,
+  "seconds": 5.92,
+  "estimated": true
+ },
+ {
+  "scene": 12,
+  "seconds": 9.77,
+  "estimated": true
+ }
+]

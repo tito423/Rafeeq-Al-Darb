@@ -21,3 +21,5 @@ copy `kids_stories/<id>/` and `estimate_timing.py` into the pipeline worktree.
 | zakariya | 15 | yes - Yahya's mother not drawn (lit home instead), the Torah a blank scroll |
 | yusuf | 24 | yes - brothers as eleven small stars/caravan/sacks, never people; no wolf, plain shirt; the greeting = stars, sun and moon over the palace |
 | kahf | 17 | yes - youths featureless, never countable (in shade, lying); the dog calm at the entrance; the mountain redrawn rugged after the first pass looked like a pyramid |
+| luqman | 12 | yes - Luqman and his son as lights; each counsel pictured (seed in a rock, cradle in a lit home, prayer rug); no donkey |
+| shuayb | 12 | yes - a balance that leans then levels; glowing honest coins beside a fading heap; the punishment = an empty market |
