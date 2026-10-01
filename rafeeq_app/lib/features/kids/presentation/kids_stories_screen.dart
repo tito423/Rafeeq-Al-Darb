@@ -102,7 +102,7 @@ class _StoryCardState extends State<_StoryCard> {
   Widget build(BuildContext context) {
     final s = widget.story;
     final lang = context.locale.languageCode;
-    final mins = s.seconds ~/ 60, secs = (s.seconds % 60).round();
+    final mins = s.seconds ~/ 60, secs = (s.seconds % 60).floor(); // as the player shows it
     final dur = localizeDigits('$mins:${secs.toString().padLeft(2, '0')}', lang);
     return Material(
       color: Theme.of(context).colorScheme.surfaceContainerHigh,

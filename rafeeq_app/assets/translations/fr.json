@@ -2323,7 +2323,7 @@
   },
   "kids": {
     "title": "Coin des enfants",
-    "card_sub": "Un parcours de mémorisation par âge, adhkâr quotidiens et « Complète le verset »",
+    "card_sub": "Histoires des prophètes en son et en image, un parcours de mémorisation par âge, adhkâr quotidiens et « Complète le verset »",
     "hello": "Salut, champion !",
     "hello_sub": "Apprends, mémorise et joue",
     "game": "Complète le verset",
@@ -2382,7 +2382,8 @@
     "story_downloading": "Téléchargement… {} %",
     "story_size": "Taille : {} Mo",
     "story_delete": "Supprimer la copie téléchargée",
-    "story_about": "Le narrateur est une voix générée par IA ; les versets sont récités par le cheikh Muhammad Siddiq al-Minshawi. Le texte de chaque histoire et ses sources figurent sur la page Sources."
+    "story_about": "Le narrateur est une voix générée par IA ; les versets sont récités par le cheikh Muhammad Siddiq al-Minshawi. Le texte de chaque histoire et ses sources figurent sur la page Sources.",
+    "story_replay": "Revoir"
   },
   "journey": {
     "how_title": "Comment gagner des points",

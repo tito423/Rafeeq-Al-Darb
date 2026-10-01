@@ -2323,7 +2323,7 @@
   },
   "kids": {
     "title": "Rincón infantil",
-    "card_sub": "Un camino de memorización por edades, adhkar diarios y «Completa la aleya»",
+    "card_sub": "Historias de los profetas con sonido e imagen, un camino de memorización por edades, adhkar diarios y «Completa la aleya»",
     "hello": "¡Hola, campeón!",
     "hello_sub": "Aprende, memoriza y juega",
     "game": "Completa la aleya",
@@ -2382,7 +2382,8 @@
     "story_downloading": "Descargando… {} %",
     "story_size": "Tamaño: {} MB",
     "story_delete": "Eliminar la copia descargada",
-    "story_about": "El narrador es una voz generada por IA; los versículos los recita el jeque Muhammad Siddiq al-Minshawi. El texto de cada historia y sus fuentes figuran en la página de Fuentes."
+    "story_about": "El narrador es una voz generada por IA; los versículos los recita el jeque Muhammad Siddiq al-Minshawi. El texto de cada historia y sus fuentes figuran en la página de Fuentes.",
+    "story_replay": "Repetir"
   },
   "journey": {
     "how_title": "Cómo se ganan los puntos",

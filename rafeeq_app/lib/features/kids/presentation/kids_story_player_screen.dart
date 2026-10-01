@@ -109,6 +109,10 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   }
 
   Duration _lastPos = Duration.zero;
+  bool _endShown = false;
+  static bool _ended(VideoPlayerValue v) =>
+      v.duration > Duration.zero && v.position >= v.duration - const Duration(milliseconds: 250);
+
   void _tick() {
     final c = _c;
     if (c == null) return;
@@ -121,9 +125,15 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
       unawaited(_next(at));
       return;
     }
-    if (!v.isPlaying && v.position >= v.duration && v.duration > Duration.zero) {
+    // video_player keeps isPlaying true at the end of the file (seen on
+    // the emulator: 1:49 / 1:49 with the pause icon), so the end is read
+    // from the position.
+    if (_ended(v) && !_endShown) {
+      _endShown = true;
       unawaited(WakelockPlus.disable());
       _show();
+    } else if (!_ended(v)) {
+      _endShown = false;
     }
     // repaint for captions / the seek bar about 5 times a second
     if ((v.position - _lastPos).inMilliseconds.abs() >= 200 || !v.isPlaying) {
@@ -135,7 +145,8 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   void _scheduleHide() {
     _hide?.cancel();
     _hide = Timer(const Duration(seconds: 3), () {
-      if (mounted && (_c?.value.isPlaying ?? false)) setState(() => _controls = false);
+      final v = _c?.value;
+      if (mounted && v != null && v.isPlaying && !_ended(v)) setState(() => _controls = false);
     });
   }
 
@@ -147,11 +158,15 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   void _toggle() {
     final c = _c;
     if (c == null) return;
-    if (c.value.isPlaying) {
+    if (_ended(c.value)) {
+      // replay from the start
+      c.seekTo(Duration.zero);
+      c.play();
+      unawaited(WakelockPlus.enable());
+    } else if (c.value.isPlaying) {
       c.pause();
       unawaited(WakelockPlus.disable());
     } else {
-      if (c.value.position >= c.value.duration) c.seekTo(Duration.zero);
       c.play();
       unawaited(WakelockPlus.enable());
     }
@@ -364,11 +379,17 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
                       ),
                       const SizedBox(width: 18),
                       IconButton.filled(
-                        tooltip: v.isPlaying ? 'kids.story_pause'.tr() : 'kids.story_play'.tr(),
+                        tooltip: _ended(v)
+                            ? 'kids.story_replay'.tr()
+                            : v.isPlaying ? 'kids.story_pause'.tr() : 'kids.story_play'.tr(),
                         iconSize: 52,
                         style: IconButton.styleFrom(backgroundColor: cs.primary.withValues(alpha: 0.85)),
                         onPressed: _toggle,
-                        icon: Icon(v.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded, color: Colors.white),
+                        icon: Icon(
+                            _ended(v)
+                                ? Icons.replay_rounded
+                                : v.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                            color: Colors.white),
                       ),
                       const SizedBox(width: 18),
                       IconButton(

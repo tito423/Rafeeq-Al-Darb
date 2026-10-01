@@ -2323,7 +2323,7 @@
   },
   "kids": {
     "title": "Kids' corner",
-    "card_sub": "A memorisation path by age, daily adhkar and “Complete the ayah”",
+    "card_sub": "Prophets’ stories in sound and pictures, a memorisation path by age, daily adhkar and “Complete the ayah”",
     "hello": "Hello, champion!",
     "hello_sub": "Learn, memorise and play",
     "game": "Complete the ayah",
@@ -2382,7 +2382,8 @@
     "story_downloading": "Downloading… {}%",
     "story_size": "Size: {} MB",
     "story_delete": "Delete the downloaded copy",
-    "story_about": "The narrator is an AI-generated voice; the verses are recited by Sheikh Muhammad Siddiq al-Minshawi. Each story's text and its sources are listed on the Sources page."
+    "story_about": "The narrator is an AI-generated voice; the verses are recited by Sheikh Muhammad Siddiq al-Minshawi. Each story's text and its sources are listed on the Sources page.",
+    "story_replay": "Replay"
   },
   "journey": {
     "how_title": "How points are earned",

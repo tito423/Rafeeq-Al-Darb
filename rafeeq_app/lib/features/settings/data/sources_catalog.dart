@@ -202,7 +202,7 @@ final sourceGroups = <(String, List<SourceEntry>)>[
   ),
   // The kids-corner story videos (docs/kids_stories/, CONTENT-LICENSES.md).
   (
-    'kids.stories',
+    'downloads.cat_kids_stories',
     [
       const SourceEntry('التفسير الميسر — مجمع الملك فهد',
           'https://qurancomplex.gov.sa', 'about.src_kids_muyassar'),

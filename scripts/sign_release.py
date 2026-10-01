@@ -32,6 +32,10 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 APK = os.path.join(ROOT, "rafeeq_app", "build", "app", "outputs",
                    "flutter-apk", "app-release.apk")
+# `--apk PATH` signs another build the same way - e.g. a debug APK that has
+# to install over the signed release on the emulator without an uninstall.
+if "--apk" in sys.argv:
+    APK = os.path.abspath(sys.argv[sys.argv.index("--apk") + 1])
 
 # Outside the repo on purpose. Overridable so the folder can be moved.
 KEYS = os.environ.get("RAFEEQ_KEYS",

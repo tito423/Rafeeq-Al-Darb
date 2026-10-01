@@ -2323,7 +2323,7 @@
   },
   "kids": {
     "title": "Cantinho infantil",
-    "card_sub": "Um caminho de memorização por idade, adhkar diários e «Complete o versículo»",
+    "card_sub": "Histórias dos profetas com som e imagem, um caminho de memorização por idade, adhkar diários e «Complete o versículo»",
     "hello": "Olá, campeão!",
     "hello_sub": "Aprenda, memorize e jogue",
     "game": "Complete o versículo",
@@ -2382,7 +2382,8 @@
     "story_downloading": "Baixando… {}%",
     "story_size": "Tamanho: {} MB",
     "story_delete": "Apagar a cópia baixada",
-    "story_about": "O narrador é uma voz gerada por IA; os versículos são recitados pelo xeique Muhammad Siddiq al-Minshawi. O texto de cada história e as suas fontes estão na página de Fontes."
+    "story_about": "O narrador é uma voz gerada por IA; os versículos são recitados pelo xeique Muhammad Siddiq al-Minshawi. O texto de cada história e as suas fontes estão na página de Fontes.",
+    "story_replay": "Repetir"
   },
   "journey": {
     "how_title": "Como ganhar pontos",
