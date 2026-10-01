@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 19:42 — IN PROGRESS — resume here**
+**2026-10-01 20:08 — IN PROGRESS — resume here**
 
-Stories: 5 of 7 clean stories voiced through the AI Studio UI and ASR-checked
+Stories: 44 ayah-worded narrator lines rewritten; Hud 6+10 re-voiced; queue of 60 runs ready
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
