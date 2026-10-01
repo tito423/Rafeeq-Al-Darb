@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 18:50 — IN PROGRESS — resume here**
+**2026-10-01 19:42 — IN PROGRESS — resume here**
 
-Stories: uploaded + mirrored 4 videos; AI Studio UI limit is separate from the API (Google usage page text); 21 stories lines extracted; ayah-wording audit
+Stories: 5 of 7 clean stories voiced through the AI Studio UI and ASR-checked
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
