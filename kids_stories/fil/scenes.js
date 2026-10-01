@@ -55,7 +55,7 @@ S.push({ // 4 throwing at them stones of hardened clay - small stones in the sky
     for (let i = 0; i < 50; i++) { const x = r() * W, q = K.fract(t * 0.7 + r()); c.fillStyle = K.rgba('#5A4A3A', 0.8 * (1 - q)); c.beginPath(); c.arc(x + q * 20, 140 + q * 260, 2.5, 0, TAU); c.fill(); }
   });
 } });
-S.push({ // 5 they became like dry leaves of crops; Allah protected His House - an empty field, the House whole
+S.push({ // 5 they became like dry leaves of crops - an empty field, the House far off and whole
   cam: (p) => [K.lerp(1.1, 1.0, E(p)), 640, 440, 0], draw(c, t, d) {
   land(c, t, 0.85, { sun: [1080, 180], house: true });
   K.par(c, 1, () => {
@@ -64,7 +64,7 @@ S.push({ // 5 they became like dry leaves of crops; Allah protected His House - 
   });
   K.par(c, 0.55, () => K.glow(c, 1000, 450, 120, '#FFF0C8', 0.25 * A(t, d * 0.5, 1.5)));
 } });
-S.push({ // 6 Allah is able; He protects His House; the oppressor is weak however strong
+S.push({ // 6 Allah is able; He brings the oppressors' plots to nothing
   cam: (p) => [K.lerp(1.0, 1.08, E(p)), 900, 400, 0], draw(c, t, d) {
   land(c, t, 0.95, { sun: [1080, 160], house: true });
   K.par(c, 0.55, () => K.rays(c, 1000, 440, 10, 700, -Math.PI * 0.9, -Math.PI * 0.1, '#FFF0C8', 0.1, t));

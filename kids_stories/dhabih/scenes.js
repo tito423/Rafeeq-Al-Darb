@@ -100,6 +100,18 @@ S.push({ // 12 glad news of Ishaq, a prophet among the righteous; blessing on th
   hills(c, t, 0.9, { sun: [1060, 180] });
   K.par(c, 1, () => { K.presence(c, 560, 620, 28, t, 1); K.presence(c, 640, 628, 16, t, 1); K.presence(c, 720, 628, 13, t, A(t, is - 0.3, 1.2)); K.glow(c, 640, 600, 260, '#FFE6A8', 0.15 * A(t, d * 0.6, 1)); });
 } });
+S.push({ // 13 that ram became an offering and a Sunnah until the Day of Judgement - Eid al-Adha morning: a town, people, a sheep standing (no slaughter)
+  cam: (p) => [K.lerp(1.0, 1.08, E(p)), 640, 440, 0], draw(c, t, d) {
+  KIT.sky(c, t, 0.95, { sun: [1000, 170], seed: 182 });
+  KIT.land(c, 0.95, { seed: 18.2, farCol: '#B0A08E', midCol: '#A8A070' });
+  KIT.town(c, 0.95, 0, { seed: 18201, n: 22, ty: 545 });
+  K.par(c, 1, () => {
+    KIT.crowd(c, 18202, 10, 160, 560, 665, 1.0, t, { face: 1, robes: ['#E8E0D0', '#D8D0C0', '#C8D8E0'] });
+    for (const [x, ph] of [[760, 0], [860, 1], [960, 2]]) K.animal(c, 'sheep', x, 650, 0.9, 0, 0);
+    K.glow(c, 640, 560, 300, '#FFE6A8', 0.12);
+  });
+  K.par(c, 0.12, () => K.birds(c, t, 18203, 7, 400, 170, 200, 26, 9, '#4A3A40', 0.6));
+} });
 S.push({ cam: (p) => [K.lerp(1.1, 1.02, E(p)), 640, K.lerp(390, 362, E(p)), 0], draw(c, t, d, p) {
   KIT.lesson(c, t, p, { seed: 18103 });
 } });

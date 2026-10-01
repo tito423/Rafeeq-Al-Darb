@@ -19,7 +19,7 @@ S.push({ // 1 Allah honoured Ilyas with prophethood, sent to his people of Bani 
   town(c, t, 0.9, { sun: [1060, 160] });
   K.par(c, 1, () => { K.presence(c, K.lerp(-40, 420, A(t, 0, d * 0.6)), 620, 28, t, 1); KIT.crowd(c, 20102, 10, 700, 1180, 665, 1.0, t, {}); });
 } });
-S.push({ // 2 they worshipped a weak idol made with their hands
+S.push({ // 2 they worshipped an idol and left the worship of Allah
   cam: (p) => [K.lerp(1.15, 1.3, E(p)), 900, 520, 0], draw(c, t, d) {
   town(c, t, 0.8, { sun: [1080, 240] });
   K.par(c, 1, () => KIT.crowd(c, 20103, 10, 700, 1150, 665, 1.0, t, { face: 1 }));
@@ -29,7 +29,7 @@ S.push({ // 3 fear Allah alone; do not associate others with Him
   town(c, t, 0.85, { sun: [1080, 220] });
   K.par(c, 1, () => { K.presence(c, 420, 620, 28, t, 1); K.rays(c, 420, 610, 9, 600, -Math.PI * 0.85, -Math.PI * 0.15, '#FFF0C8', 0.1 * A(t, d * 0.3, 1), t); KIT.crowd(c, 20103, 10, 640, 1100, 665, 1.0, t, { face: -1 }); });
 } });
-S.push({ // 4 how can you worship a weak idol and leave the Best of creators? - the idol dwarfed by the sky
+S.push({ // 4 how can you worship an idol and leave the Best of creators? - the idol dwarfed by the sky
   cam: (p) => [K.lerp(1.3, 1.0, E(p)), 900, K.lerp(560, 360, E(p)), 0], draw(c, t, d) {
   town(c, t, 0.85, { sun: [1080, 200] });
   K.par(c, 0.2, () => K.rays(c, 1080, 200, 12, 1000, Math.PI * 0.5, Math.PI * 1.0, '#FFF0C8', 0.1 * A(t, d * 0.4, 1.5), t));

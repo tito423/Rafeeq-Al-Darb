@@ -29,7 +29,7 @@ S.push({ // 1 a town by the sea; commanded to honour the Sabbath and not fish on
   shore(c, t, 0.9, { sun: [1060, 150] });
   K.par(c, 1, () => { KIT.crowd(c, 22103, 10, 700, 1180, 640, 1.0, t, {}); dayMark(c, t, A(t, d * 0.5, 1) > 0.5); });
 } });
-S.push({ // 2 a test: on the Sabbath the fish came plentiful, near the shore
+S.push({ // 2 a test: on the Sabbath the fish came plentiful, floating on the sea's surface
   cam: (p) => [K.lerp(1.0, 1.08, E(p)), 640, 460, 0], draw(c, t, d) {
   shore(c, t, 0.9, { sun: [1060, 150] });
   K.par(c, 0.4, () => fish(c, t, 40, A(t, d * 0.2, 1.5)));

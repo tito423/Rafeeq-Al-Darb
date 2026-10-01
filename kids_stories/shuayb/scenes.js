@@ -71,7 +71,7 @@ S.push({ // 5 recitation 11:85 - the level scale in the light
   market(c, t, 0.75, { sun: [1100, 300] });
   K.par(c, 1, () => { scales(c, 640, 660, 1.1, 0.02 * Math.sin(t), 0.85); K.presence(c, 470, 620, 26, t, 1); K.rays(c, 640, 540, 8, 600, -Math.PI * 0.85, -Math.PI * 0.15, '#FFF0C8', 0.08, t); });
 } });
-S.push({ // 6 the little lawful profit has blessing - better than unlawful gain
+S.push({ // 6 what remains of lawful profit is better than unlawful gain
   cam: (p) => [K.lerp(1.3, 1.15, E(p)), 640, 520, 0], draw(c, t, d) {
   const bk = B(6, 'بركةٌ', d * 0.45);
   market(c, t, 0.95, { sun: [1080, 150] });

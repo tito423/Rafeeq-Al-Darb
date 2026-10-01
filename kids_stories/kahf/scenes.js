@@ -144,7 +144,7 @@ S.push({ // 9 Allah turned them on their right and left sides
   inside(c, t, 0.6, { sky: 0.7 });
   K.par(c, 1, () => sleepers(c, t, A(t, tn - 1, 1.2) > 0.5 ? -1 : 1, 0.6));
 } });
-S.push({ // 10 their dog stretched its forelegs at the entrance, as if guarding them
+S.push({ // 10 their dog that accompanied them stretched its forelegs at the entrance
   cam: (p) => [K.lerp(1.3, 1.45, E(p)), 640, 560, 0], draw(c, t, d) {
   inside(c, t, 0.6, { sky: 0.8 });
   K.par(c, 1, () => { sleepers(c, t, 1, 0.6, 0.7); dog(c, 600, 610, 1.3, t, 0.9); });
