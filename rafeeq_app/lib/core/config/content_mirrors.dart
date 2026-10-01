@@ -50,6 +50,8 @@ class ContentMirrors {
       'config/',
       // The kids-corner story videos and their posters.
       'kids/',
+      // The complete morning/evening adhkar recordings (from archive.org).
+      'azkar/',
     ],
     'content-mushaf': ['mushaf/madinah_qc/'],
     'content-surah': [

@@ -7,12 +7,16 @@
 /// Every url below answered 206 audio/mpeg to a range request on
 /// 2026-09-30; sizes are the servers' own Content-Length, durations the
 /// file's own (ffmpeg for IslamHouse, archive.org's metadata for the rest).
-/// Streamed or downloaded from where they are published, never rehosted.
+/// IslamHouse's two are streamed from IslamHouse; the five from archive.org
+/// were slow there and are served from the bucket since 2026-10-02 (same
+/// bytes, archive.org credited as the source).
 ///
 /// Where a recording holds the morning AND the evening in one file, it is
 /// offered under both and says so ([AdhkarTime.both]) - cutting it in two
 /// would be editing someone's recording.
 library;
+
+import '../../../core/config/app_config.dart';
 
 enum AdhkarTime { morning, evening, both }
 
@@ -51,10 +55,13 @@ class AdhkarRecitation {
 const _ihDir =
     'https://d1.islamhouse.com/data/ar/ih_sounds/chain_01/Mishari_Raashid/Azkar_AlSba7_w_AlMsa';
 const _ihPage = 'https://islamhouse.com/ar/audios/92368/';
-const _iaItem = 'https://archive.org/download/adhkar-alsabah-walmasa/';
 const _iaPage = 'https://archive.org/details/adhkar-alsabah-walmasa';
 
-String _ia(String name) => '$_iaItem${Uri.encodeComponent(name)}';
+// The archive.org item streamed slowly (owner, 2026-10-02: «بطئ»), so its
+// five files are copied to the bucket byte for byte (sizes checked against
+// archive.org's own) and played from there, with the GitHub mirror behind it
+// (ContentMirrors). archive.org stays the credited source: [sourcePage].
+String _r2(String id) => '${AppConfig.contentBaseUrl}/azkar/recitations/$id.mp3';
 
 final adhkarRecitations = <AdhkarRecitation>[
   const AdhkarRecitation(
@@ -84,7 +91,7 @@ final adhkarRecitations = <AdhkarRecitation>[
     reciterAr: 'إدريس أبكر',
     reciterEn: 'Idrees Abkar',
     time: AdhkarTime.both,
-    url: _ia('أذكار الصباح والمساء بصوت الشيخ إدريس أبكر.mp3'),
+    url: _r2('abkar'),
     bytes: 14529350,
     seconds: 900,
     sourceName: 'Internet Archive',
@@ -95,7 +102,7 @@ final adhkarRecitations = <AdhkarRecitation>[
     reciterAr: 'سعد الغامدي',
     reciterEn: 'Saad Al-Ghamdi',
     time: AdhkarTime.both,
-    url: _ia('أذكار الصباح والمساء بصوت الشيخ سعد الغامدي.mp3'),
+    url: _r2('ghamdi'),
     bytes: 7009452,
     seconds: 876,
     sourceName: 'Internet Archive',
@@ -106,7 +113,7 @@ final adhkarRecitations = <AdhkarRecitation>[
     reciterAr: 'سلمان العتيبي',
     reciterEn: 'Salman Al-Utaybi',
     time: AdhkarTime.both,
-    url: _ia('أذكار الصباح والمساء بصوت الشيخ سلمان العتيبي.mp3'),
+    url: _r2('otaibi'),
     bytes: 14691683,
     seconds: 1224,
     sourceName: 'Internet Archive',
@@ -117,7 +124,7 @@ final adhkarRecitations = <AdhkarRecitation>[
     reciterAr: 'فارس عباد',
     reciterEn: 'Fares Abbad',
     time: AdhkarTime.both,
-    url: _ia('أذكار الصباح والمساء بصوت الشيخ فارس عباد.mp3'),
+    url: _r2('abbad'),
     bytes: 29556402,
     seconds: 2463,
     sourceName: 'Internet Archive',
@@ -128,7 +135,7 @@ final adhkarRecitations = <AdhkarRecitation>[
     reciterAr: 'هاني الرفاعي',
     reciterEn: 'Hani Ar-Rifai',
     time: AdhkarTime.both,
-    url: _ia('أذكار الصباح والمساء بصوت الشيخ هاني الرفاعي.mp3'),
+    url: _r2('rifai'),
     bytes: 16510283,
     seconds: 1024,
     sourceName: 'Internet Archive',

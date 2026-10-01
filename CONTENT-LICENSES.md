@@ -1109,8 +1109,14 @@ only when the recording says the same words (`scripts/hisnmuslim_audio_map.py`,
   stated purpose is free distribution.
 - Idrees Abkar, Saad Al-Ghamdi, Salman Al-Utaybi, Fares Abbad, Hani Ar-Rifai —
   Internet Archive item `adhkar-alsabah-walmasa`, uploaded by a private
-  person, **no licence stated**. Streamed/downloaded from archive.org, not
-  rehosted; said plainly on the Sources screen. IslamWeb's copies were NOT
+  person, **no licence stated**. Streamed/downloaded from archive.org until
+  2026-10-02; since then **copied to the bucket** (`azkar/recitations/`, same
+  bytes, sizes equal to archive.org's) on the owner's explicit decision,
+  because archive.org was slow: «حط ... أذكار الصباح والمساء الصوتيات على r2
+  واي حاجة احنا بنستخدمها من انترنت اركايف لانه بطئ». Same footing as the
+  ruqyah set (also archive.org, also rehosted). The item is still credited by
+  name and link on the Sources screen. Risk unchanged in kind, larger in
+  degree: a takedown request would now have to be answered by us. IslamWeb's copies were NOT
   used («جميع الحقوق محفوظة»).
 
 **«دقة أعلى في العربية» — NVIDIA stt_ar_fastconformer_hybrid_large_pcd_v1.0,
