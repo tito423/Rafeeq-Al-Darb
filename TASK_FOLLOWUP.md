@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~11:55 (10-01, Opus) VISUALS V2 BUILT LOCALLY (owner «كمل»; cloud session never started): worktree .claude/worktrees/agent-a383b101b770abc86 (branch kids-stories-pipeline), engine/lib.js (K.par parallax, K.beat word sync, presence glow, faceless K.person, birds/dust/grass/rays/spray, ark fly-in planks + pegs on their own clock, ramp slides out), engine/index.html (0.5 s cuts, hand-held breath, grain, grade), render.mjs (--at, --audio, words.json), noah/scenes.js rewritten. Stills checked at 34 beat moments (noah/out/v2sheet*.png). RUNNING: full render with narration -> kids_stories/noah/out/noah_v2.mp4. NEXT: watch frames from the mp4 (motion, cuts, sync), commit + push the branch, send the owner the mp4.
+
 ~11:10 (10-01, Opus) NUH GEMINI NARRATION COMPLETE: 10+11 voiced at 11:02 (free reset). All 12 ASR-checked word-for-word (E:/DevEnv/kids_voice/gemini/asr_check.txt). afftdn chain clipped n07/n10/n12 -> all re-cleaned with volume=0.8 first (peak 0.868, 0 clipped). Mix: E:/DevEnv/kids_voice/gemini/noah_audio_g1.mp3 (copy scripts/out/noah_audio_gemini.mp3), 157.9 s, peak -1.8 dBFS. timing.json + words.json committed on kids-stories-pipeline 536203f0 (pushed). Chrome extension not connected; built-in browser needs the owner's Google sign-in for AI Studio (not done). NEXT: owner listens to the mp3; visuals v2 still waits for his CLOUD session; then re-render with these timings.
 
 ~04:08 (10-01) Owner declined paid billing (AI Studio asked $30). Cloud $300 trial: docs say it can't pay Gemini API; Cloud TTS has only gemini-3.1/2.5 TTS (different voice than lines 1-9) -> not used. RUNNING in background: E:/DevEnv/kids_voice/gemini/wait_and_gen.sh sleeps to 11:02 Dubai then voices 10+11 (raw10/raw11.wav). If the session died: just run it again (it skips existing files). Future stories: test putting several lines in ONE request (10 req/day becomes the limit on calls, not lines).
@@ -961,6 +963,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-01 11:40 - Kids stories visuals v2 built locally; full render with narration running
 - 2026-10-01 11:06 - Nuh Gemini narration complete: 12/12 lines ASR-checked, clipping fixed, mix 157.9 s, timings on kids-stories-pipeline 536203f0
 - 2026-10-01 04:07 - Gemini lines 10-11 scheduled for the 11:00 Dubai free-tier reset; paid and Cloud-trial routes checked and ruled out
 - 2026-10-01 03:59 - Gemini lines 9+12 voiced and cleaned; 10-11 hit the free 10/day limit (per project, resets 11:00 Dubai)
