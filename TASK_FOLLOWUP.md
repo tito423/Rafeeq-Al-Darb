@@ -13,7 +13,7 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
-~23:40 (10-01, Opus) RELEASED v3.74.0 (owner asked: «انشرلي الريليز»). versionCode 88, APK 313,424,730 B (aapt2: 3.74.0/88), built by build_github_release.bat (ORT 1.28.2 all 3 ABIs, rotated signing), installed over the debug on emulator, «ادعم التطبيق» screen seen; tag v3.74.0 = HEAD 7e2637d7; asset public range 206. Includes the owner's last-minute ask: Home card «القرآن والعبادات» quick links (8 tiles, seen + 2 tiles opened). OLD RELEASES LEFT (v3.73.0, v3.72.0 draft, v3.71.0) - owner said earlier «متمسحش حاجة»; ASK him whether to delete them now. NEXT: the 10-02 list in the 23:15 entry (4 stories + isa15/dq8/salih3-4).
+~23:40 (10-01, Opus) RELEASED v3.74.0 (owner asked: «انشرلي الريليز»). versionCode 88, APK 313,424,730 B (aapt2: 3.74.0/88), built by build_github_release.bat (ORT 1.28.2 all 3 ABIs, rotated signing), installed over the debug on emulator, «ادعم التطبيق» screen seen; tag v3.74.0 = HEAD 7e2637d7; asset public range 206. Includes the owner's last-minute ask: Home card «القرآن والعبادات» quick links (8 tiles, seen + 2 tiles opened). OLD RELEASES DELETED on the owner's word («احذفهم»): v3.73.0, v3.71.0 (+tags), v3.72.0 draft. Left: v3.74.0 (latest), v3.51.0 (restore point), content-mirror/mushaf/surah prereleases. NEXT: the 10-02 list in the 23:15 entry (4 stories + isa15/dq8/salih3-4).
 
 ~23:15 (10-01, Opus, PC) 22 STORIES IN THE APP (cad3766e), seen on emulator (debug 23:11): shelves, Ihya played (narration caption + 2:260 from the app's mushaf). Today added after 21:30: yusuf, shuayb, musa_baby (3.8 UI), dayf, sabt (2.5 API, owner-approved model), ihya, hudhud, adam (gemini-3.1-flash-tts-preview, owner listened to a sample: «الاتنين حلوين»; needs --plain; model id has -preview). Word audit clean on all. QUOTAS (rate-limit page 23:00): 3.8 flash 10/10, lite 11/10, 2.5 9/10, 3.1 13/10 (503 retries counted); AI Studio UI free limit hit. NOT DONE (do after 11:00 Dubai 10-02): voice jannatayn (13 lines), dawud (13), dhabih (13), khidr (16) - one model per story; re-voice isa 15 + dhulqarnayn 8 on 3.8 flash (UI or API, their stories' model) then remix/render/upload isa + dhulqarnayn; re-voice salih 3+4 on 3.8 flash-lite (API) then remix (13 scenes, rec 6, all w) + re-render + upload salih. Then per story: rec.wav (Minshawi URL in its doc), mix_story.py, words_json.py, stage in worktree, render, sheet, entries (titles x7, assistant, STORIES), --upload, mirror, emulator. Rec scenes: jannatayn 10=18:39, dawud 9=2:250, dhabih 9=37:107, khidr 8=18:69, isa 11=19:30, dhulqarnayn 13=18:98 - CHECK each in its doc before use.
 
@@ -1007,6 +1007,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-01 23:37 - Old releases v3.73.0, v3.72.0 (draft), v3.71.0 deleted on the owner's word; v3.74.0 + v3.51.0 restore point remain
 - 2026-10-01 23:33 - Released v3.74.0 (22 kids stories, Home quick links, tasmee work since 3.73.0)
 - 2026-10-01 23:14 - Stories: 22 in the app; every free TTS quota used for today; 4 stories + 4 lines left for 10-02
 - 2026-10-01 21:24 - Stories: 14 in the app and seen on the emulator; UI free limit hit after ~51 runs; 3 more rendering
