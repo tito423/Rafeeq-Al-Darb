@@ -23,6 +23,7 @@ import 'core/services/ayah_audio_service.dart';
 import 'core/services/download_engine.dart';
 import 'core/services/notification_router.dart';
 import 'core/services/quran_translation_store.dart';
+import 'core/services/recitation_mirrors.dart';
 import 'core/services/recitation_resume.dart';
 import 'core/services/recitation_source.dart';
 import 'core/services/source_rules.dart';
@@ -117,6 +118,7 @@ Future<void> main() async {
   // How dorar.net / shamela.ws are read: cached copy now, published one
   // fetched in the background (a site change is fixed without an APK).
   unawaited(SourceRules.instance.load());
+  unawaited(RecitationMirrors.instance.load());
   // Where the continuous recitation last was, for «أكمل مع …».
   RecitationResume.watch();
   StartupTrace.step('EasyLocalization.ensureInitialized');

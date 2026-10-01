@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../app/app_locale_provider.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/services/recitation_mirrors.dart';
 
 /// One recitation of a reciter on mp3quran.net — a riwayah and a style
 /// («حفص عن عاصم - مرتل», «المصحف المجود»), served as one MP3 per surah.
@@ -52,11 +53,14 @@ class Mp3Moshaf {
     102: 'maher_murattal',
   };
 
-  /// The first place to fetch surah N from: the app's own mirror when this
-  /// recitation has one, mp3quran otherwise.
+  /// The first place to fetch surah N from: the app's own copy when this
+  /// recitation has one (R2, else GitHub - R7), mp3quran otherwise.
   String urlFor(int surah) {
     final slug = r2Mirrors[id];
-    return slug == null ? originUrlFor(surah) : AppConfig.r2SurahUrl(slug, surah);
+    if (slug != null) return AppConfig.r2SurahUrl(slug, surah);
+    return RecitationMirrors.instance.hasSurah(id)
+        ? RecitationMirrors.surahUrl(id, surah)
+        : originUrlFor(surah);
   }
 
   /// mp3quran's own copy — the fallback behind a mirrored one.

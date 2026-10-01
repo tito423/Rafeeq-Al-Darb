@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import '../config/app_config.dart';
+import 'recitation_mirrors.dart';
 
 /// Where one ayah's recitation audio actually comes from.
 ///
@@ -173,6 +174,10 @@ class RecitationSource {
     if (folder != null) {
       if (_mirroredOnR2.contains(folder)) {
         urls.add(AppConfig.r2AyahUrl(folder, surah, ayah));
+      }
+      // The app's own copy on GitHub, before the outside host (R7).
+      if (RecitationMirrors.instance.hasAyah(folder)) {
+        urls.add(RecitationMirrors.ayahUrl(folder, surah, ayah));
       }
       urls.add(AppConfig.everyAyahUrl(folder, surah, ayah));
     }

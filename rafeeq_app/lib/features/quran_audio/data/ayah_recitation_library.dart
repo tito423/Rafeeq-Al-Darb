@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/services/download_engine.dart';
+import '../../../core/services/recitation_mirrors.dart';
 import '../../../core/services/recitation_source.dart';
 import 'ayah_download_notice.dart';
 
@@ -430,8 +431,11 @@ class AyahRecitationLibrary extends ChangeNotifier {
           isDownloaded(edition, surah, ayah)) {
         continue;
       }
+      // The app's own copies first (R2, then GitHub), everyayah on a retry.
       final url = !origin && RecitationSource.isMirroredOnR2(entry.folder)
           ? AppConfig.r2AyahUrl(entry.folder, surah, ayah)
+          : !origin && RecitationMirrors.instance.hasAyah(entry.folder)
+          ? RecitationMirrors.ayahUrl(entry.folder, surah, ayah)
           : AppConfig.everyAyahUrl(entry.folder, surah, ayah);
       _handed.add(id);
       DownloadEngine.fileQueue.add(DownloadTask(

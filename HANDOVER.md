@@ -2514,9 +2514,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 03:19 — IN PROGRESS — resume here**
+**2026-10-02 03:47 — IN PROGRESS — resume here**
 
-R1-R3, R5, R6 seen on emulator; R1 tolerates a misspelt reciter name; chrome visibility moved into ChromeAutoHide (quran_screen back under its ceiling); 695 tests
+R7: own recitation copy on GitHub (script + RecitationMirrors manifest, copy first, origin behind); R4 voiced + word-audited
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
