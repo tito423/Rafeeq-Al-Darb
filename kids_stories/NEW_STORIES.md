@@ -37,3 +37,4 @@ copy `kids_stories/<id>/` and `estimate_timing.py` into the pipeline worktree.
 | ilyas | 10 | yes - Ilyas a light; the idol a plain stepped stone with no face; the few sincere stay by the light |
 | dayf | 12 | yes - Ibrahim a light; the angels three white lights at the tent, never figures or «guests»; Sara a soft light behind a moving screen; the calf a covered dish |
 | sabt | 11 | yes - featureless people; fish crowd the surface on the Sabbath (a 7-dot calendar marks it) and vanish after; the pits; the warners in white walk away in light; the transformation NOT drawn - empty shore and pits |
+| khidr | 17 | yes - Musa and al-Khidr lights (al-Khidr a cooler white-green light), Yusha' a smaller light; the fish leaps from the basket and leaves a trail in the sea; the ship and its hole; the second incident NOT drawn (scene 11: empty shore, the lights stop then walk on); the wall redrawn darker after the first pass read faint; two orphans small and featureless |
