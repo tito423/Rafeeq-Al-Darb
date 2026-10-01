@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 04:07 — IN PROGRESS — resume here**
+**2026-10-01 11:06 — IN PROGRESS — resume here**
 
-Gemini lines 10-11 scheduled for the 11:00 Dubai free-tier reset; paid and Cloud-trial routes checked and ruled out
+Nuh Gemini narration complete: 12/12 lines ASR-checked, clipping fixed, mix 157.9 s, timings on kids-stories-pipeline 536203f0
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

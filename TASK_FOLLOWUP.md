@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~11:10 (10-01, Opus) NUH GEMINI NARRATION COMPLETE: 10+11 voiced at 11:02 (free reset). All 12 ASR-checked word-for-word (E:/DevEnv/kids_voice/gemini/asr_check.txt). afftdn chain clipped n07/n10/n12 -> all re-cleaned with volume=0.8 first (peak 0.868, 0 clipped). Mix: E:/DevEnv/kids_voice/gemini/noah_audio_g1.mp3 (copy scripts/out/noah_audio_gemini.mp3), 157.9 s, peak -1.8 dBFS. timing.json + words.json committed on kids-stories-pipeline 536203f0 (pushed). Chrome extension not connected; built-in browser needs the owner's Google sign-in for AI Studio (not done). NEXT: owner listens to the mp3; visuals v2 still waits for his CLOUD session; then re-render with these timings.
+
 ~04:08 (10-01) Owner declined paid billing (AI Studio asked $30). Cloud $300 trial: docs say it can't pay Gemini API; Cloud TTS has only gemini-3.1/2.5 TTS (different voice than lines 1-9) -> not used. RUNNING in background: E:/DevEnv/kids_voice/gemini/wait_and_gen.sh sleeps to 11:02 Dubai then voices 10+11 (raw10/raw11.wav). If the session died: just run it again (it skips existing files). Future stories: test putting several lines in ONE request (10 req/day becomes the limit on calls, not lines).
 
 ~04:00 (10-01, Opus) Gemini quota tried at 03:44: lines 9 and 12 generated + cleaned (n09/n12.wav; ffmpeg = C:/Program Files/ShareX/ffmpeg.exe, not on PATH); 10 and 11 -> 429 «10 requests per day on Free Tier» (10 successes counted today). Stopped on the owner's word. Checked live (ai.google.dev rate-limits + pricing, 03:55): limits are PER PROJECT, RPD resets midnight Pacific = 11:00 Dubai; paid Tier 1 = just enable billing; gemini-3.8-flash-tts $9 / 1M audio tokens, 25 tokens/s -> a 150 s story is ~$0.03. Options for the owner: billing on the project, or a key from a NEW AI Studio project (own 10/day). NEXT EXACT: `py -3 genall_g.py 10 11` in E:/DevEnv/kids_voice/gemini (after 11:00 or with a new key in scripts/.env GEMINI_API_KEY), clean with the afftdn chain, ASR-check 9-12, then r11044.wav + ../mix2.py + ../amb.py, timing2.json + words.json -> worktree kids_stories/noah/.
@@ -959,6 +961,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-01 11:06 - Nuh Gemini narration complete: 12/12 lines ASR-checked, clipping fixed, mix 157.9 s, timings on kids-stories-pipeline 536203f0
 - 2026-10-01 04:07 - Gemini lines 10-11 scheduled for the 11:00 Dubai free-tier reset; paid and Cloud-trial routes checked and ruled out
 - 2026-10-01 03:59 - Gemini lines 9+12 voiced and cleaned; 10-11 hit the free 10/day limit (per project, resets 11:00 Dubai)
 - 2026-10-01 03:59 - Gemini lines 9+12 voiced and cleaned; 10-11 hit the free 10/day limit (per project, resets 11:00 Dubai)
