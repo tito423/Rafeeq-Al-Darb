@@ -27,3 +27,5 @@ copy `kids_stories/<id>/` and `estimate_timing.py` into the pipeline worktree.
 | musa_baby | 13 | yes - baby Musa a small light in a reed basket; mother = light at the home, sister = footprints on the bank, Pharaoh's wife = a lit palace window; servants and wet-nurses featureless |
 | fil | 7 | yes - army and elephant drawn, soldiers featureless; birds and small stones in the sky, nobody shown hit; an empty field of blowing dry leaves; the House far off and whole |
 | isa | 17 | yes - Isa a light in a cradle then a light; Maryam a soft pale light; Jibril only light coming down onto the screen; dates fall, a stream appears; the clay bird whitens and flies; healing = light and opening flowers, no sick or dead drawn |
+| dhulqarnayn | 14 | yes - Dhul-Qarnayn a travelling light; sunset over a dark spring as seen by the eye; Yajuj and Majuj never drawn (dust and shadow beyond the pass); iron rising, glowing, copper poured |
+| jannatayn | 14 | yes - two featureless men (plain robe / rich robe); vines, palms, crops and the river; the ruin = fallen trellises and bare ground, no storm |
