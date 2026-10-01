@@ -334,16 +334,26 @@ K.ark = (c, x, y, s, opts = {}) => {
   const kf = build * arkPlanks.length;
   const hullCols = ['#A86C40', '#9A6139', '#B27849'];
   const tn = (col) => K.tone(col, light);
+  // pegs follow the plank by default; opts.pegs (0..1) drives them on their own
+  // clock so they can be tapped in on the word «ومسامير»
+  const NP = arkPlanks.length;
+  const pegK = (a, i) => (opts.pegs === undefined ? K.clamp((a - 0.7) / 0.3) : (a >= 1 ? K.clamp((opts.pegs - (i / NP) * 0.75) / 0.25) : 0));
   c.save();
   c.translate(x, y);
   c.scale(s, s);
   if (opts.ramp) {
+    // opts.rampDown 0..1 slides the ramp out of the door (stowed, it lies
+    // behind the hull planks, which are drawn after it)
+    c.save();
+    const rr = 1 - (opts.rampDown ?? 1);
+    c.translate(rr * 322, -rr * 78);
     c.fillStyle = tn('#6E4529');
     c.beginPath(); c.moveTo(-500, 200); c.lineTo(-178, 122); c.lineTo(-100, 122); c.lineTo(-100, 134); c.lineTo(-178, 134); c.lineTo(-470, 206); c.closePath(); c.fill();
     c.fillStyle = tn('#9C6A42');
     c.beginPath(); c.moveTo(-500, 200); c.lineTo(-178, 122); c.lineTo(-100, 122); c.lineTo(-100, 127); c.lineTo(-178, 127); c.lineTo(-490, 204); c.closePath(); c.fill();
     c.strokeStyle = tn('#5A3822'); c.lineWidth = 2;
     for (let i = 1; i < 8; i++) { const u = i / 8, px = -500 + (322) * u, py = 200 - 78 * u; c.beginPath(); c.moveTo(px, py); c.lineTo(px + 2, py + 5); c.stroke(); }
+    c.restore();
   }
   arkPlanks.forEach((pl, i) => {
     const a = K.clamp(kf - i);
@@ -352,7 +362,14 @@ K.ark = (c, x, y, s, opts = {}) => {
     const e = K.easeOut(K.clamp(a / 0.7));
     c.save();
     c.globalAlpha *= K.clamp(a / 0.3);
-    c.translate(0, (1 - e) * -64);
+    if (opts.from) {
+      // fly in along an arc from the pile (local units), turning as it lands
+      const u = K.easeInOut(K.clamp(a / 0.8)), cx0 = pl.kind === 'hull' || pl.kind === 'cabin' ? (pl.x0 + pl.x1) / 2 : 0;
+      c.translate((1 - u) * (opts.from[0] - cx0), (1 - u) * opts.from[1] - Math.sin(Math.PI * u) * 150);
+      c.rotate((1 - u) * 0.5 * (pl.v - 0.5));
+    } else {
+      c.translate(0, (1 - e) * -64);
+    }
     if (pl.kind === 'block') {
       woodPlank(c, pl.x - 20, 140, 40, 60, tn('#7A4E2E'), pl.v);
     } else if (pl.kind === 'hull') {
@@ -360,13 +377,14 @@ K.ark = (c, x, y, s, opts = {}) => {
       const base = tn(K.mix(hullCols[Math.floor(pl.v * 3)], '#5E3A22', pl.r / ARK_ROWS * 0.45));
       woodPlank(c, pl.x0, pl.y0, pl.x1 - pl.x0, pl.y1 - pl.y0, base, pl.v);
       c.restore();
-      const k = K.clamp((a - 0.7) / 0.3), py = (pl.y0 + pl.y1) / 2;
-      if (pl.x0 > -400) peg(c, pl.x0 + 9, py, k);
-      if (pl.x1 < 400) peg(c, pl.x1 - 9, py, k);
+      const k = pegK(a, i), py = (pl.y0 + pl.y1) / 2;
+      if (pl.x0 > -400) { peg(c, pl.x0 + 9, py, k); K.puff(c, pl.x0 + 9, py, k * 1.6, 1.2); }
+      if (pl.x1 < 400) { peg(c, pl.x1 - 9, py, k); K.puff(c, pl.x1 - 9, py, k * 1.6, 1.2); }
     } else if (pl.kind === 'cabin') {
       woodPlank(c, pl.x0, pl.y0, pl.x1 - pl.x0, pl.y1 - pl.y0, tn(K.mix('#B98252', '#9A6A43', pl.v)), pl.v);
-      const k = K.clamp((a - 0.7) / 0.3), py = (pl.y0 + pl.y1) / 2;
+      const k = pegK(a, i), py = (pl.y0 + pl.y1) / 2;
       peg(c, pl.x0 + 8, py, k); peg(c, pl.x1 - 8, py, k);
+      K.puff(c, pl.x0 + 8, py, k * 1.6, 1.2); K.puff(c, pl.x1 - 8, py, k * 1.6, 1.2);
     } else if (pl.kind === 'roof') {
       c.fillStyle = tn(pl.band ? '#7B4A30' : '#8C5536');
       c.beginPath();
@@ -392,6 +410,12 @@ K.ark = (c, x, y, s, opts = {}) => {
     }
   }
   c.restore();
+};
+// The ark's silhouette (hull + cabin + roof) as a path in its local frame.
+K.arkOutline = (c) => {
+  arkHull(c);
+  c.moveTo(-215, 0); c.lineTo(-215, -106); c.lineTo(175, -106); c.lineTo(175, 0);
+  c.moveTo(-240, -106); c.lineTo(-158, -150); c.lineTo(118, -150); c.lineTo(200, -106);
 };
 // Map a point in the ark's local frame to world space.
 K.arkPt = (x, y, s, lx, ly) => [x + lx * s, y + ly * s];
@@ -483,6 +507,190 @@ K.animal = (c, type, x, y, s, phase, ang = 0, shade = 0) => {
   c.rotate(ang);
   c.scale(s, s);
   a.draw(c, phase, shade > 0 ? K.mix(K.ANIMAL_COL[type], '#4A3A40', shade) : null);
+  c.restore();
+};
+
+// ---------- v2: camera, parallax, word beats ----------
+// K.CAM is set by the engine before each scene draw: the scene camera's centre
+// (x, y) and zoom z. K.par draws a layer at depth f: f = 1 sits on the focal
+// plane (moves with the camera), f < 1 is farther (moves and zooms less),
+// f > 1 is foreground (moves more). A frame stays a pure function of time.
+K.CAM = { x: W / 2, y: H / 2, z: 1 };
+K.par = (c, f, fn) => {
+  const { x, y, z } = K.CAM, s = Math.pow(z, f - 1);
+  c.save();
+  c.translate(x, y); c.scale(s, s);
+  c.translate(-(W / 2 + f * (x - W / 2)), -(H / 2 + f * (y - H / 2)));
+  fn();
+  c.restore();
+};
+// Word timings (words.json, set by the renderer). K.beat(scene, 'word', n)
+// returns the start second of the n-th spoken word containing that text
+// (diacritics ignored), or `fallback` seconds if the recogniser spelt it
+// differently. Visual events are keyed to these so they land on the voice.
+K.WORDS = null;
+const bare = (s) => s.replace(/[ً-ٰٟـ،,.]/g, '');
+K.beat = (scene, word, fallback, n = 1) => {
+  const list = K.WORDS && K.WORDS[String(scene)];
+  if (list) {
+    const w = bare(word);
+    let k = 0;
+    for (const e of list) if (bare(e.word).includes(w) && ++k === n) return e.t;
+  }
+  return fallback;
+};
+// 0 before `at`, eased to 1 over `dur` seconds after it.
+K.after = (t, at, dur = 0.6, ease = K.easeInOut) => ease(K.clamp((t - at) / dur));
+
+// ---------- v2: atmosphere and life ----------
+K.haze = (c, y0, y1, col, a) => {
+  const g = c.createLinearGradient(0, y0, 0, y1);
+  g.addColorStop(0, K.rgba(col, 0)); g.addColorStop(0.55, K.rgba(col, a)); g.addColorStop(1, K.rgba(col, a * 0.6));
+  c.fillStyle = g; c.fillRect(-OVER, y0, W + OVER * 2, y1 - y0);
+};
+// God rays from (x, y): soft wedges added with 'lighter'.
+K.rays = (c, x, y, n, len, a0, a1, col, alpha, t = 0) => {
+  if (alpha <= 0.005) return;
+  c.save();
+  c.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < n; i++) {
+    const u = n === 1 ? 0.5 : i / (n - 1);
+    const a = K.lerp(a0, a1, u) + Math.sin(t * 0.35 + i * 1.7) * 0.025;
+    const wdt = 0.035 + 0.03 * (0.5 + 0.5 * Math.sin(i * 2.3 + t * 0.5));
+    const g = c.createRadialGradient(x, y, 0, x, y, len);
+    g.addColorStop(0, K.rgba(col, alpha * (0.7 + 0.3 * Math.sin(t * 0.8 + i))));
+    g.addColorStop(1, K.rgba(col, 0));
+    c.fillStyle = g;
+    c.beginPath(); c.moveTo(x, y); c.arc(x, y, len, a - wdt, a + wdt); c.closePath(); c.fill();
+  }
+  c.restore();
+};
+// Floating motes / dust in light.
+K.dust = (c, t, seed, n, col, alpha, x0 = -100, x1 = W + 100, y0 = 0, y1 = H, vx = 6) => {
+  if (alpha <= 0.01) return;
+  const r = K.rng(seed);
+  c.save();
+  for (let i = 0; i < n; i++) {
+    const bx = r(), by = r(), s = 0.8 + r() * 2.2, ph = r() * TAU, sp = 0.5 + r();
+    const x = x0 + K.mod(bx * (x1 - x0) + t * vx * sp + Math.sin(t * 0.6 + ph) * 14, x1 - x0);
+    const y = y0 + K.mod(by * (y1 - y0) + Math.sin(t * 0.45 + ph * 2) * 18 - t * 3 * sp, y1 - y0);
+    c.fillStyle = K.rgba(col, alpha * (0.5 + 0.5 * Math.sin(t * 1.4 + ph)));
+    c.beginPath(); c.arc(x, y, s, 0, TAU); c.fill();
+  }
+  c.restore();
+};
+// A flock far off: small flapping strokes drifting across.
+K.birds = (c, t, seed, n, x0, y0, spread, vx, s, col, alpha = 1) => {
+  if (alpha <= 0.01) return;
+  const r = K.rng(seed);
+  c.save();
+  c.strokeStyle = K.rgba(col, alpha); c.lineCap = 'round'; c.lineJoin = 'round';
+  for (let i = 0; i < n; i++) {
+    const ox = (r() - 0.5) * spread, oy = (r() - 0.5) * spread * 0.35, ph = r() * TAU, sz = s * (0.7 + r() * 0.5);
+    const x = K.mod(x0 + ox + vx * t + 300, W + 700) - 350, y = y0 + oy + Math.sin(t * 0.9 + ph) * 6;
+    const f = Math.sin(t * 9 + ph) * 0.8;
+    c.lineWidth = Math.max(1.2, sz * 0.18);
+    c.beginPath();
+    c.moveTo(x - sz, y - f * sz * 0.6); c.quadraticCurveTo(x - sz * 0.45, y - sz * 0.35 - f * sz * 0.2, x, y);
+    c.quadraticCurveTo(x + sz * 0.45, y - sz * 0.35 - f * sz * 0.2, x + sz, y - f * sz * 0.6);
+    c.stroke();
+  }
+  c.restore();
+};
+// Grass blades along a ground line, swaying in a wind that travels sideways.
+K.grass = (c, seed, x0, x1, y, h, col, t, wind = 1, density = 0.35) => {
+  const r = K.rng(seed);
+  c.fillStyle = col;
+  c.beginPath();
+  for (let x = x0; x < x1; x += 1 / density) {
+    const hh = h * (0.5 + r() * 0.7), xx = x + r() * 4;
+    const b = (Math.sin(t * 1.7 - xx * 0.012) * 0.5 + 0.5) * wind * hh * 0.45 + r() * 3;
+    c.moveTo(xx - 1.6, y); c.quadraticCurveTo(xx + b * 0.3, y - hh * 0.6, xx + b, y - hh); c.quadraticCurveTo(xx + b * 0.3 + 1, y - hh * 0.55, xx + 1.6, y);
+  }
+  c.fill();
+};
+// Spray / splash droplets thrown up from a line and falling back.
+K.spray = (c, t, seed, n, x0, x1, y, hMax, col, alpha) => {
+  if (alpha <= 0.01) return;
+  const r = K.rng(seed);
+  c.save();
+  for (let i = 0; i < n; i++) {
+    const bx = x0 + r() * (x1 - x0), ph = r(), vx = (r() - 0.5) * 60, h = hMax * (0.4 + r() * 0.6), per = 0.9 + r() * 0.8;
+    const q = K.fract(t / per + ph);
+    const x = bx + vx * q, yy = y - 4 * h * q * (1 - q);
+    c.fillStyle = K.rgba(col, alpha * (1 - q * 0.6));
+    c.beginPath(); c.arc(x, yy, 1.6 + r() * 2.4, 0, TAU); c.fill();
+  }
+  c.restore();
+};
+// Nuh's presence (peace be upon him): ONLY a soft warm light, never a figure
+// (docs/kids_stories_brief.md rule 1). Breathes slowly; sparkles orbit it.
+K.presence = (c, x, y, r, t, alpha = 1) => {
+  if (alpha <= 0.01) return;
+  c.save();
+  c.globalCompositeOperation = 'lighter';
+  const b = 1 + 0.06 * Math.sin(t * 1.6) + 0.03 * Math.sin(t * 2.9);
+  K.glow(c, x, y, r * 2.6 * b, '#FFB65C', 0.22 * alpha);
+  K.glow(c, x, y, r * 1.3 * b, '#FFD58A', 0.42 * alpha);
+  K.glow(c, x, y, r * 0.5 * b, '#FFF4D2', 0.75 * alpha);
+  const rr = K.rng(7110);
+  for (let i = 0; i < 9; i++) {
+    const a = rr() * TAU + t * (0.3 + rr() * 0.4), d = r * (0.6 + rr() * 0.9), ph = rr() * TAU;
+    const px = x + Math.cos(a) * d, py = y + Math.sin(a) * d * 0.7 - K.fract(t * 0.15 + ph) * r * 0.6;
+    c.fillStyle = K.rgba('#FFF1C9', alpha * 0.7 * (0.5 + 0.5 * Math.sin(t * 2.2 + ph)));
+    c.beginPath(); c.arc(px, py, 1.6 + rr() * 1.6, 0, TAU); c.fill();
+  }
+  c.restore();
+};
+// A puff of dust (k: 0 -> 1 over its life).
+K.puff = (c, x, y, k, s = 1, col = '#E8D3B0') => {
+  if (k <= 0 || k >= 1) return;
+  const r = K.rng(Math.round(x * 7 + y * 13));
+  c.save();
+  for (let i = 0; i < 7; i++) {
+    const a = -Math.PI + r() * Math.PI, d = (6 + r() * 16) * s * K.easeOut(k);
+    c.fillStyle = K.rgba(col, 0.75 * (1 - k));
+    c.beginPath(); c.arc(x + Math.cos(a) * d, y + Math.sin(a) * d * 0.6, (2 + r() * 3) * s * (0.6 + k), 0, TAU); c.fill();
+  }
+  c.restore();
+};
+
+// An ordinary person, flat kids style (allowed by brief rule 1 as updated
+// 2026-09-30): a plain head with NO eyes, mouth or features, a head cloth, a
+// robe and simple arms. Never used for a prophet or a companion.
+// o: { phase (walk), walk 0..1, point 0..1 (arm raised toward +x), shake 0..1
+//      (shoulders bobbing - laughing body language), robe, cloth, skin, dir }
+K.person = (c, x, gy, s, o = {}) => {
+  const ph = o.phase || 0, walk = o.walk ?? 0, dir = o.dir || 1;
+  const robe = o.robe || '#8C6A52', cloth = o.cloth || '#E9DCC4', skin = o.skin || '#C99872';
+  const shake = (o.shake || 0) * Math.abs(Math.sin(ph * 2.6)) * 3;
+  c.save();
+  c.translate(x, gy - Math.abs(Math.sin(ph)) * 2.2 * walk * s);
+  c.scale(s * dir, s);
+  // legs / feet under the robe
+  c.fillStyle = K.mix(robe, '#2A1C14', 0.55);
+  for (const k of [0, 1]) {
+    const sw = Math.sin(ph + k * Math.PI) * 7 * walk;
+    c.beginPath(); c.ellipse(-4 + k * 8 + sw, -3, 6, 3.5, 0, 0, TAU); c.fill();
+  }
+  // robe
+  c.fillStyle = robe;
+  c.beginPath(); c.moveTo(-15, -4); c.quadraticCurveTo(-13, -40, -9, -62 - shake); c.lineTo(9, -62 - shake); c.quadraticCurveTo(13, -40, 15, -4); c.closePath(); c.fill();
+  c.fillStyle = K.rgba('#000000', 0.12); c.beginPath(); c.moveTo(3, -62 - shake); c.lineTo(9, -62 - shake); c.quadraticCurveTo(13, -40, 15, -4); c.lineTo(4, -4); c.closePath(); c.fill();
+  // back arm
+  c.strokeStyle = K.mix(robe, '#2A1C14', 0.25); c.lineWidth = 6; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(-5, -56 - shake); c.lineTo(-9 - Math.sin(ph) * 5 * walk, -34 - shake); c.stroke();
+  // head: plain, featureless
+  c.fillStyle = skin; c.beginPath(); c.arc(0, -72 - shake, 9, 0, TAU); c.fill();
+  // head cloth
+  c.fillStyle = cloth;
+  c.beginPath(); c.arc(0, -74 - shake, 10, Math.PI * 1.02, TAU * 0.99); c.lineTo(10, -66 - shake); c.quadraticCurveTo(-4, -68 - shake, -11, -58 - shake); c.lineTo(-10, -74 - shake); c.fill();
+  // front arm: hangs and swings, or rises to point
+  const pt = K.easeInOut(o.point || 0);
+  const ang = K.lerp(1.45 + Math.sin(ph + Math.PI) * 0.35 * walk, -0.35 + Math.sin(ph * 2.6) * 0.05 * (o.shake || 0), pt);
+  c.strokeStyle = robe; c.lineWidth = 6;
+  c.beginPath(); c.moveTo(4, -56 - shake); c.lineTo(4 + Math.cos(ang) * 22, -56 - shake + Math.sin(ang) * 22); c.stroke();
+  c.fillStyle = skin; c.beginPath(); c.arc(4 + Math.cos(ang) * 24, -56 - shake + Math.sin(ang) * 24, 3.2, 0, TAU); c.fill();
   c.restore();
 };
 

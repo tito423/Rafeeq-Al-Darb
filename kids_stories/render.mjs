@@ -27,6 +27,14 @@ const storyDir = path.join(HERE, story);
 const outFile = outIdx >= 0 ? path.resolve(args[outIdx + 1]) : path.join(storyDir, 'preview.mp4');
 
 const timing = JSON.parse(fs.readFileSync(path.join(storyDir, 'timing.json'), 'utf8'));
+const wordsFile = path.join(storyDir, 'words.json');
+const words = fs.existsSync(wordsFile) ? JSON.parse(fs.readFileSync(wordsFile, 'utf8')) : null;
+// --at 3.2,40.5 : stills at these global seconds (for checking a beat)
+const atIdx = args.indexOf('--at');
+const atList = atIdx >= 0 ? args[atIdx + 1].split(',').map(Number) : null;
+// --audio file : mux this narration into the MP4 (AAC)
+const audIdx = args.indexOf('--audio');
+const audio = audIdx >= 0 ? path.resolve(args[audIdx + 1]) : null;
 
 function findExe(envName, candidates) {
   if (process.env[envName]) return process.env[envName];
@@ -105,10 +113,19 @@ try {
   for (let i = 0; i < 200; i++) { if (await cdp.eval('window.__engineReady === true').catch(() => false)) break; await sleep(50); }
   const nScenes = await cdp.eval(`loadStory(${JSON.stringify(story)})`);
   const total = await cdp.eval(`init(${JSON.stringify(timing)})`);
+  if (words) console.log('word beats:', await cdp.eval(`setWords(${JSON.stringify(words)})`));
   const frames = Math.round(total * FPS);
   console.log(`${story}: ${nScenes} scenes, ${total.toFixed(2)} s, ${frames} frames`);
 
-  if (stills) {
+  if (atList) {
+    const dir = path.join(storyDir, 'out', 'at');
+    fs.mkdirSync(dir, { recursive: true });
+    for (const g of atList) {
+      const url = await cdp.eval(`renderAt(${g})`);
+      fs.writeFileSync(path.join(dir, `t${g.toFixed(2).padStart(6, '0')}.png`), Buffer.from(url.split(',')[1], 'base64'));
+    }
+    console.log('stills in', dir);
+  } else if (stills) {
     const dir = path.join(storyDir, 'out', 'stills');
     fs.mkdirSync(dir, { recursive: true });
     let start = 0;
@@ -124,11 +141,12 @@ try {
     fs.mkdirSync(path.dirname(outFile), { recursive: true });
     const ff = spawn(ffmpegPath, [
       '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'png', '-i', '-',
+      ...(audio ? ['-i', audio, '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '160k', '-shortest'] : []),
       '-vf', 'scale=out_color_matrix=bt709:out_range=tv,format=yuv420p',
       '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-profile:v', 'high', '-tune', 'animation',
       '-x264-params', 'colorprim=bt709:transfer=bt709:colormatrix=bt709',
       '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv',
-      '-r', String(FPS), '-an', '-movflags', '+faststart', outFile,
+      '-r', String(FPS), ...(audio ? [] : ['-an']), '-movflags', '+faststart', outFile,
     ], { stdio: ['pipe', 'inherit', 'inherit'] });
     const ffDone = new Promise((res, rej) => ff.on('close', (code) => (code === 0 ? res() : rej(new Error('ffmpeg exit ' + code)))));
     for (let f = 0; f < frames; f++) {
