@@ -18,3 +18,4 @@ copy `kids_stories/<id>/` and `estimate_timing.py` into the pipeline worktree.
 | Story | Scenes | Stills checked |
 |---|---|---|
 | ayyub | 12 | yes |
+| zakariya | 15 | yes - Yahya's mother not drawn (lit home instead), the Torah a blank scroll |
