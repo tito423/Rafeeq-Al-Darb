@@ -58,15 +58,26 @@ const dog = (c, x, y, s, t, light = 1) => {
   c.restore();
 };
 // sleepers: featureless figures lying in a row in shade; side = 1 / -1 (turned)
+// The count must not be readable (18:22): figures overlap, and those at both
+// ends fade into the cave's darkness, so the eye cannot tell where the row ends.
+const veil = (c, light = 1) => {
+  const dark = K.tone('#2E261F', light);
+  const g = c.createLinearGradient(0, 0, W, 0);
+  g.addColorStop(0, K.rgba(dark, 1)); g.addColorStop(0.3, K.rgba(dark, 1)); g.addColorStop(0.44, K.rgba(dark, 0));
+  g.addColorStop(0.56, K.rgba(dark, 0)); g.addColorStop(0.7, K.rgba(dark, 1)); g.addColorStop(1, K.rgba(dark, 1));
+  c.fillStyle = g; c.fillRect(-420, 600, W + 840, 300);
+  c.fillStyle = dark; c.fillRect(-420, 600, 420, 300); c.fillRect(W, 600, 420, 300);
+};
 const sleepers = (c, t, side, light = 1, a = 1) => {
   c.save(); c.globalAlpha *= a;
   K.glow(c, 640, 690, 330, '#120E0A', 0.45);
-  const xs = [380, 500, 620, 740, 870];
-  xs.forEach((x, i) => {
-    c.save(); c.translate(x, 690 - (i % 2) * 10); c.rotate(side * Math.PI / 2 * 0.98); c.globalAlpha *= 0.8 - (i % 3) * 0.1;
-    K.person(c, 0, 0, 1.05, { robe: K.tone(KIT.ROBES[i], light * 0.7), cloth: K.tone(KIT.CLOTH[i % 4], light * 0.7), dir: 1 });
+  for (let i = 0; i < 8; i++) {
+    const x = 300 + i * 92;
+    c.save(); c.translate(x, 690 - (i % 2) * 12); c.rotate(side * Math.PI / 2 * 0.98); c.globalAlpha *= 0.8 - (i % 3) * 0.1;
+    K.person(c, 0, 0, 1.05, { robe: K.tone(KIT.ROBES[i % 7], light * 0.7), cloth: K.tone(KIT.CLOTH[i % 4], light * 0.7), dir: 1 });
     c.restore();
-  });
+  }
+  veil(c, light);
   c.restore();
 };
 const S = [];
@@ -156,14 +167,14 @@ S.push({ // 12 Allah woke them unchanged: how long did we stay? A day or part of
   K.par(c, 1, () => {
     const up = A(t, 0.4, 1.4);
     sleepers(c, t, 1, 0.7, 1 - up);
-    c.save(); c.globalAlpha *= up; KIT.crowd(c, 6108, 5, 420, 860, 680, 1.0, t, { face: 1, point: A(t, sa, 0.6) * 0.5 }); c.restore();
+    c.save(); c.globalAlpha *= up; KIT.crowd(c, 6108, 8, 300, 980, 680, 1.0, t, { face: 1, point: A(t, sa, 0.6) * 0.5 }); veil(c, 0.75); c.restore();
   });
   K.par(c, 0.5, () => K.dust(c, t, 6109, 30, '#FFF0D0', 0.4, 420, 860, 200, 560, 1));
 } });
 S.push({ // 13 others said: your Lord knows best how long you slept
   cam: (p) => [K.lerp(1.1, 1.0, E(p)), 640, 440, 0], draw(c, t, d) {
   inside(c, t, 0.75, { sky: 1 });
-  K.par(c, 1, () => { KIT.crowd(c, 6108, 5, 420, 860, 680, 1.0, t, { face: 1 }); K.rays(c, 640, 140, 6, 520, Math.PI * 0.35, Math.PI * 0.65, '#FFF6DA', 0.1, t); });
+  K.par(c, 1, () => { KIT.crowd(c, 6108, 8, 300, 980, 680, 1.0, t, { face: 1 }); veil(c, 0.75); K.rays(c, 640, 140, 6, 520, Math.PI * 0.35, Math.PI * 0.65, '#FFF6DA', 0.1, t); });
 } });
 S.push({ // 14 one went with their silver coins to the city, quietly, to buy pure food
   cam: (p) => [K.lerp(1.0, 1.15, E(p)), K.lerp(560, 760, E(p)), 440, 0], draw(c, t, d) {
