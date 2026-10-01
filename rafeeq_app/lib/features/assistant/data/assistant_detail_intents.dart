@@ -70,6 +70,16 @@ class OpenAyahReciterIntent extends AssistantIntent {
   String toString() => 'ayah reciter $reciterId';
 }
 
+/// «شغل الآية بصوت المنشاوي» - no surah named: the ayah open in the Quran
+/// tab (else the last page read) in that reciter's voice; while a
+/// recitation is going on, the same ayah goes on in the new voice.
+class PlayCurrentAyahIntent extends AssistantIntent {
+  const PlayCurrentAyahIntent(this.reciterId);
+  final String reciterId;
+  @override
+  String toString() => 'play current ayah by $reciterId';
+}
+
 class OpenWholeSurahReciterIntent extends AssistantIntent {
   const OpenWholeSurahReciterIntent(this.reciterId);
   final int reciterId;

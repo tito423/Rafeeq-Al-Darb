@@ -596,7 +596,12 @@ class AssistantParser {
         playing: playing, memorizing: memorizing, sunan: openingSunan);
     if (ayahRef != null) return ayahRef;
     // «شغل سورة الكهف بصوت المنشاوي» / "play surah Kahf by Alafasy"
-    final surah = _surahIn(words, requireWord: !(playing || memorizing));
+    // A reciter's own name never names a surah: «الشيخ محمد المنشاوي» played
+    // سورة محمد (owner, 2026-10-02). His name's words are left out of the
+    // surah search unless «سورة» stands right before one of them.
+    final named = _reciterIn(clean);
+    final surah = _surahIn(named == null ? words : _withoutReciterName(words, named),
+        requireWord: !(playing || memorizing));
     if (surah != null) {
       if (openingSunan) {
         return catalog.sunanSurahIds.contains(surah)
@@ -626,6 +631,13 @@ class AssistantParser {
       final reciterId = _wholeSurahReciterIn(clean);
       if (reciterId != null) return OpenWholeSurahReciterIntent(reciterId);
       return const OpenScreenIntent(AssistantScreen.recitationPlayer);
+    }
+    // «شغل الآية بصوت المنشاوي» / «اقرأ الآية بصوت الحصري»: a reciter and a
+    // play word (or «بصوت») with no surah - the open ayah in his voice. On
+    // the owner's phone this fell through to the books-reader voice setting.
+    if (named != null &&
+        (playing || words.any((w) => bare(w) == 'بصوت' || _ayahWords.contains(bare(w))))) {
+      return PlayCurrentAyahIntent(named);
     }
     return _matchDestination(
       heard: heard,
@@ -688,6 +700,22 @@ class AssistantParser {
 
   /// A reciter named after «بصوت / للشيخ / الشيخ / القارئ / لل…» or
   /// anywhere: the one whose name shares the most words with the sentence.
+  List<String> _withoutReciterName(List<String> words, String reciterId) {
+    final r = catalog.reciters.where((r) => r.id == reciterId).firstOrNull;
+    if (r == null) return words;
+    final nameWords = {
+      for (final n in r.names) ...norm(n).split(' ').map(bare).where((w) => w.length > 1),
+    };
+    final out = <String>[];
+    for (var i = 0; i < words.length; i++) {
+      final w = bare(words[i]);
+      final afterSurahWord = i > 0 && const {'سوره', 'صوره', 'سورة'}.contains(bare(words[i - 1]));
+      if (nameWords.contains(w) && !afterSurahWord) continue;
+      out.add(words[i]);
+    }
+    return out;
+  }
+
   String? _reciterIn(String clean) {
     final said = clean.split(' ').map(bare).toSet();
     String? best;

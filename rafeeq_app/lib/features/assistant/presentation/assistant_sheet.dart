@@ -56,6 +56,7 @@ import '../../library/presentation/screens/hadith_chapter_screen.dart';
 import '../../library/presentation/screens/hadith_detail_screen.dart';
 import '../../onboarding/presentation/screens/onboarding_screen.dart';
 import '../../quran/data/quran_jump_provider.dart';
+import '../../quran/data/quran_last_read.dart';
 import '../../quran/presentation/screens/sciences_pack_screen.dart';
 import '../../quran_audio/data/mp3quran_api.dart';
 import '../../quran_audio/presentation/ayah_download_screen.dart';
@@ -394,6 +395,30 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
         from: first,
         repo: repo,
         edition: reciterId ?? ref.read(selectedReciterProvider),
+        wholeMushaf: false,
+      );
+    case PlayCurrentAyahIntent(:final reciterId):
+      await ref.read(selectedReciterProvider.notifier).select(reciterId);
+      final audio = AyahAudioService.instance;
+      // already reciting: the same ayah goes on in the new voice
+      if (audio.isPlaying) {
+        await audio.switchReciter(reciterId);
+        return;
+      }
+      final repo = await ref.read(quranRepositoryProvider.future);
+      final opened = ref.read(quranOpenedAyahProvider);
+      var from = opened == null ? null : await repo.ayah(opened.surah, opened.ayah);
+      if (from == null) {
+        final page = ref.read(quranLastPageProvider) ?? 1;
+        from = (await repo.ayahsOfPage(page)).firstOrNull;
+      }
+      if (from == null) return;
+      ref.read(quranJumpRequestProvider.notifier).state = from.pageNumber;
+      tab(AppTab.quran);
+      await audio.startContinuous(
+        from: from,
+        repo: repo,
+        edition: reciterId,
         wholeMushaf: false,
       );
     case MemorizeSurahIntent(:final surah):
