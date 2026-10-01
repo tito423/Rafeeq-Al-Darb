@@ -2413,7 +2413,13 @@
     "story_sabt": "Les gens du sabbat",
     "story_ihya": "La vie après la mort, par la permission d'Allah",
     "story_hudhud": "Soulayman (Salomon) et la huppe",
-    "story_adam": "Adam"
+    "story_adam": "Adam",
+    "story_isa": "Issa (Jésus) et sa mère Maryam",
+    "story_dhulqarnayn": "Dhoul-Qarnayn et la muraille",
+    "story_jannatayn": "Le propriétaire des deux jardins",
+    "story_dawud": "Dawoud (David) et Jalout (Goliath)",
+    "story_dhabih": "Ibrahim, Ismaël et la rançon",
+    "story_khidr": "Moussa (Moïse) et al-Khidr"
   },
   "journey": {
     "how_title": "Comment gagner des points",

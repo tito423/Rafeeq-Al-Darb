@@ -607,6 +607,23 @@ owner's decision 2026-09-23.** Every other reciter is still streamed from its
 origin exactly as described above. Uploaded by
 `scripts/r2_mirror_recitations.py`.
 
+#### Changed 2026-10-02 — every recitation set is being copied to GitHub (R7)
+
+Owner, 2026-10-02: «مش هنقدر نعتمد على سيرفيرات التحميل الخارجية», and,
+offered a small R2 bill or GitHub for free, «GitHub بس، ببلاش». So every
+set the app offers — the 35 everyayah ayah-by-ayah folders and the 287
+mp3quran whole-surah moshafs — is copied by
+`scripts/github_mirror_recitations.py` to the public repository
+`tito423/rafeeq-recitations` (one release per moshaf, `surah-<id>`; seven per
+ayah folder, `ayah-<folder>-p<N>`). Same footing as the five above:
+**`REHOSTED_NO_LICENCE_STATED`, owner's decision**; bytes unchanged, every
+file's size compared with what the origin served, and a set is used by the
+app only once `config/recitation_mirrors.json` lists it as complete. The
+origins stay credited on the Sources screen and stay behind the copy as the
+fallback. Measured on 2026-10-02: 57.7 GB of ayah sets and 409.9 GB of
+whole surahs; upload ran at 6.66 MB/s from the owner's PC, about five minutes
+per moshaf.
+
 **The one exception, stated so it is not mistaken for the rule:** the ruqyah
 recordings under `ruqyah/` on the bucket **are** rehosted, and sit under the
 same argument as the mushaf scans rather than this one.

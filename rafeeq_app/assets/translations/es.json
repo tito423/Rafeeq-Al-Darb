@@ -2413,7 +2413,13 @@
     "story_sabt": "La gente del sábado",
     "story_ihya": "La vida tras la muerte, con el permiso de Allah",
     "story_hudhud": "Sulaymán (Salomón) y la abubilla",
-    "story_adam": "Adán"
+    "story_adam": "Adán",
+    "story_isa": "Isa (Jesús) y su madre Maryam",
+    "story_dhulqarnayn": "Dhul-Qarnain y la muralla",
+    "story_jannatayn": "El dueño de los dos jardines",
+    "story_dawud": "Dawud (David) y Yalut (Goliat)",
+    "story_dhabih": "Ibrahim, Ismael y el rescate",
+    "story_khidr": "Musa (Moisés) y al-Jidr"
   },
   "journey": {
     "how_title": "Cómo se ganan los puntos",

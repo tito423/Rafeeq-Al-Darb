@@ -2413,7 +2413,13 @@
     "story_sabt": "The People of the Sabbath",
     "story_ihya": "Bringing the Dead to Life, by Allah's Leave",
     "story_hudhud": "Sulayman (Solomon) and the Hoopoe",
-    "story_adam": "Adam"
+    "story_adam": "Adam",
+    "story_isa": "Isa (Jesus) and His Mother Maryam",
+    "story_dhulqarnayn": "Dhul-Qarnayn and the Wall",
+    "story_jannatayn": "The Owner of the Two Gardens",
+    "story_dawud": "Dawud (David) and Jalut (Goliath)",
+    "story_dhabih": "Ibrahim, Ismail and the Ransom",
+    "story_khidr": "Musa (Moses) and al-Khidr"
   },
   "journey": {
     "how_title": "How points are earned",

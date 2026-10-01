@@ -82,6 +82,20 @@ STORIES = [
      {8: (27, 30, f'{VOICE}/hudhud/rec.wav', 0.6, False)}, None),
     ('adam', 'prophets', 'adam', 'adam/out/adam_v1.mp4', lambda: tsv_lines('adam'),
      {12: (7, 23, f'{VOICE}/adam/rec.wav', 0.6, False)}, None),
+    # 2026-10-02 (R4): gemini-3.8-flash-tts on the owner's Gemini subscription, 4 lines a
+    # request (khidr 10-13 one a request: no pause between them); word audit clean.
+    ('isa', 'prophets', 'isa', 'isa/out/isa_v1.mp4', lambda: tsv_lines('isa'),
+     {11: (19, 30, f'{VOICE}/isa/rec.wav', 0.6, False)}, None),
+    ('dhulqarnayn', 'righteous', 'dhulqarnayn', 'dhulqarnayn/out/dhulqarnayn_v1.mp4', lambda: tsv_lines('dhulqarnayn'),
+     {13: (18, 98, f'{VOICE}/dhulqarnayn/rec.wav', 0.6, False)}, None),
+    ('jannatayn', 'quran', 'jannatayn', 'jannatayn/out/jannatayn_v1.mp4', lambda: tsv_lines('jannatayn'),
+     {10: (18, 39, f'{VOICE}/jannatayn/rec.wav', 0.6, False)}, None),
+    ('dawud', 'prophets', 'dawud', 'dawud/out/dawud_v1.mp4', lambda: tsv_lines('dawud'),
+     {9: (2, 250, f'{VOICE}/dawud/rec.wav', 0.6, False)}, None),
+    ('dhabih', 'prophets', 'dhabih', 'dhabih/out/dhabih_v1.mp4', lambda: tsv_lines('dhabih'),
+     {9: (37, 107, f'{VOICE}/dhabih/rec.wav', 0.6, False)}, None),
+    ('khidr', 'prophets', 'khidr', 'khidr/out/khidr_v1.mp4', lambda: tsv_lines('khidr'),
+     {8: (18, 69, f'{VOICE}/khidr/rec.wav', 0.6, False)}, None),
 ]
 STORIES = [e for e in STORIES if os.path.exists(os.path.join(WT, e[3]))]   # only rendered stories
 

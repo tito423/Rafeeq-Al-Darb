@@ -2514,9 +2514,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 03:47 — IN PROGRESS — resume here**
+**2026-10-02 03:56 — IN PROGRESS — resume here**
 
-R7: own recitation copy on GitHub (script + RecitationMirrors manifest, copy first, origin behind); R4 voiced + word-audited
+R4: six stories mixed and in the catalogue script, titles x7 + Rafeeq phrases; renders running; R7 recorded in CONTENT-LICENSES
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
