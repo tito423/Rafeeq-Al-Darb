@@ -26,6 +26,21 @@ import '../data/kids_stories.dart';
 /// Captions are the narrator's exact words; during a recitation the ayah is
 /// shown from the app's own mushaf text (AmiriQuran), never from the
 /// catalogue.
+
+/// The offline copy of [s], or null. A copy whose size is not the catalogue's
+/// is a previous version of the video (the hosted file was re-rendered, e.g.
+/// re-voiced lines): it would play the old narration under the new captions,
+/// so it is deleted and the story streams until it is downloaded again.
+Future<String?> storyOfflinePath(KidsStory s) async {
+  final p = await DownloadManager.instance.registeredPath(s.downloadId);
+  if (p == null || !File(p).existsSync()) return null;
+  if (File(p).lengthSync() != s.bytes) {
+    await DownloadManager.instance.remove(s.downloadId);
+    return null;
+  }
+  return p;
+}
+
 class KidsStoryPlayerScreen extends ConsumerStatefulWidget {
   final KidsStory story;
   const KidsStoryPlayerScreen({super.key, required this.story});
@@ -57,9 +72,9 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   }
 
   Future<void> _start() async {
-    final local = await DownloadManager.instance.registeredPath(story.downloadId);
+    final local = await storyOfflinePath(story);
     _sources = [
-      if (local != null && File(local).existsSync()) 'file://$local',
+      if (local != null) 'file://$local',
       ...ContentMirrors.of(story.videoUrl),
     ];
     await _open(Duration.zero);
@@ -497,8 +512,8 @@ class _DownloadRowState extends State<_DownloadRow> {
   }
 
   Future<void> _refresh() async {
-    final p = await DownloadManager.instance.registeredPath(widget.story.downloadId);
-    if (mounted) setState(() => _path = p != null && File(p).existsSync() ? p : null);
+    final p = await storyOfflinePath(widget.story);
+    if (mounted) setState(() => _path = p);
   }
 
   @override
