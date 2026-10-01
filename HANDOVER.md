@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 14:51 — IN PROGRESS — resume here**
+**2026-10-01 15:18 — IN PROGRESS — resume here**
 
-4 more prophet stories voiced and timed (Musa, Sulayman, Salih, Hud); visuals next
+Four new story videos rendered and sent; upload/mirror/emulator next
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

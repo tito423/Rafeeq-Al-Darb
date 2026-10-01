@@ -975,6 +975,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-01 15:18 - Four new story videos rendered and sent; upload/mirror/emulator next
 - 2026-10-01 14:51 - 4 more prophet stories voiced and timed (Musa, Sulayman, Salih, Hud); visuals next
 - 2026-10-01 14:28 - Stories section verified on emulator and committed; next: more stories (narrations now, voices after the Gemini reset)
 - 2026-10-01 13:34 - Yunus video sent; Ibrahim story built (narration, voice, visuals), render running; Gemini daily quota used
