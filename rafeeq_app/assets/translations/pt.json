@@ -1222,7 +1222,8 @@
     "f_hajj_desc": "Passo a passo, com diagramas interativos e as quatro escolas",
     "src_kids_muyassar": "O sentido de cada frase das histórias infantis vem de al-Tafsir al-Muyassar",
     "src_kids_minshawi": "Os versículos recitados nas histórias infantis, pelo xeique Muhammad Siddiq al-Minshawi (murattal)",
-    "src_kids_tts": "A voz do narrador das histórias infantis (uma voz gerada por IA)"
+    "src_kids_tts": "A voz do narrador das histórias infantis (uma voz gerada por IA)",
+    "src_kids_more": "Alguns detalhes vêm dos tafsir de Ibn Kathir e al-Tabari (Hud) e do hadith de Ibn Abbas no Sahih al-Bukhari citado por Ibn Kathir (a Caaba e Zamzam), como aparecem na biblioteca do app"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -2323,7 +2324,7 @@
   },
   "kids": {
     "title": "Cantinho infantil",
-    "card_sub": "Histórias dos profetas com som e imagem, um caminho de memorização por idade, adhkar diários e «Complete o versículo»",
+    "card_sub": "Histórias dos profetas e dos justos com som e imagem, um caminho de memorização por idade, adhkar diários e «Complete o versículo»",
     "hello": "Olá, campeão!",
     "hello_sub": "Aprenda, memorize e jogue",
     "game": "Complete o versículo",
@@ -2361,7 +2362,7 @@
     "stage_ahl": "Gente do Alcorão",
     "stage_ahl_ages": "17 anos ou mais · de an-Nisáʾ a al-Baqarah — o Alcorão inteiro",
     "stories": "Histórias",
-    "stories_sub": "Histórias dos profetas com som e imagem, a partir dos versículos do Alcorão",
+    "stories_sub": "Histórias dos profetas, dos justos e do Alcorão, com som e imagem",
     "stories_intro": "Histórias desenhadas e narradas para crianças. Cada frase vem dos versículos do Alcorão e do seu sentido em al-Tafsir al-Muyassar, e os versículos são recitados pelo xeique Muhammad Siddiq al-Minshawi. Nenhum profeta é desenhado; uma luz suave representa a sua presença.",
     "story_cat_prophets": "Histórias dos profetas",
     "story_cat_righteous": "Histórias dos justos",

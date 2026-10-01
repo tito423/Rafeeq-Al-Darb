@@ -1222,7 +1222,8 @@
     "f_hajj_desc": "Étape par étape, avec schémas interactifs et les quatre écoles",
     "src_kids_muyassar": "Le sens de chaque phrase des histoires pour enfants est tiré d'al-Tafsir al-Muyassar",
     "src_kids_minshawi": "Les versets récités dans les histoires pour enfants, par le cheikh Muhammad Siddiq al-Minshawi (murattal)",
-    "src_kids_tts": "La voix du narrateur des histoires pour enfants (une voix générée par IA)"
+    "src_kids_tts": "La voix du narrateur des histoires pour enfants (une voix générée par IA)",
+    "src_kids_more": "Certains détails viennent des tafsirs d'Ibn Kathir et d'al-Tabari (Houd) et du hadith d'Ibn Abbas dans Sahih al-Boukhari tel que cité par Ibn Kathir (la Kaaba et Zamzam), tels qu'ils figurent dans la bibliothèque de l'application"
   },
   "ruqyah": {
     "title": "Roqya",
@@ -2323,7 +2324,7 @@
   },
   "kids": {
     "title": "Coin des enfants",
-    "card_sub": "Histoires des prophètes en son et en image, un parcours de mémorisation par âge, adhkâr quotidiens et « Complète le verset »",
+    "card_sub": "Histoires des prophètes et des pieux en son et en image, un parcours de mémorisation par âge, adhkâr quotidiens et « Complète le verset »",
     "hello": "Salut, champion !",
     "hello_sub": "Apprends, mémorise et joue",
     "game": "Complète le verset",
@@ -2361,7 +2362,7 @@
     "stage_ahl": "Gens du Coran",
     "stage_ahl_ages": "17 ans et plus · d’an-Nisâʾ à al-Baqara — le Coran entier",
     "stories": "Histoires",
-    "stories_sub": "Histoires des prophètes en son et en image, tirées des versets du Coran",
+    "stories_sub": "Histoires des prophètes, des pieux et du Coran, en son et en image",
     "stories_intro": "Des histoires dessinées et racontées pour les enfants. Chaque phrase vient des versets du Coran et de leur sens dans al-Tafsir al-Muyassar, et les versets sont récités par le cheikh Muhammad Siddiq al-Minshawi. Aucun prophète n'est jamais dessiné ; une douce lumière figure sa présence.",
     "story_cat_prophets": "Histoires des prophètes",
     "story_cat_righteous": "Histoires des pieux",

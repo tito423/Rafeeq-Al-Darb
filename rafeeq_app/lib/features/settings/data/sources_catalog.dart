@@ -210,6 +210,8 @@ final sourceGroups = <(String, List<SourceEntry>)>[
           'https://everyayah.com/data/Minshawy_Murattal_128kbps/', 'about.src_kids_minshawi'),
       const SourceEntry('Google Gemini TTS',
           'https://ai.google.dev/gemini-api/docs/speech-generation', 'about.src_kids_tts'),
+      const SourceEntry('تفسير ابن كثير، تفسير الطبري، صحيح البخاري',
+          'https://sunnah.com/bukhari', 'about.src_kids_more'),
     ]
   ),
   (

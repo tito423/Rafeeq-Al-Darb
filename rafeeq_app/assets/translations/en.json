@@ -1222,7 +1222,8 @@
     "f_hajj_desc": "Step by step, with interactive diagrams and the four schools",
     "src_kids_muyassar": "The meaning of every sentence in the kids' stories is taken from al-Tafsir al-Muyassar",
     "src_kids_minshawi": "The verses recited inside the kids' stories, by Sheikh Muhammad Siddiq al-Minshawi (murattal)",
-    "src_kids_tts": "The narrator's voice in the kids' stories (an AI-generated voice)"
+    "src_kids_tts": "The narrator's voice in the kids' stories (an AI-generated voice)",
+    "src_kids_more": "Some story details come from the tafsirs of Ibn Kathir and al-Tabari (Hud), and from Ibn Abbas's hadith in Sahih al-Bukhari as Ibn Kathir quotes it (the Kaaba and Zamzam), as their text appears in the app's library"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -2323,7 +2324,7 @@
   },
   "kids": {
     "title": "Kids' corner",
-    "card_sub": "Prophets’ stories in sound and pictures, a memorisation path by age, daily adhkar and “Complete the ayah”",
+    "card_sub": "Stories of the Prophets and the righteous in sound and pictures, a memorisation path by age, daily adhkar and “Complete the ayah”",
     "hello": "Hello, champion!",
     "hello_sub": "Learn, memorise and play",
     "game": "Complete the ayah",
@@ -2361,7 +2362,7 @@
     "stage_ahl": "People of the Qur’an",
     "stage_ahl_ages": "Ages 17+ · an-Nisāʾ back to al-Baqarah — the whole Qur’an",
     "stories": "Stories",
-    "stories_sub": "Prophets' stories in sound and pictures, from the verses of the Qur'an",
+    "stories_sub": "Stories of the Prophets, the righteous and from the Qur'an, in sound and pictures",
     "stories_intro": "Drawn, narrated stories for children. Every sentence comes from the verses of the Qur'an and their meaning in al-Tafsir al-Muyassar, and the verses are recited by Sheikh Muhammad Siddiq al-Minshawi. No prophet is ever drawn; a soft light stands for his presence.",
     "story_cat_prophets": "Stories of the Prophets",
     "story_cat_righteous": "Stories of the righteous",

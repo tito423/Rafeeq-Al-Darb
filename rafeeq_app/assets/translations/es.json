@@ -1222,7 +1222,8 @@
     "f_hajj_desc": "Paso a paso, con diagramas interactivos y las cuatro escuelas",
     "src_kids_muyassar": "El sentido de cada frase de las historias infantiles se toma de al-Tafsir al-Muyassar",
     "src_kids_minshawi": "Los versículos recitados en las historias infantiles, por el jeque Muhammad Siddiq al-Minshawi (murattal)",
-    "src_kids_tts": "La voz del narrador de las historias infantiles (una voz generada por IA)"
+    "src_kids_tts": "La voz del narrador de las historias infantiles (una voz generada por IA)",
+    "src_kids_more": "Algunos detalles proceden de los tafsir de Ibn Kazir y al-Tabari (Hud) y del hadiz de Ibn Abbas en Sahih al-Bujari citado por Ibn Kazir (la Kaaba y Zamzam), tal como aparecen en la biblioteca de la app"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -2323,7 +2324,7 @@
   },
   "kids": {
     "title": "Rincón infantil",
-    "card_sub": "Historias de los profetas con sonido e imagen, un camino de memorización por edades, adhkar diarios y «Completa la aleya»",
+    "card_sub": "Historias de los profetas y de los justos con sonido e imagen, un camino de memorización por edades, adhkar diarios y «Completa la aleya»",
     "hello": "¡Hola, campeón!",
     "hello_sub": "Aprende, memoriza y juega",
     "game": "Completa la aleya",
@@ -2361,7 +2362,7 @@
     "stage_ahl": "Gente del Corán",
     "stage_ahl_ages": "17 años o más · de an-Nisāʾ a al-Baqarah — el Corán completo",
     "stories": "Historias",
-    "stories_sub": "Historias de los profetas con sonido e imagen, a partir de los versículos del Corán",
+    "stories_sub": "Historias de los profetas, de los justos y del Corán, con sonido e imagen",
     "stories_intro": "Historias dibujadas y narradas para niños. Cada frase procede de los versículos del Corán y de su sentido en al-Tafsir al-Muyassar, y los versículos los recita el jeque Muhammad Siddiq al-Minshawi. Nunca se dibuja a ningún profeta; una luz suave representa su presencia.",
     "story_cat_prophets": "Historias de los profetas",
     "story_cat_righteous": "Historias de los justos",
