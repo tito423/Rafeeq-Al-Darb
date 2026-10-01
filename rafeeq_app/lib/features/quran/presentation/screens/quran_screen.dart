@@ -188,7 +188,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // In full screen the tap shows/hides the floating controls instead of
     // leaving the mode — the same gesture, deliberately; see MushafChrome.
     if (_pageFillScreen) {
-      _setChromeVisible(!_chromeVisible);
+      setState(() => _chromeVisible = !_chromeVisible);
       return;
     }
     _togglePageFillScreen();
@@ -284,7 +284,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (orientation == Orientation.landscape) {
-        if (_chromeVisible) _setChromeVisible(false); // start clean
+        if (_chromeVisible) setState(() => _chromeVisible = false); // start clean
         _fillBeforePortrait = _pageFillScreen;
         if (!_pageFillScreen) _setPageFillScreen(true, persist: false);
       } else {
@@ -298,13 +298,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   }
 
   void _togglePageFillScreen() => _setPageFillScreen(!_pageFillScreen);
-
-  /// The floating controls, mirrored to `quranChromeShownProvider` so the
-  /// shell shows its navigation bar with them.
-  void _setChromeVisible(bool v) {
-    setState(() => _chromeVisible = v);
-    ref.read(quranChromeShownProvider.notifier).state = v;
-  }
 
   void _setPageFillScreen(bool entering, {bool persist = true}) {
     if (entering == _pageFillScreen) return;
@@ -847,7 +840,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 if (_pageFillScreen)
                   MushafChrome(
                     visible: _chromeVisible || ref.watch(tutorialRunningProvider),
-                    onAutoHide: () => _setChromeVisible(false),
+                    onAutoHide: () => setState(() => _chromeVisible = false),
                     mt: resolveMushafTheme(ref.watch(mushafThemeProvider),
                         Theme.of(context).brightness),
                     surahName: (edition?.hafsPagination ?? true)

@@ -83,3 +83,26 @@ int? nearestSurah(List<Set<String>> keys, List<String> after) {
   }
   return tie ? null : best;
 }
+
+/// A reciter's name word as the recogniser writes it. Seen on
+/// emulator-5554 (2026-10-02): «بصوت الحصري» came back «الحصررى» - a
+/// doubled letter - and the command was unknown. So a repeated letter is
+/// collapsed, and a long word (6+ letters, family names) may be one edit
+/// off; short words («محمد» / «احمد») must match exactly.
+bool heardNameWord(String w, Set<String> said) {
+  if (said.contains(w)) return true;
+  final cw = _collapseRepeats(w);
+  for (final s in said) {
+    if (_collapseRepeats(s) == cw) return true;
+    if (w.length >= 6 && s.length >= 5 && editDistance(w, s, 1) <= 1) return true;
+  }
+  return false;
+}
+
+String _collapseRepeats(String w) {
+  final b = StringBuffer();
+  for (var i = 0; i < w.length; i++) {
+    if (i == 0 || w[i] != w[i - 1]) b.write(w[i]);
+  }
+  return b.toString();
+}

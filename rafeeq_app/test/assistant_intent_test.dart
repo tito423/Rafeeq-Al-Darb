@@ -264,6 +264,8 @@ void main() {
     expect(of('شغل الآية بصوت الشيخ محمد المنشاوي'), 'play current ayah by ar.minshawi');
     expect(of('شغل الاية بصوت المنشاوي'), 'play current ayah by ar.minshawi');
     expect(of('اقرا الآية بصوت الحصري'), 'play current ayah by ar.husary');
+    // As the recogniser wrote it on emulator-5554: a doubled letter.
+    expect(of('شغل الايه بصوت الحصرري'), 'play current ayah by ar.husary');
     // «محمد» in a reciter's name is not سورة محمد, but «سورة محمد» still is
     expect(of('شغل سورة محمد بصوت المنشاوي'), startsWith('play surah 47 by ar.minshawi'));
     expect(of('شغل سورة الكهف بصوت الشيخ محمد صديق المنشاوي'), startsWith('play surah 18 by ar.minshawi'));

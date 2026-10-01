@@ -686,7 +686,7 @@ class AssistantParser {
     for (var i = 0; i < words.length; i++) {
       final w = bare(words[i]);
       final afterSurahWord = i > 0 && const {'سوره', 'صوره', 'سورة'}.contains(bare(words[i - 1]));
-      if (nameWords.contains(w) && !afterSurahWord) continue;
+      if (nameWords.any((n) => heardNameWord(n, {w})) && !afterSurahWord) continue;
       out.add(words[i]);
     }
     return out;
@@ -700,11 +700,12 @@ class AssistantParser {
       for (final name in r.names) {
         final nw = norm(name).split(' ').map(bare).where((w) => w.length > 1).toList();
         if (nw.isEmpty) continue;
-        final hit = nw.where(said.contains).length;
+        final hit = nw.where((w) => heardNameWord(w, said)).length;
+        final lastHeard = heardNameWord(nw.last, said);
         // A family name alone («المنشاوي») is enough; a first name alone
         // («محمد») is not.
-        final score = hit / nw.length + (hit > 0 && said.contains(nw.last) ? 0.5 : 0);
-        if (hit > 0 && score > bestScore && (said.contains(nw.last) || hit >= 2)) {
+        final score = hit / nw.length + (hit > 0 && lastHeard ? 0.5 : 0);
+        if (hit > 0 && score > bestScore && (lastHeard || hit >= 2)) {
           best = r.id;
           bestScore = score;
         }
