@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~13:55 (10-01, Opus) STORIES: Nuh v2 (sent), Yunus v1 (sent, scripts/out/yunus_story_v1.mp4, 109.9 s), Ibrahim v1 committed 94786590 - full render RUNNING -> kids_stories/ibrahim/out/ibrahim_v1.mp4 (then check frames + send). Reusable tools in E:/DevEnv/kids_voice: split_batches.py (batch -> lines by ASR word count, cleans), words_json.py; per story: lines.tsv + moods.json + ../yunus/gen_multi.py (4 lines/request OK). GEMINI FREE QUOTA USED UP for today (10/10) - next voices after 11:00 Dubai 10-02. NEXT (no voice needed): app integration - read kids_corner_screen.dart, ContentMirrors, pubspec (video player?), plan hosting R2 + GitHub mirror, story screen + player, 7 locales, assistant command; verify on emulator.
+
 ~13:40 (10-01, Opus) Owner on Nuh v2: «روعه بصراحة كمل الباقي» = the whole «قصص الأنبياء والصالحين والصحابة» section. STORY 2 YUNUS: narration docs/kids_stories/yunus_narration.md (verses + Muyassar), voice E:/DevEnv/kids_voice/yunus (gen_multi.py: 3 lines per Gemini request WORKS -> a story costs ~5 of the 10 free requests/day; split by ASR word count), audio yunus_audio.mp3 109.9 s, visuals kids_stories/yunus/scenes.js (af704c79 pushed). RUNNING: full render -> kids_stories/yunus/out/yunus_v1.mp4. Gemini requests used today: 2 (10,11) + 5 = 7 of 10. CONTENT-LICENSES.md got a kids-stories section. NEXT: check the Yunus mp4 frames, send it; then the plan: more prophets (Ibrahim, Yusuf, Musa, Hud, Salih...), righteous (Ashab al-Kahf, Luqman), companions (only from sahih with named grading), then the app section (hosting R2 + mirror, player, 7 locales, assistant command), verified on the emulator.
 
 ~12:20 (10-01, Opus) NUH VIDEO V2 DONE + SENT: kids_stories/noah/out/noah_v2.mp4 (copy scripts/out/noah_story_v2.mp4, 157.89 s, 1280x720 30 fps H.264 + AAC narration, render 722 s). Checked frame sequences from the mp4: scene 4 planks fly in, 4->5 continuity (roof added in 5), scene 7 first pair on «زوجين», scene 10 wave covers the peak, cuts 0.5 s. Branch kids-stories-pipeline aa9e8778 pushed. NEXT: owner's verdict on the video; then wiring stories into the app's kids corner (not started).
@@ -967,6 +969,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-01 13:34 - Yunus video sent; Ibrahim story built (narration, voice, visuals), render running; Gemini daily quota used
 - 2026-10-01 13:26 - Yunus story: narration, Gemini voice in batched requests, visuals; provenance recorded; full render running
 - 2026-10-01 12:18 - Nuh story video v2 rendered with narration and sent to the owner (157.9 s, frames checked)
 - 2026-10-01 11:40 - Kids stories visuals v2 built locally; full render with narration running
