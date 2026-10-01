@@ -357,10 +357,12 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
               AssistantScreen.kidsStoryHud || AssistantScreen.kidsStoryAyyub ||
               AssistantScreen.kidsStoryZakariya || AssistantScreen.kidsStoryKahf ||
               AssistantScreen.kidsStoryLuqman || AssistantScreen.kidsStoryKaaba ||
-              AssistantScreen.kidsStoryFil || AssistantScreen.kidsStoryIlyas:
+              AssistantScreen.kidsStoryFil || AssistantScreen.kidsStoryIlyas ||
+              AssistantScreen.kidsStoryYusuf || AssistantScreen.kidsStoryShuayb ||
+              AssistantScreen.kidsStoryMusaBaby:
           final id = screen.name.substring('kidsStory'.length).toLowerCase();
           push(KidsStoryPlayerScreen(
-              story: kidsStories.firstWhere((s) => s.id == id)));
+              story: kidsStories.firstWhere((s) => s.id.replaceAll('_', '') == id)));
       }
     case QuranWordIntent(:final query):
       await runQuranWord(ref, query);

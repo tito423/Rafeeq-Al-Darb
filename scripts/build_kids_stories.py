@@ -64,6 +64,12 @@ STORIES = [
     # the whole of al-Fil: five per-ayah files joined with 0.4 s between them (as fil/rec.wav was built)
     ('fil', 'quran', 'fil', 'fil/out/fil_v1.mp4', lambda: tsv_lines('fil'),
      {7: (105, [(a, f'{VOICE}/fil/r{a}.wav') for a in range(1, 6)], None, 0.6, False)}, None),
+    ('yusuf', 'prophets', 'yusuf', 'yusuf/out/yusuf_v1.mp4', lambda: tsv_lines('yusuf'),
+     {20: (12, 92, f'{VOICE}/yusuf/rec.wav', 0.6, False)}, None),
+    ('shuayb', 'prophets', 'shuayb', 'shuayb/out/shuayb_v1.mp4', lambda: tsv_lines('shuayb'),
+     {5: (11, 85, f'{VOICE}/shuayb/rec.wav', 0.6, False)}, None),
+    ('musa_baby', 'prophets', 'musa_baby', 'musa_baby/out/musa_baby_v1.mp4', lambda: tsv_lines('musa_baby'),
+     {4: (28, 7, f'{VOICE}/musa_baby/rec.wav', 0.6, False)}, None),
 ]
 STORIES = [e for e in STORIES if os.path.exists(os.path.join(WT, e[3]))]   # only rendered stories
 

@@ -2396,7 +2396,10 @@
     "story_luqman": "Luqman Advises His Son",
     "story_kaaba": "Ibrahim and Ismail Build the Kaaba",
     "story_fil": "The People of the Elephant",
-    "story_ilyas": "Ilyas (Elijah)"
+    "story_ilyas": "Ilyas (Elijah)",
+    "story_yusuf": "Yusuf (Joseph)",
+    "story_shuayb": "Shuayb and the Fair Scale",
+    "story_musa_baby": "Baby Musa (Moses) on the River"
   },
   "journey": {
     "how_title": "How points are earned",

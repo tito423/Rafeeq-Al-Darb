@@ -415,6 +415,16 @@ const screenWords = <AssistantScreen, List<String>>{
   AssistantScreen.kidsStoryIlyas: ['قصه الياس', 'قصه سيدنا الياس', 'حكايه الياس',
     'حدوته الياس', 'story of ilyas', 'story of elijah', 'ilyas story',
     'historia de elias', 'histoire de ilyas', 'история ильяса', 'الیاس کی کہانی'],
+  AssistantScreen.kidsStoryYusuf: ['قصه يوسف', 'قصه سيدنا يوسف', 'حكايه يوسف',
+    'حدوته يوسف', 'story of yusuf', 'story of joseph', 'joseph story', 'yusuf story',
+    'historia de jose', 'histoire de joseph', 'история юсуфа', 'یوسف کی کہانی'],
+  AssistantScreen.kidsStoryShuayb: ['قصه شعيب', 'قصه سيدنا شعيب', 'حكايه شعيب',
+    'حدوته شعيب', 'قصه الميزان', 'قصه مدين', 'story of shuayb', 'shuayb story',
+    'historia de shuayb', 'histoire de chouaib', 'история шуайба', 'شعیب کی کہانی'],
+  AssistantScreen.kidsStoryMusaBaby: ['قصه موسى الرضيع', 'قصه موسى وهو رضيع',
+    'قصه موسى الصغير', 'قصه ام موسى', 'حكايه ام موسى', 'حدوته ام موسى',
+    'موسى في الصندوق', 'قصه موسى في النيل', 'baby moses', 'moses in the basket',
+    'moise bebe', 'moises bebe', 'младенец муса', 'موسیٰ بچپن کی کہانی'],
   AssistantScreen.rafeeqDiag: ['تشخيص رفيق', 'تشخيص', 'فحص رفيق',
     'diagnostics', 'diagnostico', 'diagnostic', 'диагностика', 'تشخیص'],
   AssistantScreen.home: ['الرئيسيه', 'الصفحه الرئيسيه', 'البدايه', 'home',
@@ -495,6 +505,9 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.kidsStoryKaaba: ['kids.story_kaaba'],
   AssistantScreen.kidsStoryFil: ['kids.story_fil'],
   AssistantScreen.kidsStoryIlyas: ['kids.story_ilyas'],
+  AssistantScreen.kidsStoryYusuf: ['kids.story_yusuf'],
+  AssistantScreen.kidsStoryShuayb: ['kids.story_shuayb'],
+  AssistantScreen.kidsStoryMusaBaby: ['kids.story_musa_baby'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the

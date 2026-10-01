@@ -539,6 +539,11 @@ void main() {
       'وريني قصة بناء الكعبة': 'open kidsStoryKaaba',
       'شغل قصة أصحاب الفيل': 'open kidsStoryFil',
       'قصة سيدنا إلياس': 'open kidsStoryIlyas',
+      'شغل قصة يوسف': 'open kidsStoryYusuf',
+      'افتح قصة شعيب': 'open kidsStoryShuayb',
+      'قصة موسى الرضيع': 'open kidsStoryMusaBaby',
+      'حدوتة أم موسى': 'open kidsStoryMusaBaby',
+      'افتح سورة يوسف': 'open quran 12:1',
       'شغل سورة الكهف': 'play surah 18 by -',
       'افتح سورة الفيل': 'open quran 105:1',
     };
