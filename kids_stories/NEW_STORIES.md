@@ -23,3 +23,4 @@ copy `kids_stories/<id>/` and `estimate_timing.py` into the pipeline worktree.
 | kahf | 17 | yes - youths featureless, never countable (in shade, lying); the dog calm at the entrance; the mountain redrawn rugged after the first pass looked like a pyramid |
 | luqman | 12 | yes - Luqman and his son as lights; each counsel pictured (seed in a rock, cradle in a lit home, prayer rug); no donkey |
 | shuayb | 12 | yes - a balance that leans then levels; glowing honest coins beside a fading heap; the punishment = an empty market |
+| kaaba | 19 | yes - Hajar a small light (tent, between Safa and Marwa x7); Zamzam bursts in light, no angel; the House as plain stone courses rising, no covering or writing; the Prophet ﷺ in 2:129 only as a far star; tawaf by featureless figures in white |
