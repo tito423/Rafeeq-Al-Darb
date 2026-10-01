@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 01:06 — IN PROGRESS — resume here**
+**2026-10-02 01:23 — IN PROGRESS — resume here**
 
-Next release list: R6 two app instances recorded (likely root of R5)
+Sizes committed (409.9 GB full, 57.7 GB ayah); R7 hosting decision waiting for the owner
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
