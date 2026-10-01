@@ -75,6 +75,13 @@ STORIES = [
      {9: (11, 73, f'{VOICE}/dayf/rec.wav', 0.6, False)}, None),
     ('sabt', 'quran', 'sabt', 'sabt/out/sabt_v1.mp4', lambda: tsv_lines('sabt'),
      {8: (7, 164, f'{VOICE}/sabt/rec.wav', 0.6, False)}, None),
+    # gemini-3.1-flash-tts-preview (owner approved «الاتنين حلوين»), --plain, 3-5 lines a request
+    ('ihya', 'quran', 'ihya', 'ihya/out/ihya_v1.mp4', lambda: tsv_lines('ihya'),
+     {7: (2, 260, f'{VOICE}/ihya/rec.wav', 0.6, False)}, None),
+    ('hudhud', 'prophets', 'hudhud', 'hudhud/out/hudhud_v1.mp4', lambda: tsv_lines('hudhud'),
+     {8: (27, 30, f'{VOICE}/hudhud/rec.wav', 0.6, False)}, None),
+    ('adam', 'prophets', 'adam', 'adam/out/adam_v1.mp4', lambda: tsv_lines('adam'),
+     {12: (7, 23, f'{VOICE}/adam/rec.wav', 0.6, False)}, None),
 ]
 STORIES = [e for e in STORIES if os.path.exists(os.path.join(WT, e[3]))]   # only rendered stories
 

@@ -360,7 +360,8 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
               AssistantScreen.kidsStoryFil || AssistantScreen.kidsStoryIlyas ||
               AssistantScreen.kidsStoryYusuf || AssistantScreen.kidsStoryShuayb ||
               AssistantScreen.kidsStoryMusaBaby || AssistantScreen.kidsStoryDayf ||
-              AssistantScreen.kidsStorySabt:
+              AssistantScreen.kidsStorySabt || AssistantScreen.kidsStoryIhya ||
+              AssistantScreen.kidsStoryHudhud || AssistantScreen.kidsStoryAdam:
           final id = screen.name.substring('kidsStory'.length).toLowerCase();
           // a story not (yet) in the catalogue opens the shelves, never a crash
           final story = kidsStories.where((s) => s.id.replaceAll('_', '') == id).firstOrNull;

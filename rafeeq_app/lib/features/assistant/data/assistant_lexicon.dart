@@ -433,6 +433,16 @@ const screenWords = <AssistantScreen, List<String>>{
     'حدوته اصحاب السبت', 'قصه يوم السبت', 'قصه السمك', 'people of the sabbath',
     'story of the sabbath', 'historia del sabado', 'histoire du sabbat',
     'история людей субботы', 'اصحاب سبت کی کہانی'],
+  AssistantScreen.kidsStoryIhya: ['قصه احياء الموتي', 'قصه الذي مر علي قريه', 'قصه عزير',
+    'قصه الطيور الاربعه', 'حدوته الطيور', 'حكايه الطيور', 'قصه ابراهيم والطيور', 'حكايه احياء الموتي', 'raising the dead story',
+    'the four birds', 'historia de los cuatro pajaros', 'histoire des quatre oiseaux',
+    'история о воскрешении', 'مردوں کو زندہ کرنے کی کہانی'],
+  AssistantScreen.kidsStoryHudhud: ['قصه الهدهد', 'قصه سليمان والهدهد', 'حكايه الهدهد',
+    'حدوته الهدهد', 'قصه بلقيس', 'قصه ملكه سبا', 'story of the hoopoe', 'hoopoe story',
+    'historia de la abubilla', 'histoire de la huppe', 'история удода', 'ہدہد کی کہانی'],
+  AssistantScreen.kidsStoryAdam: ['قصه ادم', 'قصه سيدنا ادم', 'حكايه ادم', 'حدوته ادم',
+    'قصه ابونا ادم', 'story of adam', 'adam story', 'historia de adan', "histoire d'adam",
+    'история адама', 'آدم کی کہانی'],
   AssistantScreen.rafeeqDiag: ['تشخيص رفيق', 'تشخيص', 'فحص رفيق',
     'diagnostics', 'diagnostico', 'diagnostic', 'диагностика', 'تشخیص'],
   AssistantScreen.home: ['الرئيسيه', 'الصفحه الرئيسيه', 'البدايه', 'home',
@@ -518,6 +528,9 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.kidsStoryMusaBaby: ['kids.story_musa_baby'],
   AssistantScreen.kidsStoryDayf: ['kids.story_dayf'],
   AssistantScreen.kidsStorySabt: ['kids.story_sabt'],
+  AssistantScreen.kidsStoryIhya: ['kids.story_ihya'],
+  AssistantScreen.kidsStoryHudhud: ['kids.story_hudhud'],
+  AssistantScreen.kidsStoryAdam: ['kids.story_adam'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the
