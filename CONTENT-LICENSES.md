@@ -1121,3 +1121,16 @@ R2 `asr/rafeeq_ar_v1/` + content-mirror, optional download. Attribution on
 the Sources screen with a link to NVIDIA's card, as CC BY requires.
 whisper-turbo (MIT) was tried the same day and withdrawn for speed; its
 hosted copies were deleted.
+
+## Kids corner — prophet stories (videos), recorded 2026-10-01
+
+Every part of a story video and where it comes from:
+
+| part | source | status |
+|---|---|---|
+| narration text | written in this project from the verses (`quran_local.db`) and al-Muyassar (`quran_sciences.db`, `tafseer_texts` source `muyassar`), cross-checked against al-Sa'di, Ibn Kathir and al-Baghawi in the same table; one file per story under `docs/kids_stories/` with the verse and the tafsir sentence for every line | own text |
+| narration voice | Google Gemini 3.8 Flash TTS (voice «Sadaltager»), free tier. Gemini API Additional Terms, read 2026-10-01: «Google won't claim ownership over that content»; on the unpaid tier Google may use prompts and outputs to improve its products (the prompts are the published narration lines - nothing private) | generated, no ownership claimed by Google |
+| Qur'an recitation inside a video | محمد صديق المنشاوي، مرتّل — the per-ayah files from `everyayah.com/data/Minshawy_Murattal_128kbps/` (Hud 11:44 in Nuh, al-Anbiya 21:87 in Yunus). The same set is already rehosted on R2 by the owner's decision of 2026-09-23 (`REHOSTED_NO_LICENCE_STATED`, above); here it is mixed, unaltered and complete, into the story's soundtrack | `REHOSTED_NO_LICENCE_STATED`, owner's decision |
+| pictures and motion | drawn by code in `kids_stories/` (Canvas 2D, rendered in headless Chrome, encoded with ffmpeg) - no image, clip or font from anywhere else; tool licences in `kids_stories/LICENSES.md` | own work |
+| ambient sound | generated noise (wind, rain, waves, bubbles) by `amb.py` - no downloaded audio | own work |
+| music | none (owner's rule) | — |

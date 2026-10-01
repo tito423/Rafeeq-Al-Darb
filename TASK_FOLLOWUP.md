@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~13:40 (10-01, Opus) Owner on Nuh v2: «روعه بصراحة كمل الباقي» = the whole «قصص الأنبياء والصالحين والصحابة» section. STORY 2 YUNUS: narration docs/kids_stories/yunus_narration.md (verses + Muyassar), voice E:/DevEnv/kids_voice/yunus (gen_multi.py: 3 lines per Gemini request WORKS -> a story costs ~5 of the 10 free requests/day; split by ASR word count), audio yunus_audio.mp3 109.9 s, visuals kids_stories/yunus/scenes.js (af704c79 pushed). RUNNING: full render -> kids_stories/yunus/out/yunus_v1.mp4. Gemini requests used today: 2 (10,11) + 5 = 7 of 10. CONTENT-LICENSES.md got a kids-stories section. NEXT: check the Yunus mp4 frames, send it; then the plan: more prophets (Ibrahim, Yusuf, Musa, Hud, Salih...), righteous (Ashab al-Kahf, Luqman), companions (only from sahih with named grading), then the app section (hosting R2 + mirror, player, 7 locales, assistant command), verified on the emulator.
+
 ~12:20 (10-01, Opus) NUH VIDEO V2 DONE + SENT: kids_stories/noah/out/noah_v2.mp4 (copy scripts/out/noah_story_v2.mp4, 157.89 s, 1280x720 30 fps H.264 + AAC narration, render 722 s). Checked frame sequences from the mp4: scene 4 planks fly in, 4->5 continuity (roof added in 5), scene 7 first pair on «زوجين», scene 10 wave covers the peak, cuts 0.5 s. Branch kids-stories-pipeline aa9e8778 pushed. NEXT: owner's verdict on the video; then wiring stories into the app's kids corner (not started).
 
 ~11:55 (10-01, Opus) VISUALS V2 BUILT LOCALLY (owner «كمل»; cloud session never started): worktree .claude/worktrees/agent-a383b101b770abc86 (branch kids-stories-pipeline), engine/lib.js (K.par parallax, K.beat word sync, presence glow, faceless K.person, birds/dust/grass/rays/spray, ark fly-in planks + pegs on their own clock, ramp slides out), engine/index.html (0.5 s cuts, hand-held breath, grain, grade), render.mjs (--at, --audio, words.json), noah/scenes.js rewritten. Stills checked at 34 beat moments (noah/out/v2sheet*.png). RUNNING: full render with narration -> kids_stories/noah/out/noah_v2.mp4. NEXT: watch frames from the mp4 (motion, cuts, sync), commit + push the branch, send the owner the mp4.
@@ -965,6 +967,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-01 13:26 - Yunus story: narration, Gemini voice in batched requests, visuals; provenance recorded; full render running
 - 2026-10-01 12:18 - Nuh story video v2 rendered with narration and sent to the owner (157.9 s, frames checked)
 - 2026-10-01 11:40 - Kids stories visuals v2 built locally; full render with narration running
 - 2026-10-01 11:06 - Nuh Gemini narration complete: 12/12 lines ASR-checked, clipping fixed, mix 157.9 s, timings on kids-stories-pipeline 536203f0
