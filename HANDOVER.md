@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 03:59 — IN PROGRESS — resume here**
+**2026-10-01 04:07 — IN PROGRESS — resume here**
 
-Gemini lines 9+12 voiced and cleaned; 10-11 hit the free 10/day limit (per project, resets 11:00 Dubai)
+Gemini lines 10-11 scheduled for the 11:00 Dubai free-tier reset; paid and Cloud-trial routes checked and ruled out
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
