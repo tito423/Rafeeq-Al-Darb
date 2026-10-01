@@ -20,3 +20,4 @@ copy `kids_stories/<id>/` and `estimate_timing.py` into the pipeline worktree.
 | ayyub | 12 | yes |
 | zakariya | 15 | yes - Yahya's mother not drawn (lit home instead), the Torah a blank scroll |
 | yusuf | 24 | yes - brothers as eleven small stars/caravan/sacks, never people; no wolf, plain shirt; the greeting = stars, sun and moon over the palace |
+| kahf | 17 | yes - youths featureless, never countable (in shade, lying); the dog calm at the entrance; the mountain redrawn rugged after the first pass looked like a pyramid |
