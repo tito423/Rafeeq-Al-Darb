@@ -2365,6 +2365,7 @@
     "stories_intro": "Drawn, narrated stories for children. Every sentence comes from the verses of the Qur'an and their meaning in al-Tafsir al-Muyassar, and the verses are recited by Sheikh Muhammad Siddiq al-Minshawi. No prophet is ever drawn; a soft light stands for his presence.",
     "story_cat_prophets": "Stories of the Prophets",
     "story_cat_righteous": "Stories of the righteous",
+    "story_cat_quran": "Stories from the Quran",
     "story_cat_companions": "Stories of the Companions",
     "story_nuh": "Nuh (Noah) and the Ark",
     "story_yunus": "Yunus (Jonah) and the Whale",
@@ -2387,7 +2388,14 @@
     "story_musa": "Musa (Moses) and the Sea",
     "story_sulayman": "Sulayman (Solomon) and the Ant",
     "story_salih": "Salih and the She-Camel",
-    "story_hud": "Hud and the Wind"
+    "story_hud": "Hud and the Wind",
+    "story_ayyub": "Ayyub (Job) and Patience",
+    "story_zakariya": "Zakariya and Yahya (Zechariah and John)",
+    "story_kahf": "The People of the Cave",
+    "story_luqman": "Luqman Advises His Son",
+    "story_kaaba": "Ibrahim and Ismail Build the Kaaba",
+    "story_fil": "The People of the Elephant",
+    "story_ilyas": "Ilyas (Elijah)"
   },
   "journey": {
     "how_title": "How points are earned",

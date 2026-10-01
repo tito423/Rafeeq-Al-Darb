@@ -5,7 +5,7 @@ export 'kids_stories_data.dart';
 /// The kids corner's story shelves (owner, 2026-09-30: «قصص الأنبياء والصالحين
 /// والصحابة»). A shelf is shown only when it holds at least one story - an
 /// empty «coming soon» shelf is not shown.
-enum StoryCategory { prophets, righteous, companions }
+enum StoryCategory { prophets, righteous, quran, companions }
 
 /// One caption line. Either the narrator's exact words ([text]), or a
 /// recitation of (surah, ayah) whose text the player reads from the app's own

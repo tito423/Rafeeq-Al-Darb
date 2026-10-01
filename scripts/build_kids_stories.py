@@ -47,7 +47,25 @@ STORIES = [
      {6: (11, 64, f'{VOICE}/salih/rec.wav', 0.6, False)}, 66.0),
     ('hud', 'prophets', 'hud', 'hud/out/hud_v1.mp4', lambda: tsv_lines('hud'),
      {8: (46, 24, f'{VOICE}/hud/rec.wav', 0.6, False)}, 62.0),
+    # 2026-10-01: voiced in the AI Studio UI (gemini-3.8-flash-tts, Sadaltager, 4 lines a run);
+    # poster None = the middle of scene 3.
+    ('ayyub', 'prophets', 'ayyub', 'ayyub/out/ayyub_v1.mp4', lambda: tsv_lines('ayyub'),
+     {6: (21, 83, f'{VOICE}/ayyub/rec.wav', 0.6, False)}, None),
+    ('zakariya', 'prophets', 'zakariya', 'zakariya/out/zakariya_v1.mp4', lambda: tsv_lines('zakariya'),
+     {5: (21, 89, f'{VOICE}/zakariya/rec.wav', 0.6, False)}, None),
+    ('kaaba', 'prophets', 'kaaba', 'kaaba/out/kaaba_v1.mp4', lambda: tsv_lines('kaaba'),
+     {12: (2, 127, f'{VOICE}/kaaba/rec.wav', 0.6, False)}, None),
+    ('ilyas', 'prophets', 'ilyas', 'ilyas/out/ilyas_v1.mp4', lambda: tsv_lines('ilyas'),
+     {5: (37, 125, f'{VOICE}/ilyas/rec.wav', 0.6, False)}, None),
+    ('kahf', 'righteous', 'kahf', 'kahf/out/kahf_v1.mp4', lambda: tsv_lines('kahf'),
+     {6: (18, 10, f'{VOICE}/kahf/rec.wav', 0.6, False)}, None),
+    ('luqman', 'righteous', 'luqman', 'luqman/out/luqman_v1.mp4', lambda: tsv_lines('luqman'),
+     {4: (31, 13, f'{VOICE}/luqman/rec.wav', 0.6, False)}, None),
+    # the whole of al-Fil: five per-ayah files joined with 0.4 s between them (as fil/rec.wav was built)
+    ('fil', 'quran', 'fil', 'fil/out/fil_v1.mp4', lambda: tsv_lines('fil'),
+     {7: (105, [(a, f'{VOICE}/fil/r{a}.wav') for a in range(1, 6)], None, 0.6, False)}, None),
 ]
+STORIES = [e for e in STORIES if os.path.exists(os.path.join(WT, e[3]))]   # only rendered stories
 
 def wav_seconds(p):
     w = wave.open(p); return w.getnframes() / w.getframerate()
@@ -73,8 +91,14 @@ def build():
             end_pad = 1.5 if last else 0.3
             if i in rec:
                 su, ay, wavp, pause, follows = rec[i]
-                r = wav_seconds(wavp)
-                caps.append((start + 0.25, start + 0.25 + r, None, su, ay))
+                if isinstance(ay, list):          # several ayat, 0.4 s apart
+                    t0 = start + 0.25
+                    for k, (a, w) in enumerate(ay):
+                        ra = wav_seconds(w); caps.append((t0, t0 + ra, None, su, a)); t0 += ra + (0.4 if k < len(ay) - 1 else 0)
+                    r = t0 - (start + 0.25)
+                else:
+                    r = wav_seconds(wavp)
+                    caps.append((start + 0.25, start + 0.25 + r, None, su, ay))
                 if follows:
                     caps.append((start + 0.25 + r + pause, start + d - end_pad, lines[i], None, None))
             else:
@@ -84,6 +108,8 @@ def build():
         dur = probe_seconds(mp4p)
         if abs(dur - start) > 0.2:
             sys.exit(f'{sid}: video {dur:.2f} s but timing.json sums to {start:.2f} s')
+        if poster_t is None:
+            poster_t = round(sum(T[:2]) + T[2] / 2, 1)
         poster = os.path.join(POSTERS, f'{sid}.jpg')
         subprocess.run([FF, '-v', 'error', '-y', '-ss', str(poster_t), '-i', mp4p, '-frames:v', '1',
                         '-vf', 'scale=640:-2', '-q:v', '3', poster], check=True)

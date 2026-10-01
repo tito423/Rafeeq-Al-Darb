@@ -2365,6 +2365,7 @@
     "stories_intro": "Histórias desenhadas e narradas para crianças. Cada frase vem dos versículos do Alcorão e do seu sentido em al-Tafsir al-Muyassar, e os versículos são recitados pelo xeique Muhammad Siddiq al-Minshawi. Nenhum profeta é desenhado; uma luz suave representa a sua presença.",
     "story_cat_prophets": "Histórias dos profetas",
     "story_cat_righteous": "Histórias dos justos",
+    "story_cat_quran": "Histórias do Alcorão",
     "story_cat_companions": "Histórias dos Companheiros",
     "story_nuh": "Nuh (Noé) e a arca",
     "story_yunus": "Yunus (Jonas) e a baleia",
@@ -2387,7 +2388,14 @@
     "story_musa": "Musa (Moisés) e o mar",
     "story_sulayman": "Sulaiman (Salomão) e a formiga",
     "story_salih": "Salih e a camela",
-    "story_hud": "Hud e o vento"
+    "story_hud": "Hud e o vento",
+    "story_ayyub": "Ayyub (Jó) e a paciência",
+    "story_zakariya": "Zacarias e Yahya (João)",
+    "story_kahf": "Os companheiros da caverna",
+    "story_luqman": "Luqman aconselha o filho",
+    "story_kaaba": "Ibrahim e Ismael constroem a Caaba",
+    "story_fil": "Os do elefante",
+    "story_ilyas": "Ilyas (Elias)"
   },
   "journey": {
     "how_title": "Como ganhar pontos",

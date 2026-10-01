@@ -532,6 +532,15 @@ void main() {
       'عايز قصة الناقة': 'open kidsStorySalih',
       'وريني قصة سيدنا هود': 'open kidsStoryHud',
       'شغل سورة هود': 'play surah 11 by -',
+      'شغل قصة أيوب': 'open kidsStoryAyyub',
+      'افتح قصة زكريا': 'open kidsStoryZakariya',
+      'عايز قصة أهل الكهف': 'open kidsStoryKahf',
+      'حدوتة لقمان': 'open kidsStoryLuqman',
+      'وريني قصة بناء الكعبة': 'open kidsStoryKaaba',
+      'شغل قصة أصحاب الفيل': 'open kidsStoryFil',
+      'قصة سيدنا إلياس': 'open kidsStoryIlyas',
+      'شغل سورة الكهف': 'play surah 18 by -',
+      'افتح سورة الفيل': 'open quran 105:1',
     };
     for (final e in cases.entries) {
       expect('${p.parse(e.key)}', e.value, reason: e.key);

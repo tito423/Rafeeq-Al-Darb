@@ -21,6 +21,7 @@ class KidsStoriesScreen extends StatelessWidget {
   static const _shelfColor = {
     StoryCategory.prophets: Color(0xFF2E86DE),
     StoryCategory.righteous: Color(0xFF10AC84),
+    StoryCategory.quran: Color(0xFFE67E22),
     StoryCategory.companions: Color(0xFF8854D0),
   };
 

@@ -2365,6 +2365,7 @@
     "stories_intro": "Historias dibujadas y narradas para niños. Cada frase procede de los versículos del Corán y de su sentido en al-Tafsir al-Muyassar, y los versículos los recita el jeque Muhammad Siddiq al-Minshawi. Nunca se dibuja a ningún profeta; una luz suave representa su presencia.",
     "story_cat_prophets": "Historias de los profetas",
     "story_cat_righteous": "Historias de los justos",
+    "story_cat_quran": "Historias del Corán",
     "story_cat_companions": "Historias de los Compañeros",
     "story_nuh": "Nuh (Noé) y el arca",
     "story_yunus": "Yunus (Jonás) y la ballena",
@@ -2387,7 +2388,14 @@
     "story_musa": "Musa (Moisés) y el mar",
     "story_sulayman": "Sulaimán (Salomón) y la hormiga",
     "story_salih": "Salih y la camella",
-    "story_hud": "Hud y el viento"
+    "story_hud": "Hud y el viento",
+    "story_ayyub": "Ayyub (Job) y la paciencia",
+    "story_zakariya": "Zacarías y Yahya (Juan)",
+    "story_kahf": "Los compañeros de la cueva",
+    "story_luqman": "Luqman aconseja a su hijo",
+    "story_kaaba": "Ibrahim e Ismael construyen la Kaaba",
+    "story_fil": "Los del elefante",
+    "story_ilyas": "Ilyas (Elías)"
   },
   "journey": {
     "how_title": "Cómo se ganan los puntos",

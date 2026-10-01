@@ -50,4 +50,6 @@ enum AssistantScreen {
   // The kids-corner story shelves and each story by name (2026-10-01).
   kidsStories, kidsStoryNuh, kidsStoryYunus, kidsStoryIbrahim,
   kidsStoryMusa, kidsStorySulayman, kidsStorySalih, kidsStoryHud,
+  kidsStoryAyyub, kidsStoryZakariya, kidsStoryKahf, kidsStoryLuqman,
+  kidsStoryKaaba, kidsStoryFil, kidsStoryIlyas,
 }

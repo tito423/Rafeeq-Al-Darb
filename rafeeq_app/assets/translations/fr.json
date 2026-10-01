@@ -2365,6 +2365,7 @@
     "stories_intro": "Des histoires dessinées et racontées pour les enfants. Chaque phrase vient des versets du Coran et de leur sens dans al-Tafsir al-Muyassar, et les versets sont récités par le cheikh Muhammad Siddiq al-Minshawi. Aucun prophète n'est jamais dessiné ; une douce lumière figure sa présence.",
     "story_cat_prophets": "Histoires des prophètes",
     "story_cat_righteous": "Histoires des pieux",
+    "story_cat_quran": "Histoires du Coran",
     "story_cat_companions": "Histoires des Compagnons",
     "story_nuh": "Nouh (Noé) et l'arche",
     "story_yunus": "Younous (Jonas) et la baleine",
@@ -2387,7 +2388,14 @@
     "story_musa": "Moussa (Moïse) et la mer",
     "story_sulayman": "Soulayman (Salomon) et la fourmi",
     "story_salih": "Salih et la chamelle",
-    "story_hud": "Houd et le vent"
+    "story_hud": "Houd et le vent",
+    "story_ayyub": "Ayyoub (Job) et la patience",
+    "story_zakariya": "Zacharie et Yahya (Jean)",
+    "story_kahf": "Les gens de la caverne",
+    "story_luqman": "Louqman conseille son fils",
+    "story_kaaba": "Ibrahim et Ismaël bâtissent la Kaaba",
+    "story_fil": "Les gens de l'éléphant",
+    "story_ilyas": "Ilyas (Élie)"
   },
   "journey": {
     "how_title": "Comment gagner des points",
