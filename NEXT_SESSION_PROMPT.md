@@ -1,55 +1,18 @@
-# رفيق الدرب — موجز الجلسة القادمة (كُتب 2026-09-30 ~22:10 دبي)
+# Next session — Rafiq Al-Darb (written 2026-10-02 ~01:30 Dubai)
 
-اقرأ `CLAUDE.md` كاملًا (ملزم)، ثم أعلى `TASK_FOLLOWUP.md`، ثم `TRAPS.md` للمنطقة اللي هتشتغل فيها. الرد على المالك بالعربي، وأول رد: الكوتة بس.
+Read CLAUDE.md (mandatory), then the top entries of TASK_FOLLOWUP.md (they hold the exact detail, commands and file paths), then TRAPS.md for the area you touch (24, 31, 43, 44, 55, 56, 57 matter here). Reply to the owner in Egyptian Arabic; app strings stay MSA.
 
-## أين نحن
+## Where things are
+- **Published: v3.74.0** (tag 7e2637d7). Releases on GitHub: v3.74.0, v3.51.0 (restore point), content-* prereleases - nothing else.
+- **master is past v3.74.0** with R1-R3 below, not released. Release only when the owner asks; he wants everything in the list fixed together first. He is testing v3.74.0 on his Honor and will send more items - append them to the R-list in TASK_FOLLOWUP.md.
+- At handover: analyze clean, 695 tests pass, hosted content 7/7 206.
 
-- **المنشور العام:** `v3.73.0` (versionCode 87، الـAPK بحجم 315,513,908 بايت، والتاج = `190a5403`). مسودة `v3.72.0` البرايفت و`v3.71.0` لسه موجودين بأمر المالك («متمسحش حاجة»).
-- **`master` بعد 3.73.0 بكتير، وغير منشور.** المالك قال «مش تنشر» في 30/9. لا تنشر إلا لما يطلب.
-- الفحص وقت التسليم: `analyze` نضيف، و689 اختبار ناجح (4 متخطّين)، والمحتوى المستضاف 9 من 9 رجع 206، و7 لغات × 2,256 مفتاح متطابقة، و239 كتاب، و`hadith.db` حجمه 109,731,840 بايت فيه 67,153 حديث (45,219 بدرجة).
+## The next-release list (in this order)
+1. **R6 + R5 first - reproduce on emulator-5554 before changing anything.** Owner saw TWO app entries in Recents, both on the Quran tab; and reopening from the background / the recitation notification lands on the mushaf in full screen with no app bar and no bottom nav, Back leaves the app. MainActivity is singleTask with taskAffinity="". Steps: play a recitation -> Home key -> tap the notification; then the same after `adb shell am kill com.tito.rafeeq_aldarb`; check `adb shell dumpsys activity recents`. Fix so there is one task, Back from the mushaf always reaches the shell (Home tab with the nav bar), and full screen has a visible way back to the nav. His video: uploads/7892e937-SVID_20261002_004100_1.mp4 (frames already read: Quran full screen -> Back -> launcher).
+2. **R1, R2, R3 on the emulator** (code done, tests pass, never seen): «شغل الآية بصوت الشيخ محمد المنشاوي» with a recitation playing and with none; play one adhkar recording from the listen screen (now from R2 azkar/recitations/); the size line under ayah reciters («التلاوة كاملة: …») and beside each moshaf in the full-surah list. Also check whether the 5 moshafs with unsized surahs (listed in commit b9819891) actually play those surahs.
+3. **R7 - wait for the owner's choice**, then build it: own copies of the recitations (ayah 57.7 GB, full 409.9 GB). Options given to him: (1) all free on GitHub Releases, (2) ayah on R2 (~$0.72/month) + full on GitHub, (3) all on R2 (~$6/month). mp3quran now 301s every serverN folder to cdn.mp3quran.net (files still 206, no listings).
+4. **R4 - kids stories, after 11:00 Dubai (quota reset):** voice jannatayn, dawud, dhabih, khidr (moods ready in E:/DevEnv/kids_voice/<id>/moods.json, plan in E:/DevEnv/kids_voice/new/plan.tsv); re-voice isa 15 and dhulqarnayn 8 (gemini-3.8-flash-tts, their stories' model) and salih 3+4 (gemini-3.8-flash-lite-tts). AI Studio UI: one new tab per run (Chrome allows one download per tab); helper and queue in the page's localStorage (__h, __q, __i, __step). Then the per-story pipeline in TASK_FOLLOWUP.md (rec.wav, mix_story.py, words_json.py, render, sheet, entries x7 + assistant + STORIES, --upload, mirror, emulator). One model per story; word audit (new/word_audit.py) before anything ships.
+5. When the list is done and the owner asks: release (build_github_release.bat, bump version + AboutScreen, delete the previous release except v3.51.0 and content-*, tag = HEAD, give him both links).
 
-## اتعمل في 30/9 واتشاف على المحاكي (Android 16، بناء debug متوقّع بمفتاح الإصدار)
-
-1. **التلاوة المستمرة** بتبدأ من السورة أو الآية اللي اتفتحت بالاسم (من قائمة الانتقال أو من رفيق)، مش من أول الصفحة. اتشافت في الوضع النصي والورقي.
-2. **رفيق:**
-   - مراجعة الـ114 سورة على نفس الموديل: الفشل نزل من 247 من 684 إلى 29.
-   - أول أمر كان بياخد 7.5 ثانية وبقى 0.16.
-   - شاشة «تشخيص رفيق» فيها زمن التعرّف وزمن التنفيذ ومشاركة آخر مقطع صوتي.
-   - **بيشتغل والتطبيق مقفول** (بزرار الرجوع أو بالسحب من التطبيقات الأخيرة). السبب كان إن `audio_service` بيدمّر المحرك، والإصلاح إن `AssistantListenService` بقت مربوطة بـ `AudioService`.
-   - «افتح سورة X آية Y» بيظلّل الآية ويعمل scroll لحد ما تبان كلها.
-   - «تفسير/ترجمة/إعراب آية …» بيفتح كارت الآية على التبويب المطلوب.
-   - صيغ لهجات وأرقام ترتيبية.
-   - شاشات ركن الأطفال كلها بالصوت.
-3. **التسميع مع السماعة:** رفيق كان بيرجّع مسار الصوت في نص التسميع، فكان بيتسجل أول كلمة بس. اتصلّح وترتيب التسجيلين اتأكد من `dumpsys audio`. **ما اتجربش على سماعة بلوتوث حقيقية.**
-4. **نموذج التسميع** بقى FastConformer مع فلتر low-pass عند 3.4 كيلوهرتز:
-   - 97.5% مقابل 89.3% لـ tiny، على 750 كلمة و6 قراء.
-   - بجودة السماعة 97.1% مقابل 84.9%.
-   - الأرقام في `scripts/asr_candidates_2026-09-30.txt` و`fc_band_cause_2026-09-30.txt`.
-   - `whisper_flutter_new` اتشالت، وحزمة التسميع بقت هي حزمة رفيق العربية.
-5. **الحفظ:** مستويات «التلميحات المتناقصة» (النص كاملًا ← أوائل الكلمات ← كلمة وكلمة ← أول كلمة ← من الحفظ)، وزر تلميح. الآية بتختفي وقت التسميع، والمستوى بيطلع لو النتيجة 90% أو أكتر وبينزل لو أقل من 60%.
-6. **ركن الأطفال:** 8 مراحل للقرآن كله: «طلائع الحفّاظ»، و«السابقون»، و«حملة القرآن»، و«أهل القرآن»، ووسام الـ114.
-
-## الباقي بالترتيب (طلبات المالك المفتوحة)
-
-1. **التسميع اللحظي** (زي Tarteel): الكلمات تظهر وانت بتقرا.
-   - محتاج worker ثابت لـ sherpa، وتسجيل بـ `startStream` بدل ملف WAV، وفك نافذة آخر 6–8 ثواني كل ثانية تقريبًا، ومحاذاة مع كلمات الآية من الموضع الحالي (`TasmeeEngine.compare` فيها دالة التقارب).
-   - قِس الزمن على المحاكي قبل ما توعد بحاجة.
-   - اختبار end-to-end: `tasmee_test.wav` في مجلد الملفات الخارجي بيحل محل التسجيل.
-2. **جدول مراجعة FSRS** بدل Leitner (`hifz_store.dart`)، والتقييم من نتيجة التسميع وعدد التلميحات. وفيه يومي: جديد + مستحق + قديم (سبق/سبقي/منزل).
-3. **قسم قصص الأنبياء والصالحين والصحابة في ركن الأطفال** (كارت لكل نوع)، بصوت أو فيديو مناسب للأطفال.
-   - **ممنوع أي محتوى وهمي** (§1.1).
-   - دوّر على مصادر حقيقية ومرخّصة أو مسموح بإعادة استضافتها (archive.org، مواقع دعوية بترخيص صريح)، واسمع عيّنة، وسجّل الترخيص في `CONTENT-LICENSES.md`.
-   - لو الترخيص ما اتضحش، قول للمالك وما تبنيش.
-4. **تجربة المالك** على الهونر والشاومي، بعد ما يطلب نشر:
-   - رفيق والتطبيق مقفول.
-   - التسميع بسماعة البلوتوث.
-   - شاشة «تشخيص رفيق»، واطلب منه صورتها ومقطع الصوت.
-5. رفيق لسه ما يفتحش كارت المقولات (محتاج مقولة) ولا إدارة القنوات والمواقع في المكتبة.
-
-## تنبيهات
-
-- الـ release build بيقفل المحاكي (TRAP 24). شغّل المحاكي بـ `-no-window -no-audio -no-snapshot -gpu host` (TRAP 57).
-- الـ debug build **مش هيتسطّب فوق نسخة الإصدار** (توقيع مختلف). عشان تحتفظ بالبيانات والحزم: انسخ `app-debug.apk` إلى `app-release.apk` وشغّل `py -3 scripts/sign_release.py`.
-- الشريط العلوي في المصحف بيختفي بعد 5 ثواني (`chrome_auto_hide.dart`). اضغط على الصفحة وبعدها خلال ثانية ونص اضغط الزرار.
-- `cp.bat` بيعمل commit للملفات المتتبّعة بس: اعمل `git add` لأي ملف جديد (TRAP 55).
-- سقوف طول الملفات في `test/code_layout_test.dart`: `quran_screen.dart` عند 1057 (الملف 1056)، والملفات اللي مش مستثناة حدها 800.
+## Not verified on a real phone
+Live tasmee, Bluetooth headset tasmee, Rafeeq with the app closed (Honor/Xiaomi), the kids story videos (emulator decoder shows blocky patches; files clean in ffmpeg).

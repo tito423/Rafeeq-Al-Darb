@@ -55,3 +55,31 @@ enum AssistantScreen {
   kidsStoryYusuf, kidsStoryShuayb, kidsStoryMusaBaby,
   kidsStoryDayf, kidsStorySabt, kidsStoryIhya, kidsStoryHudhud, kidsStoryAdam,
 }
+
+/// The kids' stories, tried before any surah: «شغل قصة نوح» is the story,
+/// not سورة نوح. Baby Musa before Musa: «قصة موسى الرضيع» contains «قصه موسى».
+const storyScreensFirst = <AssistantScreen>[
+      AssistantScreen.kidsStoryNuh,
+      AssistantScreen.kidsStoryYunus,
+      AssistantScreen.kidsStoryIbrahim,
+      AssistantScreen.kidsStoryMusaBaby,
+      AssistantScreen.kidsStoryMusa,
+      AssistantScreen.kidsStorySulayman,
+      AssistantScreen.kidsStorySalih,
+      AssistantScreen.kidsStoryHud,
+      AssistantScreen.kidsStoryAyyub,
+      AssistantScreen.kidsStoryZakariya,
+      AssistantScreen.kidsStoryKahf,
+      AssistantScreen.kidsStoryLuqman,
+      AssistantScreen.kidsStoryKaaba,
+      AssistantScreen.kidsStoryFil,
+      AssistantScreen.kidsStoryIlyas,
+      AssistantScreen.kidsStoryYusuf,
+      AssistantScreen.kidsStoryShuayb,
+      AssistantScreen.kidsStoryDayf,
+      AssistantScreen.kidsStorySabt,
+      AssistantScreen.kidsStoryIhya,
+      AssistantScreen.kidsStoryHudhud,
+      AssistantScreen.kidsStoryAdam,
+      AssistantScreen.kidsStories,
+];
