@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 21:24 — IN PROGRESS — resume here**
+**2026-10-01 23:14 — IN PROGRESS — resume here**
 
-Stories: 14 in the app and seen on the emulator; UI free limit hit after ~51 runs; 3 more rendering
+Stories: 22 in the app; every free TTS quota used for today; 4 stories + 4 lines left for 10-02
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
