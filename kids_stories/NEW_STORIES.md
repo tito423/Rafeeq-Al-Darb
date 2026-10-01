@@ -24,3 +24,5 @@ copy `kids_stories/<id>/` and `estimate_timing.py` into the pipeline worktree.
 | luqman | 12 | yes - Luqman and his son as lights; each counsel pictured (seed in a rock, cradle in a lit home, prayer rug); no donkey |
 | shuayb | 12 | yes - a balance that leans then levels; glowing honest coins beside a fading heap; the punishment = an empty market |
 | kaaba | 19 | yes - Hajar a small light (tent, between Safa and Marwa x7); Zamzam bursts in light, no angel; the House as plain stone courses rising, no covering or writing; the Prophet ﷺ in 2:129 only as a far star; tawaf by featureless figures in white |
+| musa_baby | 13 | yes - baby Musa a small light in a reed basket; mother = light at the home, sister = footprints on the bank, Pharaoh's wife = a lit palace window; servants and wet-nurses featureless |
+| fil | 7 | yes - army and elephant drawn, soldiers featureless; birds and small stones in the sky, nobody shown hit; an empty field of blowing dry leaves; the House far off and whole |

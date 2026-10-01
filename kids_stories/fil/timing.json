@@ -1,0 +1,37 @@
+[
+ {
+  "scene": 1,
+  "seconds": 8.67,
+  "estimated": true
+ },
+ {
+  "scene": 2,
+  "seconds": 5.92,
+  "estimated": true
+ },
+ {
+  "scene": 3,
+  "seconds": 5.92,
+  "estimated": true
+ },
+ {
+  "scene": 4,
+  "seconds": 4.82,
+  "estimated": true
+ },
+ {
+  "scene": 5,
+  "seconds": 5.92,
+  "estimated": true
+ },
+ {
+  "scene": 6,
+  "seconds": 10.88,
+  "estimated": true
+ },
+ {
+  "scene": 7,
+  "seconds": 34.05,
+  "estimated": true
+ }
+]
