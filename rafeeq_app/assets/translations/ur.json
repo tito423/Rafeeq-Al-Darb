@@ -163,6 +163,14 @@
     "prayer": "نماز"
   },
   "home": {
+    "ql_player": "تلاوت",
+    "ql_tajweed": "تجوید",
+    "ql_hifz": "حفظ",
+    "ql_hajj": "حج و عمرہ",
+    "ql_ruqyah": "رقیہ",
+    "ql_kids": "بچوں کا کونا",
+    "ql_journey": "میرا سفر",
+    "ql_dedications": "ایصالِ ثواب",
     "greeting_morning": "صبح بخیر، رفیقِ راہ",
     "greeting_evening": "شام بخیر، رفیقِ راہ",
     "greeting_night": "شب بخیر، رفیقِ راہ",

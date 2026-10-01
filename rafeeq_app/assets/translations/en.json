@@ -163,6 +163,14 @@
     "prayer": "Prayer"
   },
   "home": {
+    "ql_player": "Recitations",
+    "ql_tajweed": "Tajweed",
+    "ql_hifz": "Memorise",
+    "ql_hajj": "Hajj & Umrah",
+    "ql_ruqyah": "Ruqyah",
+    "ql_kids": "Kids",
+    "ql_journey": "My journey",
+    "ql_dedications": "Dedications",
     "greeting_morning": "Good morning, companion of the path",
     "greeting_evening": "Good evening, companion of the path",
     "greeting_night": "Good night, companion of the path",

@@ -40,6 +40,7 @@ import '../widgets/islamic_occasions_sheet.dart';
 import '../widgets/on_this_day_sheet.dart';
 import '../widgets/prayer_countdown.dart';
 import '../widgets/prayer_slides.dart';
+import '../widgets/worship_quick_links.dart';
 
 part 'home_prayer_card.dart';
 
@@ -142,6 +143,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
               end: [
                 if (twoPane) const _HeaderCard(),
+                // «كارت كبير في وصلات سريعة» (owner, 2026-10-01) - the
+                // «القرآن والعبادات» destinations one tap from Home.
+                const WorshipQuickLinks(),
                 // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
                 // the reference shows a "متابعة القراءة" bookmark-style card
                 // ("where you left off") as its own thing, separate from the

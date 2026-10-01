@@ -163,6 +163,14 @@
     "prayer": "الصلاة"
   },
   "home": {
+    "ql_player": "مشغّل التلاوة",
+    "ql_tajweed": "التجويد",
+    "ql_hifz": "التحفيظ",
+    "ql_hajj": "الحج والعمرة",
+    "ql_ruqyah": "الرقية الشرعية",
+    "ql_kids": "ركن الأطفال",
+    "ql_journey": "رحلتي",
+    "ql_dedications": "الإهداءات",
     "greeting_morning": "صباح الخير، رفيق الدرب",
     "greeting_evening": "مساء الخير، رفيق الدرب",
     "greeting_night": "مساء النور، رفيق الدرب",
