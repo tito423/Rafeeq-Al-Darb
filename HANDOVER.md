@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 11:40 — IN PROGRESS — resume here**
+**2026-10-01 12:18 — IN PROGRESS — resume here**
 
-Kids stories visuals v2 built locally; full render with narration running
+Nuh story video v2 rendered with narration and sent to the owner (157.9 s, frames checked)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
