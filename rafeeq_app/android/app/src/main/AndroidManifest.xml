@@ -133,12 +133,26 @@
             working, and the only proof for a notification is tapping a real
             one.
         -->
+        <!--
+            No `taskAffinity=""` (Flutter's template default), so the
+            activity has the package's affinity.
+
+            R6, MEASURED on emulator-5554 (2026-10-02): with the empty
+            affinity, leaving the app with Back (the activity finishes, its
+            task stays in Recents) and then tapping the recitation
+            notification started a SECOND task - Recents held #201 (launcher
+            intent) and #202 (audio_service NOTIFICATION_CLICK) side by side,
+            the owner's «٢ instances … الاتنين فاتحين قرآن». A task with no
+            affinity can only be found again by an identical intent, and the
+            notification's intent is not the launcher's. With the package
+            affinity every entry point - launcher, notifications, the prayer
+            card, «رفيق» - lands in the one task.
+        -->
         <activity
             android:name=".MainActivity"
             android:banner="@drawable/tv_banner"
             android:exported="true"
             android:launchMode="singleTask"
-            android:taskAffinity=""
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"

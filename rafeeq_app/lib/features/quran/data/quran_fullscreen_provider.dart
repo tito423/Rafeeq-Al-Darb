@@ -9,3 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// sets this when full-screen reading is on, `AppShell` watches it to hide
 /// its own `bottomNavigationBar` entirely while it's true.
 final quranFullScreenProvider = StateProvider<bool>((ref) => false);
+
+/// Whether the full-screen reader's floating controls (`MushafChrome`) are
+/// showing. While they are, `AppShell` brings its navigation bar back over
+/// the page (R5, 2026-10-02): the owner reopened the app onto a full-screen
+/// mushaf and found no way to the other tabs — a page tap showed the
+/// controls, but the tabs stayed hidden until full screen was turned off in
+/// «العرض». The bar is laid over the page (`extendBody`), so showing it does
+/// not re-lay out the mushaf.
+final quranChromeShownProvider = StateProvider<bool>((ref) => false);

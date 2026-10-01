@@ -307,6 +307,11 @@ class _AppShellState extends ConsumerState<AppShell>
 
     final fullScreen =
         ref.watch(quranFullScreenProvider) && shown == AppTab.quran;
+    // In full screen the tabs come back with the page's floating controls
+    // (a page tap) — otherwise a reader who reopened the app onto a
+    // full-screen mushaf had no way to any other tab. See
+    // `quranChromeShownProvider`.
+    final navOverPage = fullScreen && ref.watch(quranChromeShownProvider);
 
     final tour = ref.watch(tutorialRunningProvider);
     // On a true first run the tour has the screen, so the name is asked when
@@ -424,6 +429,9 @@ class _AppShellState extends ConsumerState<AppShell>
             // بتمش أو بتعمل فليكر جامد جدا». Its dialogs float above the keyboard
             // on their own.
             resizeToAvoidBottomInset: shown != AppTab.quran,
+            // Over the page, not beside it: the full-screen mushaf keeps its
+            // whole height while the bar shows, so nothing re-lays out.
+            extendBody: fullScreen,
             body: sideways
                 ? Row(
                     children: [
@@ -459,7 +467,7 @@ class _AppShellState extends ConsumerState<AppShell>
             // fixed 68px height. Pinning the text scale stops a device font-size
             // setting from making that worse, and is the only part of this that a
             // user setting could otherwise break.
-            bottomNavigationBar: fullScreen || sideways
+            bottomNavigationBar: (fullScreen && !navOverPage) || sideways
                 ? null
                 : focus != null
                 ? const _FocusModeBar()

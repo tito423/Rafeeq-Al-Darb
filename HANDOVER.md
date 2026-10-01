@@ -2514,9 +2514,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 01:23 — IN PROGRESS — resume here**
+**2026-10-02 02:58 — IN PROGRESS — resume here**
 
-Sizes committed (409.9 GB full, 57.7 GB ayah); R7 hosting decision waiting for the owner
+R6 root cause reproduced (taskAffinity empty -> 2nd task from notification); R5 nav over full-screen mushaf
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
