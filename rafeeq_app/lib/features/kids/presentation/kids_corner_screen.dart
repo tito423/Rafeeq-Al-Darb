@@ -13,6 +13,7 @@ import '../data/kids_content.dart';
 import '../data/kids_stages.dart';
 import 'ayah_game_screen.dart';
 import 'kids_stage_screen.dart';
+import 'kids_stories_screen.dart';
 
 /// «ركن الأطفال» (owner, 2026-09-29): big, bright, and only real content -
 /// the short surahs in the app's memorisation screen, the everyday adhkar of
@@ -68,6 +69,16 @@ class KidsCornerScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 14),
+          // The story shelves: drawn, narrated stories from the Qur'an.
+          _BigTile(
+            color: const Color(0xFF2E86DE),
+            icon: Icons.movie_filter_rounded,
+            title: 'kids.stories'.tr(),
+            subtitle: 'kids.stories_sub'.tr(),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const KidsStoriesScreen())),
+          ),
+          const SizedBox(height: 12),
           // Only what is for children lives here; «رحلتي» is for every age
           // and has its own entry in More (owner, 2026-09-29).
           _BigTile(

@@ -988,7 +988,8 @@
     "repair_nothing": "Não há transferências incompletas",
     "active_now": "Baixando agora",
     "cat_ayah_recitations": "Recitações por Versículo",
-    "cat_assistant": "Rafeeq — assistente de voz"
+    "cat_assistant": "Rafeeq — assistente de voz",
+    "cat_kids_stories": "Histórias infantis"
   },
   "search": {
     "title": "Pesquisa temática",
@@ -1218,7 +1219,10 @@
     "f_tajweed": "Aprender tajwid",
     "f_tajweed_desc": "Lições graduadas — cada regra ouvida num versículo",
     "f_hajj": "Ritos do Hajj e da Umrah",
-    "f_hajj_desc": "Passo a passo, com diagramas interativos e as quatro escolas"
+    "f_hajj_desc": "Passo a passo, com diagramas interativos e as quatro escolas",
+    "src_kids_muyassar": "O sentido de cada frase das histórias infantis vem de al-Tafsir al-Muyassar",
+    "src_kids_minshawi": "Os versículos recitados nas histórias infantis, pelo xeique Muhammad Siddiq al-Minshawi (murattal)",
+    "src_kids_tts": "A voz do narrador das histórias infantis (uma voz gerada por IA)"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -2355,7 +2359,30 @@
     "stage_hamala": "Portadores do Alcorão",
     "stage_hamala_ages": "16–17 anos · de at-Tawbah a al-Máʾidah",
     "stage_ahl": "Gente do Alcorão",
-    "stage_ahl_ages": "17 anos ou mais · de an-Nisáʾ a al-Baqarah — o Alcorão inteiro"
+    "stage_ahl_ages": "17 anos ou mais · de an-Nisáʾ a al-Baqarah — o Alcorão inteiro",
+    "stories": "Histórias",
+    "stories_sub": "Histórias dos profetas com som e imagem, a partir dos versículos do Alcorão",
+    "stories_intro": "Histórias desenhadas e narradas para crianças. Cada frase vem dos versículos do Alcorão e do seu sentido em al-Tafsir al-Muyassar, e os versículos são recitados pelo xeique Muhammad Siddiq al-Minshawi. Nenhum profeta é desenhado; uma luz suave representa a sua presença.",
+    "story_cat_prophets": "Histórias dos profetas",
+    "story_cat_righteous": "Histórias dos justos",
+    "story_cat_companions": "Histórias dos Companheiros",
+    "story_nuh": "Nuh (Noé) e a arca",
+    "story_yunus": "Yunus (Jonas) e a baleia",
+    "story_ibrahim": "Ibrahim (Abraão) e os ídolos",
+    "story_error": "Não foi possível reproduzir a história. Verifique a conexão e tente novamente.",
+    "story_play": "Reproduzir",
+    "story_pause": "Pausar",
+    "story_back10": "Voltar 10 segundos",
+    "story_fwd10": "Avançar 10 segundos",
+    "story_captions": "Legendas",
+    "story_full": "Tela cheia",
+    "story_exit_full": "Sair da tela cheia",
+    "story_download": "Baixar a história para assistir offline",
+    "story_downloaded": "A história está neste aparelho",
+    "story_downloading": "Baixando… {}%",
+    "story_size": "Tamanho: {} MB",
+    "story_delete": "Apagar a cópia baixada",
+    "story_about": "O narrador é uma voz gerada por IA; os versículos são recitados pelo xeique Muhammad Siddiq al-Minshawi. O texto de cada história e as suas fontes estão na página de Fontes."
   },
   "journey": {
     "how_title": "Como ganhar pontos",

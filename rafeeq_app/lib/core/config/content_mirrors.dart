@@ -48,6 +48,8 @@ class ContentMirrors {
       'geo/',
       // How dorar.net / shamela.ws are parsed (SourceRules).
       'config/',
+      // The kids-corner story videos and their posters.
+      'kids/',
     ],
     'content-mushaf': ['mushaf/madinah_qc/'],
     'content-surah': [

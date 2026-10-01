@@ -40,10 +40,13 @@ import '../../home/presentation/widgets/clock_gallery_sheet.dart';
 import '../../home/presentation/widgets/on_this_day_sheet.dart';
 import '../../khatma/presentation/khatma_screen.dart';
 import '../../kids/data/kids_stages.dart';
+import '../../kids/data/kids_stories.dart';
 import '../../kids/presentation/ayah_game_screen.dart';
 import '../../kids/presentation/journey_screen.dart';
 import '../../kids/presentation/kids_corner_screen.dart';
 import '../../kids/presentation/kids_stage_screen.dart';
+import '../../kids/presentation/kids_stories_screen.dart';
+import '../../kids/presentation/kids_story_player_screen.dart';
 import '../../library/data/book_catalog.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
@@ -346,6 +349,13 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
           final id = screen.name.substring(4).toLowerCase();
           push(KidsStageScreen(
               stage: kidsStages.firstWhere((s) => s.id == id)));
+        case AssistantScreen.kidsStories:
+          push(const KidsStoriesScreen());
+        case AssistantScreen.kidsStoryNuh || AssistantScreen.kidsStoryYunus ||
+              AssistantScreen.kidsStoryIbrahim:
+          final id = screen.name.substring('kidsStory'.length).toLowerCase();
+          push(KidsStoryPlayerScreen(
+              story: kidsStories.firstWhere((s) => s.id == id)));
       }
     case QuranWordIntent(:final query):
       await runQuranWord(ref, query);

@@ -561,6 +561,18 @@ class AssistantParser {
         return const OpenScreenIntent(AssistantScreen.settings);
       }
     }
+    // The kids' stories before any surah: «شغل قصة نوح» is the story, not
+    // سورة نوح, and «قصص الأنبياء» is the shelf, not سورة الأنبياء. Every
+    // story phrase carries «قصه / قصص / حكايه / حدوته» (or "story"), which no
+    // surah request does.
+    for (final s in const [
+      AssistantScreen.kidsStoryNuh,
+      AssistantScreen.kidsStoryYunus,
+      AssistantScreen.kidsStoryIbrahim,
+      AssistantScreen.kidsStories,
+    ]) {
+      if (_hasPhrase(clean, _screens[s] ?? const [])) return OpenScreenIntent(s);
+    }
     final ayahRef = _ayahRef(words,
         playing: playing, memorizing: memorizing, sunan: openingSunan);
     if (ayahRef != null) return ayahRef;

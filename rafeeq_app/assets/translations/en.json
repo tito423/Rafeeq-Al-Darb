@@ -988,7 +988,8 @@
     "repair_nothing": "Nothing was left unfinished",
     "active_now": "Downloading now",
     "cat_ayah_recitations": "Per-Ayah Recitations",
-    "cat_assistant": "Rafeeq — voice assistant"
+    "cat_assistant": "Rafeeq — voice assistant",
+    "cat_kids_stories": "Kids' stories"
   },
   "search": {
     "title": "Thematic Search",
@@ -1218,7 +1219,10 @@
     "f_tajweed": "Learn Tajweed",
     "f_tajweed_desc": "Graded lessons — and every rule heard in a real ayah",
     "f_hajj": "Hajj and Umrah rites",
-    "f_hajj_desc": "Step by step, with interactive diagrams and the four schools"
+    "f_hajj_desc": "Step by step, with interactive diagrams and the four schools",
+    "src_kids_muyassar": "The meaning of every sentence in the kids' stories is taken from al-Tafsir al-Muyassar",
+    "src_kids_minshawi": "The verses recited inside the kids' stories, by Sheikh Muhammad Siddiq al-Minshawi (murattal)",
+    "src_kids_tts": "The narrator's voice in the kids' stories (an AI-generated voice)"
   },
   "ruqyah": {
     "title": "Ruqyah",
@@ -2355,7 +2359,30 @@
     "stage_hamala": "Bearers of the Qur’an",
     "stage_hamala_ages": "Ages 16–17 · at-Tawbah back to al-Māʾidah",
     "stage_ahl": "People of the Qur’an",
-    "stage_ahl_ages": "Ages 17+ · an-Nisāʾ back to al-Baqarah — the whole Qur’an"
+    "stage_ahl_ages": "Ages 17+ · an-Nisāʾ back to al-Baqarah — the whole Qur’an",
+    "stories": "Stories",
+    "stories_sub": "Prophets' stories in sound and pictures, from the verses of the Qur'an",
+    "stories_intro": "Drawn, narrated stories for children. Every sentence comes from the verses of the Qur'an and their meaning in al-Tafsir al-Muyassar, and the verses are recited by Sheikh Muhammad Siddiq al-Minshawi. No prophet is ever drawn; a soft light stands for his presence.",
+    "story_cat_prophets": "Stories of the Prophets",
+    "story_cat_righteous": "Stories of the righteous",
+    "story_cat_companions": "Stories of the Companions",
+    "story_nuh": "Nuh (Noah) and the Ark",
+    "story_yunus": "Yunus (Jonah) and the Whale",
+    "story_ibrahim": "Ibrahim (Abraham) and the Idols",
+    "story_error": "The story could not be played. Check your connection and try again.",
+    "story_play": "Play",
+    "story_pause": "Pause",
+    "story_back10": "Back 10 seconds",
+    "story_fwd10": "Forward 10 seconds",
+    "story_captions": "Captions",
+    "story_full": "Full screen",
+    "story_exit_full": "Exit full screen",
+    "story_download": "Download the story to watch offline",
+    "story_downloaded": "The story is on this device",
+    "story_downloading": "Downloading… {}%",
+    "story_size": "Size: {} MB",
+    "story_delete": "Delete the downloaded copy",
+    "story_about": "The narrator is an AI-generated voice; the verses are recited by Sheikh Muhammad Siddiq al-Minshawi. Each story's text and its sources are listed on the Sources page."
   },
   "journey": {
     "how_title": "How points are earned",

@@ -988,7 +988,8 @@
     "repair_nothing": "Aucun téléchargement inachevé",
     "active_now": "En cours de téléchargement",
     "cat_ayah_recitations": "Récitations par Verset",
-    "cat_assistant": "Rafeeq — assistant vocal"
+    "cat_assistant": "Rafeeq — assistant vocal",
+    "cat_kids_stories": "Histoires pour enfants"
   },
   "search": {
     "title": "Recherche thématique",
@@ -1218,7 +1219,10 @@
     "f_tajweed": "Apprendre le tajwid",
     "f_tajweed_desc": "Leçons graduées — et chaque règle entendue dans un verset",
     "f_hajj": "Rites du Hajj et de la Omra",
-    "f_hajj_desc": "Étape par étape, avec schémas interactifs et les quatre écoles"
+    "f_hajj_desc": "Étape par étape, avec schémas interactifs et les quatre écoles",
+    "src_kids_muyassar": "Le sens de chaque phrase des histoires pour enfants est tiré d'al-Tafsir al-Muyassar",
+    "src_kids_minshawi": "Les versets récités dans les histoires pour enfants, par le cheikh Muhammad Siddiq al-Minshawi (murattal)",
+    "src_kids_tts": "La voix du narrateur des histoires pour enfants (une voix générée par IA)"
   },
   "ruqyah": {
     "title": "Roqya",
@@ -2355,7 +2359,30 @@
     "stage_hamala": "Porteurs du Coran",
     "stage_hamala_ages": "16–17 ans · d’at-Tawba à al-Mâʾida",
     "stage_ahl": "Gens du Coran",
-    "stage_ahl_ages": "17 ans et plus · d’an-Nisâʾ à al-Baqara — le Coran entier"
+    "stage_ahl_ages": "17 ans et plus · d’an-Nisâʾ à al-Baqara — le Coran entier",
+    "stories": "Histoires",
+    "stories_sub": "Histoires des prophètes en son et en image, tirées des versets du Coran",
+    "stories_intro": "Des histoires dessinées et racontées pour les enfants. Chaque phrase vient des versets du Coran et de leur sens dans al-Tafsir al-Muyassar, et les versets sont récités par le cheikh Muhammad Siddiq al-Minshawi. Aucun prophète n'est jamais dessiné ; une douce lumière figure sa présence.",
+    "story_cat_prophets": "Histoires des prophètes",
+    "story_cat_righteous": "Histoires des pieux",
+    "story_cat_companions": "Histoires des Compagnons",
+    "story_nuh": "Nouh (Noé) et l'arche",
+    "story_yunus": "Younous (Jonas) et la baleine",
+    "story_ibrahim": "Ibrahim (Abraham) et les idoles",
+    "story_error": "Impossible de lire l'histoire. Vérifie la connexion et réessaie.",
+    "story_play": "Lecture",
+    "story_pause": "Pause",
+    "story_back10": "Reculer de 10 secondes",
+    "story_fwd10": "Avancer de 10 secondes",
+    "story_captions": "Sous-titres",
+    "story_full": "Plein écran",
+    "story_exit_full": "Quitter le plein écran",
+    "story_download": "Télécharger l'histoire pour la regarder hors ligne",
+    "story_downloaded": "L'histoire est sur cet appareil",
+    "story_downloading": "Téléchargement… {} %",
+    "story_size": "Taille : {} Mo",
+    "story_delete": "Supprimer la copie téléchargée",
+    "story_about": "Le narrateur est une voix générée par IA ; les versets sont récités par le cheikh Muhammad Siddiq al-Minshawi. Le texte de chaque histoire et ses sources figurent sur la page Sources."
   },
   "journey": {
     "how_title": "Comment gagner des points",

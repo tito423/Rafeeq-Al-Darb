@@ -47,4 +47,6 @@ enum AssistantScreen {
   kidsCorner, journey, ayahGame, adhkarListenMorning, adhkarListenEvening,
   rafeeqDiag, kidsBuds, kidsCubs, kidsKnights, kidsStars, kidsHafiz,
   kidsSabiqun, kidsHamala, kidsAhl,
+  // The kids-corner story shelves and each story by name (2026-10-01).
+  kidsStories, kidsStoryNuh, kidsStoryYunus, kidsStoryIbrahim,
 }

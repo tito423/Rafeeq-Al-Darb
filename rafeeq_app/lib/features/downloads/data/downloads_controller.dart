@@ -56,6 +56,9 @@ enum DownloadCategory {
 
   /// «رفيق»'s voice pack (the offline speech recogniser), ~368 MB.
   assistant,
+
+  /// The kids-corner story videos saved for offline viewing (10-20 MB each).
+  kidsStories,
 }
 
 extension DownloadCategoryX on DownloadCategory {
@@ -67,6 +70,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.voices => 'downloads.cat_voices',
         DownloadCategory.quranSciences => 'downloads.cat_quran_sciences',
         DownloadCategory.assistant => 'downloads.cat_assistant',
+        DownloadCategory.kidsStories => 'downloads.cat_kids_stories',
       };
 
   /// [DownloadManager] `category` string(s) that map to this bucket.
@@ -91,6 +95,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.voices => const ['tts_voice'],
         DownloadCategory.quranSciences => const ['sciences'],
         DownloadCategory.assistant => const [],
+        DownloadCategory.kidsStories => const ['kids_story'],
       };
 }
 
@@ -230,6 +235,9 @@ Future<void> freeCategory(WidgetRef ref, DownloadCategory category) async {
       await RafeeqVoicePack.instance.delete();
     case DownloadCategory.books:
       await LibraryApiService.instance.deleteAllBooks();
+    case DownloadCategory.kidsStories:
+      // The videos are DownloadManager artifacts; the loop below removes them.
+      break;
     case DownloadCategory.quranSciences:
       // Nothing outside DownloadManager: the pack IS the artifact, and
       // the loop below removes it. The ayah card reopens its download

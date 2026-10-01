@@ -361,6 +361,23 @@ const screenWords = <AssistantScreen, List<String>>{
   AssistantScreen.adhkarListenEvening: ['استمع لاذكار المساء',
     'اسمع اذكار المساء', 'سمعني اذكار المساء', 'اذكار المساء بالصوت',
     'اذكار المساء صوتي', 'listen to evening adhkar', 'evening adhkar audio'],
+  // Never the bare «القصص»: that is سورة القصص.
+  AssistantScreen.kidsStories: ['قصص الانبياء', 'قصص الاطفال', 'قصص للاطفال',
+    'قصص العيال', 'قصص الصغار', 'قصص الاولاد', 'حكايات الانبياء',
+    'حكايات الاطفال', 'حكايات للاطفال', 'حواديت', 'الحواديت', 'حدوته',
+    'حدوته للعيال', 'kids stories', 'prophet stories', 'stories of the prophets',
+    'historias de los profetas', 'histoires des prophetes', 'historias dos profetas',
+    'истории пророков', 'انبیا کی کہانیاں', 'بچوں کی کہانیاں'],
+  AssistantScreen.kidsStoryNuh: ['قصه نوح', 'قصه سيدنا نوح', 'حكايه نوح',
+    'حدوته نوح', 'قصه السفينه', 'story of noah', 'noah story', 'nuh story',
+    'historia de noe', 'histoire de noe', 'historia de noé', 'история нуха', 'نوح کی کہانی'],
+  AssistantScreen.kidsStoryYunus: ['قصه يونس', 'قصه سيدنا يونس', 'حكايه يونس',
+    'حدوته يونس', 'قصه الحوت', 'story of jonah', 'jonah story', 'yunus story',
+    'historia de jonas', 'histoire de jonas', 'история юнуса', 'یونس کی کہانی'],
+  AssistantScreen.kidsStoryIbrahim: ['قصه ابراهيم', 'قصه سيدنا ابراهيم',
+    'حكايه ابراهيم', 'حدوته ابراهيم', 'قصه الاصنام', 'story of abraham',
+    'abraham story', 'ibrahim story', 'historia de abraham', "histoire d'abraham",
+    'история ибрахима', 'ابراہیم کی کہانی'],
   AssistantScreen.rafeeqDiag: ['تشخيص رفيق', 'تشخيص', 'فحص رفيق',
     'diagnostics', 'diagnostico', 'diagnostic', 'диагностика', 'تشخیص'],
   AssistantScreen.home: ['الرئيسيه', 'الصفحه الرئيسيه', 'البدايه', 'home',
@@ -427,6 +444,9 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.kidsSabiqun: ['kids.stage_sabiqun'],
   AssistantScreen.kidsHamala: ['kids.stage_hamala'],
   AssistantScreen.kidsAhl: ['kids.stage_ahl'],
+  AssistantScreen.kidsStoryNuh: ['kids.story_nuh'],
+  AssistantScreen.kidsStoryYunus: ['kids.story_yunus'],
+  AssistantScreen.kidsStoryIbrahim: ['kids.story_ibrahim'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the

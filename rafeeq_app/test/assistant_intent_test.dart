@@ -518,6 +518,15 @@ void main() {
       'افتح حملة القرآن': 'open kidsHamala',
       'افتح البراعم': 'open kidsBuds',
       'open kids corner': 'open kidsCorner',
+      'افتح قصص الأنبياء': 'open kidsStories',
+      'عايز حواديت للعيال': 'open kidsStories',
+      'شغل قصة نوح': 'open kidsStoryNuh',
+      'افتح قصة سيدنا يونس': 'open kidsStoryYunus',
+      'وريني قصة الأصنام': 'open kidsStoryIbrahim',
+      'open kids stories': 'open kidsStories',
+      // ...and the surahs with the same names stay surahs
+      'شغل سورة نوح': 'play surah 71 by -',
+      'شغل سورة يونس': 'play surah 10 by -',
     };
     for (final e in cases.entries) {
       expect('${p.parse(e.key)}', e.value, reason: e.key);

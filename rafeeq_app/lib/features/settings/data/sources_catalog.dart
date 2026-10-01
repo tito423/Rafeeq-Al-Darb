@@ -200,6 +200,18 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       const SourceEntry('YouTube', 'https://www.youtube.com', 'about.src_youtube'),
     ]
   ),
+  // The kids-corner story videos (docs/kids_stories/, CONTENT-LICENSES.md).
+  (
+    'kids.stories',
+    [
+      const SourceEntry('التفسير الميسر — مجمع الملك فهد',
+          'https://qurancomplex.gov.sa', 'about.src_kids_muyassar'),
+      const SourceEntry('everyayah.com — محمد صدّيق المنشاوي',
+          'https://everyayah.com/data/Minshawy_Murattal_128kbps/', 'about.src_kids_minshawi'),
+      const SourceEntry('Google Gemini TTS',
+          'https://ai.google.dev/gemini-api/docs/speech-generation', 'about.src_kids_tts'),
+    ]
+  ),
   (
     'ruqyah.title',
     [

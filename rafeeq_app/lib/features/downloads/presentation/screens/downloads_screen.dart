@@ -13,6 +13,7 @@ import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../../assistant/presentation/assistant_settings_card.dart';
+import '../../../kids/presentation/kids_stories_screen.dart';
 import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/data/mushaf_edition.dart';
 import '../../../quran/data/mushaf_page_service.dart';
@@ -174,6 +175,10 @@ class _OverviewTab extends ConsumerWidget {
                   ),
                 ),
               ),
+            );
+      case DownloadCategory.kidsStories:
+        return () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const KidsStoriesScreen()),
             );
       // «والباقي مش بيوديني لحاجة» - these two had no destination at all.
       case DownloadCategory.quranSciences:
