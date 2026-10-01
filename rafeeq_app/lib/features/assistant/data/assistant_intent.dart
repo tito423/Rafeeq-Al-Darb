@@ -569,6 +569,10 @@ class AssistantParser {
       AssistantScreen.kidsStoryNuh,
       AssistantScreen.kidsStoryYunus,
       AssistantScreen.kidsStoryIbrahim,
+      AssistantScreen.kidsStoryMusa,
+      AssistantScreen.kidsStorySulayman,
+      AssistantScreen.kidsStorySalih,
+      AssistantScreen.kidsStoryHud,
       AssistantScreen.kidsStories,
     ]) {
       if (_hasPhrase(clean, _screens[s] ?? const [])) return OpenScreenIntent(s);

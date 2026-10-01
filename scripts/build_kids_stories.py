@@ -39,6 +39,14 @@ STORIES = [
      {9: (21, 87, f'{VOICE}/yunus/r21087.wav', 0.6, False)}, 62.0),
     ('ibrahim', 'prophets', 'ibrahim', 'ibrahim/out/ibrahim_v1.mp4', lambda: tsv_lines('ibrahim'),
      {10: (21, 69, f'{VOICE}/ibrahim/r21069.wav', 0.6, False)}, 61.5),
+    ('musa', 'prophets', 'musa', 'musa/out/musa_v1.mp4', lambda: tsv_lines('musa'),
+     {7: (26, 63, f'{VOICE}/musa/rec.wav', 0.6, False)}, 66.0),
+    ('sulayman', 'prophets', 'sulayman', 'sulayman/out/sulayman_v1.mp4', lambda: tsv_lines('sulayman'),
+     {9: (27, 19, f'{VOICE}/sulayman/rec.wav', 0.6, False)}, 38.0),
+    ('salih', 'prophets', 'salih', 'salih/out/salih_v1.mp4', lambda: tsv_lines('salih'),
+     {6: (11, 64, f'{VOICE}/salih/rec.wav', 0.6, False)}, 66.0),
+    ('hud', 'prophets', 'hud', 'hud/out/hud_v1.mp4', lambda: tsv_lines('hud'),
+     {8: (46, 24, f'{VOICE}/hud/rec.wav', 0.6, False)}, 62.0),
 ]
 
 def wav_seconds(p):

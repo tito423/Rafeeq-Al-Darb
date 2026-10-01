@@ -2383,7 +2383,11 @@
     "story_size": "Size: {} MB",
     "story_delete": "Delete the downloaded copy",
     "story_about": "The narrator is an AI-generated voice; the verses are recited by Sheikh Muhammad Siddiq al-Minshawi. Each story's text and its sources are listed on the Sources page.",
-    "story_replay": "Replay"
+    "story_replay": "Replay",
+    "story_musa": "Musa (Moses) and the Sea",
+    "story_sulayman": "Sulayman (Solomon) and the Ant",
+    "story_salih": "Salih and the She-Camel",
+    "story_hud": "Hud and the Wind"
   },
   "journey": {
     "how_title": "How points are earned",

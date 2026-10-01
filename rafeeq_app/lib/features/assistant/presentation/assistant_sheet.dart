@@ -352,7 +352,9 @@ Future<void> runIntent(ProviderContainer ref, AssistantIntent intent) async {
         case AssistantScreen.kidsStories:
           push(const KidsStoriesScreen());
         case AssistantScreen.kidsStoryNuh || AssistantScreen.kidsStoryYunus ||
-              AssistantScreen.kidsStoryIbrahim:
+              AssistantScreen.kidsStoryIbrahim || AssistantScreen.kidsStoryMusa ||
+              AssistantScreen.kidsStorySulayman || AssistantScreen.kidsStorySalih ||
+              AssistantScreen.kidsStoryHud:
           final id = screen.name.substring('kidsStory'.length).toLowerCase();
           push(KidsStoryPlayerScreen(
               story: kidsStories.firstWhere((s) => s.id == id)));

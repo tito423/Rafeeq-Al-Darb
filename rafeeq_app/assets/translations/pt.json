@@ -2383,7 +2383,11 @@
     "story_size": "Tamanho: {} MB",
     "story_delete": "Apagar a cópia baixada",
     "story_about": "O narrador é uma voz gerada por IA; os versículos são recitados pelo xeique Muhammad Siddiq al-Minshawi. O texto de cada história e as suas fontes estão na página de Fontes.",
-    "story_replay": "Repetir"
+    "story_replay": "Repetir",
+    "story_musa": "Musa (Moisés) e o mar",
+    "story_sulayman": "Sulaiman (Salomão) e a formiga",
+    "story_salih": "Salih e a camela",
+    "story_hud": "Hud e o vento"
   },
   "journey": {
     "how_title": "Como ganhar pontos",

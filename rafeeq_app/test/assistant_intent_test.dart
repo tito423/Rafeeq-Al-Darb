@@ -527,6 +527,11 @@ void main() {
       // ...and the surahs with the same names stay surahs
       'شغل سورة نوح': 'play surah 71 by -',
       'شغل سورة يونس': 'play surah 10 by -',
+      'شغل قصة موسى': 'open kidsStoryMusa',
+      'افتح قصة النملة': 'open kidsStorySulayman',
+      'عايز قصة الناقة': 'open kidsStorySalih',
+      'وريني قصة سيدنا هود': 'open kidsStoryHud',
+      'شغل سورة هود': 'play surah 11 by -',
     };
     for (final e in cases.entries) {
       expect('${p.parse(e.key)}', e.value, reason: e.key);

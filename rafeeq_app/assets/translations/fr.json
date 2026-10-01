@@ -2383,7 +2383,11 @@
     "story_size": "Taille : {} Mo",
     "story_delete": "Supprimer la copie téléchargée",
     "story_about": "Le narrateur est une voix générée par IA ; les versets sont récités par le cheikh Muhammad Siddiq al-Minshawi. Le texte de chaque histoire et ses sources figurent sur la page Sources.",
-    "story_replay": "Revoir"
+    "story_replay": "Revoir",
+    "story_musa": "Moussa (Moïse) et la mer",
+    "story_sulayman": "Soulayman (Salomon) et la fourmi",
+    "story_salih": "Salih et la chamelle",
+    "story_hud": "Houd et le vent"
   },
   "journey": {
     "how_title": "Comment gagner des points",
