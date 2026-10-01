@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-01 23:14 — IN PROGRESS — resume here**
+**2026-10-01 23:33 — IN PROGRESS — resume here**
 
-Stories: 22 in the app; every free TTS quota used for today; 4 stories + 4 lines left for 10-02
+Released v3.74.0 (22 kids stories, Home quick links, tasmee work since 3.73.0)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
