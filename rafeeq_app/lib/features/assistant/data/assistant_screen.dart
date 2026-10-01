@@ -53,4 +53,5 @@ enum AssistantScreen {
   kidsStoryAyyub, kidsStoryZakariya, kidsStoryKahf, kidsStoryLuqman,
   kidsStoryKaaba, kidsStoryFil, kidsStoryIlyas,
   kidsStoryYusuf, kidsStoryShuayb, kidsStoryMusaBaby,
+  kidsStoryDayf, kidsStorySabt,
 }

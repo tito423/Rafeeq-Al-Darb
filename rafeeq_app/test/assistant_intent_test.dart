@@ -543,6 +543,8 @@ void main() {
       'افتح قصة شعيب': 'open kidsStoryShuayb',
       'قصة موسى الرضيع': 'open kidsStoryMusaBaby',
       'حدوتة أم موسى': 'open kidsStoryMusaBaby',
+      'شغل قصة ضيوف إبراهيم': 'open kidsStoryDayf',
+      'افتح قصة أصحاب السبت': 'open kidsStorySabt',
       'افتح سورة يوسف': 'open quran 12:1',
       'شغل سورة الكهف': 'play surah 18 by -',
       'افتح سورة الفيل': 'open quran 105:1',

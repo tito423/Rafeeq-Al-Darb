@@ -425,6 +425,14 @@ const screenWords = <AssistantScreen, List<String>>{
     'قصه موسى الصغير', 'قصه ام موسى', 'حكايه ام موسى', 'حدوته ام موسى',
     'موسى في الصندوق', 'قصه موسى في النيل', 'baby moses', 'moses in the basket',
     'moise bebe', 'moises bebe', 'младенец муса', 'موسیٰ بچپن کی کہانی'],
+  AssistantScreen.kidsStoryDayf: ['قصه ضيوف ابراهيم', 'قصه ضيف ابراهيم', 'حكايه ضيوف ابراهيم',
+    'حدوته ضيوف ابراهيم', 'قصه الضيوف', 'قصه بشري اسحاق', 'قصه اسحاق',
+    "abraham's guests", 'guests of ibrahim', 'los huespedes de abraham',
+    "les hotes d'abraham", 'гости ибрахима', 'ابراہیم کے مہمانوں کی کہانی'],
+  AssistantScreen.kidsStorySabt: ['قصه اصحاب السبت', 'قصه اهل السبت', 'حكايه اصحاب السبت',
+    'حدوته اصحاب السبت', 'قصه يوم السبت', 'قصه السمك', 'people of the sabbath',
+    'story of the sabbath', 'historia del sabado', 'histoire du sabbat',
+    'история людей субботы', 'اصحاب سبت کی کہانی'],
   AssistantScreen.rafeeqDiag: ['تشخيص رفيق', 'تشخيص', 'فحص رفيق',
     'diagnostics', 'diagnostico', 'diagnostic', 'диагностика', 'تشخیص'],
   AssistantScreen.home: ['الرئيسيه', 'الصفحه الرئيسيه', 'البدايه', 'home',
@@ -508,6 +516,8 @@ const screenLabelKeys = <AssistantScreen, List<String>>{
   AssistantScreen.kidsStoryYusuf: ['kids.story_yusuf'],
   AssistantScreen.kidsStoryShuayb: ['kids.story_shuayb'],
   AssistantScreen.kidsStoryMusaBaby: ['kids.story_musa_baby'],
+  AssistantScreen.kidsStoryDayf: ['kids.story_dayf'],
+  AssistantScreen.kidsStorySabt: ['kids.story_sabt'],
 };
 
 /// Settings whose names, said, open the settings: every short title in the
