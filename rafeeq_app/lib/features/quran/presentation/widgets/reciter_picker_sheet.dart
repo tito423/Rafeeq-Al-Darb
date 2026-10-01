@@ -8,9 +8,11 @@ import '../../../../core/services/recitation_resume.dart';
 import '../../../../core/services/recitation_source.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
+import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
+import '../../../quran_audio/data/recitation_sizes.dart';
 import '../../../quran_audio/presentation/widgets/audio_common.dart' show surahTitle;
 import '../../data/mushaf_data_provider.dart';
 
@@ -102,6 +104,7 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
     final locale = context.locale.languageCode;
     final selected = ref.watch(selectedReciterProvider);
     final all = ref.watch(recitersProvider).valueOrNull ?? const <Reciter>[];
+    final sizes = ref.watch(recitationSizesProvider).valueOrNull;
     final q = normalizeArabic(_query.trim().toLowerCase());
     final list = [
       for (final r in all)
@@ -198,10 +201,16 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
                         ? goldOn(Theme.of(context).colorScheme)
                         : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  subtitle: onDevice > 0
-                      ? Text('quran.reciter_on_device_count'.tr(
-                          args: [pluralN('quran.ayahs', onDevice)]))
-                      : null,
+                  subtitle: () {
+                    final parts = [
+                      if (sizes?.ayahByEdition[r.identifier] case final b?)
+                        'quran.reciter_full_size'.tr(args: [formatBytes(b)]),
+                      if (onDevice > 0)
+                        'quran.reciter_on_device_count'.tr(
+                            args: [pluralN('quran.ayahs', onDevice)]),
+                    ];
+                    return parts.isEmpty ? null : Text(parts.join(' · '));
+                  }(),
                   title: Text(
                     r.displayName(locale),
                     style: TextStyle(

@@ -2513,9 +2513,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 00:33 — IN PROGRESS — resume here**
+**2026-10-02 00:51 — IN PROGRESS — resume here**
 
-Next release: R1 Rafeeq fix and R2 adhkar on R2 done in code; emulator checks pending
+Next release list: R5 Quran-without-nav bug recorded; R3 sizes in progress
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

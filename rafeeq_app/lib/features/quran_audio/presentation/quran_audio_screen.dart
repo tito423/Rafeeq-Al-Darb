@@ -20,6 +20,7 @@ import '../data/mp3quran_api.dart';
 import '../data/quran_audio_favorites.dart';
 import '../data/quran_audio_library.dart';
 import '../data/quran_audio_player.dart';
+import '../data/recitation_sizes.dart';
 import 'reciter_screen.dart';
 import 'widgets/audio_common.dart';
 import 'widgets/mini_player.dart';
@@ -101,6 +102,7 @@ class _RecitersTabState extends ConsumerState<_RecitersTab>
   Widget build(BuildContext context) {
     super.build(context);
     final async = ref.watch(mp3RecitersProvider);
+    final sizes = ref.watch(recitationSizesProvider).valueOrNull;
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (_, _) => Center(
@@ -156,7 +158,12 @@ class _RecitersTabState extends ConsumerState<_RecitersTab>
                         leading: ReciterAvatar(name: r.name),
                         title: Text(r.name, style: const TextStyle(fontWeight: FontWeight.w700)),
                         subtitle: Text(
-                          r.moshafs.map((m) => m.name).join(' • '),
+                          r.moshafs
+                              .map((m) => switch (sizes?.surahByServer[m.server]) {
+                                    final b? => '${m.name} (${formatBytes(b)})',
+                                    _ => m.name,
+                                  })
+                              .join(' • '),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 12),

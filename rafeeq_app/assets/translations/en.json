@@ -364,6 +364,7 @@
     "reciter_legend_stream": "Streams from the CDN",
     "reciter_on_device": "On this device",
     "reciter_on_device_count": "On this device: {}",
+    "reciter_full_size": "Full recitation: {}",
     "display_title": "Display",
     "display_layout": "Verse layout",
     "display_font": "Text size",

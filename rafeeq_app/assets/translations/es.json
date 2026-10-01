@@ -364,6 +364,7 @@
     "reciter_legend_stream": "Transmisión desde el CDN",
     "reciter_on_device": "En el dispositivo",
     "reciter_on_device_count": "En el dispositivo: {}",
+    "reciter_full_size": "Recitación completa: {}",
     "display_title": "Visualización",
     "display_layout": "Disposición de las aleyas",
     "display_font": "Tamaño del texto",
