@@ -34,7 +34,7 @@ from quran_local.db - the Madinah text the app shows everywhere else - with
 the surah and ayah. Shamela's own spelling of these quotes is the simplified
 one («مِنْ إِلهٍ» for «مِّنۡ إِلَٰهٍ»), so this is what makes the examples
 the mushaf's. A span that cannot be located stops the build unless it is in
-OVERRIDES below, written by hand from the mushaf with the reason.
+OVERRIDES below, pointed at its words in the mushaf by hand, with the reason.
 """
 import difflib
 import gzip
@@ -54,15 +54,16 @@ RAW = os.path.join(HERE, 'shamela_raw')
 OUT = os.path.join(ROOT, 'rafeeq_app', 'assets', 'data', 'tajweed')
 REPORT = os.path.join(HERE, 'tajweed_courses_report.txt')
 
-# Spans the skeleton matcher cannot place, written from the mushaf by hand.
-# key: the book's span text without braces -> (surah, first ayah, words)
+# Spans the skeleton matcher cannot place, pointed at the mushaf by hand.
+# key: the book's span text without braces -> (surah, ayah, first word,
+# last word), word indexes 0-based inside the ayah; the words themselves are
+# then copied from quran_local.db, never typed.
 OVERRIDES = {
     # The book discusses the word itself; the mushaf writes it once, with
     # the preposition: al-Ghashiyah 88:22 «لَّسۡتَ عَلَيۡهِم بِمُصَيۡطِرٍ».
-    'مُصَيْطِر': (88, 22, 'بِمُصَيۡطِرٍ'),
+    'مُصَيْطِر': (88, 22, 2, 2),
     # The mushaf writes «يا ابن أم» as one word: Taha 20:94.
-    'قَالَ يَا ابْنَ أُمَّ لا تَأْخُذْ بِلِحْيَتِي وَلا بِرَأْسِي':
-        (20, 94, 'قَالَ يَبۡنَؤُمَّ لَا تَأۡخُذۡ بِلِحۡيَتِي وَلَا بِرَأۡسِيٓۖ'),
+    'قَالَ يَا ابْنَ أُمَّ لا تَأْخُذْ بِلِحْيَتِي وَلا بِرَأْسِي': (20, 94, 0, 6),
 }
 
 COURSES = {
@@ -306,14 +307,19 @@ def _surah_names():
 
 
 SURAH = _surah_names()
-AYAH = {}
-for _sid, _ws in QURAN.items():
-    for _n, _w in _ws:
-        a = AYAH.setdefault(_sid, [])
-        if len(a) < _n:
-            a.append(_w)
-        else:
-            a[_n - 1] += ' ' + _w
+def _ayahs():
+    import sqlite3
+    db = sqlite3.connect(Q.QDB)
+    out = {}
+    for sid, text in db.execute(
+            'SELECT surah_id, text_uthmani FROM ayahs ORDER BY id'):
+        out.setdefault(sid, []).append(text)
+    db.close()
+    return out
+
+
+# Each ayah's text exactly as the app's database holds it.
+AYAH = _ayahs()
 _AR = str.maketrans('٠١٢٣٤٥٦٧٨٩', '0123456789')
 # «سورة الأنعام: ٢٦» / «الأنعام: الآية: ٢٦» / «سورة ق: ٣٣».
 _REF = re.compile(r'(?:سورة\s+)?([^\d٠-٩:،()]+?)\s*[:،]\s*(?:الآية\s*:?\s*|الآيتان\s*:?\s*)?([٠-٩]+)')
@@ -369,7 +375,8 @@ def quran_spans(seg, log, where, hint=None):
         inner = inner[1:-1]
     key = inner.strip(' .،')
     if key in OVERRIDES:
-        sid, ayah, text = OVERRIDES[key]
+        sid, ayah, first, last = OVERRIDES[key]
+        text = ' '.join(AYAH[sid][ayah - 1].split()[first:last + 1])
         log.lines.append('%s  OVERRIDE %d:%d  «%s» -> «%s»' % (where, sid, ayah, key, text))
         log.count += 1
         return [['q', text, '%d:%d' % (sid, ayah)]]
@@ -408,7 +415,10 @@ def classify(spans):
     if len(spans) == 1 and spans[0][0] == 'h':
         return 'head', [['t', text.strip('[] ')]]
     if re.match(r'^س\s*-', text):
-        return 'q', strip_prefix(spans, r'^س\s*-\s*')
+        # «ما تعريف الإظهار. . .؟»: the dots are the print's way of leaving
+        # a blank before the mark; on a phone they read as a typo.
+        return 'q', [[k, re.sub(r'\s*(?:\.\s*){2,}؟', '؟', t), *r]
+                     for k, t, *r in strip_prefix(spans, r'^س\s*-\s*')]
     if re.match(r'^ج\s*-', text):
         return 'a', strip_prefix(spans, r'^ج\s*-\s*')
     if '\\' in text:
