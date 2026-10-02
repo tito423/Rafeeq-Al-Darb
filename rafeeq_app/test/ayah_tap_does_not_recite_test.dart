@@ -16,6 +16,10 @@ void main() {
       .readAsStringSync();
   final screen = File('lib/features/quran/presentation/screens/quran_screen.dart')
       .readAsStringSync();
+  // The screen's page views live in a part file since 2026-10-02.
+  final views =
+      File('lib/features/quran/presentation/screens/quran_screen_views.dart')
+          .readAsStringSync();
 
   test('a tap on a verse is the page\'s, the card is the long press', () {
     expect(page, isNot(contains('onAyahTap')));
@@ -25,9 +29,13 @@ void main() {
   });
 
   test('the page tap is still one gesture with two jobs, in both modes', () {
-    // Both the text page and the image page route their tap to the same
-    // handler — that has not changed.
-    expect(RegExp('onBackgroundTap: _onPageTap').allMatches(screen).length, 2);
+    // The text page, the image page and (since 2026-10-02) the reading
+    // layout's continuous scroll all route their tap to the same handler.
+    expect(
+        RegExp('onBackgroundTap: _onPageTap')
+            .allMatches(screen + views)
+            .length,
+        3);
     final at = screen.indexOf('void _onPageTap()');
     expect(at, greaterThan(0));
     // To the end of the method, not to the first `}` — the handler now has
@@ -47,7 +55,9 @@ void main() {
     // new gesture was invented: the page already owns a long-press, a
     // horizontal swipe and a vertical scroll, and a fifth would have had to
     // fight one of them.
-    expect(body, contains('_chromeVisible = !_chromeVisible'),
+    // Through `_setChromeVisible` since 2026-10-02, which also brings the
+    // phone's own bars back with the controls.
+    expect(body, contains('_setChromeVisible(!_chromeVisible)'),
         reason: 'in full screen the tap must toggle the floating controls');
     expect(body, contains('_togglePageFillScreen()'),
         reason: 'from normal mode the tap still enters full screen, so a '
@@ -70,9 +80,9 @@ void main() {
   });
 
   test('the reader marker plays one verse, not the continuous recitation', () {
-    final at = screen.indexOf('onPlayTap:');
+    final at = views.indexOf('onPlayTap:');
     expect(at, greaterThan(0));
-    final handler = screen.substring(at, at + 200);
+    final handler = views.substring(at, at + 200);
     expect(handler, isNot(contains('startContinuous')));
     expect(handler, contains('.play('));
   });

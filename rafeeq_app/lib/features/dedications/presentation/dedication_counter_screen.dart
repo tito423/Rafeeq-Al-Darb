@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -52,13 +53,11 @@ class _DedicationCounterScreenState
 
   Future<void> _count(Dedication d) async {
     final reaching = d.hasGoal && d.count + 1 == d.goal;
-    if (reaching) {
-      HapticFeedback.heavyImpact();
-    } else {
-      HapticFeedback.lightImpact();
-    }
-    _press.forward().then((_) => _press.reverse());
-    _pulse.forward(from: 0);
+    unawaited(reaching
+        ? HapticFeedback.heavyImpact()
+        : HapticFeedback.lightImpact());
+    unawaited(_press.forward().then((_) => _press.reverse()));
+    unawaited(_pulse.forward(from: 0));
     await ref.read(dedicationsProvider.notifier).bump(d.id, 1);
   }
 
