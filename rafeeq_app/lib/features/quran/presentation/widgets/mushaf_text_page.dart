@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/db/models.dart';
 import '../../data/basmala.dart';
+import '../../data/kashida.dart';
 import '../../data/mushaf_frame.dart';
 import '../../data/mushaf_theme.dart';
 import '../../data/quran_typography.dart';
@@ -848,18 +849,82 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
     return null;
   }
 
+  /// The kashida plan and what it was made for (the words, the width, the
+  /// style), so it is worked out once per page and width, not per frame.
+  (int, Map<int, int>)? _plan;
+
+  /// Where to draw letters longer so the lines fill by kashida — see
+  /// `kashida.dart`. Empty when the elongation would move a line break.
+  Map<int, int> _kashidaFor(
+    BuildContext context,
+    List<String> texts,
+    double width,
+    double side,
+  ) {
+    final style = DefaultTextStyle.of(context).style.merge(widget.textStyle);
+    final scaler = MediaQuery.textScalerOf(context);
+    final key = Object.hash(
+        width, style, scaler, side, Object.hashAll(texts));
+    if (_plan?.$1 == key) return _plan!.$2;
+    final dims = [
+      for (var i = 0; i < texts.length; i++)
+        PlaceholderDimensions(
+          size: Size(side + 4, side),
+          alignment: PlaceholderAlignment.middle,
+        ),
+    ];
+    // The paragraph as laid out, with a plan applied: one run per verse,
+    // then its marker's room.
+    InlineSpan spanFor(Map<int, int> plan) {
+      final children = <InlineSpan>[];
+      var base = 0;
+      for (final t in texts) {
+        children
+          ..add(TextSpan(text: applyKashida(t, base, plan)))
+          ..add(const WidgetSpan(child: SizedBox.shrink()));
+        base += t.length + 1;
+      }
+      return TextSpan(style: style, children: children);
+    }
+
+    final plan = planKashida(
+      spanFor: spanFor,
+      width: width,
+      style: style,
+      placeholders: dims,
+      textScaler: scaler,
+    );
+    _plan = (key, plan);
+    return plan;
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, box) => _build(context, box.maxWidth),
+      );
+
+  Widget _build(BuildContext context, double width) {
     final spans = <InlineSpan>[];
     final ranges = <(int, int, int)>[];
     final markers = <FlowingMarker>[];
     final side = AyahMarker.sizeFor(bare: widget.bare);
     var offset = 0;
 
+    final texts = [
+      for (var i = widget.from; i <= widget.to; i++)
+        '${shapeQuranForDisplay(bodyOf(widget.ayahs[i]))} ',
+    ];
+    final plan = width.isFinite
+        ? _kashidaFor(context, texts, width, side)
+        : const <int, int>{};
+    var plainBase = 0;
+
     for (var i = widget.from; i <= widget.to; i++) {
       final ayah = widget.ayahs[i];
       final isPlaying = i == widget.playingIndex;
-      final text = '${shapeQuranForDisplay(bodyOf(ayah))} ';
+      final source = texts[i - widget.from];
+      final text = applyKashida(source, plainBase, plan);
+      plainBase += source.length + 1;
 
       spans.add(
         TextSpan(
