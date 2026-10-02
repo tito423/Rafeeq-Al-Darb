@@ -132,6 +132,8 @@ flutter:
     - assets/data/quran_local.db
     - assets/data/hadith.zip
     - assets/data/builtin_books/
+    # The tajweed course levels (scripts/build_tajweed_courses.py).
+    - assets/data/tajweed/
     - assets/data/hajj_madhahib.json
     - assets/data/mawaqit_today.json
     # GeoNames cities1000, 171,075 places (CC BY 4.0) for manual prayer
