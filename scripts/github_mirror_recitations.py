@@ -114,7 +114,14 @@ def surah_sets():
 
 def gh_call(method, url, **kw):
     for attempt in range(12):
-        r = API.request(method, url, timeout=600, **kw)
+        try:
+            r = API.request(method, url, timeout=600, **kw)
+        except requests.exceptions.RequestException as e:
+            # a dropped connection (seen 2026-10-02 13:3x: RemoteDisconnected
+            # killed the ayah run) is retried, not fatal
+            log(f'{method} {url.split("?")[0]}: {type(e).__name__} - retry in {30 * (attempt + 1)}s')
+            time.sleep(30 * (attempt + 1))
+            continue
         if r.status_code in (403, 429) and ('rate limit' in r.text.lower() or 'retry-after' in r.headers):
             wait = int(r.headers.get('retry-after') or 0)
             if not wait and r.headers.get('x-ratelimit-remaining') == '0':
