@@ -14,6 +14,7 @@
 /// hosts as `tuhfat_al_atfal`.
 library;
 
+import '../../../core/utils/digits.dart';
 import '../../library/data/book_text.dart';
 import 'tuhfa_course.dart';
 
@@ -54,12 +55,47 @@ List<TuhfaPara> tuhfaLessonParas(TuhfaLesson lesson, BookText? book) {
       for (var i = first; i <= last && i < p.paras.length; i++) {
         final t = p.paras[i].text;
         if (t.trim().isEmpty) continue;
-        out.add(TuhfaPara(t, r.commentary, p.paras[i].kind));
+        if (!r.commentary) {
+          out.add(TuhfaPara(t, false, p.paras[i].kind));
+          continue;
+        }
+        // One note per paragraph on screen, and only this lesson's notes.
+        for (final n in tuhfaNotes(t)) {
+          if (r.notes == null || r.notes!.contains(n.number)) {
+            out.add(TuhfaPara(n.text, true, p.paras[i].kind));
+          }
+        }
       }
     }
   }
   if (out.isNotEmpty && tuhfaBare(out.first.text) == tuhfaBare(lesson.title)) {
     out.removeAt(0);
+  }
+  return out;
+}
+
+/// One of الضباع's numbered notes: «(٢) يعني أن …».
+class TuhfaNote {
+  final int number;
+  final String text;
+  const TuhfaNote(this.number, this.text);
+}
+
+final _noteStart = RegExp(r'(?:^|\s)(?=\(([٠-٩]+)\)\s)');
+
+/// A commentary paragraph cut at its note markers. Text before the first
+/// marker (there is none in this book) would be kept as note 0.
+List<TuhfaNote> tuhfaNotes(String paragraph) {
+  final starts = _noteStart.allMatches(paragraph).map((m) => m.end).toList();
+  if (starts.isEmpty || starts.first > 0) starts.insert(0, 0);
+  final out = <TuhfaNote>[];
+  for (var k = 0; k < starts.length; k++) {
+    final end = k + 1 < starts.length ? starts[k + 1] : paragraph.length;
+    final text = paragraph.substring(starts[k], end).trim();
+    if (text.isEmpty) continue;
+    final m = RegExp(r'^\(([٠-٩]+)\)').firstMatch(text);
+    final number = m == null ? 0 : int.parse(asciiDigits(m.group(1)!));
+    out.add(TuhfaNote(number, text));
   }
   return out;
 }

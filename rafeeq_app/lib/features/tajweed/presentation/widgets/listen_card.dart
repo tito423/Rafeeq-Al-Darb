@@ -157,7 +157,9 @@ class ListenCardState extends ConsumerState<ListenCard>
           Row(
             children: [
               // The words the rule happens in, glowing in time while heard.
-              AnimatedBuilder(
+              // A course's example ayah has none to single out: the ayah
+              // above is the example.
+              if (widget.example.phrase.isNotEmpty) AnimatedBuilder(
                 animation: _beat,
                 builder: (context, child) => Container(
                   padding:

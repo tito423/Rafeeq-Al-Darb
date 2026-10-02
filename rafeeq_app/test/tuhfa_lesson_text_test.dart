@@ -78,9 +78,10 @@ void main() {
       final firstCommentary = paras.indexWhere((p) => p.commentary);
       if (firstCommentary < 0) continue;
       expect(firstCommentary, greaterThan(0), reason: l.title);
-      // and once the note starts, nothing of the matn follows it.
-      expect(paras.skip(firstCommentary).every((p) => p.commentary), isTrue,
-          reason: l.title);
+      // and the lesson ends on a note, never on verses left unexplained. A
+      // lesson running over two pages reads page by page — verses, their
+      // notes, the next page's verses, their notes — as the book prints it.
+      expect(paras.last.commentary, isTrue, reason: l.title);
     }
   });
 

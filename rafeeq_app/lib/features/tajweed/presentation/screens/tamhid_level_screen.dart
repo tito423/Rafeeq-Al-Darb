@@ -9,6 +9,7 @@ import '../../../library/data/book_text.dart';
 import '../../data/bundled_matn.dart';
 import '../../data/tamhid_course.dart';
 import '../../data/tamhid_lesson_text.dart';
+import '../widgets/lesson_text.dart';
 
 /// المستوى الثالث — «التمهيد في علم التجويد» لابن الجزري (ت ٨٣٣ هـ).
 ///
@@ -245,20 +246,20 @@ class _LessonTile extends ConsumerWidget {
           for (final p in body)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: Text(
-                p.text,
-                textAlign: TextAlign.justify,
-                style: switch (p.kind) {
-                  'aya' => theme.textTheme.bodyLarge?.copyWith(
+              child: switch (p.kind) {
+                'aya' => Text(
+                    p.text,
+                    textAlign: TextAlign.justify,
+                    style: theme.textTheme.bodyLarge?.copyWith(
                       fontFamily: 'AmiriQuran',
                       height: 1.9,
                       color: scheme.primary,
                     ),
-                  'head' => theme.textTheme.titleSmall
-                      ?.copyWith(color: scheme.primary, height: 1.8),
-                  _ => theme.textTheme.bodyMedium?.copyWith(height: 1.9),
-                },
-              ),
+                  ),
+                'head' => LessonProse(p.text,
+                    color: scheme.primary, fontWeight: FontWeight.w700),
+                _ => LessonProse(p.text),
+              },
             ),
           Align(
             alignment: AlignmentDirectional.centerStart,

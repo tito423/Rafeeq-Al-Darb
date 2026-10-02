@@ -12,6 +12,7 @@ import '../../data/jazariyyah_course.dart';
 import '../../data/jazariyyah_examples.dart';
 import '../../data/jazariyyah_lesson_text.dart';
 import '../../data/jazariyyah_sharh.dart';
+import '../widgets/lesson_text.dart';
 import '../widgets/listen_card.dart';
 
 /// المستوى الثاني — «المقدمة الجزرية» لابن الجزري (ت ٨٣٣ هـ).
@@ -260,20 +261,22 @@ class _LessonTile extends ConsumerWidget {
           for (final p in body)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: Text(
-                p.text,
-                textAlign: TextAlign.justify,
-                style: switch (p.kind) {
-                  'aya' => theme.textTheme.bodyLarge?.copyWith(
+              child: switch (p.kind) {
+                'aya' => Text(
+                    p.text,
+                    textAlign: TextAlign.justify,
+                    style: theme.textTheme.bodyLarge?.copyWith(
                       fontFamily: 'AmiriQuran',
                       height: 1.9,
                       color: scheme.primary,
                     ),
-                  'head' => theme.textTheme.titleSmall
-                      ?.copyWith(color: scheme.primary, height: 1.8),
-                  _ => theme.textTheme.bodyMedium?.copyWith(height: 1.9),
-                },
-              ),
+                  ),
+                'head' => LessonProse(p.text,
+                    color: scheme.primary, fontWeight: FontWeight.w700),
+                _ => verseHalves(p.text) != null
+                    ? LessonVerse(p.text)
+                    : LessonProse(p.text),
+              },
             ),
           // «الجزرية دي محتاجة شرح»: the verses above, then their شرح under
           // its own fold, so the poem stays the lesson and the explanation is
@@ -380,26 +383,20 @@ class _SharhSection extends ConsumerWidget {
                       for (final p in paras)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            p.text,
-                            textAlign: isJazariyyahVerse(p.text)
-                                ? TextAlign.center
-                                : TextAlign.justify,
-                            style: isJazariyyahVerse(p.text)
-                                ? theme.textTheme.bodyMedium?.copyWith(
-                                    height: 1.9,
-                                    color: goldText(context),
-                                    fontWeight: FontWeight.w600,
-                                  )
-                                : p.kind == 'aya'
-                                    ? theme.textTheme.bodyLarge?.copyWith(
+                          child: isJazariyyahVerse(p.text)
+                              ? LessonVerse(p.text, color: goldText(context))
+                              : p.kind == 'aya'
+                                  ? Text(
+                                      p.text,
+                                      textAlign: TextAlign.justify,
+                                      style: theme.textTheme.bodyLarge
+                                          ?.copyWith(
                                         fontFamily: 'AmiriQuran',
                                         height: 1.9,
                                         color: goldText(context),
-                                      )
-                                    : theme.textTheme.bodyMedium
-                                        ?.copyWith(height: 1.9),
-                          ),
+                                      ),
+                                    )
+                                  : LessonProse(p.text, fontSize: 16),
                         ),
                       Text(
                         'tajweed.sharh_source'.tr(),

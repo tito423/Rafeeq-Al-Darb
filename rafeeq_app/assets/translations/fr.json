@@ -1741,14 +1741,14 @@
     "bg_domes": "Coupoles"
   },
   "tajweed": {
-    "level_three": "Niveau 3 — at-Tamhīd fī ʿIlm at-Tajwīd",
+    "level_three": "Niveau 5 — at-Tamhīd fī ʿIlm at-Tajwīd",
     "level_three_sub": "Ibn al-Jazarī expliquant sa propre science : treize de ses chapitres",
     "level_three_source": "Source : at-Tamhīd fī ʿIlm at-Tajwīd, d'Ibn al-Jazarī (m. 833 H) — al-Maktaba al-Shamela",
     "title": "Apprendre le tajwid",
     "subtitle": "Des leçons dans l’ordre, depuis le début. Lisez la leçon, puis écoutez la règle récitée là où elle se produit réellement dans le Coran.",
-    "level_one": "Niveau 1 — Tuhfat al-Atfal",
+    "level_one": "Niveau 3 — Tuhfat al-Atfal",
     "level_one_sub": "Le poème pour débutants d'al-Jamzuri, avec un bref commentaire d'al-Dabba'",
-    "level_two": "Niveau 2 — al-Muqaddima al-Jazariyya",
+    "level_two": "Niveau 4 — al-Muqaddima al-Jazariyya",
     "level_two_source": "Source : al-Muqaddima al-Jazariyya, d'Ibn al-Jazarī (m. 833 H) — al-Maktaba al-Shamela",
     "level_two_sub": "Le matn d'Ibn al-Jazarī : dix-huit chapitres, dans l'ordre de l'auteur",
     "lessons_count": {
@@ -1783,7 +1783,20 @@
     "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
     "sharh_title": "Commentaire",
     "sharh_source": "Tiré de « Fath Rabb al-Bariyyah, commentaire d'al-Muqaddimah al-Jazariyyah » de Safwat Mahmud Salim — Dar Nur al-Maktabat, 2e éd. 1424 H — al-Maktaba al-Shamela",
-    "sharh_shared": "Le commentateur explique ensemble les vers de cette leçon et de la leçon voisine ; le même commentaire figure donc dans les deux."
+    "sharh_shared": "Le commentateur explique ensemble les vers de cette leçon et de la leçon voisine ; le même commentaire figure donc dans les deux.",
+    "taysir": "Niveau 1 — Taysir Ahkam at-Tajwid",
+    "taysir_sub": "Pour les enfants et les débutants : questions et réponses, avec des exemples du Coran dans chaque leçon",
+    "ghaya": "Niveau 2 — Ghayat al-Murid fi ʿIlm at-Tajwid",
+    "ghaya_sub": "Le cours complet : toutes les règles du tajwid chapitre par chapitre, avec des questions après chaque chapitre",
+    "via_shamela": "via al-Maktaba al-Shamela",
+    "next_lesson": "Leçon suivante",
+    "question": "Question",
+    "answer": "Réponse",
+    "exercises": "Questions sur le chapitre",
+    "footnotes": "Notes",
+    "examples_from_mushaf": "Les exemples de la leçon tirés du Coran",
+    "examples_from_mushaf_note": "Le tableau des exemples manque dans la copie électronique du livre ; voici donc les versets que l'auteur indique dans ses notes. Touchez un verset pour l'écouter.",
+    "listen_example": "Écouter l'exemple dans son verset"
   },
   "ayah_dl": {
     "surahs_done": "{} sourates complètes sur 114",

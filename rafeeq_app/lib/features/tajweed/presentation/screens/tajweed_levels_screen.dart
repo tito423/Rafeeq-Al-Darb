@@ -1,22 +1,22 @@
-/// «تعليم التجويد» — the three levels.
+/// «تعليم التجويد» — the ladder.
 ///
-/// The ladder the owner asked for is «ابدأه بالسهل اللي يناسب الاطفال
-/// وبالتدرج»: تحفة الأطفال للجمزوري first, then المقدمة الجزرية, then
-/// التمهيد في علم التجويد — the last two by ابن الجزري himself, his
-/// matn and then his own prose on the same science. All three are real books
-/// read verbatim at runtime, and each level names its own source on its own
-/// screen.
+/// The owner, 2026-10-02: the three-matn ladder was «كبير جدا وصعب جدا على
+/// الاطفال لدرجة اني انا في المستوى الاول مفهمتش حاجة», and «مش شرط تلت
+/// مستويات … اهم حاجة بتدرج وسهولة … منهج كامل ميسيبش اي حاجة». So it now
+/// opens on two prose books written to TEACH (`course_book.dart`):
 ///
-/// **Every rung is public domain.** The ladder used to end on two books by
-/// modern authors from commercial houses; they were taken out of the app and
-/// deleted off the bucket, because «انا مش عاوز في التطبيق اي مشكلة
-/// لحقوق الملكية نهائيا». الجمزوري died after 1198 AH and ابن الجزري in
-/// 833 AH; nothing on this ladder belongs to anyone living.
+///   1. «تيسير أحكام التجويد (المستوى الأول)» — question and answer, for
+///      young pupils, with the examples in tables.
+///   2. «غاية المريد في علم التجويد» — the whole science, chapter by
+///      chapter, each chapter with its questions.
+///   3. تحفة الأطفال, then 4. الجزرية — the two mutoon, read once the rules
+///      they versify are understood, rather than before.
+///   5. التمهيد — Ibn al-Jazari's own prose, for whoever wants more.
 ///
-/// Only levels that HAVE lessons are listed — a card that opens onto nothing
-/// is the kind of claim §1.1 forbids.
+/// The owner lifted the copyright constraint for this section himself
+/// («مش شرط حقوق ملكية»); each level still names its source where it is read.
 ///
-/// Each card's progress is read from that level's own store, so the three
+/// Each card's progress is read from that level's own store, so the
 /// counters cannot drift into each other.
 library;
 
@@ -27,10 +27,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/paired_list_view.dart';
+import '../../data/course_book.dart';
 import '../../data/jazariyyah_course.dart';
 import '../../data/tamhid_course.dart';
 import '../../data/tuhfa_course.dart';
 import '../widgets/makharij_entry.dart';
+import 'course_book_screen.dart';
 import 'jazariyyah_level_screen.dart';
 import 'tamhid_level_screen.dart';
 import 'tuhfa_level_screen.dart';
@@ -45,6 +47,28 @@ class TajweedLevelsScreen extends ConsumerWidget {
     final jazariyyahDone = ref.watch(jazariyyahProgressProvider);
     final tamhidDone = ref.watch(tamhidProgressProvider);
 
+    _LevelCard course(int number, String id, String key) {
+      final lessons =
+          ref.watch(courseBookProvider(id)).valueOrNull?.lessons ?? const [];
+      final done = ref.watch(courseProgressProvider(id));
+      return _LevelCard(
+        number: number,
+        title: 'tajweed.$key'.tr(),
+        subtitle: 'tajweed.${key}_sub'.tr(),
+        total: lessons.length,
+        done: lessons.where((l) => done.contains(l.title)).length,
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => CourseBookScreen(
+              courseId: id,
+              titleKey: 'tajweed.$key',
+              subtitleKey: 'tajweed.${key}_sub',
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text('tajweed.title'.tr())),
       body: ListView(
@@ -57,12 +81,14 @@ class TajweedLevelsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 14),
-          // Sideways the four entries stand two by two (`PairedColumn`).
+          // Sideways the entries stand two by two (`PairedColumn`).
           PairedColumn(
             children: [
               const MakharijEntry(),
+              course(1, taysirCourse, 'taysir'),
+              course(2, ghayaCourse, 'ghaya'),
               _LevelCard(
-                number: 1,
+                number: 3,
                 title: 'tajweed.level_one'.tr(),
                 subtitle: 'tajweed.level_one_sub'.tr(),
                 total: tuhfaLessons.length,
@@ -77,7 +103,7 @@ class TajweedLevelsScreen extends ConsumerWidget {
                 ),
               ),
               _LevelCard(
-                number: 2,
+                number: 4,
                 title: 'tajweed.level_two'.tr(),
                 subtitle: 'tajweed.level_two_sub'.tr(),
                 total: jazariyyahLessons.length,
@@ -90,13 +116,8 @@ class TajweedLevelsScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              // «علم التجويد كامل في المستويين دول بس ولا في اكتر» — it was not,
-              // and when it finally was, it stood on two books still in copyright.
-              // The ladder is all Ibn al-Jazari and al-Jamzuri now: matn, matn,
-              // then the author's own commentary. Nothing in it is anyone's
-              // property.
               _LevelCard(
-                number: 3,
+                number: 5,
                 title: 'tajweed.level_three'.tr(),
                 subtitle: 'tajweed.level_three_sub'.tr(),
                 total: tamhidLessons.length,

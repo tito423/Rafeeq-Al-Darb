@@ -1741,14 +1741,14 @@
     "bg_domes": "Cúpulas"
   },
   "tajweed": {
-    "level_three": "Nivel 3 — at-Tamhid fi ʿIlm at-Taywid",
+    "level_three": "Nivel 5 — at-Tamhid fi ʿIlm at-Taywid",
     "level_three_sub": "Ibn al-Yazarī explicando su propia ciencia: trece de sus capítulos",
     "level_three_source": "Fuente: at-Tamhīd fī ʿIlm at-Taywīd, de Ibn al-Yazarī (m. 833 H) — al-Maktaba al-Shamela",
     "title": "Aprender taywid",
     "subtitle": "Lecciones en orden, desde el principio. Lee la lección y luego escucha la regla recitada donde realmente ocurre en el Corán.",
-    "level_one": "Nivel 1 — Tuhfat al-Atfal",
+    "level_one": "Nivel 3 — Tuhfat al-Atfal",
     "level_one_sub": "El poema para principiantes de al-Yamzuri, con un breve comentario de al-Dabba'",
-    "level_two": "Nivel 2 — al-Muqaddima al-Yazariyya",
+    "level_two": "Nivel 4 — al-Muqaddima al-Yazariyya",
     "level_two_source": "Fuente: al-Muqaddima al-Yazariyya, de Ibn al-Yazarī (m. 833 H) — al-Maktaba al-Shamela",
     "level_two_sub": "El matn de Ibn al-Yazarī: dieciocho capítulos, en el orden del autor",
     "lessons_count": {
@@ -1783,7 +1783,20 @@
     "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
     "sharh_title": "Comentario",
     "sharh_source": "De «Fath Rabb al-Bariyyah, comentario de al-Muqaddimah al-Jazariyyah» de Safwat Mahmud Salim — Dar Nur al-Maktabat, 2.ª ed. 1424 H — al-Maktaba al-Shamela",
-    "sharh_shared": "El comentarista explica juntos los versos de esta lección y de la contigua, por eso el mismo comentario aparece en ambas."
+    "sharh_shared": "El comentarista explica juntos los versos de esta lección y de la contigua, por eso el mismo comentario aparece en ambas.",
+    "taysir": "Nivel 1 — Taysir Ahkam at-Taywid",
+    "taysir_sub": "Para niños y principiantes: preguntas y respuestas, con ejemplos del Corán en cada lección",
+    "ghaya": "Nivel 2 — Ghayat al-Murid fi ʿIlm at-Taywid",
+    "ghaya_sub": "El curso completo: todas las reglas del taywid capítulo a capítulo, con preguntas tras cada capítulo",
+    "via_shamela": "vía al-Maktaba al-Shamela",
+    "next_lesson": "Lección siguiente",
+    "question": "Pregunta",
+    "answer": "Respuesta",
+    "exercises": "Preguntas sobre el capítulo",
+    "footnotes": "Notas",
+    "examples_from_mushaf": "Los ejemplos de la lección tomados del Corán",
+    "examples_from_mushaf_note": "La tabla de ejemplos falta en la copia electrónica del libro; estas son las aleyas que el autor señala en sus notas. Toca una aleya para escucharla.",
+    "listen_example": "Escuchar el ejemplo en su aleya"
   },
   "ayah_dl": {
     "surahs_done": "{} de 114 suras completas",

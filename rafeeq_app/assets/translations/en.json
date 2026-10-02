@@ -1741,15 +1741,15 @@
     "bg_domes": "Domes"
   },
   "tajweed": {
-    "level_three": "Level 3 — at-Tamhid fi ʿIlm at-Tajwid",
+    "level_three": "Level 5 — at-Tamhid fi ʿIlm at-Tajwid",
     "level_three_sub": "Ibn al-Jazarī explaining his own science: thirteen of his chapters",
     "level_three_source": "Source: at-Tamhīd fī ʿIlm at-Tajwīd, by Ibn al-Jazarī (d. 833 AH) — al-Maktaba al-Shamela",
     "title": "Learn Tajweed",
     "card_subtitle": "Graded lessons — and every rule heard in a real ayah",
     "subtitle": "Lessons in order, from the beginning. Read the lesson, then hear the rule recited where it actually occurs in the Quran.",
-    "level_one": "Level 1 — Tuhfat al-Atfal",
+    "level_one": "Level 3 — Tuhfat al-Atfal",
     "level_one_sub": "Al-Jamzuri's poem for beginners, with a short commentary by al-Dabba'",
-    "level_two": "Level 2 — al-Muqaddimah al-Jazariyyah",
+    "level_two": "Level 4 — al-Muqaddimah al-Jazariyyah",
     "level_two_source": "Source: al-Muqaddimah fīmā ʿalā Qāriʾ al-Qurʾān an Yaʿlamahu (al-Jazariyyah), by Ibn al-Jazarī (d. 833 AH) — al-Maktaba al-Shamela",
     "level_two_sub": "Ibn al-Jazari's matn: eighteen chapters, in the author's own order",
     "lessons_count": {
@@ -1783,7 +1783,20 @@
     "listen_ra_tarqiq": "A silent ra after a kasrah, so it is pronounced light",
     "sharh_title": "Commentary",
     "sharh_source": "From “Fath Rabb al-Bariyyah, a commentary on al-Muqaddimah al-Jazariyyah” by Safwat Mahmud Salim — Dar Nur al-Maktabat, 2nd ed. 1424 AH — al-Maktaba al-Shamela",
-    "sharh_shared": "The commentator explains this lesson's verses together with the neighbouring lesson's, so the same commentary appears in both."
+    "sharh_shared": "The commentator explains this lesson's verses together with the neighbouring lesson's, so the same commentary appears in both.",
+    "taysir": "Level 1 — Taysir Ahkam at-Tajwid",
+    "taysir_sub": "For children and beginners: question and answer, with Quran examples in every lesson",
+    "ghaya": "Level 2 — Ghayat al-Murid fi ʿIlm at-Tajwid",
+    "ghaya_sub": "The complete course: every tajweed rule chapter by chapter, with questions after each chapter",
+    "via_shamela": "via al-Maktaba al-Shamela",
+    "next_lesson": "Next lesson",
+    "question": "Question",
+    "answer": "Answer",
+    "exercises": "Questions on the chapter",
+    "footnotes": "Footnotes",
+    "examples_from_mushaf": "The lesson's examples from the Quran",
+    "examples_from_mushaf_note": "The table of examples is missing from the book's electronic copy, so these are the ayahs the author points to in his footnotes. Tap an ayah to hear it.",
+    "listen_example": "Hear the example in its ayah"
   },
   "ayah_dl": {
     "surahs_done": "{} of 114 surahs complete",

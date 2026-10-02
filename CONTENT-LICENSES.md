@@ -669,7 +669,7 @@ the list grows to.
 | الأذكار للنووي (`quran_sciences.db`) | **18 chapters, 48 supplications** | `AUTHOR_LONG_DEAD` — **replaced 2026-09-17**, see below |
 | the quote of the day | 58 quotes from 4 books | `AUTHOR_LONG_DEAD` — rebuilt in v3.29.0 after the discovery that 284 of the previous 352 came from «لا تحزن», whose author is alive |
 | the Hajj guide | an-Nawawi's «الإيضاح» | `AUTHOR_LONG_DEAD` — re-sourced in v3.29.0 off Ibn Baz's manual |
-| the tajweed course | al-Jamzuri and Ibn al-Jazari | `AUTHOR_LONG_DEAD` — re-sourced in v3.28.0 off two modern books |
+| the tajweed course | levels 1-2: al-Ghawthani's «تيسير أحكام التجويد» and ʿAtiyya Qabil Nasr's «غاية المريد»; levels 3-5: al-Jamzuri and Ibn al-Jazari | levels 1-2 **not cleared**, shipped on the owner's ruling of 2026-10-02 (see the section of that date); levels 3-5 `AUTHOR_LONG_DEAD` |
 
 ---
 
@@ -1157,3 +1157,29 @@ Every part of a story video and where it comes from:
 | pictures and motion | drawn by code in `kids_stories/` (Canvas 2D, rendered in headless Chrome, encoded with ffmpeg) - no image, clip or font from anywhere else; tool licences in `kids_stories/LICENSES.md` | own work |
 | ambient sound | generated noise (wind, rain, waves, bubbles) by `amb.py` - no downloaded audio | own work |
 | music | none (owner's rule) | — |
+
+## 2026-10-02 — the tajweed ladder opens on two modern books
+
+The owner found the three-matn ladder «كبير جدا وصعب جدا على الاطفال» and
+asked for «اسهل وايسر الكتب الكاملة من الشاملة», adding «مش شرط حقوق ملكية …
+اهم حاجة بتدرج وسهولة … منهج كامل». Twelve Shamela tajweed books were
+crawled (from the laptop runner; Shamela is blocked from the cloud) and two
+were chosen. Both are built by `scripts/build_tajweed_courses.py` into
+`rafeeq_app/assets/data/tajweed/`; the raw Shamela pages are kept in
+`scripts/shamela_raw/`.
+
+| | level 1 | level 2 |
+|---|---|---|
+| Work | «تيسير أحكام التجويد (المستوى الأول)» | «غاية المريد في علم التجويد» |
+| Author | د. يحيى بن عبد الرزاق الغوثاني — **living** | عطية قابل نصر (ت ١٤٢٤هـ) — **modern** |
+| Edition | دار الغوثاني، دمشق، ط٤ ١٤٢٧هـ / ٢٠٠٦م | القاهرة، ط٧ مزيدة ومنقحة |
+| Source | Shamela 688, 29 pages | Shamela 7311, 374 sections |
+| Shipped | bundled asset, 9.5 KB gzip | bundled asset, ~165 KB gzip, with the author's footnotes |
+| Rights | **Not cleared.** Shipped on the owner's explicit ruling above. | **Not cleared.** Same. |
+
+Every Qur'an quotation in both is replaced by the mushaf's own words from
+`quran_local.db` with its surah and ayah (`test/tajweed_course_books_test.dart`
+checks each one). Shamela's text of the Ghaya lacks the example tables of the
+نون / ميم / لام chapters; their footnotes name the ayahs, and those ayahs are
+shown in full in place of the lost tables, said so on the screen.
+
