@@ -87,8 +87,12 @@ class ContinuousMushafViewState extends State<ContinuousMushafView>
   final ScrollController _scroll = ScrollController();
   final GlobalKey _viewportKey = GlobalKey();
 
-  late int _anchor = _clamp(widget.initialPage);
-  late int _current = _anchor;
+  // Set in `initState`, not lazily: a lazy `_current` first read inside
+  // `jumpToPage` — after the anchor had moved — took the TARGET page as its
+  // starting value, so the first jump was never reported to the screen
+  // (caught by `continuous_mushaf_view_test.dart`).
+  late int _anchor;
+  late int _current;
 
   /// The pages built right now, by page number. Only these can be measured.
   final Map<int, BuildContext> _built = {};
@@ -107,21 +111,58 @@ class ContinuousMushafViewState extends State<ContinuousMushafView>
   /// The page being read — the one under the reading line.
   int get currentPage => _current;
 
-  /// Brings [page]'s top to the top of the screen. A page that is built is
-  /// scrolled to where it is; any other page becomes the new anchor.
-  void jumpToPage(int page) {
+  /// Marks inside the pages that a jump can land on exactly — a surah's
+  /// banner, which on the short surahs sits halfway down its page.
+  final Map<Object, BuildContext> _marks = {};
+
+  /// The jump still waiting for its mark to be built, and how many frames
+  /// it has waited.
+  Object? _pendingMark;
+  int _markWaits = 0;
+
+  /// Brings [page]'s top to the top of the screen — or, with [mark], the
+  /// [ContinuousMark] of that id inside it (owner, 2026-10-02: the endless
+  /// scroll must stay indexed, «لما أضغط الى سورة كذا ينقلني … للسورة
+  /// كذا»). A page that is built is scrolled to where it is; any other page
+  /// becomes the new anchor, so the jump is exact whether or not the page
+  /// was ever laid out.
+  void jumpToPage(int page, {Object? mark}) {
     page = _clamp(page);
     final ctx = _built[page];
     if (ctx != null && ctx.mounted) {
       Scrollable.ensureVisible(ctx);
-      _setCurrent(page);
-      return;
+    } else {
+      _jumping = true;
+      if (_scroll.hasClients) _scroll.jumpTo(0);
+      setState(() => _anchor = page);
+      WidgetsBinding.instance.addPostFrameCallback((_) => _jumping = false);
     }
-    _jumping = true;
-    if (_scroll.hasClients) _scroll.jumpTo(0);
-    setState(() => _anchor = page);
     _setCurrent(page);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _jumping = false);
+    _pendingMark = mark;
+    _markWaits = 0;
+    if (mark != null) _seekMark();
+  }
+
+  /// Scrolls to the pending mark once its page has loaded and built it.
+  /// The page's verses come from the database a frame or more later, so
+  /// this waits for them, but not forever.
+  void _seekMark() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mark = _pendingMark;
+      if (!mounted || mark == null) return;
+      final ctx = _marks[mark];
+      if (ctx != null && ctx.mounted) {
+        _pendingMark = null;
+        Scrollable.ensureVisible(ctx);
+        return;
+      }
+      if (++_markWaits < 60) {
+        _seekMark();
+        WidgetsBinding.instance.scheduleFrame();
+      } else {
+        _pendingMark = null;
+      }
+    });
   }
 
   /// True when [page] is built and some of it is on screen.
@@ -156,6 +197,21 @@ class ContinuousMushafViewState extends State<ContinuousMushafView>
         return;
       }
     }
+  }
+
+  bool _detectScheduled = false;
+
+  /// After the frame, not at the notification: a scroll notification comes
+  /// BEFORE the pages are laid out at their new offsets, so measuring there
+  /// read where they had been — the number lagged a page behind a fast
+  /// drag (caught by `continuous_mushaf_view_test.dart`).
+  void _scheduleDetect() {
+    if (_detectScheduled) return;
+    _detectScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _detectScheduled = false;
+      if (mounted) _detectCurrent();
+    });
   }
 
   // ─── Auto-scroll ──────────────────────────────────────────────────────
@@ -195,8 +251,10 @@ class ContinuousMushafViewState extends State<ContinuousMushafView>
   }
 
   bool _onScroll(ScrollNotification n) {
+    if (n is ScrollUpdateNotification || n is ScrollEndNotification) {
+      _scheduleDetect();
+    }
     if (n is ScrollUpdateNotification) {
-      _detectCurrent();
       final d = n.scrollDelta ?? 0;
       if (n.dragDetails != null) {
         if (d > 2) {
@@ -225,6 +283,8 @@ class ContinuousMushafViewState extends State<ContinuousMushafView>
   @override
   void initState() {
     super.initState();
+    _anchor = _clamp(widget.initialPage);
+    _current = _anchor;
     _syncTicker();
   }
 
@@ -309,6 +369,44 @@ class ContinuousMushafViewState extends State<ContinuousMushafView>
       ),
     );
   }
+}
+
+/// The mark a surah's banner carries.
+String continuousSurahMark(int surahId) => 'surah-$surahId';
+
+/// A place inside a page that [ContinuousMushafViewState.jumpToPage] can
+/// land on exactly. Outside a continuous view it does nothing.
+class ContinuousMark extends StatefulWidget {
+  const ContinuousMark({super.key, required this.id, required this.child});
+
+  final Object id;
+  final Widget child;
+
+  @override
+  State<ContinuousMark> createState() => _ContinuousMarkState();
+}
+
+class _ContinuousMarkState extends State<ContinuousMark> {
+  ContinuousMushafViewState? _view;
+
+  @override
+  void initState() {
+    super.initState();
+    _view = context.findAncestorStateOfType<ContinuousMushafViewState>();
+    _view?._marks[widget.id] = context;
+  }
+
+  @override
+  void dispose() {
+    final view = _view;
+    if (view != null && identical(view._marks[widget.id], context)) {
+      view._marks.remove(widget.id);
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 /// Registers the page it holds with the view while it is built, so the view

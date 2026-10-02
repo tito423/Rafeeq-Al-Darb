@@ -6,6 +6,17 @@ part of 'quran_screen.dart';
 /// 2026-10-02 when the continuous view was added, so `quran_screen.dart`
 /// shrinks instead of growing past its ceiling (`code_layout_test.dart`).
 extension _QuranViews on _QuranScreenState {
+  /// A surah picked by name in the continuous view lands on its own banner,
+  /// not on the top of the page it shares with the surah before it. False
+  /// when this is not the continuous view; the caller turns the page.
+  /// (The page reached is saved by `_onScrolledToPage`.)
+  bool _continuousToSurah(int page, int? surahId) {
+    final continuous = _continuous.currentState;
+    if (!_isContinuous || continuous == null || surahId == null) return false;
+    continuous.jumpToPage(page, mark: continuousSurahMark(surahId));
+    return true;
+  }
+
   /// The surahs on the page being read — see `page_surahs.dart` for the rule
   /// and for the defect that made it necessary.
   String _currentSurahName(MushafData data) => surahNamesOnPage(

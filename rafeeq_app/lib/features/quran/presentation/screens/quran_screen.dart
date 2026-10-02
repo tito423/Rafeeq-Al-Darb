@@ -546,7 +546,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
             null
         ? null
         : (surah: surahId, ayah: 1, page: page, mark: false, card: null);
-    _goToPage(page, animate: false);
+    if (!_continuousToSurah(page, surahId)) _goToPage(page, animate: false);
     if (!_recite.active) return;
     final ayahs = await _ayahsOfPage(page, data);
     if (ayahs.isEmpty || !mounted) return;

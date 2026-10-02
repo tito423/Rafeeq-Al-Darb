@@ -13,6 +13,7 @@ import '../../data/quran_zoom_provider.dart';
 import '../../data/text_layout_provider.dart';
 import 'mushaf/ayah_marker.dart';
 import 'mushaf/ayah_wash_painter.dart';
+import 'mushaf/continuous_mushaf_view.dart';
 import 'mushaf_frame_painter.dart';
 
 part 'mushaf_ayah_row.dart';
@@ -513,10 +514,15 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
                 builder: (context) {
                   final item = items[index];
                   if (item.isBanner) {
-                    return _SurahBanner(
-                      name: widget.surahNameOf(item.surahId!),
-                      mt: mt,
-                      bare: bare,
+                    // The place «انتقال إلى سورة» lands on in the
+                    // continuous view; a no-op on a page of its own.
+                    return ContinuousMark(
+                      id: continuousSurahMark(item.surahId!),
+                      child: _SurahBanner(
+                        name: widget.surahNameOf(item.surahId!),
+                        mt: mt,
+                        bare: bare,
+                      ),
                     );
                   }
                   if (item.isBasmala) {
