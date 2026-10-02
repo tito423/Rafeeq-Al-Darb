@@ -1,62 +1,50 @@
 [
  {
   "scene": 1,
-  "seconds": 8.12,
-  "estimated": true
+  "seconds": 8.36
  },
  {
   "scene": 2,
-  "seconds": 8.12,
-  "estimated": true
+  "seconds": 7.6
  },
  {
   "scene": 3,
-  "seconds": 8.12,
-  "estimated": true
+  "seconds": 6.0
  },
  {
   "scene": 4,
-  "seconds": 6.47,
-  "estimated": true
+  "seconds": 4.97
  },
  {
   "scene": 5,
-  "seconds": 8.12,
-  "estimated": true
+  "seconds": 7.17
  },
  {
   "scene": 6,
-  "seconds": 16.5,
-  "estimated": true
+  "seconds": 14.643
  },
  {
   "scene": 7,
-  "seconds": 6.47,
-  "estimated": true
+  "seconds": 5.33
  },
  {
   "scene": 8,
-  "seconds": 8.12,
-  "estimated": true
+  "seconds": 6.8
  },
  {
   "scene": 9,
-  "seconds": 7.02,
-  "estimated": true
+  "seconds": 5.76
  },
  {
   "scene": 10,
-  "seconds": 7.02,
-  "estimated": true
+  "seconds": 7.25
  },
  {
   "scene": 11,
-  "seconds": 6.47,
-  "estimated": true
+  "seconds": 6.06
  },
  {
   "scene": 12,
-  "seconds": 10.88,
-  "estimated": true
+  "seconds": 10.27
  }
 ]

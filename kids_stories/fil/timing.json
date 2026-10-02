@@ -1,37 +1,30 @@
 [
  {
   "scene": 1,
-  "seconds": 8.12,
-  "estimated": true
+  "seconds": 8.24
  },
  {
   "scene": 2,
-  "seconds": 5.92,
-  "estimated": true
+  "seconds": 4.04
  },
  {
   "scene": 3,
-  "seconds": 5.92,
-  "estimated": true
+  "seconds": 5.5
  },
  {
   "scene": 4,
-  "seconds": 4.82,
-  "estimated": true
+  "seconds": 4.76
  },
  {
   "scene": 5,
-  "seconds": 4.26,
-  "estimated": true
+  "seconds": 4.28
  },
  {
   "scene": 6,
-  "seconds": 9.77,
-  "estimated": true
+  "seconds": 9.63
  },
  {
   "scene": 7,
-  "seconds": 34.05,
-  "estimated": true
+  "seconds": 34.972
  }
 ]
