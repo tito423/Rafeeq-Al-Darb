@@ -2515,9 +2515,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 04:02 — IN PROGRESS — resume here**
+**2026-10-02 05:44 — IN PROGRESS — resume here**
 
-R7: ayah and surah copies run side by side (state per kind); a size left unrecorded is asked from the source
+v3.75.0 released (tag = HEAD, v3.74.0 deleted); trap 60 GitHub secondary rate limit; R7 uploads restarted at 1200/h
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -650,3 +650,14 @@ Do not rediscover these.
     envelope with `StandardMethodCodec` and asserts the offset. **A test
     clip proves the recogniser, not the microphone - read logcat while the
     real input path runs.**
+
+60. **GitHub's secondary rate limit counts release-asset uploads, and it
+    blocks the WHOLE account.** Measured 2026-10-02 (R7, copying the
+    recitations to `tito423/rafeeq-recitations`): ~4,800 uploads between
+    03:28 and 05:20 (about 2,600 an hour, two runs side by side) went through,
+    then every write answered **403** - including `gh release create` for the
+    app's own v3.75.0 on the OTHER repository, which waited from 05:26 to
+    05:43. GitHub documents «no more than 80 content-generating requests per
+    minute and no more than 500 per hour» (docs.github.com, read 2026-10-02).
+    So: stop the bulk uploads BEFORE publishing a release, and keep their
+    pace low (`--per-hour`); the script backs off on 403 by itself.

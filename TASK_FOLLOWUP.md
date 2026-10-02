@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~05:50 (10-02, Opus) RELEASED v3.75.0: tag = HEAD 9094b7fe (checked), asset RafeeqAlDarb-v3.75.0.apk 313,461,709 B, public range 206; v3.74.0 + tag DELETED; left: v3.75.0, v3.51.0, content-*. GitHub secondary rate limit hit at 05:20 after ~4,800 uploads in ~2 h (trap #60) and held the release create until 05:43. R7 RESTARTED 05:45 slower: `--only surah --per-hour 400` + `--only ayah --per-hour 800`. Counted: 18 surah sets done (24.5 GB), ayah 0 sets done (2,855 files). Remaining at this pace: surah ~25,240 files / 400 h^-1 ≈ 63 h; ayah ~215,400 / 800 ≈ 270 h (~11 days). The PC must stay on; if it restarts, re-run both commands (they resume). BEFORE ANY FUTURE RELEASE: stop both runs first (trap #60).
+
 ~05:35 (10-02, Opus) v3.75.0 BUILT + about to publish (owner: «صلح الحاجات اللي قلتلك عليها وخلص وارفع الريليز»): R1-R7 all in it and seen on the emulator. STILL RUNNING AFTER THE RELEASE: R7 uploads (surah + ayah runs, see R7). NEXT: publish, verify tag = HEAD, delete v3.74.0 + tag, give the owner both links; then keep the R7 runs alive and report progress.
 
 ~00:30 (10-02, Opus) NEXT RELEASE LIST (owner: fix everything together, he is testing v3.74.0 and will add more - append each new item here):
@@ -1018,6 +1020,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-02 05:44 - v3.75.0 released (tag = HEAD, v3.74.0 deleted); trap 60 GitHub secondary rate limit; R7 uploads restarted at 1200/h
 - 2026-10-02 04:02 - R7: ayah and surah copies run side by side (state per kind); a size left unrecorded is asked from the source
 - 2026-10-02 03:59 - R7 seen on emulator: a mirrored moshaf plays from GitHub release assets
 - 2026-10-02 03:56 - R4: six stories mixed and in the catalogue script, titles x7 + Rafeeq phrases; renders running; R7 recorded in CONTENT-LICENSES
