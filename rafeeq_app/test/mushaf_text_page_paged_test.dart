@@ -51,6 +51,10 @@ void main() {
         ));
         await t.pump();
         expect(t.takeException(), isNull);
+        // And it comes to rest: no widget keeps asking for frames (a page
+        // that re-plans forever freezes the phone).
+        await t.pumpAndSettle(const Duration(milliseconds: 100),
+            EnginePhase.sendSemanticsUpdate, const Duration(seconds: 5));
         // The verses are drawn: a paragraph in the Qur'an font, with height.
         final paras = t.allRenderObjects.whereType<RenderParagraph>().where(
             (p) => p.text.toPlainText().contains('ٱلۡأَرۡضِ'));

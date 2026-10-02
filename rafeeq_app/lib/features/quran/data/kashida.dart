@@ -112,12 +112,12 @@ class KashidaSlot {
 /// line is filled mostly by kashida and only the remainder by the spaces.
 ///
 /// [spanFor] builds the paragraph with a plan applied (the empty plan is the
-/// text as stored). Lines are planned one at a time, top down, and each is
-/// checked by laying the paragraph out again: a stretched letter is not
-/// always exactly one tatweel wider (a letter may take another form beside
-/// it — measured on p.303, where one line's plan pushed a word down), so a
-/// line whose plan moves any line break is planned again with less, down to
-/// none. The result never changes which words share a line.
+/// text as stored). The plan is checked by laying the paragraph out again:
+/// a stretched letter is not always exactly one tatweel wider (a letter may
+/// take another form beside it — measured on p.303, where one line's plan
+/// pushed a word down), so a line whose plan moves any line break is
+/// planned again with less, down to none. The result never changes which
+/// words share a line.
 Map<int, int> planKashida({
   required InlineSpan Function(Map<int, int> plan) spanFor,
   required double width,
@@ -155,6 +155,11 @@ Map<int, int> planKashida({
   final starts = lineStarts(original, text);
   final lines = original.computeLineMetrics();
   final slots = kashidaSlots(text);
+
+  // Each justified line: its slots in the order they are filled, and how
+  // many tatweels it gets.
+  final order = <List<KashidaSlot>>[];
+  final count = <int>[];
   for (var li = 0; li < lines.length - 1; li++) {
     final line = lines[li];
     final pos = original.getPositionForOffset(
@@ -166,36 +171,49 @@ Map<int, int> planKashida({
       ..sort((a, b) => a.rank != b.rank
           ? a.rank.compareTo(b.rank)
           : a.word.compareTo(b.word));
-    if (here.isEmpty) continue;
-    var n = ((width - line.width) * fill / kashida).floor();
-    n = n.clamp(0, here.length * maxPerSlot);
-    while (n > 0) {
+    order.add(here);
+    final n = ((width - line.width) * fill / kashida).floor();
+    count.add(here.isEmpty ? 0 : n.clamp(0, here.length * maxPerSlot));
+  }
+  original.dispose();
+
+  Map<int, int> build() {
+    final plan = <int, int>{};
+    for (var li = 0; li < order.length; li++) {
       // Round-robin: every word's last slot once, then the next ranks, then
       // again — so no single word is drawn out while its neighbours are not.
-      final trial = Map<int, int>.of(plan);
-      var left = n;
+      var left = count[li];
       while (left > 0) {
-        for (final s in here) {
+        for (final s in order[li]) {
           if (left == 0) break;
-          trial[s.offset] = (trial[s.offset] ?? 0) + 1;
+          plan[s.offset] = (plan[s.offset] ?? 0) + 1;
           left--;
         }
       }
-      final check = laid(trial, TextAlign.justify);
-      final ok = listEqualsInt(
-          lineStarts(check, spanFor(trial).toPlainText()), starts);
-      check.dispose();
-      if (ok) {
-        plan
-          ..clear()
-          ..addAll(trial);
-        break;
-      }
-      n = (n * 0.6).floor();
     }
+    return plan;
   }
-  original.dispose();
-  return plan;
+
+  // All lines at once, checked by ONE layout; only a line whose plan moved a
+  // break is planned again with less. Usually one or two layouts a page —
+  // one layout per line made the first build of the Qur'an tab slow on the
+  // emulator's debug build.
+  for (var attempt = 0; attempt < 24; attempt++) {
+    final plan = build();
+    if (plan.isEmpty) return plan;
+    final check = laid(plan, TextAlign.justify);
+    final now = lineStarts(check, spanFor(plan).toPlainText());
+    check.dispose();
+    if (listEqualsInt(now, starts)) return plan;
+    // The first line that ends somewhere else is the one that overflowed.
+    var bad = 0;
+    while (bad < now.length && bad < starts.length && now[bad] == starts[bad]) {
+      bad++;
+    }
+    if (bad >= count.length) break;
+    count[bad] = (count[bad] * 0.6).floor();
+  }
+  return const {};
 }
 
 bool listEqualsInt(List<int> a, List<int> b) {
