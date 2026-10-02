@@ -12,6 +12,7 @@ import '../../data/jazariyyah_course.dart';
 import '../../data/jazariyyah_examples.dart';
 import '../../data/jazariyyah_lesson_text.dart';
 import '../../data/jazariyyah_sharh.dart';
+import '../widgets/jazariyyah_verse_lines.dart';
 import '../widgets/listen_card.dart';
 
 /// المستوى الثاني — «المقدمة الجزرية» لابن الجزري (ت ٨٣٣ هـ).
@@ -260,7 +261,12 @@ class _LessonTile extends ConsumerWidget {
           for (final p in body)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: Text(
+              child: p.kind == 'body' && isJazariyyahVerse(p.text)
+                  ? JazariyyahVerseLines(
+                      text: p.text,
+                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.9),
+                    )
+                  : Text(
                 p.text,
                 textAlign: TextAlign.justify,
                 style: switch (p.kind) {
@@ -380,18 +386,19 @@ class _SharhSection extends ConsumerWidget {
                       for (final p in paras)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            p.text,
-                            textAlign: isJazariyyahVerse(p.text)
-                                ? TextAlign.center
-                                : TextAlign.justify,
-                            style: isJazariyyahVerse(p.text)
-                                ? theme.textTheme.bodyMedium?.copyWith(
+                          child: isJazariyyahVerse(p.text)
+                              ? JazariyyahVerseLines(
+                                  text: p.text,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
                                     height: 1.9,
                                     color: goldText(context),
                                     fontWeight: FontWeight.w600,
-                                  )
-                                : p.kind == 'aya'
+                                  ),
+                                )
+                              : Text(
+                            p.text,
+                            textAlign: TextAlign.justify,
+                            style: p.kind == 'aya'
                                     ? theme.textTheme.bodyLarge?.copyWith(
                                         fontFamily: 'AmiriQuran',
                                         height: 1.9,
