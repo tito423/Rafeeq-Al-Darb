@@ -2515,9 +2515,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 05:44 — IN PROGRESS — resume here**
+**2026-10-02 13:32 — IN PROGRESS — resume here**
 
-v3.75.0 released (tag = HEAD, v3.74.0 deleted); trap 60 GitHub secondary rate limit; R7 uploads restarted at 1200/h
+GitHub completeness checked; R7 runs detached; remote-control proposal waiting for the owner
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

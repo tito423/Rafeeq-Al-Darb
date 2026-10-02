@@ -13,6 +13,8 @@ his numbers. NO code touched for any plan item yet.
 
 ## Next step (exact)
 
+~13:45 (10-02, Opus) OWNER: weekly quota 90 %; «اتأكد ان كل المشروع موجود على جيت هب» + asked my view on a way to drive the laptop remotely. DONE: master = origin/master; kids-stories-pipeline worktree committed + pushed (a6190d03: scenes/timing/words of all 28); tools/kids_voice (voicing scripts + every lines.tsv/moods.json) committed c9841ac7. NOT on GitHub on purpose: scripts/.env (secrets), ../Rafeeq-Keys (signing key - must never be public), 3.7 GB WAV takes in E:/DevEnv/kids_voice, assets/data/*.db (regenerable; on R2). R7 runs now DETACHED Windows processes: `powershell -ExecutionPolicy Bypass -File scriptsun_recitation_mirror.ps1` (start/resume; -Stop before a release); retry on dropped connections added (RemoteDisconnected killed the ayah run ~13:30). WAITING FOR THE OWNER: remote-control mechanism (proposed: GitHub self-hosted runner on a PRIVATE control repo).
+
 ~05:50 (10-02, Opus) RELEASED v3.75.0: tag = HEAD 9094b7fe (checked), asset RafeeqAlDarb-v3.75.0.apk 313,461,709 B, public range 206; v3.74.0 + tag DELETED; left: v3.75.0, v3.51.0, content-*. GitHub secondary rate limit hit at 05:20 after ~4,800 uploads in ~2 h (trap #60) and held the release create until 05:43. R7 RESTARTED 05:45 slower: `--only surah --per-hour 400` + `--only ayah --per-hour 800`. Counted: 18 surah sets done (24.5 GB), ayah 0 sets done (2,855 files). Remaining at this pace: surah ~25,240 files / 400 h^-1 ≈ 63 h; ayah ~215,400 / 800 ≈ 270 h (~11 days). The PC must stay on; if it restarts, re-run both commands (they resume). BEFORE ANY FUTURE RELEASE: stop both runs first (trap #60).
 
 ~05:35 (10-02, Opus) v3.75.0 BUILT + about to publish (owner: «صلح الحاجات اللي قلتلك عليها وخلص وارفع الريليز»): R1-R7 all in it and seen on the emulator. STILL RUNNING AFTER THE RELEASE: R7 uploads (surah + ayah runs, see R7). NEXT: publish, verify tag = HEAD, delete v3.74.0 + tag, give the owner both links; then keep the R7 runs alive and report progress.
@@ -1020,6 +1022,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-02 13:32 - GitHub completeness checked; R7 runs detached; remote-control proposal waiting for the owner
 - 2026-10-02 05:44 - v3.75.0 released (tag = HEAD, v3.74.0 deleted); trap 60 GitHub secondary rate limit; R7 uploads restarted at 1200/h
 - 2026-10-02 04:02 - R7: ayah and surah copies run side by side (state per kind); a size left unrecorded is asked from the source
 - 2026-10-02 03:59 - R7 seen on emulator: a mirrored moshaf plays from GitHub release assets
