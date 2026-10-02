@@ -1,54 +1,58 @@
 [
  {
   "scene": 1,
-  "seconds": 10.06
+  "seconds": 6.43
  },
  {
   "scene": 2,
-  "seconds": 9.02
+  "seconds": 5.91
  },
  {
   "scene": 3,
-  "seconds": 9.79
+  "seconds": 9.01
  },
  {
   "scene": 4,
-  "seconds": 6.15
+  "seconds": 5.02
  },
  {
   "scene": 5,
-  "seconds": 5.59
+  "seconds": 8.17
  },
  {
   "scene": 6,
-  "seconds": 34.496
+  "seconds": 9.33
  },
  {
   "scene": 7,
-  "seconds": 8.57
+  "seconds": 6.04
  },
  {
   "scene": 8,
-  "seconds": 6.24
+  "seconds": 6.73
  },
  {
   "scene": 9,
-  "seconds": 7.7
+  "seconds": 5.474
  },
  {
   "scene": 10,
-  "seconds": 4.63
+  "seconds": 6.16
  },
  {
   "scene": 11,
-  "seconds": 8.3
+  "seconds": 7.99
  },
  {
   "scene": 12,
-  "seconds": 8.55
+  "seconds": 9.45
  },
  {
   "scene": 13,
-  "seconds": 10.1
+  "seconds": 9.63
+ },
+ {
+  "scene": 14,
+  "seconds": 15.44
  }
 ]
