@@ -117,6 +117,7 @@ class _AyahShareCard extends StatelessWidget {
             textDirection: TextDirection.rtl,
             style: const TextStyle(
               fontFamily: 'KFGQPCHafs',
+              letterSpacing: 0, // any spacing turns the font's ligatures off
               fontSize: 30,
               height: 1.9,
               color: AppColors.textHigh,

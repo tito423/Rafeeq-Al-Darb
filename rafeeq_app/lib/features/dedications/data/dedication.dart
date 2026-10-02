@@ -39,6 +39,14 @@ class Dedication {
   final int count;
   final DateTime created;
 
+  /// The number the reader set out to reach, or 0 for none. Their own
+  /// choice in the edit sheet; the app never sets one.
+  final int goal;
+
+  /// When the counter last went up — «آخر مرة» on the card. Null until the
+  /// first count.
+  final DateTime? lastAt;
+
   const Dedication({
     required this.id,
     required this.name,
@@ -46,9 +54,21 @@ class Dedication {
     required this.note,
     required this.count,
     required this.created,
+    this.goal = 0,
+    this.lastAt,
   });
 
-  Dedication copyWith({String? name, DedicationKind? kind, String? note, int? count}) =>
+  bool get hasGoal => goal > 0 && kind.unitKey != null;
+  bool get goalReached => hasGoal && count >= goal;
+
+  Dedication copyWith({
+    String? name,
+    DedicationKind? kind,
+    String? note,
+    int? count,
+    int? goal,
+    DateTime? lastAt,
+  }) =>
       Dedication(
         id: id,
         name: name ?? this.name,
@@ -56,6 +76,8 @@ class Dedication {
         note: note ?? this.note,
         count: count ?? this.count,
         created: created,
+        goal: goal ?? this.goal,
+        lastAt: lastAt ?? this.lastAt,
       );
 
   Map<String, dynamic> toJson() => {
@@ -65,6 +87,8 @@ class Dedication {
         'note': note,
         'count': count,
         'created': created.toIso8601String(),
+        'goal': goal,
+        if (lastAt != null) 'lastAt': lastAt!.toIso8601String(),
       };
 
   factory Dedication.fromJson(Map<String, dynamic> j) => Dedication(
@@ -74,6 +98,9 @@ class Dedication {
         note: j['note'] as String? ?? '',
         count: (j['count'] as num?)?.toInt() ?? 0,
         created: DateTime.tryParse(j['created'] as String? ?? '') ?? DateTime(2026),
+        // Both absent from records saved before 2026-10-02.
+        goal: (j['goal'] as num?)?.toInt() ?? 0,
+        lastAt: DateTime.tryParse(j['lastAt'] as String? ?? ''),
       );
 }
 
@@ -123,7 +150,12 @@ class DedicationsNotifier extends StateNotifier<List<Dedication>> {
   Future<void> bump(String id, int by) async {
     state = [
       for (final x in state)
-        x.id == id ? x.copyWith(count: (x.count + by).clamp(0, 1 << 30)) : x,
+        x.id == id
+            ? x.copyWith(
+                count: (x.count + by).clamp(0, 1 << 30),
+                lastAt: by > 0 ? DateTime.now() : null,
+              )
+            : x,
     ];
     await _save();
   }

@@ -333,6 +333,7 @@ class _AyahLine extends StatelessWidget {
               fontSize: 19,
               height: 1.95,
               fontFamily: 'KFGQPCHafs',
+              letterSpacing: 0, // any spacing turns the font's ligatures off
             ),
           ),
           const SizedBox(height: 4),

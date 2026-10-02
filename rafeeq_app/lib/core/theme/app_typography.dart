@@ -57,6 +57,7 @@ abstract final class AppTypography {
   }) => TextStyle(
     fontFamily: quranFontFamily,
     fontSize: fontSize,
+    letterSpacing: 0, // any spacing turns the font's ligatures off
     color: color,
     height: height,
   );

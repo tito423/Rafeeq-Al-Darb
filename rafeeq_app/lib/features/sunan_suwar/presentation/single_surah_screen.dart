@@ -9,6 +9,7 @@ import '../../../core/db/models.dart';
 import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/utils/byte_formatter.dart' show ratio;
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/stable_insets.dart';
 import '../../../core/widgets/error_retry.dart';
 import '../../downloads/data/reciters_provider.dart';
 import '../../quran/data/mushaf_data_provider.dart';
@@ -18,6 +19,7 @@ import '../../quran/data/mushaf_paper_provider.dart';
 import '../../quran/data/mushaf_theme.dart';
 import '../../quran/data/text_layout_provider.dart';
 import '../../quran/presentation/widgets/ayah_sciences_sheet.dart';
+import '../../quran/presentation/widgets/mushaf/continuous_mushaf_view.dart';
 import '../../quran/presentation/widgets/mushaf/mushaf_paper_chips.dart';
 import '../../quran/presentation/widgets/mushaf_page_view.dart';
 import '../../quran/presentation/widgets/mushaf_text_page.dart';
@@ -57,6 +59,32 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
   PageController? _pages;
   int _current = 0;
   final Map<int, Future<List<Ayah>>> _pageFutures = {};
+
+  /// This surah's own verses of each page, for the continuous view.
+  final Map<int, Future<List<Ayah>>> _ownFutures = {};
+
+  /// The reading layout's endless scroll, while it is the one on screen.
+  final GlobalKey<ContinuousMushafViewState> _continuous = GlobalKey();
+
+  bool get _isContinuous =>
+      _mode == _Mode.text &&
+      ref.read(quranTextLayoutProvider) == QuranTextLayout.reading;
+
+  /// Turns to [page]: in the continuous view by scrolling, otherwise by
+  /// paging.
+  void _turnTo(int page) {
+    if (page < _startPage || page > _endPage) return;
+    final continuous = _continuous.currentState;
+    if (_isContinuous && continuous != null) {
+      continuous.jumpToPage(page);
+      return;
+    }
+    unawaited(_pages?.animateToPage(
+      page - _startPage,
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeInOut,
+    ));
+  }
 
   bool _fullScreen = false;
   bool _autoScroll = false;
@@ -107,11 +135,11 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
     if (!mounted || row == null) return;
     final page = row.pageNumber;
     if (page < _startPage || page > _endPage || page == _current) return;
-    unawaited(_pages?.animateToPage(
-      page - _startPage,
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeInOut,
-    ));
+    if (_isContinuous &&
+        (_continuous.currentState?.isOnScreen(page) ?? false)) {
+      return;
+    }
+    _turnTo(page);
   }
 
   void _toggleFullScreen() {
@@ -129,7 +157,15 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
     );
   }
 
-  void _setAutoScroll(bool on) => setState(() => _autoScroll = on);
+  /// Auto-scroll runs in the reading layout only, and turning it on takes
+  /// the reader there - the same rule as the Qur'an tab.
+  void _setAutoScroll(bool on) {
+    if (on) {
+      _mode = _Mode.text;
+      ref.read(quranTextLayoutProvider.notifier).set(QuranTextLayout.reading);
+    }
+    setState(() => _autoScroll = on);
+  }
 
   /// Auto-scroll reached the bottom of a page: turn to the next one, unless
   /// this was the surah's last page — where there is honestly nowhere to go.
@@ -138,10 +174,7 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
       setState(() => _autoScroll = false);
       return;
     }
-    _pages?.nextPage(
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeInOut,
-    );
+    _turnTo(_current + 1);
   }
 
   Future<void> _toggleRecitation(MushafData data) async {
@@ -179,6 +212,11 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
     final mushaf = ref.watch(mushafDataProvider);
     final edition = ref.watch(currentMushafEditionProvider).valueOrNull;
     final textLayout = ref.watch(quranTextLayoutProvider);
+    ref.listen<QuranTextLayout>(quranTextLayoutProvider, (_, layout) {
+      if (layout != QuranTextLayout.reading && _autoScroll) {
+        setState(() => _autoScroll = false);
+      }
+    });
 
     return mushaf.when(
       loading: () =>
@@ -197,9 +235,18 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
         _startPage = startPage;
         _endPage = endPage;
         _current = _current == 0 ? startPage : _current;
-        _pages ??= PageController(initialPage: _current - startPage);
-
         final isText = _mode == _Mode.text;
+        if (isText && textLayout == QuranTextLayout.reading) {
+          // No `PageView` while the continuous view shows; a fresh one
+          // starts where the reader scrolled to when they come back.
+          final old = _pages;
+          if (old != null) {
+            _pages = null;
+            WidgetsBinding.instance.addPostFrameCallback((_) => old.dispose());
+          }
+        } else {
+          _pages ??= PageController(initialPage: _current - startPage);
+        }
         final showChrome = !_fullScreen && _toolbarVisible;
 
         return Scaffold(
@@ -248,10 +295,17 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                   ],
                 )
               : null,
+          // Full screen keeps clear of the notch and the phone's bars even
+          // while they are hidden - see `stableSystemInsets`.
           body: SafeArea(
             top: !_fullScreen,
             bottom: !_fullScreen,
-            child: PageView.builder(
+            minimum: _fullScreen
+                ? stableSystemInsets(context)
+                : EdgeInsets.zero,
+            child: isText && textLayout == QuranTextLayout.reading
+                ? _continuousView(data, startPage, endPage, textLayout)
+                : PageView.builder(
               controller: _pages,
               onPageChanged: (i) => setState(() => _current = startPage + i),
               itemCount: pageCount,
@@ -356,16 +410,10 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                   autoScrollSpeed: _autoScrollSpeed,
                   layout: textLayout,
                   onPrev: _current > startPage
-                      ? () => _pages!.previousPage(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeInOut,
-                          )
+                      ? () => _turnTo(_current - 1)
                       : null,
                   onNext: _current < endPage
-                      ? () => _pages!.nextPage(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeInOut,
-                          )
+                      ? () => _turnTo(_current + 1)
                       : null,
                   onToggleRecite: () => _toggleRecitation(data),
                   onToggleAutoScroll: () => _setAutoScroll(!_autoScroll),
@@ -378,6 +426,67 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                       MushafThemePicker.show(context, origin: origin),
                 )
               : null,
+        );
+      },
+    );
+  }
+
+  /// The reading layout: this surah's pages as one scroll, no page turns.
+  Widget _continuousView(
+    MushafData data,
+    int startPage,
+    int endPage,
+    QuranTextLayout textLayout,
+  ) {
+    final mt = resolveMushafTheme(
+      ref.watch(mushafThemeProvider),
+      Theme.of(context).brightness,
+    );
+    return ContinuousMushafView(
+      key: _continuous,
+      firstPage: startPage,
+      lastPage: endPage,
+      initialPage: _current,
+      // Only this surah's verses, as the paged view draws them.
+      ayahsOf: (page) => _ownFutures.putIfAbsent(
+        page,
+        () => _pageFutures
+            .putIfAbsent(page, () => data.repo.ayahsOfPage(page))
+            .then((all) => [
+                  for (final a in all)
+                    if (a.surahId == widget.surahId) a,
+                ]),
+      ),
+      background: mt.paper,
+      ruleColor: mt.gold,
+      autoScroll: _autoScroll,
+      autoScrollSpeed: _autoScrollSpeed,
+      onAutoScrollReachedEnd: () => setState(() => _autoScroll = false),
+      onBackgroundTap: _toggleFullScreen,
+      onPageChanged: (page) => setState(() => _current = page),
+      pageBuilder: (context, page, ayahs) {
+        final frame = ref.watch(mushafFrameProvider);
+        return MushafTextPage(
+          embedded: true,
+          layout: textLayout,
+          mushafTheme: mt,
+          frameStyle: frame.style,
+          frameColor: frame.accent.color ?? mt.gold,
+          ayahs: ayahs,
+          surahNameOf: data.surahNameAr,
+          onAyahLongPress: (a) => _openSciences(a, data,
+              ref.read(currentMushafEditionProvider).valueOrNull),
+          onPlayTap: (a) => AyahAudioService.instance.startContinuous(
+            from: a,
+            repo: data.repo,
+            edition: ref.read(selectedReciterProvider),
+            wholeMushaf: false,
+          ),
+          playingSurah: _recite.active ? _recite.surahId : null,
+          playingAyah: _recite.active ? _recite.ayahNumber : null,
+          fontScale: _fontScale,
+          onBackgroundTap: _toggleFullScreen,
+          pageFillScreen: _fullScreen,
         );
       },
     );

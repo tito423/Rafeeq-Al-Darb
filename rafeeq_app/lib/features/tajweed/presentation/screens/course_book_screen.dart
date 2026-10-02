@@ -290,6 +290,9 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
   TextSpan _rich(List<CourseSpan> spans, TextStyle base) {
     final quran = base.copyWith(
       fontFamily: 'KFGQPCHafs',
+      // Above zero, Skia turns the font's ligatures off (see
+      // test/quran_font_ligatures_test.dart).
+      letterSpacing: 0,
       fontSize: (base.fontSize ?? 17) + 3,
       color: goldText(context),
       height: 2.0,
@@ -534,6 +537,7 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
                           '﴿${s.text}﴾',
                           style: const TextStyle(
                               fontFamily: 'KFGQPCHafs',
+                              letterSpacing: 0,
                               fontSize: 19,
                               height: 2.0),
                         ),

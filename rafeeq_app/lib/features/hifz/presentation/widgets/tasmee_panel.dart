@@ -588,6 +588,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                             _live[i] ? _liveWords[i] : '…',
                             style: const TextStyle(
                               fontFamily: 'KFGQPCHafs',
+                              letterSpacing: 0, // any spacing turns the font's ligatures off
                               fontSize: 19,
                               height: 1.8,
                             ),
@@ -634,6 +635,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
                           r.words[i],
                           style: TextStyle(
                             fontFamily: 'KFGQPCHafs',
+                            letterSpacing: 0, // any spacing turns the font's ligatures off
                             fontSize: 19,
                             height: 1.8,
                             color: r.heardWord[i] ? null : Colors.red.shade700,

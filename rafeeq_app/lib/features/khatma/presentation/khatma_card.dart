@@ -272,6 +272,7 @@ class KhatmaPortionRangeBlock extends StatelessWidget {
             ayahOpening(range.start.textUthmani),
             style: const TextStyle(
               fontFamily: 'KFGQPCHafs',
+              letterSpacing: 0, // any spacing turns the font's ligatures off
               fontSize: 17,
               height: 1.6,
             ),
