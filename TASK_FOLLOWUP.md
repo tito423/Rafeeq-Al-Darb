@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+~20:40 (10-02, Opus, cloud) R7 NUMBERS at 20:23:55 (rafeeq-control results/20261002_2025_r7_status.ps1.txt, read-only): SURAH 75 moshafs done (was 69 at 18:57), last finished 183, 400 files/h. AYAH still 2 of 35 reciters done; Sudais p1 + p2 finished, p3 at 150/954, 800 files/h. Same two processes since 13:35:19; watchdog log has no new action since 13:35 (last run 20:16, result 0). NEXT: wait for the owner's requests.
+
 ~20:35 (10-02, Opus, cloud) CLAUDE.md §2.0/2.0b/2.0b2/2.0c/2.1 now describe CLOUD sessions: opened from the phone; quota from get_session; checkpoint = commit + push to master (cp.bat is PC-only); R2 uploads + Gemini voices run on the laptop through rafeeq-control (R2 blocked from the cloud, no Chrome extension); repo default branch main = initial commit, branch from origin/master. «standing permission» wording REMOVED - permissions come from each session's prompt. NEXT: report fresh R7 numbers, then wait for the owner.
 
 ~20:25 (10-02, Opus, cloud) R7 NUMBERS at 18:57 (rafeeq-control results/r7_status_20261002.ps1.txt): SURAH 69 moshafs done of ~282, working on moshaf 17 (114 files), 400 files/h. AYAH 2 of 35 reciters done (Abdul_Basit_Murattal_192kbps, Abdullah_Basfar_192kbps); Sudais part 1 at 900/954, 800 files/h. Watchdog restarted nothing since 13:35 (both copy processes started 13:35:19, still alive). TASK_FOLLOWUP top repaired (garbled header, Windows paths eaten as control chars: \a \b \f \r). NEXT: report fresh R7 numbers to the owner, then wait for his requests.
