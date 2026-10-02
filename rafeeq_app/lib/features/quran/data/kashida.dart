@@ -18,7 +18,8 @@ import 'package:flutter/widgets.dart';
 /// A tatweel goes only where two letters of one word are ALREADY joined:
 /// after a dual-joining letter (with its marks) and before a letter that
 /// joins to it. Never inside lam-alef (a ligature), never after a letter
-/// that does not join forward, never after a letter carrying «ٰ» or «ٓ».
+/// that does not join forward, never after a letter carrying «ٰ» or «ٓ»,
+/// and never inside the Name of Allah.
 const tatweel = 'ـ';
 
 /// Letters that join to the letter after them (Unicode joining type D).
@@ -82,7 +83,12 @@ List<KashidaSlot> kashidaSlots(String text) {
     if (j < text.length && !carriesAlef) {
       final next = text[j];
       final lamAlef = ch == 'ل' && _alefs.contains(next);
-      if (_joinsBack.contains(next) && !lamAlef) {
+      // The Name of Allah is never drawn out — «ٱللَّـهِ» was, on
+      // emulator-5554 (2026-10-02), and the printed mushaf never does it.
+      // No slot between lam and lam, or lam and ha: every form of the Name
+      // (ٱللَّه، لِلَّه، ٱللَّهُمَّ) lies inside those.
+      final inName = ch == 'ل' && (next == 'ل' || next == 'ه');
+      if (_joinsBack.contains(next) && !lamAlef && !inName) {
         inWord.add(KashidaSlot(j, 0, 0));
       }
     }

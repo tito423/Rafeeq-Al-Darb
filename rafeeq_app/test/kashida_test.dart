@@ -30,6 +30,19 @@ void main() {
     expect(at('شُرَكَٰٓؤُاْ').where((o) => o == 7), isEmpty);
   });
 
+  test('the Name of Allah is never drawn out', () {
+    for (final w in ['ٱللَّهِ', 'لِلَّهِ', 'ٱللَّهُمَّ', 'بِٱللَّهِ', 'وَٱللَّهُ']) {
+      final text = w;
+      for (final s in kashidaSlots(text)) {
+        final before = text.substring(0, s.offset).replaceAll(
+            RegExp('[\u064B-\u065F\u0670]'), '');
+        final after = text[s.offset];
+        expect(before.endsWith('ل') && (after == 'ل' || after == 'ه'), isFalse,
+            reason: '$w at ${s.offset}');
+      }
+    }
+  });
+
   test('the word\'s last slot ranks first', () {
     final s = kashidaSlots('يَعۡلَمُونَ');
     final last = s.reduce((a, b) => a.offset > b.offset ? a : b);
