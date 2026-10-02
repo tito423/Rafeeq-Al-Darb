@@ -190,16 +190,20 @@ the uncommitted tree and the unwritten note. The owner's instruction:
 So:
 
 1. **Check the remaining budget at the start of the session**, before promising
-   anything. In Claude Code that is `/usage` (or `/status`) in an interactive
-   terminal; the running total is also printed in the context/usage indicator.
-   If the interface you are in cannot show it, **say so to the owner in your
-   first reply and ask him to read it off his screen** — do not silently guess.
+   anything. Sessions now run in the CLOUD (§2.0b): read it with `get_session`
+   (claude-code-remote) - `environment_kind`, `rate_limit_info`, `cost_usd` -
+   and report them in the first reply. The cloud credit balance is not in
+   that tool; the owner reads it off his screen. If `get_session` is not
+   available in the session, **say so in the first reply and ask him to read
+   the numbers off his screen** - do not silently guess. (On a local session:
+   `/usage` or `/status`.)
 2. **Re-check before starting any long stage** (a crawl, a bulk upload, a
    device-verification run, a full rebuild of a DB) and **report the number**.
    The owner watches the quota himself: the reading informs him, it does not
-   stop the work — keep going unless he says stop. (The quota tool in this
-   app is `mcp__ccd_session_mgmt__get_usage`; it also shows how full the
-   CONTEXT is — when that nears ~90 %, say so and offer a clean handover.)
+   stop the work — keep going unless he says stop. (Cloud: `get_session`;
+   local desktop app: `mcp__ccd_session_mgmt__get_usage`, which also shows how
+   full the CONTEXT is — when that nears ~90 %, say so and offer a clean
+   handover.)
 3. **Size the plan to the budget you actually have.** Split a big brief into
    stages that each end at a committed, working state. Never begin a stage
    whose only useful output arrives at the end.
@@ -211,20 +215,23 @@ So:
 Never answer "how much quota is left" from memory or from an earlier reading in
 the same session. It is a live number; read it live.
 
-### 2.0b Remote Control — do NOT report it
+### 2.0b How sessions start — CLOUD, from the phone. Do NOT report Remote Control
 
 > «ما تقعدش تقول كل مره انا مش لاقي السيشن شغاله واكتب كلود ار سي» (2026-09-26)
 
-How a new session actually starts: the owner, on his phone, opens the PC
-through TeamViewer, starts a new session in the Claude desktop app under the
-other account, pastes `NEXT_PROMPT.md` and presses Enter. He then switches
-accounts on the phone and finds the new session there **automatically** - he
-already has it on his phone.
+Since 2026-10-02 the owner opens sessions as **Cloud** sessions from his phone
+(claude.ai/code), not Local sessions on the PC. A cloud session has no `E:\`
+drive; it reaches the laptop only through §2.0b2. First steps in a cloud
+session: attach `tito423/Rafeeq-Al-Darb` (and `tito423/rafeeq-control` when the
+laptop is needed) if they are not in the session; `git fetch origin master`
+and branch from `origin/master` - all work is on master, while the repo's
+default branch (`main`) is only the initial commit, so a plain clone lands
+on the wrong branch.
 
-`ListAgents` does NOT see that (it showed «no reachable agents» while he was
-steering this very session from his phone). So: **do not check Remote
-Control, do not say it is off, do not suggest `claude rc`.** The first reply
-reports the quota only.
+(Older flow, still possible: a Local session started on the PC through
+TeamViewer and picked up on the phone.) Either way: **do not check Remote
+Control, do not say it is off, do not suggest `claude rc`** (`ListAgents` does
+not see these sessions). The first reply reports the quota only.
 
 ### 2.0b2 A CLOUD session reaches the owner's laptop through `rafeeq-control`
 
@@ -232,8 +239,7 @@ reports the quota only.
 > غير برومبت» (2026-10-02)
 
 If this session has no `E:\` drive (claude.ai/code, a cloud container), the
-laptop is still reachable, with the owner's standing permission: a GitHub
-self-hosted runner on it (label `rafeeq-laptop`, private repo
+laptop is still reachable: a GitHub self-hosted runner on it (label `rafeeq-laptop`, private repo
 `tito423/rafeeq-control`) runs any PowerShell in `E:\My Projects\Rafiq-Al-Darb`:
 
 - `gh workflow run run.yml -R tito423/rafeeq-control -f command="..."`, then
@@ -243,7 +249,22 @@ self-hosted runner on it (label `rafeeq-laptop`, private repo
 
 The emulator, adb, Flutter, the signing key and `scripts/.env` are all there;
 build and run on the laptop through it, never claim a device check you did
-not do (§1.3). One job at a time; a job may run up to 6 hours. If `gh` has no
+not do (§1.3).
+
+What has to run on the laptop, not in the cloud container:
+
+- **Uploads to R2** - R2 is blocked from the cloud proxy (and `scripts/.env`
+  is only on the laptop). The cloud CAN read R2 content through the GitHub
+  `content-*` mirror releases.
+- **Gemini voices** - through the laptop (API from `scripts/.env`, or AI
+  Studio in the laptop's Chrome). The Chrome extension is not available to a
+  cloud session.
+- **Builds, the emulator, signing, release-asset uploads.**
+
+What a session may do on the laptop is set by the owner **in that session's
+prompt** - this file grants no standing permission. Wait for a job with
+`git fetch` on `results/` (or `gh run view`); its state is in the repo's
+workflow runs. One job at a time; a job may run up to 6 hours. If `gh` has no
 access to `rafeeq-control` from the cloud session, say so in the first reply
 and ask the owner to add the repository to the cloud environment.
 
@@ -264,13 +285,25 @@ TASK_FOLLOWUP.md, continue from Next step» — so it never needs rewriting.
 
 Therefore, after **every** step (not every stage): update `TASK_FOLLOWUP.md`
 — current task, **Next step (exact)**, half-done/unverified items, one log
-line with the commit — then `.\cp.bat "…"` (which commits it and pushes).
+line with the commit — then checkpoint (§2.1): on the cloud, `git commit` +
+`git push origin HEAD:master`; on the PC, `.\cp.bat "…"`.
 A session may die between any two tool calls; the file must always be true.
 
 ### 2.1 Checkpoint constantly
 
 Sessions here die from quota exhaustion, usually mid-task. Do not save the
 write-up for the end.
+
+**Cloud session (the normal case now):**
+
+```bash
+git add <files> && git commit -m "..." && git fetch origin master && git rebase origin/master && git push origin HEAD:master
+```
+
+`cp.bat` is Windows-only and does not run in the cloud container; master on
+GitHub is the checkpoint. Add every new file explicitly (TRAPS #55).
+
+**Local session on the PC:**
 
 ```bash
 .\cp.bat "what you just did"
