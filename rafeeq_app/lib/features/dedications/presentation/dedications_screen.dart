@@ -8,6 +8,8 @@ import 'package:uuid/uuid.dart';
 import '../../../core/utils/digits.dart';
 import '../../../core/widgets/paired_list_view.dart';
 import '../data/dedication.dart';
+import 'dedication_counter_screen.dart';
+import 'dedication_look.dart';
 
 /// «الإهداءات» — the reader's list of people they read or make dhikr for.
 class DedicationsScreen extends ConsumerWidget {
@@ -42,6 +44,8 @@ class DedicationsScreen extends ConsumerWidget {
                   onPick: (k) => _edit(context, ref, null, kind: k),
                 ),
                 const SizedBox(height: 12),
+                _Summary(list: list),
+                const SizedBox(height: 12),
                 // Sideways two a row (`PairedColumn`).
                 PairedColumn(
                   gap: 10,
@@ -65,24 +69,6 @@ Future<void> _edit(
     builder: (_) => _EditSheet(existing: existing, kind: kind),
   );
 }
-
-/// Each kind's look: an icon and a colour, the same on the start card and
-/// on every gift of that kind.
-(IconData, Color) _look(DedicationKind k) => switch (k) {
-  DedicationKind.quran => (Icons.menu_book_rounded, const Color(0xFF10AC84)),
-  DedicationKind.istighfar => (
-    Icons.self_improvement_rounded,
-    const Color(0xFF2E86DE),
-  ),
-  DedicationKind.tasbih => (
-    Icons.radio_button_checked_rounded,
-    const Color(0xFF8854D0),
-  ),
-  DedicationKind.dua => (
-    Icons.volunteer_activism_rounded,
-    const Color(0xFFF79F1F),
-  ),
-};
 
 /// «أهدِ عملًا لمن تحب» and the four kinds, each a big tile.
 class _StartCard extends StatelessWidget {
@@ -143,6 +129,10 @@ class _StartCard extends StatelessWidget {
           GridView.count(
             crossAxisCount: compact ? 4 : 2,
             shrinkWrap: true,
+            // A scroll view with no padding of its own takes the screen's
+            // bottom inset as padding — the empty band that sat under the
+            // four tiles on the owner's phone.
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
@@ -170,7 +160,7 @@ class _KindTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (icon, color) = _look(kind);
+    final (icon, color) = dedicationLook(kind);
     return Material(
       borderRadius: BorderRadius.circular(20),
       clipBehavior: Clip.antiAlias,
@@ -223,6 +213,12 @@ class _KindTile extends StatelessWidget {
   }
 }
 
+/// One person and what is given to them.
+///
+/// A header in the kind's colour carries the name; the reader's own words
+/// sit under it as a quote; and the count is a ring with one clear action
+/// beside it that opens the counting screen — «ابدأ الاستغفار», not a bare
+/// «+» (owner, 2026-10-02: «شكلها وحش قوي إن أنا أضغط على علامة الزائد»).
 class _DedicationCard extends ConsumerWidget {
   final Dedication d;
   const _DedicationCard({required this.d});
@@ -238,87 +234,132 @@ class _DedicationCard extends ConsumerWidget {
     return b.toString().trim();
   }
 
+  Future<void> _onMenu(BuildContext context, WidgetRef ref, String v) async {
+    final n = ref.read(dedicationsProvider.notifier);
+    if (v == 'edit') await _edit(context, ref, d);
+    if (v == 'share') {
+      await SharePlus.instance.share(ShareParams(text: _shareText()));
+    }
+    if (v == 'reset') await n.update(d.copyWith(count: 0));
+    if (v == 'delete' && context.mounted) {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (c) => AlertDialog(
+          content: Text(
+            'dedication.delete_confirm'.tr(namedArgs: {'name': d.name}),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(c, false),
+              child: Text('common.cancel'.tr()),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(c, true),
+              child: Text('dedication.delete'.tr()),
+            ),
+          ],
+        ),
+      );
+      if (ok == true) await n.remove(d.id);
+    }
+  }
+
+  void _openCounter(BuildContext context) {
+    HapticFeedback.selectionClick();
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => DedicationCounterScreen(id: d.id),
+      ),
+    );
+  }
+
+  /// «اليوم» / «أمس» / the date.
+  String _when(BuildContext context, DateTime t) {
+    final now = DateTime.now();
+    final days = DateTime(now.year, now.month, now.day)
+        .difference(DateTime(t.year, t.month, t.day))
+        .inDays;
+    if (days == 0) return 'dedication.today'.tr();
+    if (days == 1) return 'dedication.yesterday'.tr();
+    return localizeDigits(
+      DateFormat.yMMMd(context.locale.toString()).format(t),
+      context.locale.languageCode,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final unit = d.kind.unitKey;
-    final n = ref.read(dedicationsProvider.notifier);
-    final (kindIcon, kindColor) = _look(d.kind);
+    final lang = context.locale.languageCode;
+    final (kindIcon, kindColor) = dedicationLook(d.kind);
+    final last = d.lastAt;
     return Card(
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: kindColor.withValues(alpha: 0.6)),
+        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(color: kindColor.withValues(alpha: 0.45)),
       ),
       color: Color.alphaBlend(
-        kindColor.withValues(alpha: 0.08),
-        theme.colorScheme.surfaceContainerHighest,
+        kindColor.withValues(alpha: 0.06),
+        scheme.surfaceContainerHighest,
       ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // ── the name, on the kind's colour ──
+          Container(
+            padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 4, 12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: AlignmentDirectional.centerStart,
+                end: AlignmentDirectional.centerEnd,
+                colors: [
+                  kindColor,
+                  Color.lerp(kindColor, Colors.black, 0.35)!,
+                ],
+              ),
+            ),
+            child: Row(
               children: [
-                CircleAvatar(
-                  radius: 22,
-                  backgroundColor: kindColor,
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                   child: Icon(kindIcon, color: Colors.white),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         d.name,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       Text(
                         d.kind.titleKey.tr(),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: Colors.white.withValues(alpha: 0.85),
                         ),
                       ),
                     ],
                   ),
                 ),
                 PopupMenuButton<String>(
-                  onSelected: (v) async {
-                    if (v == 'edit') await _edit(context, ref, d);
-                    if (v == 'share') {
-                      await SharePlus.instance.share(
-                        ShareParams(text: _shareText()),
-                      );
-                    }
-                    if (v == 'reset') await n.update(d.copyWith(count: 0));
-                    if (v == 'delete' && context.mounted) {
-                      final ok = await showDialog<bool>(
-                        context: context,
-                        builder: (c) => AlertDialog(
-                          content: Text(
-                            'dedication.delete_confirm'.tr(
-                              namedArgs: {'name': d.name},
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(c, false),
-                              child: Text('common.cancel'.tr()),
-                            ),
-                            FilledButton(
-                              onPressed: () => Navigator.pop(c, true),
-                              child: Text('dedication.delete'.tr()),
-                            ),
-                          ],
-                        ),
-                      );
-                      if (ok == true) await n.remove(d.id);
-                    }
-                  },
+                  iconColor: Colors.white,
+                  onSelected: (v) => _onMenu(context, ref, v),
                   itemBuilder: (_) => [
                     PopupMenuItem(
                       value: 'edit',
@@ -341,47 +382,228 @@ class _DedicationCard extends ConsumerWidget {
                 ),
               ],
             ),
-            if (d.note.trim().isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(
-                d.note,
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
-              ),
-            ],
-            if (unit != null) ...[
-              const SizedBox(height: 10),
-              Row(
+          ),
+          // ── their own words ──
+          if (d.note.trim().isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // «عدد المرات: ٥», not «٥ مرة»: a label and a number need
-                  // no plural agreement in any of the seven languages.
-                  Text(
-                    '${unit.tr()}: ${localizeDigits('${d.count}', uiLanguageCode)}',
-                    style: theme.textTheme.titleMedium,
+                  Icon(
+                    Icons.format_quote_rounded,
+                    color: kindColor,
+                    size: 22,
                   ),
-                  const Spacer(),
-                  if (d.kind == DedicationKind.quran)
-                    OutlinedButton(
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        n.bump(d.id, 1);
-                      },
-                      child: Text('dedication.add_page'.tr()),
-                    )
-                  else
-                    IconButton.filledTonal(
-                      iconSize: 28,
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        n.bump(d.id, 1);
-                      },
-                      icon: const Icon(Icons.add),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      d.note.trim(),
+                      style: theme.textTheme.bodyLarge?.copyWith(height: 1.7),
                     ),
+                  ),
                 ],
               ),
-            ],
-          ],
-        ),
+            ),
+          // ── the count, and the way to add to it ──
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            child: unit == null
+                ? Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: OutlinedButton.icon(
+                      onPressed: () => SharePlus.instance
+                          .share(ShareParams(text: _shareText())),
+                      icon: const Icon(Icons.share_rounded, size: 18),
+                      label: Text('dedication.share'.tr()),
+                    ),
+                  )
+                : Row(
+                    children: [
+                      _MiniRing(
+                        color: kindColor,
+                        progress: d.hasGoal
+                            ? (d.count / d.goal).clamp(0.0, 1.0).toDouble()
+                            : null,
+                        label: localizeDigits('${d.count}', lang),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              d.hasGoal
+                                  ? 'dedication.of_goal'.tr(namedArgs: {
+                                      'goal': localizeDigits('${d.goal}', lang),
+                                    })
+                                  : unit.tr(),
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            if (last != null)
+                              Text(
+                                'dedication.last_time'.tr(namedArgs: {
+                                  'when': _when(context, last),
+                                }),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: scheme.onSurfaceVariant,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: kindColor,
+                          foregroundColor: Colors.white,
+                          shape: const StadiumBorder(),
+                        ),
+                        onPressed: () => _openCounter(context),
+                        icon: Icon(
+                          d.goalReached
+                              ? Icons.verified_rounded
+                              : Icons.touch_app_rounded,
+                          size: 18,
+                        ),
+                        label: Text('dedication.action_${d.kind.name}'.tr()),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+/// The card's count: a small ring, filled toward the goal when there is one.
+class _MiniRing extends StatelessWidget {
+  const _MiniRing({
+    required this.color,
+    required this.progress,
+    required this.label,
+  });
+
+  final Color color;
+  final double? progress;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final done = (progress ?? 0) >= 1;
+    return SizedBox(
+      width: 58,
+      height: 58,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          CircularProgressIndicator(
+            value: progress ?? 1,
+            strokeWidth: 5,
+            strokeCap: StrokeCap.round,
+            color: done ? const Color(0xFFE0A800) : color,
+            backgroundColor: color.withValues(alpha: 0.15),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: FittedBox(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What all the gifts add up to — people, dhikr counted, pages read —
+/// summed from the reader's own records.
+class _Summary extends StatelessWidget {
+  const _Summary({required this.list});
+
+  final List<Dedication> list;
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = context.locale.languageCode;
+    var times = 0;
+    var pages = 0;
+    for (final d in list) {
+      if (d.kind == DedicationKind.quran) {
+        pages += d.count;
+      } else if (d.kind.unitKey != null) {
+        times += d.count;
+      }
+    }
+    final names = {for (final d in list) d.name.trim()}.length;
+    final items = <(IconData, String, String)>[
+      (
+        Icons.favorite_rounded,
+        localizeDigits('$names', lang),
+        'dedication.summary_people'.tr(),
+      ),
+      if (times > 0)
+        (
+          Icons.all_inclusive_rounded,
+          localizeDigits('$times', lang),
+          'dedication.summary_times'.tr(),
+        ),
+      if (pages > 0)
+        (
+          Icons.auto_stories_rounded,
+          localizeDigits('$pages', lang),
+          'dedication.summary_pages'.tr(),
+        ),
+    ];
+    final scheme = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        for (var i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(width: 8),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              decoration: BoxDecoration(
+                color: scheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Icon(items[i].$1, size: 18, color: const Color(0xFFE0A800)),
+                  const SizedBox(height: 2),
+                  Text(
+                    items[i].$2,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  Text(
+                    items[i].$3,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -402,6 +624,7 @@ class _EditSheetState extends ConsumerState<_EditSheet> {
   late final _note = TextEditingController(text: widget.existing?.note ?? '');
   late DedicationKind _kind =
       widget.existing?.kind ?? widget.kind ?? DedicationKind.quran;
+  late int _goal = widget.existing?.goal ?? 0;
 
   @override
   void dispose() {
@@ -424,11 +647,17 @@ class _EditSheetState extends ConsumerState<_EditSheet> {
           note: _note.text.trim(),
           count: 0,
           created: DateTime.now(),
+          goal: _kind.unitKey == null ? 0 : _goal,
         ),
       );
     } else {
       await n.update(
-        e.copyWith(name: name, kind: _kind, note: _note.text.trim()),
+        e.copyWith(
+          name: name,
+          kind: _kind,
+          note: _note.text.trim(),
+          goal: _kind.unitKey == null ? 0 : _goal,
+        ),
       );
     }
     if (mounted) Navigator.of(context).pop();
@@ -488,6 +717,19 @@ class _EditSheetState extends ConsumerState<_EditSheet> {
                 alignLabelWithHint: true,
               ),
             ),
+            if (_kind.unitKey != null) ...[
+              const SizedBox(height: 14),
+              Text(
+                'dedication.goal_label'.tr(),
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              const SizedBox(height: 8),
+              _GoalPicker(
+                kind: _kind,
+                value: _goal,
+                onChanged: (g) => setState(() => _goal = g),
+              ),
+            ],
             const SizedBox(height: 16),
             FilledButton(
               onPressed: _name.text.trim().isEmpty ? null : _save,
@@ -496,6 +738,48 @@ class _EditSheetState extends ConsumerState<_EditSheet> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The reader's own goal: none, a few common round numbers, or a whole
+/// khatma for the Qur'an (604 pages — the Madinah mushaf's real count).
+class _GoalPicker extends StatelessWidget {
+  const _GoalPicker({
+    required this.kind,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final DedicationKind kind;
+  final int value;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = context.locale.languageCode;
+    final options = kind == DedicationKind.quran
+        ? const [0, 10, 20, 100, 604]
+        : const [0, 33, 100, 1000];
+    // A goal saved before that is none of the chips still shows, selected.
+    final all = [...options, if (!options.contains(value)) value];
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final g in all)
+          ChoiceChip(
+            label: Text(
+              g == 0
+                  ? 'dedication.goal_none'.tr()
+                  : kind == DedicationKind.quran && g == 604
+                      ? 'dedication.goal_khatma'.tr()
+                      : localizeDigits('$g', lang),
+            ),
+            selected: value == g,
+            onSelected: (_) => onChanged(g),
+          ),
+      ],
     );
   }
 }

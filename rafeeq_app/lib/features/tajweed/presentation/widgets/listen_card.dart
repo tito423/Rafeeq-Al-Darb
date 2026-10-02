@@ -149,6 +149,7 @@ class ListenCardState extends ConsumerState<ListenCard>
               ayah.textUthmani,
               style: const TextStyle(
                 fontFamily: 'KFGQPCHafs',
+                letterSpacing: 0, // any spacing turns the font's ligatures off
                 fontSize: 18,
                 height: 2.0,
               ),

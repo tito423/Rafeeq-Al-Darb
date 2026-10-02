@@ -55,6 +55,7 @@ class AyahPanel extends ConsumerWidget {
               textDirection: TextDirection.rtl,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontFamily: 'KFGQPCHafs',
+                letterSpacing: 0, // any spacing turns the font's ligatures off
                 height: 2.0,
               ),
             ),

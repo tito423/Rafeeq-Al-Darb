@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/services/ayah_audio_service.dart';
+import '../../../../core/utils/stable_insets.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../downloads/data/reciters_provider.dart';
@@ -32,6 +33,7 @@ import '../widgets/ayah_sciences_sheet.dart';
 ///  • Image mode: the authentic KFQC mushaf pages as vector art, cached on
 ///    device, with the real ayah polygons layered on top for tap/highlight.
 import '../widgets/mushaf/auto_scroll_speed_bar.dart';
+import '../widgets/mushaf/continuous_mushaf_view.dart';
 import '../widgets/mushaf/fast_page_scroll_bar.dart';
 import '../widgets/mushaf/follows_recitation_note.dart';
 import '../widgets/mushaf/mushaf_chrome.dart';
@@ -61,6 +63,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   int _totalPages = 604;
 
   PageController? _pages;
+
+  /// The reading layout's endless scroll, while it is the one on screen.
+  final GlobalKey<ContinuousMushafViewState> _continuous = GlobalKey();
+
+  /// True while the text mushaf is in the reading layout, which is one
+  /// continuous scroll instead of pages (owner, 2026-10-02).
+  bool get _isContinuous =>
+      _mode == MushafMode.text &&
+      ref.read(quranTextLayoutProvider) == QuranTextLayout.reading;
   final Map<int, Future<List<Ayah>>> _pageFutures = {};
   final AyahCoordsRepository _coords = AyahCoordsRepository.instance;
 
@@ -73,7 +84,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// What full-screen was set to before the phone was turned sideways.
   bool? _fillBeforePortrait;
   int _current = 1;
-  int _initialPage = 1;
   int? _highlightSurah;
   int? _highlightAyah;
 
@@ -143,7 +153,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (!mounted) return;
     setState(() {
       if (p >= 1 && p <= _totalPages) {
-        _initialPage = p;
         _current = p;
       }
       _mode = MushafMode.values.firstWhere(
@@ -153,6 +162,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       if (fontScale != null) _fontScale = fontScale;
       if (autoScrollSpeed != null) _autoScrollSpeed = autoScrollSpeed;
       if (pageFillScreen != null) _pageFillScreen = pageFillScreen;
+    });
+    // The continuous view may have been built before the stored page was
+    // read; send it there too.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _isContinuous) _continuous.currentState?.jumpToPage(_current);
     });
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     // Only if this tab is the one on screen. On a cold start it is not —
@@ -188,7 +202,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // In full screen the tap shows/hides the floating controls instead of
     // leaving the mode — the same gesture, deliberately; see MushafChrome.
     if (_pageFillScreen) {
-      setState(() => _chromeVisible = !_chromeVisible);
+      _setChromeVisible(!_chromeVisible);
       return;
     }
     _togglePageFillScreen();
@@ -284,7 +298,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (orientation == Orientation.landscape) {
-        if (_chromeVisible) setState(() => _chromeVisible = false); // start clean
+        if (_chromeVisible) _setChromeVisible(false); // start clean
         _fillBeforePortrait = _pageFillScreen;
         if (!_pageFillScreen) _setPageFillScreen(true, persist: false);
       } else {
@@ -299,10 +313,22 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   void _togglePageFillScreen() => _setPageFillScreen(!_pageFillScreen);
 
+  /// The floating controls and the phone's own bars come and go together:
+  /// «لما أضغط على الشاشة يظهر تحت البوتوم نافيجيشن ويظهر النوتش والحاجات
+  /// اللي في الستيتس بار» (owner, 2026-10-02). The page already stops short
+  /// of where the bars sit (`stableSystemInsets`), so they appear in empty
+  /// space and nothing moves.
+  void _setChromeVisible(bool visible) {
+    if (visible == _chromeVisible) return;
+    setState(() => _chromeVisible = visible);
+    if (_isActiveTab) _applyImmersive(_pageFillScreen && !visible);
+  }
+
   void _setPageFillScreen(bool entering, {bool persist = true}) {
     if (entering == _pageFillScreen) return;
     setState(() {
       _pageFillScreen = entering;
+      _chromeVisible = false;
       // P3‑54: exiting immersive mode also stops the auto-scroll — the owner's
       // spec ("العودة للوضع الطبيعي وإيقاف التمرير"). Every exit path (the
       // toolbar button, a double-tap, and the floating button) funnels through
@@ -318,7 +344,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     // Same rule as `_restoreState`: the mode is global, so it is only ever
     // set while this tab is the one being looked at.
-    if (_isActiveTab) _applyImmersive(_pageFillScreen);
+    if (_isActiveTab) _applyImmersive(_pageFillScreen && !_chromeVisible);
     if (!persist) return;
     SharedPreferences.getInstance().then(
       (p) => p.setBool(_kPageFillScreen, _pageFillScreen),
@@ -377,11 +403,21 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// Re-applies (or lifts) the immersive mode for the tab that is now on
   /// screen. Called from `build`'s `ref.listen`.
   void _syncImmersiveToTab(int tab) {
-    _applyImmersive(tab == AppTab.quran && _pageFillScreen);
+    _applyImmersive(tab == AppTab.quran && _pageFillScreen && !_chromeVisible);
   }
 
+  /// Auto-scroll belongs to the reading layout only, and turning it on
+  /// takes the reader there: «أول ما أضغط على السكرول التلقائي يقلب
+  /// أوتوماتيك على الوضع الثالث» (owner, 2026-10-02). That layout is one
+  /// continuous scroll, so the text runs on through the page ends instead of
+  /// stopping to turn a page.
   void _toggleAutoScroll() {
-    setState(() => _autoScroll = !_autoScroll);
+    final on = !_autoScroll;
+    if (on) {
+      if (_mode != MushafMode.text) _leaveImageView();
+      ref.read(quranTextLayoutProvider.notifier).set(QuranTextLayout.reading);
+    }
+    setState(() => _autoScroll = on);
   }
 
   void _changeAutoScrollSpeed(double speed) {
@@ -449,6 +485,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final page = row.pageNumber;
     if (page == _current || page == _followedPage) return;
     _followedPage = page;
+    // The continuous scroll brings the verse on screen by itself when its
+    // page is already there; only a page out of sight needs the jump.
+    if (_isContinuous &&
+        (_continuous.currentState?.isOnScreen(page) ?? false)) {
+      return;
+    }
     _goToPage(page);
   }
 
@@ -568,9 +610,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   }
 
   void _goToPage(int page, {bool animate = true}) {
+    final p = page.clamp(1, _totalPages);
+    final continuous = _continuous.currentState;
+    if (_isContinuous && continuous != null) {
+      continuous.jumpToPage(p);
+      _persistPage();
+      return;
+    }
     final pages = _pages;
     if (pages == null) return;
-    final p = page.clamp(1, _totalPages);
     if (animate) {
       pages.animateToPage(
         p - 1,
@@ -665,6 +713,13 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // The immersive mode is process-wide and follows the tab on screen. See
     // `_applyImmersive` for the flicker this was.
     ref.listen<int>(activeTabProvider, (_, tab) => _syncImmersiveToTab(tab));
+    // Auto-scroll is the reading layout's alone; choosing another layout
+    // ends it.
+    ref.listen<QuranTextLayout>(quranTextLayoutProvider, (_, layout) {
+      if (layout != QuranTextLayout.reading && _autoScroll) {
+        setState(() => _autoScroll = false);
+      }
+    });
     final mushaf = ref.watch(mushafDataProvider);
     // `isRaster` means "this printing ships page images", nothing more (until
     // 3.44.0 it forced image mode, and the text mushaf became unreachable).
@@ -780,6 +835,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
           final orientation = MediaQuery.orientationOf(context);
           final isLandscape = orientation == Orientation.landscape;
           _syncOrientationFullScreen(orientation);
+          // Full screen stops where the system bars would be, so a tap can
+          // bring them back over empty space - see `stableSystemInsets`.
+          final bars = stableSystemInsets(context);
           return mushaf.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, _) =>
@@ -790,16 +848,21 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 // screen orientation and full-screen state.
                 Padding(
                   padding: EdgeInsets.only(
+                    // Full screen: up to the notch and the status bar, and no
+                    // further (owner, 2026-10-02).
                     top: _pageFillScreen
-                        ? (isLandscape ? 32 : 44)
+                        ? bars.top + 6
                         : (isLandscape ? 28 : 40),
-                    // Landscape floats the page badge over the page (the bar
-                    // that used to carry it is gone, see below), so the text
-                    // has to stop short of it or the last line runs underneath
-                    // the number — which is what the first attempt at this
-                    // shipped to the emulator.
+                    left: _pageFillScreen ? bars.left : 0,
+                    right: _pageFillScreen ? bars.right : 0,
+                    // Down to the phone's navigation bar. Landscape floats the
+                    // page badge over the page (the bar that used to carry it
+                    // is gone, see below), so there the text also stops short
+                    // of it or the last line runs underneath the number.
                     bottom: _pageFillScreen
-                        ? (isLandscape ? 36 : 56)
+                        ? (isLandscape
+                            ? (bars.bottom + 6).clamp(36.0, double.infinity)
+                            : bars.bottom + 6)
                         : (isLandscape ? 34 : 0),
                   ),
                   child: _buildViewer(data, edition, textLayout),
@@ -840,7 +903,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 if (_pageFillScreen)
                   MushafChrome(
                     visible: _chromeVisible || ref.watch(tutorialRunningProvider),
-                    onAutoHide: () => setState(() => _chromeVisible = false),
+                    onAutoHide: () => _setChromeVisible(false),
                     mt: resolveMushafTheme(ref.watch(mushafThemeProvider),
                         Theme.of(context).brightness),
                     surahName: (edition?.hafsPagination ?? true)
@@ -926,7 +989,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     MushafEdition? edition,
     QuranTextLayout textLayout,
   ) {
-    _pages ??= PageController(initialPage: _initialPage - 1);
+    if (_mode == MushafMode.text && textLayout == QuranTextLayout.reading) {
+      return _buildContinuous(data, textLayout);
+    }
+    _pages ??= PageController(initialPage: _current - 1);
     // «دايمًا خلّي تقليب الصفحات من اليمين للشمال»: a mushaf turns right to
     // left in every UI language; each page keeps the UI's own direction.
     final ambient = Directionality.of(context);
@@ -988,48 +1054,104 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 onBackgroundTap: _onPageTap,
               );
             }
-            final mushafTheme = resolveMushafTheme(
-              ref.watch(mushafThemeProvider),
-              Theme.of(context).brightness,
-            );
-            final frame = ref.watch(mushafFrameProvider);
-            return MushafTextPage(
-              layout: textLayout,
-              mushafTheme: mushafTheme,
-              frameStyle: frame.style,
-              frameColor: frame.accent.color ?? mushafTheme.gold,
-              ayahs: ayahs,
-              surahNameOf: data.surahNameAr,
-              // The selected verse stays marked after its card closes, as it
-              // does on the image page, so the owner can see where the
-              // continuous recitation will start from.
-              playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
-              playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
-              playingBasmalaSurah: _recite.basmala ? _recite.surahId : null,
-              onAyahLongPress: (a) => _openSciences(a, data),
-              // `edition:` is the RECITER, not the mushaf. Handed a printing
-              // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`
-              // threw and the recitation stopped: «بتقف التلاوة مش بتشتغل».
-              // The verse's own marker plays that one verse — separate from the
-              // continuous recitation, which only the toolbar starts.
-              onPlayTap: (a) => AyahAudioService.instance.play(
-                a,
-                data.repo,
-                edition: ref.read(selectedReciterProvider),
-              ),
-              fontScale: _fontScale,
-              autoScroll: _autoScroll && !(_recite.active && !_recite.stalled),
-              autoScrollSpeed: _autoScrollSpeed,
-              isActive: page == _current,
-              onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
-              onBackgroundTap: _onPageTap,
-              onReadingScroll: _onReadingScroll,
-              pageFillScreen: _pageFillScreen,
-            );
+            return _textPage(page, ayahs, data, textLayout);
           },
         )));
       },
     )));
+  }
+
+  /// One text page — on its own in the `PageView`, or [embedded] in the
+  /// reading layout's continuous scroll.
+  Widget _textPage(
+    int page,
+    List<Ayah> ayahs,
+    MushafData data,
+    QuranTextLayout textLayout, {
+    bool embedded = false,
+  }) {
+    final mushafTheme = resolveMushafTheme(
+      ref.watch(mushafThemeProvider),
+      Theme.of(context).brightness,
+    );
+    final frame = ref.watch(mushafFrameProvider);
+    return MushafTextPage(
+      embedded: embedded,
+      layout: textLayout,
+      mushafTheme: mushafTheme,
+      frameStyle: frame.style,
+      frameColor: frame.accent.color ?? mushafTheme.gold,
+      ayahs: ayahs,
+      surahNameOf: data.surahNameAr,
+      // The selected verse stays marked after its card closes, as it
+      // does on the image page, so the owner can see where the
+      // continuous recitation will start from.
+      playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
+      playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
+      playingBasmalaSurah: _recite.basmala ? _recite.surahId : null,
+      onAyahLongPress: (a) => _openSciences(a, data),
+      // `edition:` is the RECITER, not the mushaf. Handed a printing
+      // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`
+      // threw and the recitation stopped: «بتقف التلاوة مش بتشتغل».
+      // The verse's own marker plays that one verse — separate from the
+      // continuous recitation, which only the toolbar starts.
+      onPlayTap: (a) => AyahAudioService.instance.play(
+        a,
+        data.repo,
+        edition: ref.read(selectedReciterProvider),
+      ),
+      fontScale: _fontScale,
+      // Embedded pages do not scroll; the continuous view does.
+      autoScroll: !embedded &&
+          _autoScroll &&
+          !(_recite.active && !_recite.stalled),
+      autoScrollSpeed: _autoScrollSpeed,
+      isActive: embedded || page == _current,
+      onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
+      onBackgroundTap: _onPageTap,
+      onReadingScroll: _onReadingScroll,
+      pageFillScreen: _pageFillScreen,
+    );
+  }
+
+  /// The reading layout: the whole mushaf as one scroll, no page turns.
+  Widget _buildContinuous(MushafData data, QuranTextLayout textLayout) {
+    // The `PageView` and its controller are gone while this shows; a fresh
+    // one starts at the page the reader scrolled to when they come back.
+    final old = _pages;
+    if (old != null) {
+      _pages = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) => old.dispose());
+    }
+    final mt = resolveMushafTheme(
+      ref.watch(mushafThemeProvider),
+      Theme.of(context).brightness,
+    );
+    return MushafRemoteKeys(
+      onTurn: (d) => _goToPage(_current + d),
+      onSelect: _onPageTap,
+      child: ContinuousMushafView(
+        key: _continuous,
+        firstPage: 1,
+        lastPage: _totalPages,
+        initialPage: _current,
+        ayahsOf: (page) => _ayahsOfPage(page, data),
+        ayahsIfLoaded: data.repo.pageIfLoaded,
+        background: mt.paper,
+        ruleColor: mt.gold,
+        autoScroll: _autoScroll && !(_recite.active && !_recite.stalled),
+        autoScrollSpeed: _autoScrollSpeed,
+        onAutoScrollReachedEnd: () => setState(() => _autoScroll = false),
+        onReadingScroll: _onReadingScroll,
+        onBackgroundTap: _onPageTap,
+        onPageChanged: (page) {
+          setState(() => _current = page);
+          _persistPage();
+        },
+        pageBuilder: (context, page, ayahs) =>
+            _textPage(page, ayahs, data, textLayout, embedded: true),
+      ),
+    );
   }
 
   void _onImageAyahTap(

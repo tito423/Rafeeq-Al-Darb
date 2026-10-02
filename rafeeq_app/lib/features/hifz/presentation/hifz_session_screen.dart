@@ -343,6 +343,7 @@ class _HifzSessionScreenState extends ConsumerState<HifzSessionScreen> {
                   basmala,
                   style: const TextStyle(
                     fontFamily: 'KFGQPCHafs',
+                    letterSpacing: 0, // any spacing turns the font's ligatures off
                     fontSize: 20,
                   ),
                 ),

@@ -135,6 +135,7 @@ class _Word extends StatelessWidget {
 
   static const _style = TextStyle(
     fontFamily: 'KFGQPCHafs',
+    letterSpacing: 0, // any spacing turns the font's ligatures off
     fontSize: 24,
     height: 1.9,
   );

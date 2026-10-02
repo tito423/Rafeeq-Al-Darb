@@ -101,6 +101,12 @@ class MushafTextPage extends ConsumerStatefulWidget {
   /// presentational, and both callers are already Riverpod consumers.
   final MushafTheme? mushafTheme;
 
+  /// One page among many inside `ContinuousMushafView`'s single scroll
+  /// (the reading layout, «انفينيت سكرولينج»): no scroll view of its own, no
+  /// pinned header, no frame, no pinch zoom — the outer view owns all of
+  /// those. The verse being recited is scrolled to in the OUTER scrollable.
+  final bool embedded;
+
   const MushafTextPage({
     super.key,
     required this.ayahs,
@@ -122,6 +128,7 @@ class MushafTextPage extends ConsumerStatefulWidget {
     this.mushafTheme,
     this.frameStyle = MushafFrameStyle.none,
     this.frameColor,
+    this.embedded = false,
   });
 
   @override
@@ -207,6 +214,21 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
   /// (firstAyahIndex, lastAyahIndex) for each run, rebuilt every layout.
   List<(int, int)> _runs = [];
 
+  /// The scroll position the page lives in: its own, or - embedded in the
+  /// continuous view - the outer one.
+  ScrollPosition? get _position {
+    if (widget.embedded) return Scrollable.maybeOf(context)?.position;
+    return _scroll.hasClients ? _scroll.position : null;
+  }
+
+  /// The box whose top is the top of the visible area.
+  RenderBox? get _viewportBox {
+    final ro = widget.embedded
+        ? Scrollable.maybeOf(context)?.context.findRenderObject()
+        : context.findRenderObject();
+    return ro is RenderBox && ro.attached ? ro : null;
+  }
+
   /// Brings the verse being recited into view.
   ///
   /// A verse no longer has a widget of its own — it is a span inside a
@@ -220,7 +242,8 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted || index >= _ayahKeys.length) return;
         final ctx = _ayahKeys[index].currentContext;
-        if (ctx == null || !_scroll.hasClients) return;
+        final position = _position;
+        if (ctx == null || position == null) return;
         // Centring a card is right only while the whole card fits. A long
         // verse — al-Baqarah 282 is a card several screens tall — gets its
         // middle centred, which cuts off both its beginning AND its end:
@@ -230,11 +253,11 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
         final box = ctx.findRenderObject();
         final fits =
             box is! RenderBox ||
-            box.size.height <= _scroll.position.viewportDimension;
+            box.size.height <= position.viewportDimension;
         // Already on screen: leave the page where it is. Moving it on every
         // start was «بيقوم مظلّلها وينزل بالشاشة لتحت على اللي بعدها».
-        final pageBox = context.findRenderObject();
-        if (box is RenderBox && pageBox is RenderBox && box.attached) {
+        final pageBox = _viewportBox;
+        if (box is RenderBox && pageBox != null && box.attached) {
           final top = box.localToGlobal(Offset.zero, ancestor: pageBox).dy;
           if (top >= 0 && top + box.size.height <= pageBox.size.height) return;
         }
@@ -250,7 +273,8 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     final runIndex = _runs.indexWhere((r) => index >= r.$1 && index <= r.$2);
     if (runIndex < 0 || runIndex >= _runKeys.length) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_scroll.hasClients) return;
+      final position = mounted ? _position : null;
+      if (position == null) return;
       final ctx = _runKeys[runIndex].currentContext;
       if (ctx == null) return;
       final state =
@@ -260,37 +284,31 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
               : null);
       final dy = state?.offsetOfAyah(index);
       final box = ctx.findRenderObject();
-      if (dy == null || box is! RenderBox) return;
+      final pageBox = _viewportBox;
+      if (dy == null || box is! RenderBox || pageBox == null) return;
       // The paragraph's own top in scroll coordinates, plus the verse's
       // offset inside it. Placed a third of the way down rather than centred:
       // this layout knows where the verse STARTS and not how tall it is, and
       // a centred start puts half the viewport above the verse and only half
       // below it — so a long verse runs off the bottom. A third leaves twice
       // as much room in the direction the verse actually continues.
-      final top = box.localToGlobal(Offset.zero).dy;
-      final viewport = _scroll.position.viewportDimension;
+      final top = box.localToGlobal(Offset.zero, ancestor: pageBox).dy;
+      final viewport = position.viewportDimension;
       // The verse's start already in the upper part of the screen: no scroll.
-      final pageBox = context.findRenderObject();
-      final pageTop = pageBox is RenderBox
-          ? pageBox.localToGlobal(Offset.zero).dy
-          : 0.0;
-      final verseTop = top + dy - pageTop;
+      final verseTop = top + dy;
       // ...and its END on screen too: a verse starting on the last line ran
       // off the bottom, half of it unseen (owner, 2026-09-30: «حتى لو الاية
       // في اخر الصفحة ومش ظاهرة ع الشاشة انا عايزه يروح عليها»).
       final end = state?.bottomOfAyah(index);
-      final verseBottom = end == null ? verseTop : top + end - pageTop;
+      final verseBottom = end == null ? verseTop : top + end;
       if (verseTop >= 0 &&
           verseTop <= viewport * 0.8 &&
           verseBottom <= viewport) {
         return;
       }
-      final target = _scroll.offset + top + dy - viewport / 3;
-      _scroll.animateTo(
-        target.clamp(
-          _scroll.position.minScrollExtent,
-          _scroll.position.maxScrollExtent,
-        ),
+      final target = position.pixels + verseTop - viewport / 3;
+      position.animateTo(
+        target.clamp(position.minScrollExtent, position.maxScrollExtent),
         duration: const Duration(milliseconds: 450),
         curve: Curves.easeInOut,
       );
@@ -428,6 +446,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
 
     final textStyle = TextStyle(
       fontFamily: 'KFGQPCHafs',
+      letterSpacing: 0, // any spacing turns the font's ligatures off
       fontSize: baseFont,
       // Tighter leading in the reading layout, which is most of why the
       // reference page fits noticeably more of the surah on one screen.
@@ -467,6 +486,101 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     if (_ayahKeys.length != widget.ayahs.length) {
       _ayahKeys = List.generate(widget.ayahs.length, (_) => GlobalKey());
     }
+
+    final Widget content = GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: _tapPage,
+      child: Padding(
+        // Bottom 72: room for the floating page pill, which hid the
+        // last line of a long page (p.20 on the owner's phone).
+        padding: EdgeInsets.symmetric(
+          horizontal: bare
+              ? (isLandscape ? 18.0 : 8.0)
+              : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0)),
+          vertical: bare ? 6.0 : 12.0,
+        ).copyWith(bottom: bare || widget.embedded ? 6.0 : 72.0),
+        child: Column(
+          mainAxisSize:
+              widget.embedded ? MainAxisSize.min : MainAxisSize.max,
+          // Centred only where the printed mushaf centres: its first
+          // two pages. Every other page starts at the top.
+          mainAxisAlignment: widget.ayahs.first.pageNumber <= 2
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
+          children: [
+            for (var index = 0; index < items.length; index++)
+              Builder(
+                builder: (context) {
+                  final item = items[index];
+                  if (item.isBanner) {
+                    return _SurahBanner(
+                      name: widget.surahNameOf(item.surahId!),
+                      mt: mt,
+                      bare: bare,
+                    );
+                  }
+                  if (item.isBasmala) {
+                    return _BasmalaLine(
+                      text: item.basmalaText!,
+                      mt: mt,
+                      textStyle: textStyle,
+                      playing:
+                          widget.playingBasmalaSurah == item.surahId,
+                    );
+                  }
+                  if (widget.layout == QuranTextLayout.cards) {
+                    return Column(
+                      children: [
+                        for (
+                          var i = item.runFrom!;
+                          i <= item.runTo!;
+                          i++
+                        )
+                          _AyahRow(
+                            key: _ayahKeys.length > i
+                                ? _ayahKeys[i]
+                                : null,
+                            ayah: widget.ayahs[i],
+                            isPlaying: i == playingIndex,
+                            textStyle: textStyle,
+                            mt: mt,
+                            onLongPress: () =>
+                                widget.onAyahLongPress(widget.ayahs[i]),
+                            onTap: _tapPage,
+                            onPlayTap: widget.onPlayTap != null
+                                ? () =>
+                                      widget.onPlayTap!(widget.ayahs[i])
+                                : null,
+                          ),
+                      ],
+                    );
+                  }
+                  return _FlowingAyahs(
+                    key: _runKeys[item.runIndex!],
+                    mt: mt,
+                    ayahs: widget.ayahs,
+                    from: item.runFrom!,
+                    to: item.runTo!,
+                    playingIndex: playingIndex,
+                    textStyle: textStyle,
+                    // A long press selects the verse and opens its card; a
+                    // tap anywhere, verse or not, is the page's. A tap used
+                    // to START THE RECITATION («لما بضغط على آية في المصحف
+                    // النصي بيقوم مشغّل تلقائي التلاوة»), then to open the
+                    // card; «ضغطة مطولة على الآية تظليل وكارت الآية».
+                    onAyahLongPress: widget.onAyahLongPress,
+                    onBackgroundTap: _tapPage,
+                    bare: bare,
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+
+    // Inside the continuous view: the page as a plain block, nothing else.
+    if (widget.embedded) return content;
 
     final opensWithBanner = items.isNotEmpty && items.first.isBanner;
     final body = NotificationListener<ScrollNotification>(
@@ -548,95 +662,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
           // al-Baqara) sit in the middle as the printed mushaf sets them.
           SliverFillRemaining(
             hasScrollBody: false,
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: _tapPage,
-              child: Padding(
-                // Bottom 72: room for the floating page pill, which hid the
-                // last line of a long page (p.20 on the owner's phone).
-                padding: EdgeInsets.symmetric(
-                  horizontal: bare
-                      ? (isLandscape ? 18.0 : 8.0)
-                      : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0)),
-                  vertical: bare ? 6.0 : 12.0,
-                ).copyWith(bottom: bare ? 6.0 : 72.0),
-                child: Column(
-                  // Centred only where the printed mushaf centres: its first
-                  // two pages. Every other page starts at the top.
-                  mainAxisAlignment: widget.ayahs.first.pageNumber <= 2
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.start,
-                  children: [
-                    for (var index = 0; index < items.length; index++)
-                      Builder(
-                        builder: (context) {
-                          final item = items[index];
-                          if (item.isBanner) {
-                            return _SurahBanner(
-                              name: widget.surahNameOf(item.surahId!),
-                              mt: mt,
-                              bare: bare,
-                            );
-                          }
-                          if (item.isBasmala) {
-                            return _BasmalaLine(
-                              text: item.basmalaText!,
-                              mt: mt,
-                              textStyle: textStyle,
-                              playing:
-                                  widget.playingBasmalaSurah == item.surahId,
-                            );
-                          }
-                          if (widget.layout == QuranTextLayout.cards) {
-                            return Column(
-                              children: [
-                                for (
-                                  var i = item.runFrom!;
-                                  i <= item.runTo!;
-                                  i++
-                                )
-                                  _AyahRow(
-                                    key: _ayahKeys.length > i
-                                        ? _ayahKeys[i]
-                                        : null,
-                                    ayah: widget.ayahs[i],
-                                    isPlaying: i == playingIndex,
-                                    textStyle: textStyle,
-                                    mt: mt,
-                                    onLongPress: () =>
-                                        widget.onAyahLongPress(widget.ayahs[i]),
-                                    onTap: _tapPage,
-                                    onPlayTap: widget.onPlayTap != null
-                                        ? () =>
-                                              widget.onPlayTap!(widget.ayahs[i])
-                                        : null,
-                                  ),
-                              ],
-                            );
-                          }
-                          return _FlowingAyahs(
-                            key: _runKeys[item.runIndex!],
-                            mt: mt,
-                            ayahs: widget.ayahs,
-                            from: item.runFrom!,
-                            to: item.runTo!,
-                            playingIndex: playingIndex,
-                            textStyle: textStyle,
-                            // A long press selects the verse and opens its card; a
-                            // tap anywhere, verse or not, is the page's. A tap used
-                            // to START THE RECITATION («لما بضغط على آية في المصحف
-                            // النصي بيقوم مشغّل تلقائي التلاوة»), then to open the
-                            // card; «ضغطة مطولة على الآية تظليل وكارت الآية».
-                            onAyahLongPress: widget.onAyahLongPress,
-                            onBackgroundTap: _tapPage,
-                            bare: bare,
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              ),
-            ),
+            child: content,
           ),
         ],
       ),
