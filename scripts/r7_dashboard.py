@@ -13,11 +13,18 @@ Numbers on the page are read from the files the copy itself writes:
   * totals                = the same lists the copy walks (reciters_full.json,
     recitation_source.dart × the mushaf's 6,236 ayahs)
   * speed                 = files in the log's «N/M» lines over the last hour
+  * live                  = the copy's own temp files (%TEMP%\\tmp*\\<tag>_<file>):
+    a file grows while it downloads, holds still while it uploads, and is
+    deleted once GitHub has it. Polled every second here, so each file is seen
+    as it moves - no request to GitHub, nothing added to the copy's quota.
 """
 import json
 import os
 import re
+import glob
 import subprocess
+import tempfile
+import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -86,6 +93,69 @@ def processes():
     return v
 
 
+class Live:
+    """Watches the copy's temp files once a second."""
+
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.files = {}      # path -> {tag, name, size, grew_at, seen_at}
+        self.finished = []   # (time, tag, name, size) of files that left the temp dir
+        threading.Thread(target=self.run, daemon=True).start()
+
+    def scan(self):
+        found = {}
+        for d in glob.glob(os.path.join(tempfile.gettempdir(), 'tmp*')):
+            for f in glob.glob(os.path.join(d, '*.mp3')):
+                base = os.path.basename(f)
+                if not base.startswith(('ayah-', 'surah-')) or '_' not in base:
+                    continue
+                try:
+                    found[f] = os.path.getsize(f)
+                except OSError:
+                    pass
+        return found
+
+    def run(self):
+        while True:
+            try:
+                found, now = self.scan(), time.time()
+                with self.lock:
+                    for f, size in found.items():
+                        cur = self.files.get(f)
+                        if cur is None:
+                            base = os.path.basename(f)
+                            tag, name = base.rsplit('_', 1)
+                            self.files[f] = {'tag': tag, 'name': name, 'size': size,
+                                             'grew_at': now, 'seen_at': now}
+                        elif size != cur['size']:
+                            cur.update(size=size, grew_at=now)
+                    for f in [f for f in self.files if f not in found]:
+                        x = self.files.pop(f)
+                        self.finished.append((now, x['tag'], x['name'], x['size']))
+                    self.finished = [e for e in self.finished if now - e[0] < 3600]
+            except Exception:  # noqa: BLE001 - a missed scan is not worth a crash
+                pass
+            time.sleep(1)
+
+    def snapshot(self):
+        now = time.time()
+        with self.lock:
+            inflight = [{'tag': x['tag'], 'name': x['name'], 'size': x['size'],
+                         'state': 'down' if now - x['grew_at'] < 2.5 else 'up',
+                         'secs': int(now - x['seen_at'])}
+                        for x in self.files.values()]
+            fin = list(self.finished)
+        recent = [{'ago': int(now - t), 'tag': tag, 'name': n, 'size': sz}
+                  for t, tag, n, sz in reversed(fin[-12:])]
+        last10 = [e for e in fin if now - e[0] <= 600]
+        return {'inflight': sorted(inflight, key=lambda x: x['tag']), 'recent': recent,
+                'per_10min': len(last10), 'bytes_10min': sum(e[3] for e in last10),
+                'since': {tag: [t for t, tg, _, _ in fin if tg == tag]
+                          for tag in {e[1] for e in fin}}}
+
+
+LIVE = None
+
 _PROGRESS = re.compile(r'^(\d\d):(\d\d):(\d\d) (\S+): (\d+)/(\d+)$')
 _TODO = re.compile(r'^\d\d:\d\d:\d\d (\S+): (\d+) of (\d+) to copy$')
 
@@ -111,10 +181,22 @@ def kind_status(kind):
         if m:
             current = {'tag': m.group(1), 'todo': int(m.group(2)), 'of': int(m.group(3)),
                        'copied': 0}
+            beat = None
             for later in lines[lines.index(ln) + 1:]:
                 p = _PROGRESS.match(later)
                 if p and p.group(4) == current['tag']:
                     current['copied'] = int(p.group(5))
+                    beat = p
+            # files that left the temp dir after that heartbeat's clock time
+            if LIVE is not None:
+                lt = time.localtime()
+                today = time.mktime(lt[:3] + (0, 0, 0) + lt[6:])
+                ref = beat or re.match(r'^(\d\d):(\d\d):(\d\d)', ln)
+                t0 = today + int(ref.group(1)) * 3600 + int(ref.group(2)) * 60 + int(ref.group(3))
+                if t0 > time.time() + 60:
+                    t0 -= 86400
+                done_after = [t for t in LIVE.snapshot()['since'].get(current['tag'], []) if t > t0]
+                current['copied'] = min(current['todo'], current['copied'] + len(done_after))
             break
     # speed: «N/M» steps of the last hour (each step = files since the previous line)
     now = time.localtime()
@@ -154,7 +236,7 @@ def kind_status(kind):
 def status():
     return {'now': time.strftime('%Y-%m-%d %H:%M:%S'),
             'surah': kind_status('surah'), 'ayah': kind_status('ayah'),
-            'proc': processes()}
+            'proc': processes(), 'live': LIVE.snapshot() if LIVE else None}
 
 
 PAGE = r"""<!doctype html>
@@ -186,14 +268,15 @@ ul{margin:4px 0 0;padding-inline-start:18px;font-size:13px}
 button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;padding:4px 10px;cursor:pointer}
 </style></head><body><main>
 <h1>متابعة نسخ ورفع التلاوات (R7)</h1>
-<div class="sub">النسخ إلى مستودع rafeeq-recitations على GitHub. الصفحة بتتحدث لوحدها كل <span id="every">5</span> ثواني. آخر تحديث: <span id="now">…</span></div>
+<div class="sub">النسخ إلى مستودع rafeeq-recitations على GitHub. الصفحة بتتحدث لوحدها كل ثانيتين. آخر تحديث: <span id="now">…</span></div>
 <div class="top" id="top"></div>
+<div class="card" id="live" style="margin-bottom:14px"></div>
 <div class="grid" id="grid"></div>
 <p class="sub">الأرقام مقروءة من ملفات الحالة والسجل اللي برنامج النسخ بيكتبها بنفسه (scripts/out). الصفحة دي بتقرا بس ومبتغيرش أي حاجة.</p>
 </main>
 <script>
 const nf=new Intl.NumberFormat('ar-EG');
-const fmtB=b=>b>=1e9?nf.format((b/1e9).toFixed(2))+' جيجا':nf.format((b/1e6).toFixed(0))+' ميجا';
+const fmtB=b=>b>=1e9?nf.format((b/1e9).toFixed(2))+' جيجا':b>=1e6?nf.format((b/1e6).toFixed(1))+' ميجا':nf.format(Math.round(b/1e3))+' ك.ب';
 const pct=(a,b)=>b?Math.min(100,a*100/b):0;
 const label={surah:'السور الكاملة',ayah:'آية بآية'};
 let open={};
@@ -230,10 +313,18 @@ async function tick(){
       `<span class="pill ${wd==='Ready'||wd==='Running'?'ok':'bad'}">المراقب التلقائي: ${wd==='Ready'||wd==='Running'?'مفعّل':wd==='Disabled'?'متوقف':wd}</span>`+
       `<span class="pill">الإجمالي: ${nf.format(pct(s.surah.files_done+s.ayah.files_done,s.surah.files_total+s.ayah.files_total).toFixed(1))}٪ — ${fmtB(s.surah.bytes+s.ayah.bytes)}</span>`;
     document.querySelectorAll('details').forEach(d=>open[d.dataset.k]=d.open);
+    const L=s.live;
+    if(L){
+      const row=f=>`<tr><td>${f.state==='down'?'⬇ بينزل من المصدر':'⬆ بيترفع على GitHub'}</td><td style="direction:ltr;text-align:left">${f.tag} / ${f.name}</td><td>${fmtB(f.size)}</td><td>${nf.format(f.secs)} ث</td></tr>`;
+      const rec=f=>`<li>${nf.format(f.ago)} ث — <span style="direction:ltr;unicode-bidi:isolate">${f.tag} / ${f.name}</span> (${fmtB(f.size)})</li>`;
+      document.getElementById('live').innerHTML=`<h2>دلوقتي حالًا <span class="sub">${nf.format(L.per_10min)} ملف في آخر ١٠ دقايق — ${fmtB(L.bytes_10min)}</span></h2>
+      ${L.inflight.length?`<table style="width:100%;border-collapse:collapse;font-size:13px">${L.inflight.map(row).join('')}</table>`:'<div class="sub">مفيش ملف في الطريق اللحظة دي (بين ملف والتاني، أو مستني حد الرفع).</div>'}
+      <details data-k="recent" ${open['recent']?'open':''}><summary>آخر الملفات اللي اترفعت (من ساعة ما اللوحة اشتغلت)</summary><ul>${L.recent.map(rec).join('')||'<li>لسه</li>'}</ul></details>`;
+    }
     document.getElementById('grid').innerHTML=card(s.surah)+card(s.ayah);
   }catch(e){document.getElementById('now').textContent='تعذّر القراءة: '+e}
 }
-tick();setInterval(tick,5000);
+tick();setInterval(tick,2000);
 </script></body></html>"""
 
 
@@ -266,4 +357,5 @@ if __name__ == '__main__':
                   x['current'], 'eta_h', x['eta_hours'])
         print('proc', s['proc'])
     else:
+        LIVE = Live()
         ThreadingHTTPServer(('127.0.0.1', PORT), H).serve_forever()
