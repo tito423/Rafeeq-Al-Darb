@@ -22,7 +22,7 @@ import 'package:rafeeq_app/features/quran/presentation/widgets/mushaf_text_page.
 ///
 /// For each justified line it records how far the justification stretched
 /// the spaces between words, against the font's own space; and any text box
-/// outside the paragraph. Writes build/audit/lines_<layout>.json and, with
+/// outside the paragraph. Writes build/audit/`lines_LAYOUT.json` and, with
 /// RAFEEQ_AUDIT_PNG=1, a picture of each page.
 ///
 /// Needs build/audit/quran.json (exported from quran_local.db). Run with:
@@ -105,7 +105,7 @@ void main() {
             .toList();
         for (var pi = 0; pi < paras.length; pi++) {
           final p = paras[pi];
-          final text = p.text.toPlainText(includePlaceholders: true);
+          final text = p.text.toPlainText();
           TextStyle? style;
           p.text.visitChildren((span) {
             if (span is TextSpan &&
