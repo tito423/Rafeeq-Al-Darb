@@ -1,6 +1,7 @@
 """Copy the app's recitations to its own GitHub repository (R7).
 
-    py -3 scripts/github_mirror_recitations.py                 # everything, resumable
+    py -3 scripts/github_mirror_recitations.py --only ayah     # ayah sets, resumable (one kind per run;
+                                                               # an ayah run and a surah run may go side by side)
     py -3 scripts/github_mirror_recitations.py --only surah    # whole-surah sets only
     py -3 scripts/github_mirror_recitations.py --set ayah:Husary_128kbps
     py -3 scripts/github_mirror_recitations.py --publish-only  # re-upload the manifest
@@ -43,7 +44,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 REPO = 'tito423/rafeeq-recitations'
 APP_REPO = 'tito423/Rafeeq-Al-Darb'
-STATE = os.path.join(HERE, 'out', 'recitation_mirrors_state.json')
+# One state file per kind, so an ayah run and a surah run can go side by side.
+STATE_OF = lambda kind: os.path.join(HERE, 'out', f'recitation_mirrors_state_{kind}.json')
 MANIFEST = os.path.join(HERE, 'out', 'recitation_mirrors.json')
 KEY = 'config/recitation_mirrors.json'
 LOG = os.path.join(HERE, 'out', 'github_mirror_recitations.log')
@@ -210,23 +212,46 @@ def fetch(url, dest):
     raise RuntimeError(f'{url}: {err}')
 
 
+def source_size(url):
+    for attempt in range(5):
+        try:
+            r = SRC.get(url, headers={'Range': 'bytes=0-0'}, timeout=60, allow_redirects=True)
+            if r.status_code == 206:
+                return int(r.headers['Content-Range'].split('/')[-1])
+            if r.status_code == 200:
+                return int(r.headers['Content-Length'])
+        except Exception:  # noqa: BLE001 - retried
+            pass
+        time.sleep(5 * (attempt + 1))
+    raise RuntimeError(f'{url}: no size')
+
+
 # ---- state + manifest ---------------------------------------------------
 
-def load_state():
-    if os.path.exists(STATE):
-        return json.load(open(STATE, encoding='utf-8'))
-    return {'sizes': {}, 'done': {'ayah': [], 'surah': []}, 'missing': {}}
+def load_state(kind):
+    if os.path.exists(STATE_OF(kind)):
+        st = json.load(open(STATE_OF(kind), encoding='utf-8'))
+    else:
+        st = {'sizes': {}, 'done': {'ayah': [], 'surah': []}, 'missing': {}}
+    st['kind'] = kind
+    return st
 
 
 def save_state(st):
-    tmp = STATE + '.tmp'
+    path = STATE_OF(st['kind'])
+    tmp = path + '.tmp'
     json.dump(st, open(tmp, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
-    os.replace(tmp, STATE)
+    os.replace(tmp, path)
 
 
-def publish(st):
+_publish_lock = threading.Lock()
+
+
+def publish(_st=None):
+    # Both kinds' finished sets, read from their own state files.
+    a, s = load_state('ayah'), load_state('surah')
     doc = {'version': int(time.time()), 'repo': REPO, 'ayahPartStarts': AYAH_PART_STARTS,
-           'ayah': sorted(st['done']['ayah']), 'surah': sorted(int(x) for x in st['done']['surah'])}
+           'ayah': sorted(a['done']['ayah']), 'surah': sorted(int(x) for x in s['done']['surah'])}
     json.dump(doc, open(MANIFEST, 'w', encoding='utf-8'), indent=1)
     sys.path.insert(0, HERE)
     from r2_common import BUCKET, r2_client
@@ -279,9 +304,14 @@ def mirror_set(kind, sid, parts, st, tmpdir):
         save_state(st)
         # Verify: every file there, each with the byte count the source served.
         have = assets(rel)
-        for n, _ in files:
+        for n, u in files:
             if f'{tag}/{n}' in missing:
                 continue
+            if n not in sizes and n in have:
+                # uploaded by a run that stopped before saving its sizes:
+                # ask the source for the byte count instead of trusting it
+                sizes[n] = source_size(u)
+                save_state(st)
             if n not in have or have[n][1] != 'uploaded' or (n in sizes and have[n][0] != sizes[n]):
                 log(f'{tag}/{n}: NOT VERIFIED (have {have.get(n)}, source {sizes.get(n)})')
                 return False
@@ -305,15 +335,18 @@ def mirror_set(kind, sid, parts, st, tmpdir):
 def main():
     global PACE
     args = sys.argv[1:]
-    os.makedirs(os.path.dirname(STATE), exist_ok=True)
-    st = load_state()
+    os.makedirs(os.path.join(HERE, 'out'), exist_ok=True)
     if '--publish-only' in args:
-        publish(st)
+        publish()
         return
     per_hour = int(args[args.index('--per-hour') + 1]) if '--per-hour' in args else 450
     PACE = Pace(per_hour)
     only = args[args.index('--only') + 1] if '--only' in args else None
     one_set = args[args.index('--set') + 1] if '--set' in args else None
+    kind = only or (one_set.split(':')[0] if one_set else None)
+    if kind not in ('ayah', 'surah'):
+        sys.exit('--only ayah|surah (or --set kind:id): one kind per run')
+    st = load_state(kind)
     sets = []
     if only in (None, 'ayah'):
         sets += ayah_sets()

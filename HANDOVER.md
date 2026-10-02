@@ -2514,9 +2514,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 03:59 — IN PROGRESS — resume here**
+**2026-10-02 04:02 — IN PROGRESS — resume here**
 
-R7 seen on emulator: a mirrored moshaf plays from GitHub release assets
+R7: ayah and surah copies run side by side (state per kind); a size left unrecorded is asked from the source
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
