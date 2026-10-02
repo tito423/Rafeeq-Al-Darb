@@ -303,11 +303,15 @@ def mirror_set(kind, sid, parts, st, tmpdir):
                     os.remove(path)
 
         with cf.ThreadPoolExecutor(4) as ex:
-            for n, size in ex.map(one, todo):
+            for k, (n, size) in enumerate(ex.map(one, todo), 1):
                 if size is None:
                     missing.append(f'{tag}/{n}')
                 else:
                     sizes[n] = size
+                if k % 50 == 0:
+                    # a heartbeat: the watchdog takes a silent log for a hang
+                    log(f'{tag}: {k}/{len(todo)}')
+                    save_state(st)
         save_state(st)
         # Verify: every file there, each with the byte count the source served.
         have = assets(rel)
@@ -363,12 +367,15 @@ def main():
         sets = [s for s in sets if f'{s[0]}:{s[1]}' == one_set]
     log(f'{len(sets)} sets, pace {per_hour}/h')
     with tempfile.TemporaryDirectory() as tmp:
-        for kind, sid, parts in sets:
-            if mirror_set(kind, sid, parts, st, tmp):
+        for kind_, sid, parts in sets:
+            if mirror_set(kind_, sid, parts, st, tmp):
                 if sid not in st.get('published', []):
                     publish(st)
                     st.setdefault('published', []).append(sid)
                     save_state(st)
+    # read by scripts/recitation_mirror_watchdog.ps1: this kind is finished
+    left = [f'{k}:{i}' for k, i, _ in sets if i not in st['done'][k]]
+    log(f'ALL {kind} SETS PROCESSED - {len(left)} not listed (source gaps: {sorted(st["missing"])})')
 
 
 if __name__ == '__main__':
