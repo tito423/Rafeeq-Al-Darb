@@ -32,6 +32,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.path.join(HERE, 'out')
 PORT = 8777
+STALE_S = 20 * 60
 AYAHS = 6236
 
 
@@ -110,9 +111,14 @@ class Live:
                 if not base.startswith(('ayah-', 'surah-')) or '_' not in base:
                     continue
                 try:
-                    found[f] = os.path.getsize(f)
+                    st = os.stat(f)
                 except OSError:
-                    pass
+                    continue
+                # a run killed mid-file leaves its temp files behind for good
+                # (seen 2026-10-03: surah-113's, 290 MB each, from a run
+                # stopped hours earlier); a live file was written minutes ago
+                if time.time() - st.st_mtime < STALE_S:
+                    found[f] = st.st_size
         return found
 
     def run(self):
@@ -357,5 +363,14 @@ if __name__ == '__main__':
                   x['current'], 'eta_h', x['eta_hours'])
         print('proc', s['proc'])
     else:
+        # Started every 5 minutes by the task «RafeeqR7Page»: when a copy is
+        # already serving, leave. (Python sets SO_REUSEADDR, and on Windows
+        # that lets a second server bind the same port - so ask the port.)
+        import socket
+        with socket.socket() as probe:
+            probe.settimeout(2)
+            if probe.connect_ex(('127.0.0.1', PORT)) == 0:
+                sys.exit(0)
+        ThreadingHTTPServer.allow_reuse_address = False
         LIVE = Live()
         ThreadingHTTPServer(('127.0.0.1', PORT), H).serve_forever()
