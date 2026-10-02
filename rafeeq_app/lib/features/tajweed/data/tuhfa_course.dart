@@ -46,12 +46,20 @@ class TuhfaRange {
   /// marker that points at one.
   final bool commentary;
 
+  /// For a commentary range, the numbered notes («(١)», «(٢)» …) of the
+  /// paragraph that belong to THIS lesson; null keeps them all. الضباع's
+  /// notes for two lessons can share one paragraph (page 4, page 6), and a
+  /// beginner reading the lesson on the sakin meem should not first wade
+  /// through the note on the doubled letters.
+  final Set<int>? notes;
+
   const TuhfaRange(
     this.fromPage,
     this.fromPara,
     this.toPage,
     this.toPara, {
     this.commentary = false,
+    this.notes,
   });
 }
 
@@ -61,8 +69,9 @@ class TuhfaLesson {
   /// «أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوينِ (١)» is how the paragraph
   /// reads: the «(١)» is a pointer at الضباع's note at the foot of the page,
   /// not part of the name of the chapter, and the note itself is shown in the
-  /// lesson anyway. The stray fatha in «أَحْكَامُ َالمِيمِ» IS the source's
-  /// and stays — correcting the book is not mine to do.
+  /// lesson anyway. The source's typing errors in these headings (a stray
+  /// fatha in «أَحْكَامُ المِيمِ») are corrected, as `text_corrections.dart`
+  /// corrects them in the text, at the owner's request (2026-10-02).
   final String title;
 
   /// The verses, then the commentary that explains them, in reading order.
@@ -81,20 +90,24 @@ const tuhfaLessons = <TuhfaLesson>[
   TuhfaLesson('مُقَدِّمَةٌ', [
     TuhfaRange(2, 0, 2, 5),
   ]),
-  TuhfaLesson('أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوينِ', [
-    // Runs straight on: page 2 ends with its own footnote and page 3 opens
-    // with the next verses, so this one really is contiguous.
-    TuhfaRange(2, 6, 3, 8),
+  TuhfaLesson('أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوِينِ', [
+    // Page 2 ends with its own footnote and page 3 opens with the next
+    // verses. The two footnote paragraphs are الضباع's and are marked so;
+    // they used to ride inside one plain range and were set as verse.
+    TuhfaRange(2, 6, 2, 9),
+    TuhfaRange(2, 10, 2, 10, commentary: true),
+    TuhfaRange(3, 0, 3, 7),
+    TuhfaRange(3, 8, 3, 8, commentary: true),
   ]),
   TuhfaLesson('أَحْكَامُ النُّونِ وَالمِيمِ المُشَدَّدَتَيْنِ', [
     TuhfaRange(4, 0, 4, 1),
     // (١) of the shared footnote.
-    TuhfaRange(4, 9, 4, 9, commentary: true),
+    TuhfaRange(4, 9, 4, 9, commentary: true, notes: {1}),
   ]),
-  TuhfaLesson('أَحْكَامُ َالمِيمِ السَّاكِنَةِ', [
+  TuhfaLesson('أَحْكَامُ المِيمِ السَّاكِنَةِ', [
     TuhfaRange(4, 2, 4, 8),
     // (٢) of the same paragraph.
-    TuhfaRange(4, 9, 4, 9, commentary: true),
+    TuhfaRange(4, 9, 4, 9, commentary: true, notes: {2}),
   ]),
   TuhfaLesson('حُكْمُ لامِ ألْ وَلامِ الْفِعْلِ', [
     TuhfaRange(5, 0, 5, 6),
@@ -106,17 +119,18 @@ const tuhfaLessons = <TuhfaLesson>[
     TuhfaRange(5, 7, 5, 11),
     // The verses run on to the top of page 6 before the commentary.
     TuhfaRange(6, 0, 6, 0),
-    TuhfaRange(6, 9, 6, 9, commentary: true),
+    // (١) is المثلين's; (٢) and (٣) are the madd's.
+    TuhfaRange(6, 9, 6, 9, commentary: true, notes: {1}),
   ]),
   TuhfaLesson('أقْسَامُ المَدِّ', [
     TuhfaRange(6, 1, 6, 8),
-    TuhfaRange(6, 9, 6, 9, commentary: true),
+    TuhfaRange(6, 9, 6, 9, commentary: true, notes: {2, 3}),
   ]),
-  TuhfaLesson('أَحْكَامُ َالمَدِّ', [
+  TuhfaLesson('أَحْكَامُ المَدِّ', [
     TuhfaRange(7, 0, 7, 6),
     TuhfaRange(7, 12, 7, 12, commentary: true),
   ]),
-  TuhfaLesson('أقْسَامُ المَدِّ الَّلازِمِ', [
+  TuhfaLesson('أقْسَامُ المَدِّ اللَّازِمِ', [
     TuhfaRange(7, 7, 7, 11),
     TuhfaRange(8, 0, 8, 5),
     TuhfaRange(8, 11, 8, 11, commentary: true),

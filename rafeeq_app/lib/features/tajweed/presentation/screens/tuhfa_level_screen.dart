@@ -30,11 +30,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/accordion.dart';
-import '../../../../core/widgets/arabic_text.dart';
 import '../../../library/data/book_text.dart';
 import '../../data/bundled_matn.dart';
 import '../../data/tuhfa_course.dart';
 import '../../data/tuhfa_lesson_text.dart';
+import '../widgets/lesson_text.dart';
 
 /// Lessons the reader has marked done, kept by TITLE for the same reason
 /// level two keeps its own that way: a boundary that is corrected later must
@@ -46,9 +46,21 @@ class TuhfaProgress extends StateNotifier<Set<String>> {
 
   static const _key = 'tuhfa.done_v1';
 
+  /// Titles as they were stored before their typing errors were corrected
+  /// (`text_corrections.dart`, 2026-10-02), so a tick made under the old
+  /// spelling stays on its lesson.
+  static const _renamed = {
+    'أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوينِ':
+        'أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوِينِ',
+    'أَحْكَامُ َالمِيمِ السَّاكِنَةِ': 'أَحْكَامُ المِيمِ السَّاكِنَةِ',
+    'أَحْكَامُ َالمَدِّ': 'أَحْكَامُ المَدِّ',
+    'أقْسَامُ المَدِّ الَّلازِمِ': 'أقْسَامُ المَدِّ اللَّازِمِ',
+  };
+
   Future<void> _restore() async {
     final prefs = await SharedPreferences.getInstance();
-    state = (prefs.getStringList(_key) ?? const <String>[]).toSet();
+    final stored = prefs.getStringList(_key) ?? const <String>[];
+    state = {for (final t in stored) _renamed[t] ?? t};
   }
 
   Future<void> toggle(String lesson) async {
@@ -267,10 +279,12 @@ class _LessonBody extends StatelessWidget {
     }
 
     final children = <Widget>[];
-    var labelled = false;
+    // A label wherever the note starts after verses: once per page's notes.
+    var inCommentary = false;
     for (final p in paras) {
-      if (p.commentary && !labelled) {
-        labelled = true;
+      final startsNote = p.commentary && !inCommentary;
+      inCommentary = p.commentary;
+      if (startsNote) {
         children.add(Padding(
           padding: const EdgeInsets.only(top: 6, bottom: 6),
           child: Row(
@@ -294,16 +308,12 @@ class _LessonBody extends StatelessWidget {
       }
       children.add(Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: ArabicText(
-          p.text,
-          style: p.commentary
-              ? TextStyle(
-                  fontSize: 13,
-                  height: 1.8,
-                  color: scheme.onSurfaceVariant,
-                )
-              : const TextStyle(height: 1.9),
-        ),
+        // The Jamzuri's verse in two centred halves; الضباع's note as prose,
+        // a size down and quieter, so the reader sees which is which.
+        child: p.commentary
+            ? LessonProse(p.text,
+                fontSize: 16, color: scheme.onSurfaceVariant)
+            : LessonVerse(p.text),
       ));
     }
 
