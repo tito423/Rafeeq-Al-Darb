@@ -1,4 +1,4 @@
-import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 
 /// Kashida justification for the text mushaf — DISPLAY ONLY.
 ///
@@ -225,4 +225,44 @@ List<int> lineStarts(TextPainter painter, String text) {
     out.add(start - tatweel.allMatches(text.substring(0, start)).length);
   }
   return out;
+}
+
+/// The plan for one verse paragraph of the text mushaf: [texts] are its
+/// verses in order, each followed in the paragraph by its marker, a
+/// placeholder of size [marker].
+Map<int, int> planParagraphKashida({
+  required List<String> texts,
+  required double width,
+  required TextStyle style,
+  required Size marker,
+  TextScaler textScaler = TextScaler.noScaling,
+}) {
+  final dims = [
+    for (var i = 0; i < texts.length; i++)
+      PlaceholderDimensions(
+        size: marker,
+        alignment: PlaceholderAlignment.middle,
+      ),
+  ];
+  // The paragraph as laid out, with a plan applied: one run per verse,
+  // then its marker's room.
+  InlineSpan spanFor(Map<int, int> plan) {
+    final children = <InlineSpan>[];
+    var base = 0;
+    for (final t in texts) {
+      children
+        ..add(TextSpan(text: applyKashida(t, base, plan)))
+        ..add(const WidgetSpan(child: SizedBox.shrink()));
+      base += t.length + 1;
+    }
+    return TextSpan(style: style, children: children);
+  }
+
+  return planKashida(
+    spanFor: spanFor,
+    width: width,
+    style: style,
+    placeholders: dims,
+    textScaler: textScaler,
+  );
 }

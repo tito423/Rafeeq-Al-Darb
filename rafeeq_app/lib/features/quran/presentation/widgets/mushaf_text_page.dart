@@ -866,42 +866,39 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
     final key = Object.hash(
         width, style, scaler, side, Object.hashAll(texts));
     if (_plan?.$1 == key) return _plan!.$2;
-    final dims = [
-      for (var i = 0; i < texts.length; i++)
-        PlaceholderDimensions(
-          size: Size(side + 4, side),
-          alignment: PlaceholderAlignment.middle,
-        ),
-    ];
-    // The paragraph as laid out, with a plan applied: one run per verse,
-    // then its marker's room.
-    InlineSpan spanFor(Map<int, int> plan) {
-      final children = <InlineSpan>[];
-      var base = 0;
-      for (final t in texts) {
-        children
-          ..add(TextSpan(text: applyKashida(t, base, plan)))
-          ..add(const WidgetSpan(child: SizedBox.shrink()));
-        base += t.length + 1;
-      }
-      return TextSpan(style: style, children: children);
-    }
-
-    final plan = planKashida(
-      spanFor: spanFor,
+    final plan = planParagraphKashida(
+      texts: texts,
       width: width,
       style: style,
-      placeholders: dims,
+      marker: Size(side + 4, side),
       textScaler: scaler,
     );
     _plan = (key, plan);
     return plan;
   }
 
+  /// The width the paragraph was last laid out at, read back from the
+  /// paragraph after the frame. NOT a `LayoutBuilder`: the page sits in a
+  /// `SliverFillRemaining`, which asks its child for its intrinsic height,
+  /// and a `LayoutBuilder` cannot answer that — it threw, and the Qur'an
+  /// tab came up BLANK on emulator-5554 (2026-10-02) while every embedded
+  /// test passed. So the first frame is drawn without kashida and the plan
+  /// follows one frame later, then is kept for that width.
+  double? _width;
+
+  void _readWidth() {
+    if (!mounted) return;
+    final ro = _textKey.currentContext?.findRenderObject();
+    if (ro is! RenderParagraph || !ro.hasSize) return;
+    final w = ro.constraints.maxWidth;
+    if (w.isFinite && w != _width) setState(() => _width = w);
+  }
+
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-        builder: (context, box) => _build(context, box.maxWidth),
-      );
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _readWidth());
+    return _build(context, _width ?? double.infinity);
+  }
 
   Widget _build(BuildContext context, double width) {
     final spans = <InlineSpan>[];

@@ -95,6 +95,8 @@ void main() {
             ),
           ),
         ));
+        // Two frames: the kashida plan follows the paragraph's first layout.
+        await tester.pump();
         await tester.pump();
 
         // The verse paragraphs: justified, in the Qur'an font.
