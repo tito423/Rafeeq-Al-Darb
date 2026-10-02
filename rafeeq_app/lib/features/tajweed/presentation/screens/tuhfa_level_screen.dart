@@ -46,21 +46,10 @@ class TuhfaProgress extends StateNotifier<Set<String>> {
 
   static const _key = 'tuhfa.done_v1';
 
-  /// Titles as they were stored before their typing errors were corrected
-  /// (`text_corrections.dart`, 2026-10-02), so a tick made under the old
-  /// spelling stays on its lesson.
-  static const _renamed = {
-    'أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوينِ':
-        'أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوِينِ',
-    'أَحْكَامُ َالمِيمِ السَّاكِنَةِ': 'أَحْكَامُ المِيمِ السَّاكِنَةِ',
-    'أَحْكَامُ َالمَدِّ': 'أَحْكَامُ المَدِّ',
-    'أقْسَامُ المَدِّ الَّلازِمِ': 'أقْسَامُ المَدِّ اللَّازِمِ',
-  };
-
   Future<void> _restore() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getStringList(_key) ?? const <String>[];
-    state = {for (final t in stored) _renamed[t] ?? t};
+    state = {for (final t in stored) tuhfaRenamedTitles[t] ?? t};
   }
 
   Future<void> toggle(String lesson) async {

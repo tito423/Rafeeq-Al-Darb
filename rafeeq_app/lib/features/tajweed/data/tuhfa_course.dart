@@ -86,6 +86,17 @@ const tuhfaSourceLabel =
     'تحفة الأطفال والغلمان في تجويد القرآن، لسليمان بن محمد الجمزوري '
     '(ت بعد ١١٩٨هـ)، بشرح وجيز للشيخ علي محمد الضباع — المكتبة الشاملة';
 
+/// Titles as they were stored before their typing errors were corrected
+/// (`text_corrections.dart`, 2026-10-02), so a tick made under the old
+/// spelling stays on its lesson.
+const tuhfaRenamedTitles = {
+  'أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوينِ':
+      'أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوِينِ',
+  'أَحْكَامُ َالمِيمِ السَّاكِنَةِ': 'أَحْكَامُ المِيمِ السَّاكِنَةِ',
+  'أَحْكَامُ َالمَدِّ': 'أَحْكَامُ المَدِّ',
+  'أقْسَامُ المَدِّ الَّلازِمِ': 'أقْسَامُ المَدِّ اللَّازِمِ',
+};
+
 const tuhfaLessons = <TuhfaLesson>[
   TuhfaLesson('مُقَدِّمَةٌ', [
     TuhfaRange(2, 0, 2, 5),

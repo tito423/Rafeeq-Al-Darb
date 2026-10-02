@@ -14,6 +14,7 @@
 /// hosts as `tuhfat_al_atfal`.
 library;
 
+import '../../../core/utils/digits.dart';
 import '../../library/data/book_text.dart';
 import 'tuhfa_course.dart';
 
@@ -93,10 +94,7 @@ List<TuhfaNote> tuhfaNotes(String paragraph) {
     final text = paragraph.substring(starts[k], end).trim();
     if (text.isEmpty) continue;
     final m = RegExp(r'^\(([٠-٩]+)\)').firstMatch(text);
-    final number = m == null
-        ? 0
-        : int.parse(
-            m.group(1)!.split('').map('٠١٢٣٤٥٦٧٨٩'.indexOf).join());
+    final number = m == null ? 0 : int.parse(asciiDigits(m.group(1)!));
     out.add(TuhfaNote(number, text));
   }
   return out;
