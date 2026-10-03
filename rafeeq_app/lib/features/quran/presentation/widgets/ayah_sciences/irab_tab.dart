@@ -11,10 +11,19 @@
 /// scripts/resolve_irab_daas_refs.py), that earlier i'rab is shown under the
 /// book's line, framed and labelled, as the owner asked. Unproved references
 /// show the book's sentence alone - never a guessed target.
+///
+/// The book parses up to 12 ayahs as one run. Only the opened ayah's part is
+/// shown, cut where the book's quotes move to the next ayah
+/// (assets/data/irab_daas_splits.json, scripts/build_irab_daas_splits.py);
+/// a run the script could not cut safely is shown whole, with its range.
+/// The book and its authors are credited on the Sources screen only (owner,
+/// 2026-10-03).
 library;
 
-import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/db/models.dart';
@@ -29,6 +38,13 @@ final _surahNamesProvider = FutureProvider<Map<int, String>>((ref) async {
   return {for (final s in await repo.surahs()) s.id: surahNameShort(s.nameAr)};
 });
 
+/// "surah:ayahFrom" -> the offsets in the run where ayahFrom+1, +2... start.
+final _splitsProvider = FutureProvider<Map<String, List<int>>>((ref) async {
+  final raw = await rootBundle.loadString('assets/data/irab_daas_splits.json');
+  return (jsonDecode(raw) as Map<String, dynamic>).map(
+      (k, v) => MapEntry(k, [for (final o in v as List) o as int]));
+});
+
 class IrabTab extends ConsumerWidget {
   final Ayah ayah;
   final Future<IrabSection?> future;
@@ -37,89 +53,75 @@ class IrabTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final names = ref.watch(_surahNamesProvider).value ?? const <int, String>{};
+    final splits = ref.watch(_splitsProvider);
+    if (splits.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final cuts = splits.value ?? const <String, List<int>>{};
     return AsyncTab<IrabSection?>(
       future: future,
       isEmpty: (d) => d == null,
       builder: (context, section) {
         final s = section!;
+        final range = _rangeOf(s, cuts['${s.surah}:${s.ayahFrom}']);
         return ListView(
           padding: const EdgeInsets.fromLTRB(14, 10, 14, 24),
           children: [
-            _SourceHeader(section: s),
-            const SizedBox(height: 12),
-            ..._body(context, s, names),
+            if (range == null && s.ayahTo > s.ayahFrom) ...[
+              _RangeNote(section: s),
+              const SizedBox(height: 10),
+            ],
+            ..._body(context, s, names, range),
           ],
         );
       },
     );
   }
 
+  /// This ayah's [start, end) in the run, or null when the run is shown
+  /// whole (one ayah, or a run that was not cut).
+  (int, int)? _rangeOf(IrabSection s, List<int>? cut) {
+    if (s.ayahTo == s.ayahFrom || cut == null) return null;
+    if (cut.length != s.ayahTo - s.ayahFrom) return null;
+    final i = ayah.ayahNumber - s.ayahFrom;
+    final start = i == 0 ? 0 : cut[i - 1];
+    final end = i < cut.length ? cut[i] : s.text.length;
+    if (start < 0 || end > s.text.length || start >= end) return null;
+    return (start, end);
+  }
+
   /// The book's text, cut at each proved reference, with the referenced
   /// i'rab framed right after the clause that points to it.
-  List<Widget> _body(
-      BuildContext context, IrabSection s, Map<int, String> names) {
+  List<Widget> _body(BuildContext context, IrabSection s,
+      Map<int, String> names, (int, int)? range) {
     final out = <Widget>[];
-    var start = 0;
+    final (from, to) = range ?? (0, s.text.length);
+    var start = from;
     for (final r in s.references) {
-      if (r.at <= start || r.at > s.text.length) continue;
+      if (r.at <= start || r.at > to) continue;
       out.add(_BookText(s.text.substring(start, r.at).trim()));
       out.add(_ReferenceBlock(reference: r, surahName: names[r.targetSurah]));
       start = r.at;
     }
-    final rest = s.text.substring(start).trim();
+    final rest = s.text.substring(start, to).trim();
     if (rest.isNotEmpty) out.add(_BookText(rest));
     return out;
   }
 }
 
-class _SourceHeader extends StatelessWidget {
+class _RangeNote extends StatelessWidget {
   final IrabSection section;
-  const _SourceHeader({required this.section});
+  const _RangeNote({required this.section});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    const gold = AppColors.gold;
-    final range = section.ayahTo > section.ayahFrom;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: gold.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: gold.withValues(alpha: 0.25)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.menu_book_outlined, size: 16, color: gold),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'quran.irab_book'.tr(),
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(color: gold, fontWeight: FontWeight.w700),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'quran.irab_source'.tr(),
-            style: theme.textTheme.labelSmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-          ),
-          if (range) ...[
-            const SizedBox(height: 6),
-            Text(
-              trn('quran.irab_section_range',
-                  args: ['${section.ayahFrom}', '${section.ayahTo}']),
-              style: theme.textTheme.labelMedium?.copyWith(color: gold),
-            ),
-          ],
-        ],
-      ),
+    return Text(
+      trn('quran.irab_section_range',
+          args: ['${section.ayahFrom}', '${section.ayahTo}']),
+      style: Theme.of(context)
+          .textTheme
+          .labelMedium
+          ?.copyWith(color: AppColors.gold),
     );
   }
 }

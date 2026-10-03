@@ -136,6 +136,7 @@ flutter:
     - assets/data/tajweed/
     # The Islamic-history quiz (scripts/build_history_quiz.py).
     - assets/data/quiz/
+    - assets/data/irab_daas_splits.json
     - assets/data/hajj_madhahib.json
     - assets/data/mawaqit_today.json
     # GeoNames cities1000, 171,075 places (CC BY 4.0) for manual prayer
