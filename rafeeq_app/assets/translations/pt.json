@@ -1167,8 +1167,8 @@
   },
   "about": {
     "src_fastconformer_ar": "O modelo «audição mais precisa em árabe» do Rafeeq: FastConformer árabe da NVIDIA sob CC BY 4.0, exportado para ONNX (OpenVoiceOS) e quantizado em int8 para sherpa-onnx (krut42); download opcional que roda no aparelho sem internet.",
-    "src_adhkar_ih": "Os adhkar completos da manhã e da tarde por Mishary Alafasy, cada um em seu arquivo, tocados e baixados direto do IslamHouse.",
-    "src_adhkar_ia": "Os adhkar completos da manhã e da tarde por Idrees Abkar, Saad Al-Ghamdi, Salman Al-Utaybi, Fares Abbad e Hani Ar-Rifai, cada voz numa gravação, do Internet Archive como quem os enviou publicou (sem licença declarada).",
+    "src_adhkar_ayat": "Os versículos dos adhkar da manhã e da tarde (Ayat al-Kursi, as Mu‘awwidhat, a basmala) recitados por Mishary Alafasy",
+    "src_adhkar_tts": "O restante dos adhkar da manhã e da tarde com uma voz gerada por IA, cada dhikr lido uma vez",
     "blurb": "Rafeeq Al-Darb é uma aplicação islâmica completa, construída sobre fontes fiáveis e livremente disponíveis aos programadores. Cada mushaf, cada tradução e cada adhan foi verificado na fonte antes de ser adicionado, e todas as fontes estão indicadas. Os números desta página são contados do próprio conteúdo da aplicação, não escritos à mão.",
     "developed_by": "Desenvolvido por",
     "capabilities": "O que a aplicação oferece",

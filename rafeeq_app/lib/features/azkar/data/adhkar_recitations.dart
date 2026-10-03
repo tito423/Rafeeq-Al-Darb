@@ -1,4 +1,16 @@
-/// Complete recordings of the morning and the evening adhkar, by named
+/// The morning and the evening adhkar to listen to or download.
+///
+/// **2026-10-03** (owner: «تمسح محتوى كروت اذكار الصباح … والمساء … وحط
+/// بدلهم الاذكار بصوت جوجل», then «الصوت قارئ وجيميناي»): the seven
+/// recordings by named reciters (IslamHouse, Internet Archive) were replaced
+/// by one voicing of Hisn al-Muslim's own text in this app (azkar.db §27, §28):
+/// every Qur'an passage and basmala is Mishary Alafasy's ayah recording
+/// (everyayah.com), every other dhikr is Gemini TTS read once, each Gemini clip
+/// transcribed back with whisper-medium and matched letter for letter
+/// (lowest 96.6 %; rafeeq-control tools/azkar_voice.py, results/azkar_voice/).
+/// Their files stay on the bucket (azkar/recitations/) untouched.
+///
+/// Earlier history: complete recordings by named
 /// reciters, to listen to or download (owner, 2026-09-29: «الاستماع لأذكار
 /// الصباح منفردة وأذكار المساء منفردة … ولو فيه أكتر من شيخ اعمل قايمة
 /// بأسمائهم مع إمكانية تنزيلهم»; and after: «مش شرط قراءة الأذكار الموجودة
@@ -52,93 +64,32 @@ class AdhkarRecitation {
   bool fits(AdhkarTime t) => time == t || time == AdhkarTime.both;
 }
 
-const _ihDir =
-    'https://d1.islamhouse.com/data/ar/ih_sounds/chain_01/Mishari_Raashid/Azkar_AlSba7_w_AlMsa';
-const _ihPage = 'https://islamhouse.com/ar/audios/92368/';
-const _iaPage = 'https://archive.org/details/adhkar-alsabah-walmasa';
+String _voice(String file) =>
+    '${AppConfig.contentBaseUrl}/azkar/rafeeq_voice/$file';
 
-// The archive.org item streamed slowly (owner, 2026-10-02: «بطئ»), so its
-// five files are copied to the bucket byte for byte (sizes checked against
-// archive.org's own) and played from there, with the GitHub mirror behind it
-// (ContentMirrors). archive.org stays the credited source: [sourcePage].
-String _r2(String id) => '${AppConfig.contentBaseUrl}/azkar/recitations/$id.mp3';
+const _source = 'https://github.com/tito423/Rafeeq-Al-Darb';
 
 final adhkarRecitations = <AdhkarRecitation>[
-  const AdhkarRecitation(
-    id: 'alafasy_morning',
-    reciterAr: 'مشاري راشد العفاسي',
-    reciterEn: 'Mishary Rashid Alafasy',
+  AdhkarRecitation(
+    id: 'rafeeq_morning_v1',
+    reciterAr: 'الآيات بصوت العفاسي والأذكار بصوت Gemini',
+    reciterEn: 'Ayahs by Alafasy, adhkar by a Gemini voice',
     time: AdhkarTime.morning,
-    url: '$_ihDir/ar_1434_Azkar_AlSba7.mp3',
-    bytes: 33333722,
-    seconds: 832,
-    sourceName: 'IslamHouse',
-    sourcePage: _ihPage,
+    url: _voice('morning_v1.mp3'),
+    bytes: 6991979,
+    seconds: 583,
+    sourceName: 'رفيق الدرب',
+    sourcePage: _source,
   ),
-  const AdhkarRecitation(
-    id: 'alafasy_evening',
-    reciterAr: 'مشاري راشد العفاسي',
-    reciterEn: 'Mishary Rashid Alafasy',
+  AdhkarRecitation(
+    id: 'rafeeq_evening_v1',
+    reciterAr: 'الآيات بصوت العفاسي والأذكار بصوت Gemini',
+    reciterEn: 'Ayahs by Alafasy, adhkar by a Gemini voice',
     time: AdhkarTime.evening,
-    url: '$_ihDir/ar_1434_Azkar_AlMsa.mp3',
-    bytes: 24109982,
-    seconds: 602,
-    sourceName: 'IslamHouse',
-    sourcePage: _ihPage,
-  ),
-  AdhkarRecitation(
-    id: 'abkar',
-    reciterAr: 'إدريس أبكر',
-    reciterEn: 'Idrees Abkar',
-    time: AdhkarTime.both,
-    url: _r2('abkar'),
-    bytes: 14529350,
-    seconds: 900,
-    sourceName: 'Internet Archive',
-    sourcePage: _iaPage,
-  ),
-  AdhkarRecitation(
-    id: 'ghamdi',
-    reciterAr: 'سعد الغامدي',
-    reciterEn: 'Saad Al-Ghamdi',
-    time: AdhkarTime.both,
-    url: _r2('ghamdi'),
-    bytes: 7009452,
-    seconds: 876,
-    sourceName: 'Internet Archive',
-    sourcePage: _iaPage,
-  ),
-  AdhkarRecitation(
-    id: 'otaibi',
-    reciterAr: 'سلمان العتيبي',
-    reciterEn: 'Salman Al-Utaybi',
-    time: AdhkarTime.both,
-    url: _r2('otaibi'),
-    bytes: 14691683,
-    seconds: 1224,
-    sourceName: 'Internet Archive',
-    sourcePage: _iaPage,
-  ),
-  AdhkarRecitation(
-    id: 'abbad',
-    reciterAr: 'فارس عباد',
-    reciterEn: 'Fares Abbad',
-    time: AdhkarTime.both,
-    url: _r2('abbad'),
-    bytes: 29556402,
-    seconds: 2463,
-    sourceName: 'Internet Archive',
-    sourcePage: _iaPage,
-  ),
-  AdhkarRecitation(
-    id: 'rifai',
-    reciterAr: 'هاني الرفاعي',
-    reciterEn: 'Hani Ar-Rifai',
-    time: AdhkarTime.both,
-    url: _r2('rifai'),
-    bytes: 16510283,
-    seconds: 1024,
-    sourceName: 'Internet Archive',
-    sourcePage: _iaPage,
+    url: _voice('evening_v1.mp3'),
+    bytes: 6773805,
+    seconds: 564,
+    sourceName: 'رفيق الدرب',
+    sourcePage: _source,
   ),
 ];
