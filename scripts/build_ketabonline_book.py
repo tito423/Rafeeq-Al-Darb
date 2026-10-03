@@ -116,7 +116,7 @@ def blocks(content):
 # منح الروض الأزهر inside a g-parentheses span of its own. Those footnotes
 # are the modern editor's (al-Ghawji's «التعليق الميسر», d. 1434), so they
 # go with their calls. Where a page has footnotes, a bare «[١]» at the end
-# of a paragraph is a call too (نور الظلام).
+# of a paragraph is a call too (نور الظلام), on any page of the book.
 _SEP = re.compile(r'class="g-page-(separator|footer)"')
 _FN_CALL = re.compile(
     r'<span class="g-parentheses">\s*<a [^>]*g-footnote-link[^>]*>.*?</a>\s*</span>'
@@ -125,9 +125,9 @@ _FN_BARE = re.compile(r'<span class="g-square-brackets">\s*\[[٠-٩0-9]+\]\s*</s
 _INNER_TITLE = re.compile(r'<div class="g-title[^"]*"\s*>(.*?)</div>', re.S)
 
 
-def paras(content):
+def paras(content, book_has_notes=False):
     out = []
-    has_notes = bool(_SEP.search(content))
+    has_notes = book_has_notes or bool(_SEP.search(content))
     for cls, inner in blocks(content):
         if _SEP.search(inner):
             break  # the editor's footnotes follow
@@ -178,9 +178,12 @@ def build(kid, book_id):
     meta = {m["name"]: (m.get("value") or "") for m in d.get("meta") or []}
     card = "\n".join(f"{k}: {v}" if v else k for k, v in meta.items())
     pages, at = [], {}
+    # نور الظلام calls «[١]» on pages whose notes never made it in: in a book
+    # that has footnotes at all, a bare «[n]» is a call wherever it stands
+    notes = any(_SEP.search(pg.get("content") or "") for pg in d["pages"])
     for pg in d["pages"]:
         at[pg["id"]] = len(pages)
-        pages.append({"p": int(pg.get("page") or 0), "paras": paras(pg.get("content") or "")})
+        pages.append({"p": int(pg.get("page") or 0), "paras": paras(pg.get("content") or "", notes)})
     toc = []
     for e in d.get("index") or []:
         i = at.get(e.get("page_id"))
