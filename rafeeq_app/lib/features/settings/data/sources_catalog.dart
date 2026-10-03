@@ -99,6 +99,10 @@ final sourceGroups = <(String, List<SourceEntry>)>[
     [
       const SourceEntry('sunnah.com', 'https://sunnah.com', 'about.src_sunnah'),
       const SourceEntry('المكتبة الشاملة', 'https://shamela.ws', 'about.src_shamela'),
+      // The Azhari aqidah shuruh Shamela does not carry (al-Bajuri, Nawawi
+      // al-Jawi, al-Qari), 2026-10-03: scripts/build_ketabonline_book.py.
+      const SourceEntry('جامع الكتب الإسلامية', 'https://ketabonline.com',
+          'about.src_ketabonline'),
       // The adhkar (owner, 2026-09-29): the whole of Hisn al-Muslim, from the
       // MIT-licensed transcription in scripts/azkar_hisn/.
       const SourceEntry('حصن المسلم — asellam/HisnElMuslim',

@@ -1183,3 +1183,29 @@ checks each one). Shamela's text of the Ghaya lacks the example tables of the
 نون / ميم / لام chapters; their footnotes name the ayahs, and those ayahs are
 shown in full in place of the lost tables, said so on the screen.
 
+
+## 2026-10-03 — library «المرحلة ٣»: each shelf's best-known books
+
+The owner: «في كل قسم … اشهر وافضل ١٠ كتب بشروحاتهم … طالب العلم … الوثوقية
+والوسطية», then «فكك من شروط المصادر هات الكتب واتصرف بطريقة مش تعرضنا
+للحقوق» and «لو احتجت تعليقات المحققين استنبط منها مش تاخدها بالنص».
+
+How the rights question was handled (`scripts/library_phase3.py`):
+
+- **Whose text.** Every book is a pre-modern author's work, or that of a
+  20th-century author dead long enough for the work to be free in Egypt and
+  most of the Arab world (life + 50): al-Jaziri d. 1360 AH / 1941, Ibn Badis
+  1359 / 1940, al-Hashimi 1362 / 1943, al-Zurqani 1367 / 1948. No living or
+  recently dead author's book was added.
+- **The modern editor's words are not taken.** Shamela's hamesh is dropped at
+  build time (as for every library book); ketabonline's footnotes after the
+  rule likewise. The muhaqqiq's own sections — introduction, description of
+  the manuscripts and of his method, his biography of the author — are cut by
+  their فهرس title (`EDITOR` in the script) and each cut is listed in
+  `scripts/library_phase3_out.txt` and read before publishing.
+- **Sources.** Shamela (the card of each printing kept in the book's
+  `editionCard`), and جامع الكتب الإسلامية (ketabonline.com) for the four
+  Azhari aqidah shuruh Shamela does not carry; both are credited on the
+  Sources screen.
+- **Not cleared with any publisher.** This rests on the public-domain status of
+  the texts and the removal of the editors' work, on the owner's ruling above.
