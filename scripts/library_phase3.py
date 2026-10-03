@@ -77,6 +77,17 @@ PLAN = {
         "الإمام أبو بكر الآجري", "Al-Ajurri", 360, "aqidah", 0),
     "al_aqaid_al_islamiyyah_ibn_badis": (9092, "العقائد الإسلامية من الآيات القرآنية والأحاديث النبوية", "Al-Aqaid al-Islamiyyah",
         "عبد الحميد بن باديس", "Abd al-Hamid ibn Badis", 1359, "aqidah", 0),
+    # ── العقيدة, the Azhari shuruh Shamela does not carry: from
+    # جامع الكتب الإسلامية (ketabonline.com, build_ketabonline_book.py); the
+    # first element is "k<ketab id>" instead of a Shamela id.
+    "nur_al_zalam": ("k102632", "نور الظلام شرح منظومة عقيدة العوام", "Nur al-Zalam (Sharh Aqidat al-Awamm)",
+        "محمد نووي الجاوي", "Muhammad Nawawi al-Jawi", 1316, "aqidah", 0),
+    "tahqiq_al_maqam": ("k102864", "تحقيق المقام على كفاية العوام", "Tahqiq al-Maqam ala Kifayat al-Awamm",
+        "الإمام إبراهيم الباجوري", "Ibrahim al-Bajuri", 1276, "aqidah", 0),
+    "tuhfat_al_murid": ("k102863", "تحفة المريد على جوهرة التوحيد", "Tuhfat al-Murid (Sharh Jawharat al-Tawhid)",
+        "الإمام إبراهيم الباجوري", "Ibrahim al-Bajuri", 1276, "aqidah", 0),
+    "minah_al_rawd_al_azhar": ("k103078", "منح الروض الأزهر في شرح الفقه الأكبر", "Minah al-Rawd al-Azhar (Sharh al-Fiqh al-Akbar)",
+        "الملا علي القاري", "Mulla Ali al-Qari", 1014, "aqidah", 0),
     # ── التفسير: from the shortest (al-Jalalayn) to the fullest
     "tafsir_ibn_kathir": (8473, "تفسير القرآن العظيم", "Tafsir Ibn Kathir",
         "الحافظ ابن كثير", "Ibn Kathir", 774, "tafsir", 0),
@@ -175,6 +186,8 @@ def crawl(ids):
     os.makedirs(RAW, exist_ok=True)
     for bid in ids:
         sid = PLAN[bid][0]
+        if str(sid).startswith("k"):
+            continue  # one zip, fetched at build time
         n = last_page(sid)
         print(f"== {bid} (shamela {sid}): {n} pages", flush=True)
         f.run(sid, n, os.path.join(RAW, bid + ".jsonl"))
@@ -210,7 +223,11 @@ def build(ids):
     for bid in ids:
         sid = PLAN[bid][0]
         try:
-            doc = bbt.build_book(bid, sid, "المكتبة الشاملة")
+            if str(sid).startswith("k"):
+                import build_ketabonline_book as kb
+                doc, _ = kb.build(int(sid[1:]), bid)
+            else:
+                doc = bbt.build_book(bid, sid, "المكتبة الشاملة")
         except Exception as e:  # noqa: BLE001 - one bad book does not stop the batch
             out.write(f"\n== {bid}: BUILD FAILED {e}\n")
             continue
@@ -262,9 +279,10 @@ def publish(ids):
             print("REFUSED", bid, "author is one of the seven")
             continue
         _, t_ar, t_en, a_ar, a_en, death, cat, shelf = PLAN[bid]
-        label = "المكتبة الشاملة — " + "، ".join(x for x in (
-            p2.card_field(card, "الكتاب"), p2.card_field(card, "المؤلف"),
-            p2.card_field(card, "الناشر"), p2.card_field(card, "الطبعة")) if x)
+        label = book["meta"]["sourceLabel"] if book["meta"].get("ketabId") else (
+            "المكتبة الشاملة — " + "، ".join(x for x in (
+                p2.card_field(card, "الكتاب"), p2.card_field(card, "المؤلف"),
+                p2.card_field(card, "الناشر"), p2.card_field(card, "الطبعة")) if x))
         if s3 is None:
             from r2_common import BUCKET, r2_client
             s3 = r2_client()
