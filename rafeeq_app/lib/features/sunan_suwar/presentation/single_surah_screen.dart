@@ -518,7 +518,6 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
           title: '${data.surahNameAr(ayah.surahId)} · ${ayah.ayahNumber}');
       if (!mounted) return;
       if (choice != RecitingAyahChoice.tafsir) {
-        setState(() => _pressed = null);
         if (choice == RecitingAyahChoice.startHere) {
           await AyahAudioService.instance.startContinuous(
             from: ayah,
@@ -527,6 +526,8 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
             wholeMushaf: false,
           );
         }
+        // Unmarked only once the recitation has moved (see quran_screen).
+        if (mounted) setState(() => _pressed = null);
         return;
       }
     }

@@ -37,7 +37,6 @@ extension _QuranViews on _QuranScreenState {
         title: '${data.surahNameAr(ayah.surahId)} · ${ayah.ayahNumber}');
     if (!mounted) return true;
     if (choice == RecitingAyahChoice.tafsir) return false;
-    _setPressed(null);
     if (choice == RecitingAyahChoice.startHere) {
       _followedPage = ayah.pageNumber;
       await AyahAudioService.instance.startContinuous(
@@ -46,6 +45,9 @@ extension _QuranViews on _QuranScreenState {
         edition: ref.read(selectedReciterProvider),
       );
     }
+    // Only now: unmarked earlier, the page fell back to the verse still being
+    // read and scrolled away to it (seen on the emulator, 2026-10-03).
+    _setPressed(null);
     return true;
   }
 
