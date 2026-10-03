@@ -14,11 +14,6 @@ import 'package:flutter/material.dart';
 class OrnamentBackdrop extends StatelessWidget {
   static const _dir = 'assets/quote_backgrounds';
 
-  /// A mosque's muqarnas dome, for the sunnah surahs - its top band only:
-  /// lower down, the chandelier's chain ran through the text like a crack
-  /// (assets/card_ornaments/SOURCES.json).
-  static const sunan = 'assets/card_ornaments/muqarnas_band.jpg';
-
   /// Cycled through the quote-of-the-day pages (not the star panel, whose
   /// pale strapwork was too busy behind text on the hadith card).
   static const quotes = [

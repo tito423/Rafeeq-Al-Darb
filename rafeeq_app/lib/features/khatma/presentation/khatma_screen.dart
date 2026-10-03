@@ -131,7 +131,9 @@ class _EmptyBody extends StatelessWidget {
     (7, Icons.bolt_rounded, Color(0xFFEE5253)),
     (30, Icons.calendar_month_rounded, Color(0xFF10AC84)),
     (60, Icons.event_available_rounded, Color(0xFF2E86DE)),
-    (365, Icons.all_inclusive_rounded, Color(0xFF8854D0)),
+    // «غير في سنة … خليها اختر مدة الختمة» (owner, 2026-10-03): the fourth
+    // tile opens the sheet where the reader sets the duration himself.
+    (0, Icons.tune_rounded, Color(0xFF8854D0)),
   ];
 
   @override
@@ -197,8 +199,9 @@ class _EmptyBody extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
-                          onTap: () =>
-                              showCreateKhatmaSheet(context, days: days),
+                          onTap: () => days == 0
+                              ? showCreateKhatmaSheet(context)
+                              : showCreateKhatmaSheet(context, days: days),
                           child: Ink(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
@@ -219,7 +222,9 @@ class _EmptyBody extends StatelessWidget {
                                 FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    'khatma.plan_$days'.tr(),
+                                    days == 0
+                                        ? 'khatma.plan_choose'.tr()
+                                        : 'khatma.plan_$days'.tr(),
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w900,
@@ -228,6 +233,7 @@ class _EmptyBody extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 2),
+                                if (days > 0)
                                 Text(
                                   'khatma.plan_pages'.tr(
                                     args: [
@@ -248,12 +254,6 @@ class _EmptyBody extends StatelessWidget {
                         ),
                       ),
                   ],
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: () => showCreateKhatmaSheet(context),
-                  icon: const Icon(Icons.tune_rounded),
-                  label: Text('khatma.plan_custom'.tr()),
                 ),
               ],
             ),

@@ -171,7 +171,6 @@ flutter:
     - assets/data/on_this_day_hijri_ar.json
     - assets/quote_backgrounds/
     - assets/prayer_backgrounds/
-    - assets/card_ornaments/
     - assets/data/mushaf/
     - assets/mushaf_covers/
     - assets/data/catalogs/

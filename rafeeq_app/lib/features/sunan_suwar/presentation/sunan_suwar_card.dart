@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/digits.dart' show localizeDigits;
+import '../../../core/widgets/calm_card_ground.dart';
 import '../../../core/widgets/fitted_sheet.dart';
-import '../../../core/widgets/ornament_backdrop.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/sunan_suwar_catalog.dart';
 import '../data/sunan_suwar_store.dart';
@@ -41,13 +40,13 @@ class SunanSuwarCard extends ConsumerWidget {
     final mushaf = ref.watch(mushafDataProvider).valueOrNull;
     final theme = Theme.of(context);
 
-    // A mosque's muqarnas dome, faint, behind the four surahs (owner,
-    // 2026-09-29).
+    // A calm ground, nothing under the text (owner, 2026-10-03: «خلفية
+    // هادية … إسلامية خفيفة والخط يكون واضح»). The muqarnas photograph
+    // that was here (2026-09-29) made the surah names hard to read.
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: OrnamentBackdrop(
-        asset: OrnamentBackdrop.sunan,
-        radius: BorderRadius.circular(AppSpacing.radiusMd),
+      child: CalmCardGround(
+        color: AppColors.gold,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
