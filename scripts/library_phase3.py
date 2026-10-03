@@ -21,6 +21,7 @@ How that is honoured here:
 
     py -3 scripts/library_phase3.py --crawl     # Shamela pages -> scripts/shamela_raw/<id>.jsonl
     py -3 scripts/library_phase3.py --build     # -> scripts/book_text_build/<id>.json + report
+    py -3 scripts/library_phase3.py --recut     # START / TOC_FROM cuts on the built books
     py -3 scripts/library_phase3.py --publish   # R2 upload + read-back + book_catalog.dart
 """
 import gzip
@@ -234,6 +235,8 @@ def build(ids):
         cuts = cut_editor(doc)
         if cuts:
             doc["meta"]["editorIntroRemoved"] = [c[0] for c in cuts]
+        recut(doc, bid)
+        doc["meta"]["recut"] = True
         p2.tidy(doc)
         path = os.path.join(BUILD, bid + ".json")
         bbt.write_book_json(doc, path)
@@ -253,6 +256,79 @@ def build(ids):
         out.flush()
     out.close()
     print(io.open(REPORT, encoding="utf-8").read())
+
+
+# Read off the built فهرس (rafeeq-control results/library/toc_dump.txt,
+# 2026-10-03): sections the EDITOR pattern cannot catch because the editor
+# titled them in his own words («منهجنا في العمل», «نبذة عن الشارح», a
+# preface by a third party). START: the author's first section; every page
+# before it is the editor's and goes. TOC_FROM: the editor's headings all
+# point at the author's own first page (Shamela folded them onto it), so the
+# page stays and only the headings before the author's go.
+START = {
+    "dalil_al_falihin": "مقدمة الشارح",
+    "tafsir_al_baghawi": "مقدمة المؤلف",
+    "zad_al_masir": "زاد المسير في علم التفسير",
+    "asbab_al_nuzul_wahidi": "[مقدمة المؤلف]",
+    "fath_al_qadir_shawkani": "مقدمة المؤلف",
+    "al_rawd_al_unuf": "ذكر سرد النسب",
+    "al_mawahib_al_ladunniyyah": "مقدمة المؤلف",
+    "tarikh_ibn_khaldun": "مقدمة المؤلف",
+    "wafayat_al_ayan": "بسم الله الرحمن الرحيم",
+    "uyun_al_akhbar": "مقدمة المؤلف",
+    "al_aqaid_al_islamiyyah_ibn_badis": "افتتاح",
+}
+TOC_FROM = {
+    "subul_al_salam": "مقدمة المصنف",
+    "tafsir_ibn_kathir": "مقدمة ابن كثير",
+    "al_tashil_ibn_juzayy": "مقدمة المؤلف",
+    "jawami_al_seerah": "مقدمة المؤلف",
+}
+
+
+def recut(book, bid):
+    """Applies START / TOC_FROM to a built book. Returns what was cut, or
+    raises if the named title is not in the فهرس (a typo must not pass as
+    a clean book)."""
+    toc = book.get("toc") or []
+    title = START.get(bid) or TOC_FROM.get(bid)
+    if not title:
+        return []
+    k = next((i for i, e in enumerate(toc) if e["title"].startswith(title)), None)
+    if k is None:
+        raise SystemExit(f"{bid}: «{title}» is not in the فهرس")
+    gone = [e["title"] for e in toc[:k]]
+    if bid in START:
+        a = toc[k]["pageIndex"]
+        for pg in book["pages"][:a]:
+            pg["paras"] = []
+    book["toc"] = toc[k:]
+    book["meta"]["sectionCount"] = len(book["toc"])
+    book["meta"]["editorIntroRemoved"] = book["meta"].get("editorIntroRemoved", []) + gone
+    p2.tidy(book)
+    return gone
+
+
+def recut_all(ids):
+    import build_book_text as bbt
+    for bid in ids:
+        if bid not in START and bid not in TOC_FROM:
+            continue
+        path = os.path.join(BUILD, bid + ".json")
+        if not os.path.exists(path):
+            print("skip", bid, "not built")
+            continue
+        _, book = p2.load(bid)
+        if book["meta"].get("recut"):
+            print("skip", bid, "already recut")
+            continue
+        n0 = len(book["pages"])
+        gone = recut(book, bid)
+        book["meta"]["recut"] = True
+        bbt.write_book_json(book, path)
+        first = next((p["t"] for pg in book["pages"] for p in pg["paras"] if p["t"].strip()), "")
+        print(f"== {bid}: pages {n0} -> {len(book['pages'])}, headings cut {len(gone)}: "
+              f"{' | '.join(gone)}\n   opens on: {first[:160]}", flush=True)
 
 
 # Held after reading the --build report (book id -> why).
@@ -338,6 +414,8 @@ def main():
         crawl(ids)
     if "--build" in args:
         build(ids)
+    if "--recut" in args:
+        recut_all(ids)
     if "--publish" in args:
         publish(ids)
 
