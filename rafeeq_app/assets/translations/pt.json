@@ -334,6 +334,8 @@
     "page_fit_full": "Tela cheia",
     "page_fit_small": "Tamanho normal",
     "recite_continuous": "Recitação contínua",
+    "recite_choice_tafsir": "Cartão de tafsir",
+    "recite_choice_start_here": "Começar a recitação daqui",
     "recite_voice_substituted": "Não foi possível carregar o áudio do recitador escolhido; a recitação continua na voz de Muhammad Siddiq al-Minshawi (murattal).",
     "recite_waiting": "Aguardando uma fonte de recitação — retomará sozinha a partir do versículo {}",
     "recite_from_here": "Recitar a partir daqui",

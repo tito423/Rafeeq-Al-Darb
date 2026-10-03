@@ -334,6 +334,8 @@
     "page_fit_full": "ملء الشاشة",
     "page_fit_small": "حجم عادي",
     "recite_continuous": "التلاوة المستمرة",
+    "recite_choice_tafsir": "كارت التفسير",
+    "recite_choice_start_here": "بدء التلاوة من هنا",
     "recite_voice_substituted": "تعذّر تحميل التلاوة بصوت القارئ المختار، فهي تكمل الآن بصوت محمد صديق المنشاوي (مرتّل).",
     "recite_waiting": "بانتظار مصدر للتلاوة — ستُستأنف تلقائيًا من الآية {}",
     "recite_from_here": "اقرأ من هنا",

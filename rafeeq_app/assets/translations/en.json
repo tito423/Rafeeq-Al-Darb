@@ -334,6 +334,8 @@
     "page_fit_full": "Full screen",
     "page_fit_small": "Normal size",
     "recite_continuous": "Continuous recitation",
+    "recite_choice_tafsir": "Tafsir card",
+    "recite_choice_start_here": "Start recitation from here",
     "recite_voice_substituted": "The chosen reciter's audio couldn't be loaded, so the recitation continues in the voice of Muhammad Siddiq al-Minshawi (murattal).",
     "recite_waiting": "Waiting for a recitation source — it will resume by itself from verse {}",
     "recite_from_here": "Recite from here",

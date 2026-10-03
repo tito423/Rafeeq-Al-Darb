@@ -25,6 +25,7 @@ import '../../quran/presentation/widgets/mushaf_page_view.dart';
 import '../../quran/presentation/widgets/mushaf_text_page.dart';
 import '../../quran/presentation/widgets/mushaf_theme_picker.dart';
 import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
+import '../../quran/presentation/widgets/reciting_ayah_choice_sheet.dart';
 
 enum _Mode { text, image }
 
@@ -93,6 +94,9 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
   bool _toolbarVisible = true;
 
   ContinuousRecitation _recite = ContinuousRecitation.stopped;
+
+  /// The verse long-pressed while reciting, marked until its choice closes.
+  ({int surah, int ayah})? _pressed;
 
   /// The surah's own page bounds, filled in on the first build. Held as state
   /// so the recitation follower can turn pages without re-deriving them.
@@ -382,8 +386,10 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
                         edition: ref.read(selectedReciterProvider),
                         wholeMushaf: false,
                       ),
-                      playingSurah: _recite.active ? _recite.surahId : null,
-                      playingAyah: _recite.active ? _recite.ayahNumber : null,
+                      playingSurah:
+                          _pressed?.surah ?? (_recite.active ? _recite.surahId : null),
+                      playingAyah:
+                          _pressed?.ayah ?? (_recite.active ? _recite.ayahNumber : null),
                       fontScale: _fontScale,
                       autoScroll: _autoScroll,
                       autoScrollSpeed: _autoScrollSpeed,
@@ -490,8 +496,10 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
             edition: ref.read(selectedReciterProvider),
             wholeMushaf: false,
           ),
-          playingSurah: _recite.active ? _recite.surahId : null,
-          playingAyah: _recite.active ? _recite.ayahNumber : null,
+          playingSurah:
+              _pressed?.surah ?? (_recite.active ? _recite.surahId : null),
+          playingAyah:
+              _pressed?.ayah ?? (_recite.active ? _recite.ayahNumber : null),
           fontScale: _fontScale,
           onBackgroundTap: _toggleFullScreen,
           pageFillScreen: _fullScreen,
@@ -500,14 +508,36 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
     );
   }
 
-  void _openSciences(Ayah ayah, MushafData data, MushafEdition? edition) {
-    AyahSciencesSheet.show(
+  /// While the recitation runs a long press offers «بدء التلاوة من هنا» next
+  /// to the card, as on the Qur'an tab (owner, 2026-10-03).
+  Future<void> _openSciences(
+      Ayah ayah, MushafData data, MushafEdition? edition) async {
+    if (_recite.active) {
+      setState(() => _pressed = (surah: ayah.surahId, ayah: ayah.ayahNumber));
+      final choice = await showRecitingAyahChoice(context,
+          title: '${data.surahNameAr(ayah.surahId)} · ${ayah.ayahNumber}');
+      if (!mounted) return;
+      if (choice != RecitingAyahChoice.tafsir) {
+        setState(() => _pressed = null);
+        if (choice == RecitingAyahChoice.startHere) {
+          await AyahAudioService.instance.startContinuous(
+            from: ayah,
+            repo: data.repo,
+            edition: ref.read(selectedReciterProvider),
+            wholeMushaf: false,
+          );
+        }
+        return;
+      }
+    }
+    await AyahSciencesSheet.show(
       context,
       ayah: ayah,
       surahNameAr: data.surahNameAr(ayah.surahId),
       quranRepo: data.repo,
       sciencesAvailable: edition?.sciencesAvailableFor(ayah.surahId) ?? true,
     );
+    if (mounted && _pressed != null) setState(() => _pressed = null);
   }
 }
 

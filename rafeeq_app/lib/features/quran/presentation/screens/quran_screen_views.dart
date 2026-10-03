@@ -6,6 +6,49 @@ part of 'quran_screen.dart';
 /// 2026-10-02 when the continuous view was added, so `quran_screen.dart`
 /// shrinks instead of growing past its ceiling (`code_layout_test.dart`).
 extension _QuranViews on _QuranScreenState {
+  Future<void> _pickReciter() async {
+    final id = await showReciterPickerSheet(context);
+    if (id == null || !mounted) return;
+    await ref.read(selectedReciterProvider.notifier).select(id);
+    await AyahAudioService.instance.switchReciter(id);
+  }
+
+  String _reciterName() {
+    final id = ref.watch(selectedReciterProvider);
+    final list = ref.watch(recitersProvider).valueOrNull;
+    final r = list?.where((x) => x.identifier == id).firstOrNull;
+    return r?.displayName(context.locale.languageCode) ?? '';
+  }
+
+  /// The verse marked on the page: one long-pressed during the recitation
+  /// (until its choice closes), else the one recited, else the selected one.
+  int? get _markSurah =>
+      _pressed?.surah ?? (_recite.active ? _recite.surahId : _highlightSurah);
+  int? get _markAyah =>
+      _pressed?.ayah ?? (_recite.active ? _recite.ayahNumber : _highlightAyah);
+
+  /// «اثناء ما التلاوة المستمرة شغالة … ضغطة طويلة … تتظلل ويطلع لي
+  /// اختيارين: كارت التفسير ولا بدء التلاوة من هنا» (owner, 2026-10-03).
+  /// True when the press is handled here (started from the verse, or the
+  /// choice dismissed); false when the reader asked for the card.
+  Future<bool> _askWhileReciting(Ayah ayah, MushafData data) async {
+    _setPressed((surah: ayah.surahId, ayah: ayah.ayahNumber));
+    final choice = await showRecitingAyahChoice(context,
+        title: '${data.surahNameAr(ayah.surahId)} · ${ayah.ayahNumber}');
+    if (!mounted) return true;
+    if (choice == RecitingAyahChoice.tafsir) return false;
+    _setPressed(null);
+    if (choice == RecitingAyahChoice.startHere) {
+      _followedPage = ayah.pageNumber;
+      await AyahAudioService.instance.startContinuous(
+        from: ayah,
+        repo: data.repo,
+        edition: ref.read(selectedReciterProvider),
+      );
+    }
+    return true;
+  }
+
   /// A surah picked by name in the continuous view lands on its own banner,
   /// not on the top of the page it shares with the surah before it. False
   /// when this is not the continuous view; the caller turns the page.
@@ -66,9 +109,10 @@ extension _QuranViews on _QuranScreenState {
       // The selected verse stays marked after its card closes, as it
       // does on the image page, so the owner can see where the
       // continuous recitation will start from.
-      playingSurah: _recite.active ? _recite.surahId : _highlightSurah,
-      playingAyah: _recite.active ? _recite.ayahNumber : _highlightAyah,
-      playingBasmalaSurah: _recite.basmala ? _recite.surahId : null,
+      playingSurah: _markSurah,
+      playingAyah: _markAyah,
+      playingBasmalaSurah:
+          _pressed == null && _recite.basmala ? _recite.surahId : null,
       onAyahLongPress: (a) => _openSciences(a, data),
       // `edition:` is the RECITER, not the mushaf. Handed a printing
       // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`

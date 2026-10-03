@@ -46,6 +46,7 @@ import '../widgets/mushaf/toolbar_bar.dart';
 import '../widgets/mushaf_page_view.dart';
 import '../widgets/mushaf_text_page.dart';
 import '../widgets/reciter_picker_sheet.dart';
+import '../widgets/reciting_ayah_choice_sheet.dart';
 
 part 'quran_screen_views.dart';
 
@@ -130,6 +131,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// Guards the page-following below: without it, every position update for a
   /// verse already on screen would re-issue the same page jump.
   int? _followedPage;
+
+  /// The verse long-pressed while reciting (`_askWhileReciting`).
+  ({int surah, int ayah})? _pressed;
+  void _setPressed(({int surah, int ayah})? p) {
+    if (mounted && p != _pressed) setState(() => _pressed = p);
+  }
 
   Future<void> _persistPage() async {
     // Goes through the reactive provider (P3‑4), not a raw prefs write —
@@ -559,20 +566,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     );
   }
 
-  Future<void> _pickReciter() async {
-    final id = await showReciterPickerSheet(context);
-    if (id == null || !mounted) return;
-    await ref.read(selectedReciterProvider.notifier).select(id);
-    await AyahAudioService.instance.switchReciter(id);
-  }
-
-  String _reciterName() {
-    final id = ref.watch(selectedReciterProvider);
-    final list = ref.watch(recitersProvider).valueOrNull;
-    final r = list?.where((x) => x.identifier == id).firstOrNull;
-    return r?.displayName(context.locale.languageCode) ?? '';
-  }
-
   /// Starts continuous recitation where `continuousStartOnPage` says, and
   /// reads on through the mushaf.
   Future<void> _toggleContinuousRecitation(MushafData data) async {
@@ -649,11 +642,15 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     MushafData data, {
     bool sciencesAvailable = true,
     int tab = 0,
+    bool askWhenReciting = true,
   }) async {
     setState(() {
       _highlightSurah = ayah.surahId;
       _highlightAyah = ayah.ayahNumber;
     });
+    if (askWhenReciting && _recite.active) {
+      if (await _askWhileReciting(ayah, data) || !mounted) return;
+    }
     await AyahSciencesSheet.show(
       context,
       ayah: ayah,
@@ -662,6 +659,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       sciencesAvailable: sciencesAvailable,
       initialTab: tab,
     );
+    _setPressed(null);
     // The verse STAYS selected after its card closes, so «التلاوة المستمرة»
     // starts from it: «لما أكون فاتح صفحة وأضغط على آية وأضغط تلاوة تلقائية
     // يبدأ من الآية اللي ضغطت عليها». A tap on the page, or turning it,
@@ -682,7 +680,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final a = (await _ayahsOfPage(page, data))
         .where((x) => x.surahId == o.surah && x.ayahNumber == o.ayah)
         .firstOrNull;
-    if (a != null && mounted) await _openSciences(a, data, tab: tab);
+    if (a != null && mounted) {
+      await _openSciences(a, data, tab: tab, askWhenReciting: false);
+    }
   }
 
   Future<List<Ayah>> _ayahsOfPage(int page, MushafData data) =>
@@ -1027,8 +1027,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 highlight: _current != page
                     ? null
                     : _coords.regionOf(edition.polygonsAsset, page,
-                        _recite.active ? _recite.surahId : _highlightSurah,
-                        _recite.active ? _recite.ayahNumber : _highlightAyah),
+                        _markSurah, _markAyah),
                 onAyahLongPress: (region) =>
                     _onImageAyahTap(region, ayahs, data, edition),
                 onLoadFailed: edition.isRaster
