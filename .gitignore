@@ -135,3 +135,4 @@ scripts/ketab_raw/
 # library phase 3 crawl (113k pages) and build report, regenerable
 scripts/shamela_raw/
 scripts/library_phase3_out.txt
+scripts/out/quiz_books/

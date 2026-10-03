@@ -8,6 +8,7 @@ import '../../../core/utils/digits.dart';
 import '../../../core/widgets/islamic_scene.dart';
 import '../../../core/widgets/readable_insets.dart';
 import '../../azkar/presentation/screens/azkar_section_screen.dart';
+import '../../quiz/presentation/quiz_home_screen.dart';
 import '../data/journey_store.dart';
 import '../data/kids_content.dart';
 import '../data/kids_stages.dart';
@@ -88,6 +89,17 @@ class KidsCornerScreen extends ConsumerWidget {
             subtitle: 'kids.game_sub'.tr(),
             onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const AyahGameScreen())),
+          ),
+          const SizedBox(height: 12),
+          // «جيميفيكيشن في ركن الاطفال … في التاريخ الاسلامي» (owner,
+          // 2026-10-03): the history quiz, for every age, reachable here too.
+          _BigTile(
+            color: const Color(0xFF4834D4),
+            icon: Icons.quiz_rounded,
+            title: 'quiz.title'.tr(),
+            subtitle: 'quiz.level_l1_desc'.tr(),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const QuizHomeScreen())),
           ),
           const SizedBox(height: 20),
           _Heading(icon: Icons.stairs_rounded, text: 'kids.path'.tr()),

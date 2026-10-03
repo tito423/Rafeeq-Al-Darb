@@ -14,6 +14,7 @@ import '../../../hajj/presentation/hajj_screen.dart';
 import '../../../hifz/presentation/hifz_screen.dart';
 import '../../../kids/presentation/journey_screen.dart';
 import '../../../kids/presentation/kids_corner_screen.dart';
+import '../../../quiz/presentation/quiz_home_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/data/ruqyah_catalog.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
@@ -106,6 +107,7 @@ class MoreScreen extends ConsumerWidget {
               'ruqyah.audio_title',
               'kids.title',
               'journey.title',
+              'quiz.title',
               'dedication.title',
             ]),
             icon: Icons.auto_awesome_rounded,
@@ -195,6 +197,16 @@ class MoreScreen extends ConsumerWidget {
                 subtitle: 'journey.card_sub'.tr(),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(builder: (_) => const JourneyScreen()),
+                ),
+              ),
+              // «مسابقة … في التاريخ الاسلامي» (owner, 2026-10-03).
+              IslamicActionCard(
+                icon: Icons.quiz_rounded,
+                accent: const Color(0xFF4834D4),
+                title: 'quiz.title'.tr(),
+                subtitle: 'quiz.subtitle'.tr(),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const QuizHomeScreen()),
                 ),
               ),
 
