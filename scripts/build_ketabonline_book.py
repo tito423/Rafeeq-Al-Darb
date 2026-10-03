@@ -109,30 +109,68 @@ def blocks(content):
     return b.blocks
 
 
+# Read 2026-10-03 off the raw HTML of 102632 / 103078 (rafeeq-control
+# results/library/ketab_raw_peek.txt): a page's footnotes follow a block
+# holding <div class="g-page-separator"> + <div class="g-page-footer">, and
+# each is called from the text by <a class="g-footnote-link">(١)</a>, in
+# منح الروض الأزهر inside a g-parentheses span of its own. Those footnotes
+# are the modern editor's (al-Ghawji's «التعليق الميسر», d. 1434), so they
+# go with their calls. Where a page has footnotes, a bare «[١]» at the end
+# of a paragraph is a call too (نور الظلام).
+_SEP = re.compile(r'class="g-page-(separator|footer)"')
+_FN_CALL = re.compile(
+    r'<span class="g-parentheses">\s*<a [^>]*g-footnote-link[^>]*>.*?</a>\s*</span>'
+    r'|<a [^>]*g-footnote-link[^>]*>.*?</a>', re.S)
+_FN_BARE = re.compile(r'<span class="g-square-brackets">\s*\[[٠-٩0-9]+\]\s*</span>')
+_INNER_TITLE = re.compile(r'<div class="g-title[^"]*"\s*>(.*?)</div>', re.S)
+
+
 def paras(content):
     out = []
+    has_notes = bool(_SEP.search(content))
     for cls, inner in blocks(content):
+        if _SEP.search(inner):
+            break  # the editor's footnotes follow
         if "g-table" in cls:
             cells = [text(c) for c in _CELL.findall(inner)]
             t = " ... ".join(c for c in cells if c)
             if t:
                 out.append({"t": t, "k": "body"})
             continue
-        t = _PAGE_MARK.sub("", text(inner))
-        if not t or t == "••":
-            continue
-        if _RULE.match(t):
+        inner = _FN_CALL.sub("", inner)
+        if has_notes:
+            inner = _FN_BARE.sub("", inner)
+        # a heading set inside the paragraph it opens (تحقيق المقام)
+        for h in _INNER_TITLE.findall(inner):
+            if text(h):
+                out.append({"t": text(h), "k": "head"})
+        inner = _INNER_TITLE.sub("", inner)
+        # «••» divides matn from sharh; inside a paragraph (تحفة المريد) it
+        # joins the two, so it splits them
+        for part in inner.split("••"):
+            _para(out, cls, part)
+        if out and _RULE.match(out[-1]["t"]):
+            out.pop()
             break  # the muhaqqiq's footnotes follow
-        if "g-title" in cls:
-            out.append({"t": t, "k": "head"})
-            continue
-        ayas = [text(a) for a in _AYA.findall(inner)]
-        if ayas and sum(len(a) for a in ayas) >= 0.6 * len(t):
-            ref = next((text(r) for r in _REF.findall(inner) if text(r)), "")
-            out.append({"t": " ".join(ayas), "k": "aya", **({"r": ref} if ref else {})})
-            continue
-        out.append({"t": t, "k": "body"})
     return out
+
+
+def _para(out, cls, inner):
+    t = _PAGE_MARK.sub("", text(inner))
+    if not t:
+        return
+    if _RULE.match(t):
+        out.append({"t": t, "k": "body"})  # paras() stops on it
+        return
+    if "g-title" in cls:
+        out.append({"t": t, "k": "head"})
+        return
+    ayas = [text(a) for a in _AYA.findall(inner)]
+    if ayas and sum(len(a) for a in ayas) >= 0.6 * len(t):
+        ref = next((text(r) for r in _REF.findall(inner) if text(r)), "")
+        out.append({"t": " ".join(ayas), "k": "aya", **({"r": ref} if ref else {})})
+        return
+    out.append({"t": t, "k": "body"})
 
 
 def build(kid, book_id):

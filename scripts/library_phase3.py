@@ -386,7 +386,12 @@ def publish(ids):
             print("REFUSED", bid, "author is one of the seven")
             continue
         _, t_ar, t_en, a_ar, a_en, death, cat, shelf = PLAN[bid]
-        label = book["meta"]["sourceLabel"] if book["meta"].get("ketabId") else (
+        # ketabonline's card names the edition's editor as المؤلف where he
+        # added notes (منح الروض الأزهر: «وهبي سليمان غاوجي … ومعه: التعليق
+        # الميسر»); his notes are not in the text, so the label names the author
+        label = ("جامع الكتب الإسلامية — " + "، ".join(x for x in (
+            t_ar, a_ar, p2.card_field(card, "الناشر") or p2.card_field(card, "مطبعة"),
+            p2.card_field(card, "الطبعة")) if x)) if book["meta"].get("ketabId") else (
             "المكتبة الشاملة — " + "، ".join(x for x in (
                 p2.card_field(card, "الكتاب"), p2.card_field(card, "المؤلف"),
                 p2.card_field(card, "الناشر"), p2.card_field(card, "الطبعة")) if x))
