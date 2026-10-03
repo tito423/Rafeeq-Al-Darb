@@ -12,10 +12,9 @@ import '../../../../core/widgets/mirrored_network_image.dart';
 import '../../../../core/widgets/paired_list_view.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
-import '../../data/adhkar_recitations.dart';
 import '../../data/azkar_backgrounds.dart';
 import '../../data/azkar_categories.dart';
-import 'adhkar_listen_screen.dart';
+import 'adhkar_listen_row.dart';
 import 'azkar_section_screen.dart';
 import 'azkar_settings_sheet.dart';
 
@@ -113,7 +112,7 @@ class _SectionsTab extends ConsumerWidget {
           children: [
             // «كارت الاستماع لأذكار الصباح والاستماع لأذكار المساء» (owner,
             // 2026-09-29): complete recordings by named reciters.
-            const _ListenRow(),
+            const AdhkarListenRow(),
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -165,88 +164,6 @@ class _SectionsTab extends ConsumerWidget {
       },
     );
   }
-}
-
-class _ListenRow extends StatelessWidget {
-  const _ListenRow();
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-    child: Row(
-      children: [
-        Expanded(
-          child: _ListenCard(
-            time: AdhkarTime.morning,
-            icon: Icons.wb_sunny_rounded,
-            colors: const [Color(0xFFF7B733), Color(0xFFD35400)],
-            label: 'azkar.listen_morning'.tr(),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _ListenCard(
-            time: AdhkarTime.evening,
-            icon: Icons.nights_stay_rounded,
-            colors: const [Color(0xFF3A4F9C), Color(0xFF1E2A5A)],
-            label: 'azkar.listen_evening'.tr(),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-class _ListenCard extends StatelessWidget {
-  final AdhkarTime time;
-  final IconData icon;
-  final List<Color> colors;
-  final String label;
-  const _ListenCard({
-    required this.time,
-    required this.icon,
-    required this.colors,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) => Material(
-    borderRadius: BorderRadius.circular(18),
-    clipBehavior: Clip.antiAlias,
-    child: InkWell(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => AdhkarListenScreen(time: time)),
-      ),
-      child: Ink(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: colors,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.white, size: 26),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                label,
-                maxLines: 2,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            const Icon(Icons.headphones_rounded, color: Colors.white, size: 20),
-          ],
-        ),
-      ),
-    ),
-  );
 }
 
 class _CategoryCard extends ConsumerWidget {

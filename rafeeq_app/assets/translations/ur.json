@@ -163,6 +163,8 @@
     "prayer": "نماز"
   },
   "home": {
+    "quick_access": "فوری رسائی",
+    "ql_azkar_listen": "اذکار سنیں",
     "ql_player": "تلاوت",
     "ql_tajweed": "تجوید",
     "ql_hifz": "حفظ",

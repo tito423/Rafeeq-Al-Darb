@@ -163,6 +163,8 @@
     "prayer": "Oración"
   },
   "home": {
+    "quick_access": "Acceso rápido",
+    "ql_azkar_listen": "Escuchar los adhkar",
     "ql_player": "Recitaciones",
     "ql_tajweed": "Tajwid",
     "ql_hifz": "Memorizar",

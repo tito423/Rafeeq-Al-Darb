@@ -163,6 +163,8 @@
     "prayer": "Молитва"
   },
   "home": {
+    "quick_access": "Быстрый доступ",
+    "ql_azkar_listen": "Слушать азкары",
     "ql_player": "Чтецы",
     "ql_tajweed": "Таджвид",
     "ql_hifz": "Заучивание",

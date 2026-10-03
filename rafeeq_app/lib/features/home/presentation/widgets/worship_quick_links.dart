@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../azkar/presentation/screens/adhkar_listen_row.dart';
 import '../../../dedications/presentation/dedications_screen.dart';
 import '../../../hajj/presentation/hajj_screen.dart';
 import '../../../hifz/presentation/hifz_screen.dart';
@@ -17,11 +18,13 @@ import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 /// المزيد» (owner, 2026-10-01). The same destinations as the «القرآن
 /// والعبادات» group in More, in the same order, one tap from Home instead of
 /// three. Icons and accents match the More cards so a tile looks like the
-/// card it leads to.
+/// card it leads to. Renamed «الوصول السريع» and given «استمع إلى الأذكار»
+/// first (owner, 2026-10-03).
 class WorshipQuickLinks extends StatelessWidget {
   const WorshipQuickLinks({super.key});
 
   static final _links = <_Link>[
+    _Link(Icons.headphones_rounded, 'home.ql_azkar_listen', const Color(0xFFD35400), (_) => const AdhkarListenHubScreen()),
     _Link(Icons.library_music_outlined, 'home.ql_player', AppColors.gold, (_) => const QuranAudioScreen()),
     _Link(Icons.record_voice_over_outlined, 'home.ql_tajweed', AppColors.gold, (_) => const TajweedLevelsScreen()),
     _Link(Icons.school_outlined, 'home.ql_hifz', AppColors.gold, (_) => const HifzScreen()),
@@ -48,13 +51,13 @@ class WorshipQuickLinks extends StatelessWidget {
               child: Row(children: [
                 const Icon(Icons.auto_awesome_rounded, color: AppColors.gold, size: 20),
                 const SizedBox(width: 8),
-                Text('more.group_worship'.tr(), style: theme.textTheme.titleMedium),
+                Text('home.quick_access'.tr(), style: theme.textTheme.titleMedium),
               ]),
             ),
             LayoutBuilder(builder: (context, box) {
-              // five a row on a phone held upright (two rows), all nine in
+              // five a row on a phone held upright (two rows), all ten in
               // one row once there is room for it - a tablet, sideways, a TV
-              final cols = box.maxWidth >= 640 ? 9 : 5;
+              final cols = box.maxWidth >= 640 ? 10 : 5;
               final w = box.maxWidth / cols;
               return Wrap(
                 children: [
