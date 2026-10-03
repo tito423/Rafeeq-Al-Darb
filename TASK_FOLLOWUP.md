@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+~12:55 (10-03, Opus, cloud) Owner: «في السور المختارة او سنن السور لما اختار تلاوة المفروض يجيبلي قايمة القراء». FIXED 121e8661: SingleSurahScreen play opens showReciterPickerForStart (no «أكمل مع»), selects the pick, recites the surah with it. Seen on emulator-5554 (rafeeq-control results/emu_sunan/53_after_play.png): home «سور مختارة» > يوسف > play -> «اختر القارئ» sheet. Not tried: picking a reciter and hearing it (same startContinuous path as before). NOT RELEASED: v3.76.0 is out without it; asked the owner whether to ship 3.76.1.
+
 ~12:15 (10-03, Opus, cloud) RELEASED v3.76.0 on the owner's word («ارفع الاصدار اللي مدمج فيه كل حاجة»): tag = d05125f9 = HEAD, asset 314,170,548 B, sha256 0AB879BC…, range 206; v3.75.0 + tag deleted; support button seen on the emulator; R7 + watchdog restarted (rafeeq-control results/20261003_1730_release_publish.ps1.txt). Not seen on a device in this release: continuous reading mode and the dedications screen (only the text mushaf page with kashida). NEXT: wait for the owner.
 
 ~16:10 (10-03, Opus, cloud) Full test run found the 8 phase-3 hadith shuruh counted as BUILT-IN (builtinBookIds = hadith shelf minus hostedHadithBooks) -> added to hostedHadithBooks (1dee2080); editor_notes_removed_test counts 120/289. Seen on emulator-5554 (results/emu_library5): شرح الأربعين النووية opens from R2. Suite: all pass but the 2 local-data tests. NEXT: owner's review of the library; release v3.76.0 only on his word.
