@@ -549,7 +549,13 @@
     "cat_shamela": "From Shamela",
     "text_editor_page": "A page of the editor's own notes — not carried over in this app; the book continues after it.",
     "dorar_card_sub": "Hadith gradings and 11 encyclopedias",
-    "shamela_card_sub": "Import any of 8,598 books"
+    "shamela_card_sub": "Import any of 8,598 books",
+    "featured_heading": "Start here: the best-known, easiest first",
+    "rest_heading": "More on this shelf",
+    "talib_stage_1": "1 · The manners of the student",
+    "talib_stage_2": "2 · First texts, with their commentaries",
+    "talib_stage_3": "3 · Going further",
+    "talib_stage_4": "4 · Aims and the great foundations"
   },
   "azkar": {
     "reminder_opens": "When the reminder is opened",

@@ -22,6 +22,7 @@ import '../../data/book_catalog.dart';
 import '../../data/book_category.dart';
 import '../../data/hidden_books.dart';
 import '../../data/library_api_service.dart';
+import '../../data/library_featured.dart';
 import '../screens/book_text_reader_screen.dart';
 import '../widgets/book_card.dart';
 import '../widgets/hidden_books_sheet.dart';
@@ -567,15 +568,86 @@ class _CategoryExpansionTile extends StatelessWidget {
         collapsedShape: const Border(),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
         children: [
-          for (final b in books) ...[
-            BookCard(
-              book: b,
-              paths: paths,
-              onDownload: () => onDownload(b),
-              onOpen: () => onOpen(b),
-            ),
-            const SizedBox(height: 10),
+          for (final (heading, group) in _groups()) ...[
+            if (heading != null) _ShelfHeading(heading),
+            for (final b in group) ...[
+              BookCard(
+                book: b,
+                paths: paths,
+                onDownload: () => onDownload(b),
+                onOpen: () => onOpen(b),
+              ),
+              const SizedBox(height: 10),
+            ],
           ],
+        ],
+      ),
+    );
+  }
+
+  /// The shelf in labelled runs (owner, 2026-10-03: «خلي قسم المكتبة جذاب
+  /// لاي قارئ»): طالب العلم by its four stages; every other shelf opens on
+  /// its best-known books, easiest first ([featuredBookIds]), then the rest
+  /// in [books]' order. A shelf with no featured book stays one plain run.
+  List<(String?, List<LibraryBook>)> _groups() {
+    if (category == BookCategory.talibIlm) {
+      final stages = <int, List<LibraryBook>>{};
+      for (final b in books) {
+        stages.putIfAbsent(b.shelfOrder, () => []).add(b);
+      }
+      return [
+        for (final e in stages.entries)
+          (
+            e.key >= 1 && e.key <= 4
+                ? 'library.talib_stage_${e.key}'.tr()
+                : null,
+            e.value,
+          ),
+      ];
+    }
+    final byId = {for (final b in books) b.id: b};
+    final featured = [
+      for (final id in featuredBookIds[category] ?? const <String>[])
+        if (byId[id] != null) byId[id]!,
+    ];
+    if (featured.isEmpty) return [(null, books)];
+    final rest = books.where((b) => !featured.contains(b)).toList();
+    return [
+      ('library.featured_heading'.tr(), featured),
+      if (rest.isNotEmpty) ('library.rest_heading'.tr(), rest),
+    ];
+  }
+}
+
+class _ShelfHeading extends StatelessWidget {
+  final String text;
+  const _ShelfHeading(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    final gold = goldText(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 6, 4, 10),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 18,
+            decoration: BoxDecoration(
+              color: gold,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: gold,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -549,7 +549,13 @@
     "cat_shamela": "Da Shamela",
     "text_editor_page": "Página de notas do editor — não incluída neste aplicativo; o livro continua depois dela.",
     "dorar_card_sub": "Avaliação de hadiths e 11 enciclopédias",
-    "shamela_card_sub": "Importe qualquer um de 8.598 livros"
+    "shamela_card_sub": "Importe qualquer um de 8.598 livros",
+    "featured_heading": "Comece aqui: os mais conhecidos, do mais fácil ao mais avançado",
+    "rest_heading": "Mais livros desta seção",
+    "talib_stage_1": "1 · As maneiras do estudante",
+    "talib_stage_2": "2 · Primeiros textos, com seus comentários",
+    "talib_stage_3": "3 · Aprofundar",
+    "talib_stage_4": "4 · Objetivos e grandes fundamentos"
   },
   "azkar": {
     "reminder_opens": "Ao abrir o lembrete",

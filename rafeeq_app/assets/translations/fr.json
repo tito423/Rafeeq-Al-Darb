@@ -549,7 +549,13 @@
     "cat_shamela": "De Shamela",
     "text_editor_page": "Page de notes de l'éditeur — non reprise dans cette application ; le livre continue ensuite.",
     "dorar_card_sub": "Jugements des hadiths et 11 encyclopédies",
-    "shamela_card_sub": "Importez n’importe lequel des 8 598 livres"
+    "shamela_card_sub": "Importez n’importe lequel des 8 598 livres",
+    "featured_heading": "Commencer ici : les plus connus, du plus simple au plus avancé",
+    "rest_heading": "Autres livres de ce rayon",
+    "talib_stage_1": "1 · Les règles de l'étudiant",
+    "talib_stage_2": "2 · Premiers textes, avec leurs commentaires",
+    "talib_stage_3": "3 · Approfondir",
+    "talib_stage_4": "4 · Finalités et grands fondements"
   },
   "azkar": {
     "reminder_opens": "À l’ouverture du rappel",

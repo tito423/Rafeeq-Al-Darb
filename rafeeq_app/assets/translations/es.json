@@ -549,7 +549,13 @@
     "cat_shamela": "De Shamela",
     "text_editor_page": "Página de notas del editor — no se incluye en esta aplicación; el libro continúa después.",
     "dorar_card_sub": "Calificación de hadices y 11 enciclopedias",
-    "shamela_card_sub": "Importe cualquiera de 8598 libros"
+    "shamela_card_sub": "Importe cualquiera de 8598 libros",
+    "featured_heading": "Empieza aquí: los más conocidos, de lo más fácil a lo más avanzado",
+    "rest_heading": "Más libros de esta sección",
+    "talib_stage_1": "1 · Los modales del estudiante",
+    "talib_stage_2": "2 · Primeros textos, con sus comentarios",
+    "talib_stage_3": "3 · Profundizar",
+    "talib_stage_4": "4 · Objetivos y grandes fundamentos"
   },
   "azkar": {
     "reminder_opens": "Al abrir el recordatorio",
