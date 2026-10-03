@@ -23,4 +23,19 @@ final List<String> builtinBookIds = [
 /// is 12.6 MB on its own (2026-09-23) and would more than double the APK's
 /// share of books. It sits on the same shelf and downloads like the other
 /// encyclopaedias. تهذيب الكمال (6.6 MB) joined it the same day.
-const Set<String> hostedHadithBooks = {'fath_al_bari', 'tahdhib_al_kamal'};
+///
+/// Library «المرحلة ٣» (2026-10-03) put eight shuruh on this shelf, hosted
+/// like every other book of that phase: without them here they counted as
+/// built-in, and the app looked for assets that were never bundled.
+const Set<String> hostedHadithBooks = {
+  'fath_al_bari',
+  'tahdhib_al_kamal',
+  'sharh_al_arbain_ibn_daqiq',
+  'dalil_al_falihin',
+  'subul_al_salam',
+  'sharh_al_nawawi_ala_muslim',
+  'jam_al_wasail',
+  'mirqat_al_mafatih',
+  'nayl_al_awtar',
+  'al_tajrid_al_sarih',
+};
