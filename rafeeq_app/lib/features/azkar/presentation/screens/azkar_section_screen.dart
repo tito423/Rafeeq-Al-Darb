@@ -209,9 +209,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
           ? const Center(child: CircularProgressIndicator())
           : Stack(
               children: [
-                Positioned.fill(
-                  child: _CardBackground(seed: widget.section.id + _index),
-                ),
+                const Positioned.fill(child: _CardBackground()),
                 if (sideways)
                   Row(
                     children: [
@@ -240,9 +238,9 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
   }
 }
 
-/// The layered Islamic ground behind every card: one of the bundled ornament
-/// photographs (public-domain / CC0 Commons scans, the same set the quote
-/// cards use), the scrim those images were contrast-measured through, and a
+/// The layered Islamic ground behind every card: one mosque photograph
+/// (since 2026-10-03; it was one of the quote cards' ornament scans per
+/// card), the quote cards' scrim those images were contrast-measured through, and a
 /// deeper scrim toward the bottom for the controls.
 ///
 /// **2026-09-29:** the ground used to be a plain green gradient with the app's
@@ -251,26 +249,24 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
 /// إسلامية حلوة»). The picture changes with the card, so a chapter of several
 /// adhkar is not one static wall.
 class _CardBackground extends ConsumerWidget {
-  /// Picks the photograph: the chapter and the card together.
-  final int seed;
-  const _CardBackground({required this.seed});
+  const _CardBackground();
+
+  /// One calm mosque photograph behind every adhkar card (owner, 2026-10-03:
+  /// «خليه خلفية واحدة لمسجد تكون هادية … في الأذكار كلها»). Vakil Mosque,
+  /// Shiraz, by Zahrazari, CC BY 4.0 -
+  /// https://commons.wikimedia.org/wiki/File:Vakil_mosque_interior_in_2022.jpg
+  static const asset = 'assets/azkar_background/vakil_mosque.jpg';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final set = ref.watch(quoteBackgroundsProvider).valueOrNull;
     final scrim = Color(set?.scrimArgb ?? 0xCC071626);
-    final images = set?.images ?? const <QuoteBackground>[];
-    final Widget photo = images.isEmpty
-        ? const SizedBox.expand(key: ValueKey('none'))
-        : Image.asset(
-            images[seed % images.length].asset,
-            key: ValueKey(seed % images.length),
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            cacheWidth: 900,
-            errorBuilder: (_, _, _) => const SizedBox.expand(),
-          );
+    const Widget photo = Image(
+      image: ResizeImage(AssetImage(asset), width: 1080),
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+    );
     return DecoratedBox(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -286,10 +282,7 @@ class _CardBackground extends ConsumerWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 600),
-            child: photo,
-          ),
+          photo,
           ColoredBox(color: scrim),
           // Extra scrim toward the bottom for the controls' legibility.
           const DecoratedBox(

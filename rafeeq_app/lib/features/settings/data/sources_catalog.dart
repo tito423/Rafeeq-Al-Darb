@@ -175,6 +175,10 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // author and Commons page is in `assets/data/quote_backgrounds.json`.
       const SourceEntry('Wikimedia Commons', 'https://commons.wikimedia.org',
           'about.src_commons'),
+      // The one photograph behind every adhkar card (2026-10-03).
+      const SourceEntry('Wikimedia Commons — Zahrazari, CC BY 4.0',
+          'https://commons.wikimedia.org/wiki/File:Vakil_mosque_interior_in_2022.jpg',
+          'about.src_azkar_bg'),
       // The Azkar grid and the New Muslim guide draw their card photographs
       // from Unsplash, hotlinked to `images.unsplash.com` — the reader's own
       // device fetches them and nothing is rehosted here, the same position
