@@ -1,5 +1,6 @@
 {
 "schema": 1,
+"version": 187,
 "note": "Built by scripts/build_history_quiz.py; every quote is verbatim from its library page.",
 "questions": [
 {

@@ -32,12 +32,8 @@ class QuizPlayScreen extends ConsumerStatefulWidget {
 
 class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
   final _rnd = math.Random();
-  late final List<QuizQuestion> _round = HistoryQuiz.round(
-    widget.bank,
-    widget.level,
-    _rnd,
-  );
-  late List<String> _choices = _round.first.shuffled(_rnd);
+  List<QuizQuestion>? _round;
+  List<String> _choices = const [];
   final List<bool> _results = [];
   int _i = 0;
   String? _picked;
@@ -46,7 +42,20 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
   int _burst = 0;
   int _shake = 0;
 
-  QuizQuestion get _q => _round[_i];
+  @override
+  void initState() {
+    super.initState();
+    HistoryQuiz.round(widget.bank, widget.level, _rnd).then((r) {
+      if (!mounted) return;
+      setState(() {
+        _round = r;
+        if (r.isNotEmpty) _choices = r.first.shuffled(_rnd);
+      });
+    });
+  }
+
+  List<QuizQuestion> get _questions => _round ?? const [];
+  QuizQuestion get _q => _questions[_i];
   int get _score => _results.where((r) => r).length;
 
   void _pick(String c) {
@@ -68,7 +77,7 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
   }
 
   Future<void> _next() async {
-    if (_i + 1 < _round.length) {
+    if (_i + 1 < _questions.length) {
       setState(() {
         _i++;
         _picked = null;
@@ -83,7 +92,7 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
         next != null && ref.read(quizProgressProvider).unlocked(next);
     final record = await ref
         .read(quizProgressProvider.notifier)
-        .record(widget.level, _score, _round.length, _bestStreak);
+        .record(widget.level, _score, _questions.length, _bestStreak);
     final opened =
         next != null &&
         !wasOpen &&
@@ -96,7 +105,7 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
             level: widget.level,
             bank: widget.bank,
             score: _score,
-            total: _round.length,
+            total: _questions.length,
             bestStreak: _bestStreak,
             newRecord: record,
             openedNext: opened,
@@ -145,7 +154,10 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
   Widget build(BuildContext context) {
     final lang = context.locale.languageCode;
     final (colors, _) = quizLevelLook(widget.level);
-    if (_round.isEmpty) {
+    if (_round == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    if (_questions.isEmpty) {
       return Scaffold(appBar: AppBar(), body: const SizedBox.shrink());
     }
     return Scaffold(
@@ -168,7 +180,7 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
                       ),
                       Expanded(
                         child: _Segments(
-                          total: _round.length,
+                          total: _questions.length,
                           results: _results,
                           at: _i,
                         ),
@@ -206,7 +218,7 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
                           label: 'quiz.question_n'.tr(
                             args: [
                               localizeDigits('${_i + 1}', lang),
-                              localizeDigits('${_round.length}', lang),
+                              localizeDigits('${_questions.length}', lang),
                             ],
                           ),
                           text: _q.question,
@@ -236,7 +248,7 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
                             : _Explain(
                                 question: _q,
                                 right: _picked == _q.answer,
-                                last: _i + 1 == _round.length,
+                                last: _i + 1 == _questions.length,
                                 onNext: _next,
                                 onOpenBook: () => _openBook(_q),
                               ),

@@ -1,7 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/config/app_config.dart';
+import '../../../core/config/content_mirrors.dart';
 
 /// «مسابقة التاريخ الإسلامي» (owner, 2026-10-03: multiple-choice questions
 /// on Islamic history only, «حصرا تبقى في التاريخ الاسلامي»).
@@ -60,29 +68,93 @@ class QuizQuestion {
   );
 }
 
-/// The question bank, read once from the bundled asset.
+/// The question bank: the bundled asset, or the hosted copy
+/// (`quiz/history_quiz.json` on the bucket) once one larger than it has been
+/// fetched - new questions arrive without an app update (owner, 2026-10-03:
+/// «عايز الاسئلة اللي في المسابقات متجددة»). Both are built by
+/// scripts/build_history_quiz.py, with the same checks.
 class HistoryQuiz {
   HistoryQuiz._();
+
   static const asset = 'assets/data/quiz/history_quiz.json';
+  static const hosted = '${AppConfig.contentBaseUrl}/quiz/history_quiz.json';
+  static const _cacheName = 'quiz_history_bank.json';
 
   static Future<List<QuizQuestion>>? _all;
+  static Future<List<QuizQuestion>> all() => _all ??= _load();
 
-  static Future<List<QuizQuestion>> all() => _all ??= () async {
-    final j = jsonDecode(await rootBundle.loadString(asset)) as Map;
-    return [
-      for (final q in j['questions'] as List)
-        QuizQuestion.fromJson(q as Map<String, dynamic>),
-    ];
-  }();
+  static Future<List<QuizQuestion>> _load() async {
+    var best = jsonDecode(await rootBundle.loadString(asset)) as Map;
+    try {
+      final f = await _cacheFile();
+      if (await f.exists()) {
+        final cached = jsonDecode(await f.readAsString()) as Map;
+        if (_version(cached) > _version(best)) best = cached;
+      }
+    } catch (_) {
+      // a damaged cache is ignored; the next refresh rewrites it
+    }
+    unawaited(_refresh(_version(best)));
+    return _parse(best);
+  }
 
-  /// One round: [count] questions of [level], none repeated, drawn at random.
-  static List<QuizQuestion> round(
+  static int _version(Map j) =>
+      (j['version'] as int?) ?? (j['questions'] as List).length;
+
+  static List<QuizQuestion> _parse(Map j) => [
+    for (final q in j['questions'] as List)
+      QuizQuestion.fromJson(q as Map<String, dynamic>),
+  ];
+
+  static Future<File> _cacheFile() async =>
+      File('${(await getApplicationSupportDirectory()).path}/$_cacheName');
+
+  /// Fetches the hosted bank in the background; a larger one is kept for the
+  /// next opening. Offline or a failed host changes nothing.
+  static Future<void> _refresh(int have) async {
+    for (final url in ContentMirrors.of(hosted)) {
+      try {
+        final res = await Dio().get<String>(
+          url,
+          options: Options(
+            responseType: ResponseType.plain,
+            receiveTimeout: const Duration(seconds: 20),
+          ),
+        );
+        final j = jsonDecode(res.data!) as Map;
+        _parse(j); // must parse before it may replace anything
+        if (_version(j) > have) {
+          await (await _cacheFile()).writeAsString(res.data!);
+        }
+        return;
+      } catch (_) {
+        continue;
+      }
+    }
+  }
+
+  /// One round: [count] questions of [level] the player has not met yet;
+  /// once a level's questions are all seen, its record starts again (owner:
+  /// no repeats «مش على اد اللي موجود وخلاص»).
+  static Future<List<QuizQuestion>> round(
     List<QuizQuestion> bank,
     QuizLevel level,
     math.Random rnd, {
     int count = 10,
-  }) {
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'quiz_history_seen_${level.name}';
     final pool = bank.where((q) => q.level == level).toList()..shuffle(rnd);
-    return pool.take(count).toList();
+    var seen = (prefs.getStringList(key) ?? const <String>[]).toSet();
+    var fresh = pool.where((q) => !seen.contains(q.id)).toList();
+    if (fresh.length < count) {
+      // finish what is left unseen, then start the cycle again
+      final rest = pool.where((q) => seen.contains(q.id)).take(count - fresh.length);
+      fresh = [...fresh, ...rest];
+      seen = {};
+    }
+    final picked = fresh.take(count).toList();
+    await prefs.setStringList(key, [...seen, ...picked.map((q) => q.id)]);
+    return picked;
   }
 }

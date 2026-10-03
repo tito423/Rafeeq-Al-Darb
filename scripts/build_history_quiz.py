@@ -84,6 +84,9 @@ def main():
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump({'schema': 1,
+                   # the app keeps whichever bank (bundled or hosted
+                   # quiz/history_quiz.json) is larger
+                   'version': len(out),
                    'note': 'Built by scripts/build_history_quiz.py; every '
                            'quote is verbatim from its library page.',
                    'questions': out}, f, ensure_ascii=False, indent=0)
