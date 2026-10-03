@@ -187,12 +187,19 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       // source is on it, and this one was not.
       const SourceEntry('Unsplash', 'https://unsplash.com/license',
           'about.src_unsplash'),
-      // The history quiz: every question quotes one page of these two
-      // library books (assets/data/quiz/history_quiz.json).
+      // The history quiz: every question quotes one page of these
+      // library books (assets/data/quiz/history_quiz.json and the hosted
+      // copy on the bucket).
       const SourceEntry('الفصول في سيرة الرسول ﷺ — ابن كثير',
           'https://shamela.ws/book/9241', 'about.src_quiz'),
       const SourceEntry('تاريخ الخلفاء — السيوطي',
           'https://shamela.ws/book/11995', 'about.src_quiz'),
+      const SourceEntry('السيرة النبوية — ابن هشام',
+          'https://shamela.ws/book/7450', 'about.src_quiz'),
+      const SourceEntry('السيرة النبوية — ابن كثير',
+          'https://shamela.ws/book/930', 'about.src_quiz'),
+      const SourceEntry('البداية والنهاية — ابن كثير',
+          'https://shamela.ws/book/23708', 'about.src_quiz'),
     ]
   ),
   (
