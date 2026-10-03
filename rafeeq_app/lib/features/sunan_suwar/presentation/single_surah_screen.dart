@@ -24,6 +24,7 @@ import '../../quran/presentation/widgets/mushaf/mushaf_paper_chips.dart';
 import '../../quran/presentation/widgets/mushaf_page_view.dart';
 import '../../quran/presentation/widgets/mushaf_text_page.dart';
 import '../../quran/presentation/widgets/mushaf_theme_picker.dart';
+import '../../quran/presentation/widgets/reciter_picker_sheet.dart';
 
 enum _Mode { text, image }
 
@@ -189,6 +190,13 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
       await audio.stopContinuous();
       return;
     }
+    // «في السور المختارة او سنن السور لما اختار تلاوة المفروض يجيبلي قايمة
+    // القراء واختار منها» (owner, 2026-10-03): the same sheet the mushaf's
+    // continuous recitation opens, without «أكمل مع …» - that would carry
+    // on wherever the last recitation stopped, not in this surah.
+    final pick = await showReciterPickerForStart(context);
+    if (pick == null || !mounted) return;
+    await ref.read(selectedReciterProvider.notifier).select(pick.id);
     final ayahs = await _pageFutures[_current];
     if (ayahs == null || ayahs.isEmpty || !mounted) return;
     // Start at the first verse of this page that belongs to *this* surah, so
@@ -201,7 +209,7 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
     await audio.startContinuous(
       from: start,
       repo: data.repo,
-      edition: ref.read(selectedReciterProvider),
+      edition: pick.id,
       // The whole point of this screen: stop at the surah's end.
       wholeMushaf: false,
     );
