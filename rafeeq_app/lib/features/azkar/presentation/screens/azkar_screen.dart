@@ -8,7 +8,6 @@ import '../../../../core/db/azkar_repository.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
-import '../../../../core/widgets/mirrored_network_image.dart';
 import '../../../../core/widgets/paired_list_view.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
@@ -142,12 +141,10 @@ class _SectionsTab extends ConsumerWidget {
                 itemBuilder: (context, i) {
                   final category = _categoryOrder[i];
                   final info = azkarCategoryInfo[category]!;
-                  final bgUrl = azkarCategoryBackgrounds[category];
-
                   final card = _CategoryCard(
                     category: category,
                     info: info,
-                    bgUrl: bgUrl,
+                    photo: azkarCategoryBackgrounds[category],
                   );
                   // The tour explains the grid through its first card.
                   return i == 0
@@ -169,12 +166,12 @@ class _SectionsTab extends ConsumerWidget {
 class _CategoryCard extends ConsumerWidget {
   final AzkarCategory category;
   final AzkarCategoryInfo info;
-  final String? bgUrl;
+  final String? photo;
 
   const _CategoryCard({
     required this.category,
     required this.info,
-    required this.bgUrl,
+    required this.photo,
   });
 
   @override
@@ -223,7 +220,6 @@ class _CategoryCard extends ConsumerWidget {
                   builder: (_) => _CategorySectionsListScreen(
                     categoryInfo: info,
                     sections: sections,
-                    bgUrl: bgUrl,
                   ),
                 ),
               ),
@@ -240,33 +236,39 @@ class _CategoryCard extends ConsumerWidget {
           ),
           child: Stack(
             children: [
-              // A photo where there is one; otherwise the painted khātim
-              // lattice, which costs no bytes and renders identically offline.
-              // Before this, a card with no photo was a bare gradient.
-              if (bgUrl != null)
+              // The category's own photograph, at full strength, under a
+              // dark wash so the white title reads on any of them. The
+              // painted khātim lattice stays as the fallback.
+              if (photo != null) ...[
                 Positioned.fill(
-                  child: Opacity(
-                    opacity: 0.2,
-                    child: MirroredNetworkImage(
-                      url: bgUrl!,
-                      fit: BoxFit.cover,
-                      // Not `Positioned.fill`: this is laid out inside the
-                      // image widget, not inside the Stack, and a Positioned
-                      // there threw «type 'ParentData' is not a subtype of
-                      // type 'StackParentData'» — seen in the release log on
-                      // emulator-5554 whenever a card's photo failed to load.
-                      errorWidget: (context, url, error) => SizedBox.expand(
-                        child: CustomPaint(
-                          painter: IslamicPatternPainter(
-                            tile: 46,
-                            color: Colors.white.withValues(alpha: 0.12),
-                          ),
-                        ),
+                  child: Image.asset(
+                    photo!,
+                    fit: BoxFit.cover,
+                    cacheWidth: 480,
+                    errorBuilder: (context, error, stack) => CustomPaint(
+                      painter: IslamicPatternPainter(
+                        tile: 46,
+                        color: Colors.white.withValues(alpha: 0.12),
                       ),
                     ),
                   ),
-                )
-              else
+                ),
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.18),
+                          info.gradient.last.withValues(alpha: 0.35),
+                          Colors.black.withValues(alpha: 0.62),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ] else
                 Positioned.fill(
                   child: CustomPaint(
                     painter: IslamicPatternPainter(
@@ -292,6 +294,9 @@ class _CategoryCard extends ConsumerWidget {
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(color: Colors.black54, blurRadius: 6),
+                          ],
                         ),
                       ),
                     ],
@@ -309,12 +314,10 @@ class _CategoryCard extends ConsumerWidget {
 class _CategorySectionsListScreen extends StatelessWidget {
   final AzkarCategoryInfo categoryInfo;
   final List<AzkarSection> sections;
-  final String? bgUrl;
 
   const _CategorySectionsListScreen({
     required this.categoryInfo,
     required this.sections,
-    this.bgUrl,
   });
 
   @override

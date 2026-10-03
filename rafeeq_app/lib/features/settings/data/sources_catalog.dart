@@ -180,11 +180,36 @@ final sourceGroups = <(String, List<SourceEntry>)>[
       const SourceEntry('Wikimedia Commons — Zahrazari, CC BY 4.0',
           'https://commons.wikimedia.org/wiki/File:Vakil_mosque_interior_in_2022.jpg',
           'about.src_azkar_bg'),
-      // The Azkar grid and the New Muslim guide draw their card photographs
-      // from Unsplash, hotlinked to `images.unsplash.com` — the reader's own
-      // device fetches them and nothing is rehosted here, the same position
-      // the recitations sit in. Credited because this screen says every
-      // source is on it, and this one was not.
+      // One photo per adhkar category card (azkar_backgrounds.dart).
+      const SourceEntry('Wikimedia Commons — Adeelahmad93, CC BY-SA 3.0',
+          'https://commons.wikimedia.org/wiki/File:Faisal_Mosque_at_sunrise-_summer_morning.jpg',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — Moataz Egbaria, CC BY-SA 3.0',
+          'https://commons.wikimedia.org/wiki/File:Sunsets_of_Umm_al-Fahm6.JPG',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — Maro tharwat, CC BY-SA 3.0',
+          'https://commons.wikimedia.org/wiki/File:El_moez_street_..jpg',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — Nithi Ruangpisit, CC BY 3.0',
+          'https://commons.wikimedia.org/wiki/File:Blue_Mosque_In_Dawn_(122678105).jpeg',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — Brian Jeffery Beggerly, CC BY 2.0',
+          'https://commons.wikimedia.org/wiki/File:S%C3%BCleymaniye_Mosque_carpet.jpg',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — Robert Prazeres, CC BY-SA 4.0',
+          'https://commons.wikimedia.org/wiki/File:Meknes_Grand_Mosque_courtyard.jpg',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — Patricia Ilizaliturri, CC BY-SA 4.0',
+          'https://commons.wikimedia.org/wiki/File:Above_Moroccan_Dunes.jpg',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — لا روسا, CC BY-SA 4.0',
+          'https://commons.wikimedia.org/wiki/File:Misbaha_00_(8).JPG',
+          'about.src_azkar_cards'),
+      const SourceEntry('Wikimedia Commons — Mustafa-trit20, CC BY-SA 4.0',
+          'https://commons.wikimedia.org/wiki/File:Mamluk_era_Quran,_circa_1380,_open_to_sura_16.jpg',
+          'about.src_azkar_cards'),
+      // The next-prayer card's mosque photographs (assets/prayer_backgrounds,
+      // SOURCES.json) are Unsplash photos bundled in the app.
       const SourceEntry('Unsplash', 'https://unsplash.com/license',
           'about.src_unsplash'),
       // The history quiz: every question quotes one page of these
