@@ -5577,6 +5577,74 @@ const List<LibraryBook> libraryBookCatalog = [
       sourceLabel: 'المكتبة الشاملة — مناهل العرفان في علوم القرآن، محمد عبد العظيم الزُّرْقاني (ت ١٣٦٧هـ)، مطبعة عيسى البابي الحلبي وشركاه، الطبعة الثالثة',
     ),
   ),
+  LibraryBook(
+    id: 'nur_al_zalam',
+    titleAr: 'نور الظلام شرح منظومة عقيدة العوام',
+    titleEn: 'Nur al-Zalam (Sharh Aqidat al-Awamm)',
+    authorAr: 'محمد نووي الجاوي',
+    authorEn: 'Muhammad Nawawi al-Jawi',
+    deathYearAh: 1316,
+    pages: 159,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/nur_al_zalam.json',
+      sizeBytes: 80173,
+      editorNotesRemoved: true,
+      sourceLabel: 'جامع الكتب الإسلامية — نور الظلام شرح منظومة عقيدة العوام، محمد نووي الجاوي، دار الحاوي، الأولى',
+    ),
+  ),
+  LibraryBook(
+    id: 'tahqiq_al_maqam',
+    titleAr: 'تحقيق المقام على كفاية العوام',
+    titleEn: 'Tahqiq al-Maqam ala Kifayat al-Awamm',
+    authorAr: 'الإمام إبراهيم الباجوري',
+    authorEn: 'Ibrahim al-Bajuri',
+    deathYearAh: 1276,
+    pages: 202,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tahqiq_al_maqam.json',
+      sizeBytes: 139227,
+      editorNotesRemoved: true,
+      sourceLabel: 'جامع الكتب الإسلامية — تحقيق المقام على كفاية العوام، الإمام إبراهيم الباجوري، دار الكتب العلمية - بيروت سنة 2007 م',
+    ),
+  ),
+  LibraryBook(
+    id: 'tuhfat_al_murid',
+    titleAr: 'تحفة المريد على جوهرة التوحيد',
+    titleEn: 'Tuhfat al-Murid (Sharh Jawharat al-Tawhid)',
+    authorAr: 'الإمام إبراهيم الباجوري',
+    authorEn: 'Ibrahim al-Bajuri',
+    deathYearAh: 1276,
+    pages: 338,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/tuhfat_al_murid.json',
+      sizeBytes: 234666,
+      editorNotesRemoved: true,
+      sourceLabel: 'جامع الكتب الإسلامية — تحفة المريد على جوهرة التوحيد، الإمام إبراهيم الباجوري، دار السلام للطباعة والنشر والتوزيع والترجمة، الأولى 1422 - 2002 م',
+    ),
+  ),
+  LibraryBook(
+    id: 'minah_al_rawd_al_azhar',
+    titleAr: 'منح الروض الأزهر في شرح الفقه الأكبر',
+    titleEn: 'Minah al-Rawd al-Azhar (Sharh al-Fiqh al-Akbar)',
+    authorAr: 'الملا علي القاري',
+    authorEn: 'Mulla Ali al-Qari',
+    deathYearAh: 1014,
+    pages: 499,
+    category: BookCategory.aqidah,
+    textEdition: TextEdition(
+      url:
+          '${AppConfig.contentBaseUrl}/books/text/minah_al_rawd_al_azhar.json',
+      sizeBytes: 244741,
+      editorNotesRemoved: true,
+      sourceLabel: 'جامع الكتب الإسلامية — منح الروض الأزهر في شرح الفقه الأكبر، الملا علي القاري، دار البشائر الإسلامية، الأولى 1419 ه -1998 م',
+    ),
+  ),
 
 ];
 
