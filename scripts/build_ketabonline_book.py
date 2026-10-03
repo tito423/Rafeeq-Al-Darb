@@ -43,6 +43,9 @@ _AYA = re.compile(r'<span class="g-aya">(.*?)</span>', re.S)
 _REF = re.compile(r'<span class="g-square-brackets">(.*?)</span>', re.S)
 _TAG = re.compile(r"<[^>]+>")
 _RULE = re.compile(r"^[\s_ـ—–-]{5,}$")
+# ketabonline's own page-number line, «صفحة ٥», set as a paragraph of the
+# text in some books (نور الظلام: 162 of 162 pages)
+_PAGE_MARK = re.compile(r"^صفحة\s+[٠-٩0-9]+\s*")
 
 
 def text(h):
@@ -55,8 +58,13 @@ def fetch(kid):
     if not os.path.exists(path):
         req = urllib.request.Request(
             f"https://s2.ketabonline.com/books/{kid}/{kid}.data.zip", headers={"User-Agent": UA})
-        with urllib.request.urlopen(req, timeout=120) as r:
-            open(path, "wb").write(r.read())
+        with urllib.request.urlopen(req, timeout=300) as r:
+            data = r.read()
+        # a read that timed out once left half a zip here, and every later
+        # build failed on it («File is not a zip file», tahqiq_al_maqam)
+        zipfile.ZipFile(io.BytesIO(data)).testzip()
+        open(path + ".part", "wb").write(data)
+        os.replace(path + ".part", path)
     z = zipfile.ZipFile(path)
     name = next(n for n in z.namelist() if n.endswith(".json"))
     return json.loads(z.read(name))
@@ -110,7 +118,7 @@ def paras(content):
             if t:
                 out.append({"t": t, "k": "body"})
             continue
-        t = text(inner)
+        t = _PAGE_MARK.sub("", text(inner))
         if not t or t == "••":
             continue
         if _RULE.match(t):

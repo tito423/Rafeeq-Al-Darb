@@ -236,7 +236,7 @@ def build(ids):
         if cuts:
             doc["meta"]["editorIntroRemoved"] = [c[0] for c in cuts]
         recut(doc, bid)
-        doc["meta"]["recut"] = True
+        doc["meta"]["recut"] = START.get(bid) or START_TEXT.get(bid) or TOC_FROM.get(bid) or True
         p2.tidy(doc)
         path = os.path.join(BUILD, bid + ".json")
         bbt.write_book_json(doc, path)
@@ -268,7 +268,7 @@ def build(ids):
 START = {
     "dalil_al_falihin": "مقدمة الشارح",
     "tafsir_al_baghawi": "مقدمة المؤلف",
-    "zad_al_masir": "زاد المسير في علم التفسير",
+    "zad_al_masir": "خطبة الكتاب",  # «زاد المسير…» is the editor's preface + منهج التحقيق
     "asbab_al_nuzul_wahidi": "[مقدمة المؤلف]",
     "fath_al_qadir_shawkani": "مقدمة المؤلف",
     "al_rawd_al_unuf": "ذكر سرد النسب",
@@ -277,6 +277,12 @@ START = {
     "wafayat_al_ayan": "بسم الله الرحمن الرحيم",
     "uyun_al_akhbar": "مقدمة المؤلف",
     "al_aqaid_al_islamiyyah_ibn_badis": "افتتاح",
+}
+# Where the فهرس has no heading for the author's first line: the paragraph
+# it opens on. Pages before it go, and paragraphs above it on its page.
+START_TEXT = {
+    "al_mustatraf": "مقدمة التأليف",  # pages before: «مقدّمة [التحقيق]», signed سعيد محمد اللحام
+    "nur_al_zalam": "منظومة عقيدة العوام",  # before: biographies of the nazim and the sharih
 }
 TOC_FROM = {
     "subul_al_salam": "مقدمة المصنف",
@@ -291,6 +297,8 @@ def recut(book, bid):
     raises if the named title is not in the فهرس (a typo must not pass as
     a clean book)."""
     toc = book.get("toc") or []
+    if bid in START_TEXT:
+        return _recut_text(book, START_TEXT[bid])
     title = START.get(bid) or TOC_FROM.get(bid)
     if not title:
         return []
@@ -309,22 +317,45 @@ def recut(book, bid):
     return gone
 
 
+def _recut_text(book, text):
+    pages = book["pages"]
+    at = next(((i, j) for i, pg in enumerate(pages) for j, p in enumerate(pg["paras"])
+               if p["t"].strip().startswith(text)), None)
+    if at is None:
+        raise SystemExit(f"«{text}» is not in the book")
+    a, j = at
+    gone = [p["t"][:60] for pg in pages[:a] for p in pg["paras"][:1]]
+    for pg in pages[:a]:
+        pg["paras"] = []
+    pages[a]["paras"] = pages[a]["paras"][j:]
+    # a heading that pointed into the cut pages points at its own words now
+    for e in book.get("toc") or []:
+        if e["pageIndex"] < a:
+            e["pageIndex"] = next((i for i in range(a, len(pages)) for p in pages[i]["paras"]
+                                   if p["t"].strip().startswith(e["title"])), a)
+            e["page"] = pages[e["pageIndex"]]["p"]
+    book["meta"]["editorIntroRemoved"] = book["meta"].get("editorIntroRemoved", []) + gone
+    p2.tidy(book)
+    return gone
+
+
 def recut_all(ids):
     import build_book_text as bbt
     for bid in ids:
-        if bid not in START and bid not in TOC_FROM:
+        if bid not in START and bid not in TOC_FROM and bid not in START_TEXT:
             continue
         path = os.path.join(BUILD, bid + ".json")
         if not os.path.exists(path):
             print("skip", bid, "not built")
             continue
         _, book = p2.load(bid)
-        if book["meta"].get("recut"):
+        want = START.get(bid) or START_TEXT.get(bid) or TOC_FROM.get(bid)
+        if book["meta"].get("recut") == want:
             print("skip", bid, "already recut")
             continue
         n0 = len(book["pages"])
         gone = recut(book, bid)
-        book["meta"]["recut"] = True
+        book["meta"]["recut"] = want
         bbt.write_book_json(book, path)
         first = next((p["t"] for pg in book["pages"] for p in pg["paras"] if p["t"].strip()), "")
         print(f"== {bid}: pages {n0} -> {len(book['pages'])}, headings cut {len(gone)}: "
