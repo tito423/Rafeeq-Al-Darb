@@ -21,4 +21,4 @@ One file per surah, `NNN.json`: `words` in mushaf order, each
 - Never change the mushaf word; `w` must equal the token of `text_uthmani`
   (a test should enforce it).
 
-Status: 001, 103, 108, 110, 111, 112, 113, 114 written + checked against al-Da'as only (`check.py` passes). Not wired into the app.
+Status: 001, 103, 106, 107, 108, 109, 110, 111, 112, 113, 114 written + checked against al-Da'as only (`check.py` passes). Not wired into the app.
