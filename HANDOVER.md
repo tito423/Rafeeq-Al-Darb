@@ -7,7 +7,7 @@ Cline, or any other).
 | | |
 |---|---|
 | **SECURITY (found 2026-09-24, OWNER ACTION NEEDED)** | The R2 **access key id and secret** that are in `scripts/.env` today are present in this PUBLIC repo's git history — hard-coded in `scripts/upload_quranflash_coords.dart` (3747f715, 2026-08-26), `scripts/phase1_upload.dart` (ecbb820d) and `test_r2*.dart` (eae5036d), since deleted from the tree. Checked by value, not printed. Not in the published v3.59.0 APK (checked byte-wise). CF_API_TOKEN and CF_WORKERS_TOKEN are NOT in history. **Fix: rotate the R2 API token in the Cloudflare dashboard (R2 → Manage API tokens), put the new pair in `scripts/.env`.** Rewriting history does not un-leak it. |
-| **Last updated** | 2026-10-03 |
+| **Last updated** | 2026-10-05 |
 | **RELEASE 2026-10-03 ~12:14 Dubai (v3.76.0)** | **Published: v3.76.0** (versionCode 90; tag = `d05125f9` = HEAD at publish, target master; asset `RafeeqAlDarb-v3.76.0.apk` 314,170,548 B, SHA-256 `0AB879BC99026CC4D6F58E41A8A1A035460FEAD32DC1BA183E1709D9E500F9BF`, range 206 from the cloud). Built by build_github_release.bat; paypal link in all three libapp.so; installed on emulator-5554: versionName 3.76.0, text mushaf with kashida, «ادعم التطبيق» seen (rafeeq-control results/emu_release/). v3.75.0 + tag deleted; v3.51.0 and content-* kept. R7 stopped for the build, restarted after, watchdog Ready. Contains: tajweed ladder, library phase 3 (50 books), franklin branch (kashida, continuous reading, dedications), kids-stories render inputs. |
 | **STATE 2026-10-03 ~16:00 Dubai (library phase 3, NOT released)** | 50 books added (46 Shamela + 4 ketabonline: Bajuri's تحفة المريد/تحقيق المقام, Nawawi al-Jawi's نور الظلام, al-Qari's منح الروض الأزهر), each uploaded to R2 `books/text/<id>.json` and read back at its size; editor's prefaces/biographies/footnotes cut (scripts/library_phase3.py START/START_TEXT/TOC_FROM + EDITOR; ketab footnotes after g-page-separator). Shelves open on «ابدأ بها» (library_featured.dart, 10 per shelf, easiest first; التزكية untouched), طالب العلم grouped in 4 stages. SEEN on emulator-5554 (x64 release of d31cd805, rafeeq-control results/emu_library3, emu_library4): shelves, stage headings, نور الظلام and زاد المسير downloaded and opened on the author's first page. Not released: v3.76.0 waits for the owner. |
 | **RELEASE 2026-10-02 ~05:35 Dubai (v3.75.0)** | **Published: v3.75.0** (versionCode 89, built by build_github_release.bat 05:27, APK 313,461,709 B; release APK installed over debug on emulator-5554, lastUpdateTime 05:28, «ادعم التطبيق» seen). Contains the owner's 10-02 list: R1 «رفيق» «شغل الآية بصوت X» (+ misspelt reciter names), R2 adhkar recordings from R2, R3 reciter sizes, R4 six new kids stories + Salih re-voiced (28 stories), R5 tabs reachable from the full-screen mushaf, R6 one app task (taskAffinity fix), R7 own recitation copies on GitHub (tito423/rafeeq-recitations) used through config/recitation_mirrors.json - **the copy is STILL UPLOADING** (two background runs on the PC, resumable; see TASK_FOLLOWUP R7). Every item seen on the emulator (TASK_FOLLOWUP). analyze clean, 699 tests. |
@@ -2517,9 +2517,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-02 13:36 — IN PROGRESS — resume here**
+**2026-10-05 02:30 — IN PROGRESS — resume here**
 
-R7 self-running: watchdog scheduled task restarts a dead or hung copy run; heartbeat every 50 files
+TASK_FOLLOWUP: owner's 10-05 brief (12 items) logged before work
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

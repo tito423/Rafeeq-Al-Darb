@@ -16,6 +16,21 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+~02:30 (10-05, Opus, LOCAL Antigravity IDE on the laptop; quota not readable from this IDE) OWNER'S NEW BRIEF. Rules from him: easy items first; spend tokens wisely; NO emulator (he tests); build + publish only at the very end with a report; if this agent stops, Gemini 3.1 Pro continues from here with the same method (CLAUDE.md + this file, one item per commit, mark each [DONE <sha>] here). Order (do top to bottom, mark each):
+ 1. [ ] UMRAH text: «وانما اهلك كمان قبلكم» -> «إنما أهلك من كان قبلكم» (check against the hadith's source wording); then sweep the umrah/hajj texts for other spelling errors (Qur'an/hadith text itself is never «fixed» - CLAUDE.md §1.2; only our own prose).
+ 2. [ ] HOME quick-access card («الوصول السريع»): every tile a DIFFERENT colour.
+ 3. [ ] TEXT MUSHAF: starting continuous recitation turns the auto-scroll toggle OFF (and it stays off/disabled while recitation runs).
+ 4. [ ] CONTINUOUS RECITATION: if the user scrolls the page, after 5 s of no touch scroll back to the highlighted (playing) ayah.
+ 5. [ ] DOWNLOADS screen: «جاري التنزيل الآن» opens its own page (list can be long).
+ 6. [ ] DOWNLOADS screen: kids stories show «لا يوجد محتوى» although downloaded - find the path/key mismatch.
+ 7. [ ] LIBRARY: «تحميل الكل» in every section + multi-select to download or delete selected.
+ 8. [ ] App janks with many downloads running - find the hot path (progress -> setState/provider rebuild storm, DB writes per tick) and throttle.
+ 9. [ ] ABOUT («عن التطبيق» / رفيق الدرب): verify every fact there is current (version, counts, features).
+ 10. [ ] HADITH LISTEN button everywhere a hadith is shown, best available voice (check what the book reader's TTS uses - tts/open_ar_v1 on R2 - and reuse it).
+ 11. [ ] QUIZ bank 269 -> 1000 (same rules: verbatim quote + printed page, scripts/build_history_quiz.py, upload quiz/history_quiz.json to R2 via tools/r2_put.py).
+ 12. [ ] OWN I'RAB (scripts/own_irab/, README there): continue surah by surah, read every word against the books, use the correct one.
+ 13. [ ] Bump version, analyze, build_github_release.bat, publish (stop R7 first, TRAPS #60), report to owner in Arabic.
+
 ~17:50 (10-03, Opus, cloud) Owner (quota had stopped the last thread): «خلص اللي كان بيعمله وابني وانشره على جيت هب … مش تجرب على الايميوليتر، انا هجرب». DONE: (A) RELEASED v3.77.1+92 (f114dcc7): rafeeq-control commands/20261004_0100_release_v3771.ps1 - flutter analyze lib test «No issues found», build_github_release.bat, PayPal in all 3 libapp.so, asset RafeeqAlDarb-v3.77.1.apk 314,838,298 B sha256 8400B29B…, tag sha = HEAD verified, v3.77.0 + tag deleted, R7 + watchdog restarted. NO emulator, NO flutter test (owner's word) - B/C/D/E-infra/i'rab-per-ayah never seen on a device. (E) quiz writers of the dead session left nothing -> rewritten here: scripts/quiz/q_bidaya_later.json 39 (al-Bidaya, post-Rashidun; 8 dropped as overlapping q_khulafa), q_hisham.json 26 (Ibn Hisham), q_seerah_ik.json 17 (Ibn Kathir seerah) -> bank 269 (was 187), every quote verbatim on its page (build_history_quiz.py OK). Sources: the 3 books added (next release). UPLOADED (dc8c6a9b, job 20261004_0130_quiz_up.ps1): R2 quiz/history_quiz.json 157,517 B, public read-back 200, version 269; analyze clean after the Sources change. NEXT: wait for the owner's device report on v3.77.1 (quiz should show 269 after its background fetch). G (own i'rab, 9 surahs done in scripts/own_irab/, not in the app) continues only when he asks. Tell the owner: 9:129 words inside dhikr 88/112 are voiced by Gemini as dhikr.
 
 ~16:30 (10-03, Opus, cloud) OWNER'S NEW BRIEF (decided in thread, 12:21-12:27 Dubai-UTC+0 msgs). Nothing of it built yet. Do in this order, each step committed + logged here:
@@ -1074,6 +1089,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-05 02:30 - TASK_FOLLOWUP: owner's 10-05 brief (12 items) logged before work
 - 2026-10-02 13:36 - R7 self-running: watchdog scheduled task restarts a dead or hung copy run; heartbeat every 50 files
 - 2026-10-02 13:32 - GitHub completeness checked; R7 runs detached; remote-control proposal waiting for the owner
 - 2026-10-02 05:44 - v3.75.0 released (tag = HEAD, v3.74.0 deleted); trap 60 GitHub secondary rate limit; R7 uploads restarted at 1200/h
