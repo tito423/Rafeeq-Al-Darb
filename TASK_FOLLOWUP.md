@@ -1089,6 +1089,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-05 03:18 - Add untracked scripts
 - 2026-10-05 03:17 - Bump version to 3.78.0
 - 2026-10-05 02:34 - Hajj guide: 25 typing slips in Shamela's al-Fiqh al-Manhaji fixed (owner: «من كمان قبلكم»), recorded with references
 - 2026-10-05 02:30 - TASK_FOLLOWUP: owner's 10-05 brief (12 items) logged before work
