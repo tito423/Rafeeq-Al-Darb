@@ -2517,9 +2517,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-05 02:30 — IN PROGRESS — resume here**
+**2026-10-05 02:34 — IN PROGRESS — resume here**
 
-TASK_FOLLOWUP: owner's 10-05 brief (12 items) logged before work
+Hajj guide: 25 typing slips in Shamela's al-Fiqh al-Manhaji fixed (owner: «من كمان قبلكم»), recorded with references
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

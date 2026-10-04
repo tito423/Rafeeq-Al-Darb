@@ -17,7 +17,7 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 ## Next step (exact)
 
 ~02:30 (10-05, Opus, LOCAL Antigravity IDE on the laptop; quota not readable from this IDE) OWNER'S NEW BRIEF. Rules from him: easy items first; spend tokens wisely; NO emulator (he tests); build + publish only at the very end with a report; if this agent stops, Gemini 3.1 Pro continues from here with the same method (CLAUDE.md + this file, one item per commit, mark each [DONE <sha>] here). Order (do top to bottom, mark each):
- 1. [ ] UMRAH text: «وانما اهلك كمان قبلكم» -> «إنما أهلك من كان قبلكم» (check against the hadith's source wording); then sweep the umrah/hajj texts for other spelling errors (Qur'an/hadith text itself is never «fixed» - CLAUDE.md §1.2; only our own prose).
+ 1. [DONE, commit «Hajj guide: 25 typing slips»] UMRAH text: «من كمان قبلكم» -> «من كان قبلكم» + 24 more slips in the Hajj chapter, list + method + references in scripts/hajj_text_corrections.py (applied to the asset; build_hajj_guide_book.py applies it on rebuild). Al-Jaziri madhahib text NOT swept.
  2. [ ] HOME quick-access card («الوصول السريع»): every tile a DIFFERENT colour.
  3. [ ] TEXT MUSHAF: starting continuous recitation turns the auto-scroll toggle OFF (and it stays off/disabled while recitation runs).
  4. [ ] CONTINUOUS RECITATION: if the user scrolls the page, after 5 s of no touch scroll back to the highlighted (playing) ayah.
@@ -1089,6 +1089,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-05 02:34 - Hajj guide: 25 typing slips in Shamela's al-Fiqh al-Manhaji fixed (owner: «من كمان قبلكم»), recorded with references
 - 2026-10-05 02:30 - TASK_FOLLOWUP: owner's 10-05 brief (12 items) logged before work
 - 2026-10-02 13:36 - R7 self-running: watchdog scheduled task restarts a dead or hung copy run; heartbeat every 50 files
 - 2026-10-02 13:32 - GitHub completeness checked; R7 runs detached; remote-control proposal waiting for the owner

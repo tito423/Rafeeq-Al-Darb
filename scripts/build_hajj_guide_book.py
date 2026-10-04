@@ -28,6 +28,7 @@ from datetime import datetime, timezone
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import build_book_text as b  # noqa: E402
+from hajj_text_corrections import fix_pages  # noqa: E402
 
 ROOT = os.path.dirname(HERE)
 RAW = os.path.join(HERE, "shamela_raw", "al_fiqh_al_manhaji.jsonl")
@@ -60,6 +61,7 @@ def main():
         last = title or last
         pages.append({"p": printed, "paras": b.parse_nass(d.get("nass") or "")})
 
+    fix_pages(pages)  # recorded typing slips, see hajj_text_corrections.py
     printed = [p["p"] for p in pages]
     if printed != sorted(printed) or len(set(printed)) != len(printed):
         sys.exit("printed pages are not one increasing run - the guide "
