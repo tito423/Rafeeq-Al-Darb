@@ -183,7 +183,6 @@
     "previous_prayer": "الصلاة السابقة",
     "remaining": "المتبقي",
     "verse_of_day": "آية اليوم",
-    "quick_access": "الوصول السريع",
     "mushaf": "المصحف الشريف",
     "tasbeeh": "المسبحة",
     "qibla": "القبلة",
@@ -382,7 +381,8 @@
     "ayah_count": "{} آية",
     "autoscroll_follows": "التمرير التلقائي يتبع التلاوة الآن، ويعود لسرعته عند إيقافها.",
     "recite_resume_with": "أكمل مع {}",
-    "recite_resume_where": "{}، الآية {}"
+    "recite_resume_where": "{}، الآية {}",
+    "autoscroll_off_reciting": "التمرير التلقائي متوقف أثناء التلاوة المستمرة، والصفحة تتبع الآية المقروءة."
   },
   "library": {
     "title": "المكتبة",

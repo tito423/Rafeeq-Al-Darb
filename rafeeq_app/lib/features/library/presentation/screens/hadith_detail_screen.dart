@@ -12,6 +12,7 @@ import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
 import '../widgets/hadith_translation.dart';
+import '../widgets/listen_text_button.dart';
 
 /// One hadith, full text, with Previous/Next inside its chapter so reading
 /// doesn't require popping back for every hadith.
@@ -188,7 +189,14 @@ class _HadithContent extends StatelessWidget {
         // Every grading Dorar holds for this matn, each with its grader's
         // name (GitHub build; owner, 2026-09-26). Shown only when Dorar's own
         // text matches - see DorarCheck.
-        DorarCheckButton(text: item.arabic),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            DorarCheckButton(text: item.arabic),
+            ListenTextButton(text: () => item.arabic),
+          ],
+        ),
         // An earlier build ended this screen with «ابحث عن شرحه في موسوعة
         // الأحاديث» — a button that took the first words of the matn to the
         // Hadeeth Encyclopaedia and offered whatever came back as candidates.

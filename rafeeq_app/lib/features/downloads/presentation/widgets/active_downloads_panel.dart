@@ -28,11 +28,135 @@ import '../../../quran_audio/presentation/widgets/audio_common.dart';
 import '../../../shamela/data/shamela_import_service.dart';
 import '../../data/reciters_provider.dart';
 
-/// «جارٍ التنزيل الآن» on the Downloads hub: every transfer running, each
-/// with what it is and how far it has got. Moved out of downloads_screen.dart
-/// (800-line ceiling) when the per-ayah reciters and the reader voice joined
-/// it - neither was listed before, so a 383 MB ayah download ran with no
-/// trace on this screen.
+typedef _ActiveItem = (String title, String? detail, double? value, VoidCallback onTap);
+
+({List<_ActiveItem> items, int waiting}) _getActiveDownloads(BuildContext context, WidgetRef ref) {
+  final locale = context.locale.languageCode;
+  final editions = ref.watch(mushafEditionsProvider).valueOrNull ?? const [];
+  final data = ref.watch(mushafDataProvider).valueOrNull;
+  final service = MushafPageService.instance;
+  final audio = QuranAudioLibrary.instance.activeDownloads;
+  final waiting = audio.where((d) => !d.running).length;
+  final ayahLib = AyahRecitationLibrary.instance;
+  final voice = OpenVoice.installProgress.value;
+  final voiceIds = {for (final f in OpenVoice.files) OpenVoice.taskId(f)};
+  final tasmee = TasmeeEngine.instance.downloadProgress.value;
+  final catalog =
+      ref.watch(quranTranslationCatalogProvider).valueOrNull ?? const [];
+  String translationName(String lang) =>
+      catalog.where((i) => i.lang == lang).firstOrNull?.nativeName ?? lang;
+  
+  final items = <_ActiveItem>[
+    for (final e in ayahLib.entries)
+      if (ayahLib.isActive(e.edition))
+        () {
+          final have = ayahLib.downloadedCount(e.edition);
+          final total = have + ayahLib.remainingCount(e.edition);
+          return (
+            '${'downloads.cat_ayah_recitations'.tr()} — '
+                '${AyahDownloadNotice.reciters[e.edition]?.displayName(locale) ?? e.edition}',
+            localizeDigits(
+                'ayah_dl.ayahs_of'.tr(args: ['$have', '$total']), locale),
+            total == 0 ? null : have / total,
+            () => Navigator.of(context).push(MaterialPageRoute<void>(
+                  builder: (_) => const AyahDownloadScreen(),
+                )),
+          );
+        }(),
+    for (final j in ShamelaImportService.instance.jobs.value.values)
+      if (j.error == null)
+        (
+          '${'shamela.title'.tr()} — ${j.title}',
+          localizeDigits('shamela.importing'.tr(args: ['${j.pages}']), locale),
+          null,
+          () {},
+        ),
+    if (tasmee != null)
+      (
+        'onboarding.tasmee_title'.tr(),
+        ratio(formatBytes((tasmee * tasmeeDownloadBytes).round()),
+            formatBytes(tasmeeDownloadBytes)),
+        tasmee,
+        () {},
+      ),
+    for (final MapEntry(key: id, value: v)
+        in LibraryApiService.instance.bookDownloads.value.entries)
+      (
+        () {
+          final b = bookById(id);
+          if (b == null) return id;
+          return Reciter.arabicScriptLocales.contains(locale) || b.titleEn.isEmpty
+              ? b.titleAr
+              : b.titleEn;
+        }(),
+        null,
+        v,
+        () {},
+      ),
+    for (final MapEntry(key: lang, value: v)
+        in QuranTranslationStore.instance.downloading.value.entries)
+      (
+        '${'quran.translation'.tr()} — ${translationName(lang)}',
+        null,
+        v <= 0 ? null : v,
+        () {},
+      ),
+    if (voice != null)
+      (
+        'downloads.cat_voices'.tr(),
+        ratio(formatBytes((voice * OpenVoice.totalBytes).round()),
+            formatBytes(OpenVoice.totalBytes)),
+        voice,
+        () {},
+      ),
+    for (final e in editions)
+      if (service.activeEditions.contains(e.id))
+        (
+          e.localizedName(locale),
+          null,
+          service.progressFor(e.id).fraction,
+          () {},
+        ),
+    for (final d in audio)
+      if (d.running)
+      (
+        '${d.entry.reciterName} — ${surahTitle(data, d.surah, locale)}',
+        null,
+        d.progress <= 0 ? null : d.progress,
+        () {
+          final all = ref.read(mp3RecitersProvider).valueOrNull;
+          final full =
+              all?.where((r) => r.id == d.entry.reciterId).firstOrNull;
+          final reciter = full != null &&
+                  full.moshafs.any((m) => m.id == d.entry.moshafId)
+              ? full
+              : Mp3Reciter(
+                  id: d.entry.reciterId,
+                  name: d.entry.reciterName,
+                  moshafs: [d.entry.moshaf],
+                );
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => ReciterScreen(
+              reciter: reciter,
+              initialMoshafId: d.entry.moshafId,
+            ),
+          ));
+        },
+      ),
+    for (final t in DownloadManager.instance.activeTasks)
+      if (!voiceIds.contains(t.id))
+      (
+        t.title.isEmpty ? t.fileName : t.title,
+        t.total == null
+            ? null
+            : ratio(formatBytes(t.received), formatBytes(t.total!)),
+        t.total == null ? null : t.progress,
+        () {},
+      ),
+  ];
+  return (items: items, waiting: waiting);
+}
+
 class ActiveDownloadsPanel extends ConsumerStatefulWidget {
   const ActiveDownloadsPanel({super.key});
 
@@ -46,7 +170,6 @@ class ActiveDownloadsPanelState extends ConsumerState<ActiveDownloadsPanel> {
   @override
   void initState() {
     super.initState();
-    // Page progress moves many times a second; once a second reads smoothly.
     _tick = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) setState(() {});
     });
@@ -60,207 +183,127 @@ class ActiveDownloadsPanelState extends ConsumerState<ActiveDownloadsPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = context.locale.languageCode;
+    final state = _getActiveDownloads(context, ref);
+    if (state.items.isEmpty && state.waiting == 0) return const SizedBox.shrink();
     final scheme = Theme.of(context).colorScheme;
-    final editions = ref.watch(mushafEditionsProvider).valueOrNull ?? const [];
-    final data = ref.watch(mushafDataProvider).valueOrNull;
-    final service = MushafPageService.instance;
-    final audio = QuranAudioLibrary.instance.activeDownloads;
-    // A whole recitation is a hundred queued surahs; listing each one buried
-    // the few actually transferring. The waiting ones are one count.
-    final waiting = audio.where((d) => !d.running).length;
-    final ayahLib = AyahRecitationLibrary.instance;
-    final voice = OpenVoice.installProgress.value;
-    final voiceIds = {for (final f in OpenVoice.files) OpenVoice.taskId(f)};
-    final tasmee = TasmeeEngine.instance.downloadProgress.value;
-    final catalog =
-        ref.watch(quranTranslationCatalogProvider).valueOrNull ?? const [];
-    String translationName(String lang) =>
-        catalog.where((i) => i.lang == lang).firstOrNull?.nativeName ?? lang;
-    // (title, detail, fraction, tap). The detail line says WHAT is moving -
-    // «٢٤٠٤ من ٦٢٣٦ آية» - not only a percentage (owner, 2026-09-26: «حط
-    // تفاصيل ايه اللي بيتحمل حاليا في صفحة التنزيلات بالتفصيل ومدى تقدمه»).
-    final items = <(String, String?, double?, VoidCallback)>[
-      for (final e in ayahLib.entries)
-        if (ayahLib.isActive(e.edition))
-          () {
-            final have = ayahLib.downloadedCount(e.edition);
-            final total = have + ayahLib.remainingCount(e.edition);
-            return (
-              '${'downloads.cat_ayah_recitations'.tr()} — '
-                  '${AyahDownloadNotice.reciters[e.edition]?.displayName(locale) ?? e.edition}',
-              localizeDigits(
-                  'ayah_dl.ayahs_of'.tr(args: ['$have', '$total']), locale),
-              total == 0 ? null : have / total,
-              () => Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (_) => const AyahDownloadScreen(),
-                  )),
-            );
-          }(),
-      // Shamela imports: pages so far (Shamela gives no total up front).
-      for (final j in ShamelaImportService.instance.jobs.value.values)
-        if (j.error == null)
-          (
-            '${'shamela.title'.tr()} — ${j.title}',
-            localizeDigits('shamela.importing'.tr(args: ['${j.pages}']), locale),
-            null,
-            () {},
-          ),
-      if (tasmee != null)
-        (
-          'onboarding.tasmee_title'.tr(),
-          ratio(formatBytes((tasmee * tasmeeDownloadBytes).round()),
-              formatBytes(tasmeeDownloadBytes)),
-          tasmee,
-          () {},
-        ),
-      for (final MapEntry(key: id, value: v)
-          in LibraryApiService.instance.bookDownloads.value.entries)
-        (
-          () {
-            final b = bookById(id);
-            if (b == null) return id;
-            return Reciter.arabicScriptLocales.contains(locale) || b.titleEn.isEmpty
-                ? b.titleAr
-                : b.titleEn;
-          }(),
-          null,
-          v,
-          () {},
-        ),
-      for (final MapEntry(key: lang, value: v)
-          in QuranTranslationStore.instance.downloading.value.entries)
-        (
-          '${'quran.translation'.tr()} — ${translationName(lang)}',
-          null,
-          v <= 0 ? null : v,
-          () {},
-        ),
-      if (voice != null)
-        (
-          'downloads.cat_voices'.tr(),
-          ratio(formatBytes((voice * OpenVoice.totalBytes).round()),
-              formatBytes(OpenVoice.totalBytes)),
-          voice,
-          () {},
-        ),
-      for (final e in editions)
-        if (service.activeEditions.contains(e.id))
-          (
-            e.localizedName(locale),
-            null,
-            service.progressFor(e.id).fraction,
-            () {},
-          ),
-      for (final d in audio)
-        if (d.running)
-        (
-          '${d.entry.reciterName} — ${surahTitle(data, d.surah, locale)}',
-          null,
-          d.progress <= 0 ? null : d.progress,
-          // A tap on the row (its progress bar included) opens the reciter
-          // on the recitation being fetched - the place to see each surah's
-          // state and pause or cancel - the same way the audio library's
-          // own list opens it: the whole reciter when the catalogue is
-          // loaded, this recitation alone when offline.
-          () {
-            final all = ref.read(mp3RecitersProvider).valueOrNull;
-            final full =
-                all?.where((r) => r.id == d.entry.reciterId).firstOrNull;
-            final reciter = full != null &&
-                    full.moshafs.any((m) => m.id == d.entry.moshafId)
-                ? full
-                : Mp3Reciter(
-                    id: d.entry.reciterId,
-                    name: d.entry.reciterName,
-                    moshafs: [d.entry.moshaf],
-                  );
-            Navigator.of(context).push(MaterialPageRoute<void>(
-              builder: (_) => ReciterScreen(
-                reciter: reciter,
-                initialMoshafId: d.entry.moshafId,
-              ),
-            ));
-          },
-        ),
-      // The voice's two files are already one row above, summed.
-      for (final t in DownloadManager.instance.activeTasks)
-        if (!voiceIds.contains(t.id))
-        (
-          t.title.isEmpty ? t.fileName : t.title,
-          t.total == null
-              ? null
-              : ratio(formatBytes(t.received), formatBytes(t.total!)),
-          t.total == null ? null : t.progress,
-          () {},
-        ),
-    ];
-    if (items.isEmpty && waiting == 0) return const SizedBox.shrink();
+    final locale = context.locale.languageCode;
     return Padding(
       padding: const EdgeInsets.only(top: 14),
       child: Material(
         color: AppColors.gold.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(18),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.downloading_rounded, color: goldText(context), size: 20),
-                  const SizedBox(width: 8),
-                  Text('downloads.active_now'.tr(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const ActiveDownloadsScreen(),
+          )),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+            child: Row(
+              children: [
+                Icon(Icons.downloading_rounded, color: goldText(context), size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text('downloads.active_now'.tr(),
                       style: const TextStyle(fontWeight: FontWeight.w800)),
-                ],
-              ),
-              const SizedBox(height: 6),
-              for (final (title, detail, value, onTap) in items)
-                InkWell(
-                  onTap: onTap,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 13)),
-                            ),
-                            Text(
-                              value == null ? '…' : percentOf(value),
-                              style: TextStyle(fontSize: 12, color: goldOn(scheme), fontWeight: FontWeight.w700),
-                            ),
-                          ],
-                        ),
-                        if (detail != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2),
-                            child: Text(detail,
-                                style: TextStyle(
-                                    fontSize: 11.5,
-                                    color: scheme.onSurfaceVariant)),
-                          ),
-                        const SizedBox(height: 4),
-                        GoldProgressBar(value: value, height: 4, color: AppColors.gold),
-                      ],
-                    ),
-                  ),
                 ),
-              if (waiting > 0)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text('${'quran_audio.queued'.tr()} · ${ltr('$waiting')}',
-                      style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
-                ),
-            ],
+                Text(localizeDigits('${state.items.length + state.waiting}', locale),
+                    style: TextStyle(color: goldOn(scheme), fontWeight: FontWeight.w700)),
+                const SizedBox(width: 4),
+                Icon(Icons.chevron_right_rounded, color: goldOn(scheme)),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ActiveDownloadsScreen extends ConsumerStatefulWidget {
+  const ActiveDownloadsScreen({super.key});
+
+  @override
+  ConsumerState<ActiveDownloadsScreen> createState() => _ActiveDownloadsScreenState();
+}
+
+class _ActiveDownloadsScreenState extends ConsumerState<ActiveDownloadsScreen> {
+  Timer? _tick;
+
+  @override
+  void initState() {
+    super.initState();
+    _tick = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _tick?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = _getActiveDownloads(context, ref);
+    if (state.items.isEmpty && state.waiting == 0) {
+      return Scaffold(
+        appBar: AppBar(title: Text('downloads.active_now'.tr())),
+        body: Center(child: Text('downloads.nothing_downloaded'.tr())),
+      );
+    }
+    
+    final scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: AppBar(title: Text('downloads.active_now'.tr())),
+      body: ListView(
+        padding: const EdgeInsets.all(14),
+        children: [
+          for (final (title, detail, value, onTap) in state.items)
+            InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(10),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 13)),
+                        ),
+                        Text(
+                          value == null ? '…' : percentOf(value),
+                          style: TextStyle(fontSize: 12, color: goldOn(scheme), fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                    if (detail != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(detail,
+                            style: TextStyle(
+                                fontSize: 11.5,
+                                color: scheme.onSurfaceVariant)),
+                      ),
+                    const SizedBox(height: 4),
+                    GoldProgressBar(value: value, height: 4, color: AppColors.gold),
+                  ],
+                ),
+              ),
+            ),
+          if (state.waiting > 0)
+            Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 8),
+              child: Text('${'quran_audio.queued'.tr()} · ${ltr('${state.waiting}')}',
+                  style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant, fontWeight: FontWeight.w700)),
+            ),
+        ],
       ),
     );
   }

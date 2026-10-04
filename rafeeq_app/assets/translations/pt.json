@@ -183,7 +183,6 @@
     "previous_prayer": "Oração anterior",
     "remaining": "Restante",
     "verse_of_day": "Versículo do dia",
-    "quick_access": "Acesso rápido",
     "mushaf": "Sagrado Mushaf",
     "tasbeeh": "Tasbih",
     "qibla": "Qibla",
@@ -382,7 +381,8 @@
     "ayah_count": "{} versículos",
     "autoscroll_follows": "A rolagem automática acompanha a recitação; volta à sua velocidade quando ela para.",
     "recite_resume_with": "Continuar com {}",
-    "recite_resume_where": "{}, versículo {}"
+    "recite_resume_where": "{}, versículo {}",
+    "autoscroll_off_reciting": "A rolagem automática fica desligada durante a recitação contínua; a página acompanha o versículo recitado."
   },
   "library": {
     "title": "Biblioteca",

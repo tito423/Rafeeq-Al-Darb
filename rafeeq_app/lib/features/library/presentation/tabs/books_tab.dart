@@ -356,7 +356,7 @@ class _AuthorsView extends StatelessWidget {
   }
 }
 
-class _AuthorExpansionTile extends StatelessWidget {
+class _AuthorExpansionTile extends StatefulWidget {
   final String authorName;
   final String deathDate;
   final List<LibraryBook> books;
@@ -377,36 +377,45 @@ class _AuthorExpansionTile extends StatelessWidget {
   });
 
   @override
+  State<_AuthorExpansionTile> createState() => _AuthorExpansionTileState();
+}
+
+class _AuthorExpansionTileState extends State<_AuthorExpansionTile> {
+  final Set<String> _selected = {};
+  bool _selectionMode = false;
+
+  List<LibraryBook> get _missing => [
+    for (final b in widget.books)
+      if (b.textEdition != null &&
+          !widget.paths.containsKey(b.id) &&
+          DownloadManager.instance.taskById(b.id)?.status !=
+              DownloadStatus.downloading)
+        b,
+  ];
+
+  @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return AccordionTile(
       builder: (controller, onExpansionChanged) => ExpansionTile(
         controller: controller,
         onExpansionChanged: onExpansionChanged,
-        initiallyExpanded: initiallyExpanded,
+        initiallyExpanded: widget.initiallyExpanded,
         leading: CircleAvatar(
           backgroundColor: AppColors.gold.withValues(alpha: 0.15),
           child: Icon(Icons.person_outline, color: goldText(context), size: 22),
         ),
         title: Text(
-          authorName,
+          widget.authorName,
           style: Theme.of(
             context,
           ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         subtitle: Text(
-          // A living author has no death date; do not render a dangling
-          // bullet. The isolates that used to wrap each half are gone with the
-          // reason for them: the death line is written in the reader's own
-          // language now, not Arabic inside a left-to-right paragraph.
-          // In Arabic the AUTHOR'S NAME beside this already carries
-          // Arabic-Indic digits - «(١٧٠ - ٨٥٢ هـ)» comes straight from
-          // the catalogue - so a Latin «852» on the line beneath it put two
-          // numbering systems on one row. Seen on emulator-5554.
           localizeDigits(
-            deathDate.isEmpty
-                ? pluralN('library.book_count', books.length)
-                : '$deathDate • ${pluralN('library.book_count', books.length)}',
+            widget.deathDate.isEmpty
+                ? pluralN('library.book_count', widget.books.length)
+                : '${widget.deathDate} • ${pluralN('library.book_count', widget.books.length)}',
             context.locale.languageCode,
           ),
           style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
@@ -415,39 +424,109 @@ class _AuthorExpansionTile extends StatelessWidget {
         collapsedShape: const Border(),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
         children: [
-          // «حط خيار جديد في المكتبة في خانة المؤلفين لإمكانية تحميل كتب المؤلف
-          // كلها دفعة واحدة». Only books with a hosted text and not already on
-          // the device are counted, and the button goes once there are none.
-          if (_missing.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: FilledButton.tonalIcon(
-                  onPressed: () {
-                    for (final b in _missing) {
-                      onDownload(b);
-                    }
-                  },
-                  icon: const Icon(Icons.download_for_offline_rounded),
-                  label: Text(
-                    localizeDigits(
-                      trn(
-                        'library.download_author_all',
-                        args: ['${_missing.length}'],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (!_selectionMode && _missing.isNotEmpty)
+                  FilledButton.tonalIcon(
+                    onPressed: () {
+                      for (final b in _missing) {
+                        widget.onDownload(b);
+                      }
+                    },
+                    icon: const Icon(Icons.download_for_offline_rounded),
+                    label: Text(
+                      localizeDigits(
+                        trn('library.download_author_all', args: ['${_missing.length}']),
+                        context.locale.languageCode,
                       ),
-                      context.locale.languageCode,
+                    ),
+                  )
+                else if (!_selectionMode)
+                  const SizedBox(),
+                
+                if (_selectionMode) ...[
+                  TextButton.icon(
+                    icon: const Icon(Icons.close),
+                    label: Text('إلغاء التحديد'),
+                    onPressed: () => setState(() {
+                      _selectionMode = false;
+                      _selected.clear();
+                    }),
+                  ),
+                  Row(
+                    children: [
+                      if (_selected.any((id) => widget.paths.containsKey(id)))
+                        IconButton.filledTonal(
+                          icon: const Icon(Icons.delete),
+                          color: Colors.red,
+                          onPressed: () async {
+                            final toDelete = _selected.where((id) => widget.paths.containsKey(id)).toList();
+                            for (final id in toDelete) {
+                              await LibraryApiService.instance.deleteBook(id);
+                            }
+                            if (mounted) {
+                              setState(() {
+                                _selectionMode = false;
+                                _selected.clear();
+                              });
+                            }
+                          },
+                        ),
+                      if (_selected.any((id) => !widget.paths.containsKey(id)))
+                        IconButton.filledTonal(
+                          icon: const Icon(Icons.download),
+                          onPressed: () {
+                            final toDownload = widget.books.where((b) => _selected.contains(b.id) && !widget.paths.containsKey(b.id));
+                            for (final b in toDownload) {
+                              widget.onDownload(b);
+                            }
+                            setState(() {
+                              _selectionMode = false;
+                              _selected.clear();
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                ] else ...[
+                  TextButton.icon(
+                    icon: const Icon(Icons.checklist),
+                    label: Text('تحديد'),
+                    onPressed: () => setState(() => _selectionMode = true),
+                  ),
+                ]
+              ],
+            ),
+          ),
+          for (final b in widget.books) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (_selectionMode)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Checkbox(
+                      value: _selected.contains(b.id),
+                      onChanged: (v) {
+                        setState(() {
+                          if (v == true) _selected.add(b.id);
+                          else _selected.remove(b.id);
+                        });
+                      },
                     ),
                   ),
+                Expanded(
+                  child: BookCard(
+                    book: b,
+                    paths: widget.paths,
+                    onDownload: () => widget.onDownload(b),
+                    onOpen: () => widget.onOpen(b),
+                  ),
                 ),
-              ),
-            ),
-          for (final b in books) ...[
-            BookCard(
-              book: b,
-              paths: paths,
-              onDownload: () => onDownload(b),
-              onOpen: () => onOpen(b),
+              ],
             ),
             const SizedBox(height: 10),
           ],
@@ -455,15 +534,6 @@ class _AuthorExpansionTile extends StatelessWidget {
       ),
     );
   }
-
-  List<LibraryBook> get _missing => [
-    for (final b in books)
-      if (b.textEdition != null &&
-          !paths.containsKey(b.id) &&
-          DownloadManager.instance.taskById(b.id)?.status !=
-              DownloadStatus.downloading)
-        b,
-  ];
 }
 
 class _CategoriesView extends StatelessWidget {
@@ -521,7 +591,7 @@ class _CategoriesView extends StatelessWidget {
   }
 }
 
-class _CategoryExpansionTile extends StatelessWidget {
+class _CategoryExpansionTile extends StatefulWidget {
   final BookCategory category;
   final List<LibraryBook> books;
   final bool initiallyExpanded;
@@ -540,15 +610,32 @@ class _CategoryExpansionTile extends StatelessWidget {
   });
 
   @override
+  State<_CategoryExpansionTile> createState() => _CategoryExpansionTileState();
+}
+
+class _CategoryExpansionTileState extends State<_CategoryExpansionTile> {
+  final Set<String> _selected = {};
+  bool _selectionMode = false;
+
+  List<LibraryBook> get _missing => [
+    for (final b in widget.books)
+      if (b.textEdition != null &&
+          !widget.paths.containsKey(b.id) &&
+          DownloadManager.instance.taskById(b.id)?.status !=
+              DownloadStatus.downloading)
+        b,
+  ];
+
+  @override
   Widget build(BuildContext context) {
     return AccordionTile(
       builder: (controller, onExpansionChanged) => ExpansionTile(
         controller: controller,
         onExpansionChanged: onExpansionChanged,
-        initiallyExpanded: initiallyExpanded,
-        leading: Icon(category.icon, color: goldText(context)),
+        initiallyExpanded: widget.initiallyExpanded,
+        leading: Icon(widget.category.icon, color: goldText(context)),
         title: Text(
-          category.labelKey.tr(),
+          widget.category.labelKey.tr(),
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             color: goldText(context),
             fontWeight: FontWeight.w700,
@@ -556,7 +643,7 @@ class _CategoryExpansionTile extends StatelessWidget {
         ),
         subtitle: Text(
           localizeDigits(
-            pluralN('library.book_count', books.length),
+            pluralN('library.book_count', widget.books.length),
             context.locale.languageCode,
           ),
           style: TextStyle(
@@ -568,14 +655,111 @@ class _CategoryExpansionTile extends StatelessWidget {
         collapsedShape: const Border(),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (!_selectionMode && _missing.isNotEmpty)
+                  FilledButton.tonalIcon(
+                    onPressed: () {
+                      for (final b in _missing) {
+                        widget.onDownload(b);
+                      }
+                    },
+                    icon: const Icon(Icons.download_for_offline_rounded),
+                    label: Text(
+                      localizeDigits(
+                        trn('library.download_author_all', args: ['${_missing.length}']),
+                        context.locale.languageCode,
+                      ),
+                    ),
+                  )
+                else if (!_selectionMode)
+                  const SizedBox(),
+
+                if (_selectionMode) ...[
+                  TextButton.icon(
+                    icon: const Icon(Icons.close),
+                    label: Text('إلغاء التحديد'),
+                    onPressed: () => setState(() {
+                      _selectionMode = false;
+                      _selected.clear();
+                    }),
+                  ),
+                  Row(
+                    children: [
+                      if (_selected.any((id) => widget.paths.containsKey(id)))
+                        IconButton.filledTonal(
+                          icon: const Icon(Icons.delete),
+                          color: Colors.red,
+                          onPressed: () async {
+                            final toDelete = _selected.where((id) => widget.paths.containsKey(id)).toList();
+                            for (final id in toDelete) {
+                              await LibraryApiService.instance.deleteBook(id);
+                            }
+                            if (mounted) {
+                              setState(() {
+                                _selectionMode = false;
+                                _selected.clear();
+                              });
+                            }
+                          },
+                        ),
+                      if (_selected.any((id) => !widget.paths.containsKey(id)))
+                        IconButton.filledTonal(
+                          icon: const Icon(Icons.download),
+                          onPressed: () {
+                            final toDownload = widget.books.where((b) => _selected.contains(b.id) && !widget.paths.containsKey(b.id));
+                            for (final b in toDownload) {
+                              widget.onDownload(b);
+                            }
+                            setState(() {
+                              _selectionMode = false;
+                              _selected.clear();
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                ] else ...[
+                  TextButton.icon(
+                    icon: const Icon(Icons.checklist),
+                    label: Text('تحديد'),
+                    onPressed: () => setState(() => _selectionMode = true),
+                  ),
+                ]
+              ],
+            ),
+          ),
           for (final (heading, group) in _groups()) ...[
             if (heading != null) _ShelfHeading(heading),
             for (final b in group) ...[
-              BookCard(
-                book: b,
-                paths: paths,
-                onDownload: () => onDownload(b),
-                onOpen: () => onOpen(b),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_selectionMode)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Checkbox(
+                        value: _selected.contains(b.id),
+                        onChanged: (v) {
+                          setState(() {
+                            if (v == true) _selected.add(b.id);
+                            else _selected.remove(b.id);
+                          });
+                        },
+                      ),
+                    ),
+                  Expanded(
+                    child: BookCard(
+                      book: b,
+                      paths: widget.paths,
+                      onDownload: () => widget.onDownload(b),
+                      onOpen: () => widget.onOpen(b),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
             ],
@@ -585,14 +769,10 @@ class _CategoryExpansionTile extends StatelessWidget {
     );
   }
 
-  /// The shelf in labelled runs (owner, 2026-10-03: «خلي قسم المكتبة جذاب
-  /// لاي قارئ»): طالب العلم by its four stages; every other shelf opens on
-  /// its best-known books, easiest first ([featuredBookIds]), then the rest
-  /// in [books]' order. A shelf with no featured book stays one plain run.
   List<(String?, List<LibraryBook>)> _groups() {
-    if (category == BookCategory.talibIlm) {
+    if (widget.category == BookCategory.talibIlm) {
       final stages = <int, List<LibraryBook>>{};
-      for (final b in books) {
+      for (final b in widget.books) {
         stages.putIfAbsent(b.shelfOrder, () => []).add(b);
       }
       return [
@@ -605,13 +785,13 @@ class _CategoryExpansionTile extends StatelessWidget {
           ),
       ];
     }
-    final byId = {for (final b in books) b.id: b};
+    final byId = {for (final b in widget.books) b.id: b};
     final featured = [
-      for (final id in featuredBookIds[category] ?? const <String>[])
+      for (final id in featuredBookIds[widget.category] ?? const <String>[])
         if (byId[id] != null) byId[id]!,
     ];
-    if (featured.isEmpty) return [(null, books)];
-    final rest = books.where((b) => !featured.contains(b)).toList();
+    if (featured.isEmpty) return [(null, widget.books)];
+    final rest = widget.books.where((b) => !featured.contains(b)).toList();
     return [
       ('library.featured_heading'.tr(), featured),
       if (rest.isNotEmpty) ('library.rest_heading'.tr(), rest),

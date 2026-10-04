@@ -42,6 +42,7 @@ Future<void> showQuranDisplaySheet(
   required bool isRaster,
   required bool autoScroll,
   required double autoScrollSpeed,
+  required bool reciteActive,
   required bool pageFillScreen,
   required double fontScale,
   required void Function(double delta) onFontScale,
@@ -71,6 +72,7 @@ Future<void> showQuranDisplaySheet(
         isRaster: isRaster,
         autoScroll: autoScroll,
         autoScrollSpeed: autoScrollSpeed,
+        reciteActive: reciteActive,
         pageFillScreen: pageFillScreen,
         fontScale: fontScale,
         onFontScale: onFontScale,
@@ -89,6 +91,7 @@ class _QuranDisplaySheet extends ConsumerStatefulWidget {
   final bool isRaster;
   final bool autoScroll;
   final double autoScrollSpeed;
+  final bool reciteActive;
   final bool pageFillScreen;
   final double fontScale;
   final void Function(double delta) onFontScale;
@@ -103,6 +106,7 @@ class _QuranDisplaySheet extends ConsumerStatefulWidget {
     required this.isRaster,
     required this.autoScroll,
     required this.autoScrollSpeed,
+    required this.reciteActive,
     required this.pageFillScreen,
     required this.fontScale,
     required this.onFontScale,
@@ -221,7 +225,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                 icon: Icons.swipe_vertical_rounded,
                 title: 'quran.auto_scroll'.tr(),
                 value: _auto,
-                onChanged: (_) {
+                onChanged: widget.reciteActive ? null : (_) {
                   setState(() => _auto = !_auto);
                   widget.onToggleAutoScroll();
                 },
@@ -453,7 +457,7 @@ class _SwitchTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final bool value;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
   const _SwitchTile({
     required this.icon,
     required this.title,

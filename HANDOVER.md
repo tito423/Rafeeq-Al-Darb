@@ -2517,9 +2517,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-05 02:34 — IN PROGRESS — resume here**
+**2026-10-05 03:17 — IN PROGRESS — resume here**
 
-Hajj guide: 25 typing slips in Shamela's al-Fiqh al-Manhaji fixed (owner: «من كمان قبلكم»), recorded with references
+Bump version to 3.78.0
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

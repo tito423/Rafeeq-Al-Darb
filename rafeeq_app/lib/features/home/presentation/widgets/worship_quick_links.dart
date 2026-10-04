@@ -23,17 +23,19 @@ import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 class WorshipQuickLinks extends StatelessWidget {
   const WorshipQuickLinks({super.key});
 
+  // «خلي الوان الوصول السريع … كل لون مختلف عن التاني» (owner, 2026-10-05):
+  // ten hues spaced round the wheel, all bright enough for the dark theme.
   static final _links = <_Link>[
     _Link(Icons.headphones_rounded, 'home.ql_azkar_listen', const Color(0xFFD35400), (_) => const AdhkarListenHubScreen()),
     _Link(Icons.library_music_outlined, 'home.ql_player', AppColors.gold, (_) => const QuranAudioScreen()),
-    _Link(Icons.record_voice_over_outlined, 'home.ql_tajweed', AppColors.gold, (_) => const TajweedLevelsScreen()),
-    _Link(Icons.school_outlined, 'home.ql_hifz', AppColors.gold, (_) => const HifzScreen()),
-    _Link(Icons.mosque_outlined, 'home.ql_hajj', AppColors.gold, (_) => const HajjScreen()),
-    _Link(Icons.healing_outlined, 'home.ql_ruqyah', AppColors.goldSoft, (_) => const RuqyahAudioScreen()),
-    _Link(Icons.child_care_rounded, 'home.ql_kids', const Color(0xFFF79F1F), (_) => const KidsCornerScreen()),
+    _Link(Icons.record_voice_over_outlined, 'home.ql_tajweed', const Color(0xFF00A896), (_) => const TajweedLevelsScreen()),
+    _Link(Icons.school_outlined, 'home.ql_hifz', const Color(0xFF0984E3), (_) => const HifzScreen()),
+    _Link(Icons.mosque_outlined, 'home.ql_hajj', const Color(0xFF7CB342), (_) => const HajjScreen()),
+    _Link(Icons.healing_outlined, 'home.ql_ruqyah', const Color(0xFF78909C), (_) => const RuqyahAudioScreen()),
+    _Link(Icons.child_care_rounded, 'home.ql_kids', const Color(0xFFD63384), (_) => const KidsCornerScreen()),
     _Link(Icons.emoji_events_rounded, 'home.ql_journey', const Color(0xFF8854D0), (_) => const JourneyScreen()),
     _Link(Icons.quiz_rounded, 'home.ql_quiz', const Color(0xFF4834D4), (_) => const QuizHomeScreen()),
-    _Link(Icons.volunteer_activism, 'home.ql_dedications', AppColors.primarySoft, (_) => const DedicationsScreen()),
+    _Link(Icons.volunteer_activism, 'home.ql_dedications', const Color(0xFFE74C3C), (_) => const DedicationsScreen()),
   ];
 
   @override

@@ -200,6 +200,7 @@ class MushafToolbar extends ConsumerWidget {
                       isRaster: isRaster,
                       autoScroll: autoScroll,
                       autoScrollSpeed: autoScrollSpeed,
+                      reciteActive: reciteActive,
                       pageFillScreen: pageFillScreen,
                       fontScale: fontScale,
                       onFontScale: onFontScale,

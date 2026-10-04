@@ -15,6 +15,7 @@ import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
+import '../../../library/presentation/widgets/listen_text_button.dart';
 import '../../../kids/data/journey_store.dart';
 import '../../../quotes/data/quote_background_catalog.dart';
 import '../../data/azkar_audio.dart';
@@ -349,10 +350,18 @@ class _DhikrPage extends StatelessWidget {
               ),
               // The hadith this dhikr comes from, graded by name on Dorar
               // (GitHub build; owner, 2026-09-26).
-              DorarCheckButton(
-                text: item.body,
-                color: Colors.white,
-                alignment: Alignment.center,
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                alignment: WrapAlignment.center,
+                children: [
+                  DorarCheckButton(
+                    text: item.body,
+                    color: Colors.white,
+                    alignment: Alignment.center,
+                  ),
+                  ListenTextButton(text: () => item.body),
+                ],
               ),
             ],
             if (isFirst) ...[

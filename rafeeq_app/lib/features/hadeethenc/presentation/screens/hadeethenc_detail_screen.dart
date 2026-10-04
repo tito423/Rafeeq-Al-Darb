@@ -10,6 +10,7 @@ import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/utils/external_link.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
+import '../../../library/presentation/widgets/listen_text_button.dart';
 
 /// One record of موسوعة الأحاديث النبوية, in full.
 ///
@@ -106,7 +107,14 @@ class HadeethEncDetailScreen extends StatelessWidget {
           // Every other grading Dorar holds for this matn, each by name
           // (GitHub build; owner, 2026-09-26).
           if (item.hadeethAr.isNotEmpty)
-            DorarCheckButton(text: item.hadeethAr),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                DorarCheckButton(text: item.hadeethAr),
+                ListenTextButton(text: () => item.hadeethAr),
+              ],
+            ),
 
           // معاني الكلمات, right under the text it explains — before the
           // commentary, because a word you did not understand blocks the

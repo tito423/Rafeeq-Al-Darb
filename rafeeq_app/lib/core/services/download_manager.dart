@@ -179,6 +179,8 @@ class DownloadManager {
             task.received = (1000000 * update.progress).round();
           }
         }
+        _notifySoon();
+        return;
     }
     _notify();
   }
@@ -598,7 +600,18 @@ class DownloadManager {
     _controller.close();
   }
 
+  Timer? _notifyTimer;
+
+  void _notifySoon() {
+    _notifyTimer ??= Timer(const Duration(milliseconds: 150), () {
+      _notifyTimer = null;
+      if (!_controller.isClosed) _controller.add(tasks);
+    });
+  }
+
   void _notify() {
+    _notifyTimer?.cancel();
+    _notifyTimer = null;
     if (!_controller.isClosed) _controller.add(tasks);
   }
 

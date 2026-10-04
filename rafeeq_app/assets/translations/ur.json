@@ -183,7 +183,6 @@
     "previous_prayer": "پچھلی نماز",
     "remaining": "باقی",
     "verse_of_day": "آیتِ روز",
-    "quick_access": "فوری رسائی",
     "mushaf": "مصحفِ شریف",
     "tasbeeh": "تسبیح",
     "qibla": "قبلہ",
@@ -382,7 +381,8 @@
     "ayah_count": "{} آیات",
     "autoscroll_follows": "خودکار اسکرول اب تلاوت کے ساتھ چل رہا ہے؛ تلاوت رکنے پر اپنی رفتار پر واپس آ جائے گا۔",
     "recite_resume_with": "{} کے ساتھ جاری رکھیں",
-    "recite_resume_where": "{}، آیت {}"
+    "recite_resume_where": "{}، آیت {}",
+    "autoscroll_off_reciting": "مسلسل تلاوت کے دوران خودکار اسکرول بند ہے، صفحہ پڑھی جانے والی آیت کے ساتھ چلتا ہے۔"
   },
   "library": {
     "title": "کتب خانہ",

@@ -138,6 +138,28 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (mounted && p != _pressed) setState(() => _pressed = p);
   }
 
+  Timer? _returnToRecitationTimer;
+
+  bool _onGlobalScroll(ScrollNotification n) {
+    if (!_recite.active) return false;
+    
+    if (n is ScrollStartNotification) {
+      _returnToRecitationTimer?.cancel();
+    } else if (n is ScrollEndNotification) {
+      _returnToRecitationTimer?.cancel();
+      _returnToRecitationTimer = Timer(const Duration(seconds: 5), () {
+        if (!mounted || !_recite.active) return;
+        final surah = _recite.surahId;
+        final ayah = _recite.ayahNumber;
+        if (surah != null && ayah != null) {
+          _followedPage = null; // Force re-evaluation of page jump
+          _followRecitationTo(surah, ayah);
+        }
+      });
+    }
+    return false;
+  }
+
   Future<void> _persistPage() async {
     // Goes through the reactive provider (P3‑4), not a raw prefs write —
     // see `quran_last_read.dart`'s doc for why: `ContinueReadingCard` on
@@ -421,6 +443,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   /// continuous scroll, so the text runs on through the page ends instead of
   /// stopping to turn a page.
   void _toggleAutoScroll() {
+    if (_recite.active) return;
     final on = !_autoScroll;
     if (on) {
       if (_mode != MushafMode.text) _leaveImageView();
@@ -576,6 +599,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       // "running" meant the owner's press silently cleared a recitation that
       // was not playing anyway, which read as the button doing nothing.
       if (_recite.stalled) {
+        if (_autoScroll) _stopAutoScroll();
         await audio.continuousPauseResume();
         return;
       }
@@ -587,7 +611,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final pick = await pickReciterOrResume(context);
     if (pick == null || !mounted) return;
     await ref.read(selectedReciterProvider.notifier).select(pick.id);
-    if (await resumeContinuousIfPicked(pick, data.repo)) return;
+    if (await resumeContinuousIfPicked(pick, data.repo)) {
+      if (_autoScroll) _stopAutoScroll();
+      return;
+    }
+    if (_autoScroll) _stopAutoScroll();
     final ayahs = await _ayahsOfPage(_current, data);
     if (ayahs.isEmpty || !mounted) return;
     final start = continuousStartOnPage(ayahs,
@@ -600,6 +628,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   @override
   void dispose() {
+    _returnToRecitationTimer?.cancel();
     AyahAudioService.instance.continuous.removeListener(_onReciteChanged);
     AyahAudioService.instance.continuousError.removeListener(_onReciteError);
     _pages?.dispose();
@@ -851,7 +880,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             : bars.bottom + 6)
                         : (isLandscape ? 34 : 0),
                   ),
-                  child: _buildViewer(data, edition, textLayout),
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: _onGlobalScroll,
+                    child: _buildViewer(data, edition, textLayout),
+                  ),
                 ),
                 // NORMAL MODE ONLY: in full screen `MushafChrome` carries
                 // surah + juz + page with the controls, and leaving these

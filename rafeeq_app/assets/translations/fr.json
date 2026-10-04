@@ -183,7 +183,6 @@
     "previous_prayer": "Prière précédente",
     "remaining": "Restant",
     "verse_of_day": "Verset du jour",
-    "quick_access": "Accès rapide",
     "mushaf": "Saint Mushaf",
     "tasbeeh": "Tasbeeh",
     "qibla": "Qibla",
@@ -382,7 +381,8 @@
     "ayah_count": "{} versets",
     "autoscroll_follows": "Le défilement automatique suit la récitation ; il reprend sa vitesse quand elle s'arrête.",
     "recite_resume_with": "Continuer avec {}",
-    "recite_resume_where": "{}, verset {}"
+    "recite_resume_where": "{}, verset {}",
+    "autoscroll_off_reciting": "Le défilement automatique est désactivé pendant la récitation continue ; la page suit le verset récité."
   },
   "library": {
     "title": "Bibliothèque",
