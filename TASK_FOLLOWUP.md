@@ -1089,6 +1089,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-05 03:42 - Own i'rab: al-Zalzalah (36 words), read against al-Da'as
 - 2026-10-05 03:41 - Own i'rab: al-Adiyat (40 words), read against al-Da'as
 - 2026-10-05 03:18 - Add untracked scripts
 - 2026-10-05 03:17 - Bump version to 3.78.0
