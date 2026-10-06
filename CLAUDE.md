@@ -429,6 +429,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 58. Two plugins ship `libonnxruntime.so` and `pickFirsts` chose the OLD one for ARM only - the emulator (x86_64) hid it; `check_apk_native.py` now fails the build.
 59. A platform-channel `Uint8List` is a view at byte 5 - `asInt16List` on it throws; a test clip fed past the mic path hid it (v3.69.0 «رفيق» heard nothing).
 60. GitHub's secondary rate limit counts release-asset uploads and blocks the whole account - stop the R7 bulk uploads before publishing a release.
+61. Avast breaks Gradle's dynamic-version lookup (build offline via a temporary init script) and every download inside the emulator.
 
 ## 4. Where things live
 

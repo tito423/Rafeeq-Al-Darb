@@ -661,3 +661,22 @@ Do not rediscover these.
     minute and no more than 500 per hour» (docs.github.com, read 2026-10-02).
     So: stop the bulk uploads BEFORE publishing a release, and keep their
     pace low (`--per-hour`); the script backs off on 403 by itself.
+
+61. **A release build can die on `androidx.test:runner:1.2+` - Gradle's Java
+    does not trust Avast.** 2026-10-06: `build_github_release.bat` failed in
+    `:integration_test:extractReleaseAnnotations` with `PKIX path building
+    failed` on `dl.google.com/.../maven-metadata.xml`. The Flutter SDK's
+    integration_test asks for a DYNAMIC version, so once the 24 h cache of the
+    version list lapses Gradle goes online, and Avast's re-signed certificate
+    (trap 13) is not in the JDK's trust store; curl to the same URL is fine.
+    `-Djavax.net.ssl.trustStoreType=Windows-ROOT` was refused («Windows-ROOT
+    not found»). What worked: everything the build needs is cached, so build
+    OFFLINE - put `gradle.startParameter.offline = true` in
+    `E:\DevEnv\gradle\init.d\rafeeq_offline_tmp.gradle` (GRADLE_USER_HOME is
+    `E:\DevEnv\gradle`, NOT `~/.gradle`), `gradlew --stop`, build, then DELETE
+    the init script. A new dependency would need the network: do that one
+    online from a session where the cache is fresh.
+    Same day, same cause: inside emulator-5554 every app download (Dart and
+    native) fails the handshake, so library/story/recitation downloads cannot
+    be exercised on this machine; `-http-proxy` does not help (Dart ignores
+    the system proxy). Test those on the owner's phone and say so.
