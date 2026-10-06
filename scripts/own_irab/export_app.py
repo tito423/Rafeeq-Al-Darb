@@ -23,7 +23,9 @@ for f in sorted(glob.glob(os.path.join(H, '[0-9][0-9][0-9].json'))):
         if w['check'] == 'nosrc':
             continue
         alts = [[x['book'], x['text']] for x in w.get('alts', [])]
-        out.setdefault(f"{d['surah']}:{w['a']}", []).append([w['w'], w['irab'], alts])
+        # The tab sets «…» in gold as Qur'an words; a book's title is not one.
+        irab = w['irab'].replace('«الجدول»', 'الجدول')
+        out.setdefault(f"{d['surah']}:{w['a']}", []).append([w['w'], irab, alts])
         n += 1
 json.dump(out, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 print(f'{n} words, {len(out)} ayahs, {len({k.split(":")[0] for k in out})} surahs -> {os.path.getsize(OUT):,} B')
