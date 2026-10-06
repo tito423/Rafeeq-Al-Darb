@@ -1,4 +1,4 @@
-> **2026-10-06:** the current brief is `NEXT_PROMPT.md` + the top of `TASK_FOLLOWUP.md`; what follows below is older context.
+> **2026-10-07:** the current brief is `NEXT_PROMPT.md` + the top of `TASK_FOLLOWUP.md` (own i'rab 1 + 66-114 by hand, next al-Talaq 65; adhkar 138/302; quiz +231 not started); what follows below is older context.
 
 # Next session — Rafiq Al-Darb (written 2026-10-02 ~01:30 Dubai)
 
