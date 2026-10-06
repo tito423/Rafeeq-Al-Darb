@@ -153,14 +153,12 @@ class BookBulkBar extends StatelessWidget {
                     label: Text('library.download_n'.tr(args: [n(toFetch.length)])),
                   ),
                   FilledButton.tonalIcon(
-                    // Red on the theme's green tonal fill was hard to read
-                    // (seen on emulator-5554); the error container pair is
-                    // made to be read together.
+                    // Red on the theme's green tonal fill, then red on this
+                    // theme's red errorContainer: both hard to read (seen on
+                    // emulator-5554). error / onError is the pair that is.
                     style: FilledButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.errorContainer,
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onErrorContainer,
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      foregroundColor: Theme.of(context).colorScheme.onError,
                     ),
                     onPressed: toDelete.isEmpty
                         ? null
