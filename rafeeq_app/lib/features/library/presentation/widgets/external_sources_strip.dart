@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/digits.dart';
 import '../../../dorar/presentation/dorar_hub_screen.dart';
+import '../../../shamela/data/shamela_catalog.dart';
 import '../../../shamela/presentation/shamela_screen.dart';
 
 /// «الدرر السنية» and «المكتبة الشاملة» as two named cards at the top of the
@@ -39,7 +41,9 @@ class ExternalSourcesStrip extends StatelessWidget {
               delayMs: 90,
               icon: Icons.travel_explore,
               title: 'shamela.title'.tr(),
-              subtitle: 'library.shamela_card_sub'.tr(),
+              subtitle: 'library.shamela_card_sub_any'.tr(),
+              count: ShamelaCatalog.cachedCount(),
+              countKey: 'library.shamela_card_sub',
               colors: const [Color(0xFF6B4A12), Color(0xFFA77B26)],
               onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const ShamelaScreen(),
@@ -60,6 +64,8 @@ class _SourceCard extends StatefulWidget {
     required this.subtitle,
     required this.colors,
     required this.onTap,
+    this.count,
+    this.countKey,
   });
 
   final int delayMs;
@@ -68,6 +74,11 @@ class _SourceCard extends StatefulWidget {
   final String subtitle;
   final List<Color> colors;
   final VoidCallback onTap;
+
+  /// A number known only at run time; once it resolves, [countKey] (one
+  /// `{}`) replaces [subtitle].
+  final Future<int?>? count;
+  final String? countKey;
 
   @override
   State<_SourceCard> createState() => _SourceCardState();
@@ -85,10 +96,14 @@ class _SourceCardState extends State<_SourceCard>
   );
   bool _pressed = false;
   Timer? _start;
+  int? _count;
 
   @override
   void initState() {
     super.initState();
+    widget.count?.then((n) {
+      if (mounted && n != null) setState(() => _count = n);
+    });
     _start = Timer(Duration(milliseconds: 120 + widget.delayMs), () {
       if (!mounted) return;
       _enter.forward();
@@ -196,7 +211,12 @@ class _SourceCardState extends State<_SourceCard>
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      widget.subtitle,
+                                      _count == null || widget.countKey == null
+                                          ? widget.subtitle
+                                          : widget.countKey!.tr(args: [
+                                              localizeDigits('$_count',
+                                                  context.locale.languageCode),
+                                            ]),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(

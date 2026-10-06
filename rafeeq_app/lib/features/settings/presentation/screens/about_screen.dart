@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/i18n/supported_locales.dart';
@@ -12,7 +13,9 @@ import '../../../../core/widgets/readable_insets.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
 import '../../../channels/data/islamic_channels.dart';
 import '../../../downloads/data/reciters_provider.dart';
+import '../../../kids/data/kids_stories.dart';
 import '../../../library/data/book_catalog.dart';
+import '../../../quiz/data/history_quiz.dart';
 import '../../../quran/data/quran_translation_catalog.dart';
 
 /// The "about" page: who built the app, what version this is, and what it can
@@ -39,14 +42,12 @@ import '../../../quran/data/quran_translation_catalog.dart';
 /// loaded yet shows the sentence without its number rather than a guess, and
 /// nothing here can go stale without the feature itself changing.
 ///
-/// The version is the one figure that cannot be counted from anything the app
-/// carries at runtime, so `test/about_version_test.dart` reads `pubspec.yaml`
-/// and fails the build when the two drift.
+/// The version too: it was a constant kept equal to `pubspec.yaml` by a test,
+/// which still left a build where the two drifted (3.77.0 showed 3.76.0).
+/// It is read from the installed package now (`PackageInfo`), which is the
+/// build itself. The quiz bank and the kids' stories joined the list
+/// (2026-10-06), each counted from what the app actually loads.
 class AboutScreen extends ConsumerStatefulWidget {
-  /// From `pubspec.yaml`'s `version:` — kept equal to it by
-  /// `test/about_version_test.dart`.
-  static const appVersion = '3.78.0';
-
   const AboutScreen({super.key});
 
   @override
@@ -55,6 +56,9 @@ class AboutScreen extends ConsumerStatefulWidget {
 
 class _AboutScreenState extends ConsumerState<AboutScreen>
     with TickerProviderStateMixin {
+  final Future<PackageInfo> _info = PackageInfo.fromPlatform();
+  final Future<List<QuizQuestion>> _quiz = HistoryQuiz.all();
+
   late final AnimationController _intro = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1100),
@@ -205,6 +209,24 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
         title: 'about.f_hajj'.tr(),
         subtitle: 'about.f_hajj_desc'.tr(),
       ),
+      FutureBuilder<List<QuizQuestion>>(
+        future: _quiz,
+        builder: (context, snap) => _FeatureRow(
+          icon: Icons.quiz_rounded,
+          title: 'about.f_quiz'.tr(),
+          subtitle: snap.hasData
+              ? 'about.f_quiz_desc'.tr(args: [
+                  _n(snap.data!.length)!,
+                  _n(QuizLevel.values.length)!,
+                ])
+              : 'about.f_quiz_desc_loading'.tr(),
+        ),
+      ),
+      _FeatureRow(
+        icon: Icons.child_care_rounded,
+        title: 'about.f_kids'.tr(),
+        subtitle: 'about.f_kids_desc'.tr(args: [_n(kidsStories.length)!]),
+      ),
       _FeatureRow(
         icon: Icons.local_library_rounded,
         title: 'about.f_library'.tr(args: [_n(libraryBookCatalog.length)!]),
@@ -275,11 +297,14 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
                 color: accent.withValues(alpha: 0.14),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                'v${AboutScreen.appVersion}',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: accent,
-                  fontWeight: FontWeight.w700,
+              child: FutureBuilder<PackageInfo>(
+                future: _info,
+                builder: (context, snap) => Text(
+                  snap.hasData ? 'v${snap.data!.version}' : ' ',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: accent,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

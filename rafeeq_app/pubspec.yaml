@@ -89,6 +89,8 @@ dependencies:
   wakelock_plus: ^1.5.2
 
   url_launcher: ^6.3.2
+  # The About card reads the installed version from the build itself.
+  package_info_plus: ^9.0.1
 
   # Share an ayah card as an image (P2â€‘8)
   share_plus: ^12.0.2

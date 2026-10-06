@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/utils/arabic_normalize.dart';
 
@@ -35,6 +36,17 @@ class ShamelaCatalog {
 
   List<(ShamelaBookRef, String)>? _books; // (book, normalized title)
   Future<void>? _loading;
+
+  /// How many books the last catalogue on this phone held, for the library's
+  /// «استورد أي كتاب من N كتابًا» card - which used to say a number measured
+  /// once (8,598 on 2026-09-26) and typed into the translations. Null until
+  /// the catalogue has been fetched once.
+  static const _countKey = 'shamela_catalog_count';
+  static Future<int?> cachedCount() async =>
+      (await SharedPreferences.getInstance()).getInt(_countKey);
+
+  Future<void> _remember(List<Object> books) async =>
+      (await SharedPreferences.getInstance()).setInt(_countKey, books.length);
 
   bool get isLoaded => _books != null;
   int get count => _books?.length ?? 0;
@@ -75,6 +87,7 @@ class ShamelaCatalog {
           await file.parent.create(recursive: true);
           await file.writeAsBytes(gzip.encode(bytes));
           _books = parsed;
+          await _remember(parsed);
           return;
         }
       } catch (_) {
@@ -84,6 +97,7 @@ class ShamelaCatalog {
     if (_books != null && !refresh) return;
     final gz = await file.readAsBytes();
     _books = await Isolate.run(() => _parse(gzip.decode(gz)));
+    await _remember(_books!);
   }
 
   static List<(ShamelaBookRef, String)> _parse(List<int> bytes) {
