@@ -311,7 +311,9 @@ def gen(surah):
                 ok = any(same(k, mr) for k in keys)
                 if not ok and 'ناسخ' in mr and re.search(r'(إن|أن|كان|يكون|يكن|ليس|لعل|لكن|كأن|ليت)\S* واسمها|اسمها|خبرها|خبره', expl):
                     ok = True
-            if not parts or (n > 1 and segs and segs == token_segs[n - 2]) or \
+            diptote_doubt = any(x[1] == 'NOUN_PROP' and x[5] == 'مجرور' and 'كسر' in (x[6] or '') for x in segs) \
+                and not any(x[1] == 'DET' for x in segs)
+            if diptote_doubt or not parts or (n > 1 and segs and segs == token_segs[n - 2]) or \
                     any(re.search(r'(^| )حرف(\.|$|، )', p + '.') for p in parts):
                 ok = False  # a word MASAQ joins to its neighbour: read by hand
             check = 'fuller' if ok is None else ('agree' if ok else 'differ')
