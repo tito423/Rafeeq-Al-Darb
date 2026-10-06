@@ -1,3 +1,5 @@
+> **2026-10-06:** the current brief is `NEXT_PROMPT.md` + the top of `TASK_FOLLOWUP.md`; what follows below is older context.
+
 # Next session — Rafiq Al-Darb (written 2026-10-02 ~01:30 Dubai)
 
 Read CLAUDE.md (mandatory), then the top entries of TASK_FOLLOWUP.md (they hold the exact detail, commands and file paths), then TRAPS.md for the area you touch (24, 31, 43, 44, 55, 56, 57 matter here). Reply to the owner in Egyptian Arabic; app strings stay MSA.
