@@ -19,6 +19,9 @@ def write(surah, entries, status):
     assert len(toks) == len(entries), (surah, len(toks), len(entries))
     words = []
     for (a, w), e in zip(toks, entries):
+        if isinstance(e, dict):  # {'text', 'check', 'alts'}: a second view, named
+            words.append({'a': a, 'w': w, 'irab': e['text'], 'check': e['check'], 'alts': e['alts']})
+            continue
         text, check = (e, 'agree') if isinstance(e, str) else e
         words.append({'a': a, 'w': w, 'irab': text, 'check': check})
     json.dump({'surah': surah, 'status': status, 'words': words},
