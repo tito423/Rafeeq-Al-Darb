@@ -18,6 +18,12 @@
 /// a run the script could not cut safely is shown whole, with its range.
 /// The book and its authors are credited on the Sources screen only (owner,
 /// 2026-10-03).
+///
+/// Our own word-by-word i'rab (owner, 2026-10-03: it replaces the book's
+/// text) is shown instead wherever a surah has been written and checked
+/// word by word against al-Da'as by hand (assets/data/own_irab.json, from
+/// scripts/own_irab/export_app.py). A second view the book gives is shown
+/// under the word, named. Machine-generated text never reaches this asset.
 library;
 
 import 'dart:convert';
@@ -42,8 +48,40 @@ final _surahNamesProvider = FutureProvider<Map<int, String>>((ref) async {
 final _splitsProvider = FutureProvider<Map<String, List<int>>>((ref) async {
   final raw = await rootBundle.loadString('assets/data/irab_daas_splits.json');
   return (jsonDecode(raw) as Map<String, dynamic>).map(
-      (k, v) => MapEntry(k, [for (final o in v as List) o as int]));
+    (k, v) => MapEntry(k, [for (final o in v as List) o as int]),
+  );
 });
+
+/// "surah:ayah" -> [word, i'rab, [[book, text], ...]] for every word.
+final _ownIrabProvider = FutureProvider<Map<String, List<OwnIrabWord>>>((
+  ref,
+) async {
+  final raw = await rootBundle.loadString('assets/data/own_irab.json');
+  return (jsonDecode(raw) as Map<String, dynamic>).map(
+    (k, v) => MapEntry(k, [
+      for (final w in (v as List).cast<List<dynamic>>())
+        OwnIrabWord(
+          word: w[0] as String,
+          irab: w[1] as String,
+          alts: [
+            for (final a in (w[2] as List).cast<List<dynamic>>())
+              (a[0] as String, a[1] as String),
+          ],
+        ),
+    ]),
+  );
+});
+
+class OwnIrabWord {
+  final String word;
+  final String irab;
+  final List<(String, String)> alts;
+  const OwnIrabWord({
+    required this.word,
+    required this.irab,
+    required this.alts,
+  });
+}
 
 class IrabTab extends ConsumerWidget {
   final Ayah ayah;
@@ -54,8 +92,18 @@ class IrabTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final names = ref.watch(_surahNamesProvider).value ?? const <int, String>{};
     final splits = ref.watch(_splitsProvider);
-    if (splits.isLoading) {
+    final own = ref.watch(_ownIrabProvider);
+    if (splits.isLoading || own.isLoading) {
       return const Center(child: CircularProgressIndicator());
+    }
+    final words = own.value?['${ayah.surahId}:${ayah.ayahNumber}'];
+    if (words != null && words.isNotEmpty) {
+      return ListView.separated(
+        padding: const EdgeInsets.fromLTRB(14, 10, 14, 24),
+        itemCount: words.length,
+        separatorBuilder: (_, _) => const Divider(height: 18),
+        itemBuilder: (context, i) => _OwnWord(words[i]),
+      );
     }
     final cuts = splits.value ?? const <String, List<int>>{};
     return AsyncTab<IrabSection?>(
@@ -92,8 +140,12 @@ class IrabTab extends ConsumerWidget {
 
   /// The book's text, cut at each proved reference, with the referenced
   /// i'rab framed right after the clause that points to it.
-  List<Widget> _body(BuildContext context, IrabSection s,
-      Map<int, String> names, (int, int)? range) {
+  List<Widget> _body(
+    BuildContext context,
+    IrabSection s,
+    Map<int, String> names,
+    (int, int)? range,
+  ) {
     final out = <Widget>[];
     final (from, to) = range ?? (0, s.text.length);
     var start = from;
@@ -116,12 +168,13 @@ class _RangeNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      trn('quran.irab_section_range',
-          args: ['${section.ayahFrom}', '${section.ayahTo}']),
-      style: Theme.of(context)
-          .textTheme
-          .labelMedium
-          ?.copyWith(color: AppColors.gold),
+      trn(
+        'quran.irab_section_range',
+        args: ['${section.ayahFrom}', '${section.ayahTo}'],
+      ),
+      style: Theme.of(
+        context,
+      ).textTheme.labelMedium?.copyWith(color: AppColors.gold),
     );
   }
 }
@@ -138,7 +191,9 @@ class _BookText extends StatelessWidget {
     final theme = Theme.of(context);
     final base = theme.textTheme.bodyLarge?.copyWith(height: 1.9);
     final quote = base?.copyWith(
-        color: AppColors.gold, fontWeight: FontWeight.w700);
+      color: AppColors.gold,
+      fontWeight: FontWeight.w700,
+    );
     final spans = <TextSpan>[];
     var i = 0;
     for (final m in RegExp('«[^«»]*»').allMatches(text)) {
@@ -181,17 +236,76 @@ class _ReferenceBlock extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            trn('quran.irab_ref_title', args: [
-              surahName ?? '${reference.targetSurah}',
-              '${reference.targetAyah}',
-            ]),
-            style: theme.textTheme.labelMedium
-                ?.copyWith(color: gold, fontWeight: FontWeight.w700),
+            trn(
+              'quran.irab_ref_title',
+              args: [
+                surahName ?? '${reference.targetSurah}',
+                '${reference.targetAyah}',
+              ],
+            ),
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: gold,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 6),
           _BookText(reference.targetText.trim()),
         ],
       ),
+    );
+  }
+}
+
+/// One word of our own i'rab: the mushaf word in gold, its i'rab, and any
+/// second view a book gives, named.
+class _OwnWord extends StatelessWidget {
+  final OwnIrabWord w;
+  const _OwnWord(this.w);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          w.word,
+          textDirection: TextDirection.rtl,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: AppColors.gold,
+            fontWeight: FontWeight.w700,
+            height: 1.8,
+          ),
+        ),
+        _BookText(w.irab),
+        for (final (book, text) in w.alts)
+          Container(
+            margin: const EdgeInsetsDirectional.only(start: 12, top: 2),
+            padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(10),
+              border: BorderDirectional(
+                start: BorderSide(
+                  color: AppColors.gold.withValues(alpha: 0.7),
+                  width: 3,
+                ),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  trn('quran.irab_alt_$book'),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: AppColors.gold,
+                  ),
+                ),
+                _BookText(text),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }
