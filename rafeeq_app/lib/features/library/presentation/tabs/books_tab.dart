@@ -24,6 +24,7 @@ import '../../data/hidden_books.dart';
 import '../../data/library_api_service.dart';
 import '../../data/library_featured.dart';
 import '../screens/book_text_reader_screen.dart';
+import '../widgets/book_bulk_actions.dart';
 import '../widgets/book_card.dart';
 import '../widgets/hidden_books_sheet.dart';
 import 'spoken_books_view.dart';
@@ -381,17 +382,13 @@ class _AuthorExpansionTile extends StatefulWidget {
 }
 
 class _AuthorExpansionTileState extends State<_AuthorExpansionTile> {
-  final Set<String> _selected = {};
-  bool _selectionMode = false;
+  final _selection = BookSelection();
 
-  List<LibraryBook> get _missing => [
-    for (final b in widget.books)
-      if (b.textEdition != null &&
-          !widget.paths.containsKey(b.id) &&
-          DownloadManager.instance.taskById(b.id)?.status !=
-              DownloadStatus.downloading)
-        b,
-  ];
+  @override
+  void dispose() {
+    _selection.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -424,109 +421,23 @@ class _AuthorExpansionTileState extends State<_AuthorExpansionTile> {
         collapsedShape: const Border(),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (!_selectionMode && _missing.isNotEmpty)
-                  FilledButton.tonalIcon(
-                    onPressed: () {
-                      for (final b in _missing) {
-                        widget.onDownload(b);
-                      }
-                    },
-                    icon: const Icon(Icons.download_for_offline_rounded),
-                    label: Text(
-                      localizeDigits(
-                        trn('library.download_author_all', args: ['${_missing.length}']),
-                        context.locale.languageCode,
-                      ),
-                    ),
-                  )
-                else if (!_selectionMode)
-                  const SizedBox(),
-                
-                if (_selectionMode) ...[
-                  TextButton.icon(
-                    icon: const Icon(Icons.close),
-                    label: Text('إلغاء التحديد'),
-                    onPressed: () => setState(() {
-                      _selectionMode = false;
-                      _selected.clear();
-                    }),
-                  ),
-                  Row(
-                    children: [
-                      if (_selected.any((id) => widget.paths.containsKey(id)))
-                        IconButton.filledTonal(
-                          icon: const Icon(Icons.delete),
-                          color: Colors.red,
-                          onPressed: () async {
-                            final toDelete = _selected.where((id) => widget.paths.containsKey(id)).toList();
-                            for (final id in toDelete) {
-                              await LibraryApiService.instance.deleteBook(id);
-                            }
-                            if (mounted) {
-                              setState(() {
-                                _selectionMode = false;
-                                _selected.clear();
-                              });
-                            }
-                          },
-                        ),
-                      if (_selected.any((id) => !widget.paths.containsKey(id)))
-                        IconButton.filledTonal(
-                          icon: const Icon(Icons.download),
-                          onPressed: () {
-                            final toDownload = widget.books.where((b) => _selected.contains(b.id) && !widget.paths.containsKey(b.id));
-                            for (final b in toDownload) {
-                              widget.onDownload(b);
-                            }
-                            setState(() {
-                              _selectionMode = false;
-                              _selected.clear();
-                            });
-                          },
-                        ),
-                    ],
-                  ),
-                ] else ...[
-                  TextButton.icon(
-                    icon: const Icon(Icons.checklist),
-                    label: Text('تحديد'),
-                    onPressed: () => setState(() => _selectionMode = true),
-                  ),
-                ]
-              ],
-            ),
+          BookBulkBar(
+            selection: _selection,
+            books: widget.books,
+            paths: widget.paths,
+            onDownload: widget.onDownload,
+            allLabelKey: 'library.download_author_all',
           ),
           for (final b in widget.books) ...[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_selectionMode)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Checkbox(
-                      value: _selected.contains(b.id),
-                      onChanged: (v) {
-                        setState(() {
-                          if (v == true) _selected.add(b.id);
-                          else _selected.remove(b.id);
-                        });
-                      },
-                    ),
-                  ),
-                Expanded(
-                  child: BookCard(
-                    book: b,
-                    paths: widget.paths,
-                    onDownload: () => widget.onDownload(b),
-                    onOpen: () => widget.onOpen(b),
-                  ),
-                ),
-              ],
+            SelectableBook(
+              selection: _selection,
+              book: b,
+              child: BookCard(
+                book: b,
+                paths: widget.paths,
+                onDownload: () => widget.onDownload(b),
+                onOpen: () => widget.onOpen(b),
+              ),
             ),
             const SizedBox(height: 10),
           ],
@@ -614,17 +525,13 @@ class _CategoryExpansionTile extends StatefulWidget {
 }
 
 class _CategoryExpansionTileState extends State<_CategoryExpansionTile> {
-  final Set<String> _selected = {};
-  bool _selectionMode = false;
+  final _selection = BookSelection();
 
-  List<LibraryBook> get _missing => [
-    for (final b in widget.books)
-      if (b.textEdition != null &&
-          !widget.paths.containsKey(b.id) &&
-          DownloadManager.instance.taskById(b.id)?.status !=
-              DownloadStatus.downloading)
-        b,
-  ];
+  @override
+  void dispose() {
+    _selection.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -655,111 +562,25 @@ class _CategoryExpansionTileState extends State<_CategoryExpansionTile> {
         collapsedShape: const Border(),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (!_selectionMode && _missing.isNotEmpty)
-                  FilledButton.tonalIcon(
-                    onPressed: () {
-                      for (final b in _missing) {
-                        widget.onDownload(b);
-                      }
-                    },
-                    icon: const Icon(Icons.download_for_offline_rounded),
-                    label: Text(
-                      localizeDigits(
-                        trn('library.download_author_all', args: ['${_missing.length}']),
-                        context.locale.languageCode,
-                      ),
-                    ),
-                  )
-                else if (!_selectionMode)
-                  const SizedBox(),
-
-                if (_selectionMode) ...[
-                  TextButton.icon(
-                    icon: const Icon(Icons.close),
-                    label: Text('إلغاء التحديد'),
-                    onPressed: () => setState(() {
-                      _selectionMode = false;
-                      _selected.clear();
-                    }),
-                  ),
-                  Row(
-                    children: [
-                      if (_selected.any((id) => widget.paths.containsKey(id)))
-                        IconButton.filledTonal(
-                          icon: const Icon(Icons.delete),
-                          color: Colors.red,
-                          onPressed: () async {
-                            final toDelete = _selected.where((id) => widget.paths.containsKey(id)).toList();
-                            for (final id in toDelete) {
-                              await LibraryApiService.instance.deleteBook(id);
-                            }
-                            if (mounted) {
-                              setState(() {
-                                _selectionMode = false;
-                                _selected.clear();
-                              });
-                            }
-                          },
-                        ),
-                      if (_selected.any((id) => !widget.paths.containsKey(id)))
-                        IconButton.filledTonal(
-                          icon: const Icon(Icons.download),
-                          onPressed: () {
-                            final toDownload = widget.books.where((b) => _selected.contains(b.id) && !widget.paths.containsKey(b.id));
-                            for (final b in toDownload) {
-                              widget.onDownload(b);
-                            }
-                            setState(() {
-                              _selectionMode = false;
-                              _selected.clear();
-                            });
-                          },
-                        ),
-                    ],
-                  ),
-                ] else ...[
-                  TextButton.icon(
-                    icon: const Icon(Icons.checklist),
-                    label: Text('تحديد'),
-                    onPressed: () => setState(() => _selectionMode = true),
-                  ),
-                ]
-              ],
-            ),
+          BookBulkBar(
+            selection: _selection,
+            books: widget.books,
+            paths: widget.paths,
+            onDownload: widget.onDownload,
+            allLabelKey: 'library.download_section_all',
           ),
           for (final (heading, group) in _groups()) ...[
             if (heading != null) _ShelfHeading(heading),
             for (final b in group) ...[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (_selectionMode)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Checkbox(
-                        value: _selected.contains(b.id),
-                        onChanged: (v) {
-                          setState(() {
-                            if (v == true) _selected.add(b.id);
-                            else _selected.remove(b.id);
-                          });
-                        },
-                      ),
-                    ),
-                  Expanded(
-                    child: BookCard(
-                      book: b,
-                      paths: widget.paths,
-                      onDownload: () => widget.onDownload(b),
-                      onOpen: () => widget.onOpen(b),
-                    ),
-                  ),
-                ],
+              SelectableBook(
+                selection: _selection,
+                book: b,
+                child: BookCard(
+                  book: b,
+                  paths: widget.paths,
+                  onDownload: () => widget.onDownload(b),
+                  onOpen: () => widget.onOpen(b),
+                ),
               ),
               const SizedBox(height: 10),
             ],

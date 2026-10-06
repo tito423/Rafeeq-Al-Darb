@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../data/book_catalog.dart';
-import '../../data/library_api_service.dart';
+import '../widgets/book_bulk_actions.dart';
 import '../widgets/book_card.dart';
 import '../widgets/hidden_books_sheet.dart';
 
@@ -30,8 +30,13 @@ class SpokenBooksView extends StatefulWidget {
 }
 
 class _SpokenBooksViewState extends State<SpokenBooksView> {
-  bool _selectionMode = false;
-  final Set<String> _selected = {};
+  final _selection = BookSelection();
+
+  @override
+  void dispose() {
+    _selection.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,106 +95,23 @@ class _SpokenBooksViewState extends State<SpokenBooksView> {
             ),
           ]),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if (!_selectionMode)
-              FilledButton.tonalIcon(
-                onPressed: () {
-                  final missing = books.where((b) => !widget.paths.containsKey(b.id)).toList();
-                  for (final b in missing) {
-                    widget.onDownload(b);
-                  }
-                },
-                icon: const Icon(Icons.download_for_offline_rounded),
-                label: Text(
-                  localizeDigits(
-                    trn('library.download_author_all', args: ['${books.where((b) => !widget.paths.containsKey(b.id)).length}']),
-                    context.locale.languageCode,
-                  ),
-                ),
-              )
-            else
-              TextButton.icon(
-                icon: const Icon(Icons.close),
-                label: Text('إلغاء التحديد'),
-                onPressed: () => setState(() {
-                  _selectionMode = false;
-                  _selected.clear();
-                }),
-              ),
-            
-            if (_selectionMode)
-              Row(
-                children: [
-                  if (_selected.any((id) => widget.paths.containsKey(id)))
-                    IconButton.filledTonal(
-                      icon: const Icon(Icons.delete),
-                      color: Colors.red,
-                      onPressed: () async {
-                        final toDelete = _selected.where((id) => widget.paths.containsKey(id)).toList();
-                        for (final id in toDelete) {
-                          await LibraryApiService.instance.deleteBook(id);
-                        }
-                        if (mounted) {
-                          setState(() {
-                            _selectionMode = false;
-                            _selected.clear();
-                          });
-                        }
-                      },
-                    ),
-                  if (_selected.any((id) => !widget.paths.containsKey(id)))
-                    IconButton.filledTonal(
-                      icon: const Icon(Icons.download),
-                      onPressed: () {
-                        final toDownload = books.where((b) => _selected.contains(b.id) && !widget.paths.containsKey(b.id));
-                        for (final b in toDownload) {
-                          widget.onDownload(b);
-                        }
-                        setState(() {
-                          _selectionMode = false;
-                          _selected.clear();
-                        });
-                      },
-                    ),
-                ],
-              )
-            else
-              TextButton.icon(
-                icon: const Icon(Icons.checklist),
-                label: Text('تحديد'),
-                onPressed: () => setState(() => _selectionMode = true),
-              ),
-          ],
+        BookBulkBar(
+          selection: _selection,
+          books: books,
+          paths: widget.paths,
+          onDownload: widget.onDownload,
+          allLabelKey: 'library.download_list_all',
         ),
-        const SizedBox(height: 12),
         for (final b in books) ...[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (_selectionMode)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Checkbox(
-                    value: _selected.contains(b.id),
-                    onChanged: (v) {
-                      setState(() {
-                        if (v == true) _selected.add(b.id);
-                        else _selected.remove(b.id);
-                      });
-                    },
-                  ),
-                ),
-              Expanded(
-                child: BookCard(
-                  book: b,
-                  paths: widget.paths,
-                  onDownload: () => widget.onDownload(b),
-                  onOpen: () => widget.onOpen(b),
-                ),
-              ),
-            ],
+          SelectableBook(
+            selection: _selection,
+            book: b,
+            child: BookCard(
+              book: b,
+              paths: widget.paths,
+              onDownload: () => widget.onDownload(b),
+              onOpen: () => widget.onOpen(b),
+            ),
           ),
           const SizedBox(height: 10),
         ],
