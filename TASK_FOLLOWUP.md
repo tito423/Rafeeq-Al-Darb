@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+~02:30 (10-07, Opus 5.5, LOCAL) STOPPED CLEAN at 5h quota 95% / context 88%. I'rab: 66 done (cb1589b4) -> own_irab.json 5,247 of 77,430 words, 50 surahs (1 + 66-114). Tree clean, all pushed. NEXT (exact): al-Talaq (65): `py -3 scripts/own_irab/show.py 65 > %TEMP%\s65.txt`; per-ayah token counts with `grep "^== " ... | awk '{printf "%s:%d ", $2, NF-2}'`; chase doubts with `py -3 scripts/own_irab/books.py 65 <ayah> <word>`; write scripts/own_irab/fill_065.py on the pattern of fill_066.py (helpers + alt() for named second views); `py -3 scripts/own_irab/fill_065.py`, `check.py`, check first/last word of each ayah, `export_app.py`, commit + push. Then 64 -> 58. Rule used throughout: two books (al-Jadwal, Darwish) against al-Da'as -> ours follows them, al-Da'as named; one book -> ours = al-Da'as, that book named; al-Da'as typos (مضارع for a past verb etc.) are not copied and are logged in the commit. Emulator: last seen 69:47 on build of 6c9a2d40; 66 not yet seen (rebuild x64, relaunch emulator headless after the build - TRAPS 24/57, sign_release.py then install, check lastUpdateTime). Azkar task at 04:30.
+
 ~02:05 (10-07, Opus 5.5, LOCAL) JUZ TABARAK COMPLETE (6c9a2d40): own i'rab = al-Fatiha + 67-114, 4,998 of 77,430 words (quran_local.db). Building x64 (scripts/out/build_20261007a.log; delete E:\DevEnv\gradle\init.d
 afeeq_offline_tmp.gradle if the session dies) to see 69:47 / 68:10 on emulator-5554. Azkar task moved to 04:30 (schtasks warned the run-as password is empty - if items.json is still 138 tomorrow, run `schtasks /Run /TN RafeeqAzkarVoice` by hand). NEXT: Juz Qad Sami' 66 -> 58, same method.
 
