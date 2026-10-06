@@ -189,8 +189,14 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
     await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
   }
 
-  Future<void> _saveMode(String prayerKey, AdhanMode mode) async {
-    await ref.read(adhanSettingsProvider.notifier).setModeFor(prayerKey, mode);
+  Future<void> _saveMode(String prayerKey, AdhanMode mode) =>
+      _saveModes([prayerKey], mode);
+
+  /// One reschedule for any number of prayers («للكل» sets all five).
+  Future<void> _saveModes(List<String> keys, AdhanMode mode) async {
+    for (final k in keys) {
+      await ref.read(adhanSettingsProvider.notifier).setModeFor(k, mode);
+    }
     await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
   }
 
@@ -294,7 +300,6 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final catalogAsync = ref.watch(adhanCatalogProvider);
     final settings = ref.watch(adhanSettingsProvider);
 
@@ -558,22 +563,16 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
                     final options =
                         pageRef.watch(adhanCatalogProvider).valueOrNull ??
                             const <AdhanOption>[];
-                    return ListView(
-                    padding: const EdgeInsets.fromLTRB(8, 12, 8, 24),
-                    children: [
-                      for (final key in adhanPrayerKeys)
-                        PrayerModeCard(
-                          prayerKey: key,
-                          label: _prayerLabels[key]!.tr(),
-                          mode: live.modeFor(key),
-                          adhanId: live.adhanIdByPrayer[key],
-                          catalog: options,
-                          onModeChanged: (m) => _saveMode(key, m),
-                          onAdhanChanged: (id) => _saveChoice(key, id),
-                          onTest: () => _test(key),
-                          accent: scheme.primary,
-                        ),
-                    ],
+                    return PerPrayerPage(
+                      prayerKeys: adhanPrayerKeys,
+                      label: (k) => _prayerLabels[k]!.tr(),
+                      modeOf: live.modeFor,
+                      adhanOf: (k) => live.adhanIdByPrayer[k],
+                      catalog: options,
+                      onMode: _saveMode,
+                      onModeAll: (m) => _saveModes(adhanPrayerKeys, m),
+                      onAdhan: _saveChoice,
+                      onTest: _test,
                     );
                   },
                 ),

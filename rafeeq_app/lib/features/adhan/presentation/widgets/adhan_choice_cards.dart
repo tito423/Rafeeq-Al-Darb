@@ -131,98 +131,305 @@ class AdhanCard extends StatelessWidget {
   }
 }
 
-class PrayerModeCard extends StatelessWidget {
+/// The icon each alert mode wears in the per-prayer page.
+IconData adhanModeIcon(AdhanMode m) => switch (m) {
+      AdhanMode.full => Icons.fullscreen_rounded,
+      AdhanMode.audio => Icons.volume_up_rounded,
+      AdhanMode.vibrate => Icons.vibration_rounded,
+      AdhanMode.silent => Icons.notifications_off_outlined,
+    };
+
+/// «تخصيص كل صلاة» on one page (owner, 2026-10-06: «ممكن تهندسه بشكل مش
+/// يبقى طويل اوي … في صفحة وحدة وبشكل متكور وروعه بصريا»). It was five tall
+/// cards, each with a title, a caption, four long chips and a full-width
+/// dropdown - two screens of scrolling for five choices. Now: a «للكل» row
+/// that sets every prayer at once, then one short card per prayer - its
+/// name and time of day, the four modes as one segmented row of icons with
+/// the chosen one named, and the adhan as a single pill that opens a list.
+class PerPrayerPage extends StatelessWidget {
+  final List<String> prayerKeys;
+  final String Function(String key) label;
+  final AdhanMode Function(String key) modeOf;
+  final String? Function(String key) adhanOf;
+  final List<AdhanOption> catalog;
+  final void Function(String key, AdhanMode mode) onMode;
+  final void Function(AdhanMode mode) onModeAll;
+  final void Function(String key, String? adhanId) onAdhan;
+  final void Function(String key) onTest;
+
+  const PerPrayerPage({
+    super.key,
+    required this.prayerKeys,
+    required this.label,
+    required this.modeOf,
+    required this.adhanOf,
+    required this.catalog,
+    required this.onMode,
+    required this.onModeAll,
+    required this.onAdhan,
+    required this.onTest,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final modes = {for (final k in prayerKeys) modeOf(k)};
+    final common = modes.length == 1 ? modes.first : null;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 24),
+      children: [
+        Container(
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            gradient: LinearGradient(
+              begin: AlignmentDirectional.topStart,
+              end: AlignmentDirectional.bottomEnd,
+              colors: [
+                AppColors.gold.withValues(alpha: 0.18),
+                AppColors.gold.withValues(alpha: 0.05),
+              ],
+            ),
+            border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('prayer.per_prayer_all'.tr(),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800, color: goldText(context))),
+              const SizedBox(height: 8),
+              _ModeSegments(
+                selected: common,
+                onSelect: onModeAll,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        for (final k in prayerKeys)
+          _PrayerTile(
+            prayerKey: k,
+            label: label(k),
+            mode: modeOf(k),
+            adhanId: adhanOf(k),
+            catalog: catalog,
+            onMode: (m) => onMode(k, m),
+            onAdhan: (id) => onAdhan(k, id),
+            onTest: () => onTest(k),
+          ),
+        const SizedBox(height: 4),
+        Text(
+          'prayer.per_prayer_desc'.tr(),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 11.5, color: scheme.onSurfaceVariant),
+        ),
+      ],
+    );
+  }
+}
+
+/// Each prayer's place in the day, as an icon and a tint.
+const _prayerLook = <String, (IconData, Color)>{
+  'fajr': (Icons.wb_twilight_rounded, Color(0xFF5C7CFA)),
+  'dhuhr': (Icons.wb_sunny_rounded, Color(0xFFF2A93B)),
+  'asr': (Icons.light_mode_outlined, Color(0xFFE67E22)),
+  'maghrib': (Icons.wb_twilight_rounded, Color(0xFFD9534F)),
+  'isha': (Icons.nightlight_round, Color(0xFF7E57C2)),
+};
+
+class _PrayerTile extends StatelessWidget {
   final String prayerKey;
   final String label;
   final AdhanMode mode;
   final String? adhanId;
   final List<AdhanOption> catalog;
-  final ValueChanged<AdhanMode> onModeChanged;
-  final ValueChanged<String?> onAdhanChanged;
+  final ValueChanged<AdhanMode> onMode;
+  final ValueChanged<String?> onAdhan;
   final VoidCallback onTest;
-  final Color accent;
 
-  const PrayerModeCard({
-    super.key,
+  const _PrayerTile({
     required this.prayerKey,
     required this.label,
     required this.mode,
     required this.adhanId,
     required this.catalog,
-    required this.onModeChanged,
-    required this.onAdhanChanged,
+    required this.onMode,
+    required this.onAdhan,
     required this.onTest,
-    required this.accent,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(label,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: accent)),
-                ),
-                TextButton.icon(
-                  onPressed: onTest,
-                  icon: const Icon(Icons.notifications_active_outlined, size: 18),
-                  label: Text('prayer.test'.tr()),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text('prayer.notification_mode'.tr(),
-                style: Theme.of(context).textTheme.labelMedium),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: AdhanMode.values.map((m) {
-                return ChoiceChip(
-                  label: Text(m.trKey.tr()),
-                  selected: mode == m,
-                  onSelected: (_) => onModeChanged(m),
-                );
-              }).toList(),
-            ),
-            if (mode == AdhanMode.full || mode == AdhanMode.audio) ...[
-              const SizedBox(height: 10),
-              DropdownButtonFormField<String?>(
-                // A stored choice that no longer fits this prayer (an
-                // ordinary adhan picked for Fajr before Fajr was separated)
-                // reads as «default»; the dropdown asserts on a value that is
-                // not among its items.
-                initialValue: catalog.any(
-                  (o) => o.id == adhanId && o.fitsPrayer(prayerKey),
-                )
-                    ? adhanId
-                    : null,
-                decoration: InputDecoration(
-                  labelText: 'prayer.choose_adhan'.tr(),
-                  isDense: true,
-                ),
-                items: [
-                  DropdownMenuItem<String?>(
-                    child: Text('prayer.use_default'.tr()),
+    final scheme = Theme.of(context).colorScheme;
+    final (icon, tint) =
+        _prayerLook[prayerKey] ?? (Icons.access_time_rounded, AppColors.gold);
+    final sounds = mode == AdhanMode.full || mode == AdhanMode.audio;
+    final fits = [for (final o in catalog) if (o.fitsPrayer(prayerKey)) o];
+    // A stored choice that no longer fits this prayer (an ordinary adhan
+    // picked for Fajr before Fajr was separated) reads as «default».
+    final chosen = fits.where((o) => o.id == adhanId).firstOrNull;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: scheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        border: Border.all(color: tint.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [tint, tint.withValues(alpha: 0.6)],
                   ),
-                  for (final o in catalog.where((o) => o.fitsPrayer(prayerKey)))
-                    DropdownMenuItem<String?>(value: o.id, child: Text(o.name)),
-                ],
-                onChanged: onAdhanChanged,
+                ),
+                child: Icon(icon, color: Colors.white, size: 19),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(label,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800, fontSize: 15.5)),
+              ),
+              if (sounds)
+                Flexible(
+                  flex: 2,
+                  child: ActionChip(
+                    avatar: const Icon(Icons.music_note_rounded, size: 16),
+                    label: Text(
+                      chosen?.name ?? 'prayer.use_default_short'.tr(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    visualDensity: VisualDensity.compact,
+                    onPressed: () => _pickAdhan(context, fits, chosen?.id),
+                  ),
+                ),
+              IconButton(
+                tooltip: 'prayer.test'.tr(),
+                visualDensity: VisualDensity.compact,
+                onPressed: onTest,
+                icon: Icon(Icons.play_circle_outline_rounded,
+                    color: goldText(context)),
               ),
             ],
+          ),
+          const SizedBox(height: 8),
+          _ModeSegments(selected: mode, onSelect: onMode),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickAdhan(
+      BuildContext context, List<AdhanOption> fits, String? current) async {
+    final picked = await showModalBottomSheet<(String?,)>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: Text('${'prayer.choose_adhan'.tr()} — $label',
+                  style: Theme.of(ctx).textTheme.titleMedium),
+            ),
+            for (final (id, name) in [
+              (null, 'prayer.use_default'.tr()),
+              for (final o in fits) (o.id, o.name),
+            ])
+              ListTile(
+                leading: Icon(
+                  id == current
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
+                  color: id == current ? AppColors.gold : null,
+                ),
+                title: Text(name),
+                onTap: () => Navigator.pop(ctx, (id,)),
+              ),
           ],
         ),
+      ),
+    );
+    if (picked != null) onAdhan(picked.$1);
+  }
+}
+
+/// The four alert modes as one row: every mode an icon, the chosen one
+/// filled and named under it, so the row stays one line on any phone.
+class _ModeSegments extends StatelessWidget {
+  final AdhanMode? selected;
+  final ValueChanged<AdhanMode> onSelect;
+
+  const _ModeSegments({required this.selected, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        color: scheme.surface.withValues(alpha: 0.6),
+      ),
+      child: Row(
+        children: [
+          for (final m in AdhanMode.values)
+            Expanded(
+              child: Tooltip(
+                message: m.trKey.tr(),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(11),
+                  onTap: () => onSelect(m),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(11),
+                      color: m == selected
+                          ? AppColors.gold.withValues(alpha: 0.9)
+                          : Colors.transparent,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(adhanModeIcon(m),
+                            size: 20,
+                            color: m == selected
+                                ? Colors.black87
+                                : scheme.onSurfaceVariant),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${m.trKey}_short'.tr(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: m == selected
+                                ? FontWeight.w800
+                                : FontWeight.w500,
+                            color: m == selected
+                                ? Colors.black87
+                                : scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
