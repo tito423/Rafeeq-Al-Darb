@@ -16,6 +16,17 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+~07:30 (10-06, Opus 5.5, LOCAL desktop app on the laptop) OWNER'S REVIEW OF THE GEMINI SESSION (d3e01c9c, «v3.78.0»). Audit found: (a) QUIZ 269 -> 1000 was FAKE: scripts/auto_quiz.py cut random 8-word runs of al-Bidaya, blanked a word, random distractors, all 731 at l3 -> owner saw «٧٨٦ سؤالًا» in stage 3. R2 still holds the real 269. (b) Library multi-select: Arabic hard-coded strings, category button says «كتب المؤلف», three copies of the same code. (c) azkar got a SECOND listen button (device voice) next to the hisnmuslim one. (d) ar.json lost `quick_access`. Order, each its own commit, each seen on emulator-5554:
+ 1. [ ] Quiz: drop the 731 auto questions (bundle back to the real 269), delete auto_quiz.py + q_auto.json, revert the ssl-unverified hack in build_history_quiz.py.
+ 2. [ ] Library selection: one shared widget, 7-locale strings, category «تحميل كل كتب القسم», delete refreshes; try download N / delete N on the emulator.
+ 3. [ ] Kids stories row in Downloads: download a story on the emulator, see what the row says, fix the real cause.
+ 4. [ ] One listen button per hadith/dhikr, app-wide, best voice available (owner: the model voice is weak - find better).
+ 5. [ ] Continuous recitation: return to the highlighted ayah after a mis-swipe as a SETTING with a sensible delay; verify Gemini's 5 s code on the emulator.
+ 6. [ ] Prayer customisation screen: compact single page, polished.
+ 7. [ ] About screen: every number computed from content.
+ 8. [ ] Own i'rab: explain status to the owner (scripts/own_irab/, 98-101 partial untracked files left by Gemini - read before trusting).
+ 9. [ ] Quiz to ~1000 REAL cited questions (same rules as before), balanced across levels.
+
 ~02:30 (10-05, Opus, LOCAL Antigravity IDE on the laptop; quota not readable from this IDE) OWNER'S NEW BRIEF. Rules from him: easy items first; spend tokens wisely; NO emulator (he tests); build + publish only at the very end with a report; if this agent stops, Gemini 3.1 Pro continues from here with the same method (CLAUDE.md + this file, one item per commit, mark each [DONE <sha>] here). Order (do top to bottom, mark each):
  1. [DONE, commit «Hajj guide: 25 typing slips»] UMRAH text: «من كمان قبلكم» -> «من كان قبلكم» + 24 more slips in the Hajj chapter, list + method + references in scripts/hajj_text_corrections.py (applied to the asset; build_hajj_guide_book.py applies it on rebuild). Al-Jaziri madhahib text NOT swept.
  2. [DONE d3e01c9c] HOME quick-access card («الوصول السريع»): every tile a DIFFERENT colour.
