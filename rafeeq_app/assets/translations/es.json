@@ -382,7 +382,11 @@
     "autoscroll_follows": "El desplazamiento automático sigue la recitación; vuelve a su velocidad cuando esta se detiene.",
     "recite_resume_with": "Continuar con {}",
     "recite_resume_where": "{}, aleya {}",
-    "autoscroll_off_reciting": "El desplazamiento automático está desactivado durante la recitación continua; la página sigue la aleya recitada."
+    "autoscroll_off_reciting": "El desplazamiento automático está desactivado durante la recitación continua; la página sigue la aleya recitada.",
+    "recite_return": "Volver a la aleya recitada",
+    "recite_return_hint": "Durante la recitación continua, si pasas de página lejos de la aleya resaltada, el mus-haf vuelve a ella solo tras este tiempo.",
+    "recite_return_off": "Desactivado",
+    "recite_return_s": "{} s"
   },
   "library": {
     "title": "Biblioteca",

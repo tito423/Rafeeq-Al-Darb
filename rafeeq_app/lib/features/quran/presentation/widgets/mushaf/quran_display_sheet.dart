@@ -31,6 +31,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/digits.dart';
 import '../../../data/page_turn_provider.dart';
+import '../../../data/recite_return_provider.dart';
 import '../../../data/text_layout_provider.dart';
 import '../mushaf_theme_picker.dart';
 import 'auto_scroll_speed_bar.dart';
@@ -238,6 +239,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                   widget.onAutoScrollSpeedChanged(speed);
                 },
               ),
+            const _ReciteReturnRow(),
             // «اختيار المصاحف في خيارات المصاحف في القرآن مالهاش لازمة» -
             // the sheet it opened listed one printing with a tick beside it.
             // What is left under this heading is the only choice there is:
@@ -451,6 +453,65 @@ class _Tile extends StatelessWidget {
     trailing: const Icon(Icons.chevron_right, size: 20),
     onTap: onTap,
   );
+}
+
+/// «الرجوع للآية المقروءة»: off, or after 5 / 10 / 20 s away from the page
+/// the continuous recitation is on ([reciteReturnProvider]).
+class _ReciteReturnRow extends ConsumerWidget {
+  const _ReciteReturnRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final value = ref.watch(reciteReturnProvider);
+    final scheme = Theme.of(context).colorScheme;
+    final lang = context.locale.languageCode;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.my_location_rounded, color: goldText(context)),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text('quran.recite_return'.tr(),
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(start: 40, top: 2),
+            child: Text(
+              'quran.recite_return_hint'.tr(),
+              style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(start: 36),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final s in reciteReturnChoices)
+                  ChoiceChip(
+                    label: Text(s == 0
+                        ? 'quran.recite_return_off'.tr()
+                        : localizeDigits(
+                            'quran.recite_return_s'.tr(args: ['$s']), lang)),
+                    selected: value == s,
+                    selectedColor: AppColors.gold.withValues(alpha: 0.22),
+                    onSelected: (_) =>
+                        ref.read(reciteReturnProvider.notifier).set(s),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _SwitchTile extends StatelessWidget {

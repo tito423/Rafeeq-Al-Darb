@@ -382,7 +382,11 @@
     "autoscroll_follows": "A rolagem automática acompanha a recitação; volta à sua velocidade quando ela para.",
     "recite_resume_with": "Continuar com {}",
     "recite_resume_where": "{}, versículo {}",
-    "autoscroll_off_reciting": "A rolagem automática fica desligada durante a recitação contínua; a página acompanha o versículo recitado."
+    "autoscroll_off_reciting": "A rolagem automática fica desligada durante a recitação contínua; a página acompanha o versículo recitado.",
+    "recite_return": "Voltar ao versículo recitado",
+    "recite_return_hint": "Durante a recitação contínua, se virar a página para longe do versículo destacado, o mus-haf volta a ele sozinho após este tempo.",
+    "recite_return_off": "Desligado",
+    "recite_return_s": "{} s"
   },
   "library": {
     "title": "Biblioteca",

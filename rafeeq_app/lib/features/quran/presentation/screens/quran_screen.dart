@@ -25,6 +25,7 @@ import '../../data/quran_fullscreen_provider.dart';
 import '../../data/quran_jump_provider.dart';
 import '../../data/quran_last_read.dart';
 import '../../data/quran_zoom_provider.dart';
+import '../../data/recite_return_provider.dart';
 import '../../data/text_layout_provider.dart';
 import '../widgets/ayah_sciences_sheet.dart';
 /// Quran tab — a real mushaf browser.
@@ -138,26 +139,26 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (mounted && p != _pressed) setState(() => _pressed = p);
   }
 
+  /// The page moved while the continuous recitation plays: unless the
+  /// reader switched it off ([reciteReturnProvider]), go back to the
+  /// recited ayah once he has left the pages alone for that long. Armed on
+  /// every page change, the recitation's own included - the callback does
+  /// nothing when the recited ayah is already the page in view (or on
+  /// screen in the continuous scroll), so only a turn AWAY from it brings
+  /// the mushaf back.
   Timer? _returnToRecitationTimer;
 
-  bool _onGlobalScroll(ScrollNotification n) {
-    if (!_recite.active) return false;
-    
-    if (n is ScrollStartNotification) {
-      _returnToRecitationTimer?.cancel();
-    } else if (n is ScrollEndNotification) {
-      _returnToRecitationTimer?.cancel();
-      _returnToRecitationTimer = Timer(const Duration(seconds: 5), () {
-        if (!mounted || !_recite.active) return;
-        final surah = _recite.surahId;
-        final ayah = _recite.ayahNumber;
-        if (surah != null && ayah != null) {
-          _followedPage = null; // Force re-evaluation of page jump
-          _followRecitationTo(surah, ayah);
-        }
-      });
-    }
-    return false;
+  void _armReturnToRecitation() {
+    _returnToRecitationTimer?.cancel();
+    final seconds = ref.read(reciteReturnProvider);
+    if (!_recite.active || seconds == 0) return;
+    _returnToRecitationTimer = Timer(Duration(seconds: seconds), () {
+      final surah = _recite.surahId;
+      final ayah = _recite.ayahNumber;
+      if (!mounted || !_recite.active || surah == null || ayah == null) return;
+      _followedPage = null;
+      unawaited(_followRecitationTo(surah, ayah));
+    });
   }
 
   Future<void> _persistPage() async {
@@ -458,6 +459,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   void _onScrolledToPage(int page) {
     setState(() => _current = page);
     _persistPage();
+    _armReturnToRecitation();
   }
 
   void _changeAutoScrollSpeed(double speed) {
@@ -880,10 +882,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             : bars.bottom + 6)
                         : (isLandscape ? 34 : 0),
                   ),
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: _onGlobalScroll,
-                    child: _buildViewer(data, edition, textLayout),
-                  ),
+                  child: _buildViewer(data, edition, textLayout),
                 ),
                 // NORMAL MODE ONLY: in full screen `MushafChrome` carries
                 // surah + juz + page with the controls, and leaving these
@@ -1030,6 +1029,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
           }
         });
         _persistPage();
+        _armReturnToRecitation();
       },
       itemCount: _totalPages,
       itemBuilder: (context, index) {

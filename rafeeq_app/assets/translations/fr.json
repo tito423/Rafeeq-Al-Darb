@@ -382,7 +382,11 @@
     "autoscroll_follows": "Le défilement automatique suit la récitation ; il reprend sa vitesse quand elle s'arrête.",
     "recite_resume_with": "Continuer avec {}",
     "recite_resume_where": "{}, verset {}",
-    "autoscroll_off_reciting": "Le défilement automatique est désactivé pendant la récitation continue ; la page suit le verset récité."
+    "autoscroll_off_reciting": "Le défilement automatique est désactivé pendant la récitation continue ; la page suit le verset récité.",
+    "recite_return": "Revenir au verset récité",
+    "recite_return_hint": "Pendant la récitation continue, si vous tournez la page loin du verset surligné, le moushaf y revient seul après ce délai.",
+    "recite_return_off": "Désactivé",
+    "recite_return_s": "{} s"
   },
   "library": {
     "title": "Bibliothèque",

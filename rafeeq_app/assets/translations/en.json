@@ -382,7 +382,11 @@
     "autoscroll_follows": "Auto-scroll is following the recitation; it returns to its speed when the recitation stops.",
     "recite_resume_with": "Continue with {}",
     "recite_resume_where": "{}, verse {}",
-    "autoscroll_off_reciting": "Auto-scroll is off during continuous recitation; the page follows the verse being recited."
+    "autoscroll_off_reciting": "Auto-scroll is off during continuous recitation; the page follows the verse being recited.",
+    "recite_return": "Back to the recited verse",
+    "recite_return_hint": "During continuous recitation, if you turn away from the highlighted verse the mushaf returns to it by itself after this long.",
+    "recite_return_off": "Off",
+    "recite_return_s": "{} s"
   },
   "library": {
     "title": "Library",
