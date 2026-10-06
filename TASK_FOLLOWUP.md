@@ -18,14 +18,14 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ~07:30 (10-06, Opus 5.5, LOCAL desktop app on the laptop) OWNER'S REVIEW OF THE GEMINI SESSION (d3e01c9c, «v3.78.0»). Audit found: (a) QUIZ 269 -> 1000 was FAKE: scripts/auto_quiz.py cut random 8-word runs of al-Bidaya, blanked a word, random distractors, all 731 at l3 -> owner saw «٧٨٦ سؤالًا» in stage 3. R2 still holds the real 269. (b) Library multi-select: Arabic hard-coded strings, category button says «كتب المؤلف», three copies of the same code. (c) azkar got a SECOND listen button (device voice) next to the hisnmuslim one. (d) ar.json lost `quick_access`. Order, each its own commit, each seen on emulator-5554:
  1. [DONE a5e5cb15] Quiz: drop the 731 auto questions (bundle back to the real 269), delete auto_quiz.py + q_auto.json, revert the ssl-unverified hack in build_history_quiz.py.
- 2. [CODE 9b0e1dc4, emulator pending] Library selection: one shared widget, 7-locale strings, category «تحميل كل كتب القسم», delete refreshes; try download N / delete N on the emulator.
- 3. [ ] Kids stories row in Downloads: download a story on the emulator, see what the row says, fix the real cause.
+ 2. [DONE 9b0e1dc4+9fe9e808, SEEN on emulator: select, download (2) queued, delete (1) + confirm; downloads themselves fail here (TRAPS 61)] Library selection: one shared widget, 7-locale strings, category «تحميل كل كتب القسم», delete refreshes; try download N / delete N on the emulator.
+ 3. [9fe9e808: R2 sizes = app bytes for all 28; row now says «٢٨ قصة … لم تُنزَّل أي قصة بعد»; real download NOT runnable here (TRAPS 61) -> owner's phone] Kids stories row in Downloads: download a story on the emulator, see what the row says, fix the real cause.
  4. [CODE 35f12937 (one button per dhikr; Qur'an never to TTS), emulator pending; better voice NOT yet researched] One listen button per hadith/dhikr, app-wide, best voice available (owner: the model voice is weak - find better).
- 5. [CODE de3cdeb0, emulator pending] Continuous recitation: return to the highlighted ayah after a mis-swipe as a SETTING with a sensible delay; verify Gemini's 5 s code on the emulator.
- 6. [CODE ed03e45a, emulator pending] Prayer customisation screen: compact single page, polished.
- 7. [CODE 47a969b9 (PackageInfo version, quiz+kids rows, Shamela count), emulator pending] About screen: every number computed from content.
+ 5. [CODE de3cdeb0+9fe9e808; recitation audio cannot stream on this emulator (TRAPS 61) -> NOT seen; owner's phone] Continuous recitation: return to the highlighted ayah after a mis-swipe as a SETTING with a sensible delay; verify Gemini's 5 s code on the emulator.
+ 6. [DONE ed03e45a+9fe9e808, SEEN on emulator] Prayer customisation screen: compact single page, polished.
+ 7. [DONE 47a969b9, SEEN: v3.78.0, 269, 28] About screen: every number computed from content.
  8. [README marked: 098-101 by Gemini NOT TRUSTED] Own i'rab: explain status to the owner (scripts/own_irab/, 98-101 partial untracked files left by Gemini - read before trusting).
- NOW: build_github_release.bat running (log scripts/out/build_20261006.log), then boot emulator headless, install, check 2/3/4/5/6/7 with screenshots.
+ NOW: rebuild of 9fe9e808 (log scripts/out/build_20261006b.log, offline init script per TRAPS 61 - DELETE E:\DevEnv\gradle\init.d\rafeeq_offline_tmp.gradle if a session dies mid-build), then re-check the fixed delete button / listen pill / prayer play button / kids row on the emulator. Voice sample for the owner: scripts/out/voice_sample_piper_kareem.mp3 (Piper ar_JO kareem medium via sherpa-onnx 1.13.8, same hadith) - owner's ear decides.
  9. [ ] Quiz to ~1000 REAL cited questions (same rules as before), balanced across levels.
 
 ~02:30 (10-05, Opus, LOCAL Antigravity IDE on the laptop; quota not readable from this IDE) OWNER'S NEW BRIEF. Rules from him: easy items first; spend tokens wisely; NO emulator (he tests); build + publish only at the very end with a report; if this agent stops, Gemini 3.1 Pro continues from here with the same method (CLAUDE.md + this file, one item per commit, mark each [DONE <sha>] here). Order (do top to bottom, mark each):
