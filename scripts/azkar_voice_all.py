@@ -192,8 +192,12 @@ def main():
                         if tts(line, VOICE, STYLE, fn):
                             break
                 if not os.path.exists(fn):
+                    # Gemini refused (content_blocked) or failed 3 times: the item
+                    # gets no clip and is listed, the run goes on.
                     print('TTS FAILED', iid, flush=True)
-                    sys.exit(1)
+                    ok = False
+                    stopped.append({'item': iid, 'tts_failed': line[:120]})
+                    break
                 if fn not in report:
                     segs, _ = asr.transcribe(pcm16k(fn), language='ar', beam_size=5)
                     heard = ' '.join(s.text for s in segs).strip()
@@ -202,6 +206,8 @@ def main():
                     json.dump(report, open(rep_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
                 parts.append(fn)
                 parts.append(gap)
+            if not ok:
+                break
         if not ok:
             print(f'[{n}/{len(rows)}] {iid} STOPPED: Qur\'an piece is not one whole ayah', flush=True)
             continue
