@@ -60,7 +60,8 @@ SKIP_TAGS = {'DET', 'IMPERF_PREF', 'CASE_INDEF_ACC', 'CASE_INDEF_NOM', 'CASE_IND
              'CASE_DEF_NOM', 'CASE_DEF_GEN', 'PVSUFF_SUBJ'}
 
 
-LETTER = {'و': 'الواو', 'ف': 'الفاء', 'ب': 'الباء', 'ل': 'اللام', 'ك': 'الكاف', 'س': 'السين',
+LETTER = {'ون': 'الواو', 'وا': 'الواو', 'ا': 'الألف', 'ين': 'الياء', 'تم': '«تم»', 'تما': '«تما»', 'تن': '«تن»',
+          'و': 'الواو', 'ف': 'الفاء', 'ب': 'الباء', 'ل': 'اللام', 'ك': 'الكاف', 'س': 'السين',
           'أ': 'الهمزة', 'ت': 'التاء', 'ه': 'الهاء', 'ها': '«ها»', 'ن': 'النون', 'ي': 'الياء', 'نا': '«نا»',
           'كم': '«كم»', 'هم': '«هم»', 'هما': '«هما»', 'كما': '«كما»', 'هن': '«هن»', 'كن': '«كن»', 'ني': '«ني»'}
 # What a particle MASAQ only calls «حرف غير عامل» is, by its tag and form.
@@ -106,10 +107,13 @@ def seg_text(seg):
                 return f'{r} {case} وعلامة {SIGN_NOUN[case]} {MARK.get(m, m)}'
             return f'{r} مبني على {BUILT.get(m, m)}'
         return f'{r} مبني على {BUILT.get(m, m)}'
-    if built and 'ضمير' in built:
-        pr = 'ضمير منفصل' if 'منفصل' in built else 'ضمير متصل'
-        place = {'مرفوع': 'رفع', 'منصوب': 'نصب', 'مجرور': 'جر'}.get(case)
-        b = BUILT.get(m, 'السكون')
+    if (built and 'ضمير' in built) or (tag or '').startswith(('SUBJ_PRON', 'OBJ_PRON', 'POSS_PRON', 'PRON_')) \
+            or (tag or '').startswith('PVSUFF_SUBJ') and role:
+        pr = 'ضمير منفصل' if built and 'منفصل' in built else 'ضمير متصل'
+        place = {'مرفوع': 'رفع', 'منصوب': 'نصب', 'مجرور': 'جر'}.get(case) or \
+            {'فاعل': 'رفع', 'نائب فاعل': 'رفع', 'مبتدأ': 'رفع', 'مفعول به': 'نصب', 'مضاف إليه': 'جر',
+             'اسم مجرور': 'جر'}.get(role)
+        b = 'السكون' if form in ('ون', 'وا', 'و', 'ا', 'ين', 'ي') else BUILT.get(m, 'السكون')
         if r == 'اسم مجرور':
             r = 'بالحرف'
         return f'{pr} مبني على {b}' + (f' في محل {place} {r}' if place else '')
@@ -228,6 +232,9 @@ def gen(surah):
         for n, w in enumerate(toks, 1):
             segs = token_segs[n - 1]
             expl = ' '.join(by_tok.get(n - 1, []))
+            five = next((x[6] for x in segs if x[1] in ('IMPERF_PREF', 'NOON_V5') and x[6] in ('ثبوت النون', 'حذف النون', 'حذف حرف العلة')), None)
+            if five:
+                segs = [x[:6] + (five,) + x[7:] if x[2] == 'Stem' and x[4] in VERB else x for x in segs]
             texts = [(sg, seg_text(sg[:7])) for sg in segs]
             texts = [(sg, t) for sg, t in texts if t]
             pref = ''.join(sg[0] for sg in segs if sg[1] == 'IMPERF_PREF')
