@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+~03:55 (10-07, Opus 5.5, LOCAL) I'rab: al-Mumtahana (60) done -> own_irab.json 6,699 words / 56 surahs (1 + 60-114). NEXT (exact): 59 al-Hashr, same method (show.py 59; PYTHONPATH=scripts/own_irab py -3 dump of books for every ayah; fill_059.py on the pattern of fill_060.py). Then 58. Emulator: 66-60 NOT yet seen.
+
 ~03:50 (10-07, Opus 5.5, LOCAL) I'rab: al-Saff (61) done -> own_irab.json 6,351 words / 55 surahs (1 + 61-114). NEXT (exact): 60 al-Mumtahana, same method (show.py 60; PYTHONPATH=scripts/own_irab py -3 dump of books for every ayah; fill_060.py on the pattern of fill_061.py). Then 59, 58. Emulator: 66-61 NOT yet seen.
 
 ~03:47 (10-07, Opus 5.5, LOCAL) I'rab: al-Jumu'a (62) done -> own_irab.json 6,130 words / 54 surahs (1 + 62-114). NEXT (exact): 61 al-Saff, same method (show.py 61; PYTHONPATH=scripts/own_irab py -3 dump of books for every ayah; fill_061.py on the pattern of fill_062.py). Then 60 -> 58. Emulator: 66-62 NOT yet seen.
