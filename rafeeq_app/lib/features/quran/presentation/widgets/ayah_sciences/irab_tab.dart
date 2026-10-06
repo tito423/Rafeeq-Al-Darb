@@ -282,9 +282,12 @@ class _OwnWord extends StatelessWidget {
         Text(
           w.word,
           textDirection: TextDirection.rtl,
-          style: theme.textTheme.titleMedium?.copyWith(
+          // The mushaf's own font: the UI font stacks the Uthmani marks and
+          // «ٱلۡعَٰلَمِينَ» read «غلمين» on emulator-5554 (2026-10-06).
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontFamily: 'KFGQPCHafs',
+            letterSpacing: 0,
             color: AppColors.gold,
-            fontWeight: FontWeight.w700,
             height: 1.8,
           ),
         ),
