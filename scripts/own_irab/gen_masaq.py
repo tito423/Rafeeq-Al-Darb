@@ -73,7 +73,10 @@ PARTICLE = {('CONJ', 'و'): 'حرف عطف', ('CONJ', 'ف'): 'حرف عطف', ('
             ('YES_NO_RESP_PART', 'بلى'): 'حرف جواب', ('OTHER', 'ها'): 'حرف تنبيه',
             ('SUFF_FEM_TA', None): 'تاء التأنيث الساكنة', ('PVSUFF_SUBJ:3FS', None): 'تاء التأنيث الساكنة',
             ('EMPHATIC_NUN', None): 'نون التوكيد', ('PROTECT_NUN', None): 'نون الوقاية',
-            ('PART', 'لكن'): 'حرف استدراك'}
+            ('PART', 'لكن'): 'حرف استدراك', ('OTHER', 'ها'): 'حرف تنبيه', ('OTHER', 'ألا'): 'حرف استفتاح وتنبيه',
+            ('CONDITION_PART', 'إن'): 'حرف شرط', ('JUSSIVE_PART', 'لا'): 'حرف نهي وجزم',
+            ('REL_ADV', 'لولا'): 'حرف امتناع لوجود', ('PREP', 'حتى'): 'حرف غاية',
+            ('OTHER', None): 'حرف', ('PREP', None): 'حرف', ('SUBJUNC_PART', None): 'حرف'}
 SPECIFIC = {'لم': 'حرف نفي وجزم وقلب', 'لن': 'حرف نفي ونصب واستقبال', 'إن': None, 'قد': 'حرف تحقيق'}
 
 
@@ -168,6 +171,46 @@ def same(daas_role, masaq_role):
         (d == 'خبر' and 'خبر' in masaq_role) or (d == 'معطوف' and 'معطوف' in masaq_role)
 
 
+SEG_COLS = ('Segmented_Word, Morph_tag, Morph_type, Invariable_Declinable, Syntactic_Role, '
+            'Case_Mood, Case_Mood_Marker, Phrase, Phrasal_Function, Notes')
+
+
+def skeleton(t):
+    """Letters with the long vowels and hamza seats dropped: the mushaf's
+    «ٱلصَّلَوٰةَ» and MASAQ's «الصَّلَاةَ» spell the same skeleton."""
+    return re.sub('[اويءئؤ]', '', letters(t))
+
+
+def segments_by_token(m, surah, a, toks):
+    """MASAQ segments for each of our tokens. Word numbers line up in all but
+    24 ayahs, where one side writes two words as one («أين ما» / «أينما»,
+    «يا ابن أم» …); there the words are matched by their letter skeleton,
+    and a MASAQ word shared by two tokens gives each the segments whose
+    letters it holds."""
+    words = {}
+    for row in m.execute(f'select Column5, {SEG_COLS} from MASAQcsv where Sura_No=? and Verse_No=? order by ID', (surah, a)):
+        words.setdefault(row[0], []).append(row[1:])
+    order = sorted(words)
+    if len(order) == len(toks):
+        return [words[k] for k in order]
+    out, i, j = [[] for _ in toks], 0, 0
+    while i < len(toks) and j < len(order):
+        st, sw = skeleton(toks[i]), skeleton(''.join(s[0] for s in words[order[j]] if s[0]))
+        if st == sw:
+            out[i] = words[order[j]]; i += 1; j += 1
+        elif sw.startswith(st) and i + 1 < len(toks):          # one MASAQ word = two tokens
+            acc = ''
+            for sg in words[order[j]]:
+                (out[i] if len(acc) < len(st) else out[i + 1]).append(sg)
+                acc += skeleton(sg[0] or '')
+            i += 2; j += 1
+        elif st.startswith(sw) and j + 1 < len(order):        # two MASAQ words = one token
+            out[i] = words[order[j]] + words[order[j + 1]]; i += 1; j += 2
+        else:                                                 # give up on this pair, keep order
+            out[i] = words[order[j]]; i += 1; j += 1
+    return out
+
+
 def gen(surah):
     q = sqlite3.connect(os.path.join(DATA, 'quran_local.db'))
     d = sqlite3.connect(os.path.join(DATA, 'quran_sciences.db'))
@@ -181,10 +224,9 @@ def gen(surah):
         for idxs, expl in notes:
             for k in idxs:
                 by_tok.setdefault(k, []).append(expl)
+        token_segs = segments_by_token(m, surah, a, toks)
         for n, w in enumerate(toks, 1):
-            segs = list(m.execute('select Segmented_Word, Morph_tag, Morph_type, Invariable_Declinable, Syntactic_Role, '
-                                  'Case_Mood, Case_Mood_Marker, Phrase, Phrasal_Function, Notes from MASAQcsv '
-                                  'where Sura_No=? and Verse_No=? and Column5=? order by ID', (surah, a, n)))
+            segs = token_segs[n - 1]
             expl = ' '.join(by_tok.get(n - 1, []))
             texts = [(sg, seg_text(sg[:7])) for sg in segs]
             texts = [(sg, t) for sg, t in texts if t]
@@ -262,6 +304,9 @@ def gen(surah):
                 ok = any(same(k, mr) for k in keys)
                 if not ok and 'ناسخ' in mr and re.search(r'(إن|أن|كان|يكون|يكن|ليس|لعل|لكن|كأن|ليت)\S* واسمها|اسمها|خبرها|خبره', expl):
                     ok = True
+            if not parts or (n > 1 and segs and segs == token_segs[n - 2]) or \
+                    any(re.search(r'(^| )حرف(\.|$|، )', p + '.') for p in parts):
+                ok = False  # a word MASAQ joins to its neighbour: read by hand
             check = 'fuller' if ok is None else ('agree' if ok else 'differ')
             note = next((s[9] for s in segs if s[9]), None)
             words.append({'a': a, 'w': w, 'irab': '، '.join(parts) + '.', 'check': check,
