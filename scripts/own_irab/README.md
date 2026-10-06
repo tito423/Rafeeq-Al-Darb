@@ -22,3 +22,10 @@ One file per surah, `NNN.json`: `words` in mushaf order, each
   (a test should enforce it).
 
 Status: 001, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114 written + checked against al-Da'as only (`check.py` passes). Not wired into the app.
+
+NOT TRUSTED (2026-10-06): 098, 099, 100, 101 were written by a Gemini 3.1 Pro
+session on 10-05 (099/100 committed as «read against al-Da'as», 098/101 left
+untracked) from hard-coded lists in fill_*.py. `check.py` only proves each `w`
+is the mushaf token, not that the i'rab is right, and those commits carry no
+record of the reading. Before any of the four is used, redo the al-Da'as
+comparison word by word and record it, as for the others.
