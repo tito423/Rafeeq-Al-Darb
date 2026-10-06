@@ -16,7 +16,6 @@ import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
 import '../../../kids/data/journey_store.dart';
-import '../../../library/presentation/widgets/listen_text_button.dart';
 import '../../../quotes/data/quote_background_catalog.dart';
 import '../../data/azkar_audio.dart';
 
@@ -189,10 +188,9 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
             index: _index,
             total: items.length,
             onTap: _tapCount,
-            // ONE listen button (owner, 2026-10-06: two of them, the
-            // recording and the app's voice, sat on one dhikr): the human
-            // recording where there is one, otherwise the reader's voice -
-            // and never that voice on a dhikr that quotes the Qur'an.
+            // ONE listen button, the recorded dhikr; no synthetic voice on
+            // the adhkar at all (owner, 2026-10-06: «شيل زر الصوت الآلي من
+            // الأذكار»).
             listen: switch (ref.watch(azkarAudioProvider).valueOrNull?[
                 items[_index].id]) {
               final String url => _ListenButton(
@@ -200,12 +198,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
                   accent: _accent,
                   onTap: () => _listen(items[_index], url),
                 ),
-              _ => ListenTextButton(
-                  key: ValueKey(items[_index].id),
-                  text: () => items[_index].body,
-                  quranHides: true,
-                  alignment: Alignment.center,
-                ),
+              _ => null,
             },
           )
         : null;
