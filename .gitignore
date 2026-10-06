@@ -139,3 +139,4 @@ scripts/out/quiz_books/
 
 scripts/own_irab/gen/
 scripts/own_irab/__pycache__/
+scripts/own_irab/books_cache/

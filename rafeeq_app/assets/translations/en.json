@@ -272,6 +272,8 @@
     "irab_section_range": "The book parses ayahs {} to {} together",
     "irab_ref_title": "The book’s i‘rab of Surah {}, ayah {}",
     "irab_alt_daas": "Also in al-Da‘as, «I‘rab al-Qur’an al-Karim»:",
+    "irab_alt_jadwal": "Also in Mahmud Safi, «al-Jadwal fi I‘rab al-Qur’an»:",
+    "irab_alt_darwish": "Also in Muhyi al-Din Darwish, «I‘rab al-Qur’an wa-Bayanuh»:",
     "meanings": "Word Meanings",
     "word": "Word",
     "root": "Root",
