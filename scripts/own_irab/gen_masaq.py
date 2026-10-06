@@ -111,7 +111,7 @@ def seg_text(seg):
             r = 'بالحرف'
         return f'{pr} مبني على {b}' + (f' في محل {place} {r}' if place else '')
     if built in ('مبني', 'اسم استفهام', 'اسم موصول', 'اسم إشارة', 'اسم شرط') or case == 'مبني':
-        kindw = '' if built == 'مبني' else built + ' '
+        kindw = '' if built in ('مبني', None) else built + ' '
         place = {'مرفوع': 'رفع', 'منصوب': 'نصب', 'مجرور': 'جر'}.get(case)
         if role.startswith('حرف') or role in ('أداة تحقيق', 'كافة ومكفوفة', 'لا النافية', 'لا الناهية',
                                               'ما العاملة عمل ليس', 'لا النافية للجنس', 'حروف مقطعة'):
@@ -249,11 +249,19 @@ def gen(surah):
                         js = js.replace('لا محل لها', 'لا محل لها من الإعراب').replace('من الإعراب من الإعراب', 'من الإعراب')
                         if js not in parts:
                             parts.append(js)
-            dr, mr = role_key(expl), stem_role
-            ok = same(dr, mr)
-            if mr in VERB and expl:
+            mr = stem_role
+            clean = re.sub(r'متعلقان?[^«.]*|(?:و?(?:نائب )?(?:ال)?فاعله? مستتر)|والجملة[^«]*|وجملة[^«]*', ' ', expl or '')
+            keys = {k for k in ROLE_KEYS if k in clean}
+            if not mr or not expl or mr.startswith('حرف') or mr in ('اسم مجرور', 'أداة تحقيق', 'كافة ومكفوفة') \
+                    or mr.startswith('لا ') or mr.startswith('ما ') or not (keys or mr in VERB):
+                ok = None
+            elif mr in VERB:
                 vk = 'أمر' if 'أمر' in mr else ('مضارع' if 'مضارع' in mr else 'ماض')
-                ok = vk in expl or 'معطوف' in expl or 'معطوفة' in expl
+                ok = True if vk in expl or 'معطوف' in expl else None
+            else:
+                ok = any(same(k, mr) for k in keys)
+                if not ok and 'ناسخ' in mr and re.search(r'(إن|أن|كان|يكون|يكن|ليس|لعل|لكن|كأن|ليت)\S* واسمها|اسمها|خبرها|خبره', expl):
+                    ok = True
             check = 'fuller' if ok is None else ('agree' if ok else 'differ')
             note = next((s[9] for s in segs if s[9]), None)
             words.append({'a': a, 'w': w, 'irab': '، '.join(parts) + '.', 'check': check,
