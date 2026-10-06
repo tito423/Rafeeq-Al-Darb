@@ -23,9 +23,6 @@ One file per surah, `NNN.json`: `words` in mushaf order, each
 
 Status: 001, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114 written + checked against al-Da'as only (`check.py` passes). Not wired into the app.
 
-NOT TRUSTED (2026-10-06): 098, 099, 100, 101 were written by a Gemini 3.1 Pro
-session on 10-05 (099/100 committed as «read against al-Da'as», 098/101 left
-untracked) from hard-coded lists in fill_*.py. `check.py` only proves each `w`
-is the mushaf token, not that the i'rab is right, and those commits carry no
-record of the reading. Before any of the four is used, redo the al-Da'as
-comparison word by word and record it, as for the others.
+2026-10-06: 098-101 (written by a Gemini session on 10-05) re-read word by word against al-Da'as: 100 needed nothing, 99 one fix, 101 seven fixes, and 098 had NO i'rab at all (every word marked «agree» with an empty text) - written from scratch (fill_098.py). Juz 'Amma done so far: 1 + 98-114. Remaining in Juz 'Amma: 78-97 (1,826 words, measured from quran_local.db).
+
+Work sheet: `py -3 scripts/own_irab/show.py <surah>` prints each ayah's words, al-Da'as's section covering it (also multi-ayah sections) and our entries.
