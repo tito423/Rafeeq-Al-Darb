@@ -204,6 +204,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
                   key: ValueKey(items[_index].id),
                   text: () => items[_index].body,
                   quranHides: true,
+                  alignment: Alignment.center,
                 ),
             },
           )

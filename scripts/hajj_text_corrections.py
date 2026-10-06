@@ -16,7 +16,9 @@ text are typing slips with a cited reference:
   - «اللهم أشهد» -> «اللهم اشهد»: Muslim 1218 (Jabir, the Farewell Hajj),
     imperative of شهد - hamzat wasl.
   - «ربنا أتنا» -> «ربنا آتنا»: al-Baqarah 2:201 in the Madinah mushaf
-    «رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً».
+    «رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً». Seen 2026-10-06 on the Madinah page
+    (R2 mushaf/madinah_qc/031.png), lines 14-15: «رَبَّنَآ ءَاتِنَا»; evidence
+    scripts/evidence_hajj_2_201_madinah_p31_l14.png.
   - «أصابعة» -> «أصابعه»: Muslim 1218 «فشبك رسول الله أصابعه».
 
 Applied by build_hajj_guide_book.py on every rebuild, and to the shipped

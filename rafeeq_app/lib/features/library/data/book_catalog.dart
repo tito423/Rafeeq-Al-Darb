@@ -2748,7 +2748,7 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/al_fiqh_al_manhaji_hajj.json',
-      sizeBytes: 39862,
+      sizeBytes: 39847,
       sourceLabel:
           'المكتبة الشاملة — الفقه المنهجي على مذهب الإمام الشافعي، دار القلم، دمشق، الطبعة الرابعة ١٤١٣هـ، الجزء الثاني ص١١١-١٨٨',
     ),

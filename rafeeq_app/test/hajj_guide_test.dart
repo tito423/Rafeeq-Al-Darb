@@ -164,7 +164,13 @@ void main() {
             isNotNull,
             reason: '${s.key}: no page ${range.toPage}',
           );
-          expect(range.toPara, lessThan(paras[range.toPage]!), reason: s.key);
+          // 99 is the documented «to the end of the page» (hajj_guide.dart);
+          // this check never ran with it before, being skipped on machines
+          // without the built book, and failed the day a build was present.
+          if (range.toPara != 99) {
+            expect(range.toPara, lessThan(paras[range.toPage]!),
+                reason: s.key);
+          }
         }
       }
     },

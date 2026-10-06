@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,3 +38,18 @@ class ReciteReturnController extends StateNotifier<int> {
 final reciteReturnProvider = StateNotifierProvider<ReciteReturnController, int>(
   (ref) => ReciteReturnController(ref.watch(sharedPrefsProvider)),
 );
+
+/// The one pending «go back» of a mushaf screen. The screen re-arms it on
+/// every page change while reciting, the recitation's own turns included:
+/// [onFire] does nothing when the recited ayah is already in view, so only a
+/// turn AWAY from it brings the mushaf back. 0 seconds = off.
+class ReciteReturnTimer {
+  Timer? _timer;
+
+  void arm(int seconds, void Function() onFire) {
+    _timer?.cancel();
+    _timer = seconds <= 0 ? null : Timer(Duration(seconds: seconds), onFire);
+  }
+
+  void cancel() => _timer?.cancel();
+}

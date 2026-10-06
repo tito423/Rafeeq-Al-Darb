@@ -236,7 +236,7 @@ const umrahSummary = <SummaryStage>[
   SummaryStage('١. الإحرام من الميقات', [
     ..._ihramCommon,
     // p.181 [0]
-    SummaryLine.text('وإذا أراد الدخول في العمرة قال: لبيك الهم بعمرة'),
+    SummaryLine.text('وإذا أراد الدخول في العمرة قال: لبيك اللهم بعمرة'),
     ..._ihramAfter,
   ]),
   _arrival,
@@ -285,7 +285,7 @@ const hajjSummary = <SummaryStage>[
     SummaryLine.text('(الثاني): المبيت بمزدلفة:'),
     SummaryLine.text('(الثالث): رمي الجمار:'),
     SummaryLine.text('(الرابع): المبيت بمنى ليلتي التشريق:'),
-    SummaryLine.text('(الخامس): طواف الواداع:'),
+    SummaryLine.text('(الخامس): طواف الوداع:'),
     // p.139 [3]
     SummaryLine.text('فهذه الأمور الخمسة واجبات يأثم الحاج بتركها من غير عذر.'),
   ]),
@@ -385,7 +385,7 @@ const hajjSummary = <SummaryStage>[
     ),
     SummaryLine.text(
       'ثم يصلي الفجر، ثم يأتي حتى يقف عند المشعر الحرام ـ وهو جبل صغير آخر '
-      'المزدلفة، ثم يدعو الله عنده، ويكون من جمله دعائه',
+      'المزدلفة، ثم يدعو الله عنده، ويكون من جملة دعائه',
     ),
     SummaryLine.dhikr(
       'اللهم كما أوقفتنا فيه وأريتنا إياه، فوفقنا لذكرك كما هديتنا، واغفر لنا '

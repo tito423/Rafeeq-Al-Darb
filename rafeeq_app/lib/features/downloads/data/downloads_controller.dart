@@ -95,7 +95,7 @@ extension DownloadCategoryX on DownloadCategory {
         DownloadCategory.voices => const ['tts_voice'],
         DownloadCategory.quranSciences => const ['sciences'],
         DownloadCategory.assistant => const [],
-        DownloadCategory.kidsStories => const ['kids_story', 'kids_stories'],
+        DownloadCategory.kidsStories => const ['kids_story'],
       };
 }
 

@@ -45,11 +45,13 @@ class ListenTextButton extends StatefulWidget {
   /// Built when pressed, so the text is always the passage as shown now.
   final String Function() text;
   final bool quranHides;
+  final AlignmentGeometry alignment;
 
   const ListenTextButton({
     super.key,
     required this.text,
     this.quranHides = false,
+    this.alignment = AlignmentDirectional.centerStart,
   });
 
   @override
@@ -127,7 +129,7 @@ class _ListenTextButtonState extends State<ListenTextButton>
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Align(
-        alignment: AlignmentDirectional.centerStart,
+        alignment: widget.alignment,
         child: Material(
           color: Colors.transparent,
           child: InkWell(

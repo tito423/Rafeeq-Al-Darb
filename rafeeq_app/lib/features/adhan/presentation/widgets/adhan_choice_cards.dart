@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/adhan_option.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/prayer_look.dart';
 
 /// Adhan selection card — tapping the entire card selects that adhan,
 /// saves it immediately, and previews it. No separate "select" button.
@@ -84,11 +85,10 @@ class AdhanCard extends StatelessWidget {
                       Text(
                         option.name,
                         style: TextStyle(
-                          fontWeight:
-                              isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color: isSelected
-                              ? AppColors.gold
-                              : scheme.onSurface,
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                          color: isSelected ? AppColors.gold : scheme.onSurface,
                           fontSize: 15,
                         ),
                       ),
@@ -109,16 +109,22 @@ class AdhanCard extends StatelessWidget {
                 // Stop button (only visible when this adhan is playing)
                 if (isPlaying)
                   IconButton(
-                    icon: Icon(Icons.stop_circle,
-                        color: goldText(context), size: 28),
+                    icon: Icon(
+                      Icons.stop_circle,
+                      color: goldText(context),
+                      size: 28,
+                    ),
                     tooltip: 'prayer.test'.tr(),
                     onPressed: onStop,
                   ),
                 // Delete button for custom adhans
                 if (onRemove != null)
                   IconButton(
-                    icon: Icon(Icons.delete_outline,
-                        color: scheme.error, size: 22),
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: scheme.error,
+                      size: 22,
+                    ),
                     tooltip: 'prayer.remove_custom'.tr(),
                     onPressed: onRemove,
                   ),
@@ -133,11 +139,11 @@ class AdhanCard extends StatelessWidget {
 
 /// The icon each alert mode wears in the per-prayer page.
 IconData adhanModeIcon(AdhanMode m) => switch (m) {
-      AdhanMode.full => Icons.fullscreen_rounded,
-      AdhanMode.audio => Icons.volume_up_rounded,
-      AdhanMode.vibrate => Icons.vibration_rounded,
-      AdhanMode.silent => Icons.notifications_off_outlined,
-    };
+  AdhanMode.full => Icons.fullscreen_rounded,
+  AdhanMode.audio => Icons.volume_up_rounded,
+  AdhanMode.vibrate => Icons.vibration_rounded,
+  AdhanMode.silent => Icons.notifications_off_outlined,
+};
 
 /// «تخصيص كل صلاة» on one page (owner, 2026-10-06: «ممكن تهندسه بشكل مش
 /// يبقى طويل اوي … في صفحة وحدة وبشكل متكور وروعه بصريا»). It was five tall
@@ -195,14 +201,15 @@ class PerPrayerPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('prayer.per_prayer_all'.tr(),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800, color: goldText(context))),
-              const SizedBox(height: 8),
-              _ModeSegments(
-                selected: common,
-                onSelect: onModeAll,
+              Text(
+                'prayer.per_prayer_all'.tr(),
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: goldText(context),
+                ),
               ),
+              const SizedBox(height: 8),
+              _ModeSegments(selected: common, onSelect: onModeAll),
             ],
           ),
         ),
@@ -229,14 +236,6 @@ class PerPrayerPage extends StatelessWidget {
   }
 }
 
-/// Each prayer's place in the day, as an icon and a tint.
-const _prayerLook = <String, (IconData, Color)>{
-  'fajr': (Icons.wb_twilight_rounded, Color(0xFF5C7CFA)),
-  'dhuhr': (Icons.wb_sunny_rounded, Color(0xFFF2A93B)),
-  'asr': (Icons.light_mode_outlined, Color(0xFFE67E22)),
-  'maghrib': (Icons.wb_twilight_rounded, Color(0xFFD9534F)),
-  'isha': (Icons.nightlight_round, Color(0xFF7E57C2)),
-};
 
 class _PrayerTile extends StatelessWidget {
   final String prayerKey;
@@ -263,9 +262,12 @@ class _PrayerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final (icon, tint) =
-        _prayerLook[prayerKey] ?? (Icons.access_time_rounded, AppColors.gold);
+        prayerLook[prayerKey] ?? (Icons.access_time_rounded, AppColors.gold);
     final sounds = mode == AdhanMode.full || mode == AdhanMode.audio;
-    final fits = [for (final o in catalog) if (o.fitsPrayer(prayerKey)) o];
+    final fits = [
+      for (final o in catalog)
+        if (o.fitsPrayer(prayerKey)) o,
+    ];
     // A stored choice that no longer fits this prayer (an ordinary adhan
     // picked for Fajr before Fajr was separated) reads as «default».
     final chosen = fits.where((o) => o.id == adhanId).firstOrNull;
@@ -295,30 +297,42 @@ class _PrayerTile extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(label,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 15.5)),
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15.5,
+                  ),
+                ),
               ),
+              // Expanded, so the play button sits at the same place on
+              // every card whatever the adhan's name is (it wandered with the
+              // pill's width on emulator-5554).
               if (sounds)
-                Flexible(
+                Expanded(
                   flex: 2,
-                  child: ActionChip(
-                    avatar: const Icon(Icons.music_note_rounded, size: 16),
-                    label: Text(
-                      chosen?.name ?? 'prayer.use_default_short'.tr(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: ActionChip(
+                      avatar: const Icon(Icons.music_note_rounded, size: 16),
+                      label: Text(
+                        chosen?.name ?? 'prayer.use_default_short'.tr(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                      onPressed: () => _pickAdhan(context, fits, chosen?.id),
                     ),
-                    visualDensity: VisualDensity.compact,
-                    onPressed: () => _pickAdhan(context, fits, chosen?.id),
                   ),
                 ),
               IconButton(
                 tooltip: 'prayer.test'.tr(),
                 visualDensity: VisualDensity.compact,
                 onPressed: onTest,
-                icon: Icon(Icons.play_circle_outline_rounded,
-                    color: goldText(context)),
+                icon: Icon(
+                  Icons.play_circle_outline_rounded,
+                  color: goldText(context),
+                ),
               ),
             ],
           ),
@@ -330,7 +344,10 @@ class _PrayerTile extends StatelessWidget {
   }
 
   Future<void> _pickAdhan(
-      BuildContext context, List<AdhanOption> fits, String? current) async {
+    BuildContext context,
+    List<AdhanOption> fits,
+    String? current,
+  ) async {
     final picked = await showModalBottomSheet<(String?,)>(
       context: context,
       showDragHandle: true,
@@ -340,8 +357,10 @@ class _PrayerTile extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-              child: Text('${'prayer.choose_adhan'.tr()} — $label',
-                  style: Theme.of(ctx).textTheme.titleMedium),
+              child: Text(
+                '${'prayer.choose_adhan'.tr()} — $label',
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
             ),
             for (final (id, name) in [
               (null, 'prayer.use_default'.tr()),
@@ -403,11 +422,13 @@ class _ModeSegments extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(adhanModeIcon(m),
-                            size: 20,
-                            color: m == selected
-                                ? Colors.black87
-                                : scheme.onSurfaceVariant),
+                        Icon(
+                          adhanModeIcon(m),
+                          size: 20,
+                          color: m == selected
+                              ? Colors.black87
+                              : scheme.onSurfaceVariant,
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           '${m.trKey}_short'.tr(),

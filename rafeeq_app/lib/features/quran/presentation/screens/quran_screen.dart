@@ -139,27 +139,8 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     if (mounted && p != _pressed) setState(() => _pressed = p);
   }
 
-  /// The page moved while the continuous recitation plays: unless the
-  /// reader switched it off ([reciteReturnProvider]), go back to the
-  /// recited ayah once he has left the pages alone for that long. Armed on
-  /// every page change, the recitation's own included - the callback does
-  /// nothing when the recited ayah is already the page in view (or on
-  /// screen in the continuous scroll), so only a turn AWAY from it brings
-  /// the mushaf back.
-  Timer? _returnToRecitationTimer;
-
-  void _armReturnToRecitation() {
-    _returnToRecitationTimer?.cancel();
-    final seconds = ref.read(reciteReturnProvider);
-    if (!_recite.active || seconds == 0) return;
-    _returnToRecitationTimer = Timer(Duration(seconds: seconds), () {
-      final surah = _recite.surahId;
-      final ayah = _recite.ayahNumber;
-      if (!mounted || !_recite.active || surah == null || ayah == null) return;
-      _followedPage = null;
-      unawaited(_followRecitationTo(surah, ayah));
-    });
-  }
+  /// Back to the recited ayah after a turn away from it - `_QuranViews`.
+  final _returnTimer = ReciteReturnTimer();
 
   Future<void> _persistPage() async {
     // Goes through the reactive provider (P3‑4), not a raw prefs write —
@@ -508,7 +489,12 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   void _onReciteChanged() {
     if (!mounted) return;
     final state = AyahAudioService.instance.continuous.value;
-    setState(() => _recite = state);
+    // Recitation drives the page itself; auto-scroll goes off however it
+    // started (owner, 2026-10-05).
+    setState(() {
+      _recite = state;
+      if (state.active) _autoScroll = false;
+    });
     if (!state.active) {
       _followedPage = null;
       return;
@@ -517,23 +503,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final ayah = state.ayahNumber;
     if (surah == null || ayah == null) return;
     unawaited(_followRecitationTo(surah, ayah));
-  }
-
-  Future<void> _followRecitationTo(int surah, int ayah) async {
-    final repo = ref.read(mushafDataProvider).valueOrNull?.repo;
-    if (repo == null) return;
-    final row = await repo.ayah(surah, ayah);
-    if (!mounted || row == null) return;
-    final page = row.pageNumber;
-    if (page == _current || page == _followedPage) return;
-    _followedPage = page;
-    // The continuous scroll brings the verse on screen by itself when its
-    // page is already there; only a page out of sight needs the jump.
-    if (_isContinuous &&
-        (_continuous.currentState?.isOnScreen(page) ?? false)) {
-      return;
-    }
-    _goToPage(page);
   }
 
   /// What full screen was before the image mushaf took it, so going back to
@@ -601,7 +570,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       // "running" meant the owner's press silently cleared a recitation that
       // was not playing anyway, which read as the button doing nothing.
       if (_recite.stalled) {
-        if (_autoScroll) _stopAutoScroll();
         await audio.continuousPauseResume();
         return;
       }
@@ -613,11 +581,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final pick = await pickReciterOrResume(context);
     if (pick == null || !mounted) return;
     await ref.read(selectedReciterProvider.notifier).select(pick.id);
-    if (await resumeContinuousIfPicked(pick, data.repo)) {
-      if (_autoScroll) _stopAutoScroll();
-      return;
-    }
-    if (_autoScroll) _stopAutoScroll();
+    if (await resumeContinuousIfPicked(pick, data.repo)) return;
     final ayahs = await _ayahsOfPage(_current, data);
     if (ayahs.isEmpty || !mounted) return;
     final start = continuousStartOnPage(ayahs,
@@ -630,7 +594,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
 
   @override
   void dispose() {
-    _returnToRecitationTimer?.cancel();
+    _returnTimer.cancel();
     AyahAudioService.instance.continuous.removeListener(_onReciteChanged);
     AyahAudioService.instance.continuousError.removeListener(_onReciteError);
     _pages?.dispose();

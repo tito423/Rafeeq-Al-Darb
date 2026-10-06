@@ -13,6 +13,7 @@ import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../../assistant/presentation/assistant_settings_card.dart';
+import '../../../kids/data/kids_stories.dart';
 import '../../../kids/presentation/kids_stories_screen.dart';
 import '../../../library/presentation/widgets/book_voice_section.dart';
 import '../../../quran/data/mushaf_edition.dart';
@@ -444,10 +445,23 @@ class _CategoryCard extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(height: 3),
+                      // The stories play from the internet; only the ones
+                      // saved for offline count here. «لا يوجد محتوى» on
+                      // its own read as «there are no stories» (owner,
+                      // 2026-10-06), so this row says how many there are.
                       Text(
-                        empty
-                            ? 'downloads.nothing_downloaded'.tr()
-                            : '${localizeDigits('${usage.itemCount}', uiLanguageCode)} · ${_fmtSize(usage.bytes)}',
+                        usage.category == DownloadCategory.kidsStories
+                            ? (empty
+                                ? 'downloads.kids_none'.tr(args: [
+                                    localizeDigits('${kidsStories.length}', uiLanguageCode),
+                                  ])
+                                : '${'downloads.kids_some'.tr(args: [
+                                    localizeDigits('${usage.itemCount}', uiLanguageCode),
+                                    localizeDigits('${kidsStories.length}', uiLanguageCode),
+                                  ])} · ${_fmtSize(usage.bytes)}')
+                            : empty
+                                ? 'downloads.nothing_downloaded'.tr()
+                                : '${localizeDigits('${usage.itemCount}', uiLanguageCode)} · ${_fmtSize(usage.bytes)}',
                         style: TextStyle(
                           color: scheme.onSurfaceVariant,
                           fontSize: 12,

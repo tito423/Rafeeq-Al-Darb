@@ -6,6 +6,34 @@ part of 'quran_screen.dart';
 /// 2026-10-02 when the continuous view was added, so `quran_screen.dart`
 /// shrinks instead of growing past its ceiling (`code_layout_test.dart`).
 extension _QuranViews on _QuranScreenState {
+  /// Turns to the recited ayah's page when it is not the one in view.
+  Future<void> _followRecitationTo(int surah, int ayah) async {
+    final repo = ref.read(mushafDataProvider).valueOrNull?.repo;
+    if (repo == null) return;
+    final row = await repo.ayah(surah, ayah);
+    if (!mounted || row == null) return;
+    final page = row.pageNumber;
+    if (page == _current || page == _followedPage) return;
+    _followedPage = page;
+    // The continuous scroll brings the verse on screen by itself when its
+    // page is already there; only a page out of sight needs the jump.
+    if (_isContinuous &&
+        (_continuous.currentState?.isOnScreen(page) ?? false)) {
+      return;
+    }
+    _goToPage(page);
+  }
+
+  /// Every page change while reciting re-arms [ReciteReturnTimer]; when it
+  /// fires, a mushaf turned away from the recited ayah goes back to it.
+  void _armReturnToRecitation() =>
+      _returnTimer.arm(_recite.active ? ref.read(reciteReturnProvider) : 0, () {
+        final (s, a) = (_recite.surahId, _recite.ayahNumber);
+        if (!mounted || !_recite.active || s == null || a == null) return;
+        _followedPage = null;
+        unawaited(_followRecitationTo(s, a));
+      });
+
   Future<void> _pickReciter() async {
     final id = await showReciterPickerSheet(context);
     if (id == null || !mounted) return;
@@ -33,8 +61,10 @@ extension _QuranViews on _QuranScreenState {
   /// choice dismissed); false when the reader asked for the card.
   Future<bool> _askWhileReciting(Ayah ayah, MushafData data) async {
     _setPressed((surah: ayah.surahId, ayah: ayah.ayahNumber));
-    final choice = await showRecitingAyahChoice(context,
-        title: '${data.surahNameAr(ayah.surahId)} · ${ayah.ayahNumber}');
+    final choice = await showRecitingAyahChoice(
+      context,
+      title: '${data.surahNameAr(ayah.surahId)} · ${ayah.ayahNumber}',
+    );
     if (!mounted) return true;
     if (choice == RecitingAyahChoice.tafsir) return false;
     if (choice == RecitingAyahChoice.startHere) {
@@ -65,11 +95,11 @@ extension _QuranViews on _QuranScreenState {
   /// The surahs on the page being read — see `page_surahs.dart` for the rule
   /// and for the defect that made it necessary.
   String _currentSurahName(MushafData data) => surahNamesOnPage(
-        surahs: data.surahs,
-        startPages: data.surahStartPages,
-        endPages: data.surahEndPages,
-        page: _current,
-      ).join(' · ');
+    surahs: data.surahs,
+    startPages: data.surahStartPages,
+    endPages: data.surahEndPages,
+    page: _current,
+  ).join(' · ');
 
   /// Same rule as [_currentSurahName], against `juzStartPages` instead.
   int _currentJuzNumber(MushafData data) {
@@ -113,8 +143,9 @@ extension _QuranViews on _QuranScreenState {
       // continuous recitation will start from.
       playingSurah: _markSurah,
       playingAyah: _markAyah,
-      playingBasmalaSurah:
-          _pressed == null && _recite.basmala ? _recite.surahId : null,
+      playingBasmalaSurah: _pressed == null && _recite.basmala
+          ? _recite.surahId
+          : null,
       onAyahLongPress: (a) => _openSciences(a, data),
       // `edition:` is the RECITER, not the mushaf. Handed a printing
       // id (`hafs_kfqc`) every verse URL 404'd, `setAudioSource`
@@ -128,9 +159,8 @@ extension _QuranViews on _QuranScreenState {
       ),
       fontScale: _fontScale,
       // Embedded pages do not scroll; the continuous view does.
-      autoScroll: !embedded &&
-          _autoScroll &&
-          !(_recite.active && !_recite.stalled),
+      autoScroll:
+          !embedded && _autoScroll && !(_recite.active && !_recite.stalled),
       autoScrollSpeed: _autoScrollSpeed,
       isActive: embedded || page == _current,
       onAutoScrollReachedEnd: _onAutoScrollReachedEnd,
