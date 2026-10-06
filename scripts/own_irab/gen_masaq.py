@@ -54,7 +54,7 @@ ROLE_WORD = {'فعل ماضٍ': 'فعل ماض', 'فعل ماضٍ ناسخ': 'ف
              'اسم حرف ناسخ': 'اسم الحرف الناسخ', 'خبر حرف ناسخ': 'خبر الحرف الناسخ',
              'اسم فعل ناسخ': 'اسم الفعل الناسخ', 'خبر فعل ناسخ': 'خبر الفعل الناسخ',
              'حرف ناسخ (إنّ وأخواتها)': 'حرف توكيد ونصب', 'حرف ناسخ (إنّ وأخوتها)': 'حرف توكيد ونصب',
-             'حرف جرّ': 'حرف جر', 'اسم معطوف': 'معطوف', 'حرف اسثناء': 'حرف استثناء'}
+             'حرف جرّ': 'حرف جر', 'أداة تحقيق': 'حرف تحقيق', 'اسم معطوف': 'معطوف', 'حرف اسثناء': 'حرف استثناء'}
 SKIP_TAGS = {'DET', 'IMPERF_PREF', 'CASE_INDEF_ACC', 'CASE_INDEF_NOM', 'CASE_INDEF_GEN', 'NSUFF_FEM_SG',
              'NSUFF_MASC_PL', 'NSUFF_FEM_PL', 'NSUFF_MASC_DU', 'NSUFF_FEM_DU', 'CASE_DEF_ACC',
              'CASE_DEF_NOM', 'CASE_DEF_GEN', 'PVSUFF_SUBJ'}
@@ -123,10 +123,13 @@ def seg_text(seg):
         if role.startswith('حرف') or role in ('أداة تحقيق', 'كافة ومكفوفة', 'لا النافية', 'لا الناهية',
                                               'ما العاملة عمل ليس', 'لا النافية للجنس', 'حروف مقطعة'):
             return f'{r} مبني على {BUILT.get(m, m)}'
+        if r == 'اسم مجرور':
+            r = 'بالحرف'
         return f'{kindw}مبني على {BUILT.get(m, m)}' + (f' في محل {place} {r}' if place else f'، {r}')
     if case in SIGN_NOUN:
         if r == 'اسم مجرور':
             return f'اسم مجرور وعلامة جره {MARK.get(m, m)}'
+        why = {'الياء': '', 'الواو': '', 'الألف': ''}.get(m)
         return f'{r} {case} وعلامة {SIGN_NOUN[case]} {MARK.get(m, m)}'
     return r
 
@@ -247,14 +250,15 @@ def gen(surah):
                 form, tag, kind = sg[0], sg[1], sg[2]
                 if kind == 'Prefix' and form in ('و', 'ف', 'ل'):
                     lab = {'و': 'الواو', 'ف': 'الفاء', 'ل': 'اللام'}[form]
-                    mo = re.search(lab + r' ((?:حرف|حالية|اعتراضية|استئنافية|رابطة|الفصيحة|زائدة|واقعة|المزحلقة|موطئة|لام)[^«،.]*?)(?= و[ا-ي]|$|«|\.|،)', expl)
+                    mo = re.search(lab + r' ((?:حرف|حالية|اعتراضية|استئنافية|رابطة|الفصيحة|زائدة|واقعة|المزحلقة|موطئة|لام)[^«،.]*?)(?= و[ء-ي]|$|«|\.|،)', expl)
                     if mo:
                         t = mo.group(1).strip()
                 if len(texts) == 1:
                     parts.append(t)
                     continue
                 det = 'ال' if any(x[1] == 'DET' for x in segs) else ''
-                label = (f'«{det}{pref}{form}»' if kind == 'Stem' else name(form))
+                nsuf = ''.join(x[0] for x in segs[segs.index(sg) + 1:] if (x[1] or '').startswith('NSUFF')) if kind == 'Stem' else ''
+                label = (f'«{det}{pref}{form}{nsuf}»' if kind == 'Stem' else name(form))
                 parts.append(('' if i == 0 else 'و') + f'{label} {t}')
             stem_role = next((s[4] for s in segs if s[2] == 'Stem' and s[4]), None)
             if stem_role == 'اسم معطوف':
@@ -280,7 +284,7 @@ def gen(surah):
                     if any(r in ('فاعل', 'نائب فاعل') for r in roles):
                         hidden = False
                         break
-            if hidden or re.search(r'فاعله مستتر|والفاعل مستتر|نائب الفاعل مستتر', expl):
+            if hidden or (stem_role in VERB and re.search(r'فاعله مستتر|والفاعل مستتر|نائب الفاعل مستتر', expl)):
                 who = 'نائب الفاعل' if 'نائب' in expl or (stem_role and 'للمجهول' in stem_role) else 'الفاعل'
                 if stem_role and 'أمر' in stem_role:
                     parts.append(f'و{who} ضمير مستتر وجوبًا تقديره أنت')
@@ -311,9 +315,24 @@ def gen(surah):
                 ok = any(same(k, mr) for k in keys)
                 if not ok and 'ناسخ' in mr and re.search(r'(إن|أن|كان|يكون|يكن|ليس|لعل|لكن|كأن|ليت)\S* واسمها|اسمها|خبرها|خبره', expl):
                     ok = True
-            diptote_doubt = any(x[1] == 'NOUN_PROP' and x[5] == 'مجرور' and 'كسر' in (x[6] or '') for x in segs) \
-                and not any(x[1] == 'DET' for x in segs)
-            if diptote_doubt or not parts or (n > 1 and segs and segs == token_segs[n - 2]) or \
+            tanwin = re.search('[ً-ࣰٍ-ࣲ]', w)
+            diptote_doubt = any((x[1] or '').startswith('NOUN_PROP') and x[5] == 'مجرور' and 'كسر' in (x[6] or '')
+                                for x in segs) and not any(x[1] == 'DET' for x in segs) and not tanwin
+            # a role in a case it cannot take (MASAQ gives «والليل» 91:4
+            # «مفعول معه مجرور»), or a stem with no role at all: read by hand
+            need = {'مفعول': 'منصوب', 'فاعل': 'مرفوع', 'نائب فاعل': 'مرفوع', 'مبتدأ': 'مرفوع',
+                    'مضاف إليه': 'مجرور', 'اسم مجرور': 'مجرور', 'حال': 'منصوب', 'تمييز': 'منصوب'}
+            clash = any(x[2] == 'Stem' and x[4] and x[5] in SIGN_NOUN and
+                        any(x[4].startswith(k) and x[5] != c for k, c in need.items()) for x in segs)
+            no_role = any(x[2] == 'Stem' and not x[4] for x in segs)
+            for x in segs:
+                t = x[1] or ''
+                if '_DU' in t or t.startswith('NSUFF_MASC_PL'):
+                    why = ' لأنه مثنى' if '_DU' in t else ' لأنه جمع مذكر سالم'
+                    parts = [re.sub(r'(وعلامة \S+ (?:الياء|الألف|الواو))(?! لأنه)', r'\1' + why, p_) for p_ in parts]
+            seen = set()
+            parts = [p_ for p_ in parts if not (p_ in seen or seen.add(p_))]
+            if diptote_doubt or clash or no_role or not parts or (n > 1 and segs and segs == token_segs[n - 2]) or \
                     any(re.search(r'(^| )حرف(\.|$|، )', p + '.') for p in parts):
                 ok = False  # a word MASAQ joins to its neighbour: read by hand
             check = 'fuller' if ok is None else ('agree' if ok else 'differ')
