@@ -136,3 +136,6 @@ scripts/ketab_raw/
 scripts/shamela_raw/
 scripts/library_phase3_out.txt
 scripts/out/quiz_books/
+
+scripts/own_irab/gen/
+scripts/own_irab/__pycache__/
