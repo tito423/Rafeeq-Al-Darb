@@ -35,11 +35,22 @@ double diacritisedShare(String text) {
 /// «أي حاجة فيها نص متشكّل»: a passage below the library's 80% line is not
 /// offered at all - a wrong vowel in these texts is a wrong meaning, the
 /// same reason the reader refuses unvowelled books.
+///
+/// The Qur'an is never given to this voice: ayahs quoted in ﴿ ﴾ or { } are
+/// cut out of whatever is passed in (a hadith or a dhikr quoting an ayah),
+/// and with [quranHides] a text that quotes the Qur'an at all shows no
+/// button - right for a dhikr like Ayat al-Kursi, where what is left after
+/// the cut would be a basmala and nothing else.
 class ListenTextButton extends StatefulWidget {
   /// Built when pressed, so the text is always the passage as shown now.
   final String Function() text;
+  final bool quranHides;
 
-  const ListenTextButton({super.key, required this.text});
+  const ListenTextButton({
+    super.key,
+    required this.text,
+    this.quranHides = false,
+  });
 
   @override
   State<ListenTextButton> createState() => _ListenTextButtonState();
@@ -54,6 +65,19 @@ class _ListenTextButtonState extends State<ListenTextButton>
   );
   bool _speaking = false;
   int _run = 0;
+
+  static final _quran = RegExp(r'﴿[^﴾]*﴾|\{[^}]*\}');
+
+  /// What the voice may say: the passage without its Qur'an, or '' when
+  /// [ListenTextButton.quranHides] and there is Qur'an in it.
+  String _speakable() {
+    final raw = widget.text();
+    if (widget.quranHides && _quran.hasMatch(raw)) return '';
+    return raw
+        .replaceAll(_quran, ' ')
+        .replaceAll(RegExp(r'[ \t]{2,}'), ' ')
+        .trim();
+  }
 
   @override
   void dispose() {
@@ -71,7 +95,7 @@ class _ListenTextButtonState extends State<ListenTextButton>
       _set(false);
       return;
     }
-    final text = widget.text();
+    final text = _speakable();
     if (text.isEmpty) return;
     if (!await offerOpenVoice(context)) return;
     if (!await _speaker.available) {
@@ -95,7 +119,8 @@ class _ListenTextButtonState extends State<ListenTextButton>
 
   @override
   Widget build(BuildContext context) {
-    if (!_speaking && diacritisedShare(widget.text()) < 80) {
+    final text = _speaking ? '' : _speakable();
+    if (!_speaking && (text.isEmpty || diacritisedShare(text) < 80)) {
       return const SizedBox.shrink();
     }
     final fg = _speaking ? Colors.white : AppColors.gold;

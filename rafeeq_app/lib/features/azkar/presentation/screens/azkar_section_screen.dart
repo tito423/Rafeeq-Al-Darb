@@ -15,8 +15,8 @@ import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
-import '../../../library/presentation/widgets/listen_text_button.dart';
 import '../../../kids/data/journey_store.dart';
+import '../../../library/presentation/widgets/listen_text_button.dart';
 import '../../../quotes/data/quote_background_catalog.dart';
 import '../../data/azkar_audio.dart';
 
@@ -189,6 +189,10 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
             index: _index,
             total: items.length,
             onTap: _tapCount,
+            // ONE listen button (owner, 2026-10-06: two of them, the
+            // recording and the app's voice, sat on one dhikr): the human
+            // recording where there is one, otherwise the reader's voice -
+            // and never that voice on a dhikr that quotes the Qur'an.
             listen: switch (ref.watch(azkarAudioProvider).valueOrNull?[
                 items[_index].id]) {
               final String url => _ListenButton(
@@ -196,7 +200,11 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
                   accent: _accent,
                   onTap: () => _listen(items[_index], url),
                 ),
-              _ => null,
+              _ => ListenTextButton(
+                  key: ValueKey(items[_index].id),
+                  text: () => items[_index].body,
+                  quranHides: true,
+                ),
             },
           )
         : null;
@@ -350,18 +358,10 @@ class _DhikrPage extends StatelessWidget {
               ),
               // The hadith this dhikr comes from, graded by name on Dorar
               // (GitHub build; owner, 2026-09-26).
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                alignment: WrapAlignment.center,
-                children: [
-                  DorarCheckButton(
-                    text: item.body,
-                    color: Colors.white,
-                    alignment: Alignment.center,
-                  ),
-                  ListenTextButton(text: () => item.body),
-                ],
+              DorarCheckButton(
+                text: item.body,
+                color: Colors.white,
+                alignment: Alignment.center,
               ),
             ],
             if (isFirst) ...[
