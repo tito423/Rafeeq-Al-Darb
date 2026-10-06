@@ -182,9 +182,11 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
             icon: Icons.info_outline,
             message: 'quran.sciences_unavailable_here'.tr(),
           )
-        : !ready
-            ? _SciencesPackGate(onDownload: _startDownload)
-            : Column(
+        // The tabs show even before the pack is downloaded: our own i'rab
+        // ships in the app (assets/data/own_irab.json), so the i'rab tab
+        // has something to show for those ayahs; every other tab - and the
+        // i'rab of any other ayah - shows the download gate.
+        : Column(
                 children: [
                   TabBar(
                     controller: _tabs,
@@ -203,10 +205,21 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                     child: TabBarView(
                       controller: _tabs,
                       children: [
-                        TafseerTab(future: _tafseer!),
-                        TranslationTab(
-                            ayah: widget.ayah, future: _translations!),
-                        IrabTab(ayah: widget.ayah, future: _irab!),
+                        if (ready)
+                          TafseerTab(future: _tafseer!)
+                        else
+                          _SciencesPackGate(onDownload: _startDownload),
+                        if (ready)
+                          TranslationTab(
+                              ayah: widget.ayah, future: _translations!)
+                        else
+                          _SciencesPackGate(onDownload: _startDownload),
+                        IrabTab(
+                          ayah: widget.ayah,
+                          future: _irab,
+                          whenMissing:
+                              _SciencesPackGate(onDownload: _startDownload),
+                        ),
                       ],
                     ),
                   ),

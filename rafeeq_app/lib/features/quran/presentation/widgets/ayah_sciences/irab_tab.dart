@@ -85,8 +85,17 @@ class OwnIrabWord {
 
 class IrabTab extends ConsumerWidget {
   final Ayah ayah;
-  final Future<IrabSection?> future;
-  const IrabTab({super.key, required this.ayah, required this.future});
+  /// The book's section; null while the sciences pack is not downloaded.
+  final Future<IrabSection?>? future;
+
+  /// Shown for an ayah we have not written when [future] is null.
+  final Widget whenMissing;
+  const IrabTab({
+    super.key,
+    required this.ayah,
+    required this.future,
+    required this.whenMissing,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -105,9 +114,11 @@ class IrabTab extends ConsumerWidget {
         itemBuilder: (context, i) => _OwnWord(words[i]),
       );
     }
+    final book = future;
+    if (book == null) return whenMissing;
     final cuts = splits.value ?? const <String, List<int>>{};
     return AsyncTab<IrabSection?>(
-      future: future,
+      future: book,
       isEmpty: (d) => d == null,
       builder: (context, section) {
         final s = section!;
