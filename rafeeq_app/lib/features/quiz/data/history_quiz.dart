@@ -38,6 +38,12 @@ class QuizQuestion {
   final int page;
   final String quote;
 
+  /// The question, choices and explanation in the other six languages, by
+  /// language code (owner, 2026-10-07: a friend playing in French met
+  /// Arabic questions). The quote stays Arabic in every language: it is
+  /// the book's own words, the evidence the answer rests on.
+  final Map<String, ({String q, List<String> choices, String explain})> tr;
+
   const QuizQuestion({
     required this.id,
     required this.level,
@@ -48,7 +54,26 @@ class QuizQuestion {
     required this.pageIndex,
     required this.page,
     required this.quote,
+    this.tr = const {},
   });
+
+  /// This question in [lang]: the translation when there is one, else the
+  /// Arabic as authored. The correct answer stays first.
+  QuizQuestion localized(String lang) {
+    final t = tr[lang];
+    if (t == null) return this;
+    return QuizQuestion(
+      id: id,
+      level: level,
+      question: t.q,
+      choices: t.choices,
+      explain: t.explain,
+      book: book,
+      pageIndex: pageIndex,
+      page: page,
+      quote: quote,
+    );
+  }
 
   String get answer => choices.first;
 
@@ -65,6 +90,14 @@ class QuizQuestion {
     pageIndex: j['pageIndex'] as int,
     page: j['p'] as int,
     quote: j['quote'] as String,
+    tr: {
+      for (final e in ((j['t'] as Map?) ?? const {}).entries)
+        e.key as String: (
+          q: (e.value as Map)['q'] as String,
+          choices: [for (final c in (e.value as Map)['c'] as List) c as String],
+          explain: (e.value as Map)['e'] as String,
+        ),
+    },
   );
 }
 
@@ -149,7 +182,9 @@ class HistoryQuiz {
     var fresh = pool.where((q) => !seen.contains(q.id)).toList();
     if (fresh.length < count) {
       // finish what is left unseen, then start the cycle again
-      final rest = pool.where((q) => seen.contains(q.id)).take(count - fresh.length);
+      final rest = pool
+          .where((q) => seen.contains(q.id))
+          .take(count - fresh.length);
       fresh = [...fresh, ...rest];
       seen = {};
     }

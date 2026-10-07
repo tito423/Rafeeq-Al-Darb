@@ -92,6 +92,10 @@ def main():
                    'questions': out}, f, ensure_ascii=False, indent=0)
     per = {l: sum(1 for q in out if q['level'] == l) for l in LEVELS}
     print('OK %d questions %s from %s' % (len(out), per, sorted(books)))
+    # Put the translations back on (scripts/quiz/tr/); a question without
+    # all six is listed, and test/quiz_translations_test.dart fails on it.
+    import quiz_merge_tr
+    quiz_merge_tr.main(strict=False)
 
 
 if __name__ == '__main__':

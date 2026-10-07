@@ -45,8 +45,10 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
   @override
   void initState() {
     super.initState();
-    HistoryQuiz.round(widget.bank, widget.level, _rnd).then((r) {
+    HistoryQuiz.round(widget.bank, widget.level, _rnd).then((all) {
       if (!mounted) return;
+      final lang = context.locale.languageCode;
+      final r = [for (final q in all) q.localized(lang)];
       setState(() {
         _round = r;
         if (r.isNotEmpty) _choices = r.first.shuffled(_rnd);
