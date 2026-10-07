@@ -2648,5 +2648,26 @@
     "empty_shelf": "Esta estante está vazia. Adiciona os livros que quiseres.",
     "swipe_hint": "Desliza um livro para o lado para o tirar da estante",
     "day_sep": ", "
+  },
+  "caravan": {
+    "title": "A Rota da Caravana",
+    "subtitle": "Uma viagem de caravana entre as cidades da história islâmica",
+    "leg1": "Etapa 1: de Meca a Medina",
+    "kids": "Para crianças",
+    "kids_hint": "Sem perder, a um ritmo calmo",
+    "adults": "Para adultos",
+    "adults_hint": "Três hipóteses, um caminho mais rápido",
+    "tap_to_jump": "Toca no ecrã para o camelo saltar",
+    "makkah": "Meca",
+    "madinah": "Medina",
+    "gate_title": "A porta da cidade",
+    "gate_hint": "Responde para abrir as portas",
+    "try_again_kids": "Tenta outra vez, tu consegues!",
+    "try_again": "Resposta errada, perdeste uma hipótese",
+    "won_title": "A caravana chegou a Medina!",
+    "won_lanterns": "Apanhaste {} de {} lanternas",
+    "lost_title": "A caravana parou no caminho",
+    "play_again": "Jogar outra vez",
+    "exit": "Sair"
   }
 }

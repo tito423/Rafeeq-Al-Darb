@@ -8,6 +8,7 @@ import '../../../../core/utils/digits.dart';
 import '../../../../core/utils/screen_class.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import '../../../../core/widgets/paired_list_view.dart';
+import '../../../caravan/presentation/caravan_screen.dart';
 import '../../../dedications/presentation/dedications_screen.dart';
 import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../hajj/presentation/hajj_screen.dart';
@@ -108,6 +109,7 @@ class MoreScreen extends ConsumerWidget {
               'kids.title',
               'journey.title',
               'quiz.title',
+              'caravan.title',
               'dedication.title',
             ]),
             icon: Icons.auto_awesome_outlined,
@@ -207,6 +209,16 @@ class MoreScreen extends ConsumerWidget {
                 subtitle: 'quiz.subtitle'.tr(),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(builder: (_) => const QuizHomeScreen()),
+                ),
+              ),
+              // «لعبة حقيقية كلها انيمشن بصبغة اسلامية» (owner, 2026-10-07).
+              IslamicActionCard(
+                icon: Icons.route_outlined,
+                accent: const Color(0xFFB8572A),
+                title: 'caravan.title'.tr(),
+                subtitle: 'caravan.subtitle'.tr(),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const CaravanScreen()),
                 ),
               ),
 

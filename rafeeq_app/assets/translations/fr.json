@@ -2648,5 +2648,26 @@
     "empty_shelf": "Cette étagère est vide. Ajoutez les livres que vous voulez.",
     "swipe_hint": "Faites glisser un livre sur le côté pour le retirer de l’étagère",
     "day_sep": ", "
+  },
+  "caravan": {
+    "title": "La Route de la Caravane",
+    "subtitle": "Un voyage en caravane entre les villes de l’histoire islamique",
+    "leg1": "Étape 1 : de La Mecque à Médine",
+    "kids": "Pour les enfants",
+    "kids_hint": "Sans perdre, à un rythme doux",
+    "adults": "Pour les adultes",
+    "adults_hint": "Trois chances, une route plus rapide",
+    "tap_to_jump": "Touchez l’écran pour faire sauter le chameau",
+    "makkah": "La Mecque",
+    "madinah": "Médine",
+    "gate_title": "La porte de la ville",
+    "gate_hint": "Répondez pour ouvrir les portes",
+    "try_again_kids": "Essaie encore, tu peux y arriver !",
+    "try_again": "Mauvaise réponse, une chance perdue",
+    "won_title": "La caravane est arrivée à Médine !",
+    "won_lanterns": "Lanternes ramassées : {} sur {}",
+    "lost_title": "La caravane s’est arrêtée en chemin",
+    "play_again": "Rejouer",
+    "exit": "Quitter"
   }
 }

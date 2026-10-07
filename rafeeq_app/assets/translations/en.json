@@ -2648,5 +2648,26 @@
     "empty_shelf": "This shelf is empty. Add the books you want.",
     "swipe_hint": "Swipe a book sideways to take it off the shelf",
     "day_sep": ", "
+  },
+  "caravan": {
+    "title": "The Caravan Road",
+    "subtitle": "A caravan journey between the cities of Islamic history",
+    "leg1": "Leg 1: From Makkah to Madinah",
+    "kids": "For children",
+    "kids_hint": "No losing, at a gentle pace",
+    "adults": "For adults",
+    "adults_hint": "Three chances, a faster road",
+    "tap_to_jump": "Tap the screen to make the camel jump",
+    "makkah": "Makkah",
+    "madinah": "Madinah",
+    "gate_title": "The city gate",
+    "gate_hint": "Answer to open the doors",
+    "try_again_kids": "Try again, you can do it!",
+    "try_again": "Wrong answer, you lost a chance",
+    "won_title": "The caravan has reached Madinah!",
+    "won_lanterns": "You collected {} of {} lanterns",
+    "lost_title": "The caravan stopped on the road",
+    "play_again": "Play again",
+    "exit": "Exit"
   }
 }
