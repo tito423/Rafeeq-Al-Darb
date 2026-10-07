@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+~04:08 (10-07, Opus 5.5, LOCAL) I'rab: al-Hashr (59) done -> own_irab.json 7,144 words / 57 surahs (1 + 59-114). SEEN on emulator-5554 (x64 build of 6d633143, lastUpdateTime 04:01): 66:4 «وصالح» with al-Jadwal named, 65:2 «بمعروف» with al-Da'as named, 60:13 last words; 59 exported AFTER that build - NOT seen. Note: the reader's top bar (الانتقال إلى) did not take taps via adb on this build - navigated by swiping pages; check on a phone whether the bar responds to touch. NEXT (exact): 58 al-Mujadila (22 ayahs), same method (show.py 58; PYTHONPATH=scripts/own_irab py -3 dump of books; fill_058.py on the pattern of fill_059.py). Then Juz 27 backwards (57 al-Hadid ...).
+
 ~03:56 (10-07, Opus 5.5, LOCAL) BUILDING x64 release of 6d633143 (log scripts/out/build_20261007b.log; offline init script E:\DevEnv\gradle\init.d\rafeeq_offline_tmp.gradle - DELETE it if the session dies) to see 66-60 on emulator-5554 (TRAPS 24: the build kills the emulator; relaunch headless, sign_release.py, install, check lastUpdateTime). Meanwhile writing 59 al-Hashr (export_app.py only AFTER the build ends - it writes a bundled asset).
 
 ~03:55 (10-07, Opus 5.5, LOCAL) I'rab: al-Mumtahana (60) done -> own_irab.json 6,699 words / 56 surahs (1 + 60-114). NEXT (exact): 59 al-Hashr, same method (show.py 59; PYTHONPATH=scripts/own_irab py -3 dump of books for every ayah; fill_059.py on the pattern of fill_060.py). Then 58. Emulator: 66-60 NOT yet seen.
