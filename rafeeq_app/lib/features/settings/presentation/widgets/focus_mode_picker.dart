@@ -24,7 +24,7 @@ import '../../data/focus_mode_provider.dart';
 /// would crash the sheet the moment it is opened.
 const focusTargetLook = <FocusTarget, (IconData, Color)>{
   FocusTarget.quran: (Icons.menu_book_rounded, AppColors.gold),
-  FocusTarget.azkar: (Icons.spa_rounded, Color(0xFF2E9D6F)),
+  FocusTarget.azkar: (Icons.auto_awesome_rounded, Color(0xFF2E9D6F)),
   FocusTarget.tasbeeh: (Icons.radio_button_checked, Color(0xFFD4785A)),
   FocusTarget.hifz: (Icons.record_voice_over_rounded, Color(0xFF6C7BC4)),
 };

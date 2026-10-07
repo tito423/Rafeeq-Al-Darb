@@ -46,7 +46,7 @@ Widget _title(String t, IconData icon, Color c) => Row(
 /// How the points are made, and the ladder of levels.
 Future<void> showPointsSheet(BuildContext context, JourneySnapshot j) {
   const kinds = [
-    ('dhikr', Icons.spa_rounded, Color(0xFF10AC84)),
+    ('dhikr', Icons.auto_awesome_rounded, Color(0xFF10AC84)),
     ('tasbeeh', Icons.radio_button_checked_rounded, Color(0xFF0ABDE3)),
     ('game', Icons.extension_rounded, Color(0xFFF79F1F)),
     ('surah', Icons.menu_book_rounded, Color(0xFF2E86DE)),

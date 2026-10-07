@@ -90,7 +90,7 @@ const azkarCategoryInfo = <AzkarCategory, AzkarCategoryInfo>{
   ),
   AzkarCategory.afterPrayer: AzkarCategoryInfo(
     titleKey: 'azkar.category_after_prayer',
-    icon: Icons.self_improvement,
+    icon: Icons.mosque_outlined,
     gradient: [Color(0xFF1F6B3A), Color(0xFF2E9D4F)],
   ),
   AzkarCategory.waking: AzkarCategoryInfo(

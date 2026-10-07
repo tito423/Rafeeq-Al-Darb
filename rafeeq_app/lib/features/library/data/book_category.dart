@@ -42,7 +42,7 @@ enum BookCategory {
         BookCategory.tafsir => Icons.auto_stories_outlined,
         BookCategory.seerah => Icons.history_edu_outlined,
         BookCategory.tarikh => Icons.account_balance_outlined,
-        BookCategory.tazkiyah => Icons.spa_outlined,
+        BookCategory.tazkiyah => Icons.water_drop_outlined,
         BookCategory.adab => Icons.favorite_outline,
         BookCategory.talibIlm => Icons.school_outlined,
         BookCategory.shamela => Icons.cloud_download_outlined,

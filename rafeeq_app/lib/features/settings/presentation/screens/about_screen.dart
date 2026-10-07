@@ -194,7 +194,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
       ),
       const _HadithFeatureRow(),
       _FeatureRow(
-        icon: Icons.spa_rounded,
+        icon: Icons.auto_awesome_rounded,
         title: 'about.f_azkar'.tr(),
         subtitle: 'about.f_azkar_desc'.tr(),
       ),

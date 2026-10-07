@@ -97,7 +97,7 @@ const islamicChannels = <IslamicChannel>[
     nameAr: 'الدكتور ياسر الحزيمي',
     nameEn: 'Dr. Yasser Al-Hazimi',
     channelId: 'UC5Tdzct1NlgjX1CsmnGuWGg',
-    icon: Icons.self_improvement,
+    icon: Icons.lightbulb_outline_rounded,
     color: Color(0xFF5D4037),
     handle: 'ybh_1000',
   ),

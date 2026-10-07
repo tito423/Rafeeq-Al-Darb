@@ -12,7 +12,7 @@ class JourneyScreen extends StatelessWidget {
   const JourneyScreen({super.key});
 
   static IconData _icon(String kind) => switch (kind) {
-    'dhikr' => Icons.spa_rounded,
+    'dhikr' => Icons.auto_awesome_rounded,
     'tasbeeh' => Icons.radio_button_checked_rounded,
     'streak' => Icons.local_fire_department_rounded,
     'game' => Icons.extension_rounded,
@@ -148,7 +148,7 @@ class JourneyScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _Stat(
-                        icon: Icons.spa_rounded,
+                        icon: Icons.auto_awesome_rounded,
                         color: const Color(0xFF10AC84),
                         value: j.counts['dhikr'] ?? 0,
                         label: 'journey.dhikr'.tr(),
@@ -156,7 +156,7 @@ class JourneyScreen extends StatelessWidget {
                           context,
                           kind: 'dhikr',
                           count: j.counts['dhikr'] ?? 0,
-                          icon: Icons.spa_rounded,
+                          icon: Icons.auto_awesome_rounded,
                           color: const Color(0xFF10AC84),
                         ),
                       ),

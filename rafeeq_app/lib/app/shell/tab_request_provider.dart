@@ -71,7 +71,7 @@ final requestedTabProvider = StateProvider<int?>((ref) => null);
 final activeTabProvider = StateProvider<int>((ref) => AppTab.home);
 
 /// Same seam, one level deeper: `LibraryScreen` has its own inner
-/// `TabController` (0 = الكتب, 1 = الحديث), separate from the bottom-nav
+/// `TabController` (0 = الكتب, 1 = مكتبتي, 2 = الحديث), separate from the bottom-nav
 /// index above. P3‑25: `DownloadsScreen`'s overview rows navigate here —
 /// switching to the library bottom-nav tab isn't enough on its own to land
 /// on "تحميل الكتب" specifically if the library tab happened to be sitting

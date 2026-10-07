@@ -10,7 +10,7 @@ import '../data/dedication.dart';
           const Color(0xFF10AC84),
         ),
       DedicationKind.istighfar => (
-          Icons.self_improvement_rounded,
+          Icons.front_hand_rounded,
           const Color(0xFF2E86DE),
         ),
       DedicationKind.tasbih => (

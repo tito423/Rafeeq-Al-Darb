@@ -8,6 +8,7 @@ import '../../../../core/utils/screen_class.dart';
 import '../../../hadeethenc/presentation/screens/hadeethenc_tab.dart';
 import '../../../shamela/data/shamela_import_service.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../my_library/my_library_tab.dart';
 import '../tabs/books_tab.dart';
 import '../tabs/channels_tab.dart';
 import '../tabs/hadith_tab.dart';
@@ -37,7 +38,7 @@ class LibraryScreen extends ConsumerStatefulWidget {
 class _LibraryScreenState extends ConsumerState<LibraryScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController = TabController(
-    length: 5,
+    length: 6,
     vsync: this,
   );
 
@@ -92,6 +93,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
         labelStyle: const TextStyle(fontWeight: FontWeight.w700),
         tabs: [
           _pill(Icons.auto_stories_rounded, 'library.tab_books'.tr()),
+          _pill(Icons.collections_bookmark_rounded, 'shelves.tab'.tr()),
           _pill(Icons.menu_book_rounded, 'library.tab_hadith'.tr()),
           _pill(Icons.library_books_rounded, 'library.tab_hadeethenc'.tr()),
           _pill(Icons.live_tv_rounded, 'library.tab_channels'.tr()),
@@ -154,6 +156,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
               controller: _tabController,
               children: const [
                 BooksTab(),
+                MyLibraryTab(),
                 HadithTab(),
                 HadeethEncTab(),
                 ChannelsTab(),

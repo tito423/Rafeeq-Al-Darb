@@ -9,6 +9,8 @@ import '../features/azkar/presentation/screens/adhkar_listen_screen.dart';
 import '../features/azkar/presentation/screens/azkar_section_screen.dart';
 import '../features/azkar/presentation/screens/tasbeeh_screen.dart';
 import '../features/khatma/presentation/khatma_screen.dart';
+import '../features/library/data/my_shelves.dart';
+import '../features/library/presentation/my_library/shelf_screen.dart';
 import 'navigation.dart';
 
 /// Where a reminder's `open:<what>` payload lands (`NotificationRouter`).
@@ -56,6 +58,13 @@ Future<void> openScreenFromPayload(String what) async {
         section: sections.first,
         accent: azkarCategoryInfo[category]!.gradient.last,
       );
+    case final String w when w.startsWith('shelf:'):
+      // A «مكتبتي» reading reminder: that shelf, if it still exists.
+      final id = int.tryParse(w.substring('shelf:'.length));
+      if (id == null) return;
+      final container = ProviderScope.containerOf(navigator.context);
+      if (container.read(shelvesProvider.notifier).byId(id) == null) return;
+      screen = ShelfScreen(shelfId: id);
     case 'khatma':
       screen = const KhatmaScreen();
     case 'tasbih':
