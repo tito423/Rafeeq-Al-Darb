@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/i18n/proper_name.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart' show localizeDigits;
 import '../../library/data/book_catalog.dart';
@@ -447,7 +448,7 @@ class _SourcesNote extends StatelessWidget {
     final books = {for (final q in bank) q.book};
     final titles = [
       for (final id in books)
-        if (bookById(id) case final b?) '«${b.titleAr}»',
+        if (bookById(id) case final b?) '«${properName(b.titleAr, b.titleEn)}»',
     ];
     if (titles.isEmpty) return const SizedBox.shrink();
     return Text(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/i18n/proper_name.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart' show localizeDigits;
 import '../../library/data/book_catalog.dart';
@@ -602,7 +603,8 @@ class _Explain extends StatelessWidget {
                       args: [
                         book == null
                             ? question.book
-                            : '${book.titleAr} — ${book.authorAr}',
+                            : '${properName(book.titleAr, book.titleEn)} — '
+                              '${properName(book.authorAr, book.authorEn)}',
                         localizeDigits('${question.page}', lang),
                       ],
                     ),
