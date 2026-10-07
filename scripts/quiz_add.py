@@ -32,8 +32,6 @@ for q in json.load(open(sys.argv[2], encoding='utf-8')):
     text = '\n'.join(p['t'] for p in pg['paras'])
     v = verbatim(text, ' '.join(q['quote'].split()))
     if v is None:
-        v = verbatim(text.replace('\n', ' '), ' '.join(q['quote'].split()))
-    if v is None:
         print('NOT FOUND', q['pageIndex'], q['quote'][:60]); bad += 1; continue
     out.append({'book': q['book'], 'pageIndex': q['pageIndex'], 'p': pg['p'],
                 'level': q['level'], 'q': q['q'], 'choices': q['choices'],
