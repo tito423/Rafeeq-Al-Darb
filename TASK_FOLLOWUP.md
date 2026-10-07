@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+**2026-10-07 22:15 Dubai** - NOT released. (1) Rule 1.7c in CLAUDE.md: every change in all 7 languages (68e68901). (2) Game «قافلة الدرب» leg 1 Makkah->Madinah playable, video sent to owner (47708720); next legs await his feedback. (3) Quiz translation IN PROGRESS: app side done (195d9973); scripts/quiz/tr/en_1.json + en_2.json = questions 0-199 English. NEXT: `py -3 scripts/quiz_merge_tr.py --dump 200 300` -> write en_3.json, then en_4, en_5; then fr, es, pt, ru, ur (5 files each); then `py -3 scripts/quiz_merge_tr.py` (strict) -> bank version 5006 -> upload quiz/history_quiz.json to R2 + content-mirror; add a Dart test that every question has all 6 languages. Then audit the app for other Arabic-only content in non-Arabic locales (known: quiz source line shows titleAr/authorAr - use properName).
+
 **2026-10-07 20:40 Dubai - v3.81.0 PUBLISHED** (tag d278d817 == HEAD; v3.80.0 + tag deleted). Verified on emulator with the signed APK: About v3.81.0, support button, My Library. R7 watchdog re-enabled after publishing. NEXT: nothing pending from the owner; keep R7 + azkar voicing (139/302, next 2026-10-08 04:30) running; ship them together when both finish.
 
 **2026-10-07 20:25 Dubai** - al-Minshawi: old azan3 removed (85f075b6), replaced by archive.org mohamed-siddiq-el-minshawi-afghanistan, synced text 0.885/0 wrong, seen on emulator (023c4343). All 14 bundled adhans now follow their text (test enforces it). NOT released. NEXT: ask owner about release 3.81.0.
