@@ -231,7 +231,7 @@ class _QuizPlayScreenState extends ConsumerState<QuizPlayScreen> {
                       for (final (k, c) in _choices.indexed)
                         _ChoiceTile(
                           key: ValueKey('$_i-$c'),
-                          letter: const ['أ', 'ب', 'ج', 'د'][k % 4],
+                          letter: _choiceLetters(lang)[k % 4],
                           text: c,
                           state: _picked == null
                               ? _ChoiceState.open
@@ -402,6 +402,14 @@ class _QuestionCard extends StatelessWidget {
 }
 
 enum _ChoiceState { open, right, wrong, dim }
+
+/// The marks before the four choices, in the reader's own alphabet: a
+/// French reader met «أ ب ج د» before his French answers (2026-10-08).
+List<String> _choiceLetters(String lang) => switch (lang) {
+  'ar' || 'ur' => const ['أ', 'ب', 'ج', 'د'],
+  'ru' => const ['А', 'Б', 'В', 'Г'],
+  _ => const ['A', 'B', 'C', 'D'],
+};
 
 class _ChoiceTile extends StatelessWidget {
   final String letter;
