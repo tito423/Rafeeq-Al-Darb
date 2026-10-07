@@ -58,6 +58,9 @@ def main(strict=True):
     if problems:
         print(len(problems), 'problems'); print('\n'.join(problems[:40]))
         sys.exit(1)
+    # A translated bank must outrank the Arabic-only one (version = count)
+    # that devices already hold, or HistoryQuiz keeps the cached copy.
+    bank['version'] = len(qs) * 10 + len(LANGS)
     with open(BANK, 'w', encoding='utf-8', newline='\n') as f:
         json.dump(bank, f, ensure_ascii=False, indent=0)
         f.write('\n')

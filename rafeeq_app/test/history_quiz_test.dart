@@ -38,4 +38,28 @@ void main() {
     expect(qs.map((q) => q.id).toSet().length, qs.length);
     expect(qs.map((q) => q.question).toSet().length, qs.length);
   });
+
+  // Every change ships in all seven languages (CLAUDE.md §1.7c): a question
+  // missing one would show Arabic to that reader.
+  test('every question in the six other languages, quote kept Arabic', () {
+    const langs = ['en', 'fr', 'es', 'pt', 'ru', 'ur'];
+    for (final q in qs) {
+      for (final lang in langs) {
+        final t = q.tr[lang];
+        expect(t, isNotNull, reason: '${q.id} $lang');
+        expect(t!.q.trim(), isNotEmpty, reason: '${q.id} $lang');
+        expect(t.explain.trim(), isNotEmpty, reason: '${q.id} $lang');
+        expect(t.choices.where((c) => c.trim().isNotEmpty).toSet().length, 4,
+            reason: '${q.id} $lang');
+        final l = q.localized(lang);
+        expect(l.question, t.q);
+        expect(l.answer, t.choices.first);
+        expect(l.quote, q.quote);
+      }
+    }
+  });
+
+  test('the translated bank outranks the Arabic-only one devices hold', () {
+    expect(j['version'] as int, greaterThan(qs.length));
+  });
 }
