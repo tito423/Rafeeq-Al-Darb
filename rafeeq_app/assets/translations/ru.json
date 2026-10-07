@@ -147,6 +147,7 @@
     "reset_all": "Сбросить всё",
     "download": "Загрузить",
     "script": "latin",
+    "lang_code": "ru",
     "ok": "ОК",
     "percent": "{}%"
   },

@@ -147,6 +147,7 @@
     "reset_all": "Tout réinitialiser",
     "download": "Télécharger",
     "script": "latin",
+    "lang_code": "fr",
     "ok": "OK",
     "percent": "{} %"
   },

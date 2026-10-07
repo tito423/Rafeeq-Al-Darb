@@ -4,21 +4,45 @@
     "name": "أذان ١",
     "asset": "assets/audio/adhan/azan11.mp3",
     "raw": "azan11",
-    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "names": {
+      "en": "Adhan 1",
+      "fr": "Adhan 1",
+      "es": "Adhan 1",
+      "pt": "Adhan 1",
+      "ru": "Азан 1",
+      "ur": "اذان 1"
+    }
   },
   {
     "id": "azan12",
     "name": "أذان ٢",
     "asset": "assets/audio/adhan/azan12.mp3",
     "raw": "azan12",
-    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "تسجيل خاص بصوت صاحب التطبيق — قدّمه بنفسه، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "names": {
+      "en": "Adhan 2",
+      "fr": "Adhan 2",
+      "es": "Adhan 2",
+      "pt": "Adhan 2",
+      "ru": "Азан 2",
+      "ur": "اذان 2"
+    }
   },
   {
     "id": "azan13",
     "name": "أذان ٣",
     "asset": "assets/audio/adhan/azan13.mp3",
     "raw": "azan13",
-    "source": "ملف قدّمه صاحب التطبيق وذكر أنه استأذن صاحب الصوت في استخدامه، ويُعرض باسم محايد بناءً على طلبه؛ والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "ملف قدّمه صاحب التطبيق وذكر أنه استأذن صاحب الصوت في استخدامه، ويُعرض باسم محايد بناءً على طلبه؛ والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "names": {
+      "en": "Adhan 3",
+      "fr": "Adhan 3",
+      "es": "Adhan 3",
+      "pt": "Adhan 3",
+      "ru": "Азан 3",
+      "ur": "اذان 3"
+    }
   },
   {
     "id": "azan1",
@@ -26,7 +50,15 @@
     "asset": "assets/audio/adhan/azan1.mp3",
     "raw": "azan1",
     "url": "https://archive.org/download/adhan-mp3-collection/mahmoud-ali-al-banna-cairo.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "names": {
+      "en": "Mahmoud Ali al-Banna",
+      "fr": "Mahmoud Ali al-Banna",
+      "es": "Mahmoud Ali al-Banna",
+      "pt": "Mahmoud Ali al-Banna",
+      "ru": "Махмуд Али аль-Банна",
+      "ur": "محمود علی البنا"
+    }
   },
   {
     "id": "azan2",
@@ -35,7 +67,15 @@
     "raw": "azan2",
     "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-4-egypt.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr_pair": "azan18"
+    "fajr_pair": "azan18",
+    "names": {
+      "en": "Abdul Basit Abdul Samad",
+      "fr": "Abdul Basit Abdul Samad",
+      "es": "Abdul Basit Abdul Samad",
+      "pt": "Abdul Basit Abdul Samad",
+      "ru": "Абдул-Басит Абдус-Самад",
+      "ur": "عبد الباسط عبد الصمد"
+    }
   },
   {
     "id": "azan3",
@@ -43,7 +83,15 @@
     "asset": "assets/audio/adhan/azan3.mp3",
     "raw": "azan3",
     "url": "https://archive.org/download/adhan-mp3-collection/mohamed-siddiq-el-minshawi-afghanistan.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "names": {
+      "en": "Muhammad Siddiq al-Minshawi",
+      "fr": "Muhammad Siddiq al-Minshawi",
+      "es": "Muhammad Siddiq al-Minshawi",
+      "pt": "Muhammad Siddiq al-Minshawi",
+      "ru": "Мухаммад Сиддик аль-Миншави",
+      "ur": "محمد صدیق المنشاوی"
+    }
   },
   {
     "id": "azan4",
@@ -52,7 +100,15 @@
     "raw": "azan4",
     "url": "https://archive.org/download/adhan-mp3-collection/nasreddine-toubar.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr_pair": "azan19"
+    "fajr_pair": "azan19",
+    "names": {
+      "en": "Nasr al-Din Tobar",
+      "fr": "Nasr al-Din Tobar",
+      "es": "Nasr al-Din Tobar",
+      "pt": "Nasr al-Din Tobar",
+      "ru": "Наср ад-Дин Тубар",
+      "ur": "نصر الدین طوبار"
+    }
   },
   {
     "id": "azan5",
@@ -61,7 +117,15 @@
     "raw": "azan5",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-1-kuwait.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr_pair": "azan16"
+    "fajr_pair": "azan16",
+    "names": {
+      "en": "Mishary Rashid Alafasy (1)",
+      "fr": "Mishary Rashid Alafasy (1)",
+      "es": "Mishary Rashid Alafasy (1)",
+      "pt": "Mishary Rashid Alafasy (1)",
+      "ru": "Мишари Рашид аль-Афаси (1)",
+      "ur": "مشاری راشد العفاسی (1)"
+    }
   },
   {
     "id": "azan6",
@@ -70,7 +134,15 @@
     "raw": "azan6",
     "url": "https://archive.org/download/adhan-mp3-collection/ali-ibn-ahmad-mala-hq.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr": true
+    "fajr": true,
+    "names": {
+      "en": "Ali Ahmed Mulla — Fajr adhan",
+      "fr": "Ali Ahmed Mulla — adhan du Fajr",
+      "es": "Ali Ahmed Mulla — adhan del Fajr",
+      "pt": "Ali Ahmed Mulla — adhan do Fajr",
+      "ru": "Али Ахмад Мулла — азан Фаджр",
+      "ur": "علی احمد ملا — فجر کی اذان"
+    }
   },
   {
     "id": "azan8",
@@ -78,7 +150,15 @@
     "asset": "assets/audio/adhan/azan8.mp3",
     "raw": "azan8",
     "url": "https://archive.org/download/adhan-mp3-collection/abdul-majid-al-surehi-3.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
+    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
+    "names": {
+      "en": "Abdul Majeed al-Suraihi",
+      "fr": "Abdul Majeed al-Suraihi",
+      "es": "Abdul Majeed al-Suraihi",
+      "pt": "Abdul Majeed al-Suraihi",
+      "ru": "Абдул-Маджид ас-Сурайхи",
+      "ur": "عبد المجید السریحی"
+    }
   },
   {
     "id": "azan9",
@@ -87,7 +167,15 @@
     "raw": "azan9",
     "url": "https://archive.org/download/adhan-mp3-collection/mansur-al-zahrane.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr": true
+    "fajr": true,
+    "names": {
+      "en": "Mansour al-Zahrani — Fajr adhan",
+      "fr": "Mansour al-Zahrani — adhan du Fajr",
+      "es": "Mansour al-Zahrani — adhan del Fajr",
+      "pt": "Mansour al-Zahrani — adhan do Fajr",
+      "ru": "Мансур аз-Захрани — азан Фаджр",
+      "ur": "منصور الزہرانی — فجر کی اذان"
+    }
   },
   {
     "id": "azan16",
@@ -96,7 +184,15 @@
     "raw": "azan16",
     "url": "https://archive.org/download/adhan-mp3-collection/mishary-rashid-alafasy-3-fajr-kuwait.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr": true
+    "fajr": true,
+    "names": {
+      "en": "Mishary Rashid Alafasy — Fajr adhan (1)",
+      "fr": "Mishary Rashid Alafasy — adhan du Fajr (1)",
+      "es": "Mishary Rashid Alafasy — adhan del Fajr (1)",
+      "pt": "Mishary Rashid Alafasy — adhan do Fajr (1)",
+      "ru": "Мишари Рашид аль-Афаси — азан Фаджр (1)",
+      "ur": "مشاری راشد العفاسی — فجر کی اذان (1)"
+    }
   },
   {
     "id": "azan18",
@@ -105,7 +201,15 @@
     "raw": "azan18",
     "url": "https://archive.org/download/adhan-mp3-collection/abdulbasit-abdusamad-6-fajr-egypt.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، وأنه أذان فجر تحقّق منه التطبيق بالاستماع الآلي (Whisper) إلى «الصلاة خير من النوم» فيه؛ والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr": true
+    "fajr": true,
+    "names": {
+      "en": "Abdul Basit Abdul Samad — Fajr adhan",
+      "fr": "Abdul Basit Abdul Samad — adhan du Fajr",
+      "es": "Abdul Basit Abdul Samad — adhan del Fajr",
+      "pt": "Abdul Basit Abdul Samad — adhan do Fajr",
+      "ru": "Абдул-Басит Абдус-Самад — азан Фаджр",
+      "ur": "عبد الباسط عبد الصمد — فجر کی اذان"
+    }
   },
   {
     "id": "azan19",
@@ -114,6 +218,14 @@
     "raw": "azan19",
     "url": "https://archive.org/download/adhan-mp3-collection/fajr-adhan-by-nasreddine-toubar.mp3",
     "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، وأنه أذان فجر تحقّق منه التطبيق بالاستماع الآلي (Whisper) إلى «الصلاة خير من النوم» فيه؛ والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما",
-    "fajr": true
+    "fajr": true,
+    "names": {
+      "en": "Nasr al-Din Tobar — Fajr adhan",
+      "fr": "Nasr al-Din Tobar — adhan du Fajr",
+      "es": "Nasr al-Din Tobar — adhan del Fajr",
+      "pt": "Nasr al-Din Tobar — adhan do Fajr",
+      "ru": "Наср ад-Дин Тубар — азан Фаджр",
+      "ur": "نصر الدین طوبار — فجر کی اذان"
+    }
   }
 ]

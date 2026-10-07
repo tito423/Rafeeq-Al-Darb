@@ -147,6 +147,7 @@
     "reset_all": "Restablecer todo",
     "download": "Descargar",
     "script": "latin",
+    "lang_code": "es",
     "ok": "Aceptar",
     "percent": "{} %"
   },

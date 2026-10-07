@@ -1,8 +1,23 @@
+import 'package:easy_localization/easy_localization.dart';
+
 /// One selectable Adhan sound — either one of the 10 bundled, verified
 /// muezzin recordings, or an MP3 the user imported from their own device.
 class AdhanOption {
   final String id;
-  final String name;
+
+  /// The name as the catalogue records it, in Arabic (or as the user typed
+  /// it, for an imported file).
+  final String nameAr;
+
+  /// The same name in the other six languages (CLAUDE.md §1.7c): the
+  /// muezzin's name in the reader's script and «أذان الفجر» said in his
+  /// language. Empty for an imported file.
+  final Map<String, String> names;
+
+  /// The name in the reader's language. Read through `common.lang_code`, as
+  /// properName reads `common.script`, because the catalogue provider holds
+  /// these objects across a language change.
+  String get name => names['common.lang_code'.tr()] ?? nameAr;
 
   /// Flutter asset path, used for in-app preview playback (just_audio).
   /// Null for a custom adhan — previewed from [filePath] instead.
@@ -33,7 +48,8 @@ class AdhanOption {
 
   const AdhanOption({
     required this.id,
-    required this.name,
+    required String name,
+    this.names = const {},
     required this.isCustom,
     this.assetPath,
     this.rawResource,
@@ -42,11 +58,15 @@ class AdhanOption {
     this.url,
     this.isFajr = false,
     this.fajrPair,
-  });
+  }) : nameAr = name;
 
   factory AdhanOption.bundled(Map<String, dynamic> json) => AdhanOption(
         id: json['id'] as String,
         name: json['name'] as String,
+        names: {
+          for (final e in ((json['names'] as Map?) ?? const {}).entries)
+            e.key as String: e.value as String,
+        },
         assetPath: json['asset'] as String?,
         rawResource: json['raw'] as String?,
         isCustom: false,
@@ -77,7 +97,7 @@ class AdhanOption {
 
   Map<String, dynamic> toCustomJson() => {
         'id': id,
-        'name': name,
+        'name': nameAr,
         'filePath': filePath,
       };
 }
