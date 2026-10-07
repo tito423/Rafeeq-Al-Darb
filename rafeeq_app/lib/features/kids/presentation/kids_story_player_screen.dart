@@ -69,7 +69,13 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   void initState() {
     super.initState();
     unawaited(_start());
+    unawaited(kidsCaptionTranslations().then((t) {
+      if (mounted) setState(() => _tr = t[story.id]);
+    }));
   }
+
+  /// This story's narration lines in the other languages; null until loaded.
+  Map<String, List<String?>>? _tr;
 
   Future<void> _start() async {
     final local = await storyOfflinePath(story);
@@ -289,7 +295,12 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
               builder: (_, snap) => snap.data == null ? const SizedBox.shrink() : _ayahText(snap.data!, overlay),
             );
     } else {
-      child = Text(cap.text!, textAlign: TextAlign.center, textDirection: TextDirection.rtl, style: style);
+      final lines = _tr?[context.locale.languageCode];
+      final i = story.captions.indexOf(cap);
+      final line = (lines != null && i >= 0 && i < lines.length) ? lines[i] : null;
+      child = line != null
+          ? Text(line, textAlign: TextAlign.center, style: style)
+          : Text(cap.text!, textAlign: TextAlign.center, textDirection: TextDirection.rtl, style: style);
     }
     final box = Container(
       width: double.infinity,

@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart' show rootBundle;
+
 import '../../../core/config/app_config.dart';
 
 export 'kids_stories_data.dart';
@@ -53,3 +57,19 @@ class KidsStory {
     return null;
   }
 }
+
+/// The narration lines in the other six languages (CLAUDE.md §1.7c): story id
+/// -> language -> one entry per caption, null at each recited ayah. The voice
+/// stays Arabic; the line under the picture is in the child's language.
+/// Built and checked by scripts/kids_stories/build_captions_tr.py.
+Future<Map<String, Map<String, List<String?>>>>? _captionTr;
+Future<Map<String, Map<String, List<String?>>>> kidsCaptionTranslations() =>
+    _captionTr ??= rootBundle
+        .loadString('assets/data/kids_captions_tr.json')
+        .then((raw) => {
+              for (final s in (jsonDecode(raw) as Map<String, dynamic>).entries)
+                s.key: {
+                  for (final l in (s.value as Map<String, dynamic>).entries)
+                    l.key: [for (final t in l.value as List) t as String?],
+                },
+            });
