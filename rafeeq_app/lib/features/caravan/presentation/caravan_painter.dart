@@ -58,9 +58,10 @@ class CaravanPainter extends CustomPainter {
       depth: 1.0,
       base: CaravanWorld.groundY,
       amp: 0.012,
-      light: const Color(0xFFCB8A4A),
-      dark: const Color(0xFF9A5E2C),
+      light: const Color(0xFFDDA463),
+      dark: const Color(0xFFC08546),
       seed: 3,
+      rim: false,
     );
     sc.roadDetail(canvas, size, camel);
     for (final r in w.rocks) {

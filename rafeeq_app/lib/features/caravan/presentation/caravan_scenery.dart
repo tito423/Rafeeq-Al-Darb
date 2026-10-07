@@ -85,10 +85,11 @@ class CaravanScenery {
     final ray = Paint()
       ..shader = RadialGradient(
         colors: [
-          const Color(0xFFFFF1C7).withValues(alpha: 0.32),
+          const Color(0xFFFFF1C7).withValues(alpha: 0.16),
           const Color(0xFFFFF1C7).withValues(alpha: 0.0),
         ],
-      ).createShader(Rect.fromCircle(center: Offset.zero, radius: r * 9));
+      ).createShader(Rect.fromCircle(center: Offset.zero, radius: r * 9))
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     for (var i = 0; i < 12; i++) {
       final a = i * math.pi / 6;
       final spread = 0.07 + 0.03 * math.sin(w.time * 0.7 + i);
@@ -160,9 +161,9 @@ class CaravanScenery {
       final fx = i / steps;
       final u = (fx + off) * 2 * math.pi;
       final peak =
-          0.09 * math.sin(u * 1.5 + 1).abs() +
-          0.05 * math.sin(u * 3.7 + 2) +
-          0.02 * math.sin(u * 9);
+          0.075 * (0.5 + 0.5 * math.sin(u * 1.3 + 1)) +
+          0.03 * math.sin(u * 2.9 + 2) +
+          0.008 * math.sin(u * 7);
       path.lineTo(fx * size.width, base - peak * size.height);
     }
     path
@@ -195,6 +196,7 @@ class CaravanScenery {
     required Color light,
     required Color dark,
     required int seed,
+    bool rim = true,
   }) {
     final off = (w.distance * depth) % 1.0;
     final crest = Path();
@@ -223,13 +225,16 @@ class CaravanScenery {
           colors: [light, dark],
         ).createShader(Rect.fromLTWH(0, top, size.width, size.height - top)),
     );
-    canvas.drawPath(
-      crest,
-      Paint()
-        ..color = const Color(0xFFFFE9C2).withValues(alpha: 0.45)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.6,
-    );
+    if (rim) {
+      canvas.drawPath(
+        crest,
+        Paint()
+          ..color = const Color(0xFFFFE9C2).withValues(alpha: 0.22)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.2
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5),
+      );
+    }
   }
 
   /// The road itself: ripples, hoof prints trailing behind the caravan, and
@@ -269,13 +274,13 @@ class CaravanScenery {
         print..color = const Color(0xFF7A4520).withValues(alpha: 0.35 * k),
       );
     }
-    final pebble = Paint()..color = const Color(0xFF9C6A3C);
+    final pebble = Paint()..color = const Color(0xFFB98A55).withValues(alpha: 0.45);
     final rnd = math.Random(5);
     for (var i = 0; i < 14; i++) {
       final fx = (rnd.nextDouble() - off) % 1.0;
       canvas.drawCircle(
         Offset(fx * size.width, ground + size.height * (0.03 + rnd.nextDouble() * 0.14)),
-        1.5 + rnd.nextDouble() * 2.5,
+        1 + rnd.nextDouble() * 1.5,
         pebble,
       );
     }
@@ -324,7 +329,7 @@ class CaravanScenery {
       Paint()
         ..shader = RadialGradient(
           radius: 0.95,
-          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.28)],
+          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.2)],
           stops: const [0.62, 1.0],
         ).createShader(rect),
     );
