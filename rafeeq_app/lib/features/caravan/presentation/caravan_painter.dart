@@ -10,6 +10,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../data/caravan_world.dart';
+import 'caravan_scenery.dart';
 
 class CaravanPainter extends CustomPainter {
   final CaravanWorld w;
@@ -22,42 +23,59 @@ class CaravanPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final ground = size.height * CaravanWorld.groundY;
     final camel = w.camelH * size.height;
-    _sky(canvas, size);
-    _sun(canvas, size);
-    _dunes(
+    final sc = CaravanScenery(w);
+    sc.sky(canvas, size);
+    sc.sun(canvas, size);
+    sc.clouds(canvas, size);
+    sc.mountains(canvas, size);
+    sc.dunes(
       canvas,
       size,
       depth: 0.15,
       base: 0.62,
       amp: 0.05,
-      color: const Color(0xFFD9A066).withValues(alpha: 0.55),
+      light: const Color(0xFFE7B57A),
+      dark: const Color(0xFFC08048),
       seed: 1,
     );
-    _dunes(
+    sc.dunes(
       canvas,
       size,
       depth: 0.35,
       base: 0.68,
       amp: 0.045,
-      color: const Color(0xFFC98B4E).withValues(alpha: 0.8),
+      light: const Color(0xFFDDA160),
+      dark: const Color(0xFFAE6E37),
       seed: 2,
     );
     if (w.oasisX != null) {
       _oasis(canvas, size, w.oasisX! * size.width, size.height * 0.74, camel);
     }
     if (w.gateX != null) _gate(canvas, size, w.gateX! * size.width, ground);
-    _dunes(
+    sc.dunes(
       canvas,
       size,
       depth: 1.0,
       base: CaravanWorld.groundY,
       amp: 0.012,
-      color: const Color(0xFFB9763A),
+      light: const Color(0xFFCB8A4A),
+      dark: const Color(0xFF9A5E2C),
       seed: 3,
-      fill: true,
     );
+    sc.roadDetail(canvas, size, camel);
     for (final r in w.rocks) {
-      _rock(canvas, Offset(r.x * size.width, ground), camel * 0.3);
+      final at = Offset(r.x * size.width, ground);
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: at.translate(camel * 0.05, 0),
+          width: camel * 0.75,
+          height: camel * 0.1,
+        ),
+        Paint()
+          ..color = Colors.black.withValues(alpha: 0.2)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+      );
+      _rock(canvas, at, camel * 0.3);
     }
     for (final b in w.birds) {
       _birds(canvas, Offset(b.x * size.width, ground - camel * 0.95), camel);
@@ -83,6 +101,8 @@ class CaravanPainter extends CustomPainter {
       final x = CaravanWorld.leadX * size.width - i * camel * 1.05;
       final lift = w.liftAt(i) * size.height;
       final foot = Offset(x, ground - lift);
+      sc.camelShadow(canvas, foot, camel, lift);
+      if (i == 0) sc.dust(canvas, Offset(x, ground), camel, lift < 1);
       // A crouch squashes the camel down toward its feet.
       final squash = 1 - 0.45 * w.crouchAt(i);
       canvas.save();
@@ -99,6 +119,7 @@ class CaravanPainter extends CustomPainter {
       canvas.restore();
     }
     if (w.storm > 0.01) _storm(canvas, size);
+    sc.vignette(canvas, size);
     for (final p in w.popups) {
       _popup(canvas, size, p, camel);
     }
@@ -270,110 +291,6 @@ class CaravanPainter extends CustomPainter {
     tp.dispose();
   }
 
-  void _sky(Canvas canvas, Size size) {
-    // Dawn violet to morning blue to the gold of afternoon, with the road.
-    final p = w.progress.clamp(0.0, 1.0);
-    final top = Color.lerp(
-      const Color(0xFF2B2A5C),
-      const Color(0xFF3E7CB1),
-      (p * 2).clamp(0.0, 1.0),
-    )!;
-    final bottom = Color.lerp(
-      const Color(0xFFF2A65A),
-      const Color(0xFFF7E3B5),
-      (p * 1.5).clamp(0.0, 1.0),
-    )!;
-    canvas.drawRect(
-      Offset.zero & size,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [top, bottom],
-        ).createShader(Offset.zero & size),
-    );
-    // A few stars that fade as the sun climbs.
-    final starA = (1 - p * 3).clamp(0.0, 1.0);
-    if (starA > 0) {
-      final rnd = math.Random(7);
-      final star = Paint()..color = Colors.white.withValues(alpha: 0.8 * starA);
-      for (var i = 0; i < 40; i++) {
-        canvas.drawCircle(
-          Offset(
-            rnd.nextDouble() * size.width,
-            rnd.nextDouble() * size.height * 0.45,
-          ),
-          rnd.nextDouble() * 1.6 + 0.4,
-          star,
-        );
-      }
-    }
-  }
-
-  void _sun(Canvas canvas, Size size) {
-    final p = w.progress.clamp(0.0, 1.0);
-    final c = Offset(
-      size.width * (0.82 - 0.5 * p),
-      size.height * (0.55 - 0.38 * math.sin(p * math.pi * 0.9)),
-    );
-    final r = math.min(size.width, size.height) * 0.07;
-    canvas.drawCircle(
-      c,
-      r * 2.4,
-      Paint()
-        ..color = const Color(0xFFFFE6A8).withValues(alpha: 0.35)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 30),
-    );
-    canvas.drawCircle(c, r, Paint()..color = const Color(0xFFFFE9B0));
-  }
-
-  void _dunes(
-    Canvas canvas,
-    Size size, {
-    required double depth,
-    required double base,
-    required double amp,
-    required Color color,
-    required int seed,
-    bool fill = false,
-  }) {
-    final off = (w.distance * depth) % 1.0;
-    final path = Path()..moveTo(0, size.height);
-    const steps = 48;
-    for (var i = 0; i <= steps; i++) {
-      final fx = i / steps;
-      final x = fx * size.width;
-      final u = (fx + off) * 2 * math.pi;
-      final y =
-          base +
-          amp * math.sin(u * 2 + seed) +
-          amp * 0.5 * math.sin(u * 5 + seed * 2);
-      path.lineTo(x, y * size.height);
-    }
-    path
-      ..lineTo(size.width, size.height)
-      ..close();
-    canvas.drawPath(path, Paint()..color = color);
-    if (fill) {
-      // Ripples in the sand of the road.
-      final ripple = Paint()
-        ..color = const Color(0xFF8E5426).withValues(alpha: 0.35)
-        ..strokeWidth = 2
-        ..style = PaintingStyle.stroke;
-      for (var i = 0; i < 9; i++) {
-        final x = ((i / 9 - off * 1.0) % 1.0) * size.width;
-        final y = size.height * (base + 0.05 + (i % 3) * 0.045);
-        canvas.drawArc(
-          Rect.fromCenter(center: Offset(x, y), width: 60, height: 10),
-          math.pi,
-          math.pi,
-          false,
-          ripple,
-        );
-      }
-    }
-  }
-
   void _rock(Canvas canvas, Offset foot, double s) {
     final path = Path()
       ..moveTo(foot.dx - s, foot.dy)
@@ -442,11 +359,23 @@ class CaravanPainter extends CustomPainter {
     double stride, {
     bool hurt = false,
   }) {
-    final body = hurt ? const Color(0xFF9B4A32) : const Color(0xFF6B4226);
+    final body = hurt ? const Color(0xFF9B4A32) : const Color(0xFF7A4B2A);
     const shade = Color(0xFF4E2F1A);
-    final paint = Paint()..color = body;
     final legLen = h * 0.42;
     final hip = foot.translate(0, -legLen);
+    // Sunlit back, shaded belly: one gradient over the whole animal.
+    final paint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color.lerp(body, const Color(0xFFE0A86A), 0.35)!,
+          body,
+          Color.lerp(body, Colors.black, 0.3)!,
+        ],
+      ).createShader(
+        Rect.fromLTWH(hip.dx - h * 0.5, hip.dy - h * 0.6, h * 1.1, h * 0.7),
+      );
     // Legs: four, swinging in pairs.
     final legPaint = Paint()
       ..color = shade
@@ -531,6 +460,38 @@ class CaravanPainter extends CustomPainter {
         height: h * 0.025,
       ),
       Paint()..color = _gold,
+    );
+    // Tassels hanging from the saddle cloth, swinging with the walk.
+    final tassel = Paint()
+      ..color = _gold
+      ..strokeWidth = h * 0.018
+      ..strokeCap = StrokeCap.round;
+    for (var k = 0; k < 4; k++) {
+      final top = hip.translate(-h * 0.19 + k * h * 0.1, -h * 0.13);
+      final sw = math.sin(stride * 2 * math.pi + k) * h * 0.035;
+      final end = top.translate(sw, h * 0.09);
+      canvas.drawLine(top, end, tassel);
+      canvas.drawCircle(end, h * 0.018, Paint()..color = const Color(0xFFC0392B));
+    }
+    // Ear and eye.
+    final head = Offset(hip.dx + h * 0.52, hip.dy - h * 0.46 + nod);
+    canvas.drawPath(
+      Path()
+        ..moveTo(head.dx - h * 0.06, head.dy - h * 0.03)
+        ..lineTo(head.dx - h * 0.09, head.dy - h * 0.1)
+        ..lineTo(head.dx - h * 0.02, head.dy - h * 0.045)
+        ..close(),
+      Paint()..color = shade,
+    );
+    canvas.drawCircle(
+      head.translate(h * 0.02, -h * 0.015),
+      h * 0.016,
+      Paint()..color = const Color(0xFF1B0F08),
+    );
+    canvas.drawCircle(
+      head.translate(h * 0.026, -h * 0.02),
+      h * 0.005,
+      Paint()..color = Colors.white,
     );
   }
 
