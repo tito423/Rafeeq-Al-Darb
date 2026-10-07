@@ -266,7 +266,7 @@ const makharij = <Makhraj>[
     id: 'shafa_bmw',
     region: MakhrajRegion.shafatan,
     place: 'ما بين الشفتين: تنطبقان عند الباء والميم، وتنفرجان قليلًا عند '
-        'الواو المدية',
+        'الواو غير المدية',
     matn: 'لِلشَّفَتَيْنِ: الوَاوُ بَاءٌ مِيمُ',
     letters: ['ب', 'م', 'و'],
     page: 58,

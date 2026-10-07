@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rafeeq_app/features/tajweed/data/articulation.dart';
 import 'package:rafeeq_app/features/tajweed/data/makharij.dart';
@@ -141,5 +144,25 @@ void main() {
     // «بطن الشَّفة السفلى مع أطراف الثنايا العليا».
     expect(articulationByMakhraj['shafa_fa']!.articulator,
         Articulator.lipToTeeth);
+  });
+
+  // The screen names each region and place through makharij.region_* and
+  // makharij.place_* (CLAUDE.md 1.7c). The Arabic keys must say exactly what
+  // this file says, and no language may be missing one.
+  test('every region and place has its key in all seven languages', () {
+    for (final l in ['ar', 'en', 'fr', 'es', 'pt', 'ru', 'ur']) {
+      final mk = (jsonDecode(File('assets/translations/$l.json')
+              .readAsStringSync()) as Map)['makharij'] as Map;
+      for (final r in makhrajRegions) {
+        final v = mk['region_${r.region.name}'] as String?;
+        expect(v?.trim(), isNotEmpty, reason: '$l ${r.region.name}');
+        if (l == 'ar') expect(v, r.name);
+      }
+      for (final m in makharij) {
+        final v = mk['place_${m.id}'] as String?;
+        expect(v?.trim(), isNotEmpty, reason: '$l ${m.id}');
+        if (l == 'ar') expect(v, m.place);
+      }
+    }
   });
 }

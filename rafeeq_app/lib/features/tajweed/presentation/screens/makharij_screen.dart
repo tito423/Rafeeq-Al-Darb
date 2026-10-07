@@ -193,7 +193,7 @@ class _RegionDefinition extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                info.name,
+                'makharij.region_${info.region.name}'.tr(),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -339,7 +339,7 @@ class _Detail extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            info.name,
+            'makharij.region_${info.region.name}'.tr(),
             style: TextStyle(
               color: goldText(context),
               fontWeight: FontWeight.bold,
@@ -348,7 +348,7 @@ class _Detail extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            makhraj.place,
+            'makharij.place_${makhraj.id}'.tr(),
             style: const TextStyle(fontSize: 15, height: 1.9),
           ),
           const SizedBox(height: 10),
