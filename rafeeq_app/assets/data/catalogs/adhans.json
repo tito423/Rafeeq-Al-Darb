@@ -38,14 +38,6 @@
     "fajr_pair": "azan18"
   },
   {
-    "id": "azan3",
-    "name": "محمد صديق المنشاوي",
-    "asset": "assets/audio/adhan/azan3.mp3",
-    "raw": "azan3",
-    "url": "https://archive.org/download/adhan-mp3-collection/mohamed-siddiq-el-minshawi-egypt-2.mp3",
-    "source": "أرشيف adhan-mp3-collection على archive.org — اسم المؤذّن مذكور في اسم الملف عند المصدر، والملف المرفق هو نفس التسجيل بعد توحيد مستوى الصوت (EBU R128) مع بقاء المدة والمحتوى كما هما"
-  },
-  {
     "id": "azan4",
     "name": "نصر الدين طوبار",
     "asset": "assets/audio/adhan/azan4.mp3",

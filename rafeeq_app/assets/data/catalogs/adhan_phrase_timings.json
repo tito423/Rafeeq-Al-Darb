@@ -203,15 +203,6 @@
       "wrong": 1
     }
   },
-  "azan3.mp3": {
-    "total_ms": 246900,
-    "first_speech_ms": 0,
-    "last_speech_ms": 246900,
-    "checked": {
-      "timeline": null,
-      "note": "no timeline read back well enough; the app shows the whole adhan"
-    }
-  },
   "azan4.mp3": {
     "total_ms": 264400,
     "first_speech_ms": 0,
