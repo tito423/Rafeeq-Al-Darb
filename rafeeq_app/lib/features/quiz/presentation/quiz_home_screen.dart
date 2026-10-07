@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -56,6 +57,15 @@ class _QuizHomeScreenState extends ConsumerState<QuizHomeScreen> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         elevation: 0,
+        // The theme's AppBar gives the title, the icons and the status bar
+        // explicit dark colours for a light page, and those win over
+        // [foregroundColor]: on this night ground the title was dark on
+        // dark (seen on emulator-5554, 3.79.0).
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: Theme.of(
+          context,
+        ).appBarTheme.titleTextStyle?.copyWith(color: Colors.white),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         title: Text('quiz.title'.tr()),
       ),
       body: QuizStarfield(

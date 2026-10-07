@@ -110,7 +110,7 @@ class MoreScreen extends ConsumerWidget {
               'quiz.title',
               'dedication.title',
             ]),
-            icon: Icons.auto_awesome_rounded,
+            icon: Icons.auto_awesome_outlined,
             children: [
               TutorialAnchor(
                 id: TourAnchor.moreQuranAudio,
@@ -163,7 +163,7 @@ class MoreScreen extends ConsumerWidget {
               ),
 
               IslamicActionCard(
-                icon: Icons.healing_outlined,
+                icon: Icons.headphones_outlined,
                 accent: AppColors.goldSoft,
                 title: 'ruqyah.audio_title'.tr(),
                 subtitle: trn(
@@ -181,7 +181,7 @@ class MoreScreen extends ConsumerWidget {
 
               // Owner, 2026-09-29: a kids' corner and «رحلتي».
               IslamicActionCard(
-                icon: Icons.child_care_rounded,
+                icon: Icons.child_care_outlined,
                 accent: const Color(0xFFF79F1F),
                 title: 'kids.title'.tr(),
                 subtitle: 'kids.card_sub'.tr(),
@@ -191,7 +191,7 @@ class MoreScreen extends ConsumerWidget {
                 ),
               ),
               IslamicActionCard(
-                icon: Icons.emoji_events_rounded,
+                icon: Icons.emoji_events_outlined,
                 accent: const Color(0xFF8854D0),
                 title: 'journey.title'.tr(),
                 subtitle: 'journey.card_sub'.tr(),
@@ -201,7 +201,7 @@ class MoreScreen extends ConsumerWidget {
               ),
               // «مسابقة … في التاريخ الاسلامي» (owner, 2026-10-03).
               IslamicActionCard(
-                icon: Icons.quiz_rounded,
+                icon: Icons.quiz_outlined,
                 accent: const Color(0xFF4834D4),
                 title: 'quiz.title'.tr(),
                 subtitle: 'quiz.subtitle'.tr(),
@@ -211,7 +211,7 @@ class MoreScreen extends ConsumerWidget {
               ),
 
               IslamicActionCard(
-                icon: Icons.volunteer_activism,
+                icon: Icons.volunteer_activism_outlined,
                 accent: AppColors.primarySoft,
                 title: 'dedication.title'.tr(),
                 subtitle: 'dedication.card_subtitle'.tr(),
@@ -253,7 +253,7 @@ class MoreScreen extends ConsumerWidget {
           MoreGroup(
             title: 'more.group_tools'.tr(),
             subtitle: _names(['focus.title', 'tutorial.card_title']),
-            icon: Icons.handyman_rounded,
+            icon: Icons.handyman_outlined,
             accent: AppColors.primarySoft,
             children: [
               TutorialAnchor(
@@ -277,7 +277,7 @@ class MoreScreen extends ConsumerWidget {
               'fasting.section_title',
               'quotes.section_title',
             ]),
-            icon: Icons.notifications_active_rounded,
+            icon: Icons.notifications_active_outlined,
             accent: AppColors.error,
             children: const [SettingsBody(part: SettingsPart.reminders)],
           ),

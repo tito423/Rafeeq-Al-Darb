@@ -178,7 +178,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
         ),
       ),
       _FeatureRow(
-        icon: Icons.mosque_rounded,
+        icon: Icons.access_time_filled_rounded,
         title: 'about.f_prayer'.tr(),
         subtitle: 'about.f_prayer_desc'
             .tr(args: [_n(kPrayerCalculationMethods.length)!]),
@@ -205,7 +205,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
         subtitle: 'about.f_tajweed_desc'.tr(),
       ),
       _FeatureRow(
-        icon: Icons.mosque_outlined,
+        icon: Icons.mosque_rounded,
         title: 'about.f_hajj'.tr(),
         subtitle: 'about.f_hajj_desc'.tr(),
       ),

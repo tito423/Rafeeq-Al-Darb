@@ -163,19 +163,19 @@ class SettingsBody extends ConsumerWidget {
           // «رفيق»: its voice pack and the switch (the call «يا رفيق»).
           CollapsibleSection(
             title: 'assistant.setting_title'.tr(),
-            icon: Icons.mic_rounded,
+            icon: Icons.mic_none_rounded,
             children: [
               const AssistantSettingsCard(),
             ],
           ),
           CollapsibleSection(
             title: 'settings.font_section'.tr(),
-            icon: Icons.font_download_rounded,
+            icon: Icons.font_download_outlined,
             children: const [AppFontPicker()],
           ),
           CollapsibleSection(
             title: 'settings.splash_section'.tr(),
-            icon: Icons.auto_awesome_rounded,
+            icon: Icons.auto_awesome_outlined,
             children: [
               // P3‑49: the AI-generated splash video is back on by default; keep
               // a toggle for anyone who prefers a faster cold start.
@@ -244,7 +244,7 @@ class SettingsBody extends ConsumerWidget {
           // ── Home clock ──
           CollapsibleSection(
             title: 'home.clock_section'.tr(),
-            icon: Icons.watch_later_rounded,
+            icon: Icons.schedule_rounded,
             children: [
               Card(
                 child: Column(
@@ -315,7 +315,7 @@ class SettingsBody extends ConsumerWidget {
           // rest), not a heading over a lone card - the owner asked for it.
           CollapsibleSection(
             title: 'mushaf_theme.title'.tr(),
-            icon: Icons.palette_rounded,
+            icon: Icons.auto_stories_outlined,
             children: [
               Builder(
                 builder: (tileContext) => Card(
@@ -366,13 +366,13 @@ class SettingsBody extends ConsumerWidget {
           // calls `build()` again with fresh translations.
           CollapsibleSection(
             title: 'settings.permissions'.tr(),
-            icon: Icons.verified_user_rounded,
+            icon: Icons.verified_user_outlined,
             children: [const PermissionsSection()],
           ),
 
           CollapsibleSection(
             title: 'library.voice_section_title'.tr(),
-            icon: Icons.record_voice_over_rounded,
+            icon: Icons.record_voice_over_outlined,
             children: const [BookVoiceSection()],
           ),
 
@@ -386,7 +386,7 @@ class SettingsBody extends ConsumerWidget {
           // the Home "سنن السور" card — see that card's own doc comment.
           CollapsibleSection(
             title: 'sunan_suwar.reminders_section_title'.tr(),
-            icon: Icons.menu_book_rounded,
+            icon: Icons.event_note_outlined,
             children: [const SunanSuwarRemindersSection()],
           ),
 
@@ -398,7 +398,7 @@ class SettingsBody extends ConsumerWidget {
 
           CollapsibleSection(
             title: 'fasting.section_title'.tr(),
-            icon: Icons.nights_stay_rounded,
+            icon: Icons.dark_mode_outlined,
             children: const [FastingReminderSection()],
           ),
 
@@ -407,14 +407,14 @@ class SettingsBody extends ConsumerWidget {
           // preview.
           CollapsibleSection(
             title: 'quotes.section_title'.tr(),
-            icon: Icons.format_quote_rounded,
+            icon: Icons.chat_bubble_outline_rounded,
             children: [const QuoteReminderSection()],
           ),
         ],
         if (part == SettingsPart.about) ...[
           // About - the same cards as the rest of «المزيد».
           IslamicActionCard(
-            icon: Icons.info_outline_rounded,
+            icon: Icons.signpost_outlined,
             accent: AppColors.info,
             title: 'app.name'.tr(),
             subtitle: 'settings.about_desc'.tr(),

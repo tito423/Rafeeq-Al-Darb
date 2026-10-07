@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -30,29 +31,34 @@ class _QuizStarfieldState extends State<QuizStarfield>
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF0B2A3F), Color(0xFF0E3B3A), Color(0xFF071625)],
+    // The ground is always night, whatever the app theme, so the status
+    // bar's clock and icons are always light over it.
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0B2A3F), Color(0xFF0E3B3A), Color(0xFF071625)],
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: IgnorePointer(
-              child: RepaintBoundary(
-                child: AnimatedBuilder(
-                  animation: _c,
-                  builder: (_, _) =>
-                      CustomPaint(painter: _LatticePainter(_c.value)),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: IgnorePointer(
+                child: RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: _c,
+                    builder: (_, _) =>
+                        CustomPaint(painter: _LatticePainter(_c.value)),
+                  ),
                 ),
               ),
             ),
-          ),
-          widget.child,
-        ],
+            widget.child,
+          ],
+        ),
       ),
     );
   }

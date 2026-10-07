@@ -61,6 +61,12 @@ class _SyncAccountCardState extends ConsumerState<SyncAccountCard> with SingleTi
         accent: AppColors.info,
         title: 'sync.sign_in_title'.tr(),
         subtitle: 'sync.sign_in_subtitle'.tr(),
+        // The settings sections above it end in a gold chevron; the card's
+        // own accent turned this one blue, the odd one out in the list.
+        trailing: Icon(
+          Icons.chevron_right,
+          color: AppColors.gold.withValues(alpha: 0.85),
+        ),
         // Awaited, and its failure said out loud. The first cut called
         // `signIn()` and dropped the future on the floor, so a sign-in that
         // threw looked identical to a button that was not wired to anything
