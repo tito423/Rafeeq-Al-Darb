@@ -451,5 +451,40 @@
       "note": "each breath starts where one of the 13 long quiet stretches ends; all 14 breaths read back as their words"
     },
     "fajr": true
+  },
+  "azan3.mp3": {
+    "total_ms": 163450,
+    "first_speech_ms": 300,
+    "last_speech_ms": 163450,
+    "breaths": [
+      300,
+      7700,
+      19350,
+      34200,
+      52350,
+      68050,
+      86800,
+      102600,
+      119750,
+      132100,
+      147900,
+      155550
+    ],
+    "lines": [
+      300,
+      19350,
+      52350,
+      86800,
+      119750,
+      147900,
+      155550
+    ],
+    "checked": {
+      "timeline": "silences",
+      "mean": 0.885,
+      "wrong": 0,
+      "judge": "large-v3",
+      "note": "mohamed-siddiq-el-minshawi-afghanistan; 11 clear ~2 s pauses = 12 breaths; full large-v3 transcript is the adhan only, in order"
+    }
   }
 }
