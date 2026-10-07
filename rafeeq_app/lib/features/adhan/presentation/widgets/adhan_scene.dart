@@ -89,9 +89,8 @@ class _AdhanSceneState extends State<AdhanScene>
 
   int _lastPhrase = -1;
 
-  double get _now => (_clock.lastElapsedDuration ?? Duration.zero)
-      .inMilliseconds /
-      1000.0;
+  double get _now =>
+      (_clock.lastElapsedDuration ?? Duration.zero).inMilliseconds / 1000.0;
 
   @override
   void initState() {
@@ -174,60 +173,60 @@ class _AdhanPalette {
   });
 
   static _AdhanPalette forPrayer(String key) => switch (key) {
-        // Before sunrise: still night overhead, a cold blue at the horizon
-        // with the first warmth under it. The crescent is low and setting.
-        'fajr' => const _AdhanPalette(
-            zenith: Color(0xFF07142B),
-            horizon: Color(0xFF2A4A6E),
-            light: Color(0xFFE8B25F),
-            bodyHeight: 0.30,
-            bodyAcross: 0.80,
-            crescent: true,
-            starAlpha: 0.55,
-          ),
-        // Midday, but this is a dark screen with white text on it, so "high
-        // sun" is a pale gold high in a deep teal sky rather than a blue-sky
-        // photograph that the text could not sit on.
-        'dhuhr' => const _AdhanPalette(
-            zenith: Color(0xFF06243A),
-            horizon: Color(0xFF2F6E7E),
-            light: Color(0xFFFFD98A),
-            bodyHeight: 0.60,
-            bodyAcross: 0.74,
-            crescent: false,
-            starAlpha: 0.0,
-          ),
-        // Afternoon: the light has gone amber and the sun has come down.
-        'asr' => const _AdhanPalette(
-            zenith: Color(0xFF0A2438),
-            horizon: Color(0xFF8A5A34),
-            light: Color(0xFFF0A95C),
-            bodyHeight: 0.44,
-            bodyAcross: 0.24,
-            crescent: false,
-            starAlpha: 0.0,
-          ),
-        // Sunset: rose on the horizon, the first stars overhead.
-        'maghrib' => const _AdhanPalette(
-            zenith: Color(0xFF10142F),
-            horizon: Color(0xFF9B4A46),
-            light: Color(0xFFFF9D63),
-            bodyHeight: 0.18,
-            bodyAcross: 0.18,
-            crescent: true,
-            starAlpha: 0.35,
-          ),
-        // Night.
-        _ => const _AdhanPalette(
-            zenith: Color(0xFF040A1E),
-            horizon: Color(0xFF16305A),
-            light: Color(0xFFCBD8F5),
-            bodyHeight: 0.58,
-            bodyAcross: 0.78,
-            crescent: true,
-            starAlpha: 0.85,
-          ),
-      };
+    // Before sunrise: still night overhead, a cold blue at the horizon
+    // with the first warmth under it. The crescent is low and setting.
+    'fajr' => const _AdhanPalette(
+      zenith: Color(0xFF07142B),
+      horizon: Color(0xFF2A4A6E),
+      light: Color(0xFFE8B25F),
+      bodyHeight: 0.30,
+      bodyAcross: 0.80,
+      crescent: true,
+      starAlpha: 0.55,
+    ),
+    // Midday, but this is a dark screen with white text on it, so "high
+    // sun" is a pale gold high in a deep teal sky rather than a blue-sky
+    // photograph that the text could not sit on.
+    'dhuhr' => const _AdhanPalette(
+      zenith: Color(0xFF06243A),
+      horizon: Color(0xFF2F6E7E),
+      light: Color(0xFFFFD98A),
+      bodyHeight: 0.60,
+      bodyAcross: 0.74,
+      crescent: false,
+      starAlpha: 0.0,
+    ),
+    // Afternoon: the light has gone amber and the sun has come down.
+    'asr' => const _AdhanPalette(
+      zenith: Color(0xFF0A2438),
+      horizon: Color(0xFF8A5A34),
+      light: Color(0xFFF0A95C),
+      bodyHeight: 0.44,
+      bodyAcross: 0.24,
+      crescent: false,
+      starAlpha: 0.0,
+    ),
+    // Sunset: rose on the horizon, the first stars overhead.
+    'maghrib' => const _AdhanPalette(
+      zenith: Color(0xFF10142F),
+      horizon: Color(0xFF9B4A46),
+      light: Color(0xFFFF9D63),
+      bodyHeight: 0.18,
+      bodyAcross: 0.18,
+      crescent: true,
+      starAlpha: 0.35,
+    ),
+    // Night.
+    _ => const _AdhanPalette(
+      zenith: Color(0xFF040A1E),
+      horizon: Color(0xFF16305A),
+      light: Color(0xFFCBD8F5),
+      bodyHeight: 0.58,
+      bodyAcross: 0.78,
+      crescent: true,
+      starAlpha: 0.85,
+    ),
+  };
 }
 
 class _AdhanScenePainter extends CustomPainter {
@@ -294,13 +293,15 @@ class _AdhanScenePainter extends CustomPainter {
       final base = 0.25 + rnd.nextDouble() * 0.75;
       // Each star breathes on its own period, so no two blink together.
       final period = 3.0 + rnd.nextDouble() * 9.0;
-      final twinkle = 0.55 + 0.45 * math.sin(seconds / period * math.pi * 2 + i);
+      final twinkle =
+          0.55 + 0.45 * math.sin(seconds / period * math.pi * 2 + i);
       canvas.drawCircle(
         Offset(x, y),
         0.7 + rnd.nextDouble() * 1.3,
         Paint()
-          ..color = Colors.white
-              .withValues(alpha: palette.starAlpha * base * twinkle),
+          ..color = Colors.white.withValues(
+            alpha: palette.starAlpha * base * twinkle,
+          ),
       );
     }
   }
@@ -353,11 +354,10 @@ class _AdhanScenePainter extends CustomPainter {
       const steps = 12;
       for (var i = 0; i <= steps; i++) {
         final x = size.width * i / steps;
-        final y = horizonY -
+        final y =
+            horizonY -
             lift *
-                (0.5 +
-                    0.5 *
-                        math.sin(i * 0.9 + layer * 2.1 + seconds * 0.02));
+                (0.5 + 0.5 * math.sin(i * 0.9 + layer * 2.1 + seconds * 0.02));
         path.lineTo(x, y);
       }
       path
@@ -366,9 +366,11 @@ class _AdhanScenePainter extends CustomPainter {
       canvas.drawPath(
         path,
         Paint()
-          ..color = Color.lerp(palette.horizon, Colors.black,
-                  0.35 + layer * 0.22)!
-              .withValues(alpha: 0.85),
+          ..color = Color.lerp(
+            palette.horizon,
+            Colors.black,
+            0.35 + layer * 0.22,
+          )!.withValues(alpha: 0.85),
       );
     }
   }
@@ -383,13 +385,25 @@ class _AdhanScenePainter extends CustomPainter {
 
     final body = Path()
       // The prayer hall.
-      ..addRect(Rect.fromLTRB(cx - unit * 2.6, baseTop, cx + unit * 2.6, horizonY))
+      ..addRect(
+        Rect.fromLTRB(cx - unit * 2.6, baseTop, cx + unit * 2.6, horizonY),
+      )
       // The dome: a half-ellipse with the little neck under it.
-      ..addRect(Rect.fromLTRB(cx - unit * 1.25, baseTop - unit * 0.22,
-          cx + unit * 1.25, baseTop))
+      ..addRect(
+        Rect.fromLTRB(
+          cx - unit * 1.25,
+          baseTop - unit * 0.22,
+          cx + unit * 1.25,
+          baseTop,
+        ),
+      )
       ..addArc(
-        Rect.fromLTRB(cx - unit * 1.25, baseTop - unit * 2.1, cx + unit * 1.25,
-            baseTop + unit * 0.25),
+        Rect.fromLTRB(
+          cx - unit * 1.25,
+          baseTop - unit * 2.1,
+          cx + unit * 1.25,
+          baseTop + unit * 0.25,
+        ),
         math.pi,
         math.pi,
       );
@@ -400,13 +414,25 @@ class _AdhanScenePainter extends CustomPainter {
       final mx = cx + side * unit * 3.4;
       final top = horizonY - unit * 4.0;
       body
-        ..addRect(Rect.fromLTRB(mx - unit * 0.33, top, mx + unit * 0.33, horizonY))
+        ..addRect(
+          Rect.fromLTRB(mx - unit * 0.33, top, mx + unit * 0.33, horizonY),
+        )
         // The gallery the muezzin stands on.
-        ..addRect(Rect.fromLTRB(
-            mx - unit * 0.52, top + unit * 0.25, mx + unit * 0.52, top + unit * 0.5))
+        ..addRect(
+          Rect.fromLTRB(
+            mx - unit * 0.52,
+            top + unit * 0.25,
+            mx + unit * 0.52,
+            top + unit * 0.5,
+          ),
+        )
         ..addArc(
-          Rect.fromLTRB(mx - unit * 0.4, top - unit * 0.75, mx + unit * 0.4,
-              top + unit * 0.15),
+          Rect.fromLTRB(
+            mx - unit * 0.4,
+            top - unit * 0.75,
+            mx + unit * 0.4,
+            top + unit * 0.15,
+          ),
           math.pi,
           math.pi,
         );
@@ -419,12 +445,14 @@ class _AdhanScenePainter extends CustomPainter {
     // stroke, clipped to the silhouette's lit half.
     final litFromLeft = light.dx < cx;
     canvas.save();
-    canvas.clipRect(Rect.fromLTRB(
-      litFromLeft ? 0 : cx,
-      0,
-      litFromLeft ? cx : w,
-      horizonY + 1,
-    ));
+    canvas.clipRect(
+      Rect.fromLTRB(
+        litFromLeft ? 0 : cx,
+        0,
+        litFromLeft ? cx : w,
+        horizonY + 1,
+      ),
+    );
     canvas.drawPath(
       body,
       Paint()
@@ -471,24 +499,28 @@ class _AdhanScenePainter extends CustomPainter {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [Color(0xFF03070F), Color(0xFF01040A)],
-        ).createShader(
-          Rect.fromLTRB(0, horizonY, size.width, size.height),
-        ),
+        ).createShader(Rect.fromLTRB(0, horizonY, size.width, size.height)),
     );
     // The light's reflection on the ground, directly under it.
     canvas.drawRect(
       Rect.fromLTRB(0, horizonY, size.width, horizonY + size.height * 0.08),
       Paint()
-        ..shader = RadialGradient(
-          center: Alignment(palette.bodyAcross * 2 - 1, -1.0),
-          radius: 1.0,
-          colors: [
-            palette.light.withValues(alpha: 0.12),
-            palette.light.withValues(alpha: 0.0),
-          ],
-        ).createShader(
-          Rect.fromLTRB(0, horizonY, size.width, horizonY + size.height * 0.08),
-        ),
+        ..shader =
+            RadialGradient(
+              center: Alignment(palette.bodyAcross * 2 - 1, -1.0),
+              radius: 1.0,
+              colors: [
+                palette.light.withValues(alpha: 0.12),
+                palette.light.withValues(alpha: 0.0),
+              ],
+            ).createShader(
+              Rect.fromLTRB(
+                0,
+                horizonY,
+                size.width,
+                horizonY + size.height * 0.08,
+              ),
+            ),
     );
   }
 

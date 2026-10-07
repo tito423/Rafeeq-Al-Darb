@@ -15,16 +15,24 @@ import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/widgets/islamic_pattern.dart';
 import '../../data/reader_name_provider.dart';
 
-Future<void> showReaderNameSheet(BuildContext context) {
+/// [fromSettings]: opened from «الإعدادات» to add, change or clear the name
+/// later («لو نسيت ان انا اضيف اسمي في الاول او عملت له سكيب اقدر ان انا
+/// احطه بعد كده من الاعدادات»). There the left button cancels instead of
+/// skipping, and saving an emptied field removes the name.
+Future<void> showReaderNameSheet(
+  BuildContext context, {
+  bool fromSettings = false,
+}) {
   return showFittedSheet<void>(
     context: context,
     showDragHandle: true,
-    builder: (_) => const _ReaderNameSheet(),
+    builder: (_) => _ReaderNameSheet(fromSettings: fromSettings),
   );
 }
 
 class _ReaderNameSheet extends ConsumerStatefulWidget {
-  const _ReaderNameSheet();
+  final bool fromSettings;
+  const _ReaderNameSheet({required this.fromSettings});
 
   @override
   ConsumerState<_ReaderNameSheet> createState() => _ReaderNameSheetState();
@@ -47,6 +55,10 @@ class _ReaderNameSheetState extends ConsumerState<_ReaderNameSheet> {
   }
 
   Future<void> _done(bool save) async {
+    if (!save && widget.fromSettings) {
+      Navigator.of(context).pop();
+      return;
+    }
     final notifier = ref.read(readerNameProvider.notifier);
     if (save) await notifier.set(_controller.text);
     await notifier.markAsked();
@@ -72,15 +84,19 @@ class _ReaderNameSheetState extends ConsumerState<_ReaderNameSheet> {
           Text(
             'home.name_ask_title'.tr(),
             textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
-            'home.name_ask_body'.tr(),
+            widget.fromSettings
+                ? 'settings.your_name_body'.tr()
+                : 'home.name_ask_body'.tr(),
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: 16),
           // A live preview of the greeting itself, in the very face the Home
@@ -117,6 +133,8 @@ class _ReaderNameSheetState extends ConsumerState<_ReaderNameSheet> {
             controller: _controller,
             textAlign: TextAlign.center,
             textInputAction: TextInputAction.done,
+            // Opened from the settings on purpose: the keyboard is wanted.
+            autofocus: widget.fromSettings,
             maxLength: 24,
             onSubmitted: (_) => _done(true),
             decoration: InputDecoration(
@@ -132,11 +150,19 @@ class _ReaderNameSheetState extends ConsumerState<_ReaderNameSheet> {
             children: [
               TextButton(
                 onPressed: () => _done(false),
-                child: Text('home.name_skip'.tr()),
+                child: Text(
+                  widget.fromSettings
+                      ? 'common.cancel'.tr()
+                      : 'home.name_skip'.tr(),
+                ),
               ),
               const Spacer(),
               FilledButton(
-                onPressed: name.isEmpty ? null : () => _done(true),
+                // From the settings an emptied field is a real answer: it
+                // takes the name off the Home greeting.
+                onPressed: name.isEmpty && !widget.fromSettings
+                    ? null
+                    : () => _done(true),
                 child: Text('home.name_save'.tr()),
               ),
             ],
@@ -160,11 +186,7 @@ class ReaderNameFlourish extends StatelessWidget {
   final String name;
   final double fontSize;
 
-  const ReaderNameFlourish({
-    super.key,
-    required this.name,
-    this.fontSize = 22,
-  });
+  const ReaderNameFlourish({super.key, required this.name, this.fontSize = 22});
 
   @override
   Widget build(BuildContext context) {
@@ -206,14 +228,14 @@ class _Diamond extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Transform.rotate(
-        angle: 0.785398,
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            color: AppColors.gold.withValues(alpha: 0.85),
-            borderRadius: BorderRadius.circular(size * 0.18),
-          ),
-        ),
-      );
+    angle: 0.785398,
+    child: Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: AppColors.gold.withValues(alpha: 0.85),
+        borderRadius: BorderRadius.circular(size * 0.18),
+      ),
+    ),
+  );
 }

@@ -236,7 +236,6 @@ class PerPrayerPage extends StatelessWidget {
   }
 }
 
-
 class _PrayerTile extends StatelessWidget {
   final String prayerKey;
   final String label;

@@ -57,7 +57,8 @@ class ReaderNameNotifier extends StateNotifier<String> {
   }
 }
 
-final readerNameProvider =
-    StateNotifierProvider<ReaderNameNotifier, String>((ref) {
+final readerNameProvider = StateNotifierProvider<ReaderNameNotifier, String>((
+  ref,
+) {
   return ReaderNameNotifier();
 });

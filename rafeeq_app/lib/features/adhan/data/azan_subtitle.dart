@@ -41,11 +41,13 @@ List<AzanSubtitle> buildAzanSubtitles({
     final startMs = (total.inMilliseconds * accMs / totalWeight).round();
     accMs += weights[i];
     final endMs = (total.inMilliseconds * accMs / totalWeight).round();
-    out.add(AzanSubtitle(
-      text: lines[i].text,
-      startTime: Duration(milliseconds: startMs),
-      endTime: Duration(milliseconds: endMs),
-    ));
+    out.add(
+      AzanSubtitle(
+        text: lines[i].text,
+        startTime: Duration(milliseconds: startMs),
+        endTime: Duration(milliseconds: endMs),
+      ),
+    );
   }
   return out;
 }
@@ -91,8 +93,10 @@ class AdhanTimings {
   bool followsAdhan({required bool isFajr}) {
     final b = breaths;
     if (b == null || linesAreFajr != isFajr) return false;
-    final want = (isFajr ? breathsPerLineFajr : breathsPerLine)
-        .fold<int>(0, (a, c) => a + c);
+    final want = (isFajr ? breathsPerLineFajr : breathsPerLine).fold<int>(
+      0,
+      (a, c) => a + c,
+    );
     return b.length == want;
   }
 
@@ -131,7 +135,9 @@ List<AzanSubtitle> buildAzanSubtitlesMeasured({
   required AdhanTimings timings,
 }) {
   final lines = adhanLines(isFajr: isFajr);
-  final scale = timings.totalMs <= 0 ? 1.0 : total.inMilliseconds / timings.totalMs;
+  final scale = timings.totalMs <= 0
+      ? 1.0
+      : total.inMilliseconds / timings.totalMs;
 
   // BREATH BY BREATH, when the recording gave us that. The owner's own idea:
   // «تعرف صوت كل مؤذن إمتى بيقول مثلاً الله أكبر وتكتبها ع الشاشة». Twelve
@@ -158,11 +164,12 @@ List<AzanSubtitle> buildAzanSubtitlesMeasured({
           text: texts[i],
           startTime: Duration(milliseconds: (breaths[i] * scale).round()),
           endTime: Duration(
-            milliseconds: ((i + 1 < breaths.length
-                        ? breaths[i + 1]
-                        : timings.lastSpeechMs + 1500) *
-                    scale)
-                .round(),
+            milliseconds:
+                ((i + 1 < breaths.length
+                            ? breaths[i + 1]
+                            : timings.lastSpeechMs + 1500) *
+                        scale)
+                    .round(),
           ),
         ),
     ];
@@ -178,15 +185,22 @@ List<AzanSubtitle> buildAzanSubtitlesMeasured({
           text: lines[i].text,
           startTime: Duration(milliseconds: (measured[i] * scale).round()),
           endTime: Duration(
-            milliseconds: ((i + 1 < measured.length ? measured[i + 1] : timings.lastSpeechMs + 1500) * scale)
-                .round(),
+            milliseconds:
+                ((i + 1 < measured.length
+                            ? measured[i + 1]
+                            : timings.lastSpeechMs + 1500) *
+                        scale)
+                    .round(),
           ),
         ),
     ];
   }
   final start = (timings.firstSpeechMs * scale).round();
   final end = (timings.lastSpeechMs * scale).round();
-  final span = buildAzanSubtitles(isFajr: isFajr, total: Duration(milliseconds: end - start));
+  final span = buildAzanSubtitles(
+    isFajr: isFajr,
+    total: Duration(milliseconds: end - start),
+  );
   return [
     for (final s in span)
       AzanSubtitle(

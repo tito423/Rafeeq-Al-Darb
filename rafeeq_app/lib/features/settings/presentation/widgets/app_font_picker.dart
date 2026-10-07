@@ -18,24 +18,28 @@ class AppFontPicker extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
 
     Widget group(String titleKey, bool traditional) => Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 10, 4, 6),
-              child: Text(titleKey.tr(),
-                  style: TextStyle(
-                      color: goldText(context), fontWeight: FontWeight.w700)),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 10, 4, 6),
+          child: Text(
+            titleKey.tr(),
+            style: TextStyle(
+              color: goldText(context),
+              fontWeight: FontWeight.w700,
             ),
-            for (final f in appFonts)
-              if (f.traditional == traditional)
-                _FontTile(
-                  font: f,
-                  selected: f.family == current,
-                  onTap: () => ref.read(appFontProvider.notifier).set(f.family),
-                  scheme: scheme,
-                ),
-          ],
-        );
+          ),
+        ),
+        for (final f in appFonts)
+          if (f.traditional == traditional)
+            _FontTile(
+              font: f,
+              selected: f.family == current,
+              onTap: () => ref.read(appFontProvider.notifier).set(f.family),
+              scheme: scheme,
+            ),
+      ],
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -82,36 +86,50 @@ class _FontTile extends StatelessWidget {
               width: selected ? 1.6 : 1,
             ),
           ),
-          child: Row(children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // The sample is the same line for every face, in the
-                  // reader's language, so the faces compare like for like.
-                  Text(
-                    'settings.font_sample'.tr(),
-                    style: GoogleFonts.getFont(font.family,
-                        fontSize: 17, height: 1.6, color: scheme.onSurface),
-                  ),
-                  Text(
-                    font.family,
-                    textDirection: TextDirection.ltr,
-                    style: TextStyle(
-                        fontSize: 11, color: scheme.onSurfaceVariant),
-                  ),
-                ],
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // The sample is the same line for every face, in the
+                    // reader's language, so the faces compare like for like.
+                    Text(
+                      'settings.font_sample'.tr(),
+                      style: GoogleFonts.getFont(
+                        font.family,
+                        fontSize: 17,
+                        height: 1.6,
+                        color: scheme.onSurface,
+                      ),
+                    ),
+                    Text(
+                      font.family,
+                      textDirection: TextDirection.ltr,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: selected
-                  ? const Icon(Icons.check_circle_rounded,
-                      key: ValueKey(1), color: AppColors.gold)
-                  : Icon(Icons.circle_outlined,
-                      key: const ValueKey(0), color: scheme.outlineVariant),
-            ),
-          ]),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: selected
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        key: ValueKey(1),
+                        color: AppColors.gold,
+                      )
+                    : Icon(
+                        Icons.circle_outlined,
+                        key: const ValueKey(0),
+                        color: scheme.outlineVariant,
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

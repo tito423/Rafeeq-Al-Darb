@@ -65,7 +65,8 @@ class _PermissionsSectionState extends State<PermissionsSection>
   Future<void> _refreshAll() async {
     final notif = await Permission.notification.status;
     final loc = await Geolocator.checkPermission();
-    final battery = await AlarmPermissionsService.instance.isBatteryOptimizationExempt();
+    final battery = await AlarmPermissionsService.instance
+        .isBatteryOptimizationExempt();
     final prefs = await SharedPreferences.getInstance();
     if (battery) await prefs.setBool(_kBatterySeen, true);
     final revoked = !battery && (prefs.getBool(_kBatterySeen) ?? false);
@@ -73,7 +74,8 @@ class _PermissionsSectionState extends State<PermissionsSection>
     if (!mounted) return;
     setState(() {
       _notificationsOk = notif.isGranted;
-      _locationOk = loc == LocationPermission.always ||
+      _locationOk =
+          loc == LocationPermission.always ||
           loc == LocationPermission.whileInUse;
       _batteryOk = battery;
       _batteryRevoked = revoked;
@@ -191,11 +193,16 @@ class _PermissionTile extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: scheme.primary),
       title: Text(title),
-      subtitle: Text(subtitle,
-          style: warn ? TextStyle(color: scheme.error) : null),
+      subtitle: Text(
+        subtitle,
+        style: warn ? TextStyle(color: scheme.error) : null,
+      ),
       trailing: granted == null
           ? const SizedBox(
-              width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
           : Icon(
               ok ? Icons.check_circle : Icons.chevron_right,
               color: ok ? AppColors.success : scheme.outline,

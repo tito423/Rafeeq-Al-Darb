@@ -13,7 +13,16 @@ import 'package:flutter/material.dart';
 class AdhanPreviewCard extends StatelessWidget {
   final VoidCallback onTap;
 
-  const AdhanPreviewCard({super.key, required this.onTap});
+  /// Defaults to «معاينة الأذان» and its description.
+  final String? title;
+  final String? subtitle;
+
+  const AdhanPreviewCard({
+    super.key,
+    required this.onTap,
+    this.title,
+    this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +30,20 @@ class AdhanPreviewCard extends StatelessWidget {
     return Card(
       color: scheme.primaryContainer,
       child: ListTile(
-        leading: Icon(Icons.play_circle_fill,
-            color: scheme.onPrimaryContainer, size: 32),
+        leading: Icon(
+          Icons.play_circle_fill,
+          color: scheme.onPrimaryContainer,
+          size: 32,
+        ),
         title: Text(
-          'prayer.preview_azan'.tr(),
+          title ?? 'prayer.preview_azan'.tr(),
           style: TextStyle(
             color: scheme.onPrimaryContainer,
             fontWeight: FontWeight.w700,
           ),
         ),
         subtitle: Text(
-          'prayer.preview_azan_desc'.tr(),
+          subtitle ?? 'prayer.preview_azan_desc'.tr(),
           style: TextStyle(color: scheme.onPrimaryContainer),
         ),
         trailing: Icon(Icons.chevron_right, color: scheme.onPrimaryContainer),

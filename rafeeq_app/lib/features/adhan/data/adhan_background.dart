@@ -89,4 +89,5 @@ class AdhanBackgroundSetting extends StateNotifier<AdhanBackground> {
 
 final adhanBackgroundProvider =
     StateNotifierProvider<AdhanBackgroundSetting, AdhanBackground>(
-        (ref) => AdhanBackgroundSetting());
+      (ref) => AdhanBackgroundSetting(),
+    );

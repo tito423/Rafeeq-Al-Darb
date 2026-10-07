@@ -44,11 +44,7 @@ class NonArabicReadingCard extends ConsumerWidget {
                     color: gold.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    Icons.translate_rounded,
-                    color: ink,
-                    size: 24,
-                  ),
+                  child: Icon(Icons.translate_rounded, color: ink, size: 24),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -131,7 +127,9 @@ class NonArabicReadingCard extends ConsumerWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: gold.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(6),

@@ -12,12 +12,12 @@ class AdhanLine {
 }
 
 List<AdhanLine> adhanLines({required bool isFajr}) => [
-      const AdhanLine('الله أكبر', 4),
-      const AdhanLine('أشهد أن لا إله إلا الله', 2),
-      const AdhanLine('أشهد أن محمداً رسول الله', 2),
-      const AdhanLine('حيّ على الصلاة', 2),
-      const AdhanLine('حيّ على الفلاح', 2),
-      if (isFajr) const AdhanLine('الصلاة خير من النوم', 2),
-      const AdhanLine('الله أكبر', 2),
-      const AdhanLine('لا إله إلا الله', 1),
-    ];
+  const AdhanLine('الله أكبر', 4),
+  const AdhanLine('أشهد أن لا إله إلا الله', 2),
+  const AdhanLine('أشهد أن محمداً رسول الله', 2),
+  const AdhanLine('حيّ على الصلاة', 2),
+  const AdhanLine('حيّ على الفلاح', 2),
+  if (isFajr) const AdhanLine('الصلاة خير من النوم', 2),
+  const AdhanLine('الله أكبر', 2),
+  const AdhanLine('لا إله إلا الله', 1),
+];

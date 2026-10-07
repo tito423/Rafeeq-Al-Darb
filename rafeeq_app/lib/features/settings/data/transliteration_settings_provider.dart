@@ -7,7 +7,7 @@ import '../../../app/rafeeq_app.dart';
 /// Controls whether Latin transliteration is displayed beneath verses.
 class TransliterationSettingsNotifier extends StateNotifier<bool> {
   TransliterationSettingsNotifier(this._prefs)
-      : super(_prefs.getBool(_key) ?? false);
+    : super(_prefs.getBool(_key) ?? false);
 
   final SharedPreferences _prefs;
   static const _key = 'settings_show_transliteration_v1';
@@ -24,5 +24,5 @@ class TransliterationSettingsNotifier extends StateNotifier<bool> {
 
 final transliterationEnabledProvider =
     StateNotifierProvider<TransliterationSettingsNotifier, bool>((ref) {
-  return TransliterationSettingsNotifier(ref.watch(sharedPrefsProvider));
-});
+      return TransliterationSettingsNotifier(ref.watch(sharedPrefsProvider));
+    });

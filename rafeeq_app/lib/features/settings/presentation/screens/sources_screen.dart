@@ -24,7 +24,10 @@ class SourcesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('settings.credits'.tr())),
       body: ListView(
-        padding: readableInsets(context, const EdgeInsets.fromLTRB(16, 12, 16, 28)),
+        padding: readableInsets(
+          context,
+          const EdgeInsets.fromLTRB(16, 12, 16, 28),
+        ),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 16),
@@ -41,8 +44,9 @@ class SourcesScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(4, 12, 4, 8),
               child: Text(
                 group.$1.tr(),
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(color: scheme.primary),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: scheme.primary,
+                ),
               ),
             ),
             ...group.$2.map((s) => _SourceRow(source: s)),
@@ -56,7 +60,6 @@ class SourcesScreen extends StatelessWidget {
 /// A host name written in Arabic script is laid out right to left; a
 /// Latin one is not. Rendering detail, so it stays with the screen.
 final _hasArabic = RegExp(r'[\u0600-\u06FF]');
-
 
 class _SourceRow extends StatelessWidget {
   final SourceEntry source;
@@ -78,7 +81,8 @@ class _SourceRow extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                  color: scheme.outlineVariant.withValues(alpha: 0.5)),
+                color: scheme.outlineVariant.withValues(alpha: 0.5),
+              ),
             ),
             child: Row(
               children: [
@@ -120,14 +124,18 @@ class _SourceRow extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         source.roleKey.tr(),
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: scheme.onSurfaceVariant),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.open_in_new_rounded,
-                    size: 16, color: scheme.onSurfaceVariant),
+                Icon(
+                  Icons.open_in_new_rounded,
+                  size: 16,
+                  color: scheme.onSurfaceVariant,
+                ),
               ],
             ),
           ),

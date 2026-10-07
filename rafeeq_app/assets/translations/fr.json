@@ -927,6 +927,9 @@
     "adhan_settings_hint": "Son de l'adhan, mode d'affichage et alertes"
   },
   "settings": {
+    "your_name": "Votre nom",
+    "your_name_body": "Affiché dans l’accueil. Effacez-le puis enregistrez pour le retirer.",
+    "your_name_empty": "Aucun nom pour l’instant. Ajoutez-en un pour le voir dans l’accueil",
     "privacy_policy": "Politique de confidentialité",
     "privacy_policy_desc": "Ce qui est collecté ou non — rien, sauf si vous activez la synchronisation",
     "title": "Paramètres",
@@ -1770,6 +1773,7 @@
     "target_hifz_desc": "Verset par verset : écoutez, masquez les mots, récitez-le"
   },
   "adhan": {
+    "background_preview": "Touchez pour prévisualiser",
     "backgrounds_title": "Fonds de l’écran de l’adhan",
     "backgrounds_desc": "Dix fonds animés — choisissez-en un",
     "bg_horizon": "Horizon",

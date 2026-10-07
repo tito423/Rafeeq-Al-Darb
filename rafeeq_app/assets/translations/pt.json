@@ -927,6 +927,9 @@
     "adhan_settings_hint": "Som do adhan, modo de exibição e alertas"
   },
   "settings": {
+    "your_name": "Seu nome",
+    "your_name_body": "Aparece na saudação do Início. Apague e salve para removê-lo.",
+    "your_name_empty": "Ainda sem nome. Adicione um para vê-lo na saudação do Início",
     "privacy_policy": "Política de privacidade",
     "privacy_policy_desc": "O que é e não é recolhido — nada, a menos que ative a sincronização",
     "title": "Definições",
@@ -1770,6 +1773,7 @@
     "target_hifz_desc": "Versículo a versículo: ouça, oculte as palavras e recite-o"
   },
   "adhan": {
+    "background_preview": "Toque para pré-visualizar",
     "backgrounds_title": "Fundos da tela do adhan",
     "backgrounds_desc": "Dez fundos animados — escolha um",
     "bg_horizon": "Horizonte",

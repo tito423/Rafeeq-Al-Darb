@@ -35,8 +35,8 @@ AdhanOption resolveAdhanFor(
 ) {
   AdhanOption? byId(String? id) =>
       id == null ? null : catalog.where((o) => o.id == id).firstOrNull;
-  final chosen = byId(settings.adhanIdFor(prayerKey)) ??
-      byId(settings.defaultAdhanId);
+  final chosen =
+      byId(settings.adhanIdFor(prayerKey)) ?? byId(settings.defaultAdhanId);
   if (chosen != null && chosen.fitsPrayer(prayerKey)) return chosen;
   if (prayerKey == 'fajr') {
     final pair = byId(chosen?.fajrPair);

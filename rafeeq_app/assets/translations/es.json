@@ -927,6 +927,9 @@
     "adhan_settings_hint": "Sonido del adhán, modo de visualización y alertas"
   },
   "settings": {
+    "your_name": "Tu nombre",
+    "your_name_body": "Se muestra en el saludo de Inicio. Bórralo y guarda para quitarlo.",
+    "your_name_empty": "Aún no hay nombre. Añádelo para verlo en el saludo de Inicio",
     "privacy_policy": "Política de privacidad",
     "privacy_policy_desc": "Qué se recoge y qué no: nada, salvo que actives la sincronización",
     "title": "Ajustes",
@@ -1770,6 +1773,7 @@
     "target_hifz_desc": "Aleya por aleya: escucha, oculta las palabras y recítala"
   },
   "adhan": {
+    "background_preview": "Toca para previsualizar",
     "backgrounds_title": "Fondos de la pantalla del adhan",
     "backgrounds_desc": "Diez fondos animados: elige uno",
     "bg_horizon": "Horizonte",

@@ -17,7 +17,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../data/adhan_background.dart';
+import '../adhan_preview_launcher.dart';
 import '../widgets/adhan_background_painter.dart';
+import '../widgets/adhan_preview_card.dart';
 
 class AdhanBackgroundScreen extends ConsumerStatefulWidget {
   const AdhanBackgroundScreen({super.key});
@@ -33,6 +35,11 @@ class _AdhanBackgroundScreenState extends ConsumerState<AdhanBackgroundScreen>
     vsync: this,
     duration: const Duration(minutes: 30),
   )..repeat();
+
+  /// Set by the first tap on a tile: from then on the preview card sits
+  /// under the grid, so the ground just chosen is one tap from being seen
+  /// on the real adhan screen.
+  bool _picked = false;
 
   double get _now =>
       (_clock.lastElapsedDuration ?? Duration.zero).inMilliseconds / 1000.0;
@@ -60,8 +67,9 @@ class _AdhanBackgroundScreenState extends ConsumerState<AdhanBackgroundScreen>
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             // From the width: 2 on a phone upright, 4 sideways, more on a
             // tablet or a TV - one tile per ~200 dp.
-            crossAxisCount:
-                (MediaQuery.sizeOf(context).width / 200).floor().clamp(2, 6),
+            crossAxisCount: (MediaQuery.sizeOf(context).width / 200)
+                .floor()
+                .clamp(2, 6),
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
             childAspectRatio: 0.72,
@@ -73,12 +81,24 @@ class _AdhanBackgroundScreenState extends ConsumerState<AdhanBackgroundScreen>
               style: style,
               seconds: _now,
               selected: style == selected,
-              onTap: () =>
-                  ref.read(adhanBackgroundProvider.notifier).set(style),
+              onTap: () {
+                ref.read(adhanBackgroundProvider.notifier).set(style);
+                if (!_picked) setState(() => _picked = true);
+              },
             );
           },
         ),
       ),
+      bottomNavigationBar: _picked
+          ? SafeArea(
+              minimum: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+              child: AdhanPreviewCard(
+                title: 'adhan.background_preview'.tr(),
+                subtitle: selected.nameKey.tr(),
+                onTap: () => openAdhanPreview(context, ref),
+              ),
+            )
+          : null,
     );
   }
 }
@@ -141,8 +161,11 @@ class _BackgroundTile extends StatelessWidget {
               const Positioned(
                 top: 8,
                 right: 8,
-                child: Icon(Icons.check_circle_rounded,
-                    color: AppColors.gold, size: 22),
+                child: Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.gold,
+                  size: 22,
+                ),
               ),
           ],
         ),

@@ -10,8 +10,10 @@ class AdhanCatalogNotifier extends AsyncNotifier<List<AdhanOption>> {
   Future<List<AdhanOption>> build() => AdhanCatalogService.instance.loadAll();
 
   Future<AdhanOption> addCustom(String sourcePath, String displayName) async {
-    final option =
-        await AdhanCatalogService.instance.addCustom(sourcePath, displayName);
+    final option = await AdhanCatalogService.instance.addCustom(
+      sourcePath,
+      displayName,
+    );
     state = AsyncData(await AdhanCatalogService.instance.loadAll());
     return option;
   }
@@ -24,5 +26,5 @@ class AdhanCatalogNotifier extends AsyncNotifier<List<AdhanOption>> {
 
 final adhanCatalogProvider =
     AsyncNotifierProvider<AdhanCatalogNotifier, List<AdhanOption>>(
-  AdhanCatalogNotifier.new,
-);
+      AdhanCatalogNotifier.new,
+    );

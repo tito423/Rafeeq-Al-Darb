@@ -86,7 +86,10 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                             child: Text(
                               m < 60
                                   ? trn('prayer.every_minutes', args: ['$m'])
-                                  : trn('prayer.every_hours', args: ['${m ~/ 60}']),
+                                  : trn(
+                                      'prayer.every_hours',
+                                      args: ['${m ~/ 60}'],
+                                    ),
                             ),
                           ),
                       ],
@@ -115,8 +118,9 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                   leading: const Icon(Icons.calculate_outlined),
                   title: Text('prayer.calc_method'.tr()),
                   subtitle: Text(
-                    prayerCalculationMethodById(settings.calculationMethod)
-                        .name,
+                    prayerCalculationMethodById(
+                      settings.calculationMethod,
+                    ).name,
                   ),
                   // chevron_right, not chevron_left: chevron_left auto-mirrors
                   // in RTL and would point the wrong way in Arabic.
@@ -155,8 +159,8 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                   Text(
                     'prayer.reminders_desc'.tr(),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(height: 14),
                   _ReminderRow(
@@ -166,9 +170,11 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                     onChanged: (v) => ref
                         .read(adhanSettingsProvider.notifier)
                         .setReminderBefore(v)
-                        .then((_) => ref
-                            .read(prayerControllerProvider.notifier)
-                            .refresh()),
+                        .then(
+                          (_) => ref
+                              .read(prayerControllerProvider.notifier)
+                              .refresh(),
+                        ),
                   ),
                   const Divider(height: 22),
                   _ReminderRow(
@@ -178,9 +184,11 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                     onChanged: (v) => ref
                         .read(adhanSettingsProvider.notifier)
                         .setReminderAfter(v)
-                        .then((_) => ref
-                            .read(prayerControllerProvider.notifier)
-                            .refresh()),
+                        .then(
+                          (_) => ref
+                              .read(prayerControllerProvider.notifier)
+                              .refresh(),
+                        ),
                   ),
                   const Divider(height: 22),
                   _ReminderRow(
@@ -190,9 +198,11 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                     onChanged: (v) => ref
                         .read(adhanSettingsProvider.notifier)
                         .setReminderIqama(v)
-                        .then((_) => ref
-                            .read(prayerControllerProvider.notifier)
-                            .refresh()),
+                        .then(
+                          (_) => ref
+                              .read(prayerControllerProvider.notifier)
+                              .refresh(),
+                        ),
                   ),
                 ],
               ),
@@ -211,8 +221,8 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                   Text(
                     'prayer.hijri_adjust_desc'.tr(),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(height: 14),
                   _Stepper(
@@ -237,10 +247,9 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                     child: Text(
                       _hijriPreview(adj.hijriOffsetDays),
                       textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: goldText(context)),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: goldText(context),
+                      ),
                     ),
                   ),
                 ],
@@ -261,9 +270,8 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                     child: Text(
                       'prayer.times_adjust_desc'.tr(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                   for (final key in adjustablePrayerKeys) ...[
@@ -284,11 +292,11 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
                               ),
                               if (times != null && times.byName(key).isNotEmpty)
                                 Text(
-                                  formatTime12h(times.byName(key),
-                                      context.locale.languageCode),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
+                                  formatTime12h(
+                                    times.byName(key),
+                                    context.locale.languageCode,
+                                  ),
+                                  style: Theme.of(context).textTheme.titleMedium
                                       ?.copyWith(
                                         color: goldText(context),
                                         fontWeight: FontWeight.w700,
@@ -323,12 +331,15 @@ class PrayerAdjustmentsScreen extends ConsumerWidget {
   /// What the corrected Hijri date reads as today, so the user can dial the
   /// offset until it matches what their locality announced.
   String _hijriPreview(int offsetDays) {
-    final (hYear, hMonth, hDay) =
-        OfficialHijri.dateOf(DateTime.now(), offsetDays: offsetDays);
+    final (hYear, hMonth, hDay) = OfficialHijri.dateOf(
+      DateTime.now(),
+      offsetDays: offsetDays,
+    );
     return localizeDigits(
-        '$hDay ${hijriMonthName(hMonth)} $hYear'
-        '${'hijri.suffix'.tr()}',
-        uiLanguageCode);
+      '$hDay ${hijriMonthName(hMonth)} $hYear'
+      '${'hijri.suffix'.tr()}',
+      uiLanguageCode,
+    );
   }
 }
 
@@ -341,19 +352,21 @@ Widget _choice({
   required String label,
   required bool selected,
   required VoidCallback onTap,
-}) =>
-    ListTile(
-      title: Text(label),
-      trailing: selected
-          // The theme's own icon colour: flat gold measured 2.10 : 1 on the
-          // light sheet (2026-09-25), and this helper has no context.
-          ? const Icon(Icons.check)
-          : const SizedBox(width: 24),
-      onTap: onTap,
-    );
+}) => ListTile(
+  title: Text(label),
+  trailing: selected
+      // The theme's own icon colour: flat gold measured 2.10 : 1 on the
+      // light sheet (2026-09-25), and this helper has no context.
+      ? const Icon(Icons.check)
+      : const SizedBox(width: 24),
+  onTap: onTap,
+);
 
 Future<void> _pickCalculationMethod(
-    BuildContext context, WidgetRef ref, AdhanSettings settings) async {
+  BuildContext context,
+  WidgetRef ref,
+  AdhanSettings settings,
+) async {
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -388,7 +401,10 @@ Future<void> _pickCalculationMethod(
 }
 
 Future<void> _pickAsrMadhab(
-    BuildContext context, WidgetRef ref, AdhanSettings settings) async {
+  BuildContext context,
+  WidgetRef ref,
+  AdhanSettings settings,
+) async {
   await showDialog<void>(
     context: context,
     builder: (dialog) => SimpleDialog(
@@ -478,15 +494,14 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 8, right: 4, left: 4),
-        child: Text(
-          text,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.primary),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 8, right: 4, left: 4),
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Theme.of(context).colorScheme.primary,
+      ),
+    ),
+  );
 }
 
 /// A compact -/value/+ control. Steppers rather than a text field because
@@ -516,10 +531,11 @@ class _Stepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = localizeDigits(
-        value == 0 || !signed
-            ? '$value $unit'
-            : '${value > 0 ? '+' : ''}$value $unit',
-        uiLanguageCode);
+      value == 0 || !signed
+          ? '$value $unit'
+          : '${value > 0 ? '+' : ''}$value $unit',
+      uiLanguageCode,
+    );
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -533,9 +549,9 @@ class _Stepper extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: value == 0 ? null : AppColors.gold,
-                  fontWeight: value == 0 ? null : FontWeight.w700,
-                ),
+              color: value == 0 ? null : AppColors.gold,
+              fontWeight: value == 0 ? null : FontWeight.w700,
+            ),
           ),
         ),
         IconButton(

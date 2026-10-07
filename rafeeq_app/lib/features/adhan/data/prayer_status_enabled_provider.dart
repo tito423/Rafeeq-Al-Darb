@@ -12,7 +12,7 @@ import '../../../app/rafeeq_app.dart';
 /// supplies the new default where nothing was ever saved.
 class PrayerStatusEnabledNotifier extends StateNotifier<bool> {
   PrayerStatusEnabledNotifier(this._prefs)
-      : super(_prefs.getBool(_key) ?? true);
+    : super(_prefs.getBool(_key) ?? true);
 
   final SharedPreferences _prefs;
   static const _key = 'prayer_status_enabled_v1';
@@ -25,5 +25,5 @@ class PrayerStatusEnabledNotifier extends StateNotifier<bool> {
 
 final prayerStatusEnabledProvider =
     StateNotifierProvider<PrayerStatusEnabledNotifier, bool>((ref) {
-  return PrayerStatusEnabledNotifier(ref.watch(sharedPrefsProvider));
-});
+      return PrayerStatusEnabledNotifier(ref.watch(sharedPrefsProvider));
+    });

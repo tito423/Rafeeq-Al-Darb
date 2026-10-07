@@ -26,9 +26,11 @@ import '../../../splash/presentation/screens/splash_preview_screen.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_reminders_section.dart';
 import '../../../tasbih_reminder/presentation/tasbih_reminder_section.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../../data/reader_name_provider.dart';
 import '../widgets/app_font_picker.dart';
 import '../widgets/non_arabic_reading_card.dart';
 import '../widgets/permissions_section.dart';
+import '../widgets/reader_name_sheet.dart';
 import 'about_screen.dart';
 import 'sources_screen.dart';
 
@@ -73,385 +75,384 @@ class SettingsBody extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
 
     final items = <Widget>[
-        if (part == SettingsPart.settings) ...[
-          // Language — each shown in its own script, independent of the
-          // current locale (P2‑3 added es / ru / pt).
-          CollapsibleSection(
-            title: 'settings.language'.tr(),
-            icon: Icons.translate_rounded,
-            children: [
-              Wrap(
+      if (part == SettingsPart.settings) ...[
+        // The name the Home greeting uses. Asked once on first run and
+        // skippable, so it must be reachable afterwards: add it, change it
+        // or clear it here.
+        const _ReaderNameCard(),
+        // Language — each shown in its own script, independent of the
+        // current locale (P2‑3 added es / ru / pt).
+        CollapsibleSection(
+          title: 'settings.language'.tr(),
+          icon: Icons.translate_rounded,
+          children: [
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final e in kLanguageNames.entries)
+                  ChoiceChip(
+                    label: Text(e.value),
+                    selected: context.locale.languageCode == e.key,
+                    onSelected: (_) {
+                      if (context.locale.languageCode != e.key) {
+                        context.setLocale(Locale(e.key));
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ],
+        ),
+
+        // Theme - collapsible like every other section here: «اختيار
+        // ثيم التطبيق يبقى كولابسد برده».
+        CollapsibleSection(
+          title: 'settings.theme'.tr(),
+          icon: Icons.palette_outlined,
+          // The tour frames the section's header, which is always shown -
+          // not the chips inside, which are folded away until it opens.
+          tourAnchor: TourAnchor.settingsTheme,
+          children: [
+            // A Wrap (not SegmentedButton) so longer translated labels never
+            // clip — matches the language selector above.
+            TutorialAnchor(
+              id: 'settings_theme_chips',
+              child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  for (final e in kLanguageNames.entries)
+                  for (final v in ThemeVariant.values)
                     ChoiceChip(
-                      label: Text(e.value),
-                      selected: context.locale.languageCode == e.key,
-                      onSelected: (_) {
-                        if (context.locale.languageCode != e.key) {
-                          context.setLocale(Locale(e.key));
-                        }
-                      },
+                      // the check would sit on the avatar icon, muddy
+                      showCheckmark: false,
+                      avatar: Icon(
+                        v.icon,
+                        size: 18,
+                        color: themeVariant == v
+                            ? scheme.onPrimaryContainer
+                            : scheme.onSurfaceVariant,
+                      ),
+                      label: Text(v.labelKey.tr()),
+                      selected: themeVariant == v,
+                      onSelected: (_) =>
+                          ref.read(themeControllerProvider.notifier).set(v),
                     ),
                 ],
               ),
-            ],
-          ),
-
-          // Theme - collapsible like every other section here: «اختيار
-          // ثيم التطبيق يبقى كولابسد برده».
-          CollapsibleSection(
-            title: 'settings.theme'.tr(),
-            icon: Icons.palette_outlined,
-            // The tour frames the section's header, which is always shown -
-            // not the chips inside, which are folded away until it opens.
-            tourAnchor: TourAnchor.settingsTheme,
-            children: [
-              // A Wrap (not SegmentedButton) so longer translated labels never
-              // clip — matches the language selector above.
-              TutorialAnchor(
-                id: 'settings_theme_chips',
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (final v in ThemeVariant.values)
-                      ChoiceChip(
-                        // the check would sit on the avatar icon, muddy
-                        showCheckmark: false,
-                        avatar: Icon(
-                          v.icon,
-                          size: 18,
-                          color: themeVariant == v
-                              ? scheme.onPrimaryContainer
-                              : scheme.onSurfaceVariant,
-                        ),
-                        label: Text(v.labelKey.tr()),
-                        selected: themeVariant == v,
-                        onSelected: (_) =>
-                            ref.read(themeControllerProvider.notifier).set(v),
-                      ),
-                  ],
+            ),
+            if (themeVariant == ThemeVariant.rgb) ...[
+              const SizedBox(height: 8),
+              Card(
+                child: SwitchListTile(
+                  secondary: Icon(
+                    Icons.motion_photos_on_outlined,
+                    color: scheme.primary,
+                  ),
+                  title: Text('settings.motion_effects'.tr()),
+                  subtitle: Text('settings.motion_effects_desc'.tr()),
+                  value: ref.watch(motionEffectsProvider),
+                  onChanged: (v) =>
+                      ref.read(motionEffectsProvider.notifier).set(v),
                 ),
               ),
-              if (themeVariant == ThemeVariant.rgb) ...[
-                const SizedBox(height: 8),
-                Card(
-                  child: SwitchListTile(
+            ],
+          ],
+        ),
+        // «مش لاقي فعليًا خيار الاسبلاش سكرين بصوت أو بغير أو عرضها من
+        // الأساس». Both switches were here, but inside the appearance block
+        // with no heading of their own, so nothing on the screen said
+        // «شاشة البداية». They have a heading now.
+        // «كارت … بتغيير نوع الخط في البرنامج مع عرض شكل الاختيار فوري».
+        // Prayer-time adjustments live only in the Prayer tab (owner,
+        // 2026-09-29: the card was duplicated here, so it was removed).
+        // «رفيق»: its voice pack and the switch (the call «يا رفيق»).
+        CollapsibleSection(
+          title: 'assistant.setting_title'.tr(),
+          icon: Icons.mic_none_rounded,
+          children: [const AssistantSettingsCard()],
+        ),
+        CollapsibleSection(
+          title: 'settings.font_section'.tr(),
+          icon: Icons.font_download_outlined,
+          children: const [AppFontPicker()],
+        ),
+        CollapsibleSection(
+          title: 'settings.splash_section'.tr(),
+          icon: Icons.auto_awesome_outlined,
+          children: [
+            // P3‑49: the AI-generated splash video is back on by default; keep
+            // a toggle for anyone who prefers a faster cold start.
+            Card(
+              child: Column(
+                children: [
+                  SwitchListTile(
                     secondary: Icon(
-                      Icons.motion_photos_on_outlined,
+                      Icons.smart_display_outlined,
                       color: scheme.primary,
                     ),
-                    title: Text('settings.motion_effects'.tr()),
-                    subtitle: Text('settings.motion_effects_desc'.tr()),
-                    value: ref.watch(motionEffectsProvider),
+                    title: Text('settings.splash_video'.tr()),
+                    subtitle: Text('settings.splash_video_desc'.tr()),
+                    value: splashVideo,
                     onChanged: (v) =>
-                        ref.read(motionEffectsProvider.notifier).set(v),
+                        ref.read(splashVideoEnabledProvider.notifier).set(v),
                   ),
-                ),
-              ],
-            ],
-          ),
-          // «مش لاقي فعليًا خيار الاسبلاش سكرين بصوت أو بغير أو عرضها من
-          // الأساس». Both switches were here, but inside the appearance block
-          // with no heading of their own, so nothing on the screen said
-          // «شاشة البداية». They have a heading now.
-          // «كارت … بتغيير نوع الخط في البرنامج مع عرض شكل الاختيار فوري».
-          // Prayer-time adjustments live only in the Prayer tab (owner,
-          // 2026-09-29: the card was duplicated here, so it was removed).
-          // «رفيق»: its voice pack and the switch (the call «يا رفيق»).
-          CollapsibleSection(
-            title: 'assistant.setting_title'.tr(),
-            icon: Icons.mic_none_rounded,
-            children: [
-              const AssistantSettingsCard(),
-            ],
-          ),
-          CollapsibleSection(
-            title: 'settings.font_section'.tr(),
-            icon: Icons.font_download_outlined,
-            children: const [AppFontPicker()],
-          ),
-          CollapsibleSection(
-            title: 'settings.splash_section'.tr(),
-            icon: Icons.auto_awesome_outlined,
-            children: [
-              // P3‑49: the AI-generated splash video is back on by default; keep
-              // a toggle for anyone who prefers a faster cold start.
-              Card(
-                child: Column(
-                  children: [
+                  // The soundtrack is back in the asset and the choice is his:
+                  // «اديني امكانية طبعا يشتغل لو انا فعلت انه يشتغل … او لو
+                  // طفيته من الاعدادات مش يشتغل». It defaults OFF, because
+                  // the voice in the clip mispronounces «قرآني» and an app
+                  // should not say that unless its owner asked for it.
+                  // Only offered while the video itself is on — a sound switch
+                  // for a video that never plays would be a dead control.
+                  if (splashVideo)
                     SwitchListTile(
                       secondary: Icon(
-                        Icons.smart_display_outlined,
+                        splashSound
+                            ? Icons.volume_up_outlined
+                            : Icons.volume_off_outlined,
                         color: scheme.primary,
                       ),
-                      title: Text('settings.splash_video'.tr()),
-                      subtitle: Text('settings.splash_video_desc'.tr()),
-                      value: splashVideo,
+                      title: Text('settings.splash_video_sound'.tr()),
+                      subtitle: Text('settings.splash_video_sound_desc'.tr()),
+                      value: splashSound,
                       onChanged: (v) =>
-                          ref.read(splashVideoEnabledProvider.notifier).set(v),
+                          ref.read(splashVideoSoundProvider.notifier).set(v),
                     ),
-                    // The soundtrack is back in the asset and the choice is his:
-                    // «اديني امكانية طبعا يشتغل لو انا فعلت انه يشتغل … او لو
-                    // طفيته من الاعدادات مش يشتغل». It defaults OFF, because
-                    // the voice in the clip mispronounces «قرآني» and an app
-                    // should not say that unless its owner asked for it.
-                    // Only offered while the video itself is on — a sound switch
-                    // for a video that never plays would be a dead control.
-                    if (splashVideo)
-                      SwitchListTile(
-                        secondary: Icon(
-                          splashSound
-                              ? Icons.volume_up_outlined
-                              : Icons.volume_off_outlined,
-                          color: scheme.primary,
-                        ),
-                        title: Text('settings.splash_video_sound'.tr()),
-                        subtitle: Text('settings.splash_video_sound_desc'.tr()),
-                        value: splashSound,
-                        onChanged: (v) =>
-                            ref.read(splashVideoSoundProvider.notifier).set(v),
-                      ),
-                    // «هل فيه امكانية preview للفيديو من جوه التطبيق» — yes, and
-                    // it is the only way to see the intro on demand: it other-
-                    // wise plays on a cold start after half an hour away, which
-                    // is not something you can wait for while judging it.
-                    ListTile(
-                      leading: Icon(
-                        Icons.play_circle_outline,
-                        color: scheme.primary,
-                      ),
-                      title: Text('settings.splash_preview'.tr()),
-                      subtitle: Text('settings.splash_preview_desc'.tr()),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: scheme.primary,
-                      ),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const SplashPreviewScreen(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          // ── Home clock ──
-          CollapsibleSection(
-            title: 'home.clock_section'.tr(),
-            icon: Icons.schedule_rounded,
-            children: [
-              Card(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
-                      child: Row(
-                        children: [
-                          Icon(Icons.schedule_outlined, color: scheme.primary),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'home.clock_style'.tr(),
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // The twenty faces live in one gallery, opened from here and
-                    // from the Home clock itself — one picker, not two lists that
-                    // can drift apart.
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                      child: Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: FilledButton.tonalIcon(
-                          onPressed: () => ClockGallerySheet.show(context),
-                          icon: const Icon(Icons.palette_outlined, size: 18),
-                          label: Text(
-                            '${'home.clock_gallery_title'.tr()} — '
-                            '${_currentFaceLabel(ref)}',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Divider(height: 1),
-                    SwitchListTile(
-                      secondary: const Icon(Icons.access_time),
-                      title: Text('home.clock_12h'.tr()),
-                      subtitle: Text('home.clock_12h_desc'.tr()),
-                      value: ref.watch(clockSettingsProvider).use12Hour,
-                      onChanged: (v) =>
-                          ref.read(clockSettingsProvider.notifier).set12Hour(v),
-                    ),
-                    // Seconds only exist on the digital face; the analogue one
-                    // always sweeps them.
-                    if (ref.watch(clockSettingsProvider).style ==
-                        ClockStyle.digital)
-                      SwitchListTile(
-                        secondary: const Icon(Icons.timer_outlined),
-                        title: Text('home.clock_seconds'.tr()),
-                        value: ref.watch(clockSettingsProvider).showSeconds,
-                        onChanged: (v) => ref
-                            .read(clockSettingsProvider.notifier)
-                            .setShowSeconds(v),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          // The text mushaf's own colour scheme — its own section, because it
-          // is not the app theme: a light mushaf can be read inside a dark
-          // app, and the two settings genuinely mean different things.
-          // A collapsible section like its neighbours («الأذونات» and the
-          // rest), not a heading over a lone card - the owner asked for it.
-          CollapsibleSection(
-            title: 'mushaf_theme.title'.tr(),
-            icon: Icons.auto_stories_outlined,
-            children: [
-              Builder(
-                builder: (tileContext) => Card(
-                  child: ListTile(
+                  // «هل فيه امكانية preview للفيديو من جوه التطبيق» — yes, and
+                  // it is the only way to see the intro on demand: it other-
+                  // wise plays on a cold start after half an hour away, which
+                  // is not something you can wait for while judging it.
+                  ListTile(
                     leading: Icon(
-                      Icons.palette_outlined,
+                      Icons.play_circle_outline,
                       color: scheme.primary,
                     ),
-                    title: Text(_currentMushafThemeLabel(ref)),
-                    subtitle: Text('mushaf_theme.subtitle'.tr()),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () =>
-                        MushafThemePicker.show(context, origin: tileContext),
+                    title: Text('settings.splash_preview'.tr()),
+                    subtitle: Text('settings.splash_preview_desc'.tr()),
+                    trailing: Icon(Icons.chevron_right, color: scheme.primary),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const SplashPreviewScreen(),
+                      ),
+                    ),
                   ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        // ── Home clock ──
+        CollapsibleSection(
+          title: 'home.clock_section'.tr(),
+          icon: Icons.schedule_rounded,
+          children: [
+            Card(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+                    child: Row(
+                      children: [
+                        Icon(Icons.schedule_outlined, color: scheme.primary),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'home.clock_style'.tr(),
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // The twenty faces live in one gallery, opened from here and
+                  // from the Home clock itself — one picker, not two lists that
+                  // can drift apart.
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: FilledButton.tonalIcon(
+                        onPressed: () => ClockGallerySheet.show(context),
+                        icon: const Icon(Icons.palette_outlined, size: 18),
+                        label: Text(
+                          '${'home.clock_gallery_title'.tr()} — '
+                          '${_currentFaceLabel(ref)}',
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.access_time),
+                    title: Text('home.clock_12h'.tr()),
+                    subtitle: Text('home.clock_12h_desc'.tr()),
+                    value: ref.watch(clockSettingsProvider).use12Hour,
+                    onChanged: (v) =>
+                        ref.read(clockSettingsProvider.notifier).set12Hour(v),
+                  ),
+                  // Seconds only exist on the digital face; the analogue one
+                  // always sweeps them.
+                  if (ref.watch(clockSettingsProvider).style ==
+                      ClockStyle.digital)
+                    SwitchListTile(
+                      secondary: const Icon(Icons.timer_outlined),
+                      title: Text('home.clock_seconds'.tr()),
+                      value: ref.watch(clockSettingsProvider).showSeconds,
+                      onChanged: (v) => ref
+                          .read(clockSettingsProvider.notifier)
+                          .setShowSeconds(v),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        // The text mushaf's own colour scheme — its own section, because it
+        // is not the app theme: a light mushaf can be read inside a dark
+        // app, and the two settings genuinely mean different things.
+        // A collapsible section like its neighbours («الأذونات» and the
+        // rest), not a heading over a lone card - the owner asked for it.
+        CollapsibleSection(
+          title: 'mushaf_theme.title'.tr(),
+          icon: Icons.auto_stories_outlined,
+          children: [
+            Builder(
+              builder: (tileContext) => Card(
+                child: ListTile(
+                  leading: Icon(Icons.palette_outlined, color: scheme.primary),
+                  title: Text(_currentMushafThemeLabel(ref)),
+                  subtitle: Text('mushaf_theme.subtitle'.tr()),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () =>
+                      MushafThemePicker.show(context, origin: tileContext),
                 ),
               ),
-            ],
-          ),
-
-          // Reading Options for Non-Arabs (Transliteration) — and only for
-          // them. In Arabic the whole section is gone, which is the same rule
-          // `_AyahPanel` applies when it decides whether to render the Latin
-          // line at all: a reader who is using the app in Arabic never sees
-          // transliteration and never has a switch for it to be stuck on.
-          if (context.locale.languageCode != 'ar') ...[
-            SectionLabel('settings.non_arabic_reading_title'.tr()),
-            const NonArabicReadingCard(),
-            const SizedBox(height: 24),
+            ),
           ],
+        ),
 
-          // P3‑41: one place for every permission the app actually needs,
-          // each re-checked on resume (granted from a system settings
-          // screen, not an in-app dialog).
-          //
-          // P3‑45: real-device feedback found this section's own text
-          // frozen in whatever locale was active when it last happened to
-          // rebuild (e.g. a Spanish label surviving a later switch to
-          // Arabic) — `.tr()` reads from easy_localization's own global
-          // current-locale state, not a `BuildContext` dependency, so
-          // nothing marks a `.tr()`-only widget dirty on locale change by
-          // itself; a plain `Widget.canUpdate`/`identical()` check in
-          // Flutter's own element-update path then short-circuits and
-          // never re-invokes `build()` at all when the parent keeps
-          // passing back the exact same canonicalized `const` instance.
-          // Dropping `const` here (and below) is enough on its own: the
-          // parent now constructs a genuinely new, non-identical widget
-          // every rebuild, so Flutter takes the normal update path and
-          // calls `build()` again with fresh translations.
-          CollapsibleSection(
-            title: 'settings.permissions'.tr(),
+        // Reading Options for Non-Arabs (Transliteration) — and only for
+        // them. In Arabic the whole section is gone, which is the same rule
+        // `_AyahPanel` applies when it decides whether to render the Latin
+        // line at all: a reader who is using the app in Arabic never sees
+        // transliteration and never has a switch for it to be stuck on.
+        if (context.locale.languageCode != 'ar') ...[
+          SectionLabel('settings.non_arabic_reading_title'.tr()),
+          const NonArabicReadingCard(),
+          const SizedBox(height: 24),
+        ],
+
+        // P3‑41: one place for every permission the app actually needs,
+        // each re-checked on resume (granted from a system settings
+        // screen, not an in-app dialog).
+        //
+        // P3‑45: real-device feedback found this section's own text
+        // frozen in whatever locale was active when it last happened to
+        // rebuild (e.g. a Spanish label surviving a later switch to
+        // Arabic) — `.tr()` reads from easy_localization's own global
+        // current-locale state, not a `BuildContext` dependency, so
+        // nothing marks a `.tr()`-only widget dirty on locale change by
+        // itself; a plain `Widget.canUpdate`/`identical()` check in
+        // Flutter's own element-update path then short-circuits and
+        // never re-invokes `build()` at all when the parent keeps
+        // passing back the exact same canonicalized `const` instance.
+        // Dropping `const` here (and below) is enough on its own: the
+        // parent now constructs a genuinely new, non-identical widget
+        // every rebuild, so Flutter takes the normal update path and
+        // calls `build()` again with fresh translations.
+        CollapsibleSection(
+          title: 'settings.permissions'.tr(),
+          icon: Icons.verified_user_outlined,
+          children: [const PermissionsSection()],
+        ),
+
+        CollapsibleSection(
+          title: 'library.voice_section_title'.tr(),
+          icon: Icons.record_voice_over_outlined,
+          children: const [BookVoiceSection()],
+        ),
+
+        // P3‑41: the Adhan settings entry that used to live here is
+        // gone — real-device feedback pointed out it duplicated the
+        // Prayer tab's own `_AdhanSettingsLink` card
+        // (`qibla_screen.dart`), which is the one real entry point now.
+      ],
+      if (part == SettingsPart.reminders) ...[
+        // P3‑44: per-surah reminder toggles moved here wholesale from
+        // the Home "سنن السور" card — see that card's own doc comment.
+        CollapsibleSection(
+          title: 'sunan_suwar.reminders_section_title'.tr(),
+          icon: Icons.event_note_outlined,
+          children: [const SunanSuwarRemindersSection()],
+        ),
+
+        CollapsibleSection(
+          title: 'tasbih.section_title'.tr(),
+          icon: Icons.all_inclusive_rounded,
+          children: const [TasbihReminderSection()],
+        ),
+
+        CollapsibleSection(
+          title: 'fasting.section_title'.tr(),
+          icon: Icons.dark_mode_outlined,
+          children: const [FastingReminderSection()],
+        ),
+
+        // The Islamic-quote notification, beside the other reminders
+        // rather than on a screen of its own: it is one interval and a
+        // preview.
+        CollapsibleSection(
+          title: 'quotes.section_title'.tr(),
+          icon: Icons.chat_bubble_outline_rounded,
+          children: [const QuoteReminderSection()],
+        ),
+      ],
+      if (part == SettingsPart.about) ...[
+        // About - the same cards as the rest of «المزيد».
+        IslamicActionCard(
+          icon: Icons.signpost_outlined,
+          accent: AppColors.info,
+          title: 'app.name'.tr(),
+          subtitle: 'settings.about_desc'.tr(),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute<void>(builder: (_) => const AboutScreen())),
+        ),
+        TutorialAnchor(
+          id: TourAnchor.settingsSources,
+          child: IslamicActionCard(
             icon: Icons.verified_user_outlined,
-            children: [const PermissionsSection()],
-          ),
-
-          CollapsibleSection(
-            title: 'library.voice_section_title'.tr(),
-            icon: Icons.record_voice_over_outlined,
-            children: const [BookVoiceSection()],
-          ),
-
-          // P3‑41: the Adhan settings entry that used to live here is
-          // gone — real-device feedback pointed out it duplicated the
-          // Prayer tab's own `_AdhanSettingsLink` card
-          // (`qibla_screen.dart`), which is the one real entry point now.
-        ],
-        if (part == SettingsPart.reminders) ...[
-          // P3‑44: per-surah reminder toggles moved here wholesale from
-          // the Home "سنن السور" card — see that card's own doc comment.
-          CollapsibleSection(
-            title: 'sunan_suwar.reminders_section_title'.tr(),
-            icon: Icons.event_note_outlined,
-            children: [const SunanSuwarRemindersSection()],
-          ),
-
-          CollapsibleSection(
-            title: 'tasbih.section_title'.tr(),
-            icon: Icons.all_inclusive_rounded,
-            children: const [TasbihReminderSection()],
-          ),
-
-          CollapsibleSection(
-            title: 'fasting.section_title'.tr(),
-            icon: Icons.dark_mode_outlined,
-            children: const [FastingReminderSection()],
-          ),
-
-          // The Islamic-quote notification, beside the other reminders
-          // rather than on a screen of its own: it is one interval and a
-          // preview.
-          CollapsibleSection(
-            title: 'quotes.section_title'.tr(),
-            icon: Icons.chat_bubble_outline_rounded,
-            children: [const QuoteReminderSection()],
-          ),
-        ],
-        if (part == SettingsPart.about) ...[
-          // About - the same cards as the rest of «المزيد».
-          IslamicActionCard(
-            icon: Icons.signpost_outlined,
-            accent: AppColors.info,
-            title: 'app.name'.tr(),
-            subtitle: 'settings.about_desc'.tr(),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
-            ),
-          ),
-          TutorialAnchor(
-            id: TourAnchor.settingsSources,
-            child: IslamicActionCard(
-              icon: Icons.verified_user_outlined,
-              accent: AppColors.primarySoft,
-              title: 'settings.credits'.tr(),
-              subtitle: 'about.sources_hint'.tr(),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const SourcesScreen()),
-              ),
-            ),
-          ),
-          // The policy lives on the app's own bucket rather than in a screen,
-          // because Play wants a URL it can open without installing anything
-          // — and because a policy nobody outside the app can read is not a
-          // policy. Opened in a Custom Tab over the app.
-          IslamicActionCard(
-            icon: Icons.privacy_tip_outlined,
             accent: AppColors.primarySoft,
-            title: 'settings.privacy_policy'.tr(),
-            subtitle: 'settings.privacy_policy_desc'.tr(),
-            onTap: () => openLink(AppConfig.privacyPolicyUrl, inApp: true),
+            title: 'settings.credits'.tr(),
+            subtitle: 'about.sources_hint'.tr(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const SourcesScreen()),
+            ),
           ),
-        ],
+        ),
+        // The policy lives on the app's own bucket rather than in a screen,
+        // because Play wants a URL it can open without installing anything
+        // — and because a policy nobody outside the app can read is not a
+        // policy. Opened in a Custom Tab over the app.
+        IslamicActionCard(
+          icon: Icons.privacy_tip_outlined,
+          accent: AppColors.primarySoft,
+          title: 'settings.privacy_policy'.tr(),
+          subtitle: 'settings.privacy_policy_desc'.tr(),
+          onTap: () => openLink(AppConfig.privacyPolicyUrl, inApp: true),
+        ),
+      ],
     ];
     // On its own page sideways, two a row like the More tab's groups. Inside
     // the More tab it already sits in one of two columns, and stays single.
     final Widget laid = paired && ScreenClass.twoColumns(context)
         ? PairedColumn(gap: 0, equalHeights: false, children: items)
-        : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: items);
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: items,
+          );
     final focus = focusSection;
     return focus == null
         ? laid
@@ -542,8 +543,11 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
     _open = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        Scrollable.ensureVisible(context,
-            duration: const Duration(milliseconds: 350), alignment: 0.05);
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 350),
+          alignment: 0.05,
+        );
       }
     });
   }
@@ -581,22 +585,26 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
     // opened - that was the jumping.
     final accent = MoreGroupAccent.of(context);
     if (accent != null) {
-      Navigator.of(context).push(MaterialPageRoute<void>(
-        builder: (_) => Scaffold(
-          appBar: AppBar(title: Text(widget.title)),
-          body: MoreGroupAccent(
-            accent: accent,
-            child: ValueListenableBuilder<List<Widget>>(
-              valueListenable: _children,
-              builder: (context, children, _) => ListView(
-                padding: readableInsets(
-                    context, const EdgeInsets.fromLTRB(16, 12, 16, 28)),
-                children: children,
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => Scaffold(
+            appBar: AppBar(title: Text(widget.title)),
+            body: MoreGroupAccent(
+              accent: accent,
+              child: ValueListenableBuilder<List<Widget>>(
+                valueListenable: _children,
+                builder: (context, children, _) => ListView(
+                  padding: readableInsets(
+                    context,
+                    const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                  ),
+                  children: children,
+                ),
               ),
             ),
           ),
         ),
-      ));
+      );
       return;
     }
     setState(() => _open = !_open);
@@ -668,6 +676,25 @@ class SectionLabel extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
           color: Theme.of(context).colorScheme.primary,
         ),
+      ),
+    );
+  }
+}
+
+class _ReaderNameCard extends ConsumerWidget {
+  const _ReaderNameCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name = ref.watch(readerNameProvider);
+    return IslamicActionCard(
+      icon: Icons.badge_outlined,
+      title: 'settings.your_name'.tr(),
+      subtitle: name.isEmpty ? 'settings.your_name_empty'.tr() : name,
+      onTap: () => showReaderNameSheet(context, fromSettings: true),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: AppColors.gold.withValues(alpha: 0.85),
       ),
     );
   }

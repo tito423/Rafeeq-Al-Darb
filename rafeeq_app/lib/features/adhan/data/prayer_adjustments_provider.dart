@@ -38,11 +38,10 @@ class PrayerAdjustments {
   PrayerAdjustments copyWith({
     int? hijriOffsetDays,
     Map<String, int>? minuteOffsets,
-  }) =>
-      PrayerAdjustments(
-        hijriOffsetDays: hijriOffsetDays ?? this.hijriOffsetDays,
-        minuteOffsets: minuteOffsets ?? this.minuteOffsets,
-      );
+  }) => PrayerAdjustments(
+    hijriOffsetDays: hijriOffsetDays ?? this.hijriOffsetDays,
+    minuteOffsets: minuteOffsets ?? this.minuteOffsets,
+  );
 }
 
 /// Every timing the manual editor can shift, in the order it displays them.
@@ -57,13 +56,15 @@ const adjustablePrayerKeys = [
 
 class PrayerAdjustmentsNotifier extends StateNotifier<PrayerAdjustments> {
   PrayerAdjustmentsNotifier(this._prefs)
-      : super(PrayerAdjustments(
+    : super(
+        PrayerAdjustments(
           hijriOffsetDays: _prefs.getInt(_hijriKey) ?? 0,
           minuteOffsets: {
             for (final k in adjustablePrayerKeys)
               k: _prefs.getInt('$_minutePrefix$k') ?? 0,
           },
-        ));
+        ),
+      );
 
   final SharedPreferences _prefs;
 
@@ -98,8 +99,8 @@ class PrayerAdjustmentsNotifier extends StateNotifier<PrayerAdjustments> {
 
 final prayerAdjustmentsProvider =
     StateNotifierProvider<PrayerAdjustmentsNotifier, PrayerAdjustments>((ref) {
-  return PrayerAdjustmentsNotifier(ref.watch(sharedPrefsProvider));
-});
+      return PrayerAdjustmentsNotifier(ref.watch(sharedPrefsProvider));
+    });
 
 /// Applies a minute offset to an "HH:mm" clock string, rolling correctly over
 /// midnight in both directions. Returns the input unchanged if it isn't a

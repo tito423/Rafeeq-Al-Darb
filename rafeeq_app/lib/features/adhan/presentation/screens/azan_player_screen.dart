@@ -6,7 +6,7 @@ import 'dart:convert';
 // azkar_section_screen.dart / ayah_sciences_sheet.dart.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show SystemUiOverlayStyle, rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -320,145 +320,148 @@ class _AzanPlayerScreenState extends State<AzanPlayerScreen>
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _dismiss();
       },
-      child: Scaffold(
-        backgroundColor: AppColors.night,
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            // 1) The silent looping clip (or the gradient fallback).
-            Positioned.fill(child: _background()),
-            // 2) Dark scrim, so the text stays legible over any clip.
-            const Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  // Lightened once the background became a painted scene
-                  // rather than someone's 640×360 clip. The old scrim was
-                  // built to make white text survive *any* footage — 0xCC at
-                  // the top — and on `AdhanScene` it crushed the sky flat and
-                  // turned the sun into a brown smear behind the title. Seen
-                  // on emulator-5554; the scene is drawn dark enough at the
-                  // top to carry the text on its own, so the scrim only has
-                  // to protect the two rows that actually sit on the bright
-                  // part: the header and the buttons.
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0x8A000000),
-                      Color(0x1F000000),
-                      Color(0x00000000),
-                      Color(0xCC000000),
-                    ],
-                    stops: [0.0, 0.22, 0.55, 1.0],
+      // The ground is always night: the status bar's clock and icons were
+      // dark on it (seen on emulator-5554, 2026-10-07).
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Scaffold(
+          backgroundColor: AppColors.night,
+          body: Stack(
+            fit: StackFit.expand,
+            children: [
+              // 1) The silent looping clip (or the gradient fallback).
+              Positioned.fill(child: _background()),
+              // 2) Dark scrim, so the text stays legible over any clip.
+              const Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    // Lightened once the background became a painted scene
+                    // rather than someone's 640×360 clip. The old scrim was
+                    // built to make white text survive *any* footage — 0xCC at
+                    // the top — and on `AdhanScene` it crushed the sky flat and
+                    // turned the sun into a brown smear behind the title. Seen
+                    // on emulator-5554; the scene is drawn dark enough at the
+                    // top to carry the text on its own, so the scrim only has
+                    // to protect the two rows that actually sit on the bright
+                    // part: the header and the buttons.
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0x8A000000),
+                        Color(0x1F000000),
+                        Color(0x00000000),
+                        Color(0xCC000000),
+                      ],
+                      stops: [0.0, 0.22, 0.55, 1.0],
+                    ),
                   ),
                 ),
               ),
-            ),
-            // 3) The content layer.
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
-                child: Column(
-                  children: [
-                    const Icon(Icons.mosque, size: 44, color: AppColors.gold),
-                    const SizedBox(height: 10),
-                    Text(
-                      'prayer.azan_of'.tr(args: [_prayerName(widget.spec)]),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppColors.textHigh,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    const _LiveClock(),
-                    if (widget.playerMode == AzanPlayerMode.preview) ...[
-                      const SizedBox(height: 8),
-                      const _PreviewBadge(),
-                    ],
-                    const Spacer(),
-                    // No verified timeline, no text (see [_synced]).
-                    if (_synced)
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 450),
-                        transitionBuilder: (child, anim) => FadeTransition(
-                          opacity: anim,
-                          child: ScaleTransition(
-                            scale: Tween<double>(
-                              begin: 0.92,
-                              end: 1.0,
-                            ).animate(anim),
-                            child: child,
-                          ),
-                        ),
-                        child: Text(
-                          current,
-                          key: ValueKey(current),
-                          textAlign: TextAlign.center,
-                          textDirection: TextDirection.rtl,
-                          style: const TextStyle(
-                            fontFamily: 'AmiriQuran',
-                            fontSize: 40,
-                            height: 1.6,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.gold,
-                            shadows: [
-                              Shadow(blurRadius: 18),
-                            ],
-                          ),
+              // 3) The content layer.
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.mosque, size: 44, color: AppColors.gold),
+                      const SizedBox(height: 10),
+                      Text(
+                        'prayer.azan_of'.tr(args: [_prayerName(widget.spec)]),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: AppColors.textHigh,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    const Spacer(),
-                    if (_muted)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Text(
-                          'prayer.muted_now'.tr(),
-                          style: const TextStyle(color: AppColors.textMedium),
-                        ),
-                      ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: (_closing || _muted) ? null : _onMute,
-                            icon: Icon(
-                              _muted ? Icons.volume_off : Icons.volume_mute,
-                            ),
-                            label: Text('prayer.mute'.tr()),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.textHigh,
-                              side: const BorderSide(
-                                color: AppColors.nightBorder,
-                              ),
-                              minimumSize: const Size(0, 52),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: FilledButton.icon(
-                            onPressed: _closing ? null : _dismiss,
-                            icon: const Icon(Icons.stop_circle_outlined),
-                            label: Text('prayer.stop'.tr()),
-                            style: FilledButton.styleFrom(
-                              backgroundColor: AppColors.error,
-                              minimumSize: const Size(0, 52),
-                            ),
-                          ),
-                        ),
+                      const SizedBox(height: 6),
+                      const _LiveClock(),
+                      if (widget.playerMode == AzanPlayerMode.preview) ...[
+                        const SizedBox(height: 8),
+                        const _PreviewBadge(),
                       ],
-                    ),
-                    const SizedBox(height: 8),
-                  ],
+                      const Spacer(),
+                      // No verified timeline, no text (see [_synced]).
+                      if (_synced)
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 450),
+                          transitionBuilder: (child, anim) => FadeTransition(
+                            opacity: anim,
+                            child: ScaleTransition(
+                              scale: Tween<double>(
+                                begin: 0.92,
+                                end: 1.0,
+                              ).animate(anim),
+                              child: child,
+                            ),
+                          ),
+                          child: Text(
+                            current,
+                            key: ValueKey(current),
+                            textAlign: TextAlign.center,
+                            textDirection: TextDirection.rtl,
+                            style: const TextStyle(
+                              fontFamily: 'AmiriQuran',
+                              fontSize: 40,
+                              height: 1.6,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.gold,
+                              shadows: [Shadow(blurRadius: 18)],
+                            ),
+                          ),
+                        ),
+                      const Spacer(),
+                      if (_muted)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text(
+                            'prayer.muted_now'.tr(),
+                            style: const TextStyle(color: AppColors.textMedium),
+                          ),
+                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: (_closing || _muted) ? null : _onMute,
+                              icon: Icon(
+                                _muted ? Icons.volume_off : Icons.volume_mute,
+                              ),
+                              label: Text('prayer.mute'.tr()),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.textHigh,
+                                side: const BorderSide(
+                                  color: AppColors.nightBorder,
+                                ),
+                                minimumSize: const Size(0, 52),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: FilledButton.icon(
+                              onPressed: _closing ? null : _dismiss,
+                              icon: const Icon(Icons.stop_circle_outlined),
+                              label: Text('prayer.stop'.tr()),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: AppColors.error,
+                                minimumSize: const Size(0, 52),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

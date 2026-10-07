@@ -58,7 +58,9 @@ class _AlarmVolumeTileState extends State<AlarmVolumeTile> {
     if (current == null || _max <= 0) return const SizedBox.shrink();
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      // Same width as the cards above and below it on the adhan page; a
+      // 12 dp inset made it the one narrower card there.
+      margin: const EdgeInsets.symmetric(vertical: 6),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
         child: Column(
@@ -66,7 +68,7 @@ class _AlarmVolumeTileState extends State<AlarmVolumeTile> {
           children: [
             Row(
               children: [
-                Icon(Icons.alarm_rounded, size: 20, color: scheme.primary),
+                Icon(Icons.alarm_outlined, color: scheme.onSurfaceVariant),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -77,16 +79,16 @@ class _AlarmVolumeTileState extends State<AlarmVolumeTile> {
                 Text(
                   localizeDigits(ratio(current, _max), uiLanguageCode),
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                      ),
+                    color: scheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
             Text(
               'prayer.alarm_volume_desc'.tr(),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: scheme.onSurfaceVariant,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
             ),
             Slider(
               value: current.toDouble().clamp(0, _max.toDouble()),
@@ -107,9 +109,9 @@ class _AlarmVolumeTileState extends State<AlarmVolumeTile> {
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
                   'prayer.alarm_volume_refused'.tr(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: scheme.error,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: scheme.error),
                 ),
               ),
           ],

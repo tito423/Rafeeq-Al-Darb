@@ -41,13 +41,12 @@ class _PrayerLocationTileState extends State<PrayerLocationTile> {
     return ListTile(
       leading: Icon(m == null ? Icons.gps_fixed : Icons.edit_location_alt),
       title: Text('location.title'.tr()),
-      subtitle: Text(m == null
-          ? 'location.auto'.tr()
-          : _placeLine(m, lang)),
+      subtitle: Text(m == null ? 'location.auto'.tr() : _placeLine(m, lang)),
       trailing: const Icon(Icons.chevron_right),
       onTap: () async {
-        await Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const PrayerLocationScreen()));
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const PrayerLocationScreen()),
+        );
         await _load();
       },
     );
@@ -55,9 +54,9 @@ class _PrayerLocationTileState extends State<PrayerLocationTile> {
 }
 
 String _placeLine(ManualPlace p, String lang) => [
-      p.cityIn(lang),
-      p.countryIn(lang),
-    ].whereType<String>().join('location.sep'.tr());
+  p.cityIn(lang),
+  p.countryIn(lang),
+].whereType<String>().join('location.sep'.tr());
 
 /// «زود في اعدادات الموقع للصلاة اني ادخله يدوي … ايا كان موقعي فيشتغل حتى
 /// لو مفيش نت او الموقع الاوتوماتيكي مش شغال» and «any city in the world …
@@ -120,8 +119,9 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _preparing = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(userErrorText(e))));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(userErrorText(e))));
     }
   }
 
@@ -176,11 +176,15 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
     ref.invalidate(prayerControllerProvider);
     if (!mounted) return;
     final lang = context.locale.languageCode;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(place == null
-          ? 'location.auto'.tr()
-          : 'location.set_to'.tr(args: [_placeLine(place, lang)])),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          place == null
+              ? 'location.auto'.tr()
+              : 'location.set_to'.tr(args: [_placeLine(place, lang)]),
+        ),
+      ),
+    );
     Navigator.of(context).pop();
   }
 
@@ -188,20 +192,23 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
     final lat = double.tryParse(_lat.text.trim().replaceAll(',', '.'));
     final lon = double.tryParse(_lon.text.trim().replaceAll(',', '.'));
     if (lat == null || lon == null || lat.abs() > 90 || lon.abs() > 180) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('location.invalid'.tr())));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('location.invalid'.tr())));
       return;
     }
     final name = _name.text.trim();
-    _use(ManualPlace(
-      latitude: lat,
-      longitude: lon,
-      names: {
-        'name': name.isEmpty
-            ? '${lat.toStringAsFixed(4)}, ${lon.toStringAsFixed(4)}'
-            : name,
-      },
-    ));
+    _use(
+      ManualPlace(
+        latitude: lat,
+        longitude: lon,
+        names: {
+          'name': name.isEmpty
+              ? '${lat.toStringAsFixed(4)}, ${lon.toStringAsFixed(4)}'
+              : name,
+        },
+      ),
+    );
   }
 
   @override
@@ -211,33 +218,40 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('location.title'.tr())),
       body: ListView(
-        padding: readableInsets(context, const EdgeInsets.fromLTRB(12, 8, 12, 24)),
+        padding: readableInsets(
+          context,
+          const EdgeInsets.fromLTRB(12, 8, 12, 24),
+        ),
         children: [
           Card(
-            child: Column(children: [
-              ListTile(
-                onTap: _manual == null ? null : () => _use(null),
-                leading: const Icon(Icons.gps_fixed),
-                title: Text('location.auto'.tr()),
-                subtitle: Text('location.auto_desc'.tr()),
-                trailing: _manual == null
-                    ? Icon(Icons.check_circle, color: scheme.primary)
-                    : const Icon(Icons.radio_button_unchecked),
-              ),
-              ListTile(
-                // «تحديد يدوي» was a row that did nothing when tapped: it
-                // takes the reader to the search that sets it.
-                onTap: _queryFocus.requestFocus,
-                leading: const Icon(Icons.edit_location_alt),
-                title: Text('location.manual'.tr()),
-                subtitle: Text(_manual == null
-                    ? 'location.manual_desc'.tr()
-                    : _placeLine(_manual!, lang)),
-                trailing: _manual != null
-                    ? Icon(Icons.check_circle, color: scheme.primary)
-                    : const Icon(Icons.radio_button_unchecked),
-              ),
-            ]),
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: _manual == null ? null : () => _use(null),
+                  leading: const Icon(Icons.gps_fixed),
+                  title: Text('location.auto'.tr()),
+                  subtitle: Text('location.auto_desc'.tr()),
+                  trailing: _manual == null
+                      ? Icon(Icons.check_circle, color: scheme.primary)
+                      : const Icon(Icons.radio_button_unchecked),
+                ),
+                ListTile(
+                  // «تحديد يدوي» was a row that did nothing when tapped: it
+                  // takes the reader to the search that sets it.
+                  onTap: _queryFocus.requestFocus,
+                  leading: const Icon(Icons.edit_location_alt),
+                  title: Text('location.manual'.tr()),
+                  subtitle: Text(
+                    _manual == null
+                        ? 'location.manual_desc'.tr()
+                        : _placeLine(_manual!, lang),
+                  ),
+                  trailing: _manual != null
+                      ? Icon(Icons.check_circle, color: scheme.primary)
+                      : const Icon(Icons.radio_button_unchecked),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 12),
           TextField(
@@ -253,9 +267,10 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
                   ? const Padding(
                       padding: EdgeInsets.all(12),
                       child: SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2)),
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
                     )
                   : null,
             ),
@@ -276,25 +291,31 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
           if (_online)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text('location.online_note'.tr(),
-                  style: TextStyle(color: scheme.onSurfaceVariant)),
+              child: Text(
+                'location.online_note'.tr(),
+                style: TextStyle(color: scheme.onSurfaceVariant),
+              ),
             ),
           for (final h in _hits)
             ListTile(
               leading: const Icon(Icons.place_outlined),
               title: Text(h.place.cityIn(lang) ?? ''),
-              subtitle: Text([
-                h.place.countryIn(lang),
-                '${h.place.latitude.toStringAsFixed(3)}, '
-                    '${h.place.longitude.toStringAsFixed(3)}',
-              ].whereType<String>().join(' · ')),
+              subtitle: Text(
+                [
+                  h.place.countryIn(lang),
+                  '${h.place.latitude.toStringAsFixed(3)}, '
+                      '${h.place.longitude.toStringAsFixed(3)}',
+                ].whereType<String>().join(' · '),
+              ),
               onTap: () => _use(h.place),
             ),
           if (!_searching && _hits.isEmpty && _query.text.trim().length >= 2)
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Text('location.no_results'.tr(),
-                  style: TextStyle(color: scheme.onSurfaceVariant)),
+              child: Text(
+                'location.no_results'.tr(),
+                style: TextStyle(color: scheme.onSurfaceVariant),
+              ),
             ),
           const SizedBox(height: 8),
           Card(
@@ -323,24 +344,26 @@ class _PrayerLocationScreenState extends ConsumerState<PrayerLocationScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Text('location.source'.tr(),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
+          Text(
+            'location.source'.tr(),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+          ),
         ],
       ),
     );
   }
 
   Widget _numberField(TextEditingController c, String label) => TextField(
-        controller: c,
-        keyboardType:
-            const TextInputType.numberWithOptions(decimal: true, signed: true),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[-0-9.,]')),
-        ],
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
-      );
+    controller: c,
+    keyboardType: const TextInputType.numberWithOptions(
+      decimal: true,
+      signed: true,
+    ),
+    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[-0-9.,]'))],
+    decoration: InputDecoration(
+      labelText: label,
+      border: const OutlineInputBorder(),
+    ),
+  );
 }

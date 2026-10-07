@@ -8,7 +8,6 @@ library;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../screens/adhan_background_screen.dart';
 
 class AdhanBackgroundsCard extends StatelessWidget {
@@ -18,8 +17,9 @@ class AdhanBackgroundsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Icon(Icons.auto_awesome_mosaic_rounded,
-            size: 30, color: goldText(context)),
+        // An outlined glyph in the default colour, like the switches above
+        // it; a large solid gold block stood out from the whole page.
+        leading: const Icon(Icons.wallpaper_outlined),
         title: Text('adhan.backgrounds_title'.tr()),
         subtitle: Text('adhan.backgrounds_desc'.tr()),
         // chevron_right, not chevron_left: this one must not mirror (trap #7).

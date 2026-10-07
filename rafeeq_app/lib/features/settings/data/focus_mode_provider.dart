@@ -121,4 +121,5 @@ class FocusModeNotifier extends StateNotifier<FocusTarget?> {
 
 final focusModeProvider =
     StateNotifierProvider<FocusModeNotifier, FocusTarget?>(
-        (ref) => FocusModeNotifier());
+      (ref) => FocusModeNotifier(),
+    );

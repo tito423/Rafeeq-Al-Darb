@@ -114,15 +114,17 @@ void _vignette(Canvas canvas, Rect r) {
   canvas.drawRect(
     r,
     Paint()
-      ..shader = RadialGradient(
-        colors: [
-          Colors.black.withValues(alpha: 0.0),
-          Colors.black.withValues(alpha: 0.10),
-          Colors.black.withValues(alpha: 0.42),
-        ],
-        stops: const [0.35, 0.72, 1],
-      ).createShader(
-          Rect.fromCircle(center: r.center, radius: r.longestSide * 0.72)),
+      ..shader =
+          RadialGradient(
+            colors: [
+              Colors.black.withValues(alpha: 0.0),
+              Colors.black.withValues(alpha: 0.10),
+              Colors.black.withValues(alpha: 0.42),
+            ],
+            stops: const [0.35, 0.72, 1],
+          ).createShader(
+            Rect.fromCircle(center: r.center, radius: r.longestSide * 0.72),
+          ),
   );
 }
 
@@ -145,15 +147,28 @@ void _horizon(Canvas canvas, Rect r, Color accent, double t) {
       final seed = layer * 200 + i * 3;
       final x = (r.left + _rnd(seed) * r.width + drift) % r.width;
       final y = r.top + _rnd(seed + 1) * r.height * 0.82;
-      final a = (0.16 + 0.5 * (0.5 + 0.5 * math.sin(t * 0.25 + _rnd(seed + 2) * 6.28))) *
+      final a =
+          (0.16 +
+              0.5 * (0.5 + 0.5 * math.sin(t * 0.25 + _rnd(seed + 2) * 6.28))) *
           (1 - layer * 0.26);
-      canvas.drawCircle(Offset(x, y), size * (0.6 + _rnd(seed + 5) * 0.7),
-          _fill(accent, a));
+      canvas.drawCircle(
+        Offset(x, y),
+        size * (0.6 + _rnd(seed + 5) * 0.7),
+        _fill(accent, a),
+      );
       // The brightest of the near stars get a four-point flare.
       if (layer == 0 && _rnd(seed + 9) > 0.82) {
         final s = size * 5;
-        canvas.drawLine(Offset(x - s, y), Offset(x + s, y), _line(accent, a * 0.5, 0.9));
-        canvas.drawLine(Offset(x, y - s), Offset(x, y + s), _line(accent, a * 0.5, 0.9));
+        canvas.drawLine(
+          Offset(x - s, y),
+          Offset(x + s, y),
+          _line(accent, a * 0.5, 0.9),
+        );
+        canvas.drawLine(
+          Offset(x, y - s),
+          Offset(x, y + s),
+          _line(accent, a * 0.5, 0.9),
+        );
       }
     }
   }
@@ -166,8 +181,15 @@ void _girih(Canvas canvas, Rect r, Color accent, double t) {
   _girihLayer(canvas, r, accent, -t * 0.6, 96, 0.55, 0.10);
 }
 
-void _girihLayer(Canvas canvas, Rect r, Color accent, double t, double cell,
-    double weight, double alpha) {
+void _girihLayer(
+  Canvas canvas,
+  Rect r,
+  Color accent,
+  double t,
+  double cell,
+  double weight,
+  double alpha,
+) {
   final dx = (t * 2.4) % cell;
   final dy = (t * 1.2) % cell;
   final stroke = _line(accent, alpha, 1.4 * weight);
@@ -178,10 +200,16 @@ void _girihLayer(Canvas canvas, Rect r, Color accent, double t, double cell,
       _star10(canvas, c, cell * 0.44, stroke, glint);
       // The strapwork that ties the stars together.
       final half = cell * 0.5;
-      canvas.drawLine(c + Offset(0, half), c + Offset(half, 0),
-          _line(accent, alpha * 0.55, 1.0 * weight));
-      canvas.drawLine(c + Offset(0, half), c + Offset(-half, 0),
-          _line(accent, alpha * 0.55, 1.0 * weight));
+      canvas.drawLine(
+        c + Offset(0, half),
+        c + Offset(half, 0),
+        _line(accent, alpha * 0.55, 1.0 * weight),
+      );
+      canvas.drawLine(
+        c + Offset(0, half),
+        c + Offset(-half, 0),
+        _line(accent, alpha * 0.55, 1.0 * weight),
+      );
     }
   }
 }
@@ -240,7 +268,8 @@ void _arabesque(Canvas canvas, Rect r, Color accent, double t) {
     path.moveTo(r.left - 40, baseY);
     for (var x = r.left - 40.0; x <= r.right + 40; x += 12) {
       final u = (x - r.left) / r.width;
-      final y = baseY +
+      final y =
+          baseY +
           math.sin(u * math.pi * 3 + t * speed + v) * amp +
           math.sin(u * math.pi * 7 - t * speed * 0.6) * amp * 0.28;
       path.lineTo(x, y);
@@ -293,8 +322,10 @@ void _muqarnas(Canvas canvas, Rect r, Color accent, double t) {
       final niche = Path()
         ..moveTo(x, y + h)
         ..lineTo(x, y + h * 0.46)
-        ..arcToPoint(Offset(x + w, y + h * 0.46),
-            radius: Radius.circular(w * 0.58))
+        ..arcToPoint(
+          Offset(x + w, y + h * 0.46),
+          radius: Radius.circular(w * 0.58),
+        )
         ..lineTo(x + w, y + h)
         ..close();
       canvas.drawPath(
@@ -320,11 +351,13 @@ void _lanterns(Canvas canvas, Rect r, Color accent, double t) {
     final depth = _rnd(i + 300);
     final speed = 7 + depth * 14;
     final y = r.bottom - ((t * speed + _rnd(i + 40) * 900) % (r.height + 200));
-    final x = r.left +
+    final x =
+        r.left +
         r.width * _rnd(i + 80) +
         math.sin(t * 0.14 + i) * r.width * 0.04;
     final s = 10 + depth * 22;
-    final a = (0.25 + depth * 0.4) *
+    final a =
+        (0.25 + depth * 0.4) *
         (1 - ((y - r.top) / (r.height * 1.5)).abs()).clamp(0.0, 1.0);
     // The halo first, so the lantern sits inside its own light.
     canvas.drawCircle(
@@ -348,8 +381,11 @@ void _lanterns(Canvas canvas, Rect r, Color accent, double t) {
     canvas.drawPath(body, _fill(accent, a * 0.42));
     canvas.drawPath(body, _line(accent, a * 0.95, 1.3));
     // The little finial and the flame.
-    canvas.drawLine(Offset(x, y - s * 1.15), Offset(x, y - s * 1.5),
-        _line(accent, a * 0.7, 1.1));
+    canvas.drawLine(
+      Offset(x, y - s * 1.15),
+      Offset(x, y - s * 1.5),
+      _line(accent, a * 0.7, 1.1),
+    );
     canvas.drawCircle(Offset(x, y + s * 0.05), s * 0.18, _fill(accent, a));
   }
 }
@@ -371,7 +407,10 @@ void _khatim(Canvas canvas, Rect r, Color accent, double t) {
       canvas.translate(c.dx, c.dy);
       canvas.rotate(t * 0.012 + (gx + gy) * 0.2);
       final sq = Rect.fromCenter(
-          center: Offset.zero, width: size * 2, height: size * 2);
+        center: Offset.zero,
+        width: size * 2,
+        height: size * 2,
+      );
       canvas.drawRect(sq, _fill(accent, a * 0.28));
       canvas.drawRect(sq, _line(accent, a, 1.3));
       canvas.rotate(math.pi / 4);
@@ -410,13 +449,19 @@ void _crescents(Canvas canvas, Rect r, Color accent, double t) {
           ],
         ).createShader(Rect.fromCircle(center: Offset(x, y), radius: radius)),
     );
-    canvas.drawCircle(Offset(x + radius * 0.40, y - radius * 0.18), radius,
-        Paint()..blendMode = BlendMode.clear);
+    canvas.drawCircle(
+      Offset(x + radius * 0.40, y - radius * 0.18),
+      radius,
+      Paint()..blendMode = BlendMode.clear,
+    );
     canvas.restore();
     // A star in the crook, as it is drawn on every minaret.
     if (depth > 0.55) {
-      canvas.drawCircle(Offset(x + radius * 1.05, y + radius * 0.32),
-          radius * 0.10, _fill(accent, a * 1.6));
+      canvas.drawCircle(
+        Offset(x + radius * 1.05, y + radius * 0.32),
+        radius * 0.10,
+        _fill(accent, a * 1.6),
+      );
     }
   }
 }
@@ -430,7 +475,8 @@ void _ribbons(Canvas canvas, Rect r, Color accent, double t) {
     path.moveTo(r.left - 30, baseY);
     for (var x = r.left - 30.0; x <= r.right + 30; x += 8) {
       final u = (x - r.left) / r.width;
-      final y = baseY +
+      final y =
+          baseY +
           math.sin(u * math.pi * 2.2 + t * (0.05 + i * 0.008)) * amp +
           math.cos(u * math.pi * 5 - t * 0.03) * amp * 0.26;
       path.lineTo(x, y);

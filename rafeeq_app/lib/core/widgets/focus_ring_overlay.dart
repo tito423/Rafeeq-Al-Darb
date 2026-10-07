@@ -66,11 +66,22 @@ class _FocusRingOverlayState extends State<FocusRingOverlay>
     final node = FocusManager.instance.primaryFocus;
     // A scope (a route, a dialog) holding focus with nothing chosen inside
     // it is not a control, and has no ring.
-    if (_traditional && node != null && node is! FocusScopeNode) {
+    final ctx = node?.context;
+    // A text field draws its own focused border; a ring around its inner
+    // editable on top of that was a gold pill inside a teal box (the name
+    // sheet, emulator-5554, 2026-10-07).
+    final isTextField =
+        ctx != null &&
+        ctx.findAncestorWidgetOfExactType<EditableText>() != null;
+    if (_traditional &&
+        node != null &&
+        node is! FocusScopeNode &&
+        !isTextField) {
       final box = context.findRenderObject();
-      final ctx = node.context;
       final target = ctx?.findRenderObject();
-      if (box is RenderBox && target is RenderBox && target.attached &&
+      if (box is RenderBox &&
+          target is RenderBox &&
+          target.attached &&
           target.hasSize) {
         final topLeft = target.localToGlobal(Offset.zero, ancestor: box);
         next = topLeft & target.size;
@@ -88,9 +99,7 @@ class _FocusRingOverlayState extends State<FocusRingOverlay>
         if (_rect != null)
           Positioned.fill(
             child: IgnorePointer(
-              child: CustomPaint(
-                painter: _RingPainter(_rect!, widget.color),
-              ),
+              child: CustomPaint(painter: _RingPainter(_rect!, widget.color)),
             ),
           ),
       ],
@@ -108,7 +117,10 @@ class _RingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // Outside the item by 3 px so it never covers the item's own edge, with
     // a dark halo under the gold so it reads on light AND dark grounds.
-    final r = RRect.fromRectAndRadius(rect.inflate(3), const Radius.circular(14));
+    final r = RRect.fromRectAndRadius(
+      rect.inflate(3),
+      const Radius.circular(14),
+    );
     canvas.drawRRect(
       r,
       Paint()
@@ -126,5 +138,6 @@ class _RingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_RingPainter old) => old.rect != rect || old.color != color;
+  bool shouldRepaint(_RingPainter old) =>
+      old.rect != rect || old.color != color;
 }

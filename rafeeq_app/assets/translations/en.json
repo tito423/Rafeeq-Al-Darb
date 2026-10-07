@@ -927,6 +927,9 @@
     "adhan_settings_hint": "Adhan sound, display mode, and alerts"
   },
   "settings": {
+    "your_name": "Your name",
+    "your_name_body": "Shown in the Home greeting. Clear it and save to remove it.",
+    "your_name_empty": "No name yet. Add one to see it in the Home greeting",
     "privacy_policy": "Privacy policy",
     "privacy_policy_desc": "What is and is not collected — and nothing is, unless you turn sync on",
     "title": "Settings",
@@ -1770,6 +1773,7 @@
     "target_hifz_desc": "Ayah by ayah: listen, hide the words, recite it back"
   },
   "adhan": {
+    "background_preview": "Tap to preview",
     "backgrounds_title": "Adhan screen backgrounds",
     "backgrounds_desc": "Ten animated grounds — pick one",
     "bg_horizon": "Horizon",

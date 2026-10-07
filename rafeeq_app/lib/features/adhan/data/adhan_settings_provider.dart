@@ -93,25 +93,20 @@ class AdhanSettings {
     bool? autoLocationUpdate,
     int? locationUpdateMinutes,
     bool? vibrateWithFull,
-  }) =>
-      AdhanSettings(
-        defaultAdhanId: defaultAdhanId ?? this.defaultAdhanId,
-        modeByPrayer: modeByPrayer ?? this.modeByPrayer,
-        adhanIdByPrayer: adhanIdByPrayer ?? this.adhanIdByPrayer,
-        calculationMethod: calculationMethod ?? this.calculationMethod,
-        reminderBeforeMinutes:
-            reminderBeforeMinutes ?? this.reminderBeforeMinutes,
-        reminderAfterMinutes:
-            reminderAfterMinutes ?? this.reminderAfterMinutes,
-        reminderIqamaMinutes:
-            reminderIqamaMinutes ?? this.reminderIqamaMinutes,
-        asrMadhab: asrMadhab ?? this.asrMadhab,
-        highLatitudeRule: highLatitudeRule ?? this.highLatitudeRule,
-        autoLocationUpdate: autoLocationUpdate ?? this.autoLocationUpdate,
-        locationUpdateMinutes:
-            locationUpdateMinutes ?? this.locationUpdateMinutes,
-        vibrateWithFull: vibrateWithFull ?? this.vibrateWithFull,
-      );
+  }) => AdhanSettings(
+    defaultAdhanId: defaultAdhanId ?? this.defaultAdhanId,
+    modeByPrayer: modeByPrayer ?? this.modeByPrayer,
+    adhanIdByPrayer: adhanIdByPrayer ?? this.adhanIdByPrayer,
+    calculationMethod: calculationMethod ?? this.calculationMethod,
+    reminderBeforeMinutes: reminderBeforeMinutes ?? this.reminderBeforeMinutes,
+    reminderAfterMinutes: reminderAfterMinutes ?? this.reminderAfterMinutes,
+    reminderIqamaMinutes: reminderIqamaMinutes ?? this.reminderIqamaMinutes,
+    asrMadhab: asrMadhab ?? this.asrMadhab,
+    highLatitudeRule: highLatitudeRule ?? this.highLatitudeRule,
+    autoLocationUpdate: autoLocationUpdate ?? this.autoLocationUpdate,
+    locationUpdateMinutes: locationUpdateMinutes ?? this.locationUpdateMinutes,
+    vibrateWithFull: vibrateWithFull ?? this.vibrateWithFull,
+  );
 }
 
 /// Adhans taken out of the catalogue — «احذف أذان مشاري راشد العفاسي ٢، وأذان
@@ -131,8 +126,10 @@ String? _liveAdhanId(String? id) => removedAdhanIds.contains(id) ? null : id;
 
 class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
   AdhanSettingsNotifier(this._prefs)
-      : super(AdhanSettings(
-          defaultAdhanId: _liveAdhanId(_prefs.getString(_defaultKey)) ?? 'azan1',
+    : super(
+        AdhanSettings(
+          defaultAdhanId:
+              _liveAdhanId(_prefs.getString(_defaultKey)) ?? 'azan1',
           calculationMethod: _prefs.getInt(_calcMethodKey) ?? 4,
           // Off until asked for: an app that starts buzzing three extra
           // times per prayer on first launch is one nobody keeps.
@@ -140,11 +137,11 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
           reminderAfterMinutes: _prefs.getInt(_reminderAfterKey) ?? 0,
           reminderIqamaMinutes: _prefs.getInt(_reminderIqamaKey) ?? 0,
           asrMadhab: _madhabFromName(_prefs.getString(_asrMadhabKey)),
-          highLatitudeRule:
-              _highLatitudeFromName(_prefs.getString(_highLatitudeKey)),
+          highLatitudeRule: _highLatitudeFromName(
+            _prefs.getString(_highLatitudeKey),
+          ),
           autoLocationUpdate: _prefs.getBool(_autoLocationKey) ?? false,
-          locationUpdateMinutes:
-              _prefs.getInt(_locationIntervalKey) ?? 60,
+          locationUpdateMinutes: _prefs.getInt(_locationIntervalKey) ?? 60,
           vibrateWithFull: _prefs.getBool(_vibrateWithFullKey) ?? false,
           modeByPrayer: {
             for (final k in adhanPrayerKeys)
@@ -154,7 +151,8 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
             for (final k in adhanPrayerKeys)
               k: _liveAdhanId(_prefs.getString('$_choicePrefix$k')),
           },
-        ));
+        ),
+      );
 
   final SharedPreferences _prefs;
 
@@ -232,7 +230,9 @@ class AdhanSettingsNotifier extends StateNotifier<AdhanSettings> {
   }
 
   Future<void> setModeFor(String prayerKey, AdhanMode mode) async {
-    state = state.copyWith(modeByPrayer: {...state.modeByPrayer, prayerKey: mode});
+    state = state.copyWith(
+      modeByPrayer: {...state.modeByPrayer, prayerKey: mode},
+    );
     await _prefs.setString('$_modePrefix$prayerKey', mode.name);
   }
 
@@ -268,5 +268,5 @@ adhan.HighLatitudeRule _highLatitudeFromName(String? name) {
 
 final adhanSettingsProvider =
     StateNotifierProvider<AdhanSettingsNotifier, AdhanSettings>((ref) {
-  return AdhanSettingsNotifier(ref.watch(sharedPrefsProvider));
-});
+      return AdhanSettingsNotifier(ref.watch(sharedPrefsProvider));
+    });

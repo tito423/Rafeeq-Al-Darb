@@ -20,6 +20,7 @@ import '../../data/adhan_catalog_provider.dart';
 import '../../data/adhan_scheduler.dart';
 import '../../data/adhan_settings_provider.dart';
 import '../../data/prayer_status_enabled_provider.dart';
+import '../adhan_preview_launcher.dart';
 import '../widgets/adhan_backgrounds_card.dart';
 import '../widgets/adhan_choice_cards.dart';
 import '../widgets/adhan_preview_card.dart';
@@ -42,7 +43,8 @@ class AdhanSettingsScreen extends ConsumerStatefulWidget {
   const AdhanSettingsScreen({super.key});
 
   @override
-  ConsumerState<AdhanSettingsScreen> createState() => _AdhanSettingsScreenState();
+  ConsumerState<AdhanSettingsScreen> createState() =>
+      _AdhanSettingsScreenState();
 }
 
 class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
@@ -117,7 +119,10 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   /// *"supports only a single player instance"* for every player after the
   /// first, and the Quran recitation player already holds that slot — the
   /// failure was caught and swallowed, which is why previews were silent.
-  Future<void> _togglePreview(AdhanOption option, {bool forcePlay = false}) async {
+  Future<void> _togglePreview(
+    AdhanOption option, {
+    bool forcePlay = false,
+  }) async {
     final messenger = ScaffoldMessenger.of(context);
     if (!forcePlay && _playingId.value == option.id) {
       _previewWatch?.cancel();
@@ -150,7 +155,9 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   /// by assuming a duration.
   void _watchPreview() {
     _previewWatch?.cancel();
-    _previewWatch = Timer.periodic(const Duration(milliseconds: 500), (t) async {
+    _previewWatch = Timer.periodic(const Duration(milliseconds: 500), (
+      t,
+    ) async {
       final state = await AdhanNative.state();
       if (!mounted) {
         t.cancel();
@@ -206,7 +213,9 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   }
 
   Future<void> _saveChoice(String prayerKey, String? adhanId) async {
-    await ref.read(adhanSettingsProvider.notifier).setAdhanFor(prayerKey, adhanId);
+    await ref
+        .read(adhanSettingsProvider.notifier)
+        .setAdhanFor(prayerKey, adhanId);
     await ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
   }
 
@@ -219,35 +228,10 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
   /// `popUntil((route) => route.isFirst)` and threw the user out to the
   /// prayer tab: a preview now pops exactly one route, straight back here.
   Future<void> _previewAzan() async {
-    final settings = ref.read(adhanSettingsProvider);
-    final catalog = ref.read(adhanCatalogProvider).value ?? const [];
-    if (catalog.isEmpty) return;
-    if (!mounted) return;
-
     // Stop any row preview first, so two adhans can never overlap.
     _previewWatch?.cancel();
-    await AdhanNative.stop();
-    if (!mounted) return;
     _playingId.value = null;
-
-    final spec = previewSpec(
-      settings: settings,
-      catalog: catalog,
-      // Dhuhr = a neutral (non-Fajr) adhan, so the synced text uses the
-      // standard wording rather than the Fajr-only sunrise line.
-      prayerLabel: _prayerLabels['dhuhr']!.tr(),
-    );
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => AzanPlayerScreen(
-          spec: spec,
-          playerMode: AzanPlayerMode.preview,
-        ),
-      ),
-    );
-    // Backing out of the preview (system back, a gesture) must not leave the
-    // adhan sounding behind this screen.
-    await AdhanNative.stop();
+    await openAdhanPreview(context, ref);
   }
 
   /// Fires this prayer's adhan a few seconds from now through the *real*
@@ -264,7 +248,9 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
       catalog: catalog,
     );
     if (mounted) {
-      messenger.showSnackBar(SnackBar(content: Text('prayer.test_scheduled'.tr())));
+      messenger.showSnackBar(
+        SnackBar(content: Text('prayer.test_scheduled'.tr())),
+      );
     }
   }
 
@@ -307,7 +293,8 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
       appBar: AppBar(title: Text('prayer.adhan_settings'.tr())),
       body: catalogAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorRetry(onRetry: () => ref.invalidate(adhanCatalogProvider)),
+        error: (e, _) =>
+            ErrorRetry(onRetry: () => ref.invalidate(adhanCatalogProvider)),
         data: (catalog) {
           // Three adhans were removed from the catalogue at the owner's
           // request. If the stored default was one of them, the picker would
@@ -318,9 +305,13 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
           // Whisper heard «الصلاة خير من النوم» in both) keeps the reader's
           // choice where it belongs: it becomes their Fajr adhan, and the
           // default moves to the first ordinary one.
-          final def = catalog.where((o) => o.id == settings.defaultAdhanId).firstOrNull;
+          final def = catalog
+              .where((o) => o.id == settings.defaultAdhanId)
+              .firstOrNull;
           final firstPlain = catalog.where((o) => !o.isFajr).firstOrNull;
-          if (catalog.isNotEmpty && (def == null || def.isFajr) && firstPlain != null) {
+          if (catalog.isNotEmpty &&
+              (def == null || def.isFajr) &&
+              firstPlain != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
               if (def != null && settings.adhanIdByPrayer['fajr'] == null) {
@@ -330,255 +321,262 @@ class _AdhanSettingsScreenState extends ConsumerState<AdhanSettingsScreen>
             });
           }
           return ListView(
-          padding: readableInsets(context, const EdgeInsets.all(16)),
-          children: [
-            if (_exactAlarmOk == false)
-              _PermissionCard(
-                icon: Icons.alarm_on,
-                message: 'prayer.exact_alarm'.tr(),
-                action: 'prayer.exact_alarm_action'.tr(),
-                onPressed: AdhanNative.openExactAlarmSettings,
-              ),
-            if (_fullScreenIntentOk == false)
-              _PermissionCard(
-                icon: Icons.fullscreen,
-                message: 'prayer.full_screen_intent'.tr(),
-                action: 'prayer.full_screen_intent_action'.tr(),
-                onPressed: AdhanUriBridge.openFullScreenIntentSettings,
-              ),
-            if (_batteryExempt == false) _BatteryCard(
-              onExempt: () async {
-                final messenger = ScaffoldMessenger.of(context);
-                final granted =
-                    await AlarmPermissionsService.instance.requestBatteryOptimizationExemption();
-                if (mounted) {
-                  setState(() => _batteryExempt = granted);
-                  if (granted) {
-                    messenger.showSnackBar(
-                      SnackBar(content: Text('prayer.battery_exempted'.tr())),
-                    );
-                  }
-                }
-              },
-            ),
-            Card(
-              child: SwitchListTile(
-                secondary: const Icon(Icons.push_pin_outlined),
-                title: Text('prayer.status_notification'.tr()),
-                subtitle: Text('prayer.status_notification_desc'.tr()),
-                value: ref.watch(prayerStatusEnabledProvider),
-                onChanged: (v) =>
-                    ref.read(prayerStatusEnabledProvider.notifier).set(v),
-              ),
-            ),
-            // «ضيف اختيار هزاز مع الاذان الشاشة الكاملة» (owner,
-            // 2026-09-29): the phone vibrates for as long as a full-screen
-            // adhan plays, and stops with it (Stop, Mute or its natural end).
-            Card(
-              child: SwitchListTile(
-                secondary: const Icon(Icons.vibration),
-                title: Text('prayer.full_vibrate'.tr()),
-                subtitle: Text('prayer.full_vibrate_desc'.tr()),
-                value: settings.vibrateWithFull,
-                onChanged: _saveVibrate,
-              ),
-            ),
-            // «موقع الصلاة» and its auto-update moved to «المواقيت والتاريخ»
-            // (PrayerAdjustmentsScreen): the place decides WHEN, this screen
-            // is HOW the adhan is announced (owner, 2026-09-25, plan item 8).
-            const SizedBox(height: 20),
-            // The alarm-stream volume, right where the adhans are chosen: the
-            // adhan plays on STREAM_ALARM by design, so the volume rocker
-            // does nothing to it — see AlarmVolumeTile's doc.
-            const AlarmVolumeTile(),
-            // Preview the full Azan experience on demand — opens the real
-            // full-screen player right now (video + audio + synced text) so
-            // the owner can test it without waiting for an actual prayer.
-            const AdhanBackgroundsCard(),
-            const SizedBox(height: 12),
-            AdhanPreviewCard(onTap: _previewAzan),
-            const SizedBox(height: 20),
-            // P3‑46: this screen used to have every section (the ~10-item
-            // adhan list AND five per-prayer cards) expanded at once, an
-            // overwhelming wall to scroll. They were collapsed behind
-            // `ExpansionTile`s, but expanding a ten-item list inside an
-            // already-scrolling page just moved the problem — the list opened
-            // squeezed between other cards with its own scroll fighting the
-            // page's. Each now opens as its own full screen instead, so the
-            // list gets the whole viewport; the row still shows the current
-            // pick so the common case needs no navigation at all.
-            Card(
-              clipBehavior: Clip.antiAlias,
-              child: ListTile(
-                leading: const Icon(Icons.library_music_outlined),
-                title: Text('prayer.default_adhan_label'.tr()),
-                subtitle: Text(
-                  catalog
-                          .where((o) => o.id == settings.defaultAdhanId)
-                          .firstOrNull
-                          ?.name ??
-                      '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            padding: readableInsets(context, const EdgeInsets.all(16)),
+            children: [
+              if (_exactAlarmOk == false)
+                _PermissionCard(
+                  icon: Icons.alarm_on,
+                  message: 'prayer.exact_alarm'.tr(),
+                  action: 'prayer.exact_alarm_action'.tr(),
+                  onPressed: AdhanNative.openExactAlarmSettings,
                 ),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => _openFullScreen(
-                  title: 'prayer.default_adhan_label'.tr(),
-                  // Read live inside the page, not captured from the screen
-                  // underneath it - see _openFullScreen's doc.
-                  builder: (context, pageRef) {
-                    final live = pageRef.watch(adhanSettingsProvider);
-                    final options =
-                        pageRef.watch(adhanCatalogProvider).valueOrNull ??
-                            const <AdhanOption>[];
-                    return ValueListenableBuilder<String?>(
-                      valueListenable: _playingId,
-                      builder: (context, playingId, _) => ListView(
-                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
-                    children: [
-                      // A Fajr recording is not offered as the default: it
-                      // would recite «الصلاة خير من النوم» at Dhuhr.
-                      for (final option in options.where((o) => !o.isFajr))
-                        AdhanCard(
-                          option: option,
-                          isSelected: live.defaultAdhanId == option.id,
-                          isPlaying: playingId == option.id,
-                          onTap: () {
-                            _saveDefault(option.id);
-                            _togglePreview(option, forcePlay: true);
-                          },
-                          onStop: () => _togglePreview(option),
-                          onRemove: option.isCustom
-                              ? () async {
-                                  await ref
-                                      .read(adhanCatalogProvider.notifier)
-                                      .removeCustom(option);
-                                }
-                              : null,
-                        ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: OutlinedButton.icon(
-                          onPressed: _pickCustomAdhan,
-                          icon: const Icon(Icons.upload_file),
-                          label: Text('prayer.pick_file'.tr()),
-                        ),
-                      ),
-                    ],
-                      ),
-                    );
-                  },
+              if (_fullScreenIntentOk == false)
+                _PermissionCard(
+                  icon: Icons.fullscreen,
+                  message: 'prayer.full_screen_intent'.tr(),
+                  action: 'prayer.full_screen_intent_action'.tr(),
+                  onPressed: AdhanUriBridge.openFullScreenIntentSettings,
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Card(
-              clipBehavior: Clip.antiAlias,
-              child: ListTile(
-                leading: const Icon(Icons.wb_twilight_rounded),
-                title: Text('prayer.fajr_adhan_label'.tr()),
-                subtitle: Text(
-                  resolveAdhanFor(catalog, settings, 'fajr').name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => _openFullScreen(
-                  title: 'prayer.fajr_adhan_label'.tr(),
-                  builder: (context, pageRef) {
-                    final live = pageRef.watch(adhanSettingsProvider);
-                    final options =
-                        pageRef.watch(adhanCatalogProvider).valueOrNull ??
-                            const <AdhanOption>[];
-                    final picked = live.adhanIdByPrayer['fajr'];
-                    return ValueListenableBuilder<String?>(
-                      valueListenable: _playingId,
-                      builder: (context, playingId, _) => ListView(
-                        padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                            child: Text('prayer.fajr_adhan_desc'.tr()),
+              if (_batteryExempt == false)
+                _BatteryCard(
+                  onExempt: () async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final granted = await AlarmPermissionsService.instance
+                        .requestBatteryOptimizationExemption();
+                    if (mounted) {
+                      setState(() => _batteryExempt = granted);
+                      if (granted) {
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text('prayer.battery_exempted'.tr()),
                           ),
-                          Card(
-                            color: picked == null
-                                ? AppColors.gold.withValues(alpha: 0.12)
-                                : null,
-                            child: ListTile(
-                              leading: Icon(
-                                picked == null
-                                    ? Icons.radio_button_checked
-                                    : Icons.radio_button_off,
-                                color: goldText(context),
-                              ),
-                              title: Text('prayer.fajr_adhan_auto'.tr()),
-                              subtitle: Text(
-                                resolveAdhanFor(
-                                  options,
-                                  live.copyWith(adhanIdByPrayer: {
-                                    ...live.adhanIdByPrayer,
-                                    'fajr': null,
-                                  }),
-                                  'fajr',
-                                ).name,
-                              ),
-                              onTap: () => _saveChoice('fajr', null),
-                            ),
-                          ),
-                          for (final option
-                              in options.where((o) => o.fitsPrayer('fajr')))
-                            AdhanCard(
-                              option: option,
-                              isSelected: picked == option.id,
-                              isPlaying: playingId == option.id,
-                              onTap: () {
-                                _saveChoice('fajr', option.id);
-                                _togglePreview(option, forcePlay: true);
-                              },
-                              onStop: () => _togglePreview(option),
-                            ),
-                        ],
-                      ),
-                    );
+                        );
+                      }
+                    }
                   },
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Card(
-              clipBehavior: Clip.antiAlias,
-              child: ListTile(
-                leading: const Icon(Icons.tune),
-                title: Text('prayer.per_prayer'.tr()),
-                subtitle: Text(
-                  'prayer.per_prayer_desc'.tr(),
-                  maxLines: 2,
-                ),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => _openFullScreen(
-                  title: 'prayer.per_prayer'.tr(),
-                  builder: (context, pageRef) {
-                    final live = pageRef.watch(adhanSettingsProvider);
-                    final options =
-                        pageRef.watch(adhanCatalogProvider).valueOrNull ??
-                            const <AdhanOption>[];
-                    return PerPrayerPage(
-                      prayerKeys: adhanPrayerKeys,
-                      label: (k) => _prayerLabels[k]!.tr(),
-                      modeOf: live.modeFor,
-                      adhanOf: (k) => live.adhanIdByPrayer[k],
-                      catalog: options,
-                      onMode: _saveMode,
-                      onModeAll: (m) => _saveModes(adhanPrayerKeys, m),
-                      onAdhan: _saveChoice,
-                      onTest: _test,
-                    );
-                  },
+              Card(
+                child: SwitchListTile(
+                  secondary: const Icon(Icons.push_pin_outlined),
+                  title: Text('prayer.status_notification'.tr()),
+                  subtitle: Text('prayer.status_notification_desc'.tr()),
+                  value: ref.watch(prayerStatusEnabledProvider),
+                  onChanged: (v) =>
+                      ref.read(prayerStatusEnabledProvider.notifier).set(v),
                 ),
               ),
-            ),
-          ],
+              // «ضيف اختيار هزاز مع الاذان الشاشة الكاملة» (owner,
+              // 2026-09-29): the phone vibrates for as long as a full-screen
+              // adhan plays, and stops with it (Stop, Mute or its natural end).
+              Card(
+                child: SwitchListTile(
+                  secondary: const Icon(Icons.vibration),
+                  title: Text('prayer.full_vibrate'.tr()),
+                  subtitle: Text('prayer.full_vibrate_desc'.tr()),
+                  value: settings.vibrateWithFull,
+                  onChanged: _saveVibrate,
+                ),
+              ),
+              // «موقع الصلاة» and its auto-update moved to «المواقيت والتاريخ»
+              // (PrayerAdjustmentsScreen): the place decides WHEN, this screen
+              // is HOW the adhan is announced (owner, 2026-09-25, plan item 8).
+              const SizedBox(height: 20),
+              // The alarm-stream volume, right where the adhans are chosen: the
+              // adhan plays on STREAM_ALARM by design, so the volume rocker
+              // does nothing to it — see AlarmVolumeTile's doc.
+              const AlarmVolumeTile(),
+              // Preview the full Azan experience on demand — opens the real
+              // full-screen player right now (video + audio + synced text) so
+              // the owner can test it without waiting for an actual prayer.
+              const AdhanBackgroundsCard(),
+              const SizedBox(height: 12),
+              AdhanPreviewCard(onTap: _previewAzan),
+              const SizedBox(height: 20),
+              // P3‑46: this screen used to have every section (the ~10-item
+              // adhan list AND five per-prayer cards) expanded at once, an
+              // overwhelming wall to scroll. They were collapsed behind
+              // `ExpansionTile`s, but expanding a ten-item list inside an
+              // already-scrolling page just moved the problem — the list opened
+              // squeezed between other cards with its own scroll fighting the
+              // page's. Each now opens as its own full screen instead, so the
+              // list gets the whole viewport; the row still shows the current
+              // pick so the common case needs no navigation at all.
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: ListTile(
+                  leading: const Icon(Icons.library_music_outlined),
+                  title: Text('prayer.default_adhan_label'.tr()),
+                  subtitle: Text(
+                    catalog
+                            .where((o) => o.id == settings.defaultAdhanId)
+                            .firstOrNull
+                            ?.name ??
+                        '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _openFullScreen(
+                    title: 'prayer.default_adhan_label'.tr(),
+                    // Read live inside the page, not captured from the screen
+                    // underneath it - see _openFullScreen's doc.
+                    builder: (context, pageRef) {
+                      final live = pageRef.watch(adhanSettingsProvider);
+                      final options =
+                          pageRef.watch(adhanCatalogProvider).valueOrNull ??
+                          const <AdhanOption>[];
+                      return ValueListenableBuilder<String?>(
+                        valueListenable: _playingId,
+                        builder: (context, playingId, _) => ListView(
+                          padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+                          children: [
+                            // A Fajr recording is not offered as the default: it
+                            // would recite «الصلاة خير من النوم» at Dhuhr.
+                            for (final option in options.where(
+                              (o) => !o.isFajr,
+                            ))
+                              AdhanCard(
+                                option: option,
+                                isSelected: live.defaultAdhanId == option.id,
+                                isPlaying: playingId == option.id,
+                                onTap: () {
+                                  _saveDefault(option.id);
+                                  _togglePreview(option, forcePlay: true);
+                                },
+                                onStop: () => _togglePreview(option),
+                                onRemove: option.isCustom
+                                    ? () async {
+                                        await ref
+                                            .read(adhanCatalogProvider.notifier)
+                                            .removeCustom(option);
+                                      }
+                                    : null,
+                              ),
+                            const SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              child: OutlinedButton.icon(
+                                onPressed: _pickCustomAdhan,
+                                icon: const Icon(Icons.upload_file),
+                                label: Text('prayer.pick_file'.tr()),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: ListTile(
+                  leading: const Icon(Icons.wb_twilight_rounded),
+                  title: Text('prayer.fajr_adhan_label'.tr()),
+                  subtitle: Text(
+                    resolveAdhanFor(catalog, settings, 'fajr').name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _openFullScreen(
+                    title: 'prayer.fajr_adhan_label'.tr(),
+                    builder: (context, pageRef) {
+                      final live = pageRef.watch(adhanSettingsProvider);
+                      final options =
+                          pageRef.watch(adhanCatalogProvider).valueOrNull ??
+                          const <AdhanOption>[];
+                      final picked = live.adhanIdByPrayer['fajr'];
+                      return ValueListenableBuilder<String?>(
+                        valueListenable: _playingId,
+                        builder: (context, playingId, _) => ListView(
+                          padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                              child: Text('prayer.fajr_adhan_desc'.tr()),
+                            ),
+                            Card(
+                              color: picked == null
+                                  ? AppColors.gold.withValues(alpha: 0.12)
+                                  : null,
+                              child: ListTile(
+                                leading: Icon(
+                                  picked == null
+                                      ? Icons.radio_button_checked
+                                      : Icons.radio_button_off,
+                                  color: goldText(context),
+                                ),
+                                title: Text('prayer.fajr_adhan_auto'.tr()),
+                                subtitle: Text(
+                                  resolveAdhanFor(
+                                    options,
+                                    live.copyWith(
+                                      adhanIdByPrayer: {
+                                        ...live.adhanIdByPrayer,
+                                        'fajr': null,
+                                      },
+                                    ),
+                                    'fajr',
+                                  ).name,
+                                ),
+                                onTap: () => _saveChoice('fajr', null),
+                              ),
+                            ),
+                            for (final option in options.where(
+                              (o) => o.fitsPrayer('fajr'),
+                            ))
+                              AdhanCard(
+                                option: option,
+                                isSelected: picked == option.id,
+                                isPlaying: playingId == option.id,
+                                onTap: () {
+                                  _saveChoice('fajr', option.id);
+                                  _togglePreview(option, forcePlay: true);
+                                },
+                                onStop: () => _togglePreview(option),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: ListTile(
+                  leading: const Icon(Icons.tune),
+                  title: Text('prayer.per_prayer'.tr()),
+                  subtitle: Text('prayer.per_prayer_desc'.tr(), maxLines: 2),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _openFullScreen(
+                    title: 'prayer.per_prayer'.tr(),
+                    builder: (context, pageRef) {
+                      final live = pageRef.watch(adhanSettingsProvider);
+                      final options =
+                          pageRef.watch(adhanCatalogProvider).valueOrNull ??
+                          const <AdhanOption>[];
+                      return PerPrayerPage(
+                        prayerKeys: adhanPrayerKeys,
+                        label: (k) => _prayerLabels[k]!.tr(),
+                        modeOf: live.modeFor,
+                        adhanOf: (k) => live.adhanIdByPrayer[k],
+                        catalog: options,
+                        onMode: _saveMode,
+                        onModeAll: (m) => _saveModes(adhanPrayerKeys, m),
+                        onAdhan: _saveChoice,
+                        onTest: _test,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           );
         },
       ),
