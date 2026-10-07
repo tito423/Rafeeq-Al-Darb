@@ -3,33 +3,193 @@
   "name": "وزارة الحج والعمرة — المملكة العربية السعودية",
   "url": "https://haj.gov.sa/ar/Umrah/Miqaats",
   "read": "2026-09-23",
-  "note": "Each 'text' is the ministry page's own sentence for that miqat, verbatim. 'today' is the present-day name that same sentence gives, and is null where the page gives none (Dhat Irq) - nothing here is added by the app."
+  "note": "Each 'text' is the ministry page's own sentence for that miqat, verbatim. 'today' is the present-day name that same sentence gives, and is null where the page gives none (Dhat Irq) - nothing here is added by the app. 't' is the app's translation of that sentence for the other six languages; the card shows the ministry's Arabic under it."
  },
  "mawaqit": [
   {
    "name": "ذو الحُلَيْفة",
    "today": "أبيار علي",
-   "text": "ميقات أهل المدينة ومَن في طريقهم، وهو يَبعُد (420) كلم عن مكّة، ويسمى كذلك أبيار علي"
+   "text": "ميقات أهل المدينة ومَن في طريقهم، وهو يَبعُد (420) كلم عن مكّة، ويسمى كذلك أبيار علي",
+   "t": {
+    "en": {
+     "name": "Dhu al-Hulayfa",
+     "today": "Abyar Ali",
+     "text": "The miqat of the people of Madinah and those on their route. It is 420 km from Makkah, and is also called Abyar Ali."
+    },
+    "fr": {
+     "name": "Dhou al-Houlayfa",
+     "today": "Abyar Ali",
+     "text": "Miqat des habitants de Médine et de ceux qui passent par leur route. Il se trouve à 420 km de La Mecque et s'appelle aussi Abyar Ali."
+    },
+    "es": {
+     "name": "Dhu al-Hulayfa",
+     "today": "Abyar Ali",
+     "text": "Miqat de la gente de Medina y de quienes pasan por su camino. Está a 420 km de La Meca y también se llama Abyar Ali."
+    },
+    "pt": {
+     "name": "Dhu al-Hulayfa",
+     "today": "Abyar Ali",
+     "text": "Miqat da gente de Medina e de quem passa pelo seu caminho. Fica a 420 km de Meca e chama-se também Abyar Ali."
+    },
+    "ru": {
+     "name": "Зу-ль-Хулайфа",
+     "today": "Абьяр Али",
+     "text": "Микат жителей Медины и тех, кто на их пути. Он находится в 420 км от Мекки и называется также Абьяр Али."
+    },
+    "ur": {
+     "name": "ذو الحلیفہ",
+     "today": "ابیار علی",
+     "text": "اہلِ مدینہ اور ان کے راستے سے آنے والوں کا میقات۔ یہ مکہ سے 420 کلومیٹر دور ہے اور اسے ابیار علی بھی کہا جاتا ہے۔"
+    }
+   }
   },
   {
    "name": "الجُحْفة",
    "today": "رابغ",
-   "text": "ميقات أهل الشام ومن في طريقهم، وهو يَبعُد (187) كلم عن مكّة، ويُحْرِم الناس اليوم من رابغ التي تبعد عن مكة (204) كلم"
+   "text": "ميقات أهل الشام ومن في طريقهم، وهو يَبعُد (187) كلم عن مكّة، ويُحْرِم الناس اليوم من رابغ التي تبعد عن مكة (204) كلم",
+   "t": {
+    "en": {
+     "name": "Al-Juhfa",
+     "today": "Rabigh",
+     "text": "The miqat of the people of Syria (al-Sham) and those on their route. It is 187 km from Makkah; today people enter ihram at Rabigh, 204 km from Makkah."
+    },
+    "fr": {
+     "name": "Al-Jouhfa",
+     "today": "Rabigh",
+     "text": "Miqat des habitants du Cham et de ceux qui passent par leur route. Il se trouve à 187 km de La Mecque ; aujourd'hui on entre en ihram à Rabigh, à 204 km de La Mecque."
+    },
+    "es": {
+     "name": "Al-Yuhfa",
+     "today": "Rabigh",
+     "text": "Miqat de la gente de Sham y de quienes pasan por su camino. Está a 187 km de La Meca; hoy se entra en ihram en Rabigh, a 204 km de La Meca."
+    },
+    "pt": {
+     "name": "Al-Juhfa",
+     "today": "Rabigh",
+     "text": "Miqat da gente do Sham e de quem passa pelo seu caminho. Fica a 187 km de Meca; hoje entra-se em ihram em Rabigh, a 204 km de Meca."
+    },
+    "ru": {
+     "name": "Аль-Джухфа",
+     "today": "Рабиг",
+     "text": "Микат жителей Шама и тех, кто на их пути. Он находится в 187 км от Мекки; сегодня люди входят в ихрам в Рабиге, в 204 км от Мекки."
+    },
+    "ur": {
+     "name": "جحفہ",
+     "today": "رابغ",
+     "text": "اہلِ شام اور ان کے راستے سے آنے والوں کا میقات۔ یہ مکہ سے 187 کلومیٹر دور ہے؛ آج لوگ رابغ سے احرام باندھتے ہیں جو مکہ سے 204 کلومیٹر دور ہے۔"
+    }
+   }
   },
   {
    "name": "قرن المنازل",
    "today": "السيل الكبير",
-   "text": "ميقات أهل نجد ومَن في طريقهم، وهو يَبعُد (94) كلم عن مكّة، ويسمى كذلك السيل الكبير"
+   "text": "ميقات أهل نجد ومَن في طريقهم، وهو يَبعُد (94) كلم عن مكّة، ويسمى كذلك السيل الكبير",
+   "t": {
+    "en": {
+     "name": "Qarn al-Manazil",
+     "today": "Al-Sayl al-Kabir",
+     "text": "The miqat of the people of Najd and those on their route. It is 94 km from Makkah, and is also called al-Sayl al-Kabir."
+    },
+    "fr": {
+     "name": "Qarn al-Manazil",
+     "today": "As-Sayl al-Kabir",
+     "text": "Miqat des habitants du Najd et de ceux qui passent par leur route. Il se trouve à 94 km de La Mecque et s'appelle aussi as-Sayl al-Kabir."
+    },
+    "es": {
+     "name": "Qarn al-Manazil",
+     "today": "As-Sayl al-Kabir",
+     "text": "Miqat de la gente de Nayd y de quienes pasan por su camino. Está a 94 km de La Meca y también se llama as-Sayl al-Kabir."
+    },
+    "pt": {
+     "name": "Qarn al-Manazil",
+     "today": "As-Sayl al-Kabir",
+     "text": "Miqat da gente do Najd e de quem passa pelo seu caminho. Fica a 94 km de Meca e chama-se também as-Sayl al-Kabir."
+    },
+    "ru": {
+     "name": "Карн аль-Маназиль",
+     "today": "Ас-Сайль аль-Кабир",
+     "text": "Микат жителей Неджда и тех, кто на их пути. Он находится в 94 км от Мекки и называется также ас-Сайль аль-Кабир."
+    },
+    "ur": {
+     "name": "قرن المنازل",
+     "today": "السیل الکبیر",
+     "text": "اہلِ نجد اور ان کے راستے سے آنے والوں کا میقات۔ یہ مکہ سے 94 کلومیٹر دور ہے اور اسے السیل الکبیر بھی کہا جاتا ہے۔"
+    }
+   }
   },
   {
    "name": "يَلَمْلَمُ",
    "today": "السعدية",
-   "text": "ميقات أهل اليمن ومن في طريقهم، ويَبعُد (115) كلم عن مكة، ويسمى كذلك (السعدية)."
+   "text": "ميقات أهل اليمن ومن في طريقهم، ويَبعُد (115) كلم عن مكة، ويسمى كذلك (السعدية).",
+   "t": {
+    "en": {
+     "name": "Yalamlam",
+     "today": "Al-Sa'diyya",
+     "text": "The miqat of the people of Yemen and those on their route. It is 115 km from Makkah, and is also called al-Sa'diyya."
+    },
+    "fr": {
+     "name": "Yalamlam",
+     "today": "As-Sa'diyya",
+     "text": "Miqat des habitants du Yémen et de ceux qui passent par leur route. Il se trouve à 115 km de La Mecque et s'appelle aussi as-Sa'diyya."
+    },
+    "es": {
+     "name": "Yalamlam",
+     "today": "As-Sa'diyya",
+     "text": "Miqat de la gente de Yemen y de quienes pasan por su camino. Está a 115 km de La Meca y también se llama as-Sa'diyya."
+    },
+    "pt": {
+     "name": "Yalamlam",
+     "today": "As-Sa'diyya",
+     "text": "Miqat da gente do Iémen e de quem passa pelo seu caminho. Fica a 115 km de Meca e chama-se também as-Sa'diyya."
+    },
+    "ru": {
+     "name": "Яламлам",
+     "today": "Ас-Саадия",
+     "text": "Микат жителей Йемена и тех, кто на их пути. Он находится в 115 км от Мекки и называется также ас-Саадия."
+    },
+    "ur": {
+     "name": "یلملم",
+     "today": "السعدیہ",
+     "text": "اہلِ یمن اور ان کے راستے سے آنے والوں کا میقات۔ یہ مکہ سے 115 کلومیٹر دور ہے اور اسے السعدیہ بھی کہا جاتا ہے۔"
+    }
+   }
   },
   {
    "name": "ذات عِرْق",
    "today": null,
-   "text": "ميقات أهل العراق ومن في طريقهم، ويَبعُد (92) كلم عن مكة."
+   "text": "ميقات أهل العراق ومن في طريقهم، ويَبعُد (92) كلم عن مكة.",
+   "t": {
+    "en": {
+     "name": "Dhat Irq",
+     "today": null,
+     "text": "The miqat of the people of Iraq and those on their route. It is 92 km from Makkah."
+    },
+    "fr": {
+     "name": "Dhat Irq",
+     "today": null,
+     "text": "Miqat des habitants de l'Irak et de ceux qui passent par leur route. Il se trouve à 92 km de La Mecque."
+    },
+    "es": {
+     "name": "Dhat Irq",
+     "today": null,
+     "text": "Miqat de la gente de Irak y de quienes pasan por su camino. Está a 92 km de La Meca."
+    },
+    "pt": {
+     "name": "Dhat Irq",
+     "today": null,
+     "text": "Miqat da gente do Iraque e de quem passa pelo seu caminho. Fica a 92 km de Meca."
+    },
+    "ru": {
+     "name": "Зат Ирк",
+     "today": null,
+     "text": "Микат жителей Ирака и тех, кто на их пути. Он находится в 92 км от Мекки."
+    },
+    "ur": {
+     "name": "ذات عرق",
+     "today": null,
+     "text": "اہلِ عراق اور ان کے راستے سے آنے والوں کا میقات۔ یہ مکہ سے 92 کلومیٹر دور ہے۔"
+    }
+   }
   }
  ]
 }

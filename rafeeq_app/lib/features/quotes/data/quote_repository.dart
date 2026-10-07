@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../library/data/book_catalog.dart';
+
 /// One saying, and the book it is in.
 ///
 /// [book] is not decoration. The owner's instruction was «كل مقولة لازم تحمل
@@ -91,13 +93,19 @@ class QuoteLibrary {
     if (quoteIndex < 0 || quoteIndex >= b.quotes.length) return null;
     final q = b.quotes[quoteIndex];
     final arabic = q.text['ar'] ?? '';
+    // The book and its author in the reader's script: a French card used to
+    // carry its title and author in Arabic under a French maxim. The
+    // library's own entry holds the Latin forms; ar and ur keep the Arabic.
+    final lib = (locale == 'ar' || locale == 'ur') ? null : bookById(b.id);
+    String latin(String? en, String ar) =>
+        (en == null || en.isEmpty) ? ar : en;
     return Quote(
       text: q.text[locale] ?? arabic,
       arabic: arabic,
       page: q.page,
       bookId: b.id,
-      bookTitle: b.titleAr,
-      authorAr: b.authorAr,
+      bookTitle: latin(lib?.titleEn, b.titleAr),
+      authorAr: latin(lib?.authorEn, b.authorAr),
       sourceLabel: b.sourceLabel,
     );
   }

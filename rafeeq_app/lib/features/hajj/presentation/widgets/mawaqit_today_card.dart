@@ -26,12 +26,30 @@ class MiqatToday {
   final String name;
   final String? today;
   final String text;
-  const MiqatToday({required this.name, required this.today, required this.text});
+
+  /// The same miqat in the other six languages (CLAUDE.md §1.7c): the name
+  /// in the reader's script and the ministry's sentence translated. [text]
+  /// stays the ministry's own Arabic and is shown under the translation.
+  final Map<String, ({String name, String? today, String text})> tr;
+  const MiqatToday({
+    required this.name,
+    required this.today,
+    required this.text,
+    this.tr = const {},
+  });
 
   static MiqatToday fromJson(Map<String, dynamic> j) => MiqatToday(
         name: j['name'] as String,
         today: j['today'] as String?,
         text: j['text'] as String,
+        tr: {
+          for (final e in ((j['t'] as Map<String, dynamic>?) ?? {}).entries)
+            e.key: (
+              name: (e.value as Map)['name'] as String,
+              today: (e.value as Map)['today'] as String?,
+              text: (e.value as Map)['text'] as String,
+            ),
+        },
       );
 }
 
@@ -67,6 +85,7 @@ class MawaqitTodayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final lang = context.locale.languageCode;
     return FutureBuilder<MawaqitToday>(
       future: loadMawaqitToday(),
       builder: (context, snap) {
@@ -104,20 +123,30 @@ class MawaqitTodayCard extends StatelessWidget {
                   color: scheme.onSurfaceVariant,
                 ),
               ),
-              for (final m in data.mawaqit) ...[
+              for (final m in data.mawaqit)
+                for (final t in [m.tr[lang]]) ...[
                 const Divider(height: 18),
                 Wrap(
                   spacing: 8,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    ArabicText(
-                      m.name,
-                      style: TextStyle(
-                        fontSize: 15 * scale,
-                        fontWeight: FontWeight.w800,
+                    if (t == null)
+                      ArabicText(
+                        m.name,
+                        style: TextStyle(
+                          fontSize: 15 * scale,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      )
+                    else
+                      Text(
+                        t.name,
+                        style: TextStyle(
+                          fontSize: 15 * scale,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
-                    if (m.today != null)
+                    if ((t?.today ?? m.today) != null)
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -128,7 +157,7 @@ class MawaqitTodayCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          'hajj.mawaqit_today_name'.tr(args: [m.today!]),
+                          'hajj.mawaqit_today_name'.tr(args: [t?.today ?? m.today!]),
                           style: TextStyle(
                             fontSize: 12.5 * scale,
                             fontWeight: FontWeight.w700,
@@ -138,9 +167,20 @@ class MawaqitTodayCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
+                if (t != null) ...[
+                  Text(
+                    localizeDigits(t.text, lang),
+                    style: TextStyle(fontSize: 14 * scale, height: 1.6),
+                  ),
+                  const SizedBox(height: 4),
+                ],
                 ArabicText(
                   localizeDigits(m.text, 'ar'),
-                  style: TextStyle(fontSize: 14 * scale, height: 1.7),
+                  style: TextStyle(
+                    fontSize: (t == null ? 14 : 12.5) * scale,
+                    height: 1.7,
+                    color: t == null ? null : scheme.onSurfaceVariant,
+                  ),
                 ),
               ],
               // No citation line under the card (the owner, 2026-09-23): the

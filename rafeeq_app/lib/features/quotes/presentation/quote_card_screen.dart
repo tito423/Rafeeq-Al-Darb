@@ -176,7 +176,7 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
                             // §1.1 and §1.2: the book is not optional, and
                             // neither is its author. A saying with no source
                             // is the thing this project refuses to ship.
-                            ArabicText(
+                            Text(
                               q.bookTitle,
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -189,7 +189,7 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
                               ),
                             ),
                             const SizedBox(height: 4),
-                            ArabicText(
+                            Text(
                               q.authorAr,
                               textAlign: TextAlign.center,
                               style: TextStyle(
