@@ -2668,6 +2668,11 @@
     "won_lanterns": "You collected {} of {} lanterns",
     "lost_title": "The caravan stopped on the road",
     "play_again": "Play again",
-    "exit": "Exit"
+    "exit": "Exit",
+    "ev_star": "A golden star! Tap twice for a double jump",
+    "ev_storm": "Sandstorm! Watch the road",
+    "ev_oasis": "An oasis! Collect the arc of lanterns",
+    "ev_birds": "A flock of birds! Swipe down to make the camel duck",
+    "streak": "Streak ×{}!"
   }
 }

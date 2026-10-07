@@ -45,6 +45,8 @@ class _CaravanScreenState extends State<CaravanScreen>
   QuizQuestion? _gateQ;
   List<String> _choices = const [];
   String? _wrong;
+  Offset? _down;
+  bool _swiped = false;
 
   @override
   void initState() {
@@ -67,7 +69,11 @@ class _CaravanScreenState extends State<CaravanScreen>
   void _start(CaravanMode mode) {
     _world?.dispose();
     setState(() {
-      _world = CaravanWorld(mode: mode, seed: DateTime.now().millisecond);
+      _world = CaravanWorld(
+        mode: mode,
+        lang: context.locale.languageCode,
+        seed: DateTime.now().millisecond,
+      );
       _wrong = null;
       final q = _gateQ;
       if (q != null) _choices = q.shuffled(math.Random());
@@ -114,9 +120,20 @@ class _CaravanScreenState extends State<CaravanScreen>
         backgroundColor: const Color(0xFF2B2A5C),
         body: w == null
             ? _Intro(onStart: _start)
-            : GestureDetector(
+            : Listener(
                 behavior: HitTestBehavior.opaque,
-                onTapDown: (_) => w.jump(),
+                onPointerDown: (e) {
+                  _down = e.position;
+                  _swiped = false;
+                  w.jump();
+                },
+                onPointerMove: (e) {
+                  final d = _down;
+                  if (d != null && !_swiped && e.position.dy - d.dy > 28) {
+                    _swiped = true;
+                    w.duck();
+                  }
+                },
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -149,6 +166,33 @@ class _CaravanScreenState extends State<CaravanScreen>
                           ),
                         ),
                       ),
+                    ),
+                    AnimatedBuilder(
+                      animation: w,
+                      builder: (_, _) {
+                        final b = w.banner;
+                        final t = w.bannerAge;
+                        final a = b == null
+                            ? 0.0
+                            : (t < 0.3
+                                      ? t / 0.3
+                                      : (t > 1.8 ? (2.2 - t) / 0.4 : 1.0))
+                                  .clamp(0.0, 1.0);
+                        return IgnorePointer(
+                          child: Align(
+                            alignment: const Alignment(0, -0.45),
+                            child: Opacity(
+                              opacity: a,
+                              child: Transform.scale(
+                                scale: 0.9 + 0.1 * a,
+                                child: b == null
+                                    ? const SizedBox.shrink()
+                                    : _Banner(text: b.tr()),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     if (w.phase == CaravanPhase.atGate && _gateQ != null)
                       _GateQuestion(
@@ -457,6 +501,33 @@ class _Road extends StatelessWidget {
       ],
     );
   }
+}
+
+class _Banner extends StatelessWidget {
+  final String text;
+  const _Banner({required this.text});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.symmetric(horizontal: 24),
+    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [Color(0xFFB8892A), Color(0xFFE8C766), Color(0xFFB8892A)],
+      ),
+      borderRadius: BorderRadius.circular(18),
+      boxShadow: const [BoxShadow(blurRadius: 16, color: Colors.black38)],
+    ),
+    child: Text(
+      text,
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+        color: Color(0xFF3B2A12),
+        fontSize: 18,
+        fontWeight: FontWeight.w900,
+      ),
+    ),
+  );
 }
 
 class _Bubble extends StatelessWidget {

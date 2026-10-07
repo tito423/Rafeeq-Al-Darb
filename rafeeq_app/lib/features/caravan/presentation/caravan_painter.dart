@@ -42,6 +42,9 @@ class CaravanPainter extends CustomPainter {
       color: const Color(0xFFC98B4E).withValues(alpha: 0.8),
       seed: 2,
     );
+    if (w.oasisX != null) {
+      _oasis(canvas, size, w.oasisX! * size.width, size.height * 0.74, camel);
+    }
     if (w.gateX != null) _gate(canvas, size, w.gateX! * size.width, ground);
     _dunes(
       canvas,
@@ -56,14 +59,15 @@ class CaravanPainter extends CustomPainter {
     for (final r in w.rocks) {
       _rock(canvas, Offset(r.x * size.width, ground), camel * 0.3);
     }
+    for (final b in w.birds) {
+      _birds(canvas, Offset(b.x * size.width, ground - camel * 0.95), camel);
+    }
     for (final l in w.lanterns) {
-      if (!l.taken) {
-        _lantern(
-          canvas,
-          Offset(l.x * size.width, size.height * w.ly(l)),
-          camel * 0.22,
-        );
-      }
+      if (l.taken) continue;
+      final at = Offset(l.x * size.width, size.height * w.ly(l));
+      l.golden
+          ? _star(canvas, at, camel * 0.3)
+          : _lantern(canvas, at, camel * 0.22);
     }
     for (final s in w.sparks) {
       final a = (1 - s.age / 0.6).clamp(0.0, 1.0);
@@ -78,14 +82,192 @@ class CaravanPainter extends CustomPainter {
     for (var i = 2; i >= 0; i--) {
       final x = CaravanWorld.leadX * size.width - i * camel * 1.05;
       final lift = w.liftAt(i) * size.height;
+      final foot = Offset(x, ground - lift);
+      // A crouch squashes the camel down toward its feet.
+      final squash = 1 - 0.45 * w.crouchAt(i);
+      canvas.save();
+      canvas.translate(foot.dx, foot.dy);
+      canvas.scale(1, squash);
+      canvas.translate(-foot.dx, -foot.dy);
       _camel(
         canvas,
-        Offset(x, ground - lift),
+        foot,
         camel,
         w.stride + i * 0.33,
         hurt: i == 0 && w.hurtFor > 0,
       );
+      canvas.restore();
     }
+    if (w.storm > 0.01) _storm(canvas, size);
+    for (final p in w.popups) {
+      _popup(canvas, size, p, camel);
+    }
+  }
+
+  /// A flock of five birds in a loose V, wings beating.
+  void _birds(Canvas canvas, Offset c, double camel) {
+    final paint = Paint()
+      ..color = const Color(0xFF3B2A20)
+      ..strokeWidth = camel * 0.035
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+    const spots = [
+      (0.0, 0.0),
+      (-0.28, -0.18),
+      (0.28, -0.16),
+      (-0.5, -0.32),
+      (0.5, 0.06),
+    ];
+    for (var i = 0; i < spots.length; i++) {
+      final (dx, dy) = spots[i];
+      final o = c.translate(dx * camel, dy * camel);
+      final flap = math.sin(w.time * 14 + i) * camel * 0.08;
+      final span = camel * 0.16;
+      canvas.drawPath(
+        Path()
+          ..moveTo(o.dx - span, o.dy - flap)
+          ..quadraticBezierTo(
+            o.dx - span * 0.4,
+            o.dy - flap * 0.2 - camel * 0.04,
+            o.dx,
+            o.dy,
+          )
+          ..quadraticBezierTo(
+            o.dx + span * 0.4,
+            o.dy - flap * 0.2 - camel * 0.04,
+            o.dx + span,
+            o.dy - flap,
+          ),
+        paint,
+      );
+    }
+  }
+
+  /// The golden star: an eight-pointed star that turns and glows.
+  void _star(Canvas canvas, Offset c, double s) {
+    final pulse = 1 + math.sin(w.time * 5) * 0.12;
+    canvas.drawCircle(
+      c,
+      s * 2.2 * pulse,
+      Paint()
+        ..color = _gold.withValues(alpha: 0.45)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 16),
+    );
+    canvas.save();
+    canvas.translate(c.dx, c.dy);
+    canvas.rotate(w.time * 0.8);
+    for (final a in [0.0, math.pi / 4]) {
+      canvas.save();
+      canvas.rotate(a);
+      canvas.drawRect(
+        Rect.fromCenter(
+          center: Offset.zero,
+          width: s * 1.5 * pulse,
+          height: s * 1.5 * pulse,
+        ),
+        Paint()..color = a == 0 ? _gold : const Color(0xFFFFF2B8),
+      );
+      canvas.restore();
+    }
+    canvas.restore();
+  }
+
+  /// The oasis passing in the middle distance: a pool and its palms.
+  void _oasis(Canvas canvas, Size size, double cx, double base, double camel) {
+    final pool = Rect.fromCenter(
+      center: Offset(cx, base),
+      width: camel * 3.2,
+      height: camel * 0.45,
+    );
+    canvas.drawOval(
+      pool.inflate(camel * 0.12),
+      Paint()..color = const Color(0xFF7FA35A),
+    );
+    canvas.drawOval(
+      pool,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF4FA3C7), Color(0xFF2E6F9E)],
+        ).createShader(pool),
+    );
+    // Light on the water.
+    final shine = Paint()
+      ..color = Colors.white.withValues(alpha: 0.55)
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    for (var i = 0; i < 3; i++) {
+      final x =
+          cx - camel + i * camel * 0.8 + math.sin(w.time * 2 + i) * camel * 0.1;
+      canvas.drawLine(
+        Offset(x, base - camel * 0.05 + i * 4),
+        Offset(x + camel * 0.3, base - camel * 0.05 + i * 4),
+        shine,
+      );
+    }
+    for (final (dx, k) in [
+      (-1.7, 1.25),
+      (-1.1, 0.95),
+      (1.3, 1.15),
+      (1.85, 0.8),
+    ]) {
+      _palm(
+        canvas,
+        Offset(cx + dx * camel, base + camel * 0.05),
+        camel * 1.9 * k,
+      );
+    }
+  }
+
+  /// The sandstorm: an ochre veil and streaks of blown sand.
+  void _storm(Canvas canvas, Size size) {
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()
+        ..color = const Color(0xFFD9A35F).withValues(alpha: 0.42 * w.storm),
+    );
+    final streak = Paint()
+      ..color = const Color(0xFFFFE2B0).withValues(alpha: 0.55 * w.storm)
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    final rnd = math.Random(11);
+    for (var i = 0; i < 70; i++) {
+      final y = rnd.nextDouble() * size.height;
+      final speed = 0.8 + rnd.nextDouble() * 1.4;
+      final x =
+          size.width -
+          ((w.time * speed * size.width + rnd.nextDouble() * size.width) %
+              (size.width * 1.2));
+      final len = 18 + rnd.nextDouble() * 40;
+      canvas.drawLine(Offset(x, y), Offset(x + len, y - len * 0.08), streak);
+    }
+  }
+
+  void _popup(Canvas canvas, Size size, Popup p, double camel) {
+    final a = (1 - p.age / 1.1).clamp(0.0, 1.0);
+    final tp = TextPainter(
+      text: TextSpan(
+        text: p.text,
+        style: TextStyle(
+          color: (p.gold ? const Color(0xFFFFE08A) : Colors.white).withValues(
+            alpha: a,
+          ),
+          fontSize: camel * (p.gold ? 0.24 : 0.2),
+          fontWeight: FontWeight.w900,
+          shadows: const [Shadow(blurRadius: 6, color: Colors.black54)],
+        ),
+      ),
+      textDirection: TextDirection.rtl,
+    )..layout();
+    tp.paint(
+      canvas,
+      Offset(
+        p.x * size.width - tp.width / 2,
+        p.y * size.height - camel * 0.3 - p.age * camel * 0.7,
+      ),
+    );
+    tp.dispose();
   }
 
   void _sky(Canvas canvas, Size size) {

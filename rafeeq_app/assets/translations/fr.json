@@ -2668,6 +2668,11 @@
     "won_lanterns": "Lanternes ramassées : {} sur {}",
     "lost_title": "La caravane s’est arrêtée en chemin",
     "play_again": "Rejouer",
-    "exit": "Quitter"
+    "exit": "Quitter",
+    "ev_star": "Une étoile dorée ! Touchez deux fois pour un double saut",
+    "ev_storm": "Tempête de sable ! Attention à la route",
+    "ev_oasis": "Une oasis ! Ramassez l’arc de lanternes",
+    "ev_birds": "Une volée d’oiseaux ! Glissez vers le bas pour que le chameau se baisse",
+    "streak": "Série ×{} !"
   }
 }

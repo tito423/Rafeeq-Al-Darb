@@ -2668,6 +2668,11 @@
     "won_lanterns": "Recogiste {} de {} faroles",
     "lost_title": "La caravana se detuvo en el camino",
     "play_again": "Jugar otra vez",
-    "exit": "Salir"
+    "exit": "Salir",
+    "ev_star": "¡Una estrella dorada! Toca dos veces para un doble salto",
+    "ev_storm": "¡Tormenta de arena! Atento al camino",
+    "ev_oasis": "¡Un oasis! Recoge el arco de faroles",
+    "ev_birds": "¡Una bandada de pájaros! Desliza hacia abajo para que el camello se agache",
+    "streak": "¡Racha ×{}!"
   }
 }
