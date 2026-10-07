@@ -44,7 +44,9 @@ def hear(path, a, b):
     global _model
     if _model is None:
         from faster_whisper import WhisperModel
-        _model = WhisperModel('small', device='cpu', compute_type='int8')
+        # JUDGE_MODEL=large-v3 for recordings `small` cannot read (2026-10-07).
+        _model = WhisperModel(os.environ.get('JUDGE_MODEL', 'small'),
+                              device='cpu', compute_type='int8')
     raw = subprocess.run(
         [FFMPEG, '-v', 'error', '-ss', str(a), '-to', str(b), '-i', path,
          '-ac', '1', '-ar', str(SR), '-f', 's16le', '-'],

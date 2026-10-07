@@ -13,6 +13,13 @@ import sys
 
 from faster_whisper import WhisperModel
 
+import subprocess
+
+import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from align_adhan_phrases import FFMPEG  # noqa: E402
+
 out_path = sys.argv[1]
 files = sys.argv[2:]
 done = {}
@@ -26,8 +33,14 @@ for path in files:
     key = os.path.basename(path)
     if key in done:
         continue
+    # Decoded with ffmpeg, as the judging scripts do: faster-whisper's own
+    # PyAV path raises on this machine's PyAV (`metadata_errors`, 2026-10-07).
+    raw = subprocess.run(
+        [FFMPEG, '-v', 'error', '-i', path, '-ac', '1', '-ar', '16000',
+         '-f', 's16le', '-'], capture_output=True, check=True).stdout
+    audio = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768
     segs, info = model.transcribe(
-        path, language='ar', word_timestamps=True, vad_filter=False,
+        audio, language='ar', word_timestamps=True, vad_filter=False,
         beam_size=5, condition_on_previous_text=False)
     done[key] = {
         'duration': info.duration,

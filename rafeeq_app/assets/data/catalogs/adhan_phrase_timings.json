@@ -100,11 +100,37 @@
   },
   "azan13.mp3": {
     "total_ms": 138450,
-    "first_speech_ms": 0,
+    "first_speech_ms": 2050,
     "last_speech_ms": 138450,
+    "breaths": [
+      2050,
+      15550,
+      29000,
+      38300,
+      50650,
+      62250,
+      74550,
+      83600,
+      95400,
+      103300,
+      115700,
+      125850
+    ],
+    "lines": [
+      2050,
+      29000,
+      50650,
+      74550,
+      95400,
+      115700,
+      125850
+    ],
     "checked": {
-      "timeline": null,
-      "note": "no timeline read back well enough; the app shows the whole adhan"
+      "timeline": "dips",
+      "mean": 0.582,
+      "wrong": 2,
+      "judge": "large-v3",
+      "note": "breaths 1,2,5,6,11 read back at 0.74-1.0; the other cuts agree with the silence and speech timelines within 0.1 s and the breath count between confirmed breaths is fixed by the adhan"
     }
   },
   "azan16.mp3": {
@@ -400,9 +426,38 @@
     "total_ms": 288350,
     "first_speech_ms": 0,
     "last_speech_ms": 288350,
+    "breaths_fajr": [
+      0,
+      9400,
+      33400,
+      59300,
+      88950,
+      112400,
+      140450,
+      161750,
+      187500,
+      206650,
+      232600,
+      247400,
+      260700,
+      275550
+    ],
+    "lines_fajr": [
+      0,
+      33400,
+      88950,
+      140450,
+      187500,
+      232600,
+      260700,
+      275550
+    ],
     "checked": {
-      "timeline": null,
-      "note": "no timeline read back well enough; the app shows the whole adhan"
+      "timeline": "silences",
+      "mean": 0.913,
+      "wrong": 0,
+      "judge": "large-v3",
+      "note": "each breath starts where one of the 13 long quiet stretches ends; all 14 breaths read back as their words"
     },
     "fajr": true
   }
