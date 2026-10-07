@@ -161,6 +161,19 @@ what would unblock it — never leave a guess standing in its place.
 This was set after a report said the backgrounds «ممكن تكون جاية من المصدر
 الاحتياطي» instead of checking which host served them.
 
+### 1.7c Every change ships in all seven languages
+
+> «اي تعديل في التطبيق لازم يتحدث بالسبع لغات كاملة» (2026-10-07)
+
+ar, en, fr, es, pt, ru, ur - every one, every time. Not only UI keys:
+any CONTENT a screen shows (quiz questions, catalogue names and
+descriptions, game text, notifications) carries all seven. Only
+scripture-type text stays Arabic: the Qur'an, hadith text, adhkar text,
+and a book's verbatim quote shown as evidence. A data file with display
+text gets per-language fields and a test that fails on a missing one.
+This was set after a French-speaking reader met the quiz in Arabic.
+
+
 ### 1.8 Libraries and toolchain: current, stable, and proven compatible
 
 > «كل مكتبات التطبيق والبيئة اللي بنطور بيها لازم تكون محدثة ومتوافقه
