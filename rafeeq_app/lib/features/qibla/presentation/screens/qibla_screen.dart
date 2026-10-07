@@ -89,8 +89,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     // Pause the compass work (and its haptic) whenever the app leaves the
     // foreground — the sensor stream would otherwise keep firing while the
     // app is backgrounded.
-    _screenActive =
-        state == AppLifecycleState.resumed && _isPrayerTabActive();
+    _screenActive = state == AppLifecycleState.resumed && _isPrayerTabActive();
   }
 
   bool _isPrayerTabActive() => ref.read(activeTabProvider) == AppTab.prayer;
@@ -173,7 +172,8 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     const phi2 = kaabaLat * math.pi / 180;
     final deltaLambda = (kaabaLon - lon) * math.pi / 180;
     final y = math.sin(deltaLambda) * math.cos(phi2);
-    final x = math.cos(phi1) * math.sin(phi2) -
+    final x =
+        math.cos(phi1) * math.sin(phi2) -
         math.sin(phi1) * math.cos(phi2) * math.cos(deltaLambda);
     final theta = math.atan2(y, x);
     return (theta * 180 / math.pi + 360) % 360;
@@ -192,7 +192,8 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     // Track whether this tab is the one on screen; combined with the app
     // being foregrounded, this drives whether the compass does any work.
     final tabActive = ref.watch(activeTabProvider) == AppTab.prayer;
-    _screenActive = tabActive &&
+    _screenActive =
+        tabActive &&
         WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
     return Scaffold(
       appBar: AppBar(title: Text('nav.prayer'.tr())),
@@ -308,8 +309,11 @@ class _StatusCard extends StatelessWidget {
           else
             Icon(icon, size: 56, color: scheme.onSurfaceVariant),
           const SizedBox(height: 14),
-          Text(message, textAlign: TextAlign.center,
-              style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 14)),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 14),
+          ),
           if (actionLabel != null) ...[
             const SizedBox(height: 18),
             FilledButton(onPressed: onAction, child: Text(actionLabel!)),
@@ -368,15 +372,17 @@ class _CompassDial extends StatelessWidget {
           colors: surface.gradient,
         ),
         border: Border.all(
-          color: (aligned
-                  ? AppColors.success
-                  : surface.accent(const Color(0xFF15C7B0)))
-              .withValues(alpha: aligned ? 0.7 : 0.45),
+          color:
+              (aligned
+                      ? AppColors.success
+                      : surface.accent(const Color(0xFF15C7B0)))
+                  .withValues(alpha: aligned ? 0.7 : 0.45),
         ),
         boxShadow: [
           BoxShadow(
-            color: (aligned ? AppColors.success : AppColors.gold)
-                .withValues(alpha: aligned ? 0.28 : 0.12),
+            color: (aligned ? AppColors.success : AppColors.gold).withValues(
+              alpha: aligned ? 0.28 : 0.12,
+            ),
             blurRadius: aligned ? 32 : 22,
             spreadRadius: aligned ? 2 : 1,
           ),
@@ -390,62 +396,65 @@ class _CompassDial extends StatelessWidget {
           SizedBox(
             height: dial,
             child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: SizedBox(
-            width: 280,
-            height: 280,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                CustomPaint(
-                  size: const Size(280, 280),
-                  painter: _DialPainter(goldOn(scheme)),
-                ),
-                for (final e in const [
-                  (0.0, 'qibla.north'),
-                  (90.0, 'qibla.east'),
-                  (180.0, 'qibla.south'),
-                  (270.0, 'qibla.west'),
-                ])
-                  Transform.translate(
-                    offset: Offset(
-                      116 * math.sin(e.$1 * math.pi / 180),
-                      -116 * math.cos(e.$1 * math.pi / 180),
+              fit: BoxFit.scaleDown,
+              child: SizedBox(
+                width: 280,
+                height: 280,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CustomPaint(
+                      size: const Size(280, 280),
+                      painter: _DialPainter(goldOn(scheme)),
                     ),
-                    child: Text(
-                      e.$2.tr(),
-                      style: TextStyle(
-                        color: e.$1 == 0
-                            ? goldOn(scheme)
-                            : scheme.onSurfaceVariant,
-                        fontSize: 13,
-                        fontWeight: e.$1 == 0 ? FontWeight.w700 : FontWeight.w500,
+                    for (final e in const [
+                      (0.0, 'qibla.north'),
+                      (90.0, 'qibla.east'),
+                      (180.0, 'qibla.south'),
+                      (270.0, 'qibla.west'),
+                    ])
+                      Transform.translate(
+                        offset: Offset(
+                          116 * math.sin(e.$1 * math.pi / 180),
+                          -116 * math.cos(e.$1 * math.pi / 180),
+                        ),
+                        child: Text(
+                          e.$2.tr(),
+                          style: TextStyle(
+                            color: e.$1 == 0
+                                ? goldOn(scheme)
+                                : scheme.onSurfaceVariant,
+                            fontSize: 13,
+                            fontWeight: e.$1 == 0
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    AnimatedRotation(
+                      turns: needleAngle / (2 * math.pi),
+                      duration: const Duration(milliseconds: 180),
+                      curve: Curves.easeOut,
+                      child: _Needle(aligned: aligned, angle: needleAngle),
+                    ),
+                    Container(
+                      width: 14,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: goldOn(scheme),
+                        boxShadow: [
+                          BoxShadow(
+                            color: goldOn(scheme).withValues(alpha: 0.6),
+                            blurRadius: 8,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                AnimatedRotation(
-                  turns: needleAngle / (2 * math.pi),
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOut,
-                  child: _Needle(aligned: aligned),
+                  ],
                 ),
-                Container(
-                  width: 14,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: goldOn(scheme),
-                    boxShadow: [
-                      BoxShadow(
-                          color: goldOn(scheme).withValues(alpha: 0.6),
-                          blurRadius: 8),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          ),
           ),
           SizedBox(height: sideways ? 10 : 20),
           AnimatedOpacity(
@@ -454,19 +463,28 @@ class _CompassDial extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.check_circle, color: AppColors.success, size: 18),
+                const Icon(
+                  Icons.check_circle,
+                  color: AppColors.success,
+                  size: 18,
+                ),
                 const SizedBox(width: 6),
-                Text('qibla.aligned'.tr(),
-                    style: const TextStyle(
-                        color: AppColors.success, fontWeight: FontWeight.w700)),
+                Text(
+                  'qibla.aligned'.tr(),
+                  style: const TextStyle(
+                    color: AppColors.success,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ],
             ),
           ),
           const SizedBox(height: 8),
           Text(
             localizeDigits(
-                '${'qibla.bearing_info'.tr()} ${qiblaBearing.round()}°',
-                context.locale.languageCode),
+              '${'qibla.bearing_info'.tr()} ${qiblaBearing.round()}°',
+              context.locale.languageCode,
+            ),
             style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12.5),
           ),
         ],
@@ -477,39 +495,33 @@ class _CompassDial extends StatelessWidget {
 
 class _Needle extends StatelessWidget {
   final bool aligned;
-  const _Needle({required this.aligned});
+
+  /// The needle's own rotation, so the Kaaba at its tip can be turned back
+  /// by the same amount and always stand upright.
+  final double angle;
+  const _Needle({required this.aligned, required this.angle});
 
   @override
   Widget build(BuildContext context) {
     final color = aligned ? AppColors.success : AppColors.gold;
     return SizedBox(
-      width: 40,
+      width: 48,
       height: 220,
       child: Column(
         children: [
-          // Kaaba mark at the needle's tip — a plain geometric cube, not a
-          // photo/trademarked image, matching this project's "original art
-          // only" rule.
-          Container(
-            width: 20,
-            height: 20,
-            margin: const EdgeInsets.only(bottom: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1A1A),
-              borderRadius: BorderRadius.circular(3),
-              border: Border.all(color: color, width: 1.4),
-            ),
-            child: Center(
-              child: Container(
-                width: 10,
-                height: 4,
-                color: AppColors.gold,
-              ),
-            ),
+          // «العلامة اللي تودي لها ابره البوصله … تبقى الكعبه الشريفه وتبقى
+          // انيميتد» (owner, 2026-10-07). Drawn here, not a photograph -
+          // original art only. Counter-rotated: the needle turns, the Kaaba
+          // stays upright the way it stands.
+          AnimatedRotation(
+            turns: -angle / (2 * math.pi),
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            child: _KaabaMark(aligned: aligned),
           ),
           Expanded(
             child: CustomPaint(
-              size: const Size(16, 190),
+              size: const Size(16, 180),
               painter: _NeedleShaftPainter(color: color),
             ),
           ),
@@ -517,6 +529,148 @@ class _Needle extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The Kaaba at the needle's tip: a black cube seen a little from above
+/// and to the side, the kiswa's gold band round it and the gold door on
+/// its face. Alive in two slow ways - a glint that travels along the band
+/// and a halo that breathes behind it, green once the phone faces the
+/// Qibla.
+class _KaabaMark extends StatefulWidget {
+  final bool aligned;
+  const _KaabaMark({required this.aligned});
+
+  @override
+  State<_KaabaMark> createState() => _KaabaMarkState();
+}
+
+class _KaabaMarkState extends State<_KaabaMark>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2600),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 40,
+      height: 40,
+      child: RepaintBoundary(
+        child: AnimatedBuilder(
+          animation: _c,
+          builder: (_, _) => CustomPaint(
+            painter: _KaabaPainter(t: _c.value, aligned: widget.aligned),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _KaabaPainter extends CustomPainter {
+  final double t;
+  final bool aligned;
+  const _KaabaPainter({required this.t, required this.aligned});
+
+  static const _gold = Color(0xFFD4AF37);
+  static const _goldDeep = Color(0xFF9C7A1E);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final s = size.width / 40;
+    canvas.save();
+    canvas.scale(s);
+
+    // Halo: breathes in and out once per cycle.
+    final breath = 0.5 - 0.5 * math.cos(t * 2 * math.pi);
+    final halo = aligned ? AppColors.success : _gold;
+    canvas.drawCircle(
+      const Offset(20, 21),
+      15 + 3 * breath,
+      Paint()
+        ..color = halo.withValues(alpha: 0.18 + 0.22 * breath)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+    );
+
+    // The cube: front face, side face, roof.
+    const fl = 6.0, fr = 26.0, ft = 12.0, fb = 34.0; // front face
+    const dx = 8.0, dy = -5.0; // depth of the side and roof
+    const front = Rect.fromLTRB(fl, ft, fr, fb);
+    final side = Path()
+      ..moveTo(fr, ft)
+      ..lineTo(fr + dx, ft + dy)
+      ..lineTo(fr + dx, fb + dy)
+      ..lineTo(fr, fb)
+      ..close();
+    final roof = Path()
+      ..moveTo(fl, ft)
+      ..lineTo(fl + dx, ft + dy)
+      ..lineTo(fr + dx, ft + dy)
+      ..lineTo(fr, ft)
+      ..close();
+    canvas.drawRect(front, Paint()..color = const Color(0xFF111111));
+    canvas.drawPath(side, Paint()..color = const Color(0xFF242424));
+    canvas.drawPath(roof, Paint()..color = const Color(0xFF3A3A3A));
+
+    // The kiswa's band, a third of the way down, round both faces.
+    const by = 17.0, bh = 3.2;
+    final glint = (t * 1.6) - 0.3; // sweeps left to right, then rests
+    final band = LinearGradient(
+      colors: const [_goldDeep, _gold, Color(0xFFFFF2B8), _gold, _goldDeep],
+      stops: [
+        0,
+        (glint - 0.18).clamp(0.0, 1.0),
+        glint.clamp(0.0, 1.0),
+        (glint + 0.18).clamp(0.0, 1.0),
+        1,
+      ],
+    ).createShader(const Rect.fromLTRB(fl, 0, fr + dx, 1));
+    final bandPaint = Paint()..shader = band;
+    canvas.drawRect(const Rect.fromLTRB(fl, by, fr, by + bh), bandPaint);
+    final sideBand = Path()
+      ..moveTo(fr, by)
+      ..lineTo(fr + dx, by + dy)
+      ..lineTo(fr + dx, by + dy + bh)
+      ..lineTo(fr, by + bh)
+      ..close();
+    canvas.drawPath(sideBand, bandPaint);
+
+    // The door: raised off the ground, near the corner of the face.
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        const Rect.fromLTRB(17.5, 23, 22.5, 31),
+        const Radius.circular(0.8),
+      ),
+      Paint()..color = _gold,
+    );
+    canvas.drawLine(
+      const Offset(20, 23.6),
+      const Offset(20, 30.4),
+      Paint()
+        ..color = _goldDeep
+        ..strokeWidth = 0.6,
+    );
+
+    // A fine gold edge on the near corner so the cube reads on a dark dial.
+    canvas.drawLine(
+      const Offset(fr, ft),
+      const Offset(fr, fb),
+      Paint()
+        ..color = _gold.withValues(alpha: 0.55)
+        ..strokeWidth = 0.7,
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_KaabaPainter old) => old.t != t || old.aligned != aligned;
 }
 
 class _NeedleShaftPainter extends CustomPainter {
@@ -573,10 +727,14 @@ class _DialPainter extends CustomPainter {
       final rad = deg * math.pi / 180;
       final outer = radius - 6;
       final inner = outer - (major ? 14 : 7);
-      final p1 = Offset(center.dx + outer * math.sin(rad),
-          center.dy - outer * math.cos(rad));
-      final p2 = Offset(center.dx + inner * math.sin(rad),
-          center.dy - inner * math.cos(rad));
+      final p1 = Offset(
+        center.dx + outer * math.sin(rad),
+        center.dy - outer * math.cos(rad),
+      );
+      final p2 = Offset(
+        center.dx + inner * math.sin(rad),
+        center.dy - inner * math.cos(rad),
+      );
       final tick = Paint()
         ..strokeWidth = major ? 2 : 1
         ..color = accent.withValues(alpha: major ? 0.85 : 0.45);
@@ -601,8 +759,10 @@ class _PrayerAdjustmentsLink extends StatelessWidget {
       child: ListTile(
         leading: Icon(Icons.tune_rounded, color: goldText(context)),
         title: Text('prayer.adjustments'.tr()),
-        subtitle: Text('prayer.adjustments_hint'.tr(),
-            style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
+        subtitle: Text(
+          'prayer.adjustments_hint'.tr(),
+          style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
+        ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<void>(
@@ -624,13 +784,13 @@ class _AdhanSettingsLink extends StatelessWidget {
       child: ListTile(
         leading: Icon(Icons.campaign_outlined, color: goldText(context)),
         title: Text('prayer.adhan_settings'.tr()),
-        subtitle: Text('qibla.adhan_settings_hint'.tr(),
-            style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
+        subtitle: Text(
+          'qibla.adhan_settings_hint'.tr(),
+          style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
+        ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => const AdhanSettingsScreen(),
-          ),
+          MaterialPageRoute<void>(builder: (_) => const AdhanSettingsScreen()),
         ),
       ),
     );
