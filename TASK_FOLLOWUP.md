@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+**2026-10-07 20:40 Dubai - v3.81.0 PUBLISHED** (tag d278d817 == HEAD; v3.80.0 + tag deleted). Verified on emulator with the signed APK: About v3.81.0, support button, My Library. R7 watchdog re-enabled after publishing. NEXT: nothing pending from the owner; keep R7 + azkar voicing (139/302, next 2026-10-08 04:30) running; ship them together when both finish.
+
 **2026-10-07 20:25 Dubai** - al-Minshawi: old azan3 removed (85f075b6), replaced by archive.org mohamed-siddiq-el-minshawi-afghanistan, synced text 0.885/0 wrong, seen on emulator (023c4343). All 14 bundled adhans now follow their text (test enforces it). NOT released. NEXT: ask owner about release 3.81.0.
 
 **2026-10-07 19:40 Dubai** - committed+pushed, NOT released: «مكتبتي» shelves tab + reading reminders (fired on emulator) + Google Calendar link (unverified: no Google account on emulator) (16dcb7d6); meditation/lotus icons replaced app-wide; adhan text: azan13 + azan19 now synced, azan3 (al-Minshawi) still no text - named exception in test/adhan_timelines_test.dart (85fb14b4). R7 watchdog re-enabled 19:40 (GitHub returned 500 for ~15 min at 19:14; push recovered). NEXT: ask owner about release 3.81.0 (if GitHub fails: upload APK to R2, give link).
