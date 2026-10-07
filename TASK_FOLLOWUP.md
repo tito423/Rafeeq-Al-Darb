@@ -16,6 +16,9 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+**2026-10-07 17:15 Dubai - v3.80.0 PUBLISHED** (owner asked for 3.80; tag 46d28e26 == HEAD; v3.79.0 + tag deleted). Fixed before publishing, all seen on emulator-5554 with the signed APK: quiz AppBar title/arrow/status bar light on the night ground; More-screen icons one outlined style, duplicates removed, sync card gold chevron, About prayer/hajj icons distinct. New standing rule (owner): a flaw seen while verifying is FIXED before release, never reported after. R7 watchdog re-enabled 17:14. Azkar voice 139/302, next run 2026-10-08 04:30.
+NEXT: keep R7 + azkar running; when both complete, ship them in one release (owner asked). I'rab paused until after the 14th.
+
 **2026-10-07 15:10 Dubai - v3.79.0 PUBLISHED** (tag 348c185a == HEAD; https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.79.0 ; v3.78.0 + tag deleted). Seen on emulator-5554 with the signed APK: About v3.79.0, «ادعم التطبيق», quiz 58/111/116/115/100. R2 quiz/history_quiz.json = 500 (read back) + content-mirror quiz__history_quiz.json (200). Jump bar: NOT a code bug - the whole app was frozen at the time (bottom nav dead too, no ANR); after restart it jumps 551->541; freeze not reproduced, cause unknown. R7 watchdog re-enabled 15:08 (was at Muhammad_Jibreel p6 250/974). Azkar voice 139/302 clips, next run 2026-10-08 04:30. I'rab paused by owner until after the 14th. Seen but not fixed: quiz screen AppBar title is dark on the dark ground (barely readable).
 NEXT: keep R7 + azkar running; when azkar reach 302 and R7 completes, ship them in one release (owner asked). Nothing else pending from the owner.
 
