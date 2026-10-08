@@ -64,12 +64,19 @@ class ChromeFit extends StatelessWidget {
             tween: Tween(end: active && panel > 0 ? 1.0 : 0.0),
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOutCubic,
-            builder: (context, t, page) => Transform.translate(
-              offset: Offset(0, top * t),
-              child: Transform.scale(
-                scale: 1 - (1 - fit) * t,
-                alignment: Alignment.topCenter,
-                child: page,
+            // Clipped at the band's foot too: a page taller than the
+            // screen (landscape, where the scale stops at [fit]'s floor)
+            // would otherwise run on under the badge and the app's bar -
+            // seen on emulator-5554 sideways, the badge on a line of text.
+            builder: (context, t, page) => ClipRect(
+              clipper: _Above(bottom * t),
+              child: Transform.translate(
+                offset: Offset(0, top * t),
+                child: Transform.scale(
+                  scale: 1 - (1 - fit) * t,
+                  alignment: Alignment.topCenter,
+                  child: page,
+                ),
               ),
             ),
             child: child,
@@ -79,4 +86,17 @@ class ChromeFit extends StatelessWidget {
       child: child,
     );
   }
+}
+
+/// Everything but a strip of [bottom] pixels at the foot.
+class _Above extends CustomClipper<Rect> {
+  final double bottom;
+  const _Above(this.bottom);
+
+  @override
+  Rect getClip(Size size) =>
+      Rect.fromLTRB(0, 0, size.width, size.height - bottom);
+
+  @override
+  bool shouldReclip(_Above old) => old.bottom != bottom;
 }
