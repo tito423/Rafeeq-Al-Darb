@@ -16,6 +16,8 @@ runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
 
 ## Next step (exact)
 
+**2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
+
 **2026-10-08 20:25 Dubai - v3.85.0 PUBLISHED** (tag dde7e883 == HEAD; v3.84.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.85.0 , RafeeqAlDarb-v3.85.0.apk 315,990,448 B (206). Owner's screen recording: in full screen the controls covered the page's first line, the nav the last, the badge a line. Fix: ChromeFit (widgets/mushaf/chrome_fit.dart) scales the page into the band between the measured panel and the badge while the controls are up, and clips it above the badge (landscape). SEEN with the signed 3.85.0 APK: portrait paper + text, landscape - no line covered, badge in its own band. Emulator rotation restored to portrait (user-rotation free, user_rotation 0). Watchdog stopped for the publish, re-enabled, copy running. Nothing pending.
 
 **2026-10-08 19:30 Dubai - v3.84.0 PUBLISHED** (tag 7844422c == HEAD; v3.83.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.84.0 , RafeeqAlDarb-v3.84.0.apk 315,990,448 B (206). Owner asked: rename More «القرآن والعبادات» -> «العبادة والتعلّم» (7 locales); quick access third row of five (game, al-Durar, reminders page, focus picker, downloads) - NOT khatma, Home already has its card (owner). SEEN on emulator with the signed release APK (ur): 3 rows of 5, khatma card separate, each new tile opens its screen, map shows only leg 1 open (no ALL_OPEN in release), More group renamed, support button, versionName 3.84.0. Watchdog stopped for the publish, re-enabled, copy running. Emulator in URDU (its caravan prefs hold a leg-2 star from the check build - device-only leftover). Nothing pending.
@@ -1187,6 +1189,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-08 22:36 - v3.86.0 published: adhkar by six real voices, photo backgrounds
 - 2026-10-08 20:19 - v3.85.0 published: reader page makes room for the controls
 - 2026-10-08 19:26 - v3.84.0 published: caravan 20 legs, quick access row, More rename, recitation Home
 - 2026-10-08 18:36 - caravan 20 legs + rides seen on emulator; recitation Home seen; 3.84.0 awaiting owner

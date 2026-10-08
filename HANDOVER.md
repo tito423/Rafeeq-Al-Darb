@@ -2520,9 +2520,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-08 20:19 — IN PROGRESS — resume here**
+**2026-10-08 22:36 — IN PROGRESS — resume here**
 
-v3.85.0 published: reader page makes room for the controls
+v3.86.0 published: adhkar by six real voices, photo backgrounds
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
