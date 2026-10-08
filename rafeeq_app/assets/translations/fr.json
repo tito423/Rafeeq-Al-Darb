@@ -1281,7 +1281,9 @@
     "src_kids_muyassar": "Le sens de chaque phrase des histoires pour enfants est tiré d'al-Tafsir al-Muyassar",
     "src_kids_minshawi": "Les versets récités dans les histoires pour enfants, par le cheikh Muhammad Siddiq al-Minshawi (murattal)",
     "src_kids_tts": "La voix du narrateur des histoires pour enfants (une voix générée par IA)",
-    "src_kids_more": "Certains détails viennent des tafsirs d'Ibn Kathir et d'al-Tabari (Houd) et du hadith d'Ibn Abbas dans Sahih al-Boukhari tel que cité par Ibn Kathir (la Kaaba et Zamzam), tels qu'ils figurent dans la bibliothèque de l'application"
+    "src_kids_more": "Certains détails viennent des tafsirs d'Ibn Kathir et d'al-Tabari (Houd) et du hadith d'Ibn Abbas dans Sahih al-Boukhari tel que cité par Ibn Kathir (la Kaaba et Zamzam), tels qu'ils figurent dans la bibliothèque de l'application",
+    "src_adhkar_ih": "Adhkar complets du matin et du soir par Mishary Rashid Alafasy, lus depuis IslamHouse",
+    "src_adhkar_ia": "Adhkar complets du matin et du soir par Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim et Faisal Labban, tels que publiés sur Internet Archive"
   },
   "ruqyah": {
     "title": "Roqya",

@@ -1281,7 +1281,9 @@
     "src_kids_muyassar": "El sentido de cada frase de las historias infantiles se toma de al-Tafsir al-Muyassar",
     "src_kids_minshawi": "Los versículos recitados en las historias infantiles, por el jeque Muhammad Siddiq al-Minshawi (murattal)",
     "src_kids_tts": "La voz del narrador de las historias infantiles (una voz generada por IA)",
-    "src_kids_more": "Algunos detalles proceden de los tafsir de Ibn Kazir y al-Tabari (Hud) y del hadiz de Ibn Abbas en Sahih al-Bujari citado por Ibn Kazir (la Kaaba y Zamzam), tal como aparecen en la biblioteca de la app"
+    "src_kids_more": "Algunos detalles proceden de los tafsir de Ibn Kazir y al-Tabari (Hud) y del hadiz de Ibn Abbas en Sahih al-Bujari citado por Ibn Kazir (la Kaaba y Zamzam), tal como aparecen en la biblioteca de la app",
+    "src_adhkar_ih": "Adhkar completos de la mañana y de la tarde por Mishary Rashid Alafasy, reproducidos desde IslamHouse",
+    "src_adhkar_ia": "Adhkar completos de la mañana y de la tarde por Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim y Faisal Labban, tal como se publicaron en Internet Archive"
   },
   "ruqyah": {
     "title": "Ruqyah",

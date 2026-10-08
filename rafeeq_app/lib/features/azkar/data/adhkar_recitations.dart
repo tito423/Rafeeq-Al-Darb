@@ -79,7 +79,102 @@ String _voice(String file) =>
 
 const _source = 'https://github.com/tito423/Rafeeq-Al-Darb';
 
+String _r2(String file) =>
+    '${AppConfig.contentBaseUrl}/azkar/recitations/$file';
+
+const _ih =
+    'https://d1.islamhouse.com/data/ar/ih_sounds/chain_01/Mishari_Raashid/Azkar_AlSba7_w_AlMsa/';
+const _iaSeven = 'https://archive.org/details/azkar_alsabah_w_almsaa';
+const _iaSix =
+    'https://archive.org/details/AthkarAlsabahAbdulazizBi356856835685683356568';
+
+/// **2026-10-08** (owner: «حاول تدور على اذكار … مفصله اذكار الصباح واذكار
+/// المساء غير اللي هي متولده بالصوت», then «دوس»): real voices back, each
+/// morning and evening separate. Every file below was transcribed
+/// (scripts/verify_adhkar_recordings.py, faster-whisper small, its opening
+/// 8 and closing 2 minutes; report scripts/out/adhkar_verify.json) and kept
+/// only when it says the words of ITS time - «أصبحنا وأصبح الملك لله» in the
+/// morning, «أمسينا وأمسى الملك لله» in the evening - or announces itself
+/// («أذكار الصباح بصوت …»), and ends on a closing dhikr rather than cut off.
+/// Turned away: Hassan Saleh and Muhammad Jibreel (nothing told their two
+/// files apart), Yahya Hawwa (a 4:45 morning with no Ayat al-Kursi). The
+/// archive.org files are served from R2 (owner, 2026-10-02: archive.org is
+/// slow), same bytes, sizes checked after upload; al-Afasy streams from
+/// IslamHouse. Names are as the sources give them.
 final adhkarRecitations = <AdhkarRecitation>[
+  for (final (id, ar, en, m, e, url, page) in [
+    (
+      'alafasy',
+      'مشاري راشد العفاسي',
+      'Mishary Rashid Alafasy',
+      (33333722, 833),
+      (24109982, 602),
+      'ih',
+      'https://islamhouse.com/ar/audios/92368/',
+    ),
+    (
+      'fares_abbad',
+      'فارس عباد',
+      'Fares Abbad',
+      (19736031, 1233),
+      (14516557, 907),
+      'r2',
+      _iaSeven,
+    ),
+    (
+      'samir_albashiri',
+      'سمير البشيري',
+      'Samir al-Bashiri',
+      (9228119, 577),
+      (8640887, 540),
+      'r2',
+      _iaSeven,
+    ),
+    (
+      'rami_muhammad',
+      'رامي محمد',
+      'Rami Muhammad',
+      (15586532, 974),
+      (19665396, 1229),
+      'r2',
+      _iaSeven,
+    ),
+    (
+      'abdulaziz_bin_ibrahim',
+      'عبد العزيز بن إبراهيم',
+      'Abdulaziz bin Ibrahim',
+      (18882240, 1172),
+      (15442854, 957),
+      'r2',
+      _iaSix,
+    ),
+    (
+      'faisal_labban',
+      'فيصل لبان',
+      'Faisal Labban',
+      (7302418, 448),
+      (7638457, 469),
+      'r2',
+      _iaSix,
+    ),
+  ])
+    for (final (time, size) in [
+      (AdhkarTime.morning, m),
+      (AdhkarTime.evening, e),
+    ])
+      AdhkarRecitation(
+        id: '${id}_${time.name}',
+        reciterAr: ar,
+        reciterEn: en,
+        time: time,
+        url: url == 'ih'
+            ? '$_ih${time == AdhkarTime.morning ? 'ar_1434_Azkar_AlSba7' : 'ar_1434_Azkar_AlMsa'}.mp3'
+            : _r2('${id}_${time.name}.mp3'),
+        bytes: size.$1,
+        seconds: size.$2,
+        sourceName: url == 'ih' ? 'IslamHouse' : 'archive.org',
+        sourcePage: page,
+      ),
   AdhkarRecitation(
     id: 'rafeeq_morning_v1',
     reciterAr: 'الآيات بصوت العفاسي والأذكار بصوت Gemini',

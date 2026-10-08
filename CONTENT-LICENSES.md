@@ -1209,3 +1209,20 @@ How the rights question was handled (`scripts/library_phase3.py`):
   Sources screen.
 - **Not cleared with any publisher.** This rests on the public-domain status of
   the texts and the removal of the editors' work, on the owner's ruling above.
+
+**Adhkar, complete morning / evening by named voices (2026-10-08).** Back by
+the owner's request («غير اللي هي متولده بالصوت»), each file transcribed and
+kept only if it says the words of its own time (scripts/verify_adhkar_recordings.py,
+report scripts/out/adhkar_verify.json):
+- Mishary Alafasy — IslamHouse (islamhouse.com/ar/audios/92368/), 1434
+  edition, streamed from d1.islamhouse.com as before; no licence on the page,
+  IslamHouse's stated mission is free distribution.
+- Fares Abbad, Samir al-Bashiri, Rami Muhammad — archive.org item
+  `azkar_alsabah_w_almsaa` (uploader mfk4apps, 2020); Abdulaziz bin Ibrahim,
+  Faisal Labban — item `AthkarAlsabahAbdulazizBi356856835685683356568`
+  (2017). No licence stated on either item; names as the uploads give them
+  (Samir al-Bashiri's recording also says his name aloud). Hosted on R2
+  `azkar/recitations/<id>_<morning|evening>.mp3` under the owner's standing
+  decision of 2026-10-02 (archive.org is slow), credited on Sources.
+- Turned away after transcription: Hassan Saleh, Muhammad Jibreel (morning
+  and evening could not be told apart), Yahya Hawwa (incomplete morning).

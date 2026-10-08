@@ -1281,7 +1281,9 @@
     "src_kids_muyassar": "The meaning of every sentence in the kids' stories is taken from al-Tafsir al-Muyassar",
     "src_kids_minshawi": "The verses recited inside the kids' stories, by Sheikh Muhammad Siddiq al-Minshawi (murattal)",
     "src_kids_tts": "The narrator's voice in the kids' stories (an AI-generated voice)",
-    "src_kids_more": "Some story details come from the tafsirs of Ibn Kathir and al-Tabari (Hud), and from Ibn Abbas's hadith in Sahih al-Bukhari as Ibn Kathir quotes it (the Kaaba and Zamzam), as their text appears in the app's library"
+    "src_kids_more": "Some story details come from the tafsirs of Ibn Kathir and al-Tabari (Hud), and from Ibn Abbas's hadith in Sahih al-Bukhari as Ibn Kathir quotes it (the Kaaba and Zamzam), as their text appears in the app's library",
+    "src_adhkar_ih": "Complete morning and evening adhkar by Mishary Rashid Alafasy, played from IslamHouse",
+    "src_adhkar_ia": "Complete morning and evening adhkar by Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim and Faisal Labban, as uploaded to the Internet Archive"
   },
   "ruqyah": {
     "title": "Ruqyah",

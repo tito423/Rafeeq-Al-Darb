@@ -170,6 +170,19 @@ final sourceGroups = <(String, List<SourceEntry>)>[
         'https://www.hisnmuslim.com',
         'about.src_hisn_audio',
       ),
+      // Complete morning / evening adhkar by real voices (2026-10-08), each
+      // file transcribed and checked for its time before it was listed
+      // (adhkar_recitations.dart, scripts/verify_adhkar_recordings.py).
+      const SourceEntry(
+        'IslamHouse — مشاري العفاسي',
+        'https://islamhouse.com/ar/audios/92368/',
+        'about.src_adhkar_ih',
+      ),
+      const SourceEntry(
+        'Internet Archive — archive.org',
+        'https://archive.org/details/azkar_alsabah_w_almsaa',
+        'about.src_adhkar_ia',
+      ),
       // The morning / evening adhkar to listen to (2026-10-03, replacing the
       // 2026-09-30 IslamHouse / Internet Archive recordings): Hisn al-Muslim's
       // text voiced in the app - adhkar_recitations.dart.
