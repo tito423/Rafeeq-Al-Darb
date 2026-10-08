@@ -36,15 +36,16 @@
 /// not depend on what is behind it.
 library;
 
-
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 
+import '../../../../../core/widgets/measure_size.dart';
 import '../../../data/mushaf_theme.dart';
 // `hide TextDirection`: easy_localization re-exports intl, whose
 // TextDirection has no `.rtl` and shadows the one from dart:ui that Flutter
 // widgets actually take.
 import 'chrome_auto_hide.dart';
+import 'chrome_fit.dart' show chromePanelHeight;
 import 'page_overlay.dart' show PageNumberBadge, arabicPageNumber;
 
 /// How opaque the glass is over the page.
@@ -159,71 +160,77 @@ class MushafChrome extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(22),
-                    // No BackdropFilter: a blur reads the Qur'an page back
-                    // through an offscreen layer, the renderer-dependent step
-                    // that cost the owner part of an ayah (see `inkedSvg`).
-                    // The glass is simply more opaque instead.
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: glass,
-                        borderRadius: BorderRadius.circular(22),
-                        border: Border.all(
-                          color: mt.gold.withValues(alpha: 0.35),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.18),
-                            blurRadius: 18,
-                            offset: const Offset(0, 6),
+                  // Its height tells `ChromeFit` how far to lower the page.
+                  MeasureSize(
+                    onChange: (s) => chromePanelHeight.value = s.height,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(22),
+                      // No BackdropFilter: a blur reads the Qur'an page back
+                      // through an offscreen layer, the renderer-dependent step
+                      // that cost the owner part of an ayah (see `inkedSvg`).
+                      // The glass is simply more opaque instead.
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: glass,
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(
+                            color: mt.gold.withValues(alpha: 0.35),
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // The surah and juz ride INSIDE the panel in every
-                          // mode. They used to hang below it as two badges on
-                          // printings without a printed header, and there they
-                          // came down onto the first line of the page:
-                          // «ارفعهم لفوق شوية بحيث مش يغطوا على حاجة من نص
-                          // القرآن». One header line costs less than a row
-                          // of badges plus its gap.
-                          ...[
-                            _Header(
-                              mt: mt,
-                              surahName: surahName,
-                              juzNumber: juzNumber,
-                              pageNumber: pageNumber,
-                            ),
-                            Divider(
-                              height: 1,
-                              thickness: 1,
-                              color: onGlass.withValues(alpha: 0.10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.18),
+                              blurRadius: 18,
+                              offset: const Offset(0, 6),
                             ),
                           ],
-                          // The actions are `ToolbarAction`s, which colour
-                          // themselves from the ambient `ColorScheme`. Over the
-                          // glass that would be the app's scheme, not the
-                          // page's — black icons on a charcoal mushaf. This
-                          // hands them the page's ink instead.
-                          Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: Theme.of(context).colorScheme
-                                  .copyWith(
-                                    onSurface: onGlass,
-                                    onSurfaceVariant: onGlass.withValues(
-                                      alpha: 0.75,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // The surah and juz ride INSIDE the panel in every
+                            // mode. They used to hang below it as two badges on
+                            // printings without a printed header, and there they
+                            // came down onto the first line of the page:
+                            // «ارفعهم لفوق شوية بحيث مش يغطوا على حاجة من نص
+                            // القرآن». One header line costs less than a row
+                            // of badges plus its gap.
+                            ...[
+                              _Header(
+                                mt: mt,
+                                surahName: surahName,
+                                juzNumber: juzNumber,
+                                pageNumber: pageNumber,
+                              ),
+                              Divider(
+                                height: 1,
+                                thickness: 1,
+                                color: onGlass.withValues(alpha: 0.10),
+                              ),
+                            ],
+                            // The actions are `ToolbarAction`s, which colour
+                            // themselves from the ambient `ColorScheme`. Over the
+                            // glass that would be the app's scheme, not the
+                            // page's — black icons on a charcoal mushaf. This
+                            // hands them the page's ink instead.
+                            Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: Theme.of(context).colorScheme
+                                    .copyWith(
+                                      onSurface: onGlass,
+                                      onSurfaceVariant: onGlass.withValues(
+                                        alpha: 0.75,
+                                      ),
                                     ),
-                                  ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 2,
+                                ),
+                                child: actions,
+                              ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: actions,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

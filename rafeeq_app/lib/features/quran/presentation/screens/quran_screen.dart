@@ -34,6 +34,7 @@ import '../widgets/ayah_sciences_sheet.dart';
 ///  • Image mode: the authentic KFQC mushaf pages as vector art, cached on
 ///    device, with the real ayah polygons layered on top for tap/highlight.
 import '../widgets/mushaf/auto_scroll_speed_bar.dart';
+import '../widgets/mushaf/chrome_fit.dart';
 import '../widgets/mushaf/continuous_mushaf_view.dart';
 import '../widgets/mushaf/fast_page_scroll_bar.dart';
 import '../widgets/mushaf/follows_recitation_note.dart';
@@ -846,7 +847,11 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                             : bars.bottom + 6)
                         : (isLandscape ? 34 : 0),
                   ),
-                  child: _buildViewer(data, edition, textLayout),
+                  child: ChromeFit(
+                    active: _pageFillScreen && _chromeVisible,
+                    badge: !(edition?.printedHeader ?? false),
+                    child: _buildViewer(data, edition, textLayout),
+                  ),
                 ),
                 // NORMAL MODE ONLY: in full screen `MushafChrome` carries
                 // surah + juz + page with the controls, and leaving these
