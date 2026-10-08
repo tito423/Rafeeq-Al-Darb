@@ -142,9 +142,8 @@ class HeroSurface {
       (isDark ? _darkAccents : _lightAccents)[base.toARGB32()] ?? base;
 
   /// A filled chip's ground for [base], and the colour of text on it.
-  Color chipFill(Color base) => isDark
-      ? base
-      : Color.lerp(base, const Color(0xFFFFFFFF), 0.10)!;
+  Color chipFill(Color base) =>
+      isDark ? base : Color.lerp(base, const Color(0xFFFFFFFF), 0.10)!;
 
   /// Text on a chip filled with [chipFill] — white on both grounds, since a
   /// filled chip is a saturated colour either way.

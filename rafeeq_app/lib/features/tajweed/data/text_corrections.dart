@@ -54,27 +54,48 @@ const tajweedTextCorrections = <String, List<TextCorrection>>{
   'tuhfat_al_atfal': [
     TextCorrection('أَحْكَامُ َالمِيمِ', 'أَحْكَامُ المِيمِ', _strayMark),
     TextCorrection('أَحْكَامُ َالمَدِّ', 'أَحْكَامُ المَدِّ', _strayMark),
-    TextCorrection('الْمِيهِىِّ', 'الْمِيهِيِّ',
-        'a kasra and a shadda on a dotless ى: the nisba ending is «يّ»'),
-    TextCorrection('قَد ضَّمَّنْتُهَا', 'قَدْ ضَمَّنْتُهَا',
-        'a shadda on ض after «قد» (no idgham of د into ض), and the '
-        'sukun of «قَدْ» missing; the verb is ضَمَّنْتُهَا'),
-    TextCorrection('مَخَفَّفٌ كُلٌّ', 'مُخَفَّفٌ كُلٌّ',
-        'passive participle مُفَعَّل, as the line before it has «مُخَفَّفٌ»'),
-    TextCorrection('نَدٌّ بَداَ', 'نَدٌّ بَدَا',
-        'the fatha sits on the alif instead of the dal'),
-    TextCorrection('الَّلازِمِ', 'اللَّازِمِ',
-        'the shadda belongs on the second lam, not the article\'s'),
-    TextCorrection('وَالتَّنْوينِ (١)', 'وَالتَّنْوِينِ (١)',
-        'the heading drops the kasra the verse under it has'),
+    TextCorrection(
+      'الْمِيهِىِّ',
+      'الْمِيهِيِّ',
+      'a kasra and a shadda on a dotless ى: the nisba ending is «يّ»',
+    ),
+    TextCorrection(
+      'قَد ضَّمَّنْتُهَا',
+      'قَدْ ضَمَّنْتُهَا',
+      'a shadda on ض after «قد» (no idgham of د into ض), and the '
+          'sukun of «قَدْ» missing; the verb is ضَمَّنْتُهَا',
+    ),
+    TextCorrection(
+      'مَخَفَّفٌ كُلٌّ',
+      'مُخَفَّفٌ كُلٌّ',
+      'passive participle مُفَعَّل, as the line before it has «مُخَفَّفٌ»',
+    ),
+    TextCorrection(
+      'نَدٌّ بَداَ',
+      'نَدٌّ بَدَا',
+      'the fatha sits on the alif instead of the dal',
+    ),
+    TextCorrection(
+      'الَّلازِمِ',
+      'اللَّازِمِ',
+      'the shadda belongs on the second lam, not the article\'s',
+    ),
+    TextCorrection(
+      'وَالتَّنْوينِ (١)',
+      'وَالتَّنْوِينِ (١)',
+      'the heading drops the kasra the verse under it has',
+    ),
     TextCorrection('يعنى', 'يعني', _dotlessYa, count: 12),
     TextCorrection('وهى ', 'وهي ', _dotlessYa, count: 3),
     TextCorrection('أصلى', 'أصلي', _dotlessYa),
     TextCorrection('كلمى', 'كلمي', _dotlessYa, count: 2),
     TextCorrection('(حى طهر)', '(حي طهر)', _dotlessYa),
-    TextCorrection('الاقلاب', 'الإقلاب',
-        'hamzat al-qat\' of the masdar إقلاب, as the verses write it',
-        count: 2),
+    TextCorrection(
+      'الاقلاب',
+      'الإقلاب',
+      'hamzat al-qat\' of the masdar إقلاب, as the verses write it',
+      count: 2,
+    ),
   ],
   'fath_rabb_al_bariyyah_sharh_al_jazariyyah': [
     TextCorrection('مُقَدَِّمَهْ', 'مُقَدِّمَهْ', '$_critical (v. 4)'),
@@ -88,12 +109,22 @@ const tajweedTextCorrections = <String, List<TextCorrection>>{
     TextCorrection('حَرَامٌٍ غَيْرُِ', 'حَرَامٌ غَيْرُ', '$_critical (v. 78)'),
     TextCorrection('عِِمْرَانَ', 'عِمْرَانَ', '$_critical (v. 96)', count: 2),
     TextCorrection('وَاكْْسِرْهُ', 'وَاكْسِرْهُ', '$_critical (v. 102)'),
-    TextCorrection('غَيْرَِ اللاَّمِ', 'غَيْرِ اللاَّمِ', '$_critical (v. 102)'),
-    TextCorrection('بُِيونُسَ', 'بِيُونُسَ',
-        'the damma of يُونُس typed on the preposition ب'),
+    TextCorrection(
+      'غَيْرَِ اللاَّمِ',
+      'غَيْرِ اللاَّمِ',
+      '$_critical (v. 102)',
+    ),
+    TextCorrection(
+      'بُِيونُسَ',
+      'بِيُونُسَ',
+      'the damma of يُونُس typed on the preposition ب',
+    ),
     TextCorrection('إذا: ً الضاد', 'إذا: الضاد', _strayMark),
-    TextCorrection('رحيم ٍ', 'رحيمٍ',
-        'a space between the word and its tanween (the example is رحيمٍ)'),
+    TextCorrection(
+      'رحيم ٍ',
+      'رحيمٍ',
+      'a space between the word and its tanween (the example is رحيمٍ)',
+    ),
   ],
 };
 

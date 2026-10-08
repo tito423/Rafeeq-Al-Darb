@@ -39,18 +39,18 @@ class MiqatToday {
   });
 
   static MiqatToday fromJson(Map<String, dynamic> j) => MiqatToday(
-        name: j['name'] as String,
-        today: j['today'] as String?,
-        text: j['text'] as String,
-        tr: {
-          for (final e in ((j['t'] as Map<String, dynamic>?) ?? {}).entries)
-            e.key: (
-              name: (e.value as Map)['name'] as String,
-              today: (e.value as Map)['today'] as String?,
-              text: (e.value as Map)['text'] as String,
-            ),
-        },
-      );
+    name: j['name'] as String,
+    today: j['today'] as String?,
+    text: j['text'] as String,
+    tr: {
+      for (final e in ((j['t'] as Map<String, dynamic>?) ?? {}).entries)
+        e.key: (
+          name: (e.value as Map)['name'] as String,
+          today: (e.value as Map)['today'] as String?,
+          text: (e.value as Map)['text'] as String,
+        ),
+    },
+  );
 }
 
 class MawaqitToday {
@@ -62,14 +62,10 @@ class MawaqitToday {
   static MawaqitToday parse(String raw) {
     final j = jsonDecode(raw) as Map<String, dynamic>;
     final src = j['source'] as Map<String, dynamic>;
-    return MawaqitToday(
-      src['name'] as String,
-      src['url'] as String,
-      [
-        for (final m in j['mawaqit'] as List)
-          MiqatToday.fromJson(m as Map<String, dynamic>),
-      ],
-    );
+    return MawaqitToday(src['name'] as String, src['url'] as String, [
+      for (final m in j['mawaqit'] as List)
+        MiqatToday.fromJson(m as Map<String, dynamic>),
+    ]);
   }
 }
 
@@ -125,64 +121,66 @@ class MawaqitTodayCard extends StatelessWidget {
               ),
               for (final m in data.mawaqit)
                 for (final t in [m.tr[lang]]) ...[
-                const Divider(height: 18),
-                Wrap(
-                  spacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    if (t == null)
-                      ArabicText(
-                        m.name,
-                        style: TextStyle(
-                          fontSize: 15 * scale,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      )
-                    else
-                      Text(
-                        t.name,
-                        style: TextStyle(
-                          fontSize: 15 * scale,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    if ((t?.today ?? m.today) != null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.gold.withValues(alpha: 0.18),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          'hajj.mawaqit_today_name'.tr(args: [t?.today ?? m.today!]),
+                  const Divider(height: 18),
+                  Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      if (t == null)
+                        ArabicText(
+                          m.name,
                           style: TextStyle(
-                            fontSize: 12.5 * scale,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 15 * scale,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        )
+                      else
+                        Text(
+                          t.name,
+                          style: TextStyle(
+                            fontSize: 15 * scale,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                if (t != null) ...[
-                  Text(
-                    localizeDigits(t.text, lang),
-                    style: TextStyle(fontSize: 14 * scale, height: 1.6),
+                      if ((t?.today ?? m.today) != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.gold.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            'hajj.mawaqit_today_name'.tr(
+                              args: [t?.today ?? m.today!],
+                            ),
+                            style: TextStyle(
+                              fontSize: 12.5 * scale,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 4),
-                ],
-                ArabicText(
-                  localizeDigits(m.text, 'ar'),
-                  style: TextStyle(
-                    fontSize: (t == null ? 14 : 12.5) * scale,
-                    height: 1.7,
-                    color: t == null ? null : scheme.onSurfaceVariant,
+                  if (t != null) ...[
+                    Text(
+                      localizeDigits(t.text, lang),
+                      style: TextStyle(fontSize: 14 * scale, height: 1.6),
+                    ),
+                    const SizedBox(height: 4),
+                  ],
+                  ArabicText(
+                    localizeDigits(m.text, 'ar'),
+                    style: TextStyle(
+                      fontSize: (t == null ? 14 : 12.5) * scale,
+                      height: 1.7,
+                      color: t == null ? null : scheme.onSurfaceVariant,
+                    ),
                   ),
-                ),
-              ],
+                ],
               // No citation line under the card (the owner, 2026-09-23): the
               // note above names the ministry, and the Sources screen links it.
             ],

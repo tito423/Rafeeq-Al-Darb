@@ -95,10 +95,7 @@ class ListenCardState extends ConsumerState<ListenCard>
     final repo = await ref.read(quranRepositoryProvider.future);
     // The mujawwad reading on purpose: a murattal one is correct but does
     // not let you hear a ghunnah being held.
-    await AyahAudioService.instance.play(
-      ayah,
-      repo,
-    );
+    await AyahAudioService.instance.play(ayah, repo);
   }
 
   @override
@@ -116,8 +113,9 @@ class ListenCardState extends ConsumerState<ListenCard>
         ),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-            color: AppColors.gold.withValues(alpha: _playing ? 0.8 : 0.35),
-            width: _playing ? 1.6 : 1),
+          color: AppColors.gold.withValues(alpha: _playing ? 0.8 : 0.35),
+          width: _playing ? 1.6 : 1,
+        ),
         boxShadow: _playing
             ? [
                 BoxShadow(
@@ -138,7 +136,9 @@ class ListenCardState extends ConsumerState<ListenCard>
                 child: Text(
                   widget.example.listenKey.tr(),
                   style: const TextStyle(
-                      fontSize: 12.5, fontWeight: FontWeight.w700),
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -160,40 +160,45 @@ class ListenCardState extends ConsumerState<ListenCard>
               // The words the rule happens in, glowing in time while heard.
               // A course's example ayah has none to single out: the ayah
               // above is the example.
-              if (widget.example.phrase.isNotEmpty) AnimatedBuilder(
-                animation: _beat,
-                builder: (context, child) => Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.gold
-                        .withValues(alpha: _playing ? 0.08 + 0.14 * _beat.value : 0),
-                    boxShadow: _playing
-                        ? [
-                            BoxShadow(
-                              color: AppColors.gold
-                                  .withValues(alpha: 0.35 * _beat.value),
-                              blurRadius: 12,
-                            ),
-                          ]
-                        : const [],
+              if (widget.example.phrase.isNotEmpty)
+                AnimatedBuilder(
+                  animation: _beat,
+                  builder: (context, child) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.gold.withValues(
+                        alpha: _playing ? 0.08 + 0.14 * _beat.value : 0,
+                      ),
+                      boxShadow: _playing
+                          ? [
+                              BoxShadow(
+                                color: AppColors.gold.withValues(
+                                  alpha: 0.35 * _beat.value,
+                                ),
+                                blurRadius: 12,
+                              ),
+                            ]
+                          : const [],
+                    ),
+                    child: Transform.scale(
+                      scale: _playing ? 1 + 0.06 * _beat.value : 1,
+                      child: child,
+                    ),
                   ),
-                  child: Transform.scale(
-                    scale: _playing ? 1 + 0.06 * _beat.value : 1,
-                    child: child,
+                  child: Text(
+                    '﴿${widget.example.phrase}﴾',
+                    style: TextStyle(
+                      fontFamily: 'AmiriQuran',
+                      fontSize: 15,
+                      color: goldText(context),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-                child: Text(
-                  '﴿${widget.example.phrase}﴾',
-                  style: TextStyle(
-                    fontFamily: 'AmiriQuran',
-                    fontSize: 15,
-                    color: goldText(context),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
               const Spacer(),
               FilledButton.icon(
                 onPressed: ayah == null ? null : _toggle,
@@ -203,11 +208,12 @@ class ListenCardState extends ConsumerState<ListenCard>
                   visualDensity: VisualDensity.compact,
                 ),
                 icon: Icon(
-                    _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
-                    size: 18),
-                label: Text(_playing
-                    ? 'tajweed.stop'.tr()
-                    : 'tajweed.listen'.tr()),
+                  _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
+                  size: 18,
+                ),
+                label: Text(
+                  _playing ? 'tajweed.stop'.tr() : 'tajweed.listen'.tr(),
+                ),
               ),
             ],
           ),

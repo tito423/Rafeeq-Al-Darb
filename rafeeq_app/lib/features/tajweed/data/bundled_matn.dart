@@ -12,7 +12,7 @@ import 'text_corrections.dart';
 Future<BookText> bundledMatn(String id) async {
   final d = await rootBundle.load('assets/data/builtin_books/$id.json');
   return correctedBookText(
-      id,
-      BookText.fromBytes(
-          d.buffer.asUint8List(d.offsetInBytes, d.lengthInBytes)));
+    id,
+    BookText.fromBytes(d.buffer.asUint8List(d.offsetInBytes, d.lengthInBytes)),
+  );
 }

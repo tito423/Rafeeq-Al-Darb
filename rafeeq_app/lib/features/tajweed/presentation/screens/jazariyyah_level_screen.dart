@@ -47,7 +47,9 @@ class JazariyyahProgress extends StateNotifier<Set<String>> {
 }
 
 final jazariyyahProgressProvider =
-    StateNotifierProvider<JazariyyahProgress, Set<String>>((ref) => JazariyyahProgress());
+    StateNotifierProvider<JazariyyahProgress, Set<String>>(
+      (ref) => JazariyyahProgress(),
+    );
 
 /// The book, downloaded on first use and then read from disk — the same
 /// contract `tuhfaBookProvider` has, including why the error is logged rather
@@ -91,8 +93,10 @@ class JazariyyahLevelScreen extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('tajweed.needs_download'.tr(),
-                    textAlign: TextAlign.center),
+                Text(
+                  'tajweed.needs_download'.tr(),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
                   onPressed: () => ref.invalidate(jazariyyahBookProvider),
@@ -111,7 +115,9 @@ class JazariyyahLevelScreen extends ConsumerWidget {
               return _Header(
                 // Only ticks that still belong to a lesson, so a renamed
                 // section can never make this read «31 من 30».
-                done: jazariyyahLessons.where((l) => done.contains(l.title)).length,
+                done: jazariyyahLessons
+                    .where((l) => done.contains(l.title))
+                    .length,
                 total: jazariyyahLessons.length,
                 theme: theme,
                 locale: locale,
@@ -153,13 +159,19 @@ class _Header extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('tajweed.level_two_sub'.tr(),
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(
+            'tajweed.level_two_sub'.tr(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 10),
-          Text('tajweed.level_two_source'.tr(),
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(
+            'tajweed.level_two_source'.tr(),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
@@ -170,10 +182,12 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'tajweed.progress'.tr(namedArgs: {
-              'done': localizeDigits('$done', locale),
-              'total': localizeDigits('$total', locale),
-            }),
+            'tajweed.progress'.tr(
+              namedArgs: {
+                'done': localizeDigits('$done', locale),
+                'total': localizeDigits('$total', locale),
+              },
+            ),
             style: theme.textTheme.bodySmall,
           ),
         ],
@@ -231,11 +245,17 @@ class _LessonTile extends ConsumerWidget {
 
     final pages = lesson.printedFrom == lesson.printedTo
         ? 'makharij.page'.tr(
-            namedArgs: {'page': localizeDigits('${lesson.printedFrom}', locale)})
-        : 'makharij.page'.tr(namedArgs: {
-            'page': '${localizeDigits('${lesson.printedFrom}', locale)}'
-                '–${localizeDigits('${lesson.printedTo}', locale)}'
-          });
+            namedArgs: {
+              'page': localizeDigits('${lesson.printedFrom}', locale),
+            },
+          )
+        : 'makharij.page'.tr(
+            namedArgs: {
+              'page':
+                  '${localizeDigits('${lesson.printedFrom}', locale)}'
+                  '–${localizeDigits('${lesson.printedTo}', locale)}',
+            },
+          );
 
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
@@ -243,26 +263,26 @@ class _LessonTile extends ConsumerWidget {
         builder: (controller, onExpansionChanged) => ExpansionTile(
           controller: controller,
           onExpansionChanged: onExpansionChanged,
-        shape: const Border(),
-        collapsedShape: const Border(),
-        leading: done
-            ? CircleAvatar(
-                backgroundColor: scheme.primary,
-                child: Icon(Icons.check, color: scheme.onPrimary),
-              )
-            : CircleAvatar(
-                backgroundColor: scheme.surfaceContainerHighest,
-                child: Text(localizeDigits('${index + 1}', locale)),
-              ),
-        title: Text(lesson.title, style: theme.textTheme.titleMedium),
-        subtitle: Text(pages, style: theme.textTheme.bodySmall),
-        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        children: [
-          for (final p in body)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: switch (p.kind) {
-                'aya' => Text(
+          shape: const Border(),
+          collapsedShape: const Border(),
+          leading: done
+              ? CircleAvatar(
+                  backgroundColor: scheme.primary,
+                  child: Icon(Icons.check, color: scheme.onPrimary),
+                )
+              : CircleAvatar(
+                  backgroundColor: scheme.surfaceContainerHighest,
+                  child: Text(localizeDigits('${index + 1}', locale)),
+                ),
+          title: Text(lesson.title, style: theme.textTheme.titleMedium),
+          subtitle: Text(pages, style: theme.textTheme.bodySmall),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          children: [
+            for (final p in body)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: switch (p.kind) {
+                  'aya' => Text(
                     p.text,
                     textAlign: TextAlign.justify,
                     style: theme.textTheme.bodyLarge?.copyWith(
@@ -271,42 +291,47 @@ class _LessonTile extends ConsumerWidget {
                       color: scheme.primary,
                     ),
                   ),
-                'head' => LessonProse(p.text,
-                    color: scheme.primary, fontWeight: FontWeight.w700),
-                _ => verseHalves(p.text) != null
-                    ? LessonVerse(p.text)
-                    : LessonProse(p.text),
-              },
-            ),
-          // «الجزرية دي محتاجة شرح»: the verses above, then their شرح under
-          // its own fold, so the poem stays the lesson and the explanation is
-          // one tap away rather than in between its lines.
-          if (index < jazariyyahSharhRanges.length)
-            _SharhSection(range: jazariyyahSharhRanges[index]),
-          // «اسمع الحكم في آية». One chapter can hold several rules here —
-          // الجزرية puts izhar, idgham, iqlab, ikhfa and the sakin mim in a
-          // single باب — so this is a list, not one card.
-          for (final e in jazariyyahExamples[lesson.title] ?? const [])
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: ListenCard(example: e),
-            ),
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TextButton.icon(
-              onPressed: () =>
-                  ref.read(jazariyyahProgressProvider.notifier).toggle(lesson.title),
-              icon: Icon(
-                done ? Icons.check_circle : Icons.circle_outlined,
-                color: scheme.primary,
+                  'head' => LessonProse(
+                    p.text,
+                    color: scheme.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  _ =>
+                    verseHalves(p.text) != null
+                        ? LessonVerse(p.text)
+                        : LessonProse(p.text),
+                },
               ),
-              label: Text(
-                done ? 'tajweed.mark_undone'.tr() : 'tajweed.mark_done'.tr(),
+            // «الجزرية دي محتاجة شرح»: the verses above, then their شرح under
+            // its own fold, so the poem stays the lesson and the explanation is
+            // one tap away rather than in between its lines.
+            if (index < jazariyyahSharhRanges.length)
+              _SharhSection(range: jazariyyahSharhRanges[index]),
+            // «اسمع الحكم في آية». One chapter can hold several rules here —
+            // الجزرية puts izhar, idgham, iqlab, ikhfa and the sakin mim in a
+            // single باب — so this is a list, not one card.
+            for (final e in jazariyyahExamples[lesson.title] ?? const [])
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: ListenCard(example: e),
+              ),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                onPressed: () => ref
+                    .read(jazariyyahProgressProvider.notifier)
+                    .toggle(lesson.title),
+                icon: Icon(
+                  done ? Icons.check_circle : Icons.circle_outlined,
+                  color: scheme.primary,
+                ),
+                label: Text(
+                  done ? 'tajweed.mark_undone'.tr() : 'tajweed.mark_done'.tr(),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -353,8 +378,9 @@ class _SharhSection extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           'tajweed.sharh_title'.tr(),
-                          style: theme.textTheme.titleSmall
-                              ?.copyWith(color: goldText(context)),
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: goldText(context),
+                          ),
                         ),
                       ),
                       Icon(
@@ -376,8 +402,9 @@ class _SharhSection extends ConsumerWidget {
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Text(
                             'tajweed.sharh_shared'.tr(),
-                            style: theme.textTheme.bodySmall
-                                ?.copyWith(color: scheme.onSurfaceVariant),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
                       for (final p in paras)
@@ -386,22 +413,22 @@ class _SharhSection extends ConsumerWidget {
                           child: isJazariyyahVerse(p.text)
                               ? LessonVerse(p.text, color: goldText(context))
                               : p.kind == 'aya'
-                                  ? Text(
-                                      p.text,
-                                      textAlign: TextAlign.justify,
-                                      style: theme.textTheme.bodyLarge
-                                          ?.copyWith(
-                                        fontFamily: 'AmiriQuran',
-                                        height: 1.9,
-                                        color: goldText(context),
-                                      ),
-                                    )
-                                  : LessonProse(p.text, fontSize: 16),
+                              ? Text(
+                                  p.text,
+                                  textAlign: TextAlign.justify,
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    fontFamily: 'AmiriQuran',
+                                    height: 1.9,
+                                    color: goldText(context),
+                                  ),
+                                )
+                              : LessonProse(p.text, fontSize: 16),
                         ),
                       Text(
                         'tajweed.sharh_source'.tr(),
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: scheme.onSurfaceVariant),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),

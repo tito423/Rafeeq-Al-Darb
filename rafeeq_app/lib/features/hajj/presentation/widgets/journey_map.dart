@@ -116,8 +116,8 @@ class _JourneyPainter extends CustomPainter {
     final walked = highlight == null
         ? t
         : ((highlight! + 0.5 * (1 + math.sin(t * 2 * math.pi))) /
-                (pts.length - 1))
-            .clamp(0.0, 1.0);
+                  (pts.length - 1))
+              .clamp(0.0, 1.0);
     canvas.drawPath(
       metric.extractPath(0, metric.length * walked),
       Paint()
@@ -131,8 +131,11 @@ class _JourneyPainter extends CustomPainter {
     for (var i = 0; i < pts.length; i++) {
       // Makkah is drawn once (start and end share the spot on the loop).
       if (i == pts.length - 1) continue;
-      final lit = highlight == null || highlight == i ||
-          (highlight == 5 && i == 0) || (highlight == 4 && i == 1);
+      final lit =
+          highlight == null ||
+          highlight == i ||
+          (highlight == 5 && i == 0) ||
+          (highlight == 4 && i == 1);
       canvas.drawCircle(
         pts[i],
         lit ? 11 : 8,

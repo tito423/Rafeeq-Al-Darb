@@ -73,10 +73,8 @@ abstract final class AppColors {
 /// Do NOT use it on a surface that is dark in every theme (the mushaf's own
 /// night pages, the splash, a hero panel with its own fixed dark gradient):
 /// there the flat [AppColors.gold] is correct and this would dull it.
-Color goldOn(ColorScheme scheme) => Color.alphaBlend(
-      AppColors.gold.withValues(alpha: 0.50),
-      scheme.onSurface,
-    );
+Color goldOn(ColorScheme scheme) =>
+    Color.alphaBlend(AppColors.gold.withValues(alpha: 0.50), scheme.onSurface);
 
 /// WCAG 2 contrast ratio between two colours (1 : 1 to 21 : 1).
 double contrastRatio(Color a, Color b) {

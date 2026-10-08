@@ -15,8 +15,9 @@ class HajjTextScale extends StateNotifier<double> {
   static const min = 0.8, max = 1.8;
 
   Future<void> step(int dir) async {
-    final next =
-        double.parse((state + dir * 0.1).clamp(min, max).toStringAsFixed(1));
+    final next = double.parse(
+      (state + dir * 0.1).clamp(min, max).toStringAsFixed(1),
+    );
     if (next == state) return;
     state = next;
     final p = await SharedPreferences.getInstance();
@@ -24,5 +25,6 @@ class HajjTextScale extends StateNotifier<double> {
   }
 }
 
-final hajjTextScaleProvider =
-    StateNotifierProvider<HajjTextScale, double>((ref) => HajjTextScale());
+final hajjTextScaleProvider = StateNotifierProvider<HajjTextScale, double>(
+  (ref) => HajjTextScale(),
+);

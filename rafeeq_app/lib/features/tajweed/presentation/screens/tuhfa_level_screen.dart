@@ -61,8 +61,9 @@ class TuhfaProgress extends StateNotifier<Set<String>> {
   }
 }
 
-final tuhfaProgressProvider =
-    StateNotifierProvider<TuhfaProgress, Set<String>>((ref) => TuhfaProgress());
+final tuhfaProgressProvider = StateNotifierProvider<TuhfaProgress, Set<String>>(
+  (ref) => TuhfaProgress(),
+);
 
 /// The Tuhfa text, downloaded on first use and then read from disk.
 /// The error is logged rather than only turned into «يلزم تنزيل نص الدروس»,
@@ -95,8 +96,10 @@ class TuhfaLevelScreen extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('tajweed.needs_download'.tr(),
-                    textAlign: TextAlign.center),
+                Text(
+                  'tajweed.needs_download'.tr(),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
                   onPressed: () => ref.invalidate(tuhfaBookProvider),
@@ -115,8 +118,7 @@ class TuhfaLevelScreen extends ConsumerWidget {
               return _Header(
                 // Only ticks that still belong to a lesson, so a renamed
                 // section can never make this read «11 من 10».
-                done:
-                    tuhfaLessons.where((l) => done.contains(l.title)).length,
+                done: tuhfaLessons.where((l) => done.contains(l.title)).length,
                 total: tuhfaLessons.length,
                 theme: theme,
               );
@@ -129,7 +131,9 @@ class TuhfaLevelScreen extends ConsumerWidget {
               builder: (context, v, child) => Opacity(
                 opacity: v,
                 child: Transform.translate(
-                    offset: Offset(0, (1 - v) * 22), child: child),
+                  offset: Offset(0, (1 - v) * 22),
+                  child: child,
+                ),
               ),
               child: _LessonTile(
                 index: index,
@@ -159,9 +163,12 @@ class _Header extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('tajweed.level_one_sub'.tr(),
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(
+            'tajweed.level_one_sub'.tr(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
@@ -174,16 +181,21 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            trn('tajweed.progress', namedArgs: {'done': '$done', 'total': '$total'}),
-            style: theme.textTheme.labelSmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            trn(
+              'tajweed.progress',
+              namedArgs: {'done': '$done', 'total': '$total'},
+            ),
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: 14),
           // §1.2: the source is named where the content is read.
           Text(
             '${'tajweed.source_label'.tr()}: $tuhfaSourceLabel',
-            style: theme.textTheme.labelSmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -213,40 +225,49 @@ class _LessonTile extends ConsumerWidget {
         builder: (controller, onExpansionChanged) => ExpansionTile(
           controller: controller,
           onExpansionChanged: onExpansionChanged,
-        shape: const Border(),
-        leading: CircleAvatar(
-          radius: 16,
-          backgroundColor: done
-              ? AppColors.gold.withValues(alpha: 0.9)
-              : scheme.surfaceContainerHighest,
-          child: done
-              ? const Icon(Icons.check, size: 17, color: Colors.black)
-              : Text(localizeDigits('${index + 1}', uiLanguageCode),
-                  style: TextStyle(
+          shape: const Border(),
+          leading: CircleAvatar(
+            radius: 16,
+            backgroundColor: done
+                ? AppColors.gold.withValues(alpha: 0.9)
+                : scheme.surfaceContainerHighest,
+            child: done
+                ? const Icon(Icons.check, size: 17, color: Colors.black)
+                : Text(
+                    localizeDigits('${index + 1}', uiLanguageCode),
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: scheme.onSurfaceVariant)),
-        ),
-        title: Text(lesson.title,
-            style: const TextStyle(fontWeight: FontWeight.w700)),
-        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-        children: [
-          _LessonBody(lesson: lesson, book: book),
-          const SizedBox(height: 10),
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TextButton.icon(
-              onPressed: () =>
-                  ref.read(tuhfaProgressProvider.notifier).toggle(lesson.title),
-              icon: Icon(done
-                  ? Icons.check_circle_rounded
-                  : Icons.radio_button_unchecked),
-              label: Text(
-                  done ? 'tajweed.mark_undone'.tr() : 'tajweed.mark_done'.tr()),
-            ),
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
           ),
-        ],
-      ),
+          title: Text(
+            lesson.title,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+          children: [
+            _LessonBody(lesson: lesson, book: book),
+            const SizedBox(height: 10),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                onPressed: () => ref
+                    .read(tuhfaProgressProvider.notifier)
+                    .toggle(lesson.title),
+                icon: Icon(
+                  done
+                      ? Icons.check_circle_rounded
+                      : Icons.radio_button_unchecked,
+                ),
+                label: Text(
+                  done ? 'tajweed.mark_undone'.tr() : 'tajweed.mark_done'.tr(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -263,8 +284,10 @@ class _LessonBody extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final paras = tuhfaLessonParas(lesson, book);
     if (paras.isEmpty) {
-      return Text('tajweed.needs_download'.tr(),
-          style: TextStyle(color: scheme.onSurfaceVariant));
+      return Text(
+        'tajweed.needs_download'.tr(),
+        style: TextStyle(color: scheme.onSurfaceVariant),
+      );
     }
 
     final children = <Widget>[];
@@ -274,36 +297,45 @@ class _LessonBody extends StatelessWidget {
       final startsNote = p.commentary && !inCommentary;
       inCommentary = p.commentary;
       if (startsNote) {
-        children.add(Padding(
-          padding: const EdgeInsets.only(top: 6, bottom: 6),
-          child: Row(
-            children: [
-              Expanded(
-                child: Divider(
-                    color: AppColors.gold.withValues(alpha: 0.35), height: 1),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'tajweed.commentary'.tr(),
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.gold.withValues(alpha: 0.9),
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(top: 6, bottom: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: AppColors.gold.withValues(alpha: 0.35),
+                    height: 1,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Text(
+                  'tajweed.commentary'.tr(),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.gold.withValues(alpha: 0.9),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+        );
       }
-      children.add(Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        // The Jamzuri's verse in two centred halves; الضباع's note as prose,
-        // a size down and quieter, so the reader sees which is which.
-        child: p.commentary
-            ? LessonProse(p.text,
-                fontSize: 16, color: scheme.onSurfaceVariant)
-            : LessonVerse(p.text),
-      ));
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          // The Jamzuri's verse in two centred halves; الضباع's note as prose,
+          // a size down and quieter, so the reader sees which is which.
+          child: p.commentary
+              ? LessonProse(
+                  p.text,
+                  fontSize: 16,
+                  color: scheme.onSurfaceVariant,
+                )
+              : LessonVerse(p.text),
+        ),
+      );
     }
 
     return Column(

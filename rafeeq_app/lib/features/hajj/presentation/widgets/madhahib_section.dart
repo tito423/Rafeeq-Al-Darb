@@ -111,10 +111,7 @@ class MadhahibSection extends ConsumerWidget {
       child: ExpansionTile(
         shape: const Border(),
         collapsedShape: const Border(),
-        leading: Icon(
-          Icons.account_balance_rounded,
-          color: goldText(context),
-        ),
+        leading: Icon(Icons.account_balance_rounded, color: goldText(context)),
         title: Text(
           'hajj.madhahib_title'.tr(),
           style: const TextStyle(fontWeight: FontWeight.w800),

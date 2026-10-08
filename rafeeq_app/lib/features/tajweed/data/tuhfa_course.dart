@@ -98,9 +98,7 @@ const tuhfaRenamedTitles = {
 };
 
 const tuhfaLessons = <TuhfaLesson>[
-  TuhfaLesson('مُقَدِّمَةٌ', [
-    TuhfaRange(2, 0, 2, 5),
-  ]),
+  TuhfaLesson('مُقَدِّمَةٌ', [TuhfaRange(2, 0, 2, 5)]),
   TuhfaLesson('أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوِينِ', [
     // Page 2 ends with its own footnote and page 3 opens with the next
     // verses. The two footnote paragraphs are الضباع's and are marked so;
@@ -146,7 +144,5 @@ const tuhfaLessons = <TuhfaLesson>[
     TuhfaRange(8, 0, 8, 5),
     TuhfaRange(8, 11, 8, 11, commentary: true),
   ]),
-  TuhfaLesson('الخاتمة', [
-    TuhfaRange(8, 6, 8, 10),
-  ]),
+  TuhfaLesson('الخاتمة', [TuhfaRange(8, 6, 8, 10)]),
 ];

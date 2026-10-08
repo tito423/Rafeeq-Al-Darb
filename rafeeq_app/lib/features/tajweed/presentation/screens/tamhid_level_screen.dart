@@ -42,7 +42,9 @@ class TamhidProgress extends StateNotifier<Set<String>> {
 }
 
 final tamhidProgressProvider =
-    StateNotifierProvider<TamhidProgress, Set<String>>((ref) => TamhidProgress());
+    StateNotifierProvider<TamhidProgress, Set<String>>(
+      (ref) => TamhidProgress(),
+    );
 
 /// The book, downloaded on first use and then read from disk — the same
 /// contract `tuhfaBookProvider` has, including why the error is logged rather
@@ -76,8 +78,10 @@ class TamhidLevelScreen extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('tajweed.needs_download'.tr(),
-                    textAlign: TextAlign.center),
+                Text(
+                  'tajweed.needs_download'.tr(),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
                   onPressed: () => ref.invalidate(tamhidBookProvider),
@@ -138,13 +142,19 @@ class _Header extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('tajweed.level_three_sub'.tr(),
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(
+            'tajweed.level_three_sub'.tr(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 10),
-          Text('tajweed.level_three_source'.tr(),
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(
+            'tajweed.level_three_source'.tr(),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
@@ -155,10 +165,12 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'tajweed.progress'.tr(namedArgs: {
-              'done': localizeDigits('$done', locale),
-              'total': localizeDigits('$total', locale),
-            }),
+            'tajweed.progress'.tr(
+              namedArgs: {
+                'done': localizeDigits('$done', locale),
+                'total': localizeDigits('$total', locale),
+              },
+            ),
             style: theme.textTheme.bodySmall,
           ),
         ],
@@ -216,11 +228,17 @@ class _LessonTile extends ConsumerWidget {
 
     final pages = lesson.printedFrom == lesson.printedTo
         ? 'makharij.page'.tr(
-            namedArgs: {'page': localizeDigits('${lesson.printedFrom}', locale)})
-        : 'makharij.page'.tr(namedArgs: {
-            'page': '${localizeDigits('${lesson.printedFrom}', locale)}'
-                '–${localizeDigits('${lesson.printedTo}', locale)}'
-          });
+            namedArgs: {
+              'page': localizeDigits('${lesson.printedFrom}', locale),
+            },
+          )
+        : 'makharij.page'.tr(
+            namedArgs: {
+              'page':
+                  '${localizeDigits('${lesson.printedFrom}', locale)}'
+                  '–${localizeDigits('${lesson.printedTo}', locale)}',
+            },
+          );
 
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
@@ -228,26 +246,26 @@ class _LessonTile extends ConsumerWidget {
         builder: (controller, onExpansionChanged) => ExpansionTile(
           controller: controller,
           onExpansionChanged: onExpansionChanged,
-        shape: const Border(),
-        collapsedShape: const Border(),
-        leading: done
-            ? CircleAvatar(
-                backgroundColor: scheme.primary,
-                child: Icon(Icons.check, color: scheme.onPrimary),
-              )
-            : CircleAvatar(
-                backgroundColor: scheme.surfaceContainerHighest,
-                child: Text(localizeDigits('${index + 1}', locale)),
-              ),
-        title: Text(lesson.title, style: theme.textTheme.titleMedium),
-        subtitle: Text(pages, style: theme.textTheme.bodySmall),
-        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        children: [
-          for (final p in body)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: switch (p.kind) {
-                'aya' => Text(
+          shape: const Border(),
+          collapsedShape: const Border(),
+          leading: done
+              ? CircleAvatar(
+                  backgroundColor: scheme.primary,
+                  child: Icon(Icons.check, color: scheme.onPrimary),
+                )
+              : CircleAvatar(
+                  backgroundColor: scheme.surfaceContainerHighest,
+                  child: Text(localizeDigits('${index + 1}', locale)),
+                ),
+          title: Text(lesson.title, style: theme.textTheme.titleMedium),
+          subtitle: Text(pages, style: theme.textTheme.bodySmall),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          children: [
+            for (final p in body)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: switch (p.kind) {
+                  'aya' => Text(
                     p.text,
                     textAlign: TextAlign.justify,
                     style: theme.textTheme.bodyLarge?.copyWith(
@@ -256,27 +274,31 @@ class _LessonTile extends ConsumerWidget {
                       color: scheme.primary,
                     ),
                   ),
-                'head' => LessonProse(p.text,
-                    color: scheme.primary, fontWeight: FontWeight.w700),
-                _ => LessonProse(p.text),
-              },
-            ),
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TextButton.icon(
-              onPressed: () =>
-                  ref.read(tamhidProgressProvider.notifier).toggle(lesson.title),
-              icon: Icon(
-                done ? Icons.check_circle : Icons.circle_outlined,
-                color: scheme.primary,
+                  'head' => LessonProse(
+                    p.text,
+                    color: scheme.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  _ => LessonProse(p.text),
+                },
               ),
-              label: Text(
-                done ? 'tajweed.mark_undone'.tr() : 'tajweed.mark_done'.tr(),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                onPressed: () => ref
+                    .read(tamhidProgressProvider.notifier)
+                    .toggle(lesson.title),
+                icon: Icon(
+                  done ? Icons.check_circle : Icons.circle_outlined,
+                  color: scheme.primary,
+                ),
+                label: Text(
+                  done ? 'tajweed.mark_undone'.tr() : 'tajweed.mark_done'.tr(),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }

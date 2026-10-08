@@ -18,18 +18,18 @@ enum ThemeVariant {
 
   /// easy_localization key for the label shown in Settings.
   String get labelKey => switch (this) {
-        ThemeVariant.system => 'settings.system',
-        ThemeVariant.light => 'settings.light',
-        ThemeVariant.dark => 'settings.dark',
-        ThemeVariant.rgb => 'settings.rgb',
-      };
+    ThemeVariant.system => 'settings.system',
+    ThemeVariant.light => 'settings.light',
+    ThemeVariant.dark => 'settings.dark',
+    ThemeVariant.rgb => 'settings.rgb',
+  };
 
   IconData get icon => switch (this) {
-        ThemeVariant.system => Icons.settings_brightness,
-        ThemeVariant.light => Icons.light_mode,
-        ThemeVariant.dark => Icons.dark_mode,
-        ThemeVariant.rgb => Icons.auto_awesome,
-      };
+    ThemeVariant.system => Icons.settings_brightness,
+    ThemeVariant.light => Icons.light_mode,
+    ThemeVariant.dark => Icons.dark_mode,
+    ThemeVariant.rgb => Icons.auto_awesome,
+  };
 }
 
 /// Persisted theme choice. `theme_variant_v2` supersedes the old
@@ -77,15 +77,14 @@ class ThemeController extends StateNotifier<ThemeVariant> {
 
 final themeControllerProvider =
     StateNotifierProvider<ThemeController, ThemeVariant>((ref) {
-  return ThemeController(ref.watch(sharedPrefsProvider));
-});
+      return ThemeController(ref.watch(sharedPrefsProvider));
+    });
 
 /// Whether the RGB theme's backdrop animates. Off = a still frame. Also
 /// forced off when the OS "reduce motion" accessibility setting is on
 /// (checked at the widget, via MediaQuery).
 class MotionEffectsController extends StateNotifier<bool> {
-  MotionEffectsController(this._prefs)
-      : super(_prefs.getBool(_key) ?? true);
+  MotionEffectsController(this._prefs) : super(_prefs.getBool(_key) ?? true);
 
   final SharedPreferences _prefs;
   static const _key = 'motion_effects_v1';
@@ -98,5 +97,5 @@ class MotionEffectsController extends StateNotifier<bool> {
 
 final motionEffectsProvider =
     StateNotifierProvider<MotionEffectsController, bool>((ref) {
-  return MotionEffectsController(ref.watch(sharedPrefsProvider));
-});
+      return MotionEffectsController(ref.watch(sharedPrefsProvider));
+    });

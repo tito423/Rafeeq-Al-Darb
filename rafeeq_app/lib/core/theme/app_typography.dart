@@ -15,13 +15,19 @@ abstract final class AppTypography {
   /// builds the themes (Settings > الخط). Cairo unless the reader chose.
   static String uiFamily = 'Cairo';
 
+  /// Bundled Noto Naskh Arabic (pubspec family `RafeeqHonorifics`): the
+  /// honorific signs «﵁ ﵂ ﵃» are in none of the interface faces, and
+  /// Android's own fallback did not draw them either (seen 2026-10-08 on
+  /// emulator-5554 in French: an empty box after every companion's name).
+  static const fallback = ['RafeeqHonorifics'];
+
   static TextStyle uiBold(double size, {Color? color}) => GoogleFonts.getFont(
     uiFamily,
     fontSize: size,
     fontWeight: FontWeight.w700,
     color: color,
     height: 1.35,
-  );
+  ).copyWith(fontFamilyFallback: fallback);
 
   static TextStyle uiSemibold(double size, {Color? color}) =>
       GoogleFonts.getFont(
@@ -30,7 +36,7 @@ abstract final class AppTypography {
         fontWeight: FontWeight.w600,
         color: color,
         height: 1.35,
-      );
+      ).copyWith(fontFamilyFallback: fallback);
 
   static TextStyle uiMedium(double size, {Color? color}) => GoogleFonts.getFont(
     uiFamily,
@@ -38,7 +44,7 @@ abstract final class AppTypography {
     fontWeight: FontWeight.w500,
     color: color,
     height: 1.4,
-  );
+  ).copyWith(fontFamilyFallback: fallback);
 
   static TextStyle uiRegular(double size, {Color? color}) =>
       GoogleFonts.getFont(
@@ -47,7 +53,7 @@ abstract final class AppTypography {
         fontWeight: FontWeight.w400,
         color: color,
         height: 1.45,
-      );
+      ).copyWith(fontFamilyFallback: fallback);
 
   /// Uthmani Quranic text style — used by the Mushaf text renderer.
   static TextStyle quran({
@@ -105,6 +111,6 @@ abstract final class AppTypography {
               labelSmall: TextStyle(color: Color(0xFF6B7C76)),
             ),
     );
-    return base;
+    return base.apply(fontFamilyFallback: fallback);
   }
 }

@@ -94,30 +94,31 @@ class CourseBook {
   });
 
   factory CourseBook.fromJson(Map<String, dynamic> j) => CourseBook(
-        id: j['id'] as String,
-        title: j['title'] as String,
-        author: j['author'] as String,
-        edition: j['edition'] as String,
-        shamelaUrl: j['shamelaUrl'] as String,
-        lessons: [
-          for (final l in (j['lessons'] as List).cast<Map<String, dynamic>>())
-            CourseLesson(l['title'] as String, [
-              for (final b in (l['blocks'] as List).cast<Map<String, dynamic>>())
-                CourseBlock(b['k'] as String, [
-                  for (final s in (b['s'] as List).cast<List<dynamic>>())
-                    CourseSpan(
-                      s[0] as String,
-                      s[1] as String,
-                      s.length > 2 ? s[2] as String : null,
-                    ),
-                ]),
+    id: j['id'] as String,
+    title: j['title'] as String,
+    author: j['author'] as String,
+    edition: j['edition'] as String,
+    shamelaUrl: j['shamelaUrl'] as String,
+    lessons: [
+      for (final l in (j['lessons'] as List).cast<Map<String, dynamic>>())
+        CourseLesson(l['title'] as String, [
+          for (final b in (l['blocks'] as List).cast<Map<String, dynamic>>())
+            CourseBlock(b['k'] as String, [
+              for (final s in (b['s'] as List).cast<List<dynamic>>())
+                CourseSpan(
+                  s[0] as String,
+                  s[1] as String,
+                  s.length > 2 ? s[2] as String : null,
+                ),
             ]),
-        ],
-      );
+        ]),
+    ],
+  );
 
   /// Parses the gzip bytes of `assets/data/tajweed/<id>.json.gz`.
   static CourseBook fromGzip(Uint8List bytes) => CourseBook.fromJson(
-      jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, dynamic>);
+    jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, dynamic>,
+  );
 }
 
 Future<CourseBook> loadCourseBook(String id) async {
@@ -127,8 +128,10 @@ Future<CourseBook> loadCourseBook(String id) async {
   return compute(CourseBook.fromGzip, bytes);
 }
 
-final courseBookProvider =
-    FutureProvider.family<CourseBook, String>((ref, id) async {
+final courseBookProvider = FutureProvider.family<CourseBook, String>((
+  ref,
+  id,
+) async {
   try {
     return await loadCourseBook(id);
   } catch (e, st) {
@@ -164,4 +167,5 @@ class CourseProgress extends StateNotifier<Set<String>> {
 
 final courseProgressProvider =
     StateNotifierProvider.family<CourseProgress, Set<String>, String>(
-        (ref, id) => CourseProgress(id));
+      (ref, id) => CourseProgress(id),
+    );

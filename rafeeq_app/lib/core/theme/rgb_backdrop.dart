@@ -290,10 +290,12 @@ class _RgbPainter extends CustomPainter {
     final moon = Path.combine(
       PathOperation.difference,
       Path()..addOval(Rect.fromCircle(center: c, radius: r)),
-      Path()
-        ..addOval(
-          Rect.fromCircle(center: c + Offset(r * 0.42, -r * 0.18), radius: r * 0.86),
+      Path()..addOval(
+        Rect.fromCircle(
+          center: c + Offset(r * 0.42, -r * 0.18),
+          radius: r * 0.86,
         ),
+      ),
     );
     canvas.drawPath(moon, Paint()..color = _gold.withValues(alpha: 0.42));
   }
@@ -326,12 +328,15 @@ class _RgbPainter extends CustomPainter {
       body.center,
       width * 1.6,
       Paint()
-        ..shader = RadialGradient(
-          colors: [
-            _gold.withValues(alpha: glowAlpha),
-            _gold.withValues(alpha: 0.0),
-          ],
-        ).createShader(Rect.fromCircle(center: body.center, radius: width * 1.6)),
+        ..shader =
+            RadialGradient(
+              colors: [
+                _gold.withValues(alpha: glowAlpha),
+                _gold.withValues(alpha: 0.0),
+              ],
+            ).createShader(
+              Rect.fromCircle(center: body.center, radius: width * 1.6),
+            ),
     );
     canvas.drawRRect(
       RRect.fromRectAndRadius(body, Radius.circular(width * 0.18)),
@@ -390,7 +395,10 @@ class _RgbPainter extends CustomPainter {
     for (var i = 0; i < points * 2; i++) {
       final rr = i.isEven ? radius : inner;
       final a = (math.pi / points) * i - math.pi / 2;
-      final p = Offset(centre.dx + rr * math.cos(a), centre.dy + rr * math.sin(a));
+      final p = Offset(
+        centre.dx + rr * math.cos(a),
+        centre.dy + rr * math.sin(a),
+      );
       if (i == 0) {
         path.moveTo(p.dx, p.dy);
       } else {

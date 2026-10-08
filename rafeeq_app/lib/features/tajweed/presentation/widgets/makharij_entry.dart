@@ -20,9 +20,9 @@ class MakharijEntry extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const MakharijScreen()),
-      ),
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (_) => const MakharijScreen())),
       child: Container(
         padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
         decoration: BoxDecoration(
@@ -32,8 +32,11 @@ class MakharijEntry extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.record_voice_over_rounded,
-                color: goldText(context), size: 26),
+            Icon(
+              Icons.record_voice_over_rounded,
+              color: goldText(context),
+              size: 26,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

@@ -72,9 +72,12 @@ class CourseBookScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(subtitleKey.tr(),
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: scheme.onSurfaceVariant)),
+                      Text(
+                        subtitleKey.tr(),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
@@ -85,29 +88,36 @@ class CourseBookScreen extends ConsumerWidget {
                           minHeight: 8,
                           backgroundColor: scheme.surfaceContainerHighest,
                           valueColor: const AlwaysStoppedAnimation<Color>(
-                              AppColors.gold),
+                            AppColors.gold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        trn('tajweed.progress', namedArgs: {
-                          'done': '$count',
-                          'total': '${b.lessons.length}',
-                        }),
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: scheme.onSurfaceVariant),
+                        trn(
+                          'tajweed.progress',
+                          namedArgs: {
+                            'done': '$count',
+                            'total': '${b.lessons.length}',
+                          },
+                        ),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
                       ),
                       const SizedBox(height: 14),
                       // §1.2: the source is named where the content is read.
                       ArabicText(
                         '${b.title} — ${b.author} — ${b.edition}',
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: scheme.onSurfaceVariant),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
                       ),
                       Text(
                         '${'tajweed.via_shamela'.tr()} · ${b.shamelaUrl}',
-                        style: theme.textTheme.labelSmall
-                            ?.copyWith(color: scheme.onSurfaceVariant),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -126,21 +136,28 @@ class CourseBookScreen extends ConsumerWidget {
                         : scheme.surfaceContainerHighest,
                     child: isDone
                         ? const Icon(Icons.check, size: 17, color: Colors.black)
-                        : Text(localizeDigits('${index + 1}', uiLanguageCode),
+                        : Text(
+                            localizeDigits('${index + 1}', uiLanguageCode),
                             style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                                color: scheme.onSurfaceVariant)),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
                   ),
-                  title: ArabicText(lesson.title,
-                      style: const TextStyle(fontWeight: FontWeight.w700)),
+                  title: ArabicText(
+                    lesson.title,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
                   // chevron_right: the left one mirrors in RTL (trap #7).
-                  trailing: Icon(Icons.chevron_right,
-                      color: scheme.onSurfaceVariant),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: scheme.onSurfaceVariant,
+                  ),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) => CourseLessonScreen(
-                          courseId: courseId, index: index),
+                      builder: (_) =>
+                          CourseLessonScreen(courseId: courseId, index: index),
                     ),
                   ),
                 ),
@@ -157,8 +174,11 @@ class CourseLessonScreen extends ConsumerWidget {
   final String courseId;
   final int index;
 
-  const CourseLessonScreen(
-      {super.key, required this.courseId, required this.index});
+  const CourseLessonScreen({
+    super.key,
+    required this.courseId,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -184,7 +204,8 @@ class CourseLessonScreen extends ConsumerWidget {
             return CourseBlockView(
               block: blocks[i],
               // A table's first row is its header.
-              firstRow: blocks[i].kind == 'row' &&
+              firstRow:
+                  blocks[i].kind == 'row' &&
                   (i == 0 || blocks[i - 1].kind != 'row'),
             );
           }
@@ -198,23 +219,30 @@ class CourseLessonScreen extends ConsumerWidget {
                   onPressed: () => ref
                       .read(courseProgressProvider(courseId).notifier)
                       .toggle(lesson.title),
-                  icon: Icon(isDone
-                      ? Icons.check_circle_rounded
-                      : Icons.radio_button_unchecked),
-                  label: Text(isDone
-                      ? 'tajweed.mark_undone'.tr()
-                      : 'tajweed.mark_done'.tr()),
+                  icon: Icon(
+                    isDone
+                        ? Icons.check_circle_rounded
+                        : Icons.radio_button_unchecked,
+                  ),
+                  label: Text(
+                    isDone
+                        ? 'tajweed.mark_undone'.tr()
+                        : 'tajweed.mark_done'.tr(),
+                  ),
                 ),
                 if (hasNext)
                   FilledButton.icon(
                     onPressed: () {
-                      final notifier =
-                          ref.read(courseProgressProvider(courseId).notifier);
+                      final notifier = ref.read(
+                        courseProgressProvider(courseId).notifier,
+                      );
                       if (!isDone) notifier.toggle(lesson.title);
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute<void>(
                           builder: (_) => CourseLessonScreen(
-                              courseId: courseId, index: index + 1),
+                            courseId: courseId,
+                            index: index + 1,
+                          ),
                         ),
                       );
                     },
@@ -245,8 +273,11 @@ class CourseBlockView extends ConsumerStatefulWidget {
   final CourseBlock block;
   final bool firstRow;
 
-  const CourseBlockView(
-      {super.key, required this.block, this.firstRow = false});
+  const CourseBlockView({
+    super.key,
+    required this.block,
+    this.firstRow = false,
+  });
 
   @override
   ConsumerState<CourseBlockView> createState() => _CourseBlockViewState();
@@ -304,11 +335,13 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
       switch (s.kind) {
         case 'q':
           // Opens a run unless the span before was this quote's ayah end.
-          final opens = i < 2 ||
+          final opens =
+              i < 2 ||
               spans[i - 1].kind != 't' ||
               !_ayahEnd.hasMatch(spans[i - 1].text) ||
               spans[i - 2].kind != 'q';
-          final closes = i + 2 >= spans.length ||
+          final closes =
+              i + 2 >= spans.length ||
               spans[i + 1].kind != 't' ||
               !_ayahEnd.hasMatch(spans[i + 1].text) ||
               spans[i + 2].kind != 'q';
@@ -318,23 +351,32 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
           out.add(TextSpan(text: s.text, style: quran, recognizer: tap));
           if (closes) out.add(TextSpan(text: '﴾', style: bracket));
         case 't':
-          final isEnd = _ayahEnd.hasMatch(s.text) &&
-              i > 0 &&
-              spans[i - 1].kind == 'q';
-          out.add(TextSpan(
+          final isEnd =
+              _ayahEnd.hasMatch(s.text) && i > 0 && spans[i - 1].kind == 'q';
+          out.add(
+            TextSpan(
               text: isEnd ? ' ${s.text.trim()} ' : s.text,
-              style: isEnd ? bracket : null));
+              style: isEnd ? bracket : null,
+            ),
+          );
         case 'b' || 'h':
-          out.add(TextSpan(
+          out.add(
+            TextSpan(
               text: s.text,
-              style: const TextStyle(fontWeight: FontWeight.w700)));
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          );
         case 'n':
-          out.add(TextSpan(
+          out.add(
+            TextSpan(
               text: '(${s.text})',
               style: TextStyle(
-                  fontSize: (base.fontSize ?? 17) * 0.7,
-                  color: goldText(context),
-                  fontWeight: FontWeight.w700)));
+                fontSize: (base.fontSize ?? 17) * 0.7,
+                color: goldText(context),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          );
         default:
           out.add(TextSpan(text: s.text));
       }
@@ -349,24 +391,31 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
     return TextSpan(style: base, children: out);
   }
 
-  Widget _para(List<CourseSpan> spans, TextStyle base,
-          {TextAlign align = TextAlign.justify}) =>
-      Directionality(
-        textDirection: ui.TextDirection.rtl,
-        child: Text.rich(_rich(spans, base), textAlign: align),
-      );
+  Widget _para(
+    List<CourseSpan> spans,
+    TextStyle base, {
+    TextAlign align = TextAlign.justify,
+  }) => Directionality(
+    textDirection: ui.TextDirection.rtl,
+    child: Text.rich(_rich(spans, base), textAlign: align),
+  );
 
   Widget _badge(String label, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-        margin: const EdgeInsets.only(bottom: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.18),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 11.5, fontWeight: FontWeight.w800, color: color)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+    margin: const EdgeInsets.only(bottom: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.18),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Text(
+      label,
+      style: TextStyle(
+        fontSize: 11.5,
+        fontWeight: FontWeight.w800,
+        color: color,
+      ),
+    ),
+  );
 
   Widget _label(IconData icon, String text) {
     final c = goldText(context);
@@ -376,13 +425,20 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
         children: [
           Icon(icon, size: 16, color: c),
           const SizedBox(width: 6),
-          Text(text,
-              style: TextStyle(
-                  fontSize: 12, fontWeight: FontWeight.w800, color: c)),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              color: c,
+            ),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Divider(
-                color: AppColors.gold.withValues(alpha: 0.35), height: 1),
+              color: AppColors.gold.withValues(alpha: 0.35),
+              height: 1,
+            ),
           ),
         ],
       ),
@@ -399,20 +455,24 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
     final scheme = Theme.of(context).colorScheme;
     final b = widget.block;
     final body = lessonTextStyle(fontSize: 17, color: scheme.onSurface);
-    final quiet = lessonTextStyle(fontSize: 14, color: scheme.onSurfaceVariant)
-        .copyWith(height: 1.8);
+    final quiet = lessonTextStyle(
+      fontSize: 14,
+      color: scheme.onSurfaceVariant,
+    ).copyWith(height: 1.8);
 
     switch (b.kind) {
       case 'head':
         return Padding(
           padding: const EdgeInsets.only(top: 14, bottom: 6),
           child: _para(
-              b.spans,
-              lessonTextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.w700,
-                  color: scheme.primary),
-              align: TextAlign.start),
+            b.spans,
+            lessonTextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.w700,
+              color: scheme.primary,
+            ),
+            align: TextAlign.start,
+          ),
         );
       case 'q':
       case 'a':
@@ -430,16 +490,20 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _badge(isQ ? 'tajweed.question'.tr() : 'tajweed.answer'.tr(),
-                  isQ ? scheme.primary : goldText(context)),
+              _badge(
+                isQ ? 'tajweed.question'.tr() : 'tajweed.answer'.tr(),
+                isQ ? scheme.primary : goldText(context),
+              ),
               _para(
-                  b.spans,
-                  isQ
-                      ? lessonTextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: scheme.onSurface)
-                      : body),
+                b.spans,
+                isQ
+                    ? lessonTextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: scheme.onSurface,
+                      )
+                    : body,
+              ),
             ],
           ),
         );
@@ -468,7 +532,8 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
                 ? AppColors.gold.withValues(alpha: 0.12)
                 : null,
             border: Border(
-                bottom: BorderSide(color: scheme.outlineVariant, width: 0.7)),
+              bottom: BorderSide(color: scheme.outlineVariant, width: 0.7),
+            ),
           ),
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Directionality(
@@ -492,15 +557,19 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: LessonVerse(
-              b.spans.where((s) => s.kind != 'n').map((s) => s.text).join()),
+            b.spans.where((s) => s.kind != 'n').map((s) => s.text).join(),
+          ),
         );
       case 'exh':
         return _label(Icons.quiz_outlined, 'tajweed.exercises'.tr());
       case 'ex':
         return Padding(
           padding: const EdgeInsets.only(bottom: 6),
-          child: _para(b.spans, lessonTextStyle(fontSize: 16),
-              align: TextAlign.start),
+          child: _para(
+            b.spans,
+            lessonTextStyle(fontSize: 16),
+            align: TextAlign.start,
+          ),
         );
       case 'notes':
         return Column(
@@ -519,7 +588,10 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _label(Icons.menu_book_rounded, 'tajweed.examples_from_mushaf'.tr()),
+            _label(
+              Icons.menu_book_rounded,
+              'tajweed.examples_from_mushaf'.tr(),
+            ),
             Text('tajweed.examples_from_mushaf_note'.tr(), style: quiet),
             const SizedBox(height: 6),
             for (final s in b.spans)
@@ -536,24 +608,30 @@ class _CourseBlockViewState extends ConsumerState<CourseBlockView> {
                         ArabicText(
                           '﴿${s.text}﴾',
                           style: const TextStyle(
-                              fontFamily: 'KFGQPCHafs',
-                              letterSpacing: 0,
-                              fontSize: 19,
-                              height: 2.0),
+                            fontFamily: 'KFGQPCHafs',
+                            letterSpacing: 0,
+                            fontSize: 19,
+                            height: 2.0,
+                          ),
                         ),
                         if (s.place != null)
                           Row(
                             children: [
-                              Icon(Icons.play_circle_outline_rounded,
-                                  size: 16, color: goldText(context)),
+                              Icon(
+                                Icons.play_circle_outline_rounded,
+                                size: 16,
+                                color: goldText(context),
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 localizeDigits(
-                                    '${mushaf?.surahNameAr(s.place!.$1) ?? s.place!.$1} : ${s.place!.$2}',
-                                    'ar'),
+                                  '${mushaf?.surahNameAr(s.place!.$1) ?? s.place!.$1} : ${s.place!.$2}',
+                                  'ar',
+                                ),
                                 style: TextStyle(
-                                    fontSize: 12,
-                                    color: scheme.onSurfaceVariant),
+                                  fontSize: 12,
+                                  color: scheme.onSurfaceVariant,
+                                ),
                               ),
                             ],
                           ),

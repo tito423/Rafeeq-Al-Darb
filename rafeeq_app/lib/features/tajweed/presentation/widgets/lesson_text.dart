@@ -25,13 +25,12 @@ TextStyle lessonTextStyle({
   double fontSize = 18,
   Color? color,
   FontWeight fontWeight = FontWeight.w400,
-}) =>
-    GoogleFonts.notoNaskhArabic(
-      fontSize: fontSize,
-      height: 2.0,
-      color: color,
-      fontWeight: fontWeight,
-    );
+}) => GoogleFonts.notoNaskhArabic(
+  fontSize: fontSize,
+  height: 2.0,
+  color: color,
+  fontWeight: fontWeight,
+);
 
 /// The hemistich separator the e-texts use, with or without a real ellipsis.
 final _halves = RegExp(r'\s+(?:\.\.\.|…)\s+');
@@ -59,14 +58,14 @@ class LessonProse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ArabicText(
-        text,
-        textAlign: TextAlign.justify,
-        style: lessonTextStyle(
-          fontSize: fontSize,
-          color: color,
-          fontWeight: fontWeight,
-        ),
-      );
+    text,
+    textAlign: TextAlign.justify,
+    style: lessonTextStyle(
+      fontSize: fontSize,
+      color: color,
+      fontWeight: fontWeight,
+    ),
+  );
 }
 
 /// A line of verse: two centred halves when it has them, else one line.

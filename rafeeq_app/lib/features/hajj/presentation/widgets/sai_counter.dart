@@ -91,16 +91,18 @@ class _SaiCounterState extends State<SaiCounter>
           complete
               ? 'hajj.done'.tr()
               : '${'hajj.lap'.tr()} ${localizeDigits('${_done + 1}', locale)}'
-                  ' / ${localizeDigits('$passes', locale)}',
+                    ' / ${localizeDigits('$passes', locale)}',
           style: TextStyle(
             fontWeight: FontWeight.w800,
             color: complete ? AppColors.success : AppColors.gold,
           ),
         ),
         const SizedBox(height: 4),
-        Text('hajj.sai_hint'.tr(),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
+        Text(
+          'hajj.sai_hint'.tr(),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+        ),
         TextButton.icon(
           onPressed: _tap,
           icon: Icon(complete ? Icons.replay_rounded : Icons.touch_app_rounded),
@@ -168,7 +170,10 @@ class _SaiPainter extends CustomPainter {
         text: TextSpan(
           text: name,
           style: TextStyle(
-              color: label, fontSize: 13, fontWeight: FontWeight.w700),
+            color: label,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         textDirection: TextDirection.rtl,
       )..layout();
@@ -198,12 +203,13 @@ class _SaiPainter extends CustomPainter {
     final x = from + (to - from) * progress;
     canvas.drawCircle(Offset(x, y), 9, Paint()..color = AppColors.gold);
     canvas.drawCircle(
-        Offset(x, y),
-        9,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
-          ..color = label);
+      Offset(x, y),
+      9,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = label,
+    );
   }
 
   @override

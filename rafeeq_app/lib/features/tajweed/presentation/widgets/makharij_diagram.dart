@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -89,6 +90,7 @@ class MakharijDiagram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isArabicUi = context.locale.languageCode == 'ar';
     return AspectRatio(
       aspectRatio: _aspect,
       child: LayoutBuilder(
@@ -128,6 +130,7 @@ class MakharijDiagram extends StatelessWidget {
                             articulation: t,
                             flow: flow.value,
                             isDark: isDark,
+                            isArabicUi: isArabicUi,
                           ),
                         ),
                       ],
@@ -142,17 +145,16 @@ class MakharijDiagram extends StatelessWidget {
     );
   }
 
-
   /// Both layers are mirrored the same way, so they stay registered.
   Widget _svg(String asset, bool isDark) => Transform.scale(
-        scaleX: -1,
-        child: SvgPicture.asset(
-          asset,
-          colorFilter: isDark
-              ? const ColorFilter.mode(Color(0xFF8FA3B8), BlendMode.srcIn)
-              : null,
-        ),
-      );
+    scaleX: -1,
+    child: SvgPicture.asset(
+      asset,
+      colorFilter: isDark
+          ? const ColorFilter.mode(Color(0xFF8FA3B8), BlendMode.srcIn)
+          : null,
+    ),
+  );
 
   /// How the tongue moves for the chosen makhraj.
   ///
@@ -163,8 +165,7 @@ class MakharijDiagram extends StatelessWidget {
   /// from `contactX` rather than typed in per letter, and a new makhraj cannot
   /// be added with a movement that contradicts its own description.
   Matrix4 _tongue(Size size, double t) {
-    final spec =
-        selected == null ? null : articulationByMakhraj[selected!.id];
+    final spec = selected == null ? null : articulationByMakhraj[selected!.id];
     if (spec == null ||
         spec.articulator != Articulator.tongue ||
         spec.contactX == null) {
@@ -232,12 +233,14 @@ class _ArticulationPainter extends CustomPainter {
   final double articulation;
   final double flow;
   final bool isDark;
+  final bool isArabicUi;
 
   _ArticulationPainter({
     required this.selected,
     required this.articulation,
     required this.flow,
     required this.isDark,
+    required this.isArabicUi,
   });
 
   ArticulationSpec? get _spec =>
@@ -285,8 +288,10 @@ class _ArticulationPainter extends CustomPainter {
       canvas.drawCircle(
         p,
         r + w * 0.006,
-        Paint()..color = (isDark ? Colors.black : Colors.white)
-            .withValues(alpha: 0.85),
+        Paint()
+          ..color = (isDark ? Colors.black : Colors.white).withValues(
+            alpha: 0.85,
+          ),
       );
       canvas.drawCircle(
         p,
@@ -294,8 +299,9 @@ class _ArticulationPainter extends CustomPainter {
         Paint()
           ..color = on
               ? AppColors.gold
-              : (isDark ? Colors.white : const Color(0xFF5A6B7C))
-                  .withValues(alpha: 0.45),
+              : (isDark ? Colors.white : const Color(0xFF5A6B7C)).withValues(
+                  alpha: 0.45,
+                ),
       );
       if (on) {
         canvas.drawCircle(
@@ -320,7 +326,11 @@ class _ArticulationPainter extends CustomPainter {
       ..moveTo(at.dx - width / 2, at.dy + reach)
       ..quadraticBezierTo(at.dx, at.dy + reach * 0.35, at.dx, at.dy)
       ..quadraticBezierTo(
-          at.dx, at.dy + reach * 0.35, at.dx + width / 2, at.dy + reach)
+        at.dx,
+        at.dy + reach * 0.35,
+        at.dx + width / 2,
+        at.dy + reach,
+      )
       ..close();
     canvas.drawPath(
       wedge,
@@ -377,7 +387,11 @@ class _ArticulationPainter extends CustomPainter {
 
   /// The air, as dashes moving along the tract.
   void _drawAirstream(
-      Canvas canvas, Size size, ArticulationSpec spec, Offset at) {
+    Canvas canvas,
+    Size size,
+    ArticulationSpec spec,
+    Offset at,
+  ) {
     final w = size.width;
     final h = size.height;
     // Everything starts at the larynx except the throat letters, which start
@@ -418,21 +432,30 @@ class _ArticulationPainter extends CustomPainter {
   void _label(Canvas canvas, Size size, MakhrajRegion region, Offset at) {
     final on = selected?.region == region;
     final info = makhrajRegions.firstWhere((i) => i.region == region);
+    // The reader's own word for the place (its short form, before the
+    // transliteration in brackets); Arabic keeps the matn's word. Seen in
+    // French on 2026-10-08: the list was translated, the picture was not.
+    final tr = 'makharij.region_${region.name}'.tr();
+    final name = isArabicUi ? info.name : tr.split(' (').first;
     final tp = TextPainter(
       text: TextSpan(
-        text: info.name,
+        text: name,
         style: TextStyle(
           fontSize: math.max(10.0, size.width * 0.040),
           fontWeight: on ? FontWeight.bold : FontWeight.w600,
           color: on
               ? AppColors.gold
-              : (isDark ? Colors.white : const Color(0xFF44535F))
-                  .withValues(alpha: 0.75),
+              : (isDark ? Colors.white : const Color(0xFF44535F)).withValues(
+                  alpha: 0.75,
+                ),
         ),
       ),
-      textDirection: TextDirection.rtl,
+      textDirection: RegExp(r'^[؀-ۿ]').hasMatch(name)
+          ? TextDirection.rtl
+          : TextDirection.ltr,
     )..layout();
-    final o = Offset(at.dx * size.width, at.dy * size.height) -
+    final o =
+        Offset(at.dx * size.width, at.dy * size.height) -
         Offset(tp.width / 2, tp.height / 2);
     // A soft plate behind the word, so it stays legible over the grey fill.
     canvas.drawRRect(
@@ -441,8 +464,9 @@ class _ArticulationPainter extends CustomPainter {
         Radius.circular(size.width * 0.012),
       ),
       Paint()
-        ..color = (isDark ? Colors.black : Colors.white)
-            .withValues(alpha: on ? 0.82 : 0.62),
+        ..color = (isDark ? Colors.black : Colors.white).withValues(
+          alpha: on ? 0.82 : 0.62,
+        ),
     );
     tp.paint(canvas, o);
   }
@@ -452,5 +476,6 @@ class _ArticulationPainter extends CustomPainter {
       old.selected?.id != selected?.id ||
       old.articulation != articulation ||
       old.flow != flow ||
-      old.isDark != isDark;
+      old.isDark != isDark ||
+      old.isArabicUi != isArabicUi;
 }

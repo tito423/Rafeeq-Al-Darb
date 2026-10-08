@@ -34,7 +34,9 @@ class CaravanScenery {
   Color land(Color c) {
     if (!w.toNight) return c;
     final green = Color.lerp(c, const Color(0xFF9FA36C), 0.4 * _p)!;
-    return Color.lerp(green, const Color(0xFF161B38), 0.62 * w.night)!;
+    // Moonlit sand: towards a silver blue, not towards black - mixing the
+    // sand with a near-black navy read as a grey fog on the emulator.
+    return Color.lerp(green, const Color(0xFF4C5C92), 0.72 * w.night)!;
   }
 
   /// Three stops instead of two: a deep top, a warm band low on the horizon,

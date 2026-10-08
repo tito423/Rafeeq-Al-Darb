@@ -90,28 +90,32 @@ const makhrajRegions = <MakhrajRegionInfo>[
   MakhrajRegionInfo(
     region: MakhrajRegion.jawf,
     name: 'الجوف',
-    definition: 'فَأَلِفُ الجَوْفِ وَأُخْتَاهَا وَهِي … '
+    definition:
+        'فَأَلِفُ الجَوْفِ وَأُخْتَاهَا وَهِي … '
         'حُرُوفُ مَدٍّ لِلْهَوَاءِ تَنْتَهِي',
     page: 56,
   ),
   MakhrajRegionInfo(
     region: MakhrajRegion.halq,
     name: 'الحلق',
-    definition: 'ثُمَّ لِأَقْصَى الحَلْقِ: هَمْزٌ هَاءُ … '
+    definition:
+        'ثُمَّ لِأَقْصَى الحَلْقِ: هَمْزٌ هَاءُ … '
         'ثُمَّ لِوَسْطِهِ: فَعَيْنٌ حَاءُ • أَدْنَاهُ: غَيْنٌ خَاؤُهَا',
     page: 56,
   ),
   MakhrajRegionInfo(
     region: MakhrajRegion.lisan,
     name: 'اللسان',
-    definition: 'وَالقَافُ أَقْصَى اللِّسَانِ فَوْقُ، ثُمَّ الكَافُ • '
+    definition:
+        'وَالقَافُ أَقْصَى اللِّسَانِ فَوْقُ، ثُمَّ الكَافُ • '
         'أَسْفَلُ، وَالوَسْطُ: فَجِيمُ الشِّينُ يَا',
     page: 56,
   ),
   MakhrajRegionInfo(
     region: MakhrajRegion.shafatan,
     name: 'الشَّفتان',
-    definition: 'وَمِنْ بَطْنِ الشَّفَهْ … '
+    definition:
+        'وَمِنْ بَطْنِ الشَّفَهْ … '
         'فَالْفَا مَعَ اطْرَافِ الثَّنَايَا المُشْرِفَهْ • '
         'لِلشَّفَتَيْنِ: الوَاوُ بَاءٌ مِيمُ',
     page: 58,
@@ -133,7 +137,8 @@ const makharij = <Makhraj>[
     id: 'jawf',
     region: MakhrajRegion.jawf,
     place: 'الخلاء الواقع في جوف الفم والحلق، تنتهي إليه حروف المد الثلاثة',
-    matn: 'فَأَلِفُ الجَوْفِ وَأُخْتَاهَا وَهِي … '
+    matn:
+        'فَأَلِفُ الجَوْفِ وَأُخْتَاهَا وَهِي … '
         'حُرُوفُ مَدٍّ لِلْهَوَاءِ تَنْتَهِي',
     letters: ['ا', 'و', 'ي'],
     page: 56,
@@ -178,7 +183,8 @@ const makharij = <Makhraj>[
   Makhraj(
     id: 'lisan_aqsa_kaf',
     region: MakhrajRegion.lisan,
-    place: 'أقصى اللسان أسفل من مخرج القاف قليلًا، مع ما يحاذيه من الحنك '
+    place:
+        'أقصى اللسان أسفل من مخرج القاف قليلًا، مع ما يحاذيه من الحنك '
         'الأعلى',
     matn: 'ثُمَّ الكَافُ أَسْفَلُ',
     letters: ['ك'],
@@ -196,7 +202,8 @@ const makharij = <Makhraj>[
     id: 'lisan_hafa_dad',
     region: MakhrajRegion.lisan,
     place: 'إحدى حافتي اللسان مع ما يليها من الأضراس، من اليسرى أو اليمنى',
-    matn: 'وَالضَّادُ: مِنْ حَافَتِهِ إِذْ وَلِيَا … '
+    matn:
+        'وَالضَّادُ: مِنْ حَافَتِهِ إِذْ وَلِيَا … '
         'لَاضْرَاسَ مِنْ أَيْسَرَ أَوْ يُمْنَاهَا',
     letters: ['ض'],
     page: 56,
@@ -212,7 +219,8 @@ const makharij = <Makhraj>[
   Makhraj(
     id: 'lisan_taraf_nun',
     region: MakhrajRegion.lisan,
-    place: 'طرف اللسان تحت مخرج اللام قليلًا، مع ما يليه من لَثَة الأسنان '
+    place:
+        'طرف اللسان تحت مخرج اللام قليلًا، مع ما يليه من لَثَة الأسنان '
         'العليا',
     matn: 'وَالنُّونُ: مِنْ طَرَفِهِ تَحْتُ اجْعَلُوا',
     letters: ['ن'],
@@ -238,7 +246,8 @@ const makharij = <Makhraj>[
     id: 'lisan_asaliyya',
     region: MakhrajRegion.lisan,
     place: 'طرف اللسان مع ما فوق الثنايا السفلى — وهي حروف الصفير',
-    matn: 'وَالصَّفِيرُ: مُسْتَكِنْ … مِنْهُ وَمِنْ فَوْقِ الثَّنَايَا '
+    matn:
+        'وَالصَّفِيرُ: مُسْتَكِنْ … مِنْهُ وَمِنْ فَوْقِ الثَّنَايَا '
         'السُّفْلَى',
     letters: ['ص', 'ز', 'س'],
     page: 57,
@@ -257,7 +266,8 @@ const makharij = <Makhraj>[
     id: 'shafa_fa',
     region: MakhrajRegion.shafatan,
     place: 'بطن الشَّفة السفلى مع أطراف الثنايا العليا',
-    matn: 'وَمِنْ بَطْنِ الشَّفَهْ … '
+    matn:
+        'وَمِنْ بَطْنِ الشَّفَهْ … '
         'فَالْفَا مَعَ اطْرَافِ الثَّنَايَا المُشْرِفَهْ',
     letters: ['ف'],
     page: 58,
@@ -265,7 +275,8 @@ const makharij = <Makhraj>[
   Makhraj(
     id: 'shafa_bmw',
     region: MakhrajRegion.shafatan,
-    place: 'ما بين الشفتين: تنطبقان عند الباء والميم، وتنفرجان قليلًا عند '
+    place:
+        'ما بين الشفتين: تنطبقان عند الباء والميم، وتنفرجان قليلًا عند '
         'الواو غير المدية',
     matn: 'لِلشَّفَتَيْنِ: الوَاوُ بَاءٌ مِيمُ',
     letters: ['ب', 'م', 'و'],

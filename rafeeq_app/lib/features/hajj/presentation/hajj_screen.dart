@@ -228,72 +228,72 @@ class _StepCard extends StatelessWidget {
         builder: (controller, onExpansionChanged) => ExpansionTile(
           controller: controller,
           onExpansionChanged: onExpansionChanged,
-        shape: const Border(),
-        leading: Container(
-          width: 36,
-          height: 36,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [AppColors.gold, Color(0xFFB8860B)],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.gold.withValues(alpha: 0.35),
-                blurRadius: 8,
+          shape: const Border(),
+          leading: Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
+                colors: [AppColors.gold, Color(0xFFB8860B)],
               ),
-            ],
-          ),
-          child: Text(
-            // The app's own digits for its language, as everywhere else —
-            // the first build on the owner's phone showed «1 2 3» in Arabic.
-            localizeDigits('$number', context.locale.languageCode),
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-        title: Text(
-          'hajj.step_${step.key}'.tr(),
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
-        subtitle: step.dayKey == null
-            ? null
-            : Text(
-                step.dayKey!.tr(),
-                style: TextStyle(color: goldText(context), fontSize: 12),
-              ),
-        childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-        children: [
-          if (_rite(step, track) case final rite?) ...[
-            rite,
-            const Divider(height: 22),
-          ],
-          book.when(
-            loading: () => const Padding(
-              padding: EdgeInsets.all(18),
-              child: CircularProgressIndicator(),
-            ),
-            error: (_, _) => Column(
-              children: [
-                Text(
-                  'hajj.needs_download'.tr(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: scheme.onSurfaceVariant),
-                ),
-                TextButton.icon(
-                  onPressed: onRetry,
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: Text('common.retry'.tr()),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.gold.withValues(alpha: 0.35),
+                  blurRadius: 8,
                 ),
               ],
             ),
-            data: (text) => _StepText(step: step, book: text),
+            child: Text(
+              // The app's own digits for its language, as everywhere else —
+              // the first build on the owner's phone showed «1 2 3» in Arabic.
+              localizeDigits('$number', context.locale.languageCode),
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
           ),
-        ],
-      ),
+          title: Text(
+            'hajj.step_${step.key}'.tr(),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+          subtitle: step.dayKey == null
+              ? null
+              : Text(
+                  step.dayKey!.tr(),
+                  style: TextStyle(color: goldText(context), fontSize: 12),
+                ),
+          childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+          children: [
+            if (_rite(step, track) case final rite?) ...[
+              rite,
+              const Divider(height: 22),
+            ],
+            book.when(
+              loading: () => const Padding(
+                padding: EdgeInsets.all(18),
+                child: CircularProgressIndicator(),
+              ),
+              error: (_, _) => Column(
+                children: [
+                  Text(
+                    'hajj.needs_download'.tr(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: scheme.onSurfaceVariant),
+                  ),
+                  TextButton.icon(
+                    onPressed: onRetry,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: Text('common.retry'.tr()),
+                  ),
+                ],
+              ),
+              data: (text) => _StepText(step: step, book: text),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -355,6 +355,13 @@ class _StepText extends ConsumerWidget {
               color: scheme.onSurfaceVariant,
             ),
           ),
+          // The miqat card carries its own seven languages; this early
+          // return used to hide it from every non-Arabic reader (seen on
+          // emulator-5554 in French, 2026-10-08).
+          if (mawaqitStepKeys.contains(step.key)) ...[
+            const SizedBox(height: 10),
+            MawaqitTodayCard(scale: k),
+          ],
         ],
       );
     }

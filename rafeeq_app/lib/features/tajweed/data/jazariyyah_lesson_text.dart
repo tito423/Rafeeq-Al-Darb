@@ -94,8 +94,7 @@ bool isJazariyyahVerse(String text) =>
 /// matn is fully vowelled and its headings carry the editor's marker.
 String jazariyyahBare(String s) => s
     .replaceAll(RegExp(r'\s*\(\s*[\d٠-٩]+\s*\)\s*$'), '')
-    .replaceAll(
-        RegExp('[ؐ-ًؚ-ٰٟۖ-ۭـ]'), '')
+    .replaceAll(RegExp('[ؐ-ًؚ-ٰٟۖ-ۭـ]'), '')
     .replaceAll(RegExp('[آأإٱ]'), 'ا')
     .replaceAll('ى', 'ي')
     .replaceAll('ة', 'ه')

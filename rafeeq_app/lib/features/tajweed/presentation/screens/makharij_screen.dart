@@ -63,10 +63,7 @@ class _MakharijScreenState extends State<MakharijScreen>
         children: [
           Text(
             'makharij.subtitle'.tr(),
-            style: TextStyle(
-              color: scheme.onSurfaceVariant,
-              height: 1.6,
-            ),
+            style: TextStyle(color: scheme.onSurfaceVariant, height: 1.6),
           ),
           const SizedBox(height: 10),
           // «الحروف بعيدة عن الرسم يعني اضغط على الحرف تحت وفين وفين على ما
@@ -79,7 +76,8 @@ class _MakharijScreenState extends State<MakharijScreen>
               // Sideways two fifths of the height is a small drawing (216 dp
               // of emulator-5554's 540, 163 of the owner's Xiaomi's 407);
               // 62 % still leaves the letter strip in view under it.
-              maxHeight: MediaQuery.sizeOf(context).height *
+              maxHeight:
+                  MediaQuery.sizeOf(context).height *
                   (MediaQuery.orientationOf(context) == Orientation.landscape
                       ? 0.62
                       : 0.40),
@@ -202,10 +200,7 @@ class _RegionDefinition extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 trn('makharij.page', namedArgs: {'page': '${info.page}'}),
-                style: TextStyle(
-                  fontSize: 11,
-                  color: scheme.onSurfaceVariant,
-                ),
+                style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
               ),
             ],
           ),
@@ -242,19 +237,23 @@ class _LetterStrip extends StatelessWidget {
     MakhrajRegion? last;
     for (final m in makharij) {
       if (last != null && m.region != last) {
-        children.add(Container(
-          width: 1.5,
-          height: 26,
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          color: AppColors.gold.withValues(alpha: 0.45),
-        ));
+        children.add(
+          Container(
+            width: 1.5,
+            height: 26,
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            color: AppColors.gold.withValues(alpha: 0.45),
+          ),
+        );
       }
       last = m.region;
-      children.add(_LetterChip(
-        makhraj: m,
-        on: selected?.id == m.id,
-        onTap: () => onPick(m),
-      ));
+      children.add(
+        _LetterChip(
+          makhraj: m,
+          on: selected?.id == m.id,
+          onTap: () => onPick(m),
+        ),
+      );
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

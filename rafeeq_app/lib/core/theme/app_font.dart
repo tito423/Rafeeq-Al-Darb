@@ -58,5 +58,6 @@ class AppFontController extends StateNotifier<String> {
   }
 }
 
-final appFontProvider =
-    StateNotifierProvider<AppFontController, String>((ref) => AppFontController());
+final appFontProvider = StateNotifierProvider<AppFontController, String>(
+  (ref) => AppFontController(),
+);

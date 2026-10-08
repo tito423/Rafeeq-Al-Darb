@@ -111,8 +111,8 @@ class _JamaratCounterState extends State<JamaratCounter>
           complete
               ? 'hajj.done'.tr()
               : '${names[current]} · ${'hajj.pebble'.tr()} '
-                  '${localizeDigits('${_thrown[current] + 1}', locale)}'
-                  ' / ${localizeDigits('$perJamrah', locale)}',
+                    '${localizeDigits('${_thrown[current] + 1}', locale)}'
+                    ' / ${localizeDigits('$perJamrah', locale)}',
           style: TextStyle(
             fontWeight: FontWeight.w800,
             color: complete ? AppColors.success : AppColors.gold,
@@ -120,7 +120,9 @@ class _JamaratCounterState extends State<JamaratCounter>
         ),
         const SizedBox(height: 4),
         Text(
-          widget.nahr ? 'hajj.jamarat_nahr_hint'.tr() : 'hajj.jamarat_hint'.tr(),
+          widget.nahr
+              ? 'hajj.jamarat_nahr_hint'.tr()
+              : 'hajj.jamarat_hint'.tr(),
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
         ),
@@ -169,8 +171,7 @@ class _JamaratPainter extends CustomPainter {
       // The pillar.
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromCenter(
-              center: Offset(x, baseY - 40), width: 22, height: 80),
+          Rect.fromCenter(center: Offset(x, baseY - 40), width: 22, height: 80),
           const Radius.circular(6),
         ),
         Paint()
@@ -193,7 +194,10 @@ class _JamaratPainter extends CustomPainter {
         text: TextSpan(
           text: names[i],
           style: TextStyle(
-              color: label, fontSize: 12, fontWeight: FontWeight.w700),
+            color: label,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         textDirection: TextDirection.rtl,
       )..layout();
@@ -207,7 +211,9 @@ class _JamaratPainter extends CustomPainter {
     final end = Offset(tx, baseY - 30);
     final t = flight;
     final x = start.dx + (end.dx - start.dx) * t;
-    final y = start.dy + (end.dy - start.dy) * t -
+    final y =
+        start.dy +
+        (end.dy - start.dy) * t -
         math.sin(t * math.pi) * size.height * 0.35;
     canvas.drawCircle(Offset(x, y), 5, Paint()..color = AppColors.gold);
   }

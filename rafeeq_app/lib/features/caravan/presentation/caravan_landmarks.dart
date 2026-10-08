@@ -263,14 +263,14 @@ class CaravanLandmarks {
   }
 
   /// Night over the land: a deep blue veil, then the light that cuts
-  /// through it - each lantern's glow, a warm pool round the caravan, and
+  /// through it - each lantern's glow and
   /// fireflies drifting over the road.
   void nightVeil(Canvas canvas, Size size, double camel) {
     final n = w.night;
     if (n < 0.01) return;
     canvas.drawRect(
       Offset.zero & size,
-      Paint()..color = const Color(0xFF0A0F2E).withValues(alpha: 0.38 * n),
+      Paint()..color = const Color(0xFF0A0F2E).withValues(alpha: 0.22 * n),
     );
     for (final l in w.lanterns) {
       if (l.taken) continue;
@@ -281,15 +281,6 @@ class CaravanLandmarks {
         0.55 * n,
       );
     }
-    _glow(
-      canvas,
-      Offset(
-        CaravanWorld.leadX * size.width,
-        size.height * CaravanWorld.groundY,
-      ),
-      camel * 1.6,
-      0.18 * n,
-    );
     final rnd = math.Random(31);
     for (var i = 0; i < 18; i++) {
       final fx =
@@ -330,5 +321,5 @@ class CaravanLandmarks {
 
   /// Buildings and trees sink into the night with the land.
   Color _shade(Color c) =>
-      Color.lerp(c, const Color(0xFF1C2244), 0.55 * w.night)!;
+      Color.lerp(c, const Color(0xFF3A4270), 0.42 * w.night)!;
 }
