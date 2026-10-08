@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 
+import '../../../app/shell/home_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/byte_formatter.dart';
 import '../../../core/utils/digits.dart';
@@ -297,15 +298,13 @@ class _TopBar extends StatelessWidget {
             icon: const Icon(Icons.keyboard_arrow_down_rounded),
             onPressed: () => Navigator.of(context).maybePop(),
           ),
+          const HomeButton(color: AppColors.textHigh),
           Expanded(
             child: Text(
               'quran_audio.now_playing'.tr(),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textMedium,
-                letterSpacing: 0.4,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(color: AppColors.textMedium,
+                  letterSpacing: 0.4, fontWeight: FontWeight.w600),
             ),
           ),
           ListenableBuilder(

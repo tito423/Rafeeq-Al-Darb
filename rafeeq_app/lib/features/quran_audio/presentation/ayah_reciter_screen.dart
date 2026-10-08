@@ -21,6 +21,7 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/shell/home_button.dart';
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
 import '../../../core/services/ayah_audio_service.dart';
@@ -142,6 +143,7 @@ class _AyahReciterScreenState extends ConsumerState<AyahReciterScreen> {
       appBar: AppBar(
         title: Text(widget.reciter.displayName(locale)),
         actions: [
+          const HomeButton(),
           if (progress.downloaded > 0)
             IconButton(
               tooltip: 'downloads.delete'.tr(),

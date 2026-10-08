@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/shell/home_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/byte_formatter.dart';
 import '../../../core/utils/digits.dart';
@@ -118,7 +119,10 @@ class _ReciterScreenState extends ConsumerState<ReciterScreen> {
     final player = QuranAudioPlayer.instance;
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.reciter.name)),
+      appBar: AppBar(
+        title: Text(widget.reciter.name),
+        actions: const [HomeButton()],
+      ),
       // «زرار شفاف أسفل يسار الشاشة لما أنزل بمقدار صفحة يرفعني لأول الصفحة».
       floatingActionButtonLocation:
           Directionality.of(context) == ui.TextDirection.rtl

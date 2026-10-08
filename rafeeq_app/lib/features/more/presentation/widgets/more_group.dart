@@ -48,6 +48,21 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
   @override
   void accordionCollapse() => setState(() => _open = false);
 
+  /// A tap inside the open group usually opens a screen over this one. If
+  /// it did, the group closes behind it, so coming back and pressing back
+  /// goes Home in one press instead of first folding the menu up (owner,
+  /// 2026-10-08: from the recitation player it took five presses to reach
+  /// Home, one of them spent closing this group). A card opened and left
+  /// on this screen still takes back first, as the accordion rule says.
+  void _closeIfCovered() {
+    Future<void>.delayed(const Duration(milliseconds: 450), () {
+      if (!mounted || !_open) return;
+      if (ModalRoute.of(context)?.isCurrent ?? true) return;
+      setState(() => _open = false);
+      accordionClosed();
+    });
+  }
+
   void _toggle() {
     setState(() => _open = !_open);
     if (_open) {
@@ -109,11 +124,14 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
                   // than as more cards of the same width.
                   padding: const EdgeInsetsDirectional.only(
                       start: 26, end: 12, bottom: 8),
-                  child: MoreGroupAccent(
-                    accent: widget.accent,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: widget.children,
+                  child: Listener(
+                    onPointerUp: (_) => _closeIfCovered(),
+                    child: MoreGroupAccent(
+                      accent: widget.accent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: widget.children,
+                      ),
                     ),
                   ),
                 )

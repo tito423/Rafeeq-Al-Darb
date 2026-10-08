@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 
+import '../../../app/shell/home_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/utils/byte_formatter.dart';
@@ -51,6 +52,7 @@ class _QuranAudioScreenState extends State<QuranAudioScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('quran_audio.title'.tr()),
+          actions: const [HomeButton()],
           bottom: TabBar(
             indicatorColor: AppColors.gold,
             indicatorWeight: 3,
