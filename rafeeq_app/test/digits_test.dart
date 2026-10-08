@@ -103,4 +103,17 @@ void main() {
     uiLanguageCode = 'ar';
     expect(readerDigits('(ت ٨٥٢هـ)'), '(ت ٨٥٢هـ)');
   });
+
+  // «3–5 سال» drew as «5–3» on emulator-5554 once the digits were Latin:
+  // an en dash between two European numbers in a right-to-left line is a
+  // neutral, and the pair reverses. A left-to-right mark before the range
+  // keeps it as written.
+  test('every Urdu number range is held left to right', () {
+    final text = File('assets/translations/ur.json').readAsStringSync();
+    final bare = RegExp(r'(?<![0-9\u200E])[0-9]+\s*[\u2013\u2014]\s*[0-9]')
+        .allMatches(text)
+        .map((m) => m[0])
+        .toList();
+    expect(bare, isEmpty);
+  });
 }
