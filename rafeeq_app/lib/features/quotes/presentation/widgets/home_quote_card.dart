@@ -96,12 +96,17 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
     );
   }
 
-  Future<void> _open(Quote quote) async {
+  Future<void> _open(List<Quote> all, int index) async {
     final photos = await ref.read(quoteBackgroundsProvider.future);
-    if (!mounted) return;
+    if (!mounted || all.isEmpty) return;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => QuoteCardScreen(quote: quote, photos: photos),
+        builder: (_) => QuoteCardScreen(
+          quote: all[index],
+          quotes: all,
+          initialIndex: index,
+          photos: photos,
+        ),
       ),
     );
   }
@@ -183,7 +188,13 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
                   accent: _accents[i % _accents.length],
                   ornament: OrnamentBackdrop
                       .quotes[i % OrnamentBackdrop.quotes.length],
-                  onTap: () => _open(quote),
+                  onTap: () {
+                    final all = [
+                      for (final (b, q) in picks)
+                        library.at(b, q, locale: context.locale.languageCode),
+                    ].whereType<Quote>().toList();
+                    _open(all, all.indexOf(quote).clamp(0, all.length - 1));
+                  },
                 ),
               );
             },

@@ -16,6 +16,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/utils/digits.dart' as digits;
 import '../../../../core/widgets/islamic_scene.dart';
+import '../../../../core/widgets/mosque_backdrop.dart';
 import '../../../../core/widgets/remote_tap.dart';
 import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
@@ -145,7 +146,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 if (twoPane) const _HeaderCard(),
                 // «كارت كبير في وصلات سريعة» (owner, 2026-10-01) - the
                 // «القرآن والعبادات» destinations one tap from Home.
-                const WorshipQuickLinks(),
+                // Each card on its own mosque (owner, 2026-10-08) - see
+                // core/widgets/mosque_backdrop.dart.
+                const MosqueBackdrop(
+                  photo: MosquePhotos.blueMosque,
+                  child: WorshipQuickLinks(),
+                ),
                 // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
                 // the reference shows a "متابعة القراءة" bookmark-style card
                 // ("where you left off") as its own thing, separate from the
@@ -153,26 +159,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // there's no real last-read page yet (see its own doc).
                 const TutorialAnchor(
                   id: TourAnchor.continueReading,
-                  child: ContinueReadingCard(),
+                  child: MosqueBackdrop(
+                    photo: MosquePhotos.meknes,
+                    child: ContinueReadingCard(),
+                  ),
                 ),
                 const TutorialAnchor(
                   id: TourAnchor.khatmaCard,
-                  child: KhatmaCard(),
+                  child: MosqueBackdrop(
+                    photo: MosquePhotos.vakil,
+                    child: KhatmaCard(),
+                  ),
                 ),
                 const TutorialAnchor(
                   id: TourAnchor.sunanCard,
-                  child: SunanSuwarCard(),
+                  child: MosqueBackdrop(
+                    photo: MosquePhotos.alMuizz,
+                    child: SunanSuwarCard(),
+                  ),
                 ),
-                const SelectedSurahsCard(),
+                const MosqueBackdrop(
+                  photo: MosquePhotos.suleymaniye,
+                  child: SelectedSurahsCard(),
+                ),
                 // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
                 // اليوم». It draws nothing at all when the setting is off.
                 const TutorialAnchor(
                   id: TourAnchor.quoteCard,
-                  child: HomeQuoteCard(),
+                  child: MosqueBackdrop(
+                    photo: MosquePhotos.ummAlFahm,
+                    child: HomeQuoteCard(),
+                  ),
                 ),
                 const TutorialAnchor(
                   id: TourAnchor.hadithCard,
-                  child: DailyHadithCard(),
+                  child: MosqueBackdrop(
+                    photo: MosquePhotos.faisal,
+                    child: DailyHadithCard(),
+                  ),
                 ),
               ],
             ),

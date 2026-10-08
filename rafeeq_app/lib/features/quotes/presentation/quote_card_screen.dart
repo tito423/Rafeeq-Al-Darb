@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/arabic_normalize.dart';
 import '../../../core/widgets/arabic_text.dart';
-import '../../../core/widgets/islamic_pattern.dart';
+import '../../../core/widgets/mosque_backdrop.dart';
 import '../data/quote_background_catalog.dart';
 import '../data/quote_palettes.dart';
 import '../data/quote_repository.dart';
@@ -34,6 +34,11 @@ import '../data/quote_repository.dart';
 class QuoteCardScreen extends StatefulWidget {
   final Quote quote;
 
+  /// The sayings to swipe through, [quote] among them at [initialIndex];
+  /// null for a card opened on one saying (the notification).
+  final List<Quote>? quotes;
+  final int initialIndex;
+
   /// Fixed only in tests and in the gallery; null means "pick one now".
   final int? paletteIndex;
 
@@ -46,6 +51,8 @@ class QuoteCardScreen extends StatefulWidget {
   const QuoteCardScreen({
     super.key,
     required this.quote,
+    this.quotes,
+    this.initialIndex = 0,
     this.paletteIndex,
     this.photos,
   });
@@ -54,72 +61,55 @@ class QuoteCardScreen extends StatefulWidget {
   State<QuoteCardScreen> createState() => _QuoteCardScreenState();
 }
 
-
 class _QuoteCardScreenState extends State<QuoteCardScreen> {
   late final QuotePalette _palette;
-  late final double _tile;
 
-  /// The photograph this card drew, or null when it drew the ornament.
-  QuoteBackground? _photo;
+  /// The mosque behind the saying (owner, 2026-10-08: «خلي خلفية المقولة
+  /// برده مسجد جميل في شاشتها الكبيرة»), drawn once per opening.
+  late final String _mosque;
+
+  /// «اديني امكانية اني اتنقل للمقولات اللي بعد الظاهرة بالاصبع»: the same
+  /// sayings the Home card holds, swiped through over a fixed background.
+  late final PageController _pages = PageController(
+    initialPage: widget.initialIndex,
+  );
+  List<Quote> get _all => widget.quotes ?? [widget.quote];
+
+  @override
+  void dispose() {
+    _pages.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     final rng = Random();
-    _palette = kQuotePalettes[
-        widget.paletteIndex ?? rng.nextInt(kQuotePalettes.length)];
-    // The lattice scale changes too, so two cards on the same palette still
-    // do not look like the same picture.
-    _tile = 56.0 + rng.nextInt(5) * 12;
+    _palette =
+        kQuotePalettes[widget.paletteIndex ??
+            rng.nextInt(kQuotePalettes.length)];
     // «خلفية إسلامية تتغير عشوائي كل مرة» — the whole pool, drawn ornaments
     // and photographs together, so «كل مرة» really is a different picture
     // rather than a rotation of six.
-    final photos = widget.photos?.images ?? const <QuoteBackground>[];
-    if (photos.isNotEmpty && widget.paletteIndex == null) {
-      final n = rng.nextInt(photos.length + kQuotePalettes.length);
-      if (n < photos.length) _photo = photos[n];
-    }
+    _mosque = MosquePhotos.wide[rng.nextInt(MosquePhotos.wide.length)];
   }
 
   @override
   Widget build(BuildContext context) {
-    final q = widget.quote;
     return Scaffold(
       backgroundColor: _palette.bottom,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          if (_photo != null) ...[
-            Image.asset(
-              _photo!.asset,
-              fit: BoxFit.cover,
-              // A missing or unreadable asset must not leave a blank card:
-              // fall through to the gradient underneath.
-              errorBuilder: (_, _, _) => const SizedBox.shrink(),
-            ),
-            // The scrim the photograph was MEASURED through. Every image's
-            // brightest region clears 4.5:1 against the ink under exactly
-            // this layer (trap #15 — the composite is what the eye gets, not
-            // either colour on its own), so the value comes from the manifest
-            // rather than from a number typed here.
-            ColoredBox(color: Color(widget.photos!.scrimArgb)),
-          ] else ...[
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [_palette.top, _palette.bottom],
-                ),
-              ),
-            ),
-            CustomPaint(
-              painter: IslamicPatternPainter(
-                tile: _tile,
-                color: _palette.ornament,
-              ),
-            ),
-          ],
+          Image.asset(
+            _mosque,
+            fit: BoxFit.cover,
+            // A missing asset must not leave a blank card.
+            errorBuilder: (_, _, _) => const SizedBox.shrink(),
+          ),
+          // The scrim the quote photographs were MEASURED through (trap
+          // #15): the ink clears 4.5:1 over the brightest region under it.
+          ColoredBox(color: Color(widget.photos?.scrimArgb ?? 0xCC071626)),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
@@ -127,77 +117,95 @@ class _QuoteCardScreenState extends State<QuoteCardScreen> {
                 children: [
                   Align(
                     alignment: AlignmentDirectional.topEnd,
-                    child: Icon(Icons.format_quote,
-                        size: 40, color: _palette.ink.withValues(alpha: 0.28)),
+                    child: Icon(
+                      Icons.format_quote,
+                      size: 40,
+                      color: _palette.ink.withValues(alpha: 0.28),
+                    ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // The saying in the reader's language — and only
-                            // an Arabic one needs the right-to-left paragraph
-                            // `arabic_direction_test` measures.
-                            ScriptText(
-                              stripBidiControls(q.text),
-                              arabic: context.locale.languageCode == 'ar',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: _palette.ink,
-                                fontSize: 21,
-                                height: 1.95,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            // … and under it, always, the words the author
-                            // wrote. A translated maxim without its original
-                            // is a claim about a book, not a quotation from
-                            // it — the same rule the ayah cards follow.
-                            if (context.locale.languageCode != 'ar') ...[
-                              const SizedBox(height: 18),
-                              ArabicText(
-                                stripBidiControls(q.arabic),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: _palette.ink.withValues(alpha: 0.72),
-                                  fontSize: 16,
-                                  height: 1.95,
+                    child: PageView.builder(
+                      controller: _pages,
+                      itemCount: _all.length,
+                      itemBuilder: (context, i) {
+                        final q = _all[i];
+                        return Center(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // The saying in the reader's language — and only
+                                // an Arabic one needs the right-to-left paragraph
+                                // `arabic_direction_test` measures.
+                                ScriptText(
+                                  stripBidiControls(q.text),
+                                  arabic: context.locale.languageCode == 'ar',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: _palette.ink,
+                                    fontSize: 21,
+                                    height: 1.95,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
-                            const SizedBox(height: 26),
-                            Container(
-                              width: 54,
-                              height: 1,
-                              color: _palette.ornament.withValues(alpha: 0.9),
+                                // … and under it, always, the words the author
+                                // wrote. A translated maxim without its original
+                                // is a claim about a book, not a quotation from
+                                // it — the same rule the ayah cards follow.
+                                if (context.locale.languageCode != 'ar') ...[
+                                  const SizedBox(height: 18),
+                                  ArabicText(
+                                    stripBidiControls(q.arabic),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: _palette.ink.withValues(
+                                        alpha: 0.72,
+                                      ),
+                                      fontSize: 16,
+                                      height: 1.95,
+                                    ),
+                                  ),
+                                ],
+                                const SizedBox(height: 26),
+                                Container(
+                                  width: 54,
+                                  height: 1,
+                                  color: _palette.ornament.withValues(
+                                    alpha: 0.9,
+                                  ),
+                                ),
+                                const SizedBox(height: 18),
+                                // §1.1 and §1.2: the book is not optional, and
+                                // neither is its author. A saying with no source
+                                // is the thing this project refuses to ship.
+                                Text(
+                                  q.bookTitle,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    // Measured against this card's own ground,
+                                    // which changes with its palette.
+                                    color: readableOn(
+                                      AppColors.gold,
+                                      _palette.bottom,
+                                    ),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  q.authorAr,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: _palette.muted,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 18),
-                            // §1.1 and §1.2: the book is not optional, and
-                            // neither is its author. A saying with no source
-                            // is the thing this project refuses to ship.
-                            Text(
-                              q.bookTitle,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                // Measured against this card's own ground,
-                                // which changes with its palette.
-                                color: readableOn(
-                                    AppColors.gold, _palette.bottom),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              q.authorAr,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: _palette.muted, fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 12),
