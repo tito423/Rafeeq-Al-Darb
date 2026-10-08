@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../azkar/presentation/screens/adhkar_listen_row.dart';
+import '../../../caravan/presentation/caravan_screen.dart';
 import '../../../dedications/presentation/dedications_screen.dart';
+import '../../../dorar/presentation/dorar_hub_screen.dart';
+import '../../../downloads/presentation/screens/downloads_screen.dart';
 import '../../../hajj/presentation/hajj_screen.dart';
 import '../../../hifz/presentation/hifz_screen.dart';
 import '../../../kids/presentation/journey_screen.dart';
@@ -12,6 +15,8 @@ import '../../../kids/presentation/kids_corner_screen.dart';
 import '../../../quiz/presentation/quiz_home_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../ruqyah/presentation/screens/ruqyah_audio_screen.dart';
+import '../../../settings/presentation/screens/settings_screen.dart';
+import '../../../settings/presentation/widgets/focus_mode_picker.dart';
 import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 
 /// «كارت كبير في وصلات سريعة للحاجة اللي في كارت القرآن والعبادات من
@@ -20,6 +25,15 @@ import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 /// three. Icons and accents match the More cards so a tile looks like the
 /// card it leads to. Renamed «الوصول السريع» and given «استمع إلى الأذكار»
 /// first (owner, 2026-10-03).
+///
+/// A third row (owner, 2026-10-08: «زود اسم اللعبة في الوصول السريع بشكل
+/// يخلي الكارت متنسق او ممكن تزود صف ايقونات سريع من المزيد»): one tile
+/// for the game alone would have stood by itself on a row, so a whole row
+/// of five: the game, al-Durar al-Saniyya, the reminders, focus mode and
+/// downloads. Not the khatma: Home already has its card a little further
+/// down («خد بالك عشان ميبقاش فيه حاجة مكررة في الشاشة الرئيسية»).
+/// Labels are the keys the cards they open already use, so a tile reads
+/// exactly as its card, in every language.
 class WorshipQuickLinks extends StatelessWidget {
   const WorshipQuickLinks({super.key});
 
@@ -36,6 +50,11 @@ class WorshipQuickLinks extends StatelessWidget {
     _Link(Icons.emoji_events_rounded, 'home.ql_journey', const Color(0xFF8854D0), (_) => const JourneyScreen()),
     _Link(Icons.quiz_rounded, 'home.ql_quiz', const Color(0xFF4834D4), (_) => const QuizHomeScreen()),
     _Link(Icons.volunteer_activism, 'home.ql_dedications', const Color(0xFFE74C3C), (_) => const DedicationsScreen()),
+    _Link(Icons.route_rounded, 'caravan.title', const Color(0xFFE1A623), (_) => const CaravanScreen()),
+    _Link(Icons.fact_check_outlined, 'dorar.hub_title', const Color(0xFF16A085), (_) => const DorarHubScreen()),
+    _Link(Icons.notifications_active_outlined, 'more.group_reminders', const Color(0xFFC0392B), (_) => const _RemindersPage()),
+    const _Link(Icons.center_focus_strong_outlined, 'focus.title', Color(0xFF5D6D7E), null, onTap: showFocusModePicker),
+    _Link(Icons.download_for_offline_outlined, 'downloads.title', const Color(0xFF2E86C1), (_) => const DownloadsScreen()),
   ];
 
   @override
@@ -57,9 +76,9 @@ class WorshipQuickLinks extends StatelessWidget {
               ]),
             ),
             LayoutBuilder(builder: (context, box) {
-              // five a row on a phone held upright (two rows), all ten in
-              // one row once there is room for it - a tablet, sideways, a TV
-              final cols = box.maxWidth >= 640 ? 10 : 5;
+              // Five a row: three full rows on a phone; wider screens keep
+              // five a row too, so fifteen never leaves a short last row.
+              const cols = 5;
               final w = box.maxWidth / cols;
               return Wrap(
                 children: [
@@ -78,8 +97,26 @@ class _Link {
   final IconData icon;
   final String labelKey;
   final Color color;
-  final WidgetBuilder page;
-  const _Link(this.icon, this.labelKey, this.color, this.page);
+
+  /// The screen it opens, or null when [onTap] does something else
+  /// (focus mode opens its own picker).
+  final WidgetBuilder? page;
+  final Future<void> Function(BuildContext)? onTap;
+  const _Link(this.icon, this.labelKey, this.color, this.page, {this.onTap});
+}
+
+/// «التذكيرات» on a page of its own - the same section More shows.
+class _RemindersPage extends StatelessWidget {
+  const _RemindersPage();
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text('more.group_reminders'.tr())),
+    body: const SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 32),
+      child: SettingsBody(part: SettingsPart.reminders),
+    ),
+  );
 }
 
 class _Tile extends StatelessWidget {
@@ -91,7 +128,14 @@ class _Tile extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: link.page)),
+      onTap: () {
+        final page = link.page;
+        if (page != null) {
+          Navigator.of(context).push(MaterialPageRoute<void>(builder: page));
+        } else {
+          link.onTap?.call(context);
+        }
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
         child: Column(children: [
