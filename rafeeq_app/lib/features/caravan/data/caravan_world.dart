@@ -42,7 +42,10 @@ class Rock {
 class Birds {
   double x;
   bool hit = false;
-  Birds(this.x);
+
+  /// On a flown leg: a storm cloud at this height, in camel heights.
+  final double alt;
+  Birds(this.x, {this.alt = 0});
 }
 
 class Lantern {
@@ -180,7 +183,7 @@ class CaravanWorld extends ChangeNotifier {
   double _y = 0, _vy = 0;
   bool _doubled = false;
   double duckFor = 0;
-  double get _g => camelH * 28;
+  double get _g => camelH * (leg.flying ? 16 : 28);
   final _trail = <double>[];
   final _duckTrail = <double>[];
 
@@ -198,7 +201,10 @@ class CaravanWorld extends ChangeNotifier {
     // Birds join the rocks; from leg four a boulder may come rolling.
     while (f < oasisAt - 0.04) {
       final r = _rnd.nextDouble();
-      if (leg.hasBirds && r < 0.4) {
+      if (leg.flying && r < 0.45) {
+        birds.add(Birds(at(f), alt: 1.8 + _rnd.nextDouble() * 1.2));
+        lanterns.add(Lantern(at(f) + 0.3, 1.3));
+      } else if (leg.hasBirds && r < 0.4) {
         birds.add(Birds(at(f)));
         lanterns.add(Lantern(at(f) + 0.25, 0.6));
       } else if (leg.hasBoulders && r < 0.6) {
@@ -224,12 +230,21 @@ class CaravanWorld extends ChangeNotifier {
       final r = _rnd.nextDouble();
       if (r < 0.32) {
         rocks.add(Rock(at(f)));
+      } else if (leg.flying && r < 0.6) {
+        birds.add(Birds(at(f), alt: 1.6 + _rnd.nextDouble() * 1.5));
       } else if (leg.hasBirds && r < 0.52) {
         birds.add(Birds(at(f)));
       } else if (leg.hasBoulders && r < 0.64) {
         rocks.add(Rock(at(f) + 0.6, rolling: true));
       } else {
-        lanterns.add(Lantern(at(f), 1.0 + _rnd.nextDouble() * 0.9));
+        lanterns.add(
+          Lantern(
+            at(f),
+            leg.flying
+                ? 1.3 + _rnd.nextDouble() * 2.0
+                : 1.0 + _rnd.nextDouble() * 0.9,
+          ),
+        );
       }
       f += gap();
     }
@@ -257,6 +272,11 @@ class CaravanWorld extends ChangeNotifier {
   /// Tap: jump; tap again in the air: one more jump.
   void jump() {
     if (phase != CaravanPhase.running) return;
+    if (leg.flying) {
+      // Every tap beats the wings once; there is no ground to push from.
+      _vy = math.sqrt(2 * _g * camelH * 1.1);
+      return;
+    }
     if (_onGround) {
       _doubled = false;
     } else if (_doubled) {
@@ -332,6 +352,8 @@ class CaravanWorld extends ChangeNotifier {
       storm += ((hard ? 1.0 : 0.0) - storm) * k;
     }
     if (phase == CaravanPhase.running) {
+      if (leg.sea && p > 0.01) _announce('caravan.ev_waves');
+      if (leg.flying && p > 0.01) _announce('caravan.ev_fly');
       if (leg.hasBirds && p > birdsFrom - 0.02) _announce('caravan.ev_birds');
       if (leg.hasBoulders && p > birdsFrom + 0.06) {
         _announce('caravan.ev_boulder');
@@ -370,6 +392,10 @@ class CaravanWorld extends ChangeNotifier {
     // Jump physics.
     _vy -= _g * dt;
     _y = math.max(0, _y + _vy * dt);
+    if (leg.flying && _y > camelH * 3.6) {
+      _y = camelH * 3.6;
+      _vy = math.min(0, _vy);
+    }
     if (_y == 0 && _vy < 0) _vy = 0;
     _trail.add(_y);
     _duckTrail.add(crouching ? 1 : 0);
@@ -399,18 +425,23 @@ class CaravanWorld extends ChangeNotifier {
     }
 
     // The lead camel's top above the road: a crouch takes it to about half.
-    final camelTop = _y + camelH * (crouching ? 0.5 : 0.9);
+    final camelTop = leg.flying
+        ? _y + camelH * 0.6
+        : _y + camelH * (crouching ? 0.5 : 0.9);
     for (final r in rocks) {
       final reach = camelW * (r.rolling ? 0.4 : 0.35);
-      final clear = camelH * (r.rolling ? 0.4 : 0.3);
+      // A flown leg's rocks are peaks: clear them by a camel's height.
+      final clear = camelH * (leg.flying ? 1.0 : (r.rolling ? 0.4 : 0.3));
       if (!r.hit && (r.x - leadX).abs() < reach && _y < clear) {
         r.hit = true;
         hurt();
       }
     }
     for (final b in birds) {
-      // The flock spans 0.65..1.3 camel heights above the road.
-      final low = camelH * 0.65, high = camelH * 1.3;
+      // The flock spans 0.65..1.3 camel heights above the road; a cloud
+      // spans half a camel height either side of its altitude.
+      final low = b.alt > 0 ? (b.alt - 0.45) * camelH : camelH * 0.65;
+      final high = b.alt > 0 ? (b.alt + 0.25) * camelH : camelH * 1.3;
       if (!b.hit &&
           (b.x - leadX).abs() < camelW * 0.4 &&
           camelTop > low &&

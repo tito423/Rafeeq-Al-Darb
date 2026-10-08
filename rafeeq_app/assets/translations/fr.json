@@ -2709,6 +2709,21 @@
     "ev_boulder": "Un rocher roule vers vous ! Sautez par-dessus",
     "ev_dates": "Des dattes ! Ramassez-les pour éviter une chute",
     "shield_on": "Protégé !",
-    "shielded": "Les dattes vous ont protégé !"
+    "shielded": "Les dattes vous ont protégé !",
+    "hira": "Grotte de Hira",
+    "habasha": "Abyssinie",
+    "aqaba": "Al-Aqaba",
+    "thawr": "Grotte de Thawr",
+    "uhud": "Ouhoud",
+    "khandaq": "Al-Khandaq",
+    "hudaybiya": "Al-Houdaybiya",
+    "mutah": "Mou’ta",
+    "hunayn": "Hounayn",
+    "damascus": "Damas",
+    "hittin": "Hattin",
+    "ain_jalut": "‘Ayn Jalout",
+    "ev_waves": "En mer ! Touchez pour faire sauter le bateau par-dessus les vagues",
+    "ev_island": "Une île ! Ramassez l’arc de lanternes",
+    "ev_fly": "Volez avec la huppe ! Touchez pour battre des ailes, évitez les pics et les nuages"
   }
 }

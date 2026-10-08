@@ -40,8 +40,31 @@ class _CaravanMapState extends State<CaravanMap>
 
   static const _rowH = 132.0;
 
+  /// Twenty stations do not fit one screen: the map opens scrolled to the
+  /// leg the reader has reached.
+  final _scroll = ScrollController();
+  int? _scrolledTo;
+
+  void _reveal(int index) {
+    if (_scrolledTo == index) return;
+    _scrolledTo = index;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scroll.hasClients) return;
+      final target = (index * _rowH - 120).clamp(
+        0.0,
+        _scroll.position.maxScrollExtent,
+      );
+      _scroll.animateTo(
+        target,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
   @override
   void dispose() {
+    _scroll.dispose();
     _pulse.dispose();
     super.dispose();
   }
@@ -81,7 +104,9 @@ class _CaravanMapState extends State<CaravanMap>
                   // held flat the road stays a road, centred.
                   final w = math.min(box.maxWidth, 520.0);
                   final h = 40 + legs.length * _rowH;
+                  if (p != null) _reveal(next.number - 1);
                   return SingleChildScrollView(
+                    controller: _scroll,
                     padding: const EdgeInsets.only(bottom: 24),
                     child: Center(
                       child: SizedBox(

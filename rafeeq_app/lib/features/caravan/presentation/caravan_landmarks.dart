@@ -303,6 +303,177 @@ class CaravanLandmarks {
     }
   }
 
+  /// Water for the legs by boat - the sea to Abyssinia, the Tigris, the
+  /// Nile: bands of blue from the horizon down, lines of light drifting
+  /// at their own depth.
+  void sea(Canvas canvas, Size size) {
+    final top = size.height * 0.64;
+    final rect = Rect.fromLTWH(0, top, size.width, size.height - top);
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            _shade(const Color(0xFF4FA3C7)),
+            _shade(const Color(0xFF1B4F7A)),
+          ],
+        ).createShader(rect),
+    );
+    final line = Paint()
+      ..color = Colors.white.withValues(alpha: 0.35 * (1 - 0.5 * w.night))
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    final rnd = math.Random(9);
+    for (var i = 0; i < 26; i++) {
+      final depth = 0.3 + rnd.nextDouble() * 0.9;
+      final y = top + (size.height - top) * rnd.nextDouble();
+      final x = ((rnd.nextDouble() - w.distance * depth) % 1.0) * size.width;
+      final len = 14 + depth * 26;
+      final bob = math.sin(w.time * 2 + i) * 2;
+      canvas.drawLine(Offset(x, y + bob), Offset(x + len, y + bob), line);
+    }
+  }
+
+  /// A breaking wave: the obstacle of a leg by boat.
+  void wave(Canvas canvas, Offset foot, double s) {
+    final curl = math.sin(w.time * 4 + foot.dx / 30) * s * 0.08;
+    final path = Path()
+      ..moveTo(foot.dx - s * 1.2, foot.dy)
+      ..quadraticBezierTo(
+        foot.dx - s * 0.6,
+        foot.dy - s * 0.2,
+        foot.dx - s * 0.2,
+        foot.dy - s,
+      )
+      ..quadraticBezierTo(
+        foot.dx + s * 0.3 + curl,
+        foot.dy - s * 1.35,
+        foot.dx + s * 0.55,
+        foot.dy - s * 0.8,
+      )
+      ..quadraticBezierTo(
+        foot.dx + s * 0.25,
+        foot.dy - s * 0.85,
+        foot.dx + s * 0.35,
+        foot.dy - s * 0.55,
+      )
+      ..quadraticBezierTo(
+        foot.dx + s * 0.8,
+        foot.dy - s * 0.2,
+        foot.dx + s * 1.2,
+        foot.dy,
+      )
+      ..close();
+    canvas.drawPath(
+      path,
+      Paint()
+        ..shader =
+            LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                const Color(0xFFBFE6F5),
+                _shade(const Color(0xFF2E7DAA)),
+              ],
+            ).createShader(
+              Rect.fromLTWH(foot.dx - s, foot.dy - s * 1.4, s * 2, s * 1.4),
+            ),
+    );
+    canvas.drawCircle(
+      foot.translate(s * 0.35, -s * 1.05),
+      s * 0.18,
+      Paint()..color = Colors.white.withValues(alpha: 0.8),
+    );
+  }
+
+  /// A small island passing where the land legs have their oasis.
+  void island(Canvas canvas, double cx, double base, double camel) {
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(cx, base),
+        width: camel * 3,
+        height: camel * 0.4,
+      ),
+      Paint()..color = _shade(const Color(0xFFE7C38A)),
+    );
+    for (final (dx, k) in [(-0.6, 1.1), (0.5, 0.85)]) {
+      final foot = Offset(cx + dx * camel, base - camel * 0.05);
+      final h = camel * 1.5 * k;
+      final top = foot.translate(h * 0.1, -h);
+      canvas.drawLine(
+        foot,
+        top,
+        Paint()
+          ..color = _shade(const Color(0xFF7A5230))
+          ..strokeWidth = h * 0.06
+          ..strokeCap = StrokeCap.round,
+      );
+      final leaf = Paint()..color = _shade(const Color(0xFF3F7A3A));
+      for (var i = 0; i < 6; i++) {
+        final a = -math.pi + i * math.pi / 5;
+        canvas.drawOval(
+          Rect.fromCenter(
+            center: top.translate(
+              math.cos(a) * h * 0.22,
+              math.sin(a) * h * 0.1 + h * 0.06,
+            ),
+            width: h * 0.42,
+            height: h * 0.1,
+          ),
+          leaf,
+        );
+      }
+    }
+  }
+
+  /// A rocky peak rising from the ground: the obstacle of a flown leg.
+  void peak(Canvas canvas, Offset foot, double camel) {
+    final h = camel * 1.05, b = camel * 0.55;
+    final path = Path()
+      ..moveTo(foot.dx - b, foot.dy)
+      ..lineTo(foot.dx - b * 0.2, foot.dy - h)
+      ..lineTo(foot.dx + b * 0.15, foot.dy - h * 0.85)
+      ..lineTo(foot.dx + b, foot.dy)
+      ..close();
+    canvas.drawPath(path, Paint()..color = _shade(const Color(0xFF6D5446)));
+    canvas.drawPath(
+      Path()
+        ..moveTo(foot.dx - b * 0.2, foot.dy - h)
+        ..lineTo(foot.dx + b * 0.15, foot.dy - h * 0.85)
+        ..lineTo(foot.dx + b * 0.4, foot.dy - h * 0.4)
+        ..close(),
+      Paint()..color = _shade(const Color(0xFF8E7462)),
+    );
+  }
+
+  /// A dark storm cloud with a flicker of lightning: the sky's obstacle.
+  void cloud(Canvas canvas, Offset c, double camel) {
+    final paint = Paint()..color = const Color(0xFF4A4F66);
+    for (final (dx, dy, r) in [
+      (0.0, 0.0, 0.32),
+      (-0.3, 0.08, 0.24),
+      (0.3, 0.06, 0.26),
+      (0.12, -0.16, 0.22),
+    ]) {
+      canvas.drawCircle(c.translate(dx * camel, dy * camel), r * camel, paint);
+    }
+    if (math.sin(w.time * 3 + c.dx) > 0.92) {
+      canvas.drawPath(
+        Path()
+          ..moveTo(c.dx, c.dy + camel * 0.25)
+          ..lineTo(c.dx - camel * 0.08, c.dy + camel * 0.45)
+          ..lineTo(c.dx + camel * 0.02, c.dy + camel * 0.45)
+          ..lineTo(c.dx - camel * 0.06, c.dy + camel * 0.68),
+        Paint()
+          ..color = const Color(0xFFFFF2A0)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5,
+      );
+    }
+  }
+
   void _glow(Canvas canvas, Offset c, double r, double a) {
     if (r <= 0 || a <= 0) return;
     canvas.drawCircle(

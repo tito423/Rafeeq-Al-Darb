@@ -2709,6 +2709,21 @@
     "ev_boulder": "Uma pedra rola na tua direção! Salta por cima",
     "ev_dates": "Tâmaras! Apanha-as para te protegerem de um tropeção",
     "shield_on": "Protegido!",
-    "shielded": "As tâmaras protegeram-te!"
+    "shielded": "As tâmaras protegeram-te!",
+    "hira": "Gruta de Hira",
+    "habasha": "Abissínia",
+    "aqaba": "Al-Aqaba",
+    "thawr": "Gruta de Thawr",
+    "uhud": "Uhud",
+    "khandaq": "Al-Khandaq",
+    "hudaybiya": "Al-Hudaybiya",
+    "mutah": "Mu’ta",
+    "hunayn": "Hunayn",
+    "damascus": "Damasco",
+    "hittin": "Hattin",
+    "ain_jalut": "‘Ayn Jalut",
+    "ev_waves": "Ao mar! Toca para o barco saltar as ondas",
+    "ev_island": "Uma ilha! Apanha o arco de lanternas",
+    "ev_fly": "Voa com a poupa! Toca para bater as asas, foge dos picos e das nuvens"
   }
 }

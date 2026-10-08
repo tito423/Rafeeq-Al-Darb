@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../data/caravan_world.dart';
 import 'caravan_landmarks.dart';
+import 'caravan_rides.dart';
 import 'caravan_scenery.dart';
 
 class CaravanPainter extends CustomPainter {
@@ -26,6 +27,7 @@ class CaravanPainter extends CustomPainter {
     final camel = w.camelH * size.height;
     final sc = CaravanScenery(w);
     final lm = CaravanLandmarks(w);
+    final rides = CaravanRides(w);
     sc.sky(canvas, size);
     sc.sun(canvas, size);
     if (w.toNight) lm.moon(canvas, size);
@@ -41,21 +43,28 @@ class CaravanPainter extends CustomPainter {
       dark: const Color(0xFFC08048),
       seed: 1,
     );
-    sc.dunes(
-      canvas,
-      size,
-      depth: 0.35,
-      base: 0.68,
-      amp: 0.045,
-      light: const Color(0xFFDDA160),
-      dark: const Color(0xFFAE6E37),
-      seed: 2,
-    );
+    if (w.leg.sea) lm.sea(canvas, size);
+    if (!w.leg.sea) {
+      sc.dunes(
+        canvas,
+        size,
+        depth: 0.35,
+        base: 0.68,
+        amp: 0.045,
+        light: const Color(0xFFDDA160),
+        dark: const Color(0xFFAE6E37),
+        seed: 2,
+      );
+    }
     if (w.oasisX != null) {
       final at = w.oasisX! * size.width, base = size.height * 0.74;
-      w.leg.north
-          ? lm.olives(canvas, size, at, base, camel)
-          : _oasis(canvas, size, at, base, camel);
+      if (w.leg.sea) {
+        lm.island(canvas, at, size.height * 0.68, camel);
+      } else if (w.leg.north) {
+        lm.olives(canvas, size, at, base, camel);
+      } else {
+        _oasis(canvas, size, at, base, camel);
+      }
     }
     if (w.gateX != null) {
       final at = w.gateX! * size.width;
@@ -63,18 +72,20 @@ class CaravanPainter extends CustomPainter {
           ? lm.qudsGate(canvas, size, at, ground)
           : _gate(canvas, size, at, ground);
     }
-    sc.dunes(
-      canvas,
-      size,
-      depth: 1.0,
-      base: CaravanWorld.groundY,
-      amp: 0.012,
-      light: const Color(0xFFDDA463),
-      dark: const Color(0xFFC08546),
-      seed: 3,
-      rim: false,
-    );
-    sc.roadDetail(canvas, size, camel);
+    if (!w.leg.sea) {
+      sc.dunes(
+        canvas,
+        size,
+        depth: 1.0,
+        base: CaravanWorld.groundY,
+        amp: 0.012,
+        light: const Color(0xFFDDA463),
+        dark: const Color(0xFFC08546),
+        seed: 3,
+        rim: false,
+      );
+    }
+    if (!w.leg.sea) sc.roadDetail(canvas, size, camel);
     for (final r in w.rocks) {
       final at = Offset(r.x * size.width, ground);
       canvas.drawOval(
@@ -87,12 +98,28 @@ class CaravanPainter extends CustomPainter {
           ..color = Colors.black.withValues(alpha: 0.2)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
       );
-      r.rolling
-          ? _boulder(canvas, at, camel * 0.24, r.spin)
-          : _rock(canvas, at, camel * 0.3);
+      if (w.leg.sea) {
+        lm.wave(canvas, at, camel * 0.3);
+      } else if (w.leg.flying) {
+        lm.peak(canvas, at, camel);
+      } else if (r.rolling) {
+        _boulder(canvas, at, camel * 0.24, r.spin);
+      } else {
+        _rock(canvas, at, camel * 0.3);
+      }
     }
     for (final b in w.birds) {
-      _birds(canvas, Offset(b.x * size.width, ground - camel * 0.95), camel);
+      b.alt > 0
+          ? lm.cloud(
+              canvas,
+              Offset(b.x * size.width, ground - b.alt * camel),
+              camel,
+            )
+          : _birds(
+              canvas,
+              Offset(b.x * size.width, ground - camel * 0.95),
+              camel,
+            );
     }
     for (final l in w.lanterns) {
       if (l.taken) continue;
@@ -115,7 +142,32 @@ class CaravanPainter extends CustomPainter {
     }
     // The caravan: three camels, the lead one is the player; each follower
     // repeats the lead's jump a beat later.
-    for (var i = 2; i >= 0; i--) {
+    if (w.leg.sea) {
+      rides.boat(
+        canvas,
+        Offset(
+          CaravanWorld.leadX * size.width,
+          ground - w.liftAt(0) * size.height,
+        ),
+        camel,
+        hurt: w.hurtFor > 0,
+      );
+    }
+    if (w.leg.flying) {
+      for (var i = 2; i >= 0; i--) {
+        final x = CaravanWorld.leadX * size.width - i * camel * 0.9;
+        final y = ground - w.liftAt(i) * size.height - camel * 0.3;
+        rides.hoopoe(
+          canvas,
+          Offset(x, y),
+          camel * (i == 0 ? 1 : 0.75),
+          hurt: i == 0 && w.hurtFor > 0,
+          phase: i * 1.3,
+        );
+      }
+    }
+    final walkers = w.leg.sea || w.leg.flying ? -1 : 2;
+    for (var i = walkers; i >= 0; i--) {
       final x = CaravanWorld.leadX * size.width - i * camel * 1.05;
       final lift = w.liftAt(i) * size.height;
       final foot = Offset(x, ground - lift);
@@ -127,13 +179,24 @@ class CaravanPainter extends CustomPainter {
       canvas.translate(foot.dx, foot.dy);
       canvas.scale(1, squash);
       canvas.translate(-foot.dx, -foot.dy);
-      _camel(
-        canvas,
-        foot,
-        camel,
-        w.stride + i * 0.33,
-        hurt: i == 0 && w.hurtFor > 0,
-      );
+      if (w.leg.ride == CaravanRide.horses) {
+        rides.horse(
+          canvas,
+          foot,
+          camel,
+          w.stride * 1.6 + i * 0.33,
+          hurt: i == 0 && w.hurtFor > 0,
+          coat: i,
+        );
+      } else {
+        _camel(
+          canvas,
+          foot,
+          camel,
+          w.stride + i * 0.33,
+          hurt: i == 0 && w.hurtFor > 0,
+        );
+      }
       canvas.restore();
     }
     if (w.storm > 0.01) _storm(canvas, size);

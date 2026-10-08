@@ -30,8 +30,13 @@ class CaravanProgress {
 
   int starsOf(CaravanLeg leg) => _stars[leg.number] ?? 0;
 
+  /// Set only on a device-check build (`--dart-define=RAFEEQ_CARAVAN_ALL_OPEN=true`)
+  /// so every leg can be seen on the emulator without playing the ones
+  /// before it; build_github_release.bat never passes it.
+  static const _allOpen = bool.fromEnvironment('RAFEEQ_CARAVAN_ALL_OPEN');
+
   bool isOpen(CaravanLeg leg) =>
-      leg.number == 1 || _stars.containsKey(leg.number - 1);
+      _allOpen || leg.number == 1 || _stars.containsKey(leg.number - 1);
 
   int get totalStars => _stars.values.fold(0, (a, b) => a + b);
 

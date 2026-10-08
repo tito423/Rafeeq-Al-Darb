@@ -2709,6 +2709,21 @@
     "ev_boulder": "¡Una roca rueda hacia ti! Salta por encima",
     "ev_dates": "¡Dátiles! Recógelos para protegerte de un tropiezo",
     "shield_on": "¡Protegido!",
-    "shielded": "¡Los dátiles te protegieron!"
+    "shielded": "¡Los dátiles te protegieron!",
+    "hira": "Cueva de Hira",
+    "habasha": "Abisinia",
+    "aqaba": "Al-Aqaba",
+    "thawr": "Cueva de Thawr",
+    "uhud": "Uhud",
+    "khandaq": "Al-Jandaq",
+    "hudaybiya": "Al-Hudaybiya",
+    "mutah": "Mu’ta",
+    "hunayn": "Hunayn",
+    "damascus": "Damasco",
+    "hittin": "Hattin",
+    "ain_jalut": "‘Ayn Yalut",
+    "ev_waves": "¡Al mar! Toca para que el barco salte las olas",
+    "ev_island": "¡Una isla! Recoge el arco de faroles",
+    "ev_fly": "¡Vuela con la abubilla! Toca para batir las alas, evita los picos y las nubes"
   }
 }
