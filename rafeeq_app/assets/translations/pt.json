@@ -2696,6 +2696,12 @@
     "ev_storm": "Tempestade de areia! Atenção ao caminho",
     "ev_oasis": "Um oásis! Apanha o arco de lanternas",
     "ev_birds": "Um bando de pássaros! Desliza para baixo para o camelo se baixar",
-    "streak": "Sequência ×{}!"
+    "streak": "Sequência ×{}!",
+    "leg2": "Etapa 2: de Medina a Bayt al-Maqdis (Jerusalém)",
+    "quds": "Jerusalém",
+    "won_title2": "A caravana chegou a Bayt al-Maqdis!",
+    "ev_olives": "Olivais! Apanha o arco de lanternas",
+    "ev_night": "Caiu a noite! Segue a luz das lanternas",
+    "next_leg": "Continuar a viagem para {}"
   }
 }

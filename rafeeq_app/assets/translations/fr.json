@@ -2696,6 +2696,12 @@
     "ev_storm": "Tempête de sable ! Attention à la route",
     "ev_oasis": "Une oasis ! Ramassez l’arc de lanternes",
     "ev_birds": "Une volée d’oiseaux ! Glissez vers le bas pour que le chameau se baisse",
-    "streak": "Série ×{} !"
+    "streak": "Série ×{} !",
+    "leg2": "Étape 2 : de Médine à Bayt al-Maqdis (Jérusalem)",
+    "quds": "Jérusalem",
+    "won_title2": "La caravane est arrivée à Bayt al-Maqdis !",
+    "ev_olives": "Des oliveraies ! Ramassez l’arc de lanternes",
+    "ev_night": "La nuit est tombée ! Suivez la lumière des lanternes",
+    "next_leg": "Poursuivre le voyage vers {}"
   }
 }

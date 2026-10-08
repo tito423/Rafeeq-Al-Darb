@@ -140,10 +140,14 @@ class _Arrived extends StatelessWidget {
   final CaravanWorld world;
   final QuizQuestion question;
   final VoidCallback onAgain, onExit;
+
+  /// The next leg, or null on the last one.
+  final VoidCallback? onNext;
   const _Arrived({
     required this.world,
     required this.question,
     required this.onAgain,
+    required this.onNext,
     required this.onExit,
   });
 
@@ -160,7 +164,7 @@ class _Arrived extends StatelessWidget {
         children: [
           const Icon(Icons.auto_awesome, color: Color(0xFFB8892A), size: 44),
           Text(
-            'caravan.won_title'.tr(),
+            world.leg.wonKey.tr(),
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: AppColors.ink,
@@ -231,14 +235,28 @@ class _Arrived extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          FilledButton.icon(
+          if (onNext != null) ...[
+            FilledButton.icon(
+              onPressed: onNext,
+              icon: const Icon(Icons.east_rounded),
+              label: Text(
+                'caravan.next_leg'.tr(args: [world.leg.next.toKey.tr()]),
+              ),
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFFB8892A),
+                foregroundColor: Colors.white,
+                minimumSize: const Size.fromHeight(48),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+          OutlinedButton.icon(
             onPressed: onAgain,
             icon: const Icon(Icons.replay_rounded),
             label: Text('caravan.play_again'.tr()),
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFF1F6B5A),
-              foregroundColor: Colors.white,
-              minimumSize: const Size.fromHeight(48),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFF1F6B5A),
+              minimumSize: const Size.fromHeight(46),
             ),
           ),
           TextButton(onPressed: onExit, child: Text('caravan.exit'.tr())),

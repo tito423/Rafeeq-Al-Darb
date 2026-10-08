@@ -4,6 +4,10 @@
 /// crests and shaded in their hollows, dust kicked up by the camels, and a
 /// soft frame that holds the eye on the road.
 ///
+/// Leg two runs the other way through the day: afternoon, a sunset, then
+/// night under a crescent and the stars, while the sand turns to the
+/// greener ground of al-Sham.
+///
 /// Owner, 2026-10-08: «خليها فيجوالي احمل واروع». Every layer moves at its
 /// own depth ([CaravanWorld.distance] x depth), which is what makes a flat
 /// road read as a land the caravan is crossing.
@@ -21,10 +25,26 @@ class CaravanScenery {
 
   double get _p => w.progress.clamp(0.0, 1.0);
 
+  /// a -> b -> c as t goes 0 -> 0.5 -> 1.
+  static Color _three(Color a, Color b, Color c, double t) =>
+      t < 0.5 ? Color.lerp(a, b, t * 2)! : Color.lerp(b, c, (t - 0.5) * 2)!;
+
+  /// A colour of the land, as the leg's light makes it: on leg two the sand
+  /// greens as the road climbs into al-Sham, then sinks into the night blue.
+  Color land(Color c) {
+    if (!w.toNight) return c;
+    final green = Color.lerp(c, const Color(0xFF9FA36C), 0.4 * _p)!;
+    return Color.lerp(green, const Color(0xFF161B38), 0.62 * w.night)!;
+  }
+
   /// Three stops instead of two: a deep top, a warm band low on the horizon,
   /// and the haze right above the land.
   void sky(Canvas canvas, Size size) {
     final p = _p;
+    if (w.toNight) {
+      _skyToNight(canvas, size, p);
+      return;
+    }
     final top = Color.lerp(
       const Color(0xFF1E2152),
       const Color(0xFF2F6FA8),
@@ -52,7 +72,43 @@ class CaravanScenery {
         ).createShader(rect),
     );
     // Stars that fade as the sun climbs, each twinkling on its own beat.
-    final starA = (1 - p * 3).clamp(0.0, 1.0);
+    _stars(canvas, size, (1 - p * 3).clamp(0.0, 1.0));
+  }
+
+  void _skyToNight(Canvas canvas, Size size, double p) {
+    final top = _three(
+      const Color(0xFF2F6FA8),
+      const Color(0xFF3B3A7A),
+      const Color(0xFF070B26),
+      p,
+    );
+    final mid = _three(
+      const Color(0xFF8CC2E3),
+      const Color(0xFFC8648A),
+      const Color(0xFF1A2152),
+      p,
+    );
+    final low = _three(
+      const Color(0xFFFBE7B9),
+      const Color(0xFFFFA25C),
+      const Color(0xFF3B3570),
+      p,
+    );
+    final rect = Offset.zero & size;
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [top, mid, low],
+          stops: const [0.0, 0.42, 0.7],
+        ).createShader(rect),
+    );
+    _stars(canvas, size, ((p - 0.5) * 2.5).clamp(0.0, 1.0));
+  }
+
+  void _stars(Canvas canvas, Size size, double starA) {
     if (starA > 0) {
       final rnd = math.Random(7);
       for (var i = 0; i < 60; i++) {
@@ -69,14 +125,21 @@ class CaravanScenery {
     }
   }
 
-  Offset sunCentre(Size size) => Offset(
-    size.width * (0.82 - 0.5 * _p),
-    size.height * (0.55 - 0.38 * math.sin(_p * math.pi * 0.9)),
-  );
+  Offset sunCentre(Size size) => w.toNight
+      ? Offset(
+          size.width * (0.32 - 0.14 * _p),
+          size.height * (0.22 + 0.62 * _p),
+        )
+      : Offset(
+          size.width * (0.82 - 0.5 * _p),
+          size.height * (0.55 - 0.38 * math.sin(_p * math.pi * 0.9)),
+        );
 
   /// The sun, its halo, and slow rays turning out of it.
   void sun(Canvas canvas, Size size) {
     final c = sunCentre(size);
+    // On leg two the sun is gone below the far hills by the time night falls.
+    if (w.toNight && c.dy > size.height * 0.75) return;
     final r = math.min(size.width, size.height) * 0.07;
     // Rays: long soft wedges, turning very slowly.
     canvas.save();
@@ -122,9 +185,17 @@ class CaravanScenery {
 
   /// Soft clouds drifting far above, slower than anything on the ground.
   void clouds(Canvas canvas, Size size) {
-    final a = 0.35 + 0.35 * _p;
+    final a = w.toNight ? 0.6 * (1 - 0.75 * w.night) : 0.35 + 0.35 * _p;
+    // At sunset the clouds catch the light.
+    final tint = w.toNight
+        ? Color.lerp(
+            Colors.white,
+            const Color(0xFFFFB38A),
+            (_p * 2).clamp(0.0, 1.0),
+          )!
+        : Colors.white;
     final paint = Paint()
-      ..color = Colors.white.withValues(alpha: a)
+      ..color = tint.withValues(alpha: a)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
     final rnd = math.Random(23);
     for (var i = 0; i < 5; i++) {
@@ -169,19 +240,33 @@ class CaravanScenery {
     path
       ..lineTo(size.width, size.height)
       ..close();
-    final haze = Color.lerp(
-      const Color(0xFF6E4A78),
-      const Color(0xFFB59AA8),
-      _p,
-    )!;
+    final haze = w.toNight
+        ? _three(
+            const Color(0xFF8C9A86),
+            const Color(0xFF7A5878),
+            const Color(0xFF242A4E),
+            _p,
+          )
+        : Color.lerp(const Color(0xFF6E4A78), const Color(0xFFB59AA8), _p)!;
     canvas.drawPath(
       path,
       Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [haze.withValues(alpha: 0.75), haze.withValues(alpha: 0.2)],
-        ).createShader(Rect.fromLTWH(0, base - size.height * 0.16, size.width, size.height * 0.3)),
+        ..shader =
+            LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                haze.withValues(alpha: 0.75),
+                haze.withValues(alpha: 0.2),
+              ],
+            ).createShader(
+              Rect.fromLTWH(
+                0,
+                base - size.height * 0.16,
+                size.width,
+                size.height * 0.3,
+              ),
+            ),
     );
   }
 
@@ -222,14 +307,18 @@ class CaravanScenery {
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [light, dark],
+          colors: [land(light), land(dark)],
         ).createShader(Rect.fromLTWH(0, top, size.width, size.height - top)),
     );
     if (rim) {
       canvas.drawPath(
         crest,
         Paint()
-          ..color = const Color(0xFFFFE9C2).withValues(alpha: 0.22)
+          ..color =
+              (w.night > 0.3
+                      ? const Color(0xFFB8C4FF)
+                      : const Color(0xFFFFE9C2))
+                  .withValues(alpha: 0.22)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.2
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5),
@@ -259,7 +348,8 @@ class CaravanScenery {
     }
     // Prints left behind the caravan: they start under the last camel and
     // slide back with the road.
-    final print = Paint()..color = const Color(0xFF7A4520).withValues(alpha: 0.35);
+    final print = Paint()
+      ..color = const Color(0xFF7A4520).withValues(alpha: 0.35);
     final lead = CaravanWorld.leadX * size.width;
     final step = camel * 0.42;
     final shift = (w.distance * size.width) % step;
@@ -274,12 +364,16 @@ class CaravanScenery {
         print..color = const Color(0xFF7A4520).withValues(alpha: 0.35 * k),
       );
     }
-    final pebble = Paint()..color = const Color(0xFFB98A55).withValues(alpha: 0.45);
+    final pebble = Paint()
+      ..color = const Color(0xFFB98A55).withValues(alpha: 0.45);
     final rnd = math.Random(5);
     for (var i = 0; i < 14; i++) {
       final fx = (rnd.nextDouble() - off) % 1.0;
       canvas.drawCircle(
-        Offset(fx * size.width, ground + size.height * (0.03 + rnd.nextDouble() * 0.14)),
+        Offset(
+          fx * size.width,
+          ground + size.height * (0.03 + rnd.nextDouble() * 0.14),
+        ),
         1 + rnd.nextDouble() * 1.5,
         pebble,
       );

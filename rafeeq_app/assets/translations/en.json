@@ -2696,6 +2696,12 @@
     "ev_storm": "Sandstorm! Watch the road",
     "ev_oasis": "An oasis! Collect the arc of lanterns",
     "ev_birds": "A flock of birds! Swipe down to make the camel duck",
-    "streak": "Streak ×{}!"
+    "streak": "Streak ×{}!",
+    "leg2": "Leg 2: From Madinah to Bayt al-Maqdis (Jerusalem)",
+    "quds": "Jerusalem",
+    "won_title2": "The caravan has reached Bayt al-Maqdis!",
+    "ev_olives": "Olive groves! Collect the arc of lanterns",
+    "ev_night": "Night has fallen! Follow the lantern light",
+    "next_leg": "Continue the journey to {}"
   }
 }

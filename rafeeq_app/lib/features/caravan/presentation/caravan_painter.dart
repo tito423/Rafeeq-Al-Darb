@@ -10,6 +10,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../data/caravan_world.dart';
+import 'caravan_landmarks.dart';
 import 'caravan_scenery.dart';
 
 class CaravanPainter extends CustomPainter {
@@ -24,8 +25,10 @@ class CaravanPainter extends CustomPainter {
     final ground = size.height * CaravanWorld.groundY;
     final camel = w.camelH * size.height;
     final sc = CaravanScenery(w);
+    final lm = CaravanLandmarks(w);
     sc.sky(canvas, size);
     sc.sun(canvas, size);
+    if (w.toNight) lm.moon(canvas, size);
     sc.clouds(canvas, size);
     sc.mountains(canvas, size);
     sc.dunes(
@@ -49,9 +52,17 @@ class CaravanPainter extends CustomPainter {
       seed: 2,
     );
     if (w.oasisX != null) {
-      _oasis(canvas, size, w.oasisX! * size.width, size.height * 0.74, camel);
+      final at = w.oasisX! * size.width, base = size.height * 0.74;
+      w.toNight
+          ? lm.olives(canvas, size, at, base, camel)
+          : _oasis(canvas, size, at, base, camel);
     }
-    if (w.gateX != null) _gate(canvas, size, w.gateX! * size.width, ground);
+    if (w.gateX != null) {
+      final at = w.gateX! * size.width;
+      w.toNight
+          ? lm.qudsGate(canvas, size, at, ground)
+          : _gate(canvas, size, at, ground);
+    }
     sc.dunes(
       canvas,
       size,
@@ -120,6 +131,7 @@ class CaravanPainter extends CustomPainter {
       canvas.restore();
     }
     if (w.storm > 0.01) _storm(canvas, size);
+    lm.nightVeil(canvas, size, camel);
     sc.vignette(canvas, size);
     for (final p in w.popups) {
       _popup(canvas, size, p, camel);
@@ -366,17 +378,18 @@ class CaravanPainter extends CustomPainter {
     final hip = foot.translate(0, -legLen);
     // Sunlit back, shaded belly: one gradient over the whole animal.
     final paint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color.lerp(body, const Color(0xFFE0A86A), 0.35)!,
-          body,
-          Color.lerp(body, Colors.black, 0.3)!,
-        ],
-      ).createShader(
-        Rect.fromLTWH(hip.dx - h * 0.5, hip.dy - h * 0.6, h * 1.1, h * 0.7),
-      );
+      ..shader =
+          LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.lerp(body, const Color(0xFFE0A86A), 0.35)!,
+              body,
+              Color.lerp(body, Colors.black, 0.3)!,
+            ],
+          ).createShader(
+            Rect.fromLTWH(hip.dx - h * 0.5, hip.dy - h * 0.6, h * 1.1, h * 0.7),
+          );
     // Legs: four, swinging in pairs.
     final legPaint = Paint()
       ..color = shade
@@ -472,7 +485,11 @@ class CaravanPainter extends CustomPainter {
       final sw = math.sin(stride * 2 * math.pi + k) * h * 0.035;
       final end = top.translate(sw, h * 0.09);
       canvas.drawLine(top, end, tassel);
-      canvas.drawCircle(end, h * 0.018, Paint()..color = const Color(0xFFC0392B));
+      canvas.drawCircle(
+        end,
+        h * 0.018,
+        Paint()..color = const Color(0xFFC0392B),
+      );
     }
     // Ear and eye.
     final head = Offset(hip.dx + h * 0.52, hip.dy - h * 0.46 + nod);

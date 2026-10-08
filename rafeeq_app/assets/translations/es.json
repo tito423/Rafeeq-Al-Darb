@@ -2696,6 +2696,12 @@
     "ev_storm": "¡Tormenta de arena! Atento al camino",
     "ev_oasis": "¡Un oasis! Recoge el arco de faroles",
     "ev_birds": "¡Una bandada de pájaros! Desliza hacia abajo para que el camello se agache",
-    "streak": "¡Racha ×{}!"
+    "streak": "¡Racha ×{}!",
+    "leg2": "Etapa 2: de Medina a Bayt al-Maqdis (Jerusalén)",
+    "quds": "Jerusalén",
+    "won_title2": "¡La caravana ha llegado a Bayt al-Maqdis!",
+    "ev_olives": "¡Olivares! Recoge el arco de faroles",
+    "ev_night": "¡Ha caído la noche! Sigue la luz de los faroles",
+    "next_leg": "Continuar el viaje a {}"
   }
 }

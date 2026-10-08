@@ -19,6 +19,65 @@ enum CaravanMode { kids, adults }
 
 enum CaravanPhase { running, arriving, atGate, won, lost }
 
+/// One leg of the journey: the two cities, the question at the far gate (an
+/// id in the verified quiz bank - never a question written here), and the
+/// banners of its road.
+class CaravanLeg {
+  final int number;
+  final String fromKey, toKey, titleKey, wonKey;
+  final String gateQuestionId;
+
+  /// The banner of the scenery stop in the middle of the road, and of the
+  /// hard stretch after it.
+  final String midKey, hardKey;
+  const CaravanLeg({
+    required this.number,
+    required this.fromKey,
+    required this.toKey,
+    required this.titleKey,
+    required this.wonKey,
+    required this.gateQuestionId,
+    required this.midKey,
+    required this.hardKey,
+  });
+
+  /// Leg one: Makkah to Madinah, dawn to afternoon, an oasis and a
+  /// sandstorm. Gate: «إلى أي مدينة أذن النبي ﷺ للمسلمين أن يهاجروا من
+  /// مكة؟» (al-Fusul fi Sirat al-Rasul, p. 113).
+  ///
+  /// Leg two: Madinah to Bayt al-Maqdis, north into al-Sham, afternoon to
+  /// night, olive groves and a dark stretch lit by the lanterns. Gate: «في
+  /// خلافة من فُتح بيت المقدس؟» (al-Suyuti, Tarikh al-Khulafa, p. 238:
+  /// «سار عمر ففتح بيت المقدس»).
+  static const first = CaravanLeg(
+    number: 1,
+    fromKey: 'caravan.makkah',
+    toKey: 'caravan.madinah',
+    titleKey: 'caravan.leg1',
+    wonKey: 'caravan.won_title',
+    gateQuestionId: 'ef3e67153c',
+    midKey: 'caravan.ev_oasis',
+    hardKey: 'caravan.ev_storm',
+  );
+
+  static const all = [
+    first,
+    CaravanLeg(
+      number: 2,
+      fromKey: 'caravan.madinah',
+      toKey: 'caravan.quds',
+      titleKey: 'caravan.leg2',
+      wonKey: 'caravan.won_title2',
+      gateQuestionId: '96c6f015e7',
+      midKey: 'caravan.ev_olives',
+      hardKey: 'caravan.ev_night',
+    ),
+  ];
+
+  bool get isLast => number == all.length;
+  CaravanLeg get next => all[number];
+}
+
 class Rock {
   double x;
   bool hit = false;
@@ -61,13 +120,21 @@ class Popup {
 }
 
 class CaravanWorld extends ChangeNotifier {
-  CaravanWorld({required this.mode, this.lang = 'ar', int seed = 1})
-    : _rnd = math.Random(seed) {
+  CaravanWorld({
+    required this.mode,
+    this.leg = CaravanLeg.first,
+    this.lang = 'ar',
+    int seed = 1,
+  }) : _rnd = math.Random(seed) {
     _layOut();
   }
 
   final CaravanMode mode;
+  final CaravanLeg leg;
   final String lang;
+
+  /// Leg two goes from afternoon into night; leg one from dawn into day.
+  bool get toNight => leg.number == 2;
   final math.Random _rnd;
 
   static const groundY = 0.80;
@@ -93,7 +160,9 @@ class CaravanWorld extends ChangeNotifier {
     camelH = px / height;
   }
 
-  double get _baseSpeed => mode == CaravanMode.kids ? 0.36 : 0.46;
+  /// Each leg is a little faster than the one before it.
+  double get _baseSpeed =>
+      (mode == CaravanMode.kids ? 0.36 : 0.46) * (1 + 0.08 * (leg.number - 1));
 
   /// Screen widths per second.
   double get speed => _baseSpeed * _slow;
@@ -119,8 +188,12 @@ class CaravanWorld extends ChangeNotifier {
   /// The oasis scenery's x while it passes, else null.
   double? oasisX;
 
-  /// 0..1, how thick the sandstorm is.
+  /// 0..1, how thick the sandstorm is (leg one).
   double storm = 0;
+
+  /// 0..1, how dark the night is (leg two): it falls with the hard stretch
+  /// and stays, so the caravan reaches the city under its lamps.
+  double night = 0;
 
   /// A banner across the screen when a part of the road begins, by key.
   String? banner;
@@ -270,12 +343,17 @@ class CaravanWorld extends ChangeNotifier {
     if (duckFor > 0 && _onGround) duckFor -= dt;
 
     final p = progress;
-    final target = p > stormFrom && p < stormTo ? 1.0 : 0.0;
-    storm += (target - storm) * math.min(1, dt * 1.5);
+    final hard = toNight ? p > stormFrom : p > stormFrom && p < stormTo;
+    final k = math.min(1.0, dt * (toNight ? 0.6 : 1.5));
+    if (toNight) {
+      night += ((hard ? 1.0 : 0.0) - night) * k;
+    } else {
+      storm += ((hard ? 1.0 : 0.0) - storm) * k;
+    }
     if (phase == CaravanPhase.running) {
       if (p > birdsFrom - 0.02) _announce('caravan.ev_birds');
-      if (p > oasisAt - 0.03) _announce('caravan.ev_oasis');
-      if (p > stormFrom) _announce('caravan.ev_storm');
+      if (p > oasisAt - 0.03) _announce(leg.midKey);
+      if (p > stormFrom) _announce(leg.hardKey);
       if (p > starAt - 0.06) _announce('caravan.ev_star');
     }
 

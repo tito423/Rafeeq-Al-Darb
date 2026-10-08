@@ -9,6 +9,10 @@
 /// Drawn with a plain Ticker and a CustomPainter: Flame 1.38 needs Flutter
 /// 3.41 and this app is on 3.38.7 (checked 2026-10-07), and one journey
 /// game does not need an engine.
+///
+/// Leg two (2026-10-08): Madinah to Bayt al-Maqdis, reached from the
+/// arrival card of leg one. Every leg's gate question is an id in the quiz
+/// bank ([CaravanLeg.gateQuestionId]); a test holds each one to the bank.
 library;
 
 import 'dart:math' as math;
@@ -28,10 +32,6 @@ import 'caravan_painter.dart';
 
 part 'caravan_cards.dart';
 
-/// The gate question of leg one: «إلى أي مدينة أذن النبي ﷺ للمسلمين أن
-/// يهاجروا من مكة؟» - from the quiz bank, so it is sourced and translated.
-const _gateQuestionId = 'ef3e67153c';
-
 class CaravanScreen extends StatefulWidget {
   const CaravanScreen({super.key});
 
@@ -44,7 +44,11 @@ class _CaravanScreenState extends State<CaravanScreen>
   CaravanWorld? _world;
   late final Ticker _ticker = createTicker(_tick);
   Duration _last = Duration.zero;
-  QuizQuestion? _gateQ;
+  CaravanLeg _leg = CaravanLeg.first;
+
+  /// Gate questions by id, localized, loaded once from the bank.
+  final _gates = <String, QuizQuestion>{};
+  QuizQuestion? get _gateQ => _gates[_leg.gateQuestionId];
   List<String> _choices = const [];
   String? _wrong;
   Offset? _down;
@@ -54,10 +58,15 @@ class _CaravanScreenState extends State<CaravanScreen>
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations(const []);
+    final ids = {for (final l in CaravanLeg.all) l.gateQuestionId};
     HistoryQuiz.all().then((bank) {
-      final q = bank.where((q) => q.id == _gateQuestionId).firstOrNull;
-      if (!mounted || q == null) return;
-      setState(() => _gateQ = q.localized(context.locale.languageCode));
+      if (!mounted) return;
+      final lang = context.locale.languageCode;
+      setState(() {
+        for (final q in bank) {
+          if (ids.contains(q.id)) _gates[q.id] = q.localized(lang);
+        }
+      });
     });
   }
 
@@ -68,11 +77,13 @@ class _CaravanScreenState extends State<CaravanScreen>
     super.dispose();
   }
 
-  void _start(CaravanMode mode) {
+  void _start(CaravanMode mode, [CaravanLeg? leg]) {
     _world?.dispose();
     setState(() {
+      _leg = leg ?? _leg;
       _world = CaravanWorld(
         mode: mode,
+        leg: _leg,
         lang: context.locale.languageCode,
         seed: DateTime.now().millisecond,
       );
@@ -121,7 +132,7 @@ class _CaravanScreenState extends State<CaravanScreen>
       child: Scaffold(
         backgroundColor: const Color(0xFF2B2A5C),
         body: w == null
-            ? _Intro(onStart: _start)
+            ? _Intro(onStart: (m) => _start(m, CaravanLeg.first))
             : Listener(
                 behavior: HitTestBehavior.opaque,
                 onPointerDown: (e) {
@@ -209,6 +220,11 @@ class _CaravanScreenState extends State<CaravanScreen>
                         world: w,
                         question: _gateQ!,
                         onAgain: () => _start(w.mode),
+                        onNext:
+                            _leg.isLast ||
+                                _gates[_leg.next.gateQuestionId] == null
+                            ? null
+                            : () => _start(w.mode, _leg.next),
                         onExit: () => Navigator.of(context).pop(),
                       ),
                     if (w.phase == CaravanPhase.lost)
@@ -402,7 +418,9 @@ class _Hud extends StatelessWidget {
               ),
             ],
             const SizedBox(width: 10),
-            Expanded(child: _Road(progress: world.progress)),
+            Expanded(
+              child: _Road(leg: world.leg, progress: world.progress),
+            ),
           ],
         ),
       ),
@@ -439,10 +457,11 @@ class _Chip extends StatelessWidget {
   );
 }
 
-/// Makkah ... Madinah, with the caravan's place between them.
+/// The leg's two cities, with the caravan's place between them.
 class _Road extends StatelessWidget {
+  final CaravanLeg leg;
   final double progress;
-  const _Road({required this.progress});
+  const _Road({required this.leg, required this.progress});
 
   @override
   Widget build(BuildContext context) {
@@ -459,7 +478,7 @@ class _Road extends StatelessWidget {
   Widget _row(TextStyle style) {
     return Row(
       children: [
-        Text('caravan.makkah'.tr(), style: style),
+        Text(leg.fromKey.tr(), style: style),
         const SizedBox(width: 6),
         Expanded(
           child: LayoutBuilder(
@@ -499,7 +518,7 @@ class _Road extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 6),
-        Text('caravan.madinah'.tr(), style: style),
+        Text(leg.toKey.tr(), style: style),
       ],
     );
   }
