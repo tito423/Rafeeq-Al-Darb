@@ -687,6 +687,9 @@ class _ReaderNameCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final name = ref.watch(readerNameProvider);
+    // A const card with no locale dependency kept its old language after a
+    // switch (seen fr -> ur on emulator-5554, 2026-10-08).
+    context.locale;
     return IslamicActionCard(
       icon: Icons.badge_outlined,
       title: 'settings.your_name'.tr(),
