@@ -1189,6 +1189,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-09 00:00 - v3.87.0 published: home cards on mosques, swipeable full-screen sayings
 - 2026-10-08 22:36 - v3.86.0 published: adhkar by six real voices, photo backgrounds
 - 2026-10-08 20:19 - v3.85.0 published: reader page makes room for the controls
 - 2026-10-08 19:26 - v3.84.0 published: caravan 20 legs, quick access row, More rename, recitation Home
