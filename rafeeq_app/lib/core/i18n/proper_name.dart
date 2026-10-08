@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 
+import '../utils/digits.dart';
+
 /// A person's, channel's or reciter's own name, in the script the reader reads.
 ///
 /// A name is never translated — «عبد الله رشدي» and "Abdullah Rushdy" are the
@@ -22,4 +24,4 @@ bool get readsArabicScript => 'common.script'.tr() == 'arabic';
 /// back to [arabic] when no Latin form was recorded, since a name in the wrong
 /// script beats no name at all.
 String properName(String arabic, String latin) =>
-    (readsArabicScript || latin.isEmpty) ? arabic : latin;
+    (readsArabicScript || latin.isEmpty) ? readerDigits(arabic) : latin;

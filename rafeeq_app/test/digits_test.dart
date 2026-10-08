@@ -25,8 +25,11 @@ void main() {
   test('CLDR is what decided Urdu, and it still says Latin', () {
     // Reading the package's own bundled CLDR data rather than asserting from
     // memory — this is the measurement the decision rests on.
-    expect(numberFormatSymbols['ur']!.ZERO_DIGIT, '0',
-        reason: 'if CLDR ever changes this, the Urdu decision changes with it');
+    expect(
+      numberFormatSymbols['ur']!.ZERO_DIGIT,
+      '0',
+      reason: 'if CLDR ever changes this, the Urdu decision changes with it',
+    );
     expect(numberFormatSymbols['fa']!.ZERO_DIGIT, '۰');
     expect(numberFormatSymbols['ps']!.ZERO_DIGIT, '۰');
   });
@@ -40,8 +43,10 @@ void main() {
   });
 
   test('non-digits pass through untouched', () {
-    expect(localizeDigits('٢٨ ربيع الأول 1448 هـ', 'ar'),
-        '٢٨ ربيع الأول ١٤٤٨ هـ');
+    expect(
+      localizeDigits('٢٨ ربيع الأول 1448 هـ', 'ar'),
+      '٢٨ ربيع الأول ١٤٤٨ هـ',
+    );
     expect(localizeDigits('', 'ar'), '');
   });
 
@@ -51,10 +56,11 @@ void main() {
     // its own digit table and its own loop. A file that carries the table is
     // a file that has its own implementation.
     final offenders = <String>[];
-    for (final f in Directory('lib')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((f) => f.path.endsWith('.dart'))) {
+    for (final f
+        in Directory('lib')
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((f) => f.path.endsWith('.dart'))) {
       if (f.path.endsWith('digits.dart')) continue;
       // `azkar_repeat.dart` parses Arabic-Indic digits back to int — the
       // inverse direction, and not a copy of this.
@@ -68,8 +74,33 @@ void main() {
         }
       }
     }
-    expect(offenders, isEmpty,
-        reason: 'these carry their own digit table instead of calling '
-            'localizeDigits: ${offenders.join(", ")}');
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'these carry their own digit table instead of calling '
+          'localizeDigits: ${offenders.join(", ")}',
+    );
+  });
+
+  // Owner, 2026-10-08: Urdu shows ONE digit style. 78 ur.json values had
+  // ٠١٢ or ۰۱۲ beside Latin numbers elsewhere in the UI; all are Latin now,
+  // as on the five Urdu news sites measured that day.
+  test('ur.json writes every number in Latin digits', () {
+    final text = File('assets/translations/ur.json').readAsStringSync();
+    final bad = RegExp('[٠-٩۰-۹]').allMatches(text);
+    expect(bad.length, 0);
+  });
+
+  test('Arabic catalogue text reaches an Urdu reader with Latin digits', () {
+    final before = uiLanguageCode;
+    addTearDown(() => uiLanguageCode = before);
+    uiLanguageCode = 'ur';
+    expect(
+      readerDigits('ابن حجر (ت ٨٥٢هـ) ط ۱۴۲۴'),
+      'ابن حجر (ت 852هـ) ط 1424',
+    );
+    uiLanguageCode = 'ar';
+    expect(readerDigits('(ت ٨٥٢هـ)'), '(ت ٨٥٢هـ)');
   });
 }

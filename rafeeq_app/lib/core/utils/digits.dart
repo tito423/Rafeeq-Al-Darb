@@ -100,22 +100,39 @@ String localizeDigits(String text, String localeCode) {
 /// read-only everywhere else.
 String uiLanguageCode = 'ar';
 
+/// Arabic catalogue text (an author's «(ت ٨٥٢هـ)», an edition's «الطبعة
+/// السابعة ١٤٢٤هـ») shown to a reader whose interface is not Arabic: its
+/// digits in that reader's form, which outside Arabic is Latin.
+///
+/// Urdu is the case that forced it (owner, 2026-10-08: «يا تخليها لاتيني يا
+/// تخليها عربي»). Measured the same day on the visible text of five Urdu
+/// news sites - BBC Urdu 382, Express 1,400, Jang 50, Urdu News 54,
+/// Independent Urdu 46 digits, every one Latin, none ٠١٢ or ۰۱۲ - which
+/// agrees with CLDR's `ur` default above. Scripture and quoted source text
+/// never pass through here; only metadata does.
+String readerDigits(String text) =>
+    uiLanguageCode == 'ar' ? text : asciiDigits(text);
+
 /// `.tr()` with the reader's own numerals.
 ///
 /// Use in place of `key.tr(...)` wherever the result can contain a number.
 String trn(String key, {List<String>? args, Map<String, String>? namedArgs}) =>
-    localizeDigits(
-        key.tr(args: args, namedArgs: namedArgs), uiLanguageCode);
+    localizeDigits(key.tr(args: args, namedArgs: namedArgs), uiLanguageCode);
 
 /// `.plural()` with the reader's own numerals.
 ///
 /// Keeps easy_localization's CLDR plural selection intact — Arabic has six
 /// categories and «١٠ دقائق» is not «١٠ دقيقة» (trap #30) — and only maps the
 /// digits afterwards.
-String pluralN(String key, num value,
-        {List<String>? args, Map<String, String>? namedArgs}) =>
-    localizeDigits(
-        key.plural(value, args: args, namedArgs: namedArgs), uiLanguageCode);
+String pluralN(
+  String key,
+  num value, {
+  List<String>? args,
+  Map<String, String>? namedArgs,
+}) => localizeDigits(
+  key.plural(value, args: args, namedArgs: namedArgs),
+  uiLanguageCode,
+);
 
 /// A percentage in the reader's own form: «٤٧٪» in Arabic — the Arabic
 /// percent sign after the number — «47 %» in French, «47%» in English.

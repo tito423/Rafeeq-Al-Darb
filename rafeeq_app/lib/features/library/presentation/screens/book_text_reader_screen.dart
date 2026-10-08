@@ -402,7 +402,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
             Text('library.text_source'.tr(),
                 style: Theme.of(ctx).textTheme.titleMedium),
             const SizedBox(height: 10),
-            ArabicText(te.sourceLabel,
+            ArabicText(readerDigits(te.sourceLabel),
                 style: const TextStyle(height: 1.7)),
             const SizedBox(height: 8),
             if (_doc?.meta.printReliable ?? false)

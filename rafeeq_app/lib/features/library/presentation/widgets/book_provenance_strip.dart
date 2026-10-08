@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../data/book_catalog.dart';
 
@@ -54,8 +55,11 @@ class BookProvenanceStrip extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.info_outline,
-                size: 14, color: ink.withValues(alpha: 0.6)),
+            Icon(
+              Icons.info_outline,
+              size: 14,
+              color: ink.withValues(alpha: 0.6),
+            ),
             const SizedBox(width: 6),
             Expanded(
               child: Column(
@@ -63,11 +67,13 @@ class BookProvenanceStrip extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ArabicText(
-                    edition?.sourceLabel ?? '',
+                    readerDigits(edition?.sourceLabel ?? ''),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: ink.withValues(alpha: 0.6), fontSize: 11.5),
+                      color: ink.withValues(alpha: 0.6),
+                      fontSize: 11.5,
+                    ),
                   ),
                   // A translation key, not Arabic in the widget — a reader who
                   // chose English reads this in English.
@@ -79,7 +85,9 @@ class BookProvenanceStrip extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            color: ink.withValues(alpha: 0.5), fontSize: 10.5),
+                          color: ink.withValues(alpha: 0.5),
+                          fontSize: 10.5,
+                        ),
                       ),
                     ),
                 ],
@@ -88,15 +96,18 @@ class BookProvenanceStrip extends StatelessWidget {
             if (edition?.isOcr ?? false)
               Container(
                 margin: const EdgeInsetsDirectional.only(start: 6),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                 decoration: BoxDecoration(
                   color: scheme.errorContainer,
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: Text('library.text_ocr_badge'.tr(),
-                    style: TextStyle(
-                        fontSize: 10, color: scheme.onErrorContainer)),
+                child: Text(
+                  'library.text_ocr_badge'.tr(),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: scheme.onErrorContainer,
+                  ),
+                ),
               ),
           ],
         ),
