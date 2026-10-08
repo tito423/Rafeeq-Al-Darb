@@ -145,8 +145,8 @@ class _Line extends ConsumerWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'KFGQPCHafs',
-                  letterSpacing:
-                      0, // any spacing turns the font's ligatures off
+                  // Any spacing turns the font's ligatures off.
+                  letterSpacing: 0,
                   fontSize: 19 * k,
                   height: 2,
                 ),

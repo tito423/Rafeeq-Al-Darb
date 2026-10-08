@@ -428,6 +428,10 @@ class _ArticulationPainter extends CustomPainter {
     }
   }
 
+  /// Arabic or Urdu script: the first letter is in the Arabic block.
+  static bool _arabicScript(String s) =>
+      s.isNotEmpty && s.codeUnitAt(0) >= 0x0600 && s.codeUnitAt(0) <= 0x06FF;
+
   /// A region's name, lit while one of its makharij is the chosen one.
   void _label(Canvas canvas, Size size, MakhrajRegion region, Offset at) {
     final on = selected?.region == region;
@@ -450,7 +454,7 @@ class _ArticulationPainter extends CustomPainter {
                 ),
         ),
       ),
-      textDirection: RegExp(r'^[؀-ۿ]').hasMatch(name)
+      textDirection: _arabicScript(name)
           ? TextDirection.rtl
           : TextDirection.ltr,
     )..layout();
