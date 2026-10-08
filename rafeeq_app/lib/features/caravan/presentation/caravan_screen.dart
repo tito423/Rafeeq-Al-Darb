@@ -10,9 +10,10 @@
 /// 3.41 and this app is on 3.38.7 (checked 2026-10-07), and one journey
 /// game does not need an engine.
 ///
-/// Leg two (2026-10-08): Madinah to Bayt al-Maqdis, reached from the
-/// arrival card of leg one. Every leg's gate question is an id in the quiz
-/// bank ([CaravanLeg.gateQuestionId]); a test holds each one to the bank.
+/// Since 2026-10-08 a journey of eight legs on a map (caravan_map.dart),
+/// stars per leg kept on the device, the next leg opened by winning this
+/// one. Every gate question is drawn from ids in the quiz bank
+/// ([CaravanLeg.gateIds]); a test holds each one to the bank.
 library;
 
 import 'dart:math' as math;
@@ -27,7 +28,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
 import '../../library/data/book_catalog.dart';
 import '../../quiz/data/history_quiz.dart';
+import '../data/caravan_progress.dart';
 import '../data/caravan_world.dart';
+import 'caravan_map.dart';
 import 'caravan_painter.dart';
 
 part 'caravan_cards.dart';
@@ -45,10 +48,14 @@ class _CaravanScreenState extends State<CaravanScreen>
   late final Ticker _ticker = createTicker(_tick);
   Duration _last = Duration.zero;
   CaravanLeg _leg = CaravanLeg.first;
+  CaravanMode _mode = CaravanMode.kids;
+  CaravanProgress? _progress;
 
-  /// Gate questions by id, localized, loaded once from the bank.
+  /// Gate questions by id, localized, loaded once from the bank; [_gateId]
+  /// is the one drawn for the leg being played.
   final _gates = <String, QuizQuestion>{};
-  QuizQuestion? get _gateQ => _gates[_leg.gateQuestionId];
+  String? _gateId;
+  QuizQuestion? get _gateQ => _gates[_gateId];
   List<String> _choices = const [];
   String? _wrong;
   Offset? _down;
@@ -58,7 +65,10 @@ class _CaravanScreenState extends State<CaravanScreen>
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations(const []);
-    final ids = {for (final l in CaravanLeg.all) l.gateQuestionId};
+    CaravanProgress.load().then((p) {
+      if (mounted) setState(() => _progress = p);
+    });
+    final ids = {for (final l in CaravanLeg.all) ...l.gateIds};
     HistoryQuiz.all().then((bank) {
       if (!mounted) return;
       final lang = context.locale.languageCode;
@@ -77,12 +87,14 @@ class _CaravanScreenState extends State<CaravanScreen>
     super.dispose();
   }
 
-  void _start(CaravanMode mode, [CaravanLeg? leg]) {
+  void _start(CaravanLeg leg) {
     _world?.dispose();
+    final pool = [...leg.gateIds.where(_gates.containsKey)]..shuffle();
     setState(() {
-      _leg = leg ?? _leg;
+      _leg = leg;
+      _gateId = pool.isEmpty ? null : pool.first;
       _world = CaravanWorld(
-        mode: mode,
+        mode: _mode,
         leg: _leg,
         lang: context.locale.languageCode,
         seed: DateTime.now().millisecond,
@@ -107,11 +119,21 @@ class _CaravanScreenState extends State<CaravanScreen>
     if (w.phase != before) setState(() {});
   }
 
+  /// Back to the journey map, from the road or an end card.
+  void _toMap() {
+    _ticker.stop();
+    _world?.dispose();
+    setState(() => _world = null);
+  }
+
   void _answer(String c) {
     final w = _world!;
     if (c == _gateQ!.answer) {
       HapticFeedback.lightImpact();
       setState(w.open);
+      _progress?.record(_leg, w.stars).then((_) {
+        if (mounted) setState(() {});
+      });
     } else {
       HapticFeedback.heavyImpact();
       setState(() {
@@ -132,7 +154,12 @@ class _CaravanScreenState extends State<CaravanScreen>
       child: Scaffold(
         backgroundColor: const Color(0xFF2B2A5C),
         body: w == null
-            ? _Intro(onStart: (m) => _start(m, CaravanLeg.first))
+            ? CaravanMap(
+                progress: _progress,
+                mode: _mode,
+                onMode: (m) => setState(() => _mode = m),
+                onPlay: _start,
+              )
             : Listener(
                 behavior: HitTestBehavior.opaque,
                 onPointerDown: (e) {
@@ -161,7 +188,7 @@ class _CaravanScreenState extends State<CaravanScreen>
                     SafeArea(
                       child: Align(
                         alignment: Alignment.topCenter,
-                        child: _Hud(world: w),
+                        child: _Hud(world: w, onBack: _toMap),
                       ),
                     ),
                     // The hint fades out after the first seconds; it is
@@ -219,178 +246,24 @@ class _CaravanScreenState extends State<CaravanScreen>
                       _Arrived(
                         world: w,
                         question: _gateQ!,
-                        onAgain: () => _start(w.mode),
-                        onNext:
-                            _leg.isLast ||
-                                _gates[_leg.next.gateQuestionId] == null
-                            ? null
-                            : () => _start(w.mode, _leg.next),
-                        onExit: () => Navigator.of(context).pop(),
+                        onAgain: () => _start(_leg),
+                        onNext: _leg.isLast ? null : () => _start(_leg.next),
+                        onExit: _toMap,
                       ),
                     if (w.phase == CaravanPhase.lost)
-                      _Lost(
-                        onAgain: () => _start(w.mode),
-                        onExit: () => Navigator.of(context).pop(),
-                      ),
+                      _Lost(onAgain: () => _start(_leg), onExit: _toMap),
                   ],
                 ),
               ),
       ),
     );
   }
-}
-
-class _Intro extends StatelessWidget {
-  final void Function(CaravanMode) onStart;
-  const _Intro({required this.onStart});
-
-  @override
-  Widget build(BuildContext context) {
-    final preview = CaravanWorld(mode: CaravanMode.kids);
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        LayoutBuilder(
-          builder: (_, box) {
-            preview.fit(box.maxWidth, box.maxHeight);
-            return CustomPaint(painter: CaravanPainter(preview));
-          },
-        ),
-        Container(color: Colors.black.withValues(alpha: 0.35)),
-        SafeArea(
-          child: Align(
-            alignment: AlignmentDirectional.topStart,
-            child: IconButton(
-              icon: const BackButtonIcon(),
-              color: Colors.white,
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-        ),
-        SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 0.6, end: 1),
-                    duration: const Duration(milliseconds: 900),
-                    curve: Curves.elasticOut,
-                    builder: (_, s, c) => Transform.scale(scale: s, child: c),
-                    child: Text(
-                      'caravan.title'.tr(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Color(0xFFFFE9B0),
-                        fontSize: 40,
-                        fontWeight: FontWeight.w900,
-                        shadows: [
-                          Shadow(blurRadius: 18, color: Colors.black54),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'caravan.leg1'.tr(),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 17),
-                  ),
-                  const SizedBox(height: 28),
-                  _ModeButton(
-                    icon: Icons.child_care_outlined,
-                    title: 'caravan.kids'.tr(),
-                    hint: 'caravan.kids_hint'.tr(),
-                    color: const Color(0xFF1F8A70),
-                    onTap: () => onStart(CaravanMode.kids),
-                  ),
-                  const SizedBox(height: 12),
-                  _ModeButton(
-                    icon: Icons.local_fire_department_outlined,
-                    title: 'caravan.adults'.tr(),
-                    hint: 'caravan.adults_hint'.tr(),
-                    color: const Color(0xFFB8572A),
-                    onTap: () => onStart(CaravanMode.adults),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ModeButton extends StatelessWidget {
-  final IconData icon;
-  final String title, hint;
-  final Color color;
-  final VoidCallback onTap;
-  const _ModeButton({
-    required this.icon,
-    required this.title,
-    required this.hint,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) => ConstrainedBox(
-    constraints: const BoxConstraints(maxWidth: 420),
-    child: Material(
-      color: color,
-      borderRadius: BorderRadius.circular(22),
-      elevation: 6,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-          child: Row(
-            children: [
-              Icon(icon, color: Colors.white, size: 34),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 19,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text(
-                      hint,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.play_arrow_rounded,
-                color: Colors.white,
-                size: 30,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
 }
 
 class _Hud extends StatelessWidget {
   final CaravanWorld world;
-  const _Hud({required this.world});
+  final VoidCallback onBack;
+  const _Hud({required this.world, required this.onBack});
 
   @override
   Widget build(BuildContext context) {
@@ -404,7 +277,7 @@ class _Hud extends StatelessWidget {
             IconButton(
               icon: const BackButtonIcon(),
               color: Colors.white,
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: onBack,
             ),
             _Chip(
               icon: Icons.light_outlined,
@@ -416,6 +289,10 @@ class _Hud extends StatelessWidget {
                 icon: Icons.favorite_rounded,
                 text: localizeDigits('${world.hearts}', lang),
               ),
+            ],
+            if (world.shield) ...[
+              const SizedBox(width: 6),
+              const _Chip(icon: Icons.shield_moon_outlined, text: '✓'),
             ],
             const SizedBox(width: 10),
             Expanded(

@@ -1,13 +1,17 @@
-/// The state of one journey in «قافلة الدرب», stepped once per frame.
+/// The state of one leg of «قافلة الدرب», stepped once per frame.
 ///
 /// Units are fractions of the screen (x of its width, y of its height), and
 /// every height that touches the camel is in camel heights, so the journey
 /// plays the same on a phone, a tablet and a TV, either way up.
 ///
 /// The road is a short story, not one repeated jump (owner, 2026-10-07:
-/// «القفز مدته طويلة … خليهم يعملوا اي حاجة جذابة وجيمي في الطريق»):
-/// rocks to jump, a low flock of birds to duck under, an oasis with an arc
-/// of lanterns, a sandstorm, and a golden star only a double jump reaches.
+/// «القفز مدته طويلة … خليهم يعملوا اي حاجة جذابة وجيمي في الطريق»), and
+/// it has no idle stretch (2026-10-08: «في وقت اصلا بتمشي فيه»): the first
+/// rock is on screen within a second, and each leg is a little faster and
+/// a little denser than the one before it. Rocks to jump, a low flock to
+/// duck under, an oasis or olive grove with an arc of lanterns, dates that
+/// shield one stumble, boulders that roll at the caravan, a sandstorm or
+/// the night, and a golden star only a double jump reaches.
 library;
 
 import 'dart:math' as math;
@@ -15,73 +19,22 @@ import 'dart:math' as math;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 
+import 'caravan_legs.dart';
+
+export 'caravan_legs.dart';
+
 enum CaravanMode { kids, adults }
 
 enum CaravanPhase { running, arriving, atGate, won, lost }
 
-/// One leg of the journey: the two cities, the question at the far gate (an
-/// id in the verified quiz bank - never a question written here), and the
-/// banners of its road.
-class CaravanLeg {
-  final int number;
-  final String fromKey, toKey, titleKey, wonKey;
-  final String gateQuestionId;
-
-  /// The banner of the scenery stop in the middle of the road, and of the
-  /// hard stretch after it.
-  final String midKey, hardKey;
-  const CaravanLeg({
-    required this.number,
-    required this.fromKey,
-    required this.toKey,
-    required this.titleKey,
-    required this.wonKey,
-    required this.gateQuestionId,
-    required this.midKey,
-    required this.hardKey,
-  });
-
-  /// Leg one: Makkah to Madinah, dawn to afternoon, an oasis and a
-  /// sandstorm. Gate: «إلى أي مدينة أذن النبي ﷺ للمسلمين أن يهاجروا من
-  /// مكة؟» (al-Fusul fi Sirat al-Rasul, p. 113).
-  ///
-  /// Leg two: Madinah to Bayt al-Maqdis, north into al-Sham, afternoon to
-  /// night, olive groves and a dark stretch lit by the lanterns. Gate: «في
-  /// خلافة من فُتح بيت المقدس؟» (al-Suyuti, Tarikh al-Khulafa, p. 238:
-  /// «سار عمر ففتح بيت المقدس»).
-  static const first = CaravanLeg(
-    number: 1,
-    fromKey: 'caravan.makkah',
-    toKey: 'caravan.madinah',
-    titleKey: 'caravan.leg1',
-    wonKey: 'caravan.won_title',
-    gateQuestionId: 'ef3e67153c',
-    midKey: 'caravan.ev_oasis',
-    hardKey: 'caravan.ev_storm',
-  );
-
-  static const all = [
-    first,
-    CaravanLeg(
-      number: 2,
-      fromKey: 'caravan.madinah',
-      toKey: 'caravan.quds',
-      titleKey: 'caravan.leg2',
-      wonKey: 'caravan.won_title2',
-      gateQuestionId: '96c6f015e7',
-      midKey: 'caravan.ev_olives',
-      hardKey: 'caravan.ev_night',
-    ),
-  ];
-
-  bool get isLast => number == all.length;
-  CaravanLeg get next => all[number];
-}
-
 class Rock {
   double x;
   bool hit = false;
-  Rock(this.x);
+
+  /// A boulder rolls toward the caravan faster than the road moves.
+  final bool rolling;
+  double spin = 0;
+  Rock(this.x, {this.rolling = false});
 }
 
 /// A low flock: its bottom edge is below a standing camel's head, above a
@@ -100,8 +53,11 @@ class Lantern {
 
   /// The golden star: worth five, only reachable with a double jump.
   final bool golden;
+
+  /// A cluster of dates: no score, but it shields the next stumble.
+  final bool dates;
   bool taken = false;
-  Lantern(this.x, this.lift, {this.golden = false});
+  Lantern(this.x, this.lift, {this.golden = false, this.dates = false});
 }
 
 class Spark {
@@ -132,22 +88,21 @@ class CaravanWorld extends ChangeNotifier {
   final CaravanMode mode;
   final CaravanLeg leg;
   final String lang;
-
-  /// Leg two goes from afternoon into night; leg one from dawn into day.
-  bool get toNight => leg.number == 2;
   final math.Random _rnd;
+
+  bool get toNight => leg.toNight;
 
   static const groundY = 0.80;
   static const leadX = 0.45;
 
-  /// Seconds of road from the first city to the next.
-  static const legSeconds = 30.0;
+  /// Seconds of road from one city to the next.
+  static const legSeconds = 24.0;
 
   // Where each part of the road is, as a fraction of the leg.
-  static const birdsFrom = 0.28;
-  static const oasisAt = 0.45;
-  static const stormFrom = 0.6, stormTo = 0.8;
-  static const starAt = 0.88;
+  static const birdsFrom = 0.22;
+  static const oasisAt = 0.42;
+  static const stormFrom = 0.58, stormTo = 0.8;
+  static const starAt = 0.9;
 
   /// The camel's size: the smaller of a fifth of the width or a sixth of
   /// the height. [camelW] is a fraction of the width, [camelH] of the
@@ -162,7 +117,7 @@ class CaravanWorld extends ChangeNotifier {
 
   /// Each leg is a little faster than the one before it.
   double get _baseSpeed =>
-      (mode == CaravanMode.kids ? 0.36 : 0.46) * (1 + 0.08 * (leg.number - 1));
+      (mode == CaravanMode.kids ? 0.38 : 0.48) * (1 + 0.06 * (leg.number - 1));
 
   /// Screen widths per second.
   double get speed => _baseSpeed * _slow;
@@ -181,18 +136,25 @@ class CaravanWorld extends ChangeNotifier {
   final popups = <Popup>[];
   int collected = 0;
   int lanternsTotal = 0;
+  int lanternsTaken = 0;
   int streak = 0;
   int hearts = 3;
+
+  /// Stumbles on this leg, shielded ones not counted.
+  int hits = 0;
   double hurtFor = 0;
 
-  /// The oasis scenery's x while it passes, else null.
+  /// Dates eaten and not yet spent on a stumble.
+  bool shield = false;
+
+  /// The oasis (or olive grove) scenery's x while it passes, else null.
   double? oasisX;
 
-  /// 0..1, how thick the sandstorm is (leg one).
+  /// 0..1, how thick the sandstorm is (odd legs).
   double storm = 0;
 
-  /// 0..1, how dark the night is (leg two): it falls with the hard stretch
-  /// and stays, so the caravan reaches the city under its lamps.
+  /// 0..1, how dark the night is (even legs): it falls with the hard
+  /// stretch and stays, so the caravan reaches the city under its lamps.
   double night = 0;
 
   /// A banner across the screen when a part of the road begins, by key.
@@ -204,6 +166,15 @@ class CaravanWorld extends ChangeNotifier {
   double? gateX;
   double gateOpen = 0;
 
+  /// Stars for this leg, once won: three for nearly every lantern and no
+  /// stumble, two for half of them and at most one stumble, else one.
+  int get stars {
+    final r = lanternsTotal == 0 ? 1.0 : lanternsTaken / lanternsTotal;
+    if (r >= 0.8 && hits == 0) return 3;
+    if (r >= 0.5 && hits <= 1) return 2;
+    return 1;
+  }
+
   // The lead camel: height, speed up, whether its air jump is used, and how
   // long it stays crouched. Its recent heights let the followers repeat it.
   double _y = 0, _vy = 0;
@@ -214,48 +185,58 @@ class CaravanWorld extends ChangeNotifier {
   final _duckTrail = <double>[];
 
   void _layOut() {
+    final n = leg.number;
     final d = legSeconds * _baseSpeed;
-    double at(double f) => leadX + 1.2 + f * (d - 1.6);
-    // Warm-up: rocks and lanterns.
-    var f = 0.04;
+    // The first thing is on screen at once: no empty walk-in.
+    double at(double f) => leadX + 0.75 + f * (d - 1.1);
+    double gap() => 0.05 - 0.002 * n + _rnd.nextDouble() * 0.025;
+    var f = 0.0;
     while (f < birdsFrom) {
       _rockOrLantern(at(f));
-      f += 0.045 + _rnd.nextDouble() * 0.03;
+      f += gap();
     }
-    // Birds join the rocks.
+    // Birds join the rocks; from leg four a boulder may come rolling.
     while (f < oasisAt - 0.04) {
-      if (_rnd.nextDouble() < 0.5) {
+      final r = _rnd.nextDouble();
+      if (leg.hasBirds && r < 0.4) {
         birds.add(Birds(at(f)));
         lanterns.add(Lantern(at(f) + 0.25, 0.6));
+      } else if (leg.hasBoulders && r < 0.6) {
+        rocks.add(Rock(at(f) + 0.6, rolling: true));
       } else {
         _rockOrLantern(at(f));
       }
-      f += 0.05 + _rnd.nextDouble() * 0.03;
+      f += gap();
     }
-    // The oasis: an arc of seven lanterns over the water.
+    // The oasis or grove: an arc of seven lanterns, dates at its end.
     for (var i = 0; i < 7; i++) {
       final t = i / 6;
       lanterns.add(
         Lantern(at(oasisAt) + i * 0.12, 0.9 + math.sin(t * math.pi) * 1.1),
       );
     }
+    if (leg.hasDates) {
+      lanterns.add(Lantern(at(oasisAt) + 1.0, 0.7, dates: true));
+    }
     f = oasisAt + 0.08;
-    // Then the storm, then the run to the star.
+    // Then the hard stretch, then the run to the star.
     while (f < starAt - 0.03) {
       final r = _rnd.nextDouble();
-      if (r < 0.35) {
+      if (r < 0.32) {
         rocks.add(Rock(at(f)));
-      } else if (r < 0.55) {
+      } else if (leg.hasBirds && r < 0.52) {
         birds.add(Birds(at(f)));
+      } else if (leg.hasBoulders && r < 0.64) {
+        rocks.add(Rock(at(f) + 0.6, rolling: true));
       } else {
         lanterns.add(Lantern(at(f), 1.0 + _rnd.nextDouble() * 0.9));
       }
-      f += 0.045 + _rnd.nextDouble() * 0.03;
+      f += gap();
     }
     // A rock to launch from, and the golden star above it.
     rocks.add(Rock(at(starAt)));
     lanterns.add(Lantern(at(starAt) + 0.05, 3.3, golden: true));
-    lanternsTotal = lanterns.length;
+    lanternsTotal = lanterns.where((l) => !l.dates).length;
   }
 
   void _rockOrLantern(double x) {
@@ -351,8 +332,12 @@ class CaravanWorld extends ChangeNotifier {
       storm += ((hard ? 1.0 : 0.0) - storm) * k;
     }
     if (phase == CaravanPhase.running) {
-      if (p > birdsFrom - 0.02) _announce('caravan.ev_birds');
+      if (leg.hasBirds && p > birdsFrom - 0.02) _announce('caravan.ev_birds');
+      if (leg.hasBoulders && p > birdsFrom + 0.06) {
+        _announce('caravan.ev_boulder');
+      }
       if (p > oasisAt - 0.03) _announce(leg.midKey);
+      if (leg.hasDates && p > oasisAt + 0.06) _announce('caravan.ev_dates');
       if (p > stormFrom) _announce(leg.hardKey);
       if (p > starAt - 0.06) _announce('caravan.ev_star');
     }
@@ -364,7 +349,10 @@ class CaravanWorld extends ChangeNotifier {
       distance += dx;
       stride = (stride + dt * 1.6) % 1.0;
       for (final r in rocks) {
-        r.x -= dx;
+        // A boulder only starts rolling once it is on screen.
+        final roll = r.rolling && r.x < 1.1 ? _baseSpeed * 0.55 * dt : 0.0;
+        r.x -= dx + roll;
+        if (r.rolling) r.spin += (dx + roll) * 9;
       }
       for (final b in birds) {
         b.x -= dx;
@@ -389,8 +377,19 @@ class CaravanWorld extends ChangeNotifier {
     if (_duckTrail.length > 40) _duckTrail.removeAt(0);
 
     void hurt() {
+      if (shield) {
+        shield = false;
+        _pop(
+          'caravan.shielded'.tr(),
+          leadX,
+          groundY - camelH * 1.4,
+          gold: true,
+        );
+        return;
+      }
       hurtFor = 0.5;
       streak = 0;
+      hits += 1;
       if (mode == CaravanMode.kids) {
         _slow = 0.5; // a stumble, never a loss
       } else {
@@ -402,7 +401,9 @@ class CaravanWorld extends ChangeNotifier {
     // The lead camel's top above the road: a crouch takes it to about half.
     final camelTop = _y + camelH * (crouching ? 0.5 : 0.9);
     for (final r in rocks) {
-      if (!r.hit && (r.x - leadX).abs() < camelW * 0.35 && _y < camelH * 0.3) {
+      final reach = camelW * (r.rolling ? 0.4 : 0.35);
+      final clear = camelH * (r.rolling ? 0.4 : 0.3);
+      if (!r.hit && (r.x - leadX).abs() < reach && _y < clear) {
         r.hit = true;
         hurt();
       }
@@ -426,11 +427,16 @@ class CaravanWorld extends ChangeNotifier {
           ly(l) < groundY - _y) {
         l.taken = true;
         sparks.add(Spark(l.x, ly(l)));
-        if (l.golden) {
+        if (l.dates) {
+          shield = true;
+          _pop('caravan.shield_on'.tr(), l.x, ly(l), gold: true);
+        } else if (l.golden) {
           collected += 5;
+          lanternsTaken += 1;
           _pop('+${_n(5)}', l.x, ly(l), gold: true);
         } else {
           collected += 1;
+          lanternsTaken += 1;
           streak += 1;
           _pop('+${_n(1)}', l.x, ly(l));
           if (streak >= 3) {
@@ -447,10 +453,11 @@ class CaravanWorld extends ChangeNotifier {
     rocks.removeWhere((r) => r.x < -0.3);
     birds.removeWhere((b) => b.x < -0.3);
 
-    // The end of the leg: the city rises, the caravan walks up to its gate.
+    // The end of the leg: the city rises close by, the caravan walks up to
+    // its gate - a short walk, not a second stretch of road.
     if (phase == CaravanPhase.running && time >= legSeconds) {
       phase = CaravanPhase.arriving;
-      gateX = 1.35;
+      gateX = 1.15;
       rocks.clear();
       birds.clear();
     }

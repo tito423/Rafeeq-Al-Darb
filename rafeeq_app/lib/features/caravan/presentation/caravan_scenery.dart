@@ -32,8 +32,11 @@ class CaravanScenery {
   /// A colour of the land, as the leg's light makes it: on leg two the sand
   /// greens as the road climbs into al-Sham, then sinks into the night blue.
   Color land(Color c) {
-    if (!w.toNight) return c;
-    final green = Color.lerp(c, const Color(0xFF9FA36C), 0.4 * _p)!;
+    if (!w.toNight && !w.leg.north) return c;
+    // The north is green from the first step; Arabia stays sand.
+    final green = w.leg.north
+        ? Color.lerp(c, const Color(0xFF9FA36C), 0.45)!
+        : c;
     // Moonlit sand: towards a silver blue, not towards black - mixing the
     // sand with a near-black navy read as a grey fog on the emulator.
     return Color.lerp(green, const Color(0xFF4C5C92), 0.72 * w.night)!;

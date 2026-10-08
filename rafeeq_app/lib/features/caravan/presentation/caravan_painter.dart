@@ -53,13 +53,13 @@ class CaravanPainter extends CustomPainter {
     );
     if (w.oasisX != null) {
       final at = w.oasisX! * size.width, base = size.height * 0.74;
-      w.toNight
+      w.leg.north
           ? lm.olives(canvas, size, at, base, camel)
           : _oasis(canvas, size, at, base, camel);
     }
     if (w.gateX != null) {
       final at = w.gateX! * size.width;
-      w.toNight
+      w.leg.north
           ? lm.qudsGate(canvas, size, at, ground)
           : _gate(canvas, size, at, ground);
     }
@@ -87,7 +87,9 @@ class CaravanPainter extends CustomPainter {
           ..color = Colors.black.withValues(alpha: 0.2)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
       );
-      _rock(canvas, at, camel * 0.3);
+      r.rolling
+          ? _boulder(canvas, at, camel * 0.24, r.spin)
+          : _rock(canvas, at, camel * 0.3);
     }
     for (final b in w.birds) {
       _birds(canvas, Offset(b.x * size.width, ground - camel * 0.95), camel);
@@ -95,9 +97,13 @@ class CaravanPainter extends CustomPainter {
     for (final l in w.lanterns) {
       if (l.taken) continue;
       final at = Offset(l.x * size.width, size.height * w.ly(l));
-      l.golden
-          ? _star(canvas, at, camel * 0.3)
-          : _lantern(canvas, at, camel * 0.22);
+      if (l.dates) {
+        _dates(canvas, at, camel * 0.2);
+      } else if (l.golden) {
+        _star(canvas, at, camel * 0.3);
+      } else {
+        _lantern(canvas, at, camel * 0.22);
+      }
     }
     for (final s in w.sparks) {
       final a = (1 - s.age / 0.6).clamp(0.0, 1.0);
@@ -302,6 +308,75 @@ class CaravanPainter extends CustomPainter {
       ),
     );
     tp.dispose();
+  }
+
+  /// A boulder rolling at the caravan: a round stone, its cracks turning.
+  void _boulder(Canvas canvas, Offset foot, double r, double spin) {
+    final c = foot.translate(0, -r);
+    canvas.drawCircle(
+      c,
+      r,
+      Paint()
+        ..shader = const RadialGradient(
+          center: Alignment(-0.4, -0.5),
+          colors: [Color(0xFFA27E62), Color(0xFF5B3E2E)],
+        ).createShader(Rect.fromCircle(center: c, radius: r)),
+    );
+    final crack = Paint()
+      ..color = const Color(0xFF3E291D)
+      ..strokeWidth = r * 0.09
+      ..strokeCap = StrokeCap.round;
+    for (var i = 0; i < 3; i++) {
+      final a = -spin + i * 2.1;
+      canvas.drawLine(
+        c + Offset(math.cos(a), math.sin(a)) * r * 0.2,
+        c + Offset(math.cos(a + 0.4), math.sin(a + 0.4)) * r * 0.8,
+        crack,
+      );
+    }
+    // Dust kicked up behind it as it rolls.
+    canvas.drawCircle(
+      foot.translate(r * 1.2, -r * 0.2),
+      r * 0.45,
+      Paint()
+        ..color = const Color(0xFFE2B47C).withValues(alpha: 0.4)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
+    );
+  }
+
+  /// Three dates on a palm frond, glowing softly: the shield.
+  void _dates(Canvas canvas, Offset c, double s) {
+    final bob = math.sin(w.time * 3) * s * 0.2;
+    final o = c.translate(0, bob);
+    canvas.drawCircle(
+      o,
+      s * 2,
+      Paint()
+        ..color = const Color(0xFF9BE07A).withValues(alpha: 0.35)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
+    );
+    canvas.drawLine(
+      o.translate(-s * 1.1, -s * 0.9),
+      o.translate(s * 0.9, -s * 0.5),
+      Paint()
+        ..color = const Color(0xFF3F7A3A)
+        ..strokeWidth = s * 0.18
+        ..strokeCap = StrokeCap.round,
+    );
+    for (final (dx, dy) in [(-0.45, 0.1), (0.15, 0.25), (0.65, 0.0)]) {
+      final d = Rect.fromCenter(
+        center: o.translate(dx * s, dy * s),
+        width: s * 0.55,
+        height: s * 0.85,
+      );
+      canvas.drawOval(
+        d,
+        Paint()
+          ..shader = const LinearGradient(
+            colors: [Color(0xFFB5652B), Color(0xFF5A2A10)],
+          ).createShader(d),
+      );
+    }
   }
 
   void _rock(Canvas canvas, Offset foot, double s) {

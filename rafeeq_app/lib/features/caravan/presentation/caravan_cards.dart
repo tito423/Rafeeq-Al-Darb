@@ -164,7 +164,7 @@ class _Arrived extends StatelessWidget {
         children: [
           const Icon(Icons.auto_awesome, color: Color(0xFFB8892A), size: 44),
           Text(
-            world.leg.wonKey.tr(),
+            'caravan.won_to'.tr(args: [world.leg.toKey.tr()]),
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: AppColors.ink,
@@ -172,11 +172,34 @@ class _Arrived extends StatelessWidget {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 6),
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.easeOutBack,
+            builder: (_, t, _) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var s = 1; s <= 3; s++)
+                  Transform.scale(
+                    scale: s <= world.stars ? t : 1,
+                    child: Icon(
+                      s <= world.stars
+                          ? Icons.star_rounded
+                          : Icons.star_border_rounded,
+                      size: 40,
+                      color: s <= world.stars
+                          ? const Color(0xFFE8B923)
+                          : const Color(0xFFBFB39A),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 2),
           Text(
             localizeDigits(
               'caravan.won_lanterns'.tr(
-                args: ['${world.collected}', '${world.lanternsTotal}'],
+                args: ['${world.lanternsTaken}', '${world.lanternsTotal}'],
               ),
               lang,
             ),
@@ -259,7 +282,7 @@ class _Arrived extends StatelessWidget {
               minimumSize: const Size.fromHeight(46),
             ),
           ),
-          TextButton(onPressed: onExit, child: Text('caravan.exit'.tr())),
+          TextButton(onPressed: onExit, child: Text('caravan.to_map'.tr())),
         ],
       ),
     );
@@ -301,7 +324,7 @@ class _Lost extends StatelessWidget {
             minimumSize: const Size.fromHeight(48),
           ),
         ),
-        TextButton(onPressed: onExit, child: Text('caravan.exit'.tr())),
+        TextButton(onPressed: onExit, child: Text('caravan.to_map'.tr())),
       ],
     ),
   );
