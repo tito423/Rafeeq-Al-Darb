@@ -29,6 +29,16 @@
 library;
 
 import '../../../core/config/app_config.dart';
+import 'azkar_backgrounds.dart';
+import 'azkar_categories.dart';
+
+/// The photograph behind the morning or the evening listening screen: the
+/// same licensed photos as the adhkar cards (azkar_backgrounds.dart, credited
+/// on Sources) - the Faisal Mosque at sunrise, minarets at sunset.
+String adhkarListenBackground(AdhkarTime t) =>
+    azkarCategoryBackgrounds[t == AdhkarTime.evening
+        ? AzkarCategory.evening
+        : AzkarCategory.morning]!;
 
 enum AdhkarTime { morning, evening, both }
 

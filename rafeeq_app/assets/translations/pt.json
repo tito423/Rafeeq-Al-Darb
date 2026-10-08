@@ -587,7 +587,6 @@
     "track_evening": "Adhkar da tarde",
     "listen_morning": "Ouvir os adhkar da manhã",
     "listen_evening": "Ouvir os adhkar da tarde",
-    "listen_intro": "Gravações completas de recitadores conhecidos. Toque para ouvir em tela cheia, deixe tocando em segundo plano ou baixe para ouvir offline.",
     "listen_minutes": "{n} min",
     "listen_both": "manhã e tarde numa gravação",
     "listen_delete": "Apagar download",
@@ -805,7 +804,10 @@
     "tasbeeh_custom": "Personalizado",
     "tasbeeh_custom_title": "Contagem personalizada",
     "tasbeeh_custom_hint": "Digite um número",
-    "tap_to_count_dhikr": "Toque para contar"
+    "tap_to_count_dhikr": "Toque para contar",
+    "listen_intro_morning": "Escolhe uma voz para os adhkar completos da manhã: ouve em ecrã inteiro, deixa-os a tocar em segundo plano ou transfere-os para ouvir sem internet.",
+    "listen_intro_evening": "Escolhe uma voz para os adhkar completos da tarde: ouve em ecrã inteiro, deixa-os a tocar em segundo plano ou transfere-os para ouvir sem internet.",
+    "listen_voices": "Vozes: {n}"
   },
   "prayer": {
     "fajr": "Fajr",

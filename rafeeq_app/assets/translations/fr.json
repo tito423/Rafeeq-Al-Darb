@@ -587,7 +587,6 @@
     "track_evening": "Adhkâr du soir",
     "listen_morning": "Écouter les adhkâr du matin",
     "listen_evening": "Écouter les adhkâr du soir",
-    "listen_intro": "Enregistrements complets par des récitateurs connus. Touche pour écouter en plein écran, laisse-le jouer en arrière-plan, ou télécharge-le pour l’écouter hors ligne.",
     "listen_minutes": "{n} min",
     "listen_both": "matin et soir en un enregistrement",
     "listen_delete": "Supprimer le téléchargement",
@@ -805,7 +804,10 @@
     "tasbeeh_custom": "Personnalisé",
     "tasbeeh_custom_title": "Nombre personnalisé",
     "tasbeeh_custom_hint": "Saisissez un nombre",
-    "tap_to_count_dhikr": "Touchez pour compter"
+    "tap_to_count_dhikr": "Touchez pour compter",
+    "listen_intro_morning": "Choisissez une voix pour les adhkar complets du matin : écoutez en plein écran, laissez-les jouer en arrière-plan, ou téléchargez-les pour les écouter hors ligne.",
+    "listen_intro_evening": "Choisissez une voix pour les adhkar complets du soir : écoutez en plein écran, laissez-les jouer en arrière-plan, ou téléchargez-les pour les écouter hors ligne.",
+    "listen_voices": "Voix : {n}"
   },
   "prayer": {
     "fajr": "Fajr",

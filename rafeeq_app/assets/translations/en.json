@@ -587,7 +587,6 @@
     "track_evening": "Evening adhkar",
     "listen_morning": "Listen to the morning adhkar",
     "listen_evening": "Listen to the evening adhkar",
-    "listen_intro": "Complete recordings by known reciters. Tap to listen full screen, or leave it playing in the background, or download it to play offline.",
     "listen_minutes": "{n} min",
     "listen_both": "morning and evening in one recording",
     "listen_delete": "Delete download",
@@ -805,7 +804,10 @@
     "tasbeeh_custom": "Custom",
     "tasbeeh_custom_title": "Custom count",
     "tasbeeh_custom_hint": "Enter a number",
-    "tap_to_count_dhikr": "Tap to count"
+    "tap_to_count_dhikr": "Tap to count",
+    "listen_intro_morning": "Choose a voice for the complete morning adhkar: listen full screen, leave it playing in the background, or download it to play offline.",
+    "listen_intro_evening": "Choose a voice for the complete evening adhkar: listen full screen, leave it playing in the background, or download it to play offline.",
+    "listen_voices": "Voices: {n}"
   },
   "prayer": {
     "fajr": "Fajr",

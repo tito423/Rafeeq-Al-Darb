@@ -148,78 +148,115 @@ class _AdhkarListenScreenState extends State<AdhkarListenScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final lang = context.locale.languageCode;
+    // «حط خلفية حلوة اسلامية للشاشة بتاعة كل واحد فيهم» (owner,
+    // 2026-10-08): the morning screen on its sunrise, the evening on its
+    // sunset, darkened enough that the cards and the white title read.
     return Scaffold(
-      appBar: AppBar(title: Text(_title)),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text(_title),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
       bottomNavigationBar: const MiniPlayer(),
-      body: ListenableBuilder(
-        listenable: QuranAudioPlayer.instance,
-        builder: (context, _) {
-          final player = QuranAudioPlayer.instance;
-          final currentId = player.active ? player.current?.id : null;
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-            children: [
-              IslamicPatternPanel(
-                child: Row(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(adhkarListenBackground(widget.time), fit: BoxFit.cover),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.55),
+                  Colors.black.withValues(alpha: 0.35),
+                  Colors.black.withValues(alpha: 0.75),
+                ],
+              ),
+            ),
+          ),
+          SafeArea(
+            child: ListenableBuilder(
+              listenable: QuranAudioPlayer.instance,
+              builder: (context, _) {
+                final player = QuranAudioPlayer.instance;
+                final currentId = player.active ? player.current?.id : null;
+                return ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
                   children: [
-                    Icon(
-                      widget.time == AdhkarTime.evening
-                          ? Icons.nights_stay_rounded
-                          : Icons.wb_sunny_rounded,
-                      color: goldOn(scheme),
-                      size: 30,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'azkar.listen_intro'.tr(),
-                        style: TextStyle(
-                          color: scheme.onSurface,
-                          fontSize: 13,
-                          height: 1.5,
-                        ),
+                    IslamicPatternPanel(
+                      child: Row(
+                        children: [
+                          Icon(
+                            widget.time == AdhkarTime.evening
+                                ? Icons.nights_stay_rounded
+                                : Icons.wb_sunny_rounded,
+                            color: goldOn(scheme),
+                            size: 30,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              (widget.time == AdhkarTime.evening
+                                      ? 'azkar.listen_intro_evening'
+                                      : 'azkar.listen_intro_morning')
+                                  .tr(),
+                              style: TextStyle(
+                                color: scheme.onSurface,
+                                fontSize: 13,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    const SizedBox(height: 14),
+                    for (final r in _list)
+                      _ReciterCard(
+                        name: _name(r),
+                        details: [
+                          trn(
+                            'azkar.listen_minutes',
+                            namedArgs: {
+                              'n': localizeDigits(
+                                '${(r.seconds / 60).round()}',
+                                lang,
+                              ),
+                            },
+                          ),
+                          if (_paths[r.id] != null)
+                            'downloads.offline_ready'.tr()
+                          else
+                            formatBytes(r.bytes),
+                        ].join(' · '),
+                        // On their own lines: a Latin source name inside an Arabic
+                        // line wrapped the words around it out of order.
+                        both: r.time == AdhkarTime.both,
+                        source: r.sourceName,
+                        task: DownloadManager.instance.taskById(r.downloadId),
+                        downloaded: _paths[r.id] != null,
+                        isCurrent: currentId == _trackId(r),
+                        isPlaying: currentId == _trackId(r) && player.playing,
+                        onPlay: () => _play(r),
+                        onDownload: () => _download(r),
+                        onPause: () =>
+                            DownloadManager.instance.pause(r.downloadId),
+                        onResume: () =>
+                            DownloadManager.instance.resume(r.downloadId),
+                        onCancel: () =>
+                            DownloadManager.instance.cancel(r.downloadId),
+                        onDelete: () => _delete(r),
+                      ),
                   ],
-                ),
-              ),
-              const SizedBox(height: 14),
-              for (final r in _list)
-                _ReciterCard(
-                  name: _name(r),
-                  details: [
-                    trn(
-                      'azkar.listen_minutes',
-                      namedArgs: {
-                        'n': localizeDigits(
-                          '${(r.seconds / 60).round()}',
-                          lang,
-                        ),
-                      },
-                    ),
-                    if (_paths[r.id] != null)
-                      'downloads.offline_ready'.tr()
-                    else
-                      formatBytes(r.bytes),
-                  ].join(' · '),
-                  // On their own lines: a Latin source name inside an Arabic
-                  // line wrapped the words around it out of order.
-                  both: r.time == AdhkarTime.both,
-                  source: r.sourceName,
-                  task: DownloadManager.instance.taskById(r.downloadId),
-                  downloaded: _paths[r.id] != null,
-                  isCurrent: currentId == _trackId(r),
-                  isPlaying: currentId == _trackId(r) && player.playing,
-                  onPlay: () => _play(r),
-                  onDownload: () => _download(r),
-                  onPause: () => DownloadManager.instance.pause(r.downloadId),
-                  onResume: () => DownloadManager.instance.resume(r.downloadId),
-                  onCancel: () => DownloadManager.instance.cancel(r.downloadId),
-                  onDelete: () => _delete(r),
-                ),
-            ],
-          );
-        },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
