@@ -67,6 +67,14 @@ class CaravanLeg {
   bool get hasDates => number >= 5;
   bool get hasBoulders => number >= 6 && !sea && !flying;
 
+  /// The first hint on the road, for what the player is riding.
+  String get tapKey => switch (ride) {
+    CaravanRide.camels => 'caravan.tap_to_jump',
+    CaravanRide.horses => 'caravan.tap_horse',
+    CaravanRide.boat => 'caravan.tap_boat',
+    CaravanRide.hoopoe => 'caravan.tap_fly',
+  };
+
   bool get isLast => number == all.length;
   CaravanLeg get next => all[number];
 

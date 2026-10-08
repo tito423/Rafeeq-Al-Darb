@@ -2692,7 +2692,7 @@
     "ev_star": "Une étoile dorée ! Touchez deux fois pour un double saut",
     "ev_storm": "Tempête de sable ! Attention à la route",
     "ev_oasis": "Une oasis ! Ramassez l’arc de lanternes",
-    "ev_birds": "Une volée d’oiseaux ! Glissez vers le bas pour que le chameau se baisse",
+    "ev_birds": "Une volée d’oiseaux ! Glissez vers le bas pour vous baisser",
     "streak": "Série ×{} !",
     "quds": "Jérusalem",
     "ev_olives": "Des oliveraies ! Ramassez l’arc de lanternes",
@@ -2705,7 +2705,7 @@
     "cairo": "Le Caire",
     "won_to": "La caravane est arrivée à {} !",
     "to_map": "Carte du voyage",
-    "map_hint": "Huit étapes de l’histoire islamique. Terminez-en une pour ouvrir la suivante.",
+    "map_hint": "{} étapes de l’histoire islamique. Terminez-en une pour ouvrir la suivante.",
     "ev_boulder": "Un rocher roule vers vous ! Sautez par-dessus",
     "ev_dates": "Des dattes ! Ramassez-les pour éviter une chute",
     "shield_on": "Protégé !",
@@ -2724,6 +2724,9 @@
     "ain_jalut": "‘Ayn Jalout",
     "ev_waves": "En mer ! Touchez pour faire sauter le bateau par-dessus les vagues",
     "ev_island": "Une île ! Ramassez l’arc de lanternes",
-    "ev_fly": "Volez avec la huppe ! Touchez pour battre des ailes, évitez les pics et les nuages"
+    "ev_fly": "Volez avec la huppe ! Touchez pour battre des ailes, évitez les pics et les nuages",
+    "tap_horse": "Touchez l’écran pour faire sauter le cheval",
+    "tap_boat": "Touchez l’écran pour faire bondir le bateau",
+    "tap_fly": "Touchez l’écran pour faire battre les ailes de la huppe"
   }
 }

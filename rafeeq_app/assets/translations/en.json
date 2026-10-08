@@ -2692,7 +2692,7 @@
     "ev_star": "A golden star! Tap twice for a double jump",
     "ev_storm": "Sandstorm! Watch the road",
     "ev_oasis": "An oasis! Collect the arc of lanterns",
-    "ev_birds": "A flock of birds! Swipe down to make the camel duck",
+    "ev_birds": "A flock of birds! Swipe down to duck under it",
     "streak": "Streak ×{}!",
     "quds": "Jerusalem",
     "ev_olives": "Olive groves! Collect the arc of lanterns",
@@ -2705,7 +2705,7 @@
     "cairo": "Cairo",
     "won_to": "The caravan has reached {}!",
     "to_map": "Journey map",
-    "map_hint": "Eight stations from Islamic history. Finish one to open the next.",
+    "map_hint": "{} stations from Islamic history. Finish one to open the next.",
     "ev_boulder": "A boulder is rolling at you! Jump over it",
     "ev_dates": "Dates! Pick them up to shield one stumble",
     "shield_on": "Shielded!",
@@ -2724,6 +2724,9 @@
     "ain_jalut": "‘Ayn Jalut",
     "ev_waves": "To the sea! Tap to make the boat leap the waves",
     "ev_island": "An island! Collect the arc of lanterns",
-    "ev_fly": "Fly with the hoopoe! Tap to beat its wings, keep clear of peaks and clouds"
+    "ev_fly": "Fly with the hoopoe! Tap to beat its wings, keep clear of peaks and clouds",
+    "tap_horse": "Tap the screen to make the horse jump",
+    "tap_boat": "Tap the screen to make the boat leap",
+    "tap_fly": "Tap the screen to beat the hoopoe’s wings"
   }
 }

@@ -354,7 +354,9 @@ class CaravanWorld extends ChangeNotifier {
     if (phase == CaravanPhase.running) {
       if (leg.sea && p > 0.01) _announce('caravan.ev_waves');
       if (leg.flying && p > 0.01) _announce('caravan.ev_fly');
-      if (leg.hasBirds && p > birdsFrom - 0.02) _announce('caravan.ev_birds');
+      if (leg.hasBirds && !leg.flying && p > birdsFrom - 0.02) {
+        _announce('caravan.ev_birds');
+      }
       if (leg.hasBoulders && p > birdsFrom + 0.06) {
         _announce('caravan.ev_boulder');
       }

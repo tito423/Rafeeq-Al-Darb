@@ -206,7 +206,9 @@ class _CaravanMapState extends State<CaravanMap>
             ],
           ),
           Text(
-            'caravan.map_hint'.tr(),
+            'caravan.map_hint'.tr(
+              args: [localizeDigits('${CaravanLeg.all.length}', lang)],
+            ),
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white70, fontSize: 13),
           ),

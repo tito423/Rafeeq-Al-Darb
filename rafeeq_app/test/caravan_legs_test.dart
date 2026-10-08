@@ -51,6 +51,7 @@ void main() {
         leg.toKey,
         leg.midKey,
         leg.hardKey,
+        leg.tapKey,
       ],
       for (final k in [
         'title',

@@ -2692,7 +2692,7 @@
     "ev_star": "¡Una estrella dorada! Toca dos veces para un doble salto",
     "ev_storm": "¡Tormenta de arena! Atento al camino",
     "ev_oasis": "¡Un oasis! Recoge el arco de faroles",
-    "ev_birds": "¡Una bandada de pájaros! Desliza hacia abajo para que el camello se agache",
+    "ev_birds": "¡Una bandada de pájaros! Desliza hacia abajo para agacharte",
     "streak": "¡Racha ×{}!",
     "quds": "Jerusalén",
     "ev_olives": "¡Olivares! Recoge el arco de faroles",
@@ -2705,7 +2705,7 @@
     "cairo": "El Cairo",
     "won_to": "¡La caravana ha llegado a {}!",
     "to_map": "Mapa del viaje",
-    "map_hint": "Ocho estaciones de la historia islámica. Completa una para abrir la siguiente.",
+    "map_hint": "{} estaciones de la historia islámica. Completa una para abrir la siguiente.",
     "ev_boulder": "¡Una roca rueda hacia ti! Salta por encima",
     "ev_dates": "¡Dátiles! Recógelos para protegerte de un tropiezo",
     "shield_on": "¡Protegido!",
@@ -2724,6 +2724,9 @@
     "ain_jalut": "‘Ayn Yalut",
     "ev_waves": "¡Al mar! Toca para que el barco salte las olas",
     "ev_island": "¡Una isla! Recoge el arco de faroles",
-    "ev_fly": "¡Vuela con la abubilla! Toca para batir las alas, evita los picos y las nubes"
+    "ev_fly": "¡Vuela con la abubilla! Toca para batir las alas, evita los picos y las nubes",
+    "tap_horse": "Toca la pantalla para que el caballo salte",
+    "tap_boat": "Toca la pantalla para que el barco salte",
+    "tap_fly": "Toca la pantalla para que la abubilla bata las alas"
   }
 }

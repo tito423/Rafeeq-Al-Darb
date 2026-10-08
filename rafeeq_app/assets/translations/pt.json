@@ -2692,7 +2692,7 @@
     "ev_star": "Uma estrela dourada! Toca duas vezes para um salto duplo",
     "ev_storm": "Tempestade de areia! Atenção ao caminho",
     "ev_oasis": "Um oásis! Apanha o arco de lanternas",
-    "ev_birds": "Um bando de pássaros! Desliza para baixo para o camelo se baixar",
+    "ev_birds": "Um bando de aves! Desliza para baixo para te baixares",
     "streak": "Sequência ×{}!",
     "quds": "Jerusalém",
     "ev_olives": "Olivais! Apanha o arco de lanternas",
@@ -2705,7 +2705,7 @@
     "cairo": "Cairo",
     "won_to": "A caravana chegou a {}!",
     "to_map": "Mapa da viagem",
-    "map_hint": "Oito estações da história islâmica. Conclua uma para abrir a seguinte.",
+    "map_hint": "{} estações da história islâmica. Conclui uma para abrir a seguinte.",
     "ev_boulder": "Uma pedra rola na tua direção! Salta por cima",
     "ev_dates": "Tâmaras! Apanha-as para te protegerem de um tropeção",
     "shield_on": "Protegido!",
@@ -2724,6 +2724,9 @@
     "ain_jalut": "‘Ayn Jalut",
     "ev_waves": "Ao mar! Toca para o barco saltar as ondas",
     "ev_island": "Uma ilha! Apanha o arco de lanternas",
-    "ev_fly": "Voa com a poupa! Toca para bater as asas, foge dos picos e das nuvens"
+    "ev_fly": "Voa com a poupa! Toca para bater as asas, foge dos picos e das nuvens",
+    "tap_horse": "Toca no ecrã para o cavalo saltar",
+    "tap_boat": "Toca no ecrã para o barco saltar",
+    "tap_fly": "Toca no ecrã para a poupa bater as asas"
   }
 }

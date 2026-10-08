@@ -202,7 +202,7 @@ class _CaravanScreenState extends State<CaravanScreen>
                               : 0,
                           duration: const Duration(milliseconds: 400),
                           child: Center(
-                            child: _Bubble(text: 'caravan.tap_to_jump'.tr()),
+                            child: _Bubble(text: w.leg.tapKey.tr()),
                           ),
                         ),
                       ),
