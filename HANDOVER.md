@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-09 21:26 — IN PROGRESS — resume here**
+**2026-10-09 21:31 — IN PROGRESS — resume here**
 
-audit: checkpoint expanded historical credential scan and rule history
+audit: complete full task history reading and preserve exact next checks
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
