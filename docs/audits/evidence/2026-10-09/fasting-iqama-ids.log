@@ -1,0 +1,4 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/fasting_iqama_ids_audit_test.dart
+00:00 +0: turning fasting reminders off cancels iqama notification IDs
+AUDIT_FASTING_IQAMA: actual fasting service disabling reminders canceled 7300-7349, including all five iqama IDs
+00:00 +1: All tests passed!

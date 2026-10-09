@@ -5784,7 +5784,24 @@
     "path": "rafeeq_app/lib/features/qibla/presentation/screens/qibla_screen.dart",
     "lines": 798,
     "sha256": "80e84671d29bd9136b4bc5eacc4ecad144dd02e642aae6429e4752480a7caa98",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 798,
+    "notes": [
+      {
+        "lines": [
+          1,
+          565
+        ],
+        "note": "Read qibla 1-565: correct great-circle formula, gated tab/lifecycle/current-route haptics, real location failure states. Heading treated as true north while plugin magnetic correction needs verification; compass error subscription and location operation races remain candidates."
+      },
+      {
+        "lines": [
+          566,
+          798
+        ],
+        "note": "Completed qibla screen/painters and links; original Kaaba art and lifecycle guards. Reduced motion for continuously repeating Kaaba remains candidate; magnetic heading verification pending plugin source."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quiz/data/history_quiz.dart",
