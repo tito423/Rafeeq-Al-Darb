@@ -7476,13 +7476,33 @@
     "path": "rafeeq_app/lib/features/settings/data/focus_mode_provider.dart",
     "lines": 125,
     "sha256": "ece1a7252634cb925b335caef6b0d0ff0ab34af7ef32310a717227a2832246c3",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 125,
+    "notes": [
+      {
+        "lines": [
+          1,
+          125
+        ],
+        "note": "Reviewed focus local-key migration and enter/leave persistence, reader-name restoration/asked flags. Restore-versus-first-write races remain candidates pending controlled scenario."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/data/reader_name_provider.dart",
     "lines": 64,
     "sha256": "d7f21fdd963e49f1c45f6a86ff23a3c1f546ba74fc62eb5332c7359e75f91718",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 64,
+    "notes": [
+      {
+        "lines": [
+          1,
+          64
+        ],
+        "note": "Reviewed focus local-key migration and enter/leave persistence, reader-name restoration/asked flags. Restore-versus-first-write races remain candidates pending controlled scenario."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/data/sources_catalog.dart",
