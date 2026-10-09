@@ -8510,13 +8510,33 @@
     "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tour_pieces.dart",
     "lines": 343,
     "sha256": "a0ffb4a61874d720e472fd9950100275d1a3f26bb2b06193891b3c6c9443c1d2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 343,
+    "notes": [
+      {
+        "lines": [
+          1,
+          343
+        ],
+        "note": "Reviewed spotlight/pointer painters, explanation controls and seven-language row, plus screenshot TourSlides entirely. Live anchor capture is distinct from normal screenshot-based tour; do not falsely report static photos as dynamic anchoring failure. Slides filter missing frames, keep welcome, clamp index and dispose pulse. Candidates: portrait bubble lacks vertical scroll at large text; compact bottom button Row may overflow; pulse ignores disableAnimations; black text on violet/teal accents needs measured contrast; verify asset/frame consistency and current captures."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tour_slides.dart",
     "lines": 177,
     "sha256": "a327e3f24ec9a8ba0c5e97d8ac72ad6671448b4f5756add28bb0f931dff611e5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 177,
+    "notes": [
+      {
+        "lines": [
+          1,
+          177
+        ],
+        "note": "Reviewed spotlight/pointer painters, explanation controls and seven-language row, plus screenshot TourSlides entirely. Live anchor capture is distinct from normal screenshot-based tour; do not falsely report static photos as dynamic anchoring failure. Slides filter missing frames, keep welcome, clamp index and dispose pulse. Candidates: portrait bubble lacks vertical scroll at large text; compact bottom button Row may overflow; pulse ignores disableAnimations; black text on violet/teal accents needs measured contrast; verify asset/frame consistency and current captures."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tutorial_entry_card.dart",
