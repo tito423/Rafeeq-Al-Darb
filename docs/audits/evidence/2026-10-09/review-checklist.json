@@ -4040,13 +4040,33 @@
     "path": "rafeeq_app/lib/features/hajj/data/hajj_guide.dart",
     "lines": 414,
     "sha256": "c08b69a75dc0e3c538306740a168266336df966589fe50461057ed03eec5f93c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 414,
+    "notes": [
+      {
+        "lines": [
+          1,
+          414
+        ],
+        "note": "Reviewed hajj guide whole414 and step-text49: named source edition, all Hajj/Umrah ranges/tracks, display/source citations, legacy commentary filter and numeric note removal. Filter belongs old Nawawi asset comments but applies current Manhaji text; actual paragraph/source coverage and dropped body comparisons remain content verification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/data/hajj_step_text.dart",
     "lines": 49,
     "sha256": "b22393266003a02c6fb968228a2b88cd7d72dc14bcba4e11e650b76b9e2edbcc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 49,
+    "notes": [
+      {
+        "lines": [
+          1,
+          49
+        ],
+        "note": "Reviewed hajj guide whole414 and step-text49: named source edition, all Hajj/Umrah ranges/tracks, display/source citations, legacy commentary filter and numeric note removal. Filter belongs old Nawawi asset comments but applies current Manhaji text; actual paragraph/source coverage and dropped body comparisons remain content verification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/data/hajj_summary.dart",
