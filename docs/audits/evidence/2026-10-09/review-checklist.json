@@ -6675,55 +6675,166 @@
     "path": "rafeeq_app/lib/features/quran_audio/data/surah_fallback.dart",
     "lines": 69,
     "sha256": "2a324d386863b66a628148eeffc5098f35cebeab5a65457e7fd6eed5db439ff0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 69,
+    "notes": [
+      {
+        "lines": [
+          1,
+          69
+        ],
+        "note": "SurahFallback and AyahDownloadScreen whole read: substitute same surah artist changes intentionally notified; prior download library metadata trusted is pending sample integrity; ayah completed counts O6236 per visible row candidate measure only; no new confirmed defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/ayah_download_screen.dart",
     "lines": 207,
     "sha256": "1b9f105213c5e23b5d3ac9c23c5808c5520f12e6b358984dc39d45bcd204dc91",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 207,
+    "notes": [
+      {
+        "lines": [
+          1,
+          207
+        ],
+        "note": "SurahFallback and AyahDownloadScreen whole read: substitute same surah artist changes intentionally notified; prior download library metadata trusted is pending sample integrity; ayah completed counts O6236 per visible row candidate measure only; no new confirmed defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/ayah_reciter_screen.dart",
     "lines": 503,
     "sha256": "f20197b0f4a8414c63be04da047098547c9741b32abdfab1334e45c79fd377e5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 503,
+    "notes": [
+      {
+        "lines": [
+          1,
+          503
+        ],
+        "note": "AyahReciterScreen whole503 read: sourceGold body extends A22 candidate; repo.surahs future refreshed every libchange may cost query needs measurement; _play awaits repo/ayahs has mounted but no operation token so rapid taps can choose stale surah pending proof; playing background after route intentional. Arabic asciiDigits search correct."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/player_screen.dart",
     "lines": 949,
     "sha256": "7741935b6be28a74d85bb38d4a72bd6b6bf6cc6752164b4e85384f488b2b3311",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 949,
+    "notes": [
+      {
+        "lines": [
+          1,
+          524
+        ],
+        "note": "PlayerScreen1-524 source read: scroll body landscape supported, close button299 no tooltip a11y candidate; _Disc animation ignores reduced motion candidate; fixed 5-column theme selector possible scaled-font overflow pending actual font. Source transport fixedLTR intentional."
+      },
+      {
+        "lines": [
+          525,
+          949
+        ],
+        "note": "PlayerScreen525-949 whole read. Five transport controls lack tooltip/semanticLabel (IconButton auto icon has no label), central RemoteTap semantic tap unlabelled; actual semantics proof can extend A23. Seek slider no time semantic formatter raw milliseconds spoken candidate. _Transport minimumwidth ~270 plus52 padding fits360 but small320 mayclip; measure."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/quran_audio_screen.dart",
     "lines": 764,
     "sha256": "a49c6aa3b4587f6141398a874b71e599ad7c08527cc3f36e175bc8215db6ab30",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 764,
+    "notes": [
+      {
+        "lines": [
+          1,
+          518
+        ],
+        "note": "QuranAudioScreen1-518 read; cold initial tab chosen before ensureReady resolves candidate; library/play WidgetContext guard, picker service work intentionally survives screen. DeviceView chips fixed48 height largefont candidate; futurelocalFiles recreated on player updates disk cost measure before claim."
+      },
+      {
+        "lines": [
+          519,
+          764
+        ],
+        "note": "QuranAudioScreen519-764 whole read. Imported local deletion does not stop player vs recitation delete stop; strong candidate actual current local track filesystem existence after unlink needs device. Play group/delete icons lack labels possible A23 extension; favorites preserves missing local path urlnull then toSource null -> actualfailure candidate. No new verified."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/reciter_screen.dart",
     "lines": 574,
     "sha256": "179244a42831b3d88bbea68a62c53488edc1b87ae29920029e9bfe323c827e5f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 574,
+    "notes": [
+      {
+        "lines": [
+          1,
+          489
+        ],
+        "note": "ReciterScreen1-489 read; per-surah cancel actual bound to cancelSurah confirming candidate user path; mutable _moshaf consulted after confirmation can affect new selection if changed behind modal usually blocked, not claimed. SourceLight gold counts extends A22 candidate; rowGlobalKeys cachedby surah okay one subtree replacement."
+      },
+      {
+        "lines": [
+          490,
+          574
+        ],
+        "note": "ReciterScreen remaining, AudioCommon and AyahDlRing fully read. AudioCommon RecitationCover artist onSurface and album onSurfaceVariant applied over ALWAYSdark grounds -> light theme darkink strong actual-render candidate needs color proof. Percent helper locale arg ignored butglobaluiLocale deliberate; valid count clamp correct."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/widgets/audio_common.dart",
     "lines": 364,
     "sha256": "159b2dca5eb08222d6dd9c7d01dbdc1fad1d773b7712ff2f6de3f49c801a8186",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 364,
+    "notes": [
+      {
+        "lines": [
+          1,
+          364
+        ],
+        "note": "ReciterScreen remaining, AudioCommon and AyahDlRing fully read. AudioCommon RecitationCover artist onSurface and album onSurfaceVariant applied over ALWAYSdark grounds -> light theme darkink strong actual-render candidate needs color proof. Percent helper locale arg ignored butglobaluiLocale deliberate; valid count clamp correct."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/widgets/ayah_dl_ring.dart",
     "lines": 72,
     "sha256": "2d482044c45cbd546ca969c6a3182bd0f9d739e0b2b65edaaed60e3b1ca1804f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 72,
+    "notes": [
+      {
+        "lines": [
+          1,
+          72
+        ],
+        "note": "ReciterScreen remaining, AudioCommon and AyahDlRing fully read. AudioCommon RecitationCover artist onSurface and album onSurfaceVariant applied over ALWAYSdark grounds -> light theme darkink strong actual-render candidate needs color proof. Percent helper locale arg ignored butglobaluiLocale deliberate; valid count clamp correct."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/presentation/widgets/mini_player.dart",
     "lines": 242,
     "sha256": "93fe40e821fe0a8540a8c06e9e1d2c6d5764ee4a7018ab44365c0d6be43fb303",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 242,
+    "notes": [
+      {
+        "lines": [
+          1,
+          242
+        ],
+        "note": "MiniPlayer whole242 read. Actual theme textcolors correct over themesurface; play/stop unlabelled semantic candidates, EqualizerOverlay no reduced motion check; listeners/ticker cleanup correct. All quran_audio feature source reviewed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
