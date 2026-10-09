@@ -1,0 +1,5 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/story_precedence_audit_test.dart
+00:00 +0: actual parser chooses general story before named specific story
+افتح قصة إبراهيم والطيور => open kidsStoryIbrahim
+افتح قصة سليمان والهدهد => open kidsStorySulayman
+00:00 +1: All tests passed!
