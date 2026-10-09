@@ -3115,19 +3115,49 @@
     "path": "rafeeq_app/lib/features/assistant/data/assistant_wake_word.dart",
     "lines": 52,
     "sha256": "78a227a1c6b82942f6ee0bb1e1a364bab6664065d382bfd1111a10f5fabe73f0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 52,
+    "notes": [
+      {
+        "lines": [
+          1,
+          52
+        ],
+        "note": "Wake word/diagnostics/ear/describe whole read. RafeeqEar worker failed init leaves ReceivePort and vad ifrec constructorfails; _ensureWorker no timeout/error/exit ports could hang _starting/stop, pending native failure proof. Permission checked after modelsloaded memory cost measure; micstart failure Bluetooth restore missing candidate. Testclip44-byte WAV assumpt intentionalonlyownercheck not externalAPI. No confirmed new."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/rafeeq_diag.dart",
     "lines": 99,
     "sha256": "b924fa9681eec0e353da77941b7c5ccf1be1b340ff0b50aac17ab302f9eee1d9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 99,
+    "notes": [
+      {
+        "lines": [
+          1,
+          99
+        ],
+        "note": "Wake word/diagnostics/ear/describe whole read. RafeeqEar worker failed init leaves ReceivePort and vad ifrec constructorfails; _ensureWorker no timeout/error/exit ports could hang _starting/stop, pending native failure proof. Permission checked after modelsloaded memory cost measure; micstart failure Bluetooth restore missing candidate. Testclip44-byte WAV assumpt intentionalonlyownercheck not externalAPI. No confirmed new."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/rafeeq_ear.dart",
     "lines": 301,
     "sha256": "6c79b329909b41c26aba40b20943db64e5f733c16c81954a6a3044b6cd23a2f4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 301,
+    "notes": [
+      {
+        "lines": [
+          1,
+          301
+        ],
+        "note": "Wake word/diagnostics/ear/describe whole read. RafeeqEar worker failed init leaves ReceivePort and vad ifrec constructorfails; _ensureWorker no timeout/error/exit ports could hang _starting/stop, pending native failure proof. Permission checked after modelsloaded memory cost measure; micstart failure Bluetooth restore missing candidate. Testclip44-byte WAV assumpt intentionalonlyownercheck not externalAPI. No confirmed new."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/rafeeq_voice_pack.dart",
@@ -3149,19 +3179,49 @@
     "path": "rafeeq_app/lib/features/assistant/presentation/assistant_describe.dart",
     "lines": 63,
     "sha256": "81824b7adeafb1dd3d11b1be38518ca681b391f8d9248c2989c3e2c312540eab",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 63,
+    "notes": [
+      {
+        "lines": [
+          1,
+          63
+        ],
+        "note": "Wake word/diagnostics/ear/describe whole read. RafeeqEar worker failed init leaves ReceivePort and vad ifrec constructorfails; _ensureWorker no timeout/error/exit ports could hang _starting/stop, pending native failure proof. Permission checked after modelsloaded memory cost measure; micstart failure Bluetooth restore missing candidate. Testclip44-byte WAV assumpt intentionalonlyownercheck not externalAPI. No confirmed new."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/presentation/assistant_quran_word.dart",
     "lines": 207,
     "sha256": "13e16206ae80f6cce62973caddc2dc837d10fffa36e613dc9b1477e587637143",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 207,
+    "notes": [
+      {
+        "lines": [
+          1,
+          207
+        ],
+        "note": "Reviewed assistant word search and settings completely; retained lifecycle and spoken selection candidates pending proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/presentation/assistant_settings_card.dart",
     "lines": 290,
     "sha256": "c17c3f069669997040398a0ec2cb20f5755df6a62ef6f39f06f4ebf277e74c5a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 290,
+    "notes": [
+      {
+        "lines": [
+          1,
+          290
+        ],
+        "note": "Reviewed assistant word search and settings completely; retained lifecycle and spoken selection candidates pending proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/presentation/assistant_sheet.dart",
