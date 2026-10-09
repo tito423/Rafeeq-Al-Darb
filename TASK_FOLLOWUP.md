@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 02:22 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 391/563; 32 interim findings. Confirmed A-32 with actual parser: specific Ibrahim birds and Sulayman hoopoe story requests open the general story. 391 files complete; 32 findings. Exact NEXT: Continue unreviewed features and remaining audit measurements; assistant queue failure remains pending reproduction.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 02:25 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 403/563; 32 interim findings. Completed all 12 hifz files (403 total); isolated pending microphone startup/disposal candidate for actual widget reproduction. Exact NEXT: Reproduce tasmee startup disposal recording flag; then continue khatma and remaining features.. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 02:25 - audit: complete memorization and tasmee source review
+
+- 2026-10-10 02:25 Dubai — **AUDIT IN PROGRESS (2026-10-10 02:25 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 403/563; 32 interim findings. Completed all 12 hifz files (403 total); isolated pending microphone startup/disposal candidate for actual widget reproduction. Exact NEXT: Reproduce tasmee startup disposal recording flag; then continue khatma and remaining features.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 02:22 - audit: prove assistant story destination precedence
 
 - 2026-10-10 02:22 Dubai — **AUDIT IN PROGRESS (2026-10-10 02:22 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 391/563; 32 interim findings. Confirmed A-32 with actual parser: specific Ibrahim birds and Sulayman hoopoe story requests open the general story. 391 files complete; 32 findings. Exact NEXT: Continue unreviewed features and remaining audit measurements; assistant queue failure remains pending reproduction.. No app/backend edits; full source/content/device audit and final563-file report remain required.

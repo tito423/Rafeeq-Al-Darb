@@ -4045,73 +4045,207 @@
     "path": "rafeeq_app/lib/features/hifz/data/hifz_mask.dart",
     "lines": 80,
     "sha256": "2e67c93c1e188530e83fb8dbeb248b7106a3ac3dde31781ed8c941f5733ea4be",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 80,
+    "notes": [
+      {
+        "lines": [
+          1,
+          80
+        ],
+        "note": "Read hifz mask/plans/store and WAV filtering completely. Mask preserves original words; Leitner schedule intentionally UTC based. Retained async restore overwrite and invalid saved ranges as unproven candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/data/hifz_plans.dart",
     "lines": 138,
     "sha256": "bef9bb1c125e3173322e89ccd6629ca730e877759592e463794b3dc789c08121",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 138,
+    "notes": [
+      {
+        "lines": [
+          1,
+          138
+        ],
+        "note": "Read hifz mask/plans/store and WAV filtering completely. Mask preserves original words; Leitner schedule intentionally UTC based. Retained async restore overwrite and invalid saved ranges as unproven candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/data/hifz_store.dart",
     "lines": 186,
     "sha256": "5fb5ef71574f1d349b2fab6ace09bf5858abe1e2444c17c8e8ec3329c143b56a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 186,
+    "notes": [
+      {
+        "lines": [
+          1,
+          186
+        ],
+        "note": "Read hifz mask/plans/store and WAV filtering completely. Mask preserves original words; Leitner schedule intentionally UTC based. Retained async restore overwrite and invalid saved ranges as unproven candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/data/tasmee_audio.dart",
     "lines": 56,
     "sha256": "3590bce18770d82deb875379cb78460f092fa717a3ebd10af4a9de8a2403c8f0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 56,
+    "notes": [
+      {
+        "lines": [
+          1,
+          56
+        ],
+        "note": "Read hifz mask/plans/store and WAV filtering completely. Mask preserves original words; Leitner schedule intentionally UTC based. Retained async restore overwrite and invalid saved ranges as unproven candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/data/tasmee_engine.dart",
     "lines": 593,
     "sha256": "7a875fe229846a35a01636f504752ab613ed303dd7a080147016d4c7a9730eaf",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 593,
+    "notes": [
+      {
+        "lines": [
+          1,
+          558
+        ],
+        "note": "Read tasmee engine 1-558: offline model sharing, graceful worker exit, comparison normalization confined to scoring, transcript alignment. Startup worker exit before SendPort leaves ready unresolved; needs actual failure reproduction. Religious text unchanged."
+      },
+      {
+        "lines": [
+          559,
+          593
+        ],
+        "note": "Completed tasmee engine, mic routing and hifz list. Old Whisper removal intentional. Long audio live window is bounded; graceful stop allows brief worker overlap. Bluetooth route failure cleanup depends on caller; inspect panel next."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/data/tasmee_mic.dart",
     "lines": 87,
     "sha256": "fe766a4392ca6d7833ef64a8b2ee7ef8bfd5de36e739a4e2b0652b8b9d1c837f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 87,
+    "notes": [
+      {
+        "lines": [
+          1,
+          87
+        ],
+        "note": "Completed tasmee engine, mic routing and hifz list. Old Whisper removal intentional. Long audio live window is bounded; graceful stop allows brief worker overlap. Bluetooth route failure cleanup depends on caller; inspect panel next."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/presentation/hifz_screen.dart",
     "lines": 127,
     "sha256": "8be5925083a4e32ec7d2d3a08c6b6a9e2c1feeb20c0cb1fe55380dafa0a5b56d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 127,
+    "notes": [
+      {
+        "lines": [
+          1,
+          127
+        ],
+        "note": "Completed tasmee engine, mic routing and hifz list. Old Whisper removal intentional. Long audio live window is bounded; graceful stop allows brief worker overlap. Bluetooth route failure cleanup depends on caller; inspect panel next."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/presentation/hifz_session_screen.dart",
     "lines": 483,
     "sha256": "493c331e939839849956e24baeb7e8e299d5b6a0653bf3b0b138085a623c117e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 483,
+    "notes": [
+      {
+        "lines": [
+          1,
+          483
+        ],
+        "note": "Completed hifz session: original ayah body/basmala separation and keyed recording panel. Kept overlapping navigation requests, rapid remembered taps, empty corrupt range and large-font repeats row as candidates requiring actual proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/presentation/widgets/hifz_ayah_view.dart",
     "lines": 174,
     "sha256": "4212d4c056b0bd5f714840482bc8216391c80a37f8cb8ebdf6e4d027adea494b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 174,
+    "notes": [
+      {
+        "lines": [
+          1,
+          174
+        ],
+        "note": "Completed hifz ayah view and navigator: hidden text kept at zero opacity, typed localized digits converted correctly, whole gesture path used to reject vertical swipes. Animation/lifecycle and compact font layout candidates require reproduction."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/presentation/widgets/hifz_navigator.dart",
     "lines": 324,
     "sha256": "bb0823d32f3a1b1baf823ff407ff8e12261895ba7beac08cd520917a12a791b7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 324,
+    "notes": [
+      {
+        "lines": [
+          1,
+          324
+        ],
+        "note": "Completed hifz ayah view and navigator: hidden text kept at zero opacity, typed localized digits converted correctly, whole gesture path used to reject vertical swipes. Animation/lifecycle and compact font layout candidates require reproduction."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/presentation/widgets/hifz_plans_section.dart",
     "lines": 332,
     "sha256": "f26e36ac4d7f93a53075303b2d4e82b349e0cd7005ea9821e71626ba1e0b78f1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 332,
+    "notes": [
+      {
+        "lines": [
+          1,
+          332
+        ],
+        "note": "Completed hifz plans sheet. Valid ranges constrained in normal UI; retained non-scrollable keyboard/landscape sheet and repeat submission as candidates pending rendered or storage proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/presentation/widgets/tasmee_panel.dart",
     "lines": 699,
     "sha256": "09936b29481025176b8f1436fe988b40ef47887c7fa75504fbcfacea50c4de92",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 699,
+    "notes": [
+      {
+        "lines": [
+          1,
+          550
+        ],
+        "note": "Read tasmee panel 1-550. Startup sets shared recording flag before permission/platform awaits with phase still idle; disposal only resets flag when recording, and recorder start lacks mounted checks. Native start errors may leave flag/audio route; inspect button catch next before finding."
+      },
+      {
+        "lines": [
+          551,
+          699
+        ],
+        "note": "Completed tasmee panel: no catch around start button; pending startup disposal can retain global recording flag while phase idle. This is candidate for controlled real widget proof. Tajweed disclaimer present."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/data/clock_settings_provider.dart",
