@@ -3883,25 +3883,65 @@
     "path": "rafeeq_app/lib/features/fasting/data/fasting_reminder_provider.dart",
     "lines": 109,
     "sha256": "b18107f22a0cc6158fdd6b22b4b3a00d80dfcfe628527fcf19a9fe461946ba97",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 109,
+    "notes": [
+      {
+        "lines": [
+          1,
+          109
+        ],
+        "note": "Completed fasting feature: hadith excerpts/citations bound to corpus tests, Ramadan/Eid/tashriq suppression and calendar date construction correct. Fasting notifications IDs 7300-7349 overlap existing iqama namespace (A-09 scope); late rearm and disposal candidates unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/fasting/data/fasting_reminder_service.dart",
     "lines": 83,
     "sha256": "68b5e60d6352ce5ebdeefaf5b916627057e78b1bbdcace14316827c89fe8545a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 83,
+    "notes": [
+      {
+        "lines": [
+          1,
+          83
+        ],
+        "note": "Completed fasting feature: hadith excerpts/citations bound to corpus tests, Ramadan/Eid/tashriq suppression and calendar date construction correct. Fasting notifications IDs 7300-7349 overlap existing iqama namespace (A-09 scope); late rearm and disposal candidates unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/fasting/data/sunnah_fasting.dart",
     "lines": 138,
     "sha256": "75f137e7441f4d08bad97b5220c6158a98774bc6d875906e9f53a8a76f4bcc82",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 138,
+    "notes": [
+      {
+        "lines": [
+          1,
+          138
+        ],
+        "note": "Completed fasting feature: hadith excerpts/citations bound to corpus tests, Ramadan/Eid/tashriq suppression and calendar date construction correct. Fasting notifications IDs 7300-7349 overlap existing iqama namespace (A-09 scope); late rearm and disposal candidates unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/fasting/presentation/fasting_reminder_section.dart",
     "lines": 179,
     "sha256": "1a72374bb52d113084d2661e632403ef65478e5a5894e9ed239d259aad359334",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 179,
+    "notes": [
+      {
+        "lines": [
+          1,
+          179
+        ],
+        "note": "Completed fasting feature: hadith excerpts/citations bound to corpus tests, Ramadan/Eid/tashriq suppression and calendar date construction correct. Fasting notifications IDs 7300-7349 overlap existing iqama namespace (A-09 scope); late rearm and disposal candidates unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hadeethenc/data/hadeethenc_providers.dart",
@@ -7252,19 +7292,49 @@
     "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
     "lines": 272,
     "sha256": "71aef6a2c30e6b407e094049cdbf70b63cb0515058390c846d718fd5928a1847",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 272,
+    "notes": [
+      {
+        "lines": [
+          1,
+          272
+        ],
+        "note": "Completed ruqyah catalog: verses and supplications read from canonical databases with source IDs, group provenance notes distinguish tradition from established sunnah. Reciter labels preserve unknown owner recording. Actual media payload validation remains pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/ruqyah/presentation/screens/ruqyah_audio_screen.dart",
     "lines": 392,
     "sha256": "c17cbbe077daade9c314f1d648af59c8b45d91df19038690992bbf9ce0a47504",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 392,
+    "notes": [
+      {
+        "lines": [
+          1,
+          392
+        ],
+        "note": "Completed ruqyah audio UI. Playback uses shared Quran player; URL fallback retained when local path missing; download controls use manager stream. Playback button lacks tooltip (accessibility scope candidate); disk path polling per progress needs measured cost."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/ruqyah/presentation/screens/ruqyah_screen.dart",
     "lines": 415,
     "sha256": "8ecf0bf446f5cc17b3cb61d3fed129b38777697a484708d2ee4962ef7873e23f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 415,
+    "notes": [
+      {
+        "lines": [
+          1,
+          415
+        ],
+        "note": "Completed ruqyah text screen. Quran and dua content fetched once from canonical repositories; original text/takhrij displayed, explicit group notes and queue stop on route exit. Same-group operation reuse candidate pending proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/search/data/topic_tree.dart",
@@ -7612,25 +7682,65 @@
     "path": "rafeeq_app/lib/features/tasbih_reminder/data/tasbih_items.dart",
     "lines": 90,
     "sha256": "94afa6befd14dc86a59d741de9b934e4c4ef6f59466f520946366bc12e3e2c3a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 90,
+    "notes": [
+      {
+        "lines": [
+          1,
+          90
+        ],
+        "note": "Completed tasbih reminder files: corpus-backed excerpts, interval validation and wrapping layout. Tasbih service 79 shares confirmed A-16 DST duration construction. Notification rearm overlap remains unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tasbih_reminder/data/tasbih_reminder_provider.dart",
     "lines": 44,
     "sha256": "c626558e43423703faf0cea247fffb5ac9b9401f55ec3fe20b45fb9a5b26245c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 44,
+    "notes": [
+      {
+        "lines": [
+          1,
+          44
+        ],
+        "note": "Completed tasbih reminder files: corpus-backed excerpts, interval validation and wrapping layout. Tasbih service 79 shares confirmed A-16 DST duration construction. Notification rearm overlap remains unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tasbih_reminder/data/tasbih_reminder_service.dart",
     "lines": 104,
     "sha256": "b45a06b553c7a320b29c49a93901d4ed94c30bc904cce5e74e3fd145a0c70330",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 104,
+    "notes": [
+      {
+        "lines": [
+          1,
+          104
+        ],
+        "note": "Completed tasbih reminder files: corpus-backed excerpts, interval validation and wrapping layout. Tasbih service 79 shares confirmed A-16 DST duration construction. Notification rearm overlap remains unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tasbih_reminder/presentation/tasbih_reminder_section.dart",
     "lines": 70,
     "sha256": "2d22b3c2edd1659b5fb2a65880146907f89eba5a1dc4dafe7d8846643698876a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 70,
+    "notes": [
+      {
+        "lines": [
+          1,
+          70
+        ],
+        "note": "Completed tasbih reminder files: corpus-backed excerpts, interval validation and wrapping layout. Tasbih service 79 shares confirmed A-16 DST duration construction. Notification rearm overlap remains unproven."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tutorial/data/tutorial_anchors.dart",
