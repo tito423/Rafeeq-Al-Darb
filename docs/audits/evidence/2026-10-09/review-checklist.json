@@ -8092,13 +8092,33 @@
     "path": "rafeeq_app/lib/features/splash/data/splash_video_provider.dart",
     "lines": 109,
     "sha256": "de4674ebc88938091dde6cd0fb1b7b118447f86655f4cdce98679ec4f9fae9b0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 109,
+    "notes": [
+      {
+        "lines": [
+          1,
+          109
+        ],
+        "note": "Reviewed splash prefs defaults, 30-minute away gating, first-run marker and full preview lifecycle. Owner-requested sound/video defaults preserved. Preview controller assigned before play and disposes after late init when unmounted; initialization exceptions before assignment and background transition during initialization remain candidates needing proof. Recitation resume behavior needs physical audio-focus validation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/splash/presentation/screens/splash_preview_screen.dart",
     "lines": 155,
     "sha256": "fc8188c0eaffb687a581e0873d4b792b838976bbb4dec8109af7073a92bd026f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 155,
+    "notes": [
+      {
+        "lines": [
+          1,
+          155
+        ],
+        "note": "Reviewed splash prefs defaults, 30-minute away gating, first-run marker and full preview lifecycle. Owner-requested sound/video defaults preserved. Preview controller assigned before play and disposes after late init when unmounted; initialization exceptions before assignment and background transition during initialization remain candidates needing proof. Recitation resume behavior needs physical audio-focus validation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/splash/presentation/screens/splash_screen.dart",
