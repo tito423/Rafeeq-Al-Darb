@@ -6020,19 +6020,49 @@
     "path": "rafeeq_app/lib/features/onboarding/data/offline_pack_sizes.dart",
     "lines": 60,
     "sha256": "54f4026f122c8f5866d4419a8d69ad01313735026e2ac4fa0314cd9d0d65e0cc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 60,
+    "notes": [
+      {
+        "lines": [
+          1,
+          60
+        ],
+        "note": "Reviewed offline size asset decoding/selected recitation mapping, synchronous onboarding completion flag and whole onboarding page: catalog selection, actual download jobs, byte total, sign-in offer, replacement locale capture and revisit/later behavior. Finish ref invalidation precedes mounted guard and duplicate finish taps remain lifecycle candidates; measured pack sizes still require live byte census."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/onboarding/data/onboarding_state.dart",
     "lines": 19,
     "sha256": "ba1d42c6daa2ce3cbfe459017915edf44e379879f81867486c5b3f1e78f5daec",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 19,
+    "notes": [
+      {
+        "lines": [
+          1,
+          19
+        ],
+        "note": "Reviewed offline size asset decoding/selected recitation mapping, synchronous onboarding completion flag and whole onboarding page: catalog selection, actual download jobs, byte total, sign-in offer, replacement locale capture and revisit/later behavior. Finish ref invalidation precedes mounted guard and duplicate finish taps remain lifecycle candidates; measured pack sizes still require live byte census."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/onboarding/presentation/screens/onboarding_screen.dart",
     "lines": 350,
     "sha256": "9c6a3538a7f73b33928d23cf7d8ec8c34e4d50403772681504e2342a1cc553fe",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 350,
+    "notes": [
+      {
+        "lines": [
+          1,
+          350
+        ],
+        "note": "Reviewed offline size asset decoding/selected recitation mapping, synchronous onboarding completion flag and whole onboarding page: catalog selection, actual download jobs, byte total, sign-in offer, replacement locale capture and revisit/later behavior. Finish ref invalidation precedes mounted guard and duplicate finish taps remain lifecycle candidates; measured pack sizes still require live byte census."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/onboarding/presentation/screens/permissions_intro_screen.dart",
