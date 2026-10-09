@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 03:00 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 484/563; 35 interim findings. Completed Search source review (484 of 563); recorded timing, per-ayah reciter and text-scaling candidates. Exact NEXT: Review remaining features and reproduce candidates; finalize all required source/content/device audit evidence before Phase 2.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 03:04 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 484/563; 36 interim findings. Confirmed A-36 with two passing production-widget/provider lifetime tests: More group auto-collapse disposes settings ref and page notifier, breaking visible settings callbacks and updates. Report now has 36 findings; source count 484/563. Exact NEXT: Continue remaining 79 source files; remaining content/media/DB/performance/device and prior-audit checks must precede final Arabic 563-file report. A-36 proof is committed; do not fix app during Phase1.. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 03:04 - audit: prove settings page disposal after More auto-collapse
+
+- 2026-10-10 03:04 Dubai — **AUDIT IN PROGRESS (2026-10-10 03:04 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 484/563; 36 interim findings. Confirmed A-36 with two passing production-widget/provider lifetime tests: More group auto-collapse disposes settings ref and page notifier, breaking visible settings callbacks and updates. Report now has 36 findings; source count 484/563. Exact NEXT: Continue remaining 79 source files; remaining content/media/DB/performance/device and prior-audit checks must precede final Arabic 563-file report. A-36 proof is committed; do not fix app during Phase1.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 03:00 - audit: complete topic and keyword search screen review
 
 - 2026-10-10 03:00 Dubai — **AUDIT IN PROGRESS (2026-10-10 03:00 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 484/563; 35 interim findings. Completed Search source review (484 of 563); recorded timing, per-ayah reciter and text-scaling candidates. Exact NEXT: Review remaining features and reproduce candidates; finalize all required source/content/device audit evidence before Phase 2.. No app/backend edits; full source/content/device audit and final563-file report remain required.
