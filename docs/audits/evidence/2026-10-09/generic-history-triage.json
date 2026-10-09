@@ -1,0 +1,72 @@
+{
+  "candidate": "historical miniflare built-in development TLS key",
+  "blob": "7550b22e44b68e0d83559d5a64be873442b25f0c",
+  "path": "sync_backend/node_modules/miniflare/dist/src/index.js",
+  "line": 3389,
+  "certificate_subject": [
+    [
+      [
+        "countryName",
+        "US"
+      ]
+    ],
+    [
+      [
+        "stateOrProvinceName",
+        "Texas"
+      ]
+    ],
+    [
+      [
+        "localityName",
+        "Austin"
+      ]
+    ],
+    [
+      [
+        "organizationName",
+        "Cloudflare"
+      ]
+    ],
+    [
+      [
+        "organizationalUnitName",
+        "Workers"
+      ]
+    ]
+  ],
+  "certificate_issuer": [
+    [
+      [
+        "countryName",
+        "US"
+      ]
+    ],
+    [
+      [
+        "stateOrProvinceName",
+        "Texas"
+      ]
+    ],
+    [
+      [
+        "localityName",
+        "Austin"
+      ]
+    ],
+    [
+      [
+        "organizationName",
+        "Cloudflare"
+      ]
+    ],
+    [
+      [
+        "organizationalUnitName",
+        "Workers"
+      ]
+    ]
+  ],
+  "currently_tracked": false,
+  "classification": "Built-in development certificate in a previously committed npm dependency; not an owner production credential. The package is now a devDependency and node_modules is ignored."
+}
