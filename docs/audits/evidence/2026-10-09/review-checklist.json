@@ -3227,19 +3227,56 @@
     "path": "rafeeq_app/lib/features/assistant/presentation/assistant_sheet.dart",
     "lines": 660,
     "sha256": "628e452e987f6aca7b05b872e01d7044e0a82d1f955405545519754b54e461f5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 660,
+    "notes": [
+      {
+        "lines": [
+          1,
+          446
+        ],
+        "note": "Read assistant sheet lines 1-446; checked catalog fallback and asynchronous navigation. Dispatchers retain navigation and provider references across awaits, pending lifecycle proof."
+      },
+      {
+        "lines": [
+          447,
+          660
+        ],
+        "note": "Completed assistant sheet and wake listener. Retained unmounted dispatch, concurrent sheet hearing, and failed Future queue poisoning candidates for actual tests; no new finding without proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/presentation/assistant_wake_listener.dart",
     "lines": 258,
     "sha256": "c66271bd7b2dd4b30c0fe7552104d3b00955dd05552613fb09dd4a49e25ada67",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 258,
+    "notes": [
+      {
+        "lines": [
+          1,
+          258
+        ],
+        "note": "Completed assistant sheet and wake listener. Retained unmounted dispatch, concurrent sheet hearing, and failed Future queue poisoning candidates for actual tests; no new finding without proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/presentation/rafeeq_diag_screen.dart",
     "lines": 242,
     "sha256": "11c789d8475fc34cbbdaf697116cb2d69b226f8670e49a895be6bda525bee78d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 242,
+    "notes": [
+      {
+        "lines": [
+          1,
+          242
+        ],
+        "note": "Completed assistant diagnostics screen. Permission resume refresh implemented here; audio export explicitly user triggered; retained repeated polling and unhandled export failure candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/data/adhkar_recitations.dart",
