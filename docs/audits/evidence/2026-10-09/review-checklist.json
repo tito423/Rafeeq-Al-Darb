@@ -3193,13 +3193,33 @@
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/adhkar_listen_screen.dart",
     "lines": 433,
     "sha256": "1ee1759487c1923ec99ea5601cb7a43a634aeda957a91b66295b83db0f3f9e0d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 433,
+    "notes": [
+      {
+        "lines": [
+          1,
+          433
+        ],
+        "note": "Reviewed full morning/evening recording list/offline registry/autoplay/shared-player behavior/backgrounds and native download pause/resume/cancel/remove with source/duration labels. Player continuing after route closes is explicit design here, unlike passage TTS; no lifecycle bug inferred from background playback."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/azkar_screen.dart",
     "lines": 450,
     "sha256": "11126fe7e7c3a0a77d2540eeabba9766d04593ffb03b6ef93122277044c95878",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 450,
+    "notes": [
+      {
+        "lines": [
+          1,
+          450
+        ],
+        "note": "Reviewed complete AzkarScreen/sections/category grid/photo fallback, locale dependency, real repository filtering and morning/evening routing, themed generated section ground. Untested empty morning/evening corpus would hit sections.first; current mapped data verified by baseline coverage tests, no current-data failure claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/azkar_section_screen.dart",

@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 01:59 — IN PROGRESS — resume here**
+**2026-10-10 02:01 — IN PROGRESS — resume here**
 
-audit: finish library source review and audit adhkar catalogs
+audit: prove passage speech starts after card disposal
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
