@@ -2593,127 +2593,365 @@
     "path": "rafeeq_app/lib/features/adhan/data/adhan_background.dart",
     "lines": 93,
     "sha256": "0a556ca1d2a738e99fb7573f37df28047495a3e03d01543c097d9daf253a9155",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 93,
+    "notes": [
+      {
+        "lines": [
+          1,
+          93
+        ],
+        "note": "Read adhan background persistence, catalog async operations, option/Fajr resolution and native scheduling/test/preview pathways. Native daily drift already A11; small restore/dispose race candidate unproved."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/adhan_catalog_provider.dart",
     "lines": 30,
     "sha256": "124458256b5d4c85ec3b7e8f227c887be85d62b82bba24ff82a1d4ea859989ed",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 30,
+    "notes": [
+      {
+        "lines": [
+          1,
+          30
+        ],
+        "note": "Read adhan background persistence, catalog async operations, option/Fajr resolution and native scheduling/test/preview pathways. Native daily drift already A11; small restore/dispose race candidate unproved."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/adhan_scheduler.dart",
     "lines": 157,
     "sha256": "b7ff7d87655afbf2b783a63227c1d2bcb758004a9fa2ed451a8764f11a83bea5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 157,
+    "notes": [
+      {
+        "lines": [
+          1,
+          157
+        ],
+        "note": "Read adhan background persistence, catalog async operations, option/Fajr resolution and native scheduling/test/preview pathways. Native daily drift already A11; small restore/dispose race candidate unproved."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/adhan_settings_provider.dart",
     "lines": 272,
     "sha256": "37279a74cf3647bfa5827f94b38a2ae1844aba840112890eec611109881feba1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 272,
+    "notes": [
+      {
+        "lines": [
+          1,
+          272
+        ],
+        "note": "Read adhan preferences and cache invalidation, removal IDs, canonical adhan lines and subtitle timing through208. Static bundled timings checked by suite; no content changes. Calculation settings refresh callers still to inspect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/adhan_text.dart",
     "lines": 23,
     "sha256": "0c8b10197366ca0f41fac60705e3b560ea9f4bd8e5120378baede5d8820167f2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 23,
+    "notes": [
+      {
+        "lines": [
+          1,
+          23
+        ],
+        "note": "Read adhan preferences and cache invalidation, removal IDs, canonical adhan lines and subtitle timing through208. Static bundled timings checked by suite; no content changes. Calculation settings refresh callers still to inspect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/azan_subtitle.dart",
     "lines": 212,
     "sha256": "b1dcf7b9ca455b63cde2051880989a27708fb6b14c89eef6d6d5e816f7b1d986",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 212,
+    "notes": [
+      {
+        "lines": [
+          1,
+          208
+        ],
+        "note": "Read adhan preferences and cache invalidation, removal IDs, canonical adhan lines and subtitle timing through208. Static bundled timings checked by suite; no content changes. Calculation settings refresh callers still to inspect."
+      },
+      {
+        "lines": [
+          209,
+          212
+        ],
+        "note": "Read adjustment persistence/asciiDigits time rollover, status toggle, preview awaits/mounted stops, background grid ticker disposal and painter. No new finding; single ticker still rebuilds grid each frame performance measurement needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/prayer_adjustments_provider.dart",
     "lines": 123,
     "sha256": "69b3e1bc12f4f2da3bdb31e3dcfe3b17d0fac9c64456c6c5b8b032b428767163",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 123,
+    "notes": [
+      {
+        "lines": [
+          1,
+          123
+        ],
+        "note": "Read adjustment persistence/asciiDigits time rollover, status toggle, preview awaits/mounted stops, background grid ticker disposal and painter. No new finding; single ticker still rebuilds grid each frame performance measurement needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/prayer_look.dart",
     "lines": 10,
     "sha256": "ea2b01fd6622b954cf1e1fe8088aa42b32a3026c31fd7beb28e6cb8691e93147",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 10,
+    "notes": [
+      {
+        "lines": [
+          1,
+          10
+        ],
+        "note": "Read adjustment persistence/asciiDigits time rollover, status toggle, preview awaits/mounted stops, background grid ticker disposal and painter. No new finding; single ticker still rebuilds grid each frame performance measurement needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/prayer_status_enabled_provider.dart",
     "lines": 29,
     "sha256": "295f466195ed6017254b1e5c39df847a716592916233b5d5e590240c4ca43e37",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 29,
+    "notes": [
+      {
+        "lines": [
+          1,
+          29
+        ],
+        "note": "Read adjustment persistence/asciiDigits time rollover, status toggle, preview awaits/mounted stops, background grid ticker disposal and painter. No new finding; single ticker still rebuilds grid each frame performance measurement needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/adhan_preview_launcher.dart",
     "lines": 47,
     "sha256": "2f4a112df3f8d34c8ce91728ec19144de486168fc3fb82f3cce434c4db81f7b7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 47,
+    "notes": [
+      {
+        "lines": [
+          1,
+          47
+        ],
+        "note": "Read adjustment persistence/asciiDigits time rollover, status toggle, preview awaits/mounted stops, background grid ticker disposal and painter. No new finding; single ticker still rebuilds grid each frame performance measurement needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/screens/adhan_background_screen.dart",
     "lines": 205,
     "sha256": "35653079aca01f10fb83113c7712785a4cb6f6cfae9f78823acaf151050d8500",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 205,
+    "notes": [
+      {
+        "lines": [
+          1,
+          205
+        ],
+        "note": "Read adjustment persistence/asciiDigits time rollover, status toggle, preview awaits/mounted stops, background grid ticker disposal and painter. No new finding; single ticker still rebuilds grid each frame performance measurement needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/screens/adhan_settings_screen.dart",
     "lines": 681,
     "sha256": "c9ec6640829a2eb1252356175bf6552ee4423679406a1c47ef7b937125c7682c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 681,
+    "notes": [
+      {
+        "lines": [
+          1,
+          481
+        ],
+        "note": "Read settings through481, native row preview ownership/watch disposal, save reschedules, custom import and default heal. Candidate custom removal omits reschedule and can invalidate saved alarm sound path; trace catalog/native/file lifecycle before reporting."
+      },
+      {
+        "lines": [
+          482,
+          681
+        ],
+        "note": "Completed Fajr/per-prayer routes and permission cards. Fajr options temporarily empty calls resolveAdhanFor(empty) -> catalog.first, only during catalog reload; trigger/device reproduction required. Native permission grants checked on resume, battery check not refreshed after external settings."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/screens/azan_player_screen.dart",
     "lines": 542,
     "sha256": "ffb0a9be38629c9ff5cba3075170265cb33cfe3bd71413f90da94410d5f0eeab",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 542,
+    "notes": [
+      {
+        "lines": [
+          1,
+          522
+        ],
+        "note": "Read player live/preview startup, mounted polling, silent/error fallback, measured subtitles eligibility, dismiss/back, wakelock and all layout through522. Candidate unused repeating _bgController adds ticker without rendering use; measure before priority. Native onNewIntent stale spec still requires device."
+      },
+      {
+        "lines": [
+          523,
+          542
+        ],
+        "note": "Read live clock disposal and adjustments screen through517: location interval, method/Asr callbacks, reminders, hijri correction, preview offsets. A22 gold reminder label also present. Await/ref callbacks lifecycle candidate; no added finding without repro."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/screens/prayer_adjustments_screen.dart",
     "lines": 564,
     "sha256": "500312eedd2334772fd2ff03040086a41251aa5c74421f57f207372bf82a4658",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 564,
+    "notes": [
+      {
+        "lines": [
+          1,
+          517
+        ],
+        "note": "Read live clock disposal and adjustments screen through517: location interval, method/Asr callbacks, reminders, hijri correction, preview offsets. A22 gold reminder label also present. Await/ref callbacks lifecycle candidate; no added finding without repro."
+      },
+      {
+        "lines": [
+          518,
+          564
+        ],
+        "note": "Completed stepper and all location UI/search/cache preparation/manual writes. Candidate: clear query during inflight search leaves _searching=true (short branch and stale return never reset); needs controlled geocoder/DB widget proof. Localized coordinate digits filtered out intentionally ASCII-only field; document UX sweep."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/screens/prayer_location_screen.dart",
     "lines": 369,
     "sha256": "d483340c25914b8b66da33c8dfa979633f61a534b5c16fd756e332e8673bc968",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 369,
+    "notes": [
+      {
+        "lines": [
+          1,
+          369
+        ],
+        "note": "Completed stepper and all location UI/search/cache preparation/manual writes. Candidate: clear query during inflight search leaves _searching=true (short branch and stale return never reset); needs controlled geocoder/DB widget proof. Localized coordinate digits filtered out intentionally ASCII-only field; document UX sweep."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_background_painter.dart",
     "lines": 518,
     "sha256": "af873e22ed27566355aedf42ae777d84b220c1d6ccc8407e661536284d3243e3",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 518,
+    "notes": [
+      {
+        "lines": [
+          1,
+          518
+        ],
+        "note": "Read every background geometry routine, balanced canvas save/layers, bounded motif loops and card route. Current callers use origin zero and positive size; no speculative zero-width finding. Perf backdrop layers need measured frame timings."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_backgrounds_card.dart",
     "lines": 35,
     "sha256": "8a459c9b63dbf984289dfcb85c8b5e11a5d0e73d0efda64652d2f308775c8ed1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 35,
+    "notes": [
+      {
+        "lines": [
+          1,
+          35
+        ],
+        "note": "Read every background geometry routine, balanced canvas save/layers, bounded motif loops and card route. Current callers use origin zero and positive size; no speculative zero-width finding. Perf backdrop layers need measured frame timings."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_choice_cards.dart",
     "lines": 456,
     "sha256": "149b426a428e8cac3a190ab5ecb143dfde9e4754c14db4b2984529df7536e0d3",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 456,
+    "notes": [
+      {
+        "lines": [
+          1,
+          456
+        ],
+        "note": "Read all adhan choice cards/per-prayer selection modes and preview card. A22 same gold-on-pale selected names. Stop icon tooltip wrongly uses prayer.test at117: accessibility wording candidate explicit, pending semantics sweep. Async picker can call disposed parent callback; proof pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_preview_card.dart",
     "lines": 54,
     "sha256": "5fba01acefd33f95f13fda85af897eae6c28be35408e40c39b3e59c0b3089c8d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 54,
+    "notes": [
+      {
+        "lines": [
+          1,
+          54
+        ],
+        "note": "Read all adhan choice cards/per-prayer selection modes and preview card. A22 same gold-on-pale selected names. Stop icon tooltip wrongly uses prayer.test at117: accessibility wording candidate explicit, pending semantics sweep. Async picker can call disposed parent callback; proof pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_scene.dart",
     "lines": 532,
     "sha256": "f1b6bb9bfddfa9346b8957cff4893f0bfb31940fa4261907ad77724101a3f0c5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 532,
+    "notes": [
+      {
+        "lines": [
+          1,
+          532
+        ],
+        "note": "Read complete adhan scene ticker/ring lifecycle and all scene geometry. shouldRepaint omits background/ring contents but current animated calls repaint on elapsed seconds; no falsely claimed active defect. Reduced-motion wiring requires actual OS preference test."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/presentation/widgets/alarm_volume_tile.dart",
     "lines": 122,
     "sha256": "c29b7b60888c99b85e29b2977ab66668b6ff4099847d2a43a9cabe84866d6a4b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 122,
+    "notes": [
+      {
+        "lines": [
+          1,
+          122
+        ],
+        "note": "Read alarm-volume native load/refusal/readback and mounted guards; no confirmed defect. Adhan feature source complete; physical permissions, focus, Doze/reboot and two-day schedule remain pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_ayah_ref.dart",
