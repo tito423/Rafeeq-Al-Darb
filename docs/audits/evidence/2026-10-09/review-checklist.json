@@ -3580,19 +3580,49 @@
     "path": "rafeeq_app/lib/features/dedications/data/dedication.dart",
     "lines": 166,
     "sha256": "78022b8f93897a614a5630a8cea3ca823a041aafe1d206e6db08909940f24b7a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 166,
+    "notes": [
+      {
+        "lines": [
+          1,
+          166
+        ],
+        "note": "Reviewed dedication model/store and full counter screen; appearance mapping read through line20 only. User-written dedication notes are not app-authored religious rulings. Store updates state synchronously and persists whole list; restored loading can overwrite early mutations unless caller waits loaded, inspect screen next. Invalid one record empties entire restored list and next save rewrites it; needs realistic corruption proof. Counter accessibility whole-screen gesture lacks explicit button semantics; large-text/landscape layout and reduced-motion need actual tests. Dua has no unit: confirm UI prevents opening counter for it before reporting null assertion."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dedications/presentation/dedication_counter_screen.dart",
     "lines": 400,
     "sha256": "09739882f820c49ec29955de89cfb468f292b2570de45caa6630ae8692e23f40",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 400,
+    "notes": [
+      {
+        "lines": [
+          1,
+          400
+        ],
+        "note": "Reviewed dedication model/store and full counter screen; appearance mapping read through line20 only. User-written dedication notes are not app-authored religious rulings. Store updates state synchronously and persists whole list; restored loading can overwrite early mutations unless caller waits loaded, inspect screen next. Invalid one record empties entire restored list and next save rewrites it; needs realistic corruption proof. Counter accessibility whole-screen gesture lacks explicit button semantics; large-text/landscape layout and reduced-motion need actual tests. Dua has no unit: confirm UI prevents opening counter for it before reporting null assertion."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dedications/presentation/dedication_look.dart",
     "lines": 24,
     "sha256": "4597207ae502d00c185d9f0004138ba3344e72edda3e957f312dd301a6e7a840",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 20,
+    "notes": [
+      {
+        "lines": [
+          1,
+          20
+        ],
+        "note": "Reviewed dedication model/store and full counter screen; appearance mapping read through line20 only. User-written dedication notes are not app-authored religious rulings. Store updates state synchronously and persists whole list; restored loading can overwrite early mutations unless caller waits loaded, inspect screen next. Invalid one record empties entire restored list and next save rewrites it; needs realistic corruption proof. Counter accessibility whole-screen gesture lacks explicit button semantics; large-text/landscape layout and reduced-motion need actual tests. Dua has no unit: confirm UI prevents opening counter for it before reporting null assertion."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dedications/presentation/dedications_screen.dart",
