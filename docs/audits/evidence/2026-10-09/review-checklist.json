@@ -4732,109 +4732,303 @@
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences_sheet.dart",
     "lines": 352,
     "sha256": "95ae6e03159605d2ca61a9444fae5b95b99c33b90e729d939cb0d5f259c952e1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 352,
+    "notes": [
+      {
+        "lines": [
+          1,
+          352
+        ],
+        "note": "Reviewed sheet repo binding/download readiness, numbering gate and complete share overlay/raster/temp-file flow. Gold sheet labels add A-22 scope; share downloaded-language omission still candidate, no external sharing executed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_share_card.dart",
     "lines": 159,
     "sha256": "0d459a07d23bb1e1c7584f2f6f63de2e4c776531c5e4f45cd37abed0f4e19582",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 159,
+    "notes": [
+      {
+        "lines": [
+          1,
+          159
+        ],
+        "note": "Reviewed sheet repo binding/download readiness, numbering gate and complete share overlay/raster/temp-file flow. Gold sheet labels add A-22 scope; share downloaded-language omission still candidate, no external sharing executed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/continue_reading_card.dart",
     "lines": 165,
     "sha256": "9026232b731c213885dafcc494c074638e2b0e310446db42f01abe83cafc13d8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 165,
+    "notes": [
+      {
+        "lines": [
+          1,
+          165
+        ],
+        "note": "Reviewed continue-reading persistence/card, speed slider, ayah marker 1-288 including number geometry and logical-to-visual slot assignment. Remaining marker return plus viewer widgets pending; no scripture edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/auto_scroll_speed_bar.dart",
     "lines": 69,
     "sha256": "da0ecaef9d4205b2d6395c600d5a306872edd0e1c47754c297222fe6e952091f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 69,
+    "notes": [
+      {
+        "lines": [
+          1,
+          69
+        ],
+        "note": "Reviewed continue-reading persistence/card, speed slider, ayah marker 1-288 including number geometry and logical-to-visual slot assignment. Remaining marker return plus viewer widgets pending; no scripture edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/ayah_marker.dart",
     "lines": 293,
     "sha256": "028fb77a76be738b86e3a1578c0164ad56ccce60b7fa1d9f9b7703444c0087ec",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 293,
+    "notes": [
+      {
+        "lines": [
+          1,
+          288
+        ],
+        "note": "Reviewed continue-reading persistence/card, speed slider, ayah marker 1-288 including number geometry and logical-to-visual slot assignment. Remaining marker return plus viewer widgets pending; no scripture edits."
+      },
+      {
+        "lines": [
+          289,
+          293
+        ],
+        "note": "Completed marker mapping; reviewed wash single-fill geometry, chrome timer/provider reporting and fit/clip math. Small-screen fit floor deliberately clips scrolling content; device large-font matrix required to judge usability."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/ayah_wash_painter.dart",
     "lines": 74,
     "sha256": "198376c1d92d574d87f6012566d639ff6748d297f6ec0952f44168d10121912e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 74,
+    "notes": [
+      {
+        "lines": [
+          1,
+          74
+        ],
+        "note": "Completed marker mapping; reviewed wash single-fill geometry, chrome timer/provider reporting and fit/clip math. Small-screen fit floor deliberately clips scrolling content; device large-font matrix required to judge usability."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/chrome_auto_hide.dart",
     "lines": 71,
     "sha256": "4b6278b4fe356110f05c8ffaefc093ba091f9b90af2a7f462a3bd23488c9f3ed",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 71,
+    "notes": [
+      {
+        "lines": [
+          1,
+          71
+        ],
+        "note": "Completed marker mapping; reviewed wash single-fill geometry, chrome timer/provider reporting and fit/clip math. Small-screen fit floor deliberately clips scrolling content; device large-font matrix required to judge usability."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/chrome_fit.dart",
     "lines": 102,
     "sha256": "a1b671b48add7b9966e9131b132595b6d73f00af4b33680d4e641b7c4a55fd13",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 102,
+    "notes": [
+      {
+        "lines": [
+          1,
+          102
+        ],
+        "note": "Completed marker mapping; reviewed wash single-fill geometry, chrome timer/provider reporting and fit/clip math. Small-screen fit floor deliberately clips scrolling content; device large-font matrix required to judge usability."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/continuous_mushaf_view.dart",
     "lines": 485,
     "sha256": "15e14da5f36e8b26818ecb4a5ff0f271cd774c27cc2ba0b1c42319667da1914c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 485,
+    "notes": [
+      {
+        "lines": [
+          1,
+          485
+        ],
+        "note": "Reviewed continuous reader anchoring, mark seeking, current-page detection, tick/drag lifecycle and slot registrations. FutureBuilder omits error branch just like paged viewer; real repository warm-cache behavior must be checked before escalating failure scenario."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/fast_page_scroll_bar.dart",
     "lines": 153,
     "sha256": "39ea01f254122e3add80992d1caa7b28e428d7923ff2d62e2d4ac55151f9bc4a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 153,
+    "notes": [
+      {
+        "lines": [
+          1,
+          153
+        ],
+        "note": "Reviewed fast page scrollbar and follow note; tap leaves drag fraction active: reproduce before reporting. Reviewed mushaf chrome through line 299."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/follows_recitation_note.dart",
     "lines": 39,
     "sha256": "15a5c3e56141bd365740718191be7ade2172aabcf3d2dce50502bb5119a5317c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 39,
+    "notes": [
+      {
+        "lines": [
+          1,
+          39
+        ],
+        "note": "Reviewed fast page scrollbar and follow note; tap leaves drag fraction active: reproduce before reporting. Reviewed mushaf chrome through line 299."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_chrome.dart",
     "lines": 334,
     "sha256": "21b041677934edbb3de316df567bb7962ba8e4db4ed02eae2a6acbf0d2aa6d56",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 334,
+    "notes": [
+      {
+        "lines": [
+          1,
+          299
+        ],
+        "note": "Reviewed fast page scrollbar and follow note; tap leaves drag fraction active: reproduce before reporting. Reviewed mushaf chrome through line 299."
+      },
+      {
+        "lines": [
+          300,
+          334
+        ],
+        "note": "Reviewed chrome completion, paper choices, remote navigation and toolbar; await navigator result lacks mounted check but no dereferenced state here; no new confirmed issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_paper_chips.dart",
     "lines": 55,
     "sha256": "37c8fd5b0638550f60d880522c0c3cef54741ea741ac1c0cff55167745a42d33",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 55,
+    "notes": [
+      {
+        "lines": [
+          1,
+          55
+        ],
+        "note": "Reviewed chrome completion, paper choices, remote navigation and toolbar; await navigator result lacks mounted check but no dereferenced state here; no new confirmed issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_remote_keys.dart",
     "lines": 52,
     "sha256": "b5231e972e2d44e181e6908fce04671e03fedf4a07f87c9c1bfc400a42280add",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 52,
+    "notes": [
+      {
+        "lines": [
+          1,
+          52
+        ],
+        "note": "Reviewed chrome completion, paper choices, remote navigation and toolbar; await navigator result lacks mounted check but no dereferenced state here; no new confirmed issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_toolbar.dart",
     "lines": 222,
     "sha256": "22478015839374b455cdebb6962983b8575848b31fb180171742f15a8ae68cba",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 222,
+    "notes": [
+      {
+        "lines": [
+          1,
+          222
+        ],
+        "note": "Reviewed chrome completion, paper choices, remote navigation and toolbar; await navigator result lacks mounted check but no dereferenced state here; no new confirmed issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/page_overlay.dart",
     "lines": 193,
     "sha256": "eba885618cecff06cb08d5236be46ea86e1c20b3dc19e5c0396386e16abdff64",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 193,
+    "notes": [
+      {
+        "lines": [
+          1,
+          193
+        ],
+        "note": "Reviewed overlay with intentional printed digits and page-turn stable subtree/perspective. Gold badge contrast joins A22 candidate; no independent confirmed issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/page_turn.dart",
     "lines": 166,
     "sha256": "a0b351161494abe2f74596afb123cd6d4504c9c53319b1b124bbb5451429e681",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 166,
+    "notes": [
+      {
+        "lines": [
+          1,
+          166
+        ],
+        "note": "Reviewed overlay with intentional printed digits and page-turn stable subtree/perspective. Gold badge contrast joins A22 candidate; no independent confirmed issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/quran_display_sheet.dart",
     "lines": 537,
     "sha256": "e3f7ae45e227193d9346acbbb429552b005e445b1e5e03487ba88084d10620fa",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 537,
+    "notes": [
+      {
+        "lines": [
+          1,
+          537
+        ],
+        "note": "Reviewed all display sheet state, settings callbacks, layout/font controls and reader return preferences. Selected layout label uses gold on pale gold, matching A22 scope; no separate confirmed issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/recite_bar.dart",
