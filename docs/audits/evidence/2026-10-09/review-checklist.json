@@ -4865,7 +4865,17 @@
     "path": "rafeeq_app/lib/features/kids/data/kids_stories_data.dart",
     "lines": 451,
     "sha256": "4a3c736027133c399cba99f496cd6f9f78cb32bd82f126a8d63369a64de6b728",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 229,
+    "notes": [
+      {
+        "lines": [
+          1,
+          229
+        ],
+        "note": "Read generated kids narrative/caption data 1-229: Nuh through beginning Yusuf, timestamp intervals and embedded recitation references. Source/prose comparison with named tafsir/hadith editions and actual voiced media remains unverified; no scripture/grade change authorized."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/presentation/ayah_game_screen.dart",
