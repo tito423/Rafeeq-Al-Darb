@@ -6116,7 +6116,17 @@
     "path": "rafeeq_app/lib/features/onboarding/presentation/widgets/offline_pack_tiles.dart",
     "lines": 555,
     "sha256": "6ceef6ad08fc767f2a25da39e1ecb48b82b171119ef39b6130843f9eb7493363",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 555,
+    "notes": [
+      {
+        "lines": [
+          1,
+          555
+        ],
+        "note": "Reviewed offline pack tiles whole555: 1KB host probes/timeouts/smallest recommendation, persisted library busy state, selected reciter downloads, mp3 catalog retry/mirror choices, Tasmee/OpenVoice real progress/hash/install/cancel hooks and choice sheets. Probe accepts any nonempty200/206, missing options spinner and ref after await are candidates needing live/controlled input; no new finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/qibla/presentation/screens/qibla_screen.dart",

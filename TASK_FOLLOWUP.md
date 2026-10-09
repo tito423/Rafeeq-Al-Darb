@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 02:55 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 473/563; 35 interim findings. Permission intro and offline content/row widgets complete; 473/563 files. Exact NEXT: Read last onboarding offline pack tiles, then remaining 90 files. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 02:55 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 474/563; 35 interim findings. ALL onboarding files complete; 474/563 reviewed and 35 findings. Exact NEXT: Read more/sign-in sources next then remaining 89 files; physical device still absent last adb check. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 02:55 - audit: complete onboarding host probes and actual pack downloads
+
+- 2026-10-10 02:55 Dubai — **AUDIT IN PROGRESS (2026-10-10 02:55 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 474/563; 35 interim findings. ALL onboarding files complete; 474/563 reviewed and 35 findings. Exact NEXT: Read more/sign-in sources next then remaining 89 files; physical device still absent last adb check. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 02:55 - audit: review onboarding grants and offline pack progress rows
 
 - 2026-10-10 02:55 Dubai — **AUDIT IN PROGRESS (2026-10-10 02:55 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 473/563; 35 interim findings. Permission intro and offline content/row widgets complete; 473/563 files. Exact NEXT: Read last onboarding offline pack tiles, then remaining 90 files. No app/backend edits; full source/content/device audit and final563-file report remain required.
