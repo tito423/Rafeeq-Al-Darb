@@ -3755,7 +3755,17 @@
     "path": "rafeeq_app/lib/features/home/data/on_this_day_repository.dart",
     "lines": 130,
     "sha256": "cce4fbc9ab503ca8d33df3a7620d80ca5f6d8026551e1d51a04cf321cab66761",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 130,
+    "notes": [
+      {
+        "lines": [
+          1,
+          130
+        ],
+        "note": "Read bundled Gregorian/Hijri events providers, six-language/fallback handling, gzip magic and isolate parsing; data provenance verification remains separate. Prayer hero icon map reviewed, no new functional issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/data/prayer_controller.dart",
@@ -3777,7 +3787,17 @@
     "path": "rafeeq_app/lib/features/home/data/prayer_hero_icons.dart",
     "lines": 12,
     "sha256": "97254c64e2e71fed374cb4137cc82d0c37ca1ced7921d20eee948fa01a344fef",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 12,
+    "notes": [
+      {
+        "lines": [
+          1,
+          12
+        ],
+        "note": "Read bundled Gregorian/Hijri events providers, six-language/fallback handling, gzip magic and isolate parsing; data provenance verification remains separate. Prayer hero icon map reviewed, no new functional issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/screens/home_prayer_card.dart",
