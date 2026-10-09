@@ -7650,8 +7650,8 @@
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/permissions_section.dart",
     "lines": 213,
     "sha256": "3d6251f13ee2a06e67031ee00de13a516f326be27e01ddc25a3f9b8f96a58b06",
-    "review": "partial",
-    "read_through_line": 203,
+    "review": "source-reviewed",
+    "read_through_line": 213,
     "notes": [
       {
         "lines": [
@@ -7659,6 +7659,13 @@
           203
         ],
         "note": "Reviewed focus target sheet and provider invocation, non-Arabic reading preview/gold ink, and PermissionsSection 1-203: sequential status queries, resume refresh, granted/revoked battery history, autostart settings and native intent bridge. No physical OEM permission outcome inferred from source."
+      },
+      {
+        "lines": [
+          204,
+          213
+        ],
+        "note": "Completed permissions status tile and reader-name sheet: mounted close after persistence, skip/cancel contracts, keyboard insets, 24-character input, gradient name rendering. Name gradient on light ground is a candidate for extending contrast evidence, not separately counted."
       }
     ]
   },
@@ -7666,7 +7673,17 @@
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/reader_name_sheet.dart",
     "lines": 241,
     "sha256": "4e1f99bbf3f9b7249623bdafa684a9ca31029fdc7676a7266b17ee9db09a46a7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 241,
+    "notes": [
+      {
+        "lines": [
+          1,
+          241
+        ],
+        "note": "Completed permissions status tile and reader-name sheet: mounted close after persistence, skip/cancel contracts, keyboard insets, 24-character input, gradient name rendering. Name gradient on light ground is a candidate for extending contrast evidence, not separately counted."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/shamela/data/shamela_book_builder.dart",
