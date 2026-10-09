@@ -1,0 +1,58 @@
+columns the code casts as a non-nullable int: 21
+  at, ayah_end, ayah_from, ayah_number, ayah_start, ayah_to, book_id, chapter_count, chapter_no, hadeeth_count, hadith_count, id, juz_number, number_in_book, p, pos, section_id, surah, surah_id, target_ayah, target_surah
+
+=== azkar.db (3 tables) ===
+  azkar_sections               id                    133 rows
+  azkar_items                  id                    302 rows
+  azkar_items                  section_id            302 rows
+
+=== hadith.db (9 tables) ===
+  books                        id                      9 rows
+  books                        hadith_count            9 rows
+  books                        chapter_count           9 rows
+  chapters                     book_id              1482 rows
+  chapters                     chapter_no           1482 rows  <-- 1 of 1482 NOT integer
+  hadiths                      id                  67153 rows
+  hadiths                      book_id             67153 rows
+  hadiths                      chapter_no          67153 rows  <-- 83 of 67153 NOT integer
+  hadiths                      number_in_book      67153 rows
+  hadiths_fts_data             id                   1283 rows
+  hadiths_fts_docsize          id                  67153 rows
+
+=== quran.db (0 tables) ===
+
+=== quran_local.db (11 tables) ===
+  surahs                       id                    114 rows
+  ayahs                        id                   6236 rows
+  ayahs                        surah_id             6236 rows
+  ayahs                        ayah_number          6236 rows
+  ayahs                        juz_number           6236 rows
+  tafsir_names                 id                     20 rows
+  ayahs_search_data            id                    239 rows
+  ayahs_search_content         id                   6236 rows
+  ayahs_search_docsize         id                   6236 rows
+
+=== quran_sciences.db (9 tables) ===
+  tafseer_texts                id                  42435 rows
+  tafseer_texts                surah               42435 rows
+  tafseer_texts                ayah_start          42435 rows
+  tafseer_texts                ayah_end            42435 rows
+  word_meanings                surah               83665 rows
+  word_meanings                pos                 83665 rows
+  azkar_sections               id                     26 rows
+  azkar_items                  id                     98 rows
+  azkar_items                  section_id             98 rows
+  translations                 surah               37416 rows
+  irab_daas                    surah                3639 rows
+  irab_daas                    ayah_from            3639 rows
+  irab_daas                    ayah_to              3639 rows
+  irab_daas_refs               surah                 215 rows
+  irab_daas_refs               ayah_from             215 rows
+  irab_daas_refs               at                    215 rows
+  irab_daas_refs               target_surah          215 rows
+  irab_daas_refs               target_ayah           215 rows
+
+=== VERDICT ===
+2 column(s) can crash a cast:
+  hadith.db.chapters.chapter_no: 1 of 1482 not integer, e.g. [(35.2, 'real')]
+  hadith.db.hadiths.chapter_no: 83 of 67153 not integer, e.g. [(35.2, 'real'), (35.2, 'real'), (35.2, 'real')]

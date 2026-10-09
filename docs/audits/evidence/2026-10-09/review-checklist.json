@@ -3,25 +3,65 @@
     "path": ".github/workflows/ci.yml",
     "lines": 58,
     "sha256": "a3d9d7d49370a9528049140903d06b344227a5e8f3c065e660325dc73e0552a2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 58,
+    "notes": [
+      {
+        "lines": [
+          1,
+          58
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "build_github_release.bat",
     "lines": 24,
     "sha256": "851cc776f8862f8a163ab3df62ac857894ab205660908b89b08e7f21d625a683",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 24,
+    "notes": [
+      {
+        "lines": [
+          1,
+          24
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/build.gradle.kts",
     "lines": 191,
     "sha256": "585c7fb90acdfb2c8cb86e277e2fd92d31cef5a3858051524dbb31752ec5f2a2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 191,
+    "notes": [
+      {
+        "lines": [
+          1,
+          191
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/proguard-rules.pro",
     "lines": 27,
     "sha256": "72a14428daf2833bfb5f819bac5e5ee7f740d1b621c84c3eefe8bcd6a41f4fd4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 27,
+    "notes": [
+      {
+        "lines": [
+          1,
+          27
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/debug/AndroidManifest.xml",
@@ -39,157 +79,417 @@
     "path": "rafeeq_app/android/app/src/main/AndroidManifest.xml",
     "lines": 330,
     "sha256": "89073959ecb9b3bf359fefd339d61e515e4b5f43db82f721811e89ab79a14866",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 330,
+    "notes": [
+      {
+        "lines": [
+          1,
+          330
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/AssistantListenService.kt",
     "lines": 167,
     "sha256": "99a413157f0cbb3b544f603f82c3512aaa43ab512f8e9643f27e0c46b4862836",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 167,
+    "notes": [
+      {
+        "lines": [
+          1,
+          167
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/AssistantOverlay.kt",
     "lines": 136,
     "sha256": "042ad0bad7d128ca72843a6e33616f87452084c8d132ac2cd6dc1dad7bef0094",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 136,
+    "notes": [
+      {
+        "lines": [
+          1,
+          136
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/DownloadForegroundService.kt",
     "lines": 243,
     "sha256": "8cb20661521c19ac4f2571cbec35a406154935e25355d40484df5e96da506640",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 243,
+    "notes": [
+      {
+        "lines": [
+          1,
+          243
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/MainActivity.kt",
     "lines": 182,
     "sha256": "9f36e3ac1c3f21388091dbc6cecea93e441123b28f8e5d38fd430a95dc947811",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 182,
+    "notes": [
+      {
+        "lines": [
+          1,
+          182
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/NativeStrings.kt",
     "lines": 96,
     "sha256": "28fd129d40f26fc15943d50ac639daacde21e7fcf5fa803341e70037fb784fd2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 96,
+    "notes": [
+      {
+        "lines": [
+          1,
+          96
+        ],
+        "note": "NativeStrings, AdhanActivity, vibration and assistant bridge read fully. Direct Boot strings use credential storage (A-12 follow-through); reusing a live AdhanActivity with a new spec needs device check before another finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/PrayerCard.kt",
     "lines": 365,
     "sha256": "083cc70d47a5c70cec9bd54be730f6a5a4e8888dbc4b5d7898104c39b814341d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 365,
+    "notes": [
+      {
+        "lines": [
+          1,
+          365
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/RafeeqApplication.kt",
     "lines": 65,
     "sha256": "d97f25ffed78a3adeafd2f6b2a0a0d02457cbb3f265358d841ae25d10a3929a8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 65,
+    "notes": [
+      {
+        "lines": [
+          1,
+          65
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanActivity.kt",
     "lines": 149,
     "sha256": "89a410fd43f40dc25446840f232f0311be55cca26420901c0a087b87ca228b68",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 149,
+    "notes": [
+      {
+        "lines": [
+          1,
+          149
+        ],
+        "note": "NativeStrings, AdhanActivity, vibration and assistant bridge read fully. Direct Boot strings use credential storage (A-12 follow-through); reusing a live AdhanActivity with a new spec needs device check before another finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanAlarmReceiver.kt",
     "lines": 68,
     "sha256": "99b6afdf88cb2bd69355fdd054dcfb588872f2b0633b541118f0fe056c0a3ebb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 68,
+    "notes": [
+      {
+        "lines": [
+          1,
+          68
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanBootReceiver.kt",
     "lines": 24,
     "sha256": "c4c0d8e4d93d8bc4bd42d4f6b9ebddfe676e4e8ea9822fcb61d5b699c10744ba",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 24,
+    "notes": [
+      {
+        "lines": [
+          1,
+          24
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanChannels.kt",
     "lines": 183,
     "sha256": "ec420fad511247fe2ce0126bf55fabf11033b06a853119f24adb879cf04aff88",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 183,
+    "notes": [
+      {
+        "lines": [
+          1,
+          183
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanNotifications.kt",
     "lines": 171,
     "sha256": "e4c09e2ef7d49deba730f1428b8776494b6c1b6f9d21b06962fc628b0648b9ef",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 171,
+    "notes": [
+      {
+        "lines": [
+          1,
+          171
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanPlayer.kt",
     "lines": 253,
     "sha256": "d4eef93860e906ddd2b5a78a90f12f9dab131b3abbaab094895a1128b7acbb8c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 253,
+    "notes": [
+      {
+        "lines": [
+          1,
+          253
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanScheduler.kt",
     "lines": 203,
     "sha256": "ca30505d511760dc8102f1c7a33f4a3c0365d0353e7831e35cb3e37bea3e02de",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 203,
+    "notes": [
+      {
+        "lines": [
+          1,
+          203
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanService.kt",
     "lines": 242,
     "sha256": "7dc22d47b6b04b508aefa1ae786102447c46286f4609870743dcb60d6fce52e1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 242,
+    "notes": [
+      {
+        "lines": [
+          1,
+          242
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanSpec.kt",
     "lines": 156,
     "sha256": "e5a3777f94fcf5372fbfef7863b1275103f389937cb115a021e893c3d3c92526",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 156,
+    "notes": [
+      {
+        "lines": [
+          1,
+          156
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanVibration.kt",
     "lines": 74,
     "sha256": "fa05afc136f462835cb9ecd0420df8f656212cf9e1057d844c55baee70a4a149",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 74,
+    "notes": [
+      {
+        "lines": [
+          1,
+          74
+        ],
+        "note": "NativeStrings, AdhanActivity, vibration and assistant bridge read fully. Direct Boot strings use credential storage (A-12 follow-through); reusing a live AdhanActivity with a new spec needs device check before another finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/AdhanControlChannel.kt",
     "lines": 132,
     "sha256": "f5c89a21b9b76d03fb099edd4596982d789762a6bdda423bb9ab956765c7fe3f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 132,
+    "notes": [
+      {
+        "lines": [
+          1,
+          132
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/AssistantChannel.kt",
     "lines": 140,
     "sha256": "1942545223b131e4cf6c13178ebcbc95987a8757a6d363ed29a42fc21a8d3964",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 140,
+    "notes": [
+      {
+        "lines": [
+          1,
+          140
+        ],
+        "note": "NativeStrings, AdhanActivity, vibration and assistant bridge read fully. Direct Boot strings use credential storage (A-12 follow-through); reusing a live AdhanActivity with a new spec needs device check before another finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/ChannelNames.kt",
     "lines": 22,
     "sha256": "da120bd571f1371c04e072fb12a177dde34dfdf0aecba6fff8341882abf29588",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 22,
+    "notes": [
+      {
+        "lines": [
+          1,
+          22
+        ],
+        "note": "Native channels reviewed fully; playback error cleanup and locale notification refresh need consumer follow-through before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/DownloadServiceChannel.kt",
     "lines": 87,
     "sha256": "b96a0b1b559e9591a2201b2dd96dd4a5940e2b94bf22cbe3e177df5ed0c7ee65",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 87,
+    "notes": [
+      {
+        "lines": [
+          1,
+          87
+        ],
+        "note": "Native channels reviewed fully; playback error cleanup and locale notification refresh need consumer follow-through before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/MediaAudioChannel.kt",
     "lines": 79,
     "sha256": "637007a3444e36a598ab4010c74bb2650a9266ff4674ec87aee29582b85b44be",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 79,
+    "notes": [
+      {
+        "lines": [
+          1,
+          79
+        ],
+        "note": "Native channels reviewed fully; playback error cleanup and locale notification refresh need consumer follow-through before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/NativeStringsChannel.kt",
     "lines": 45,
     "sha256": "aad9fb2feea5517519dd760ed7c7f7233bb7cf679c3cdb5ea2a4b8d99b7a214f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 45,
+    "notes": [
+      {
+        "lines": [
+          1,
+          45
+        ],
+        "note": "Native channels reviewed fully; playback error cleanup and locale notification refresh need consumer follow-through before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/PrayerCardChannel.kt",
     "lines": 65,
     "sha256": "f00bad12e2842557fb766485ee16d2c8728139de75b17574fc0f9a4057047ee6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 65,
+    "notes": [
+      {
+        "lines": [
+          1,
+          65
+        ],
+        "note": "Native channels reviewed fully; playback error cleanup and locale notification refresh need consumer follow-through before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/VoicePlayerChannel.kt",
     "lines": 164,
     "sha256": "c693c98fced83ddf6d67d3ed651674db36c247113c9e1b2976cb64a141d66978",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 164,
+    "notes": [
+      {
+        "lines": [
+          1,
+          164
+        ],
+        "note": "Native channels reviewed fully; playback error cleanup and locale notification refresh need consumer follow-through before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/drawable-night-v21/launch_background.xml",
@@ -291,25 +591,65 @@
     "path": "rafeeq_app/android/build.gradle.kts",
     "lines": 19,
     "sha256": "3de78548a7b8b29fdc91980a8a618d99491bb794d5d09e0098b2d4e0f27e108f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 19,
+    "notes": [
+      {
+        "lines": [
+          1,
+          19
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/gradle.properties",
     "lines": 4,
     "sha256": "808fb9cef4d65a4f31ccaa6317256129a43656b713f66f202e38695a20325a40",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 4,
+    "notes": [
+      {
+        "lines": [
+          1,
+          4
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/gradle/wrapper/gradle-wrapper.properties",
     "lines": 5,
     "sha256": "1220fdd333a881e47441de07b23f9dd1ebd35459730543ae429cf249847d91bf",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 5,
+    "notes": [
+      {
+        "lines": [
+          1,
+          5
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/settings.gradle.kts",
     "lines": 46,
     "sha256": "46026cef519f70f15b2211c6d341633939043430afd63e9f5aa38deb48fded09",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 46,
+    "notes": [
+      {
+        "lines": [
+          1,
+          46
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/adhan_entry.dart",
@@ -339,7 +679,17 @@
     "path": "rafeeq_app/lib/app/rafeeq_app.dart",
     "lines": 220,
     "sha256": "6bf6537404d4c9136481ae2fbb80bf52d111e80f5a6ae2aea546e731f8814fdc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 220,
+    "notes": [
+      {
+        "lines": [
+          1,
+          220
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/shell/app_shell.dart",
@@ -375,7 +725,17 @@
     "path": "rafeeq_app/lib/core/config/content_mirrors.dart",
     "lines": 122,
     "sha256": "3a26e8368b336e3183de658de8df4e5c0c3000b7522ce40bb497d5885d257f1a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 122,
+    "notes": [
+      {
+        "lines": [
+          1,
+          122
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/config/prefs_provider.dart",
@@ -387,73 +747,193 @@
     "path": "rafeeq_app/lib/core/db/azkar_repository.dart",
     "lines": 73,
     "sha256": "52dd64ef1b21ea57a2436948ef663bf866a7dfb74e9466f35ea290c2b733fa8d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 73,
+    "notes": [
+      {
+        "lines": [
+          1,
+          73
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/db/db_helper.dart",
     "lines": 113,
     "sha256": "2e098098b8d6cd6db0fa2d54fef03e6d0473f63966537b337acac8801b5f7622",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 113,
+    "notes": [
+      {
+        "lines": [
+          1,
+          113
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/db/hadeethenc_repository.dart",
     "lines": 305,
     "sha256": "43fe1f80dc95012ebe9826fd31449e1b6d32012d514d3629d385c7e94357905c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 305,
+    "notes": [
+      {
+        "lines": [
+          1,
+          305
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/db/hadith_repository.dart",
     "lines": 400,
     "sha256": "9721ba7369d8e97ef2b39c487b099a86c2740733938235e1640402180ad20f6c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 400,
+    "notes": [
+      {
+        "lines": [
+          1,
+          400
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/db/models.dart",
     "lines": 259,
     "sha256": "1fbaa4ee0b1685bb0156f3508981161b5085b168cb68f41480784f53e8998ccb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 259,
+    "notes": [
+      {
+        "lines": [
+          1,
+          259
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/db/quran_repository.dart",
     "lines": 310,
     "sha256": "58e2296a75babac5bde88302892d8c1b91cf36754d8329562650babe8f375ebb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 310,
+    "notes": [
+      {
+        "lines": [
+          1,
+          310
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/db/sciences_repository.dart",
     "lines": 311,
     "sha256": "644c556987674be35ce22ffb33fbdff58cf8c3eaed6ce178a8d6ebe5ce99fcf0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 311,
+    "notes": [
+      {
+        "lines": [
+          1,
+          311
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/i18n/hadith_grade_i18n.dart",
     "lines": 109,
     "sha256": "5df8b644bf24799398d0722ec7e5e4247db5a90d2bcc845679de423a5f384aee",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 109,
+    "notes": [
+      {
+        "lines": [
+          1,
+          109
+        ],
+        "note": "All i18n helpers read fully. Seven locales centralized; hadith terms preserve source outside Arabic deliberately. No changes to religious terms."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/i18n/hijri_months.dart",
     "lines": 31,
     "sha256": "26b6c50305a0692df8087d0e8c3255cf2b8d1c12234a811e7da14d58cbf9b5f4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 31,
+    "notes": [
+      {
+        "lines": [
+          1,
+          31
+        ],
+        "note": "All i18n helpers read fully. Seven locales centralized; hadith terms preserve source outside Arabic deliberately. No changes to religious terms."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/i18n/isolate_strings.dart",
     "lines": 92,
     "sha256": "cb019462726da0b43ae9a37380ac612719a7219e02bd9752fdd4b9b0ceeb9c8d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 92,
+    "notes": [
+      {
+        "lines": [
+          1,
+          92
+        ],
+        "note": "All i18n helpers read fully. Seven locales centralized; hadith terms preserve source outside Arabic deliberately. No changes to religious terms."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/i18n/proper_name.dart",
     "lines": 27,
     "sha256": "85af9acc1cc2237bbb698dded23a73d9ca3d61b141e696e762ab5075e7e52f64",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 27,
+    "notes": [
+      {
+        "lines": [
+          1,
+          27
+        ],
+        "note": "All i18n helpers read fully. Seven locales centralized; hadith terms preserve source outside Arabic deliberately. No changes to religious terms."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/i18n/supported_locales.dart",
     "lines": 40,
     "sha256": "dece6a02e1511867321a87f5d592bfc62da69e979dc9db6a68d71ea14e9de584",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 40,
+    "notes": [
+      {
+        "lines": [
+          1,
+          40
+        ],
+        "note": "All i18n helpers read fully. Seven locales centralized; hadith terms preserve source outside Arabic deliberately. No changes to religious terms."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/models/adhan_mode.dart",
@@ -477,7 +957,17 @@
     "path": "rafeeq_app/lib/core/models/prayer_times.dart",
     "lines": 105,
     "sha256": "33c9047f2976f4b289939ded68257114d8dd5c6238820210052f1159447350ab",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 105,
+    "notes": [
+      {
+        "lines": [
+          1,
+          105
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/adhan_catalog_service.dart",
@@ -549,19 +1039,49 @@
     "path": "rafeeq_app/lib/core/services/download_engine.dart",
     "lines": 455,
     "sha256": "25d6bd26fd991e98c267e327a31e359c654dd4a32b10c024e89e0e24f8ca00fb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 455,
+    "notes": [
+      {
+        "lines": [
+          1,
+          455
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/download_foreground_service.dart",
     "lines": 119,
     "sha256": "722a65e78195e3152b156ddb4df679b30698fd7269dcefe831e47ebe0e2e72d8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 119,
+    "notes": [
+      {
+        "lines": [
+          1,
+          119
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/download_manager.dart",
     "lines": 687,
     "sha256": "87a6061bd89e5c52c639e498a1a06b2d95a0b7ba5b8729c7d266831687332ebd",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 687,
+    "notes": [
+      {
+        "lines": [
+          1,
+          687
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/download_notifications.dart",
@@ -579,7 +1099,17 @@
     "path": "rafeeq_app/lib/core/services/khatma_reminder_service.dart",
     "lines": 66,
     "sha256": "e392f361f060e29593718414df004ea38947ba9b8ef7ebc1457c67a00c99dfae",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 66,
+    "notes": [
+      {
+        "lines": [
+          1,
+          66
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/location_service.dart",
@@ -603,7 +1133,17 @@
     "path": "rafeeq_app/lib/core/services/notification_router.dart",
     "lines": 131,
     "sha256": "1dd7a5b9a2701a56e9b5a87fa91d23cc378afcb3d2c47bf35b04477d6ccb2c47",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 131,
+    "notes": [
+      {
+        "lines": [
+          1,
+          131
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/official_hijri.dart",
@@ -621,19 +1161,49 @@
     "path": "rafeeq_app/lib/core/services/prayer_reminder_service.dart",
     "lines": 210,
     "sha256": "f6f0000fb4767f9206bd8a254f4a2ef13914398e234befa0bd3e1a24d5f1af98",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 210,
+    "notes": [
+      {
+        "lines": [
+          1,
+          210
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/prayer_status_notification.dart",
     "lines": 281,
     "sha256": "098e58bca0327f0e51c9e3b17e4619192a1c00ddf3d3c298a7094f3d6abeb4f0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 281,
+    "notes": [
+      {
+        "lines": [
+          1,
+          281
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/prayer_times_service.dart",
     "lines": 194,
     "sha256": "74a0dc829cc218d7cfa158db508ab17663a8078934df94d50cbb428ef8f45a5b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 194,
+    "notes": [
+      {
+        "lines": [
+          1,
+          194
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/quran_api_service.dart",
@@ -651,7 +1221,17 @@
     "path": "rafeeq_app/lib/core/services/recitation_mirrors.dart",
     "lines": 109,
     "sha256": "cd2eb0146039987ff3ee9c0f7b813bd8b18683ea4df8aa840ac54923aeaa47e6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 109,
+    "notes": [
+      {
+        "lines": [
+          1,
+          109
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/recitation_resume.dart",
@@ -687,13 +1267,33 @@
     "path": "rafeeq_app/lib/core/services/sync_service.dart",
     "lines": 361,
     "sha256": "e090009175452c490f2b132a1d4b722972a25868713ee18ba203c3ff23b5c14d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 361,
+    "notes": [
+      {
+        "lines": [
+          1,
+          361
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/syncable_shared_preferences.dart",
     "lines": 99,
     "sha256": "824904c5f10572011d7c0a3f98f1a8300f112afc4879ef46aeb1d641b1add669",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 99,
+    "notes": [
+      {
+        "lines": [
+          1,
+          99
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/app_colors.dart",
@@ -747,73 +1347,193 @@
     "path": "rafeeq_app/lib/core/utils/arabic_normalize.dart",
     "lines": 292,
     "sha256": "ce890e7f5e9ece4e1042e2d95f533b0fc0b8e17a8f913e81ebd41ce0c46effc0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 292,
+    "notes": [
+      {
+        "lines": [
+          1,
+          292
+        ],
+        "note": "Normalization and byte formatting read fully. Display transformations are scoped; space-only hadith boundary requires a real-corpus check. No byte-format defect confirmed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/byte_formatter.dart",
     "lines": 121,
     "sha256": "a76a9e15e42c361fad047a6604fd0c5ab14da0683a44f04de3219278c4e7b912",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 121,
+    "notes": [
+      {
+        "lines": [
+          1,
+          121
+        ],
+        "note": "Normalization and byte formatting read fully. Display transformations are scoped; space-only hadith boundary requires a real-corpus check. No byte-format defect confirmed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/digits.dart",
     "lines": 144,
     "sha256": "24c5acd0dd55d9e65550b65f1ff675aff53680d83a0daf8bdb2ce53d5e6786e2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 144,
+    "notes": [
+      {
+        "lines": [
+          1,
+          144
+        ],
+        "note": "Digits, external links, HEAD probe, name matching and Quran search matcher read fully. No new standalone defect confirmed; matching is Arabic/Latin by catalogue design."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/external_link.dart",
     "lines": 56,
     "sha256": "8aaeb1dcc3469035de0e1ceb3e5815865227a377eeba3146f5185c3195e6251c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 56,
+    "notes": [
+      {
+        "lines": [
+          1,
+          56
+        ],
+        "note": "Digits, external links, HEAD probe, name matching and Quran search matcher read fully. No new standalone defect confirmed; matching is Arabic/Latin by catalogue design."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/http_status_probe.dart",
     "lines": 29,
     "sha256": "668d1276615187683e1304f6f2a425a3625661c2d613f96f9d9735f6a4e99c45",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 29,
+    "notes": [
+      {
+        "lines": [
+          1,
+          29
+        ],
+        "note": "Digits, external links, HEAD probe, name matching and Quran search matcher read fully. No new standalone defect confirmed; matching is Arabic/Latin by catalogue design."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/name_match.dart",
     "lines": 71,
     "sha256": "0b4a179a08cdfd5375121a84af3641fb26e8788ada7a5def58bb8e1cba9e5fa1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 71,
+    "notes": [
+      {
+        "lines": [
+          1,
+          71
+        ],
+        "note": "Digits, external links, HEAD probe, name matching and Quran search matcher read fully. No new standalone defect confirmed; matching is Arabic/Latin by catalogue design."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/quran_search_match.dart",
     "lines": 160,
     "sha256": "0b460145c6a1117c6c370fd39c564b869d9e534d8a9fd5bf06517c047ee103af",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 160,
+    "notes": [
+      {
+        "lines": [
+          1,
+          160
+        ],
+        "note": "Digits, external links, HEAD probe, name matching and Quran search matcher read fully. No new standalone defect confirmed; matching is Arabic/Latin by catalogue design."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/screen_class.dart",
     "lines": 43,
     "sha256": "7e7c514d4b42f1fa334b08ccd75d175599975b0b4a7ea9f500944bb2b047c492",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 43,
+    "notes": [
+      {
+        "lines": [
+          1,
+          43
+        ],
+        "note": "Screen breakpoints, stable insets, startup trace, time formatter and user error helpers read fully. No new confirmed defect; release startup trace intentionally disabled."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/stable_insets.dart",
     "lines": 43,
     "sha256": "187aa35387c3b08c41e8cf63fa051ea43bb848022e65e8fa2dafb6b97ef84a2c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 43,
+    "notes": [
+      {
+        "lines": [
+          1,
+          43
+        ],
+        "note": "Screen breakpoints, stable insets, startup trace, time formatter and user error helpers read fully. No new confirmed defect; release startup trace intentionally disabled."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/startup_trace.dart",
     "lines": 65,
     "sha256": "81cdb242ce6fd01c54821a6ffde84c3c4effcf14ab1251aac66802c0eaf74224",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 65,
+    "notes": [
+      {
+        "lines": [
+          1,
+          65
+        ],
+        "note": "Screen breakpoints, stable insets, startup trace, time formatter and user error helpers read fully. No new confirmed defect; release startup trace intentionally disabled."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/time_formatter.dart",
     "lines": 126,
     "sha256": "f44cc947730b35c8ab7ea5bdff8f07d223840addbc857f1617c0663708b62759",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 126,
+    "notes": [
+      {
+        "lines": [
+          1,
+          126
+        ],
+        "note": "Screen breakpoints, stable insets, startup trace, time formatter and user error helpers read fully. No new confirmed defect; release startup trace intentionally disabled."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/user_error.dart",
     "lines": 33,
     "sha256": "9daef879f0c4fa762f1d7210121ba80bc94b3d990919ebae29b69e9b3661fc2c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 33,
+    "notes": [
+      {
+        "lines": [
+          1,
+          33
+        ],
+        "note": "Screen breakpoints, stable insets, startup trace, time formatter and user error helpers read fully. No new confirmed defect; release startup trace intentionally disabled."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/accordion.dart",
@@ -1167,7 +1887,17 @@
     "path": "rafeeq_app/lib/features/assistant/data/rafeeq_voice_pack.dart",
     "lines": 193,
     "sha256": "ce8cfa1c1b503e8f37515a0ad30bcd676ed3652116c486dd81efb7e501565a0c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 193,
+    "notes": [
+      {
+        "lines": [
+          1,
+          193
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/presentation/assistant_describe.dart",
@@ -1209,13 +1939,33 @@
     "path": "rafeeq_app/lib/features/azkar/data/adhkar_recitations.dart",
     "lines": 200,
     "sha256": "fc40ce06c453ed66b203b83e717db548d8e10fd0b0c171b96548fe3889c84ddc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 200,
+    "notes": [
+      {
+        "lines": [
+          1,
+          200
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/data/azkar_audio.dart",
     "lines": 23,
     "sha256": "4f3408992773371416f18fee029b2be977bf0d6d927a220d4974f7db47c5acd9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 23,
+    "notes": [
+      {
+        "lines": [
+          1,
+          23
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/data/azkar_backgrounds.dart",
@@ -1245,7 +1995,17 @@
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/adhkar_listen_row.dart",
     "lines": 213,
     "sha256": "d9ae8b926aaf5f6f8dd686a6522969f702ab15bb69fc126a8f947a737ccd386b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 213,
+    "notes": [
+      {
+        "lines": [
+          1,
+          213
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/adhkar_listen_screen.dart",
@@ -1539,19 +2299,49 @@
     "path": "rafeeq_app/lib/features/hadeethenc/data/hadeethenc_providers.dart",
     "lines": 230,
     "sha256": "a4bb12800a3e62be0086078298f43470da48fbe790eb821967937fc849ce7528",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 230,
+    "notes": [
+      {
+        "lines": [
+          1,
+          230
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hadeethenc/presentation/screens/hadeethenc_category_screen.dart",
     "lines": 181,
     "sha256": "8482bae3c7153fdad287440bfc14bee637a7d65bdbe1a07dc07d9cc5c3adb2b7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 181,
+    "notes": [
+      {
+        "lines": [
+          1,
+          181
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hadeethenc/presentation/screens/hadeethenc_detail_screen.dart",
     "lines": 371,
     "sha256": "bec732aebcefa83aabb173f550e02ab6e92d28e97ec4ff0d6d03d72a725a7135",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 371,
+    "notes": [
+      {
+        "lines": [
+          1,
+          371
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hadeethenc/presentation/screens/hadeethenc_tab.dart",
@@ -1749,7 +2539,17 @@
     "path": "rafeeq_app/lib/features/home/data/prayer_controller.dart",
     "lines": 223,
     "sha256": "a8642415b9b0f5171d002eb84c145ee9d0b9b0c21ccb18d4165a7debc8f58441",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 223,
+    "notes": [
+      {
+        "lines": [
+          1,
+          223
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/data/prayer_hero_icons.dart",
@@ -1857,7 +2657,17 @@
     "path": "rafeeq_app/lib/features/khatma/data/khatma_store.dart",
     "lines": 216,
     "sha256": "a0f322b97a7c3b97229b938e4fad412684e5d076d6cc4008e5b61927b4c9e734",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 216,
+    "notes": [
+      {
+        "lines": [
+          1,
+          216
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/presentation/create_khatma_sheet.dart",
@@ -1905,7 +2715,17 @@
     "path": "rafeeq_app/lib/features/kids/data/kids_stories.dart",
     "lines": 75,
     "sha256": "f182c8c17772b5f658355a35ef20692e20ec98954aca10d0697b33407b356517",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 75,
+    "notes": [
+      {
+        "lines": [
+          1,
+          75
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/data/kids_stories_data.dart",
@@ -2361,7 +3181,17 @@
     "path": "rafeeq_app/lib/features/quotes/data/quote_reminder_service.dart",
     "lines": 198,
     "sha256": "e4aa1a0504b6cca2e88e67fe38f7bb7d01ac87e688b1159f6cf6929f8e88b5c4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 198,
+    "notes": [
+      {
+        "lines": [
+          1,
+          198
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/data/quote_repository.dart",
@@ -2409,7 +3239,17 @@
     "path": "rafeeq_app/lib/features/quran/data/ayah_notes_store.dart",
     "lines": 52,
     "sha256": "45006582951210d160feddb7005823c5ad8b3664c2dd6a3b225888ff4f29a4c9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 52,
+    "notes": [
+      {
+        "lines": [
+          1,
+          52
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/basmala.dart",
@@ -2499,7 +3339,17 @@
     "path": "rafeeq_app/lib/features/quran/data/quran_last_read.dart",
     "lines": 41,
     "sha256": "b1aa577bfbb40cbd74f95b8564dd4f12271a424691038da0cd4cbcbc8c07275d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 41,
+    "notes": [
+      {
+        "lines": [
+          1,
+          41
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/quran_translation_catalog.dart",
@@ -2805,7 +3655,17 @@
     "path": "rafeeq_app/lib/features/quran_audio/data/mp3quran_api.dart",
     "lines": 163,
     "sha256": "c242be2cf294de099a0e38c80e3fb3ea70fbe842b3891dc5610415f6dca65d01",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 163,
+    "notes": [
+      {
+        "lines": [
+          1,
+          163
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/player_theme.dart",
@@ -3321,60 +4181,160 @@
     "path": "rafeeq_app/lib/main.dart",
     "lines": 224,
     "sha256": "842e238162dd79887eb4d712fe4a44a62b0c34972730013c0a544914848e93fa",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 224,
+    "notes": [
+      {
+        "lines": [
+          1,
+          224
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "scripts/check.ps1",
     "lines": 74,
     "sha256": "9a2e13507634882cfb861091a460bda13d4e09a39af393526130665668e612ea",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 74,
+    "notes": [
+      {
+        "lines": [
+          1,
+          74
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "scripts/check_apk_native.py",
     "lines": 45,
     "sha256": "1e40f3695680ba06a0cd7c4b4a1b6d4a3c87fe7aea1696002895345f4d0cfff2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 45,
+    "notes": [
+      {
+        "lines": [
+          1,
+          45
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "scripts/checkpoint.ps1",
     "lines": 122,
     "sha256": "fe4f4516d5e2be60d8226965e8f46cb256356640f01cbb8d045eefecf966213f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 122,
+    "notes": [
+      {
+        "lines": [
+          1,
+          122
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "scripts/sign_release.py",
     "lines": 164,
     "sha256": "1540e64a09d7cad79bec17b87086e864dbf19c6dfedfacef04436c9016db49c2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 164,
+    "notes": [
+      {
+        "lines": [
+          1,
+          164
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "sync_backend/package.json",
     "lines": 14,
     "sha256": "3a63ef35e58a4d099dcb8a8cf89ae7c3a1bebebdaaebe7263c630438934278ab",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 14,
+    "notes": [
+      {
+        "lines": [
+          1,
+          14
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "sync_backend/schema.sql",
     "lines": 15,
     "sha256": "00ef34ed22290c3f03d4636699e32b9b1e99db119a6404ff639f7c1302e99681",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 15,
+    "notes": [
+      {
+        "lines": [
+          1,
+          15
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "sync_backend/src/index.ts",
     "lines": 276,
     "sha256": "0eb3187892c4bb76c47532f04b06ca7603e7c5cabd8a935beb1b5eb1cdd7c6f2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 276,
+    "notes": [
+      {
+        "lines": [
+          1,
+          276
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "sync_backend/tsconfig.json",
     "lines": 12,
     "sha256": "70b6c43a00bc088aa10e531b32c5cfebd2df4d8690dfc4b37bc8402c6245133c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 12,
+    "notes": [
+      {
+        "lines": [
+          1,
+          12
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   },
   {
     "path": "sync_backend/wrangler.toml",
     "lines": 8,
     "sha256": "6a984a8143056bda2f4d1d31df50bce0a12eda410149eb9542586387b3404cfd",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 8,
+    "notes": [
+      {
+        "lines": [
+          1,
+          8
+        ],
+        "note": "Full source read during audit checks or direct tool reads; source review only, runtime verification separately reported. Finding details in interim report where applicable."
+      }
+    ]
   }
 ]

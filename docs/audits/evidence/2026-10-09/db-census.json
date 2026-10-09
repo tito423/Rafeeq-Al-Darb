@@ -1,0 +1,83 @@
+[
+  {
+    "file": "rafeeq_app\\assets\\data\\azkar.db",
+    "bytes": 188416,
+    "quick_check": "ok",
+    "indexes": [],
+    "rows": {
+      "azkar_sections": 133,
+      "azkar_items": 302
+    }
+  },
+  {
+    "file": "rafeeq_app\\assets\\data\\hadith.db",
+    "bytes": 109731840,
+    "quick_check": "ok",
+    "indexes": [
+      "sqlite_autoindex_books_1",
+      "sqlite_autoindex_chapters_1",
+      "idx_hadiths_book_chapter_num",
+      "idx_hadiths_book_num"
+    ],
+    "rows": {
+      "books": 9,
+      "chapters": 1482,
+      "hadiths": 67153,
+      "hadiths_fts_data": 1283,
+      "hadiths_fts_idx": 731,
+      "hadiths_fts_docsize": 67153,
+      "hadiths_fts_config": 1,
+      "hadiths_fts": 67153
+    }
+  },
+  {
+    "file": "rafeeq_app\\assets\\data\\quran.db",
+    "bytes": 0,
+    "quick_check": "ok",
+    "indexes": [],
+    "rows": {}
+  },
+  {
+    "file": "rafeeq_app\\assets\\data\\quran_local.db",
+    "bytes": 5611520,
+    "quick_check": "ok",
+    "indexes": [],
+    "rows": {
+      "surahs": 114,
+      "ayahs": 6236,
+      "tafsir_names": 20,
+      "ayah_details": 0,
+      "ayahs_search_data": 239,
+      "ayahs_search_idx": 97,
+      "ayahs_search_content": 6236,
+      "ayahs_search_docsize": 6236,
+      "ayahs_search_config": 1,
+      "ayahs_search": 6236
+    }
+  },
+  {
+    "file": "rafeeq_app\\assets\\data\\quran_sciences.db",
+    "bytes": 138215424,
+    "quick_check": "ok",
+    "indexes": [
+      "sqlite_autoindex_word_meanings_1",
+      "sqlite_autoindex_translations_1",
+      "sqlite_autoindex_translation_editions_1",
+      "sqlite_autoindex_irab_daas_1",
+      "idx_wm",
+      "idx_tt",
+      "idx_translations_ayah",
+      "idx_irab_refs"
+    ],
+    "rows": {
+      "tafseer_texts": 42435,
+      "word_meanings": 83665,
+      "azkar_sections": 26,
+      "azkar_items": 98,
+      "translations": 37416,
+      "translation_editions": 6,
+      "irab_daas": 3639,
+      "irab_daas_refs": 215
+    }
+  }
+]
