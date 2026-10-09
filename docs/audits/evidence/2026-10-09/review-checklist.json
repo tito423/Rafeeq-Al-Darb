@@ -4959,13 +4959,33 @@
     "path": "rafeeq_app/lib/features/kids/presentation/kids_stage_screen.dart",
     "lines": 310,
     "sha256": "c760e4b616d690d570c337ff2851d0a942f095c2e9b8882cc58ddbe5da4101bb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 310,
+    "notes": [
+      {
+        "lines": [
+          1,
+          310
+        ],
+        "note": "Reviewed KidsStageScreen and story shelf: memorized persistence before setState (no mounted guard at stage line53), game/review/recitation routes, real download offline badge and poster mirrors. Async stage disposal remains candidate; parallel store calls alone do not establish realistic UI data loss."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/presentation/kids_stories_screen.dart",
     "lines": 193,
     "sha256": "326828be81c0e65d5eca40d617e23028d7a59dec839fed9f309dfb28d5e8e675",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 193,
+    "notes": [
+      {
+        "lines": [
+          1,
+          193
+        ],
+        "note": "Reviewed KidsStageScreen and story shelf: memorized persistence before setState (no mounted guard at stage line53), game/review/recitation routes, real download offline badge and poster mirrors. Async stage disposal remains candidate; parallel store calls alone do not establish realistic UI data loss."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/presentation/kids_story_player_screen.dart",
