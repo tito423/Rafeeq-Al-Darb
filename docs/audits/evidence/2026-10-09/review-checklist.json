@@ -4866,7 +4866,7 @@
     "lines": 451,
     "sha256": "4a3c736027133c399cba99f496cd6f9f78cb32bd82f126a8d63369a64de6b728",
     "review": "partial",
-    "read_through_line": 229,
+    "read_through_line": 443,
     "notes": [
       {
         "lines": [
@@ -4874,6 +4874,13 @@
           229
         ],
         "note": "Read generated kids narrative/caption data 1-229: Nuh through beginning Yusuf, timestamp intervals and embedded recitation references. Source/prose comparison with named tafsir/hadith editions and actual voiced media remains unverified; no scripture/grade change authorized."
+      },
+      {
+        "lines": [
+          230,
+          443
+        ],
+        "note": "Read generated captions 230-443: rest of Yusuf through Khidr, timings, source-dependent paraphrases and recitation coordinates. Requires original edition/source and voiced-video verification; read-through does not certify religious accuracy."
       }
     ]
   },
