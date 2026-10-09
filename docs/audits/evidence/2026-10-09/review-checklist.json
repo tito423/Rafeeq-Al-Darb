@@ -4120,19 +4120,49 @@
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/hajj_summary_card.dart",
     "lines": 169,
     "sha256": "aed555d187f2805fe014cb36c0367a7fafd26bd0bd5c62be7b8d14ff34294ce0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 169,
+    "notes": [
+      {
+        "lines": [
+          1,
+          169
+        ],
+        "note": "Reviewed summary-card canonical Quran query/ayah TTS exclusion, Jamarat counter ordered seven pebbles with animation/mounted guard, JourneyMap ordered stops/RTL coordinates and loop painting. Painted-label semantics/font scaling/reduced-motion and counter gold contrast remain accessibility candidates; no evidence of wrong rite counts."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/jamarat_counter.dart",
     "lines": 224,
     "sha256": "69bfdd02bca2f7bd9f568361aa62db906547e5957f25666963564e711ddc1cea",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 224,
+    "notes": [
+      {
+        "lines": [
+          1,
+          224
+        ],
+        "note": "Reviewed summary-card canonical Quran query/ayah TTS exclusion, Jamarat counter ordered seven pebbles with animation/mounted guard, JourneyMap ordered stops/RTL coordinates and loop painting. Painted-label semantics/font scaling/reduced-motion and counter gold contrast remain accessibility candidates; no evidence of wrong rite counts."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/journey_map.dart",
     "lines": 167,
     "sha256": "8651698b822c46c6ea0f0652548e5b826b04b3c5e7fb6f0b6f764dacf0ad411c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 167,
+    "notes": [
+      {
+        "lines": [
+          1,
+          167
+        ],
+        "note": "Reviewed summary-card canonical Quran query/ayah TTS exclusion, Jamarat counter ordered seven pebbles with animation/mounted guard, JourneyMap ordered stops/RTL coordinates and loop painting. Painted-label semantics/font scaling/reduced-motion and counter gold contrast remain accessibility candidates; no evidence of wrong rite counts."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/madhahib_section.dart",
