@@ -841,19 +841,49 @@
     "path": "rafeeq_app/lib/app/app_locale_provider.dart",
     "lines": 34,
     "sha256": "707e7045aea8f7921a19ace50e0ef163b6057ffeaa652a3924afb67b3a4881b9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 34,
+    "notes": [
+      {
+        "lines": [
+          1,
+          34
+        ],
+        "note": "Reviewed app locale provider/root navigator and notification payload routing in full. Async azkar repository lookup then push has no navigator mounted recheck; requires disposal/cold-start scenario. Shelf/morning/evening payloads follow current store. No additional confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/navigation.dart",
     "lines": 16,
     "sha256": "7225ffb41581a21a5f19c387e59b3db9ebc26b56a2587e53694d63ce8ac6fcca",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 16,
+    "notes": [
+      {
+        "lines": [
+          1,
+          16
+        ],
+        "note": "Reviewed app locale provider/root navigator and notification payload routing in full. Async azkar repository lookup then push has no navigator mounted recheck; requires disposal/cold-start scenario. Shelf/morning/evening payloads follow current store. No additional confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/notification_open.dart",
     "lines": 76,
     "sha256": "f4c4ce7ee1e67c351821cdd5c81d351c021163c926f7da54ec24f654f17ab936",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 76,
+    "notes": [
+      {
+        "lines": [
+          1,
+          76
+        ],
+        "note": "Reviewed app locale provider/root navigator and notification payload routing in full. Async azkar repository lookup then push has no navigator mounted recheck; requires disposal/cold-start scenario. Shelf/morning/evening payloads follow current store. No additional confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/rafeeq_app.dart",
@@ -875,31 +905,88 @@
     "path": "rafeeq_app/lib/app/shell/app_shell.dart",
     "lines": 587,
     "sha256": "b2edaf36457a542142cd14d0ed7179267027b0af597d5d1d65ea49d8f192ff53",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 587,
+    "notes": [
+      {
+        "lines": [
+          1,
+          420
+        ],
+        "note": "Read app shell lines1-420; remaining mandatory. Verified navigation/focus/full-screen and orientation tree logic retains global-key tab state; locale deliberately rebuilds tabs. Delayed callback ref/context access before mounted guard noted as candidate only."
+      },
+      {
+        "lines": [
+          421,
+          587
+        ],
+        "note": "Completed full shell, HomeButton, SideTabs and tab seam. Explicit no-text-scaling and adaptive label shrink remain accessibility audit targets; orientation state design understood. HomeButton uses ref after popUntil; synchronous unmount timing requires real navigation reproduction before reporting."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/shell/home_button.dart",
     "lines": 27,
     "sha256": "89d5ec632c729a033e5a4d00249170bc51a2c447fbdb420aa258a495483c8fef",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 27,
+    "notes": [
+      {
+        "lines": [
+          1,
+          27
+        ],
+        "note": "Completed full shell, HomeButton, SideTabs and tab seam. Explicit no-text-scaling and adaptive label shrink remain accessibility audit targets; orientation state design understood. HomeButton uses ref after popUntil; synchronous unmount timing requires real navigation reproduction before reporting."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/shell/side_tabs.dart",
     "lines": 117,
     "sha256": "b5fd9873e317e3d302c59ba61250f60ebee304996864f17dca9dd7db793db430",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 117,
+    "notes": [
+      {
+        "lines": [
+          1,
+          117
+        ],
+        "note": "Completed full shell, HomeButton, SideTabs and tab seam. Explicit no-text-scaling and adaptive label shrink remain accessibility audit targets; orientation state design understood. HomeButton uses ref after popUntil; synchronous unmount timing requires real navigation reproduction before reporting."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/shell/tab_request_provider.dart",
     "lines": 79,
     "sha256": "53030588203106fdeb630cede03608423cd52a8c5b8324342e78116d5a2de670",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 79,
+    "notes": [
+      {
+        "lines": [
+          1,
+          79
+        ],
+        "note": "Completed full shell, HomeButton, SideTabs and tab seam. Explicit no-text-scaling and adaptive label shrink remain accessibility audit targets; orientation state design understood. HomeButton uses ref after popUntil; synchronous unmount timing requires real navigation reproduction before reporting."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/config/app_config.dart",
     "lines": 300,
     "sha256": "6eea8d0c016057f3485cde2088dd832fc7fcc5976decc6edf21a083d7ad0303f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 300,
+    "notes": [
+      {
+        "lines": [
+          1,
+          300
+        ],
+        "note": "Reviewed AppConfig and injected prefs provider in full; I1 exact contentBaseUrl line119 confirmed. Public OAuth client identifier is not a credential. URLs and pack sizes require measured content comparisons; comments about hadith/download bundling are historical and executable behavior must be judged from consumers."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/config/content_mirrors.dart",
@@ -921,7 +1008,17 @@
     "path": "rafeeq_app/lib/core/config/prefs_provider.dart",
     "lines": 8,
     "sha256": "2fefe29803e23e80d1547de2b5ed6a2e2589090912162998f7f88c35cebeadc3",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 8,
+    "notes": [
+      {
+        "lines": [
+          1,
+          8
+        ],
+        "note": "Reviewed AppConfig and injected prefs provider in full; I1 exact contentBaseUrl line119 confirmed. Public OAuth client identifier is not a credential. URLs and pack sizes require measured content comparisons; comments about hadith/download bundling are historical and executable behavior must be judged from consumers."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/db/azkar_repository.dart",
@@ -1119,19 +1216,49 @@
     "path": "rafeeq_app/lib/core/models/adhan_mode.dart",
     "lines": 25,
     "sha256": "69dfbdef5c69cfc09e21933a1858ad06a007a8ab2ab7550a8db6d2843fccafce",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 25,
+    "notes": [
+      {
+        "lines": [
+          1,
+          25
+        ],
+        "note": "Reviewed full adhan modes/options and20 calculation method data/parameter generation. Fajr paired recording rule and language names explicit; Ramadan interval intentionally uses UmmAlQura table, not display offset. Live methods/timings verification still required for current audit beyond passing stored-fixture tests."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/models/adhan_option.dart",
     "lines": 103,
     "sha256": "a6995b1753d119d2aee7162acf40f54f5b78ff631e20840e81d5eb114e77e6fa",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 103,
+    "notes": [
+      {
+        "lines": [
+          1,
+          103
+        ],
+        "note": "Reviewed full adhan modes/options and20 calculation method data/parameter generation. Fajr paired recording rule and language names explicit; Ramadan interval intentionally uses UmmAlQura table, not display offset. Live methods/timings verification still required for current audit beyond passing stored-fixture tests."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/models/prayer_calculation_methods.dart",
     "lines": 328,
     "sha256": "a1de821d7d553d7d624d0e7a24a687425f1462a848f127d107d471660046c2ff",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 328,
+    "notes": [
+      {
+        "lines": [
+          1,
+          328
+        ],
+        "note": "Reviewed full adhan modes/options and20 calculation method data/parameter generation. Fajr paired recording rule and language names explicit; Ramadan interval intentionally uses UmmAlQura table, not display offset. Live methods/timings verification still required for current audit beyond passing stored-fixture tests."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/models/prayer_times.dart",
@@ -1464,7 +1591,17 @@
     "path": "rafeeq_app/lib/core/services/native_strings.dart",
     "lines": 62,
     "sha256": "590364605ce79fe3a8f7f965f13d2a43980cb8df7a526a845a9d5c04776dea66",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 62,
+    "notes": [
+      {
+        "lines": [
+          1,
+          62
+        ],
+        "note": "Reviewed native-string handoff, declared Hijri cache/provider and Quran API service in full. Candidates: OfficialHijri corrupt-cache load can throw despite refresh never-throws doc; prefetchChapterTransliterations needs actual pagination contract and callers before judging completeness. Quran API English transliteration resource57 must be verified live, not inferred from endpoint naming."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/notification_router.dart",
@@ -1486,13 +1623,33 @@
     "path": "rafeeq_app/lib/core/services/official_hijri.dart",
     "lines": 128,
     "sha256": "e2f219ee6a5e3989f4da53bf8f09085c781ef8874ac3a1704cf5181f0c72f941",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 128,
+    "notes": [
+      {
+        "lines": [
+          1,
+          128
+        ],
+        "note": "Reviewed native-string handoff, declared Hijri cache/provider and Quran API service in full. Candidates: OfficialHijri corrupt-cache load can throw despite refresh never-throws doc; prefetchChapterTransliterations needs actual pagination contract and callers before judging completeness. Quran API English transliteration resource57 must be verified live, not inferred from endpoint naming."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/official_hijri_provider.dart",
     "lines": 12,
     "sha256": "98d5b47d23120ebf18a5fcd450522bcbd182404378406e647cc4df6e4f8d48c2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 12,
+    "notes": [
+      {
+        "lines": [
+          1,
+          12
+        ],
+        "note": "Reviewed native-string handoff, declared Hijri cache/provider and Quran API service in full. Candidates: OfficialHijri corrupt-cache load can throw despite refresh never-throws doc; prefetchChapterTransliterations needs actual pagination contract and callers before judging completeness. Quran API English transliteration resource57 must be verified live, not inferred from endpoint naming."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/prayer_reminder_service.dart",
@@ -1546,13 +1703,33 @@
     "path": "rafeeq_app/lib/core/services/quran_api_service.dart",
     "lines": 239,
     "sha256": "8bcfeff1303dfdacd6a4f6f4821ab57086f4cdd774a3626189419bec863727e9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 239,
+    "notes": [
+      {
+        "lines": [
+          1,
+          239
+        ],
+        "note": "Reviewed native-string handoff, declared Hijri cache/provider and Quran API service in full. Candidates: OfficialHijri corrupt-cache load can throw despite refresh never-throws doc; prefetchChapterTransliterations needs actual pagination contract and callers before judging completeness. Quran API English transliteration resource57 must be verified live, not inferred from endpoint naming."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/quran_translation_store.dart",
     "lines": 191,
     "sha256": "d2d19accea4b624acf4a465b0d7d9b2dec88f72a56ceb07614db2477453e8d32",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 191,
+    "notes": [
+      {
+        "lines": [
+          1,
+          191
+        ],
+        "note": "Reviewed translation database transaction/download/install lifecycle, recitation resume persistence and full URL routing. Translation count validation is not reference/text integrity proof; actual downloaded45corpora must be audited. Candidate local-file-only URL excludes remote fallback if cached MP3 invalid; consumer validity checks needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/recitation_mirrors.dart",
@@ -1574,31 +1751,81 @@
     "path": "rafeeq_app/lib/core/services/recitation_resume.dart",
     "lines": 58,
     "sha256": "7afd90835351d0df602a4623dae1c9ecd37e77fd8b3cd1221623def3d5268b46",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 58,
+    "notes": [
+      {
+        "lines": [
+          1,
+          58
+        ],
+        "note": "Reviewed translation database transaction/download/install lifecycle, recitation resume persistence and full URL routing. Translation count validation is not reference/text integrity proof; actual downloaded45corpora must be audited. Candidate local-file-only URL excludes remote fallback if cached MP3 invalid; consumer validity checks needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/recitation_source.dart",
     "lines": 202,
     "sha256": "2dd85f313896ffd4cd9480f776e1c0a2147117722f099efd472d30ab7e25ba49",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 202,
+    "notes": [
+      {
+        "lines": [
+          1,
+          202
+        ],
+        "note": "Reviewed translation database transaction/download/install lifecycle, recitation resume persistence and full URL routing. Translation count validation is not reference/text integrity proof; actual downloaded45corpora must be audited. Candidate local-file-only URL excludes remote fallback if cached MP3 invalid; consumer validity checks needed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/source_rules.dart",
     "lines": 183,
     "sha256": "ae2b880372c20b7e21cad20c4e4e0478912abcebc653e9af4e5f2b2c48de4e84",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 183,
+    "notes": [
+      {
+        "lines": [
+          1,
+          183
+        ],
+        "note": "Reviewed full source rule defaults/version application, weekly reminder scheduling and basmala playlist plan. Weekly DST arithmetic is part of A16. SourceRules accepted partial newer configs advances version even when invalid patterns skipped; actual config validation/live check required before finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/sunan_suwar_reminder_service.dart",
     "lines": 92,
     "sha256": "0331cf23448a019c2c9ecfe7f5ebc81f43018fe5578d72398e1a0a942099c7e5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 92,
+    "notes": [
+      {
+        "lines": [
+          1,
+          92
+        ],
+        "note": "Reviewed full source rule defaults/version application, weekly reminder scheduling and basmala playlist plan. Weekly DST arithmetic is part of A16. SourceRules accepted partial newer configs advances version even when invalid patterns skipped; actual config validation/live check required before finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/surah_playlist.dart",
     "lines": 35,
     "sha256": "b1d2a49dcc7b0c35c9bf68967225080f72c3bb5d14356baf6a916f09eb75d18b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 35,
+    "notes": [
+      {
+        "lines": [
+          1,
+          35
+        ],
+        "note": "Reviewed full source rule defaults/version application, weekly reminder scheduling and basmala playlist plan. Weekly DST arithmetic is part of A16. SourceRules accepted partial newer configs advances version even when invalid patterns skipped; actual config validation/live check required before finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/sync_service.dart",
@@ -1636,37 +1863,97 @@
     "path": "rafeeq_app/lib/core/theme/app_colors.dart",
     "lines": 119,
     "sha256": "582918002395c8332bebdc6efdf5f7fc17c4c6946dba47708033604603d68eec",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 119,
+    "notes": [
+      {
+        "lines": [
+          1,
+          119
+        ],
+        "note": "Reviewed full palettes, readable contrast helpers, font state, spacing and theme. Candidate confirmed colour math needed: light default TextButton/OutlinedButton foreground primarySoft and TabBar label primarySoft may fall below4.5; need rendered-use caller context. RGB onPrimary prior fix retained."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/app_font.dart",
     "lines": 63,
     "sha256": "4f6774e5a56b94a655cd1fc8faaa680e474b9d77681472b8d43e7611ede87ecf",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 63,
+    "notes": [
+      {
+        "lines": [
+          1,
+          63
+        ],
+        "note": "Reviewed full palettes, readable contrast helpers, font state, spacing and theme. Candidate confirmed colour math needed: light default TextButton/OutlinedButton foreground primarySoft and TabBar label primarySoft may fall below4.5; need rendered-use caller context. RGB onPrimary prior fix retained."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/app_spacing.dart",
     "lines": 18,
     "sha256": "e0bb2c16a2506702b129ea4370934ab5e6069187ec37c5264d419930f39e3f98",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 18,
+    "notes": [
+      {
+        "lines": [
+          1,
+          18
+        ],
+        "note": "Reviewed full palettes, readable contrast helpers, font state, spacing and theme. Candidate confirmed colour math needed: light default TextButton/OutlinedButton foreground primarySoft and TabBar label primarySoft may fall below4.5; need rendered-use caller context. RGB onPrimary prior fix retained."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/app_theme.dart",
     "lines": 278,
     "sha256": "9e42bb88a853e2f59697c610b999ac24e0fe6462b501f96109b42e0619f52892",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 278,
+    "notes": [
+      {
+        "lines": [
+          1,
+          278
+        ],
+        "note": "Reviewed full palettes, readable contrast helpers, font state, spacing and theme. Candidate confirmed colour math needed: light default TextButton/OutlinedButton foreground primarySoft and TabBar label primarySoft may fall below4.5; need rendered-use caller context. RGB onPrimary prior fix retained."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/app_typography.dart",
     "lines": 116,
     "sha256": "ebd3ab470211cf07dc863c461449670e0d1eba528b7f31b949eb0c251fb2c766",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 116,
+    "notes": [
+      {
+        "lines": [
+          1,
+          116
+        ],
+        "note": "Reviewed typography and hero surface in full; contrast of inherited action text separately measured against actual rendered widgets. Hero chip colors require consumer-specific verification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/hero_surface.dart",
     "lines": 155,
     "sha256": "4370e02c1903583ab98a58b45b73a83db89fc5191036c92456a00fa005186bf4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 155,
+    "notes": [
+      {
+        "lines": [
+          1,
+          155
+        ],
+        "note": "Reviewed typography and hero surface in full; contrast of inherited action text separately measured against actual rendered widgets. Hero chip colors require consumer-specific verification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/rgb_backdrop.dart",

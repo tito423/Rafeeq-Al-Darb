@@ -1,0 +1,6 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/light_action_contrast_audit_test.dart
+00:00 +0: audit: default light action labels rendered below body contrast floor
+AUDIT_CONTRAST: Audit text action color=Color(alpha: 1.0000, red: 0.0863, green: 0.6275, blue: 0.5216, colorSpace: ColorSpace.sRGB) font=14.0 weight=FontWeight.w600 ground=Color(alpha: 1.0000, red: 1.0000, green: 1.0000, blue: 1.0000, colorSpace: ColorSpace.sRGB) ratio=3.2806718018588974
+AUDIT_CONTRAST: Audit outlined action color=Color(alpha: 1.0000, red: 0.0863, green: 0.6275, blue: 0.5216, colorSpace: ColorSpace.sRGB) font=15.0 weight=FontWeight.w600 ground=Color(alpha: 1.0000, red: 1.0000, green: 1.0000, blue: 1.0000, colorSpace: ColorSpace.sRGB) ratio=3.2806718018588974
+AUDIT_CONTRAST: Audit selected tab color=Color(alpha: 1.0000, red: 0.0863, green: 0.6275, blue: 0.5216, colorSpace: ColorSpace.sRGB) font=14.0 weight=FontWeight.w700 ground=Color(alpha: 1.0000, red: 1.0000, green: 1.0000, blue: 1.0000, colorSpace: ColorSpace.sRGB) ratio=3.2806718018588974
+00:01 +1: All tests passed!

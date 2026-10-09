@@ -1,0 +1,13 @@
+{
+  "selected": 343,
+  "completed": 343,
+  "failures": [],
+  "counts_by_kind": {
+    "mirror-book": 289,
+    "mirror-translation": 45,
+    "mirror-hadeethenc": 7,
+    "mirror-hadith": 1,
+    "mirror-sciences": 1
+  },
+  "scope": "Full decoded SHA256 comparison; JSON structural and translation reference coverage; ZIP CRC only, not semantic religious accuracy."
+}
