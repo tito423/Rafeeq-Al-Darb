@@ -7825,7 +7825,17 @@
     "path": "rafeeq_app/lib/features/search/data/topic_tree.dart",
     "lines": 204,
     "sha256": "ab084cea5ca619a87d4b79376e28fb8036bdceb75a32fc12a3a1daa0176a8e8f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 204,
+    "notes": [
+      {
+        "lines": [
+          1,
+          204
+        ],
+        "note": "Read all topic categories, selected Quran references, normalized word/root patterns and documented exclusions. No religious assertions certified from comments; validate reference bounds and actual matched tokens against bundled canonical Quran database and displayed topic-search distinction during content audit."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/search/presentation/screens/search_screen.dart",
