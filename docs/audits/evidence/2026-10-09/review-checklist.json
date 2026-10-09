@@ -8248,7 +8248,17 @@
     "path": "rafeeq_app/lib/features/support/presentation/screens/support_screen.dart",
     "lines": 201,
     "sha256": "4e5aa25d7954444720eb4f7178f9f6337475a3d01db3a10dbeb3ca6367f98502",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 201,
+    "notes": [
+      {
+        "lines": [
+          1,
+          201
+        ],
+        "note": "Completed support screen, one-time persisted introduction, optional external support URL gating and fitted sheet actions. Caller active-tab/tour checks were reviewed in MoreScreen; mounted check follows persistence here. Candidate: tab changes while markShown is pending can show intro after leaving More, requiring delayed preferences and active-tab widget proof. Payment publication/purchase never performed; current configured support destination still needs read-only live check."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/articulation.dart",
