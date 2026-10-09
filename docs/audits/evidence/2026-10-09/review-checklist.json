@@ -7841,7 +7841,17 @@
     "path": "rafeeq_app/lib/features/search/presentation/screens/search_screen.dart",
     "lines": 536,
     "sha256": "6de4bf153db72e8f18c4a1a9aa46edf96ee94adc687ddd88f2618e30d6453ab7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 536,
+    "notes": [
+      {
+        "lines": [
+          1,
+          536
+        ],
+        "note": "Completed search UI including debounce, mode/diacritics controls, highlighting, curated versus matched topics and queue playback. Candidates: request guard compares query only, not mode/diacritics; play-all awaiting topic result can restart after stop/close; per-ayah topic play omits selected-reciter edition while play-all supplies it; highlighted RichText omits MediaQuery textScaler. Require actual service/widget proof before confirming."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/data/focus_mode_provider.dart",
