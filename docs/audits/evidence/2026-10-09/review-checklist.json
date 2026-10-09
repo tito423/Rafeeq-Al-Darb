@@ -5996,13 +5996,33 @@
     "path": "rafeeq_app/lib/features/more/presentation/screens/more_screen.dart",
     "lines": 346,
     "sha256": "fc6c5ce439d51f4e1901d2f96155a37b36a1003426187fbaa85fde4488238979",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 346,
+    "notes": [
+      {
+        "lines": [
+          1,
+          346
+        ],
+        "note": "Reviewed MoreScreen routes, active-tab support intro, landscape layout and reminder/settings groups; MoreGroup delayed collapse, tutorial expansion and reveal guards. Candidate: automatic group collapse disposes section child notifier while pushed section page can still listen; requires widget reproduction."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/more/presentation/widgets/more_group.dart",
     "lines": 143,
     "sha256": "4b6308c88a153609f323b805345a2ec23f1249657fba0b2475f476efea712bae",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 143,
+    "notes": [
+      {
+        "lines": [
+          1,
+          143
+        ],
+        "note": "Reviewed MoreScreen routes, active-tab support intro, landscape layout and reminder/settings groups; MoreGroup delayed collapse, tutorial expansion and reveal guards. Candidate: automatic group collapse disposes section child notifier while pushed section page can still listen; requires widget reproduction."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/more/presentation/widgets/sign_in_offer.dart",
