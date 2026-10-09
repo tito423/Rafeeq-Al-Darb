@@ -4943,7 +4943,17 @@
     "path": "rafeeq_app/lib/features/kids/presentation/kids_corner_screen.dart",
     "lines": 390,
     "sha256": "a65b456c873fc55ec0bff9f2b9d36163786bbd85977b7e4b7fb4ad20464c704c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 390,
+    "notes": [
+      {
+        "lines": [
+          1,
+          390
+        ],
+        "note": "Reviewed KidsCornerScreen complete: story/game/history routes, stage counts and memorized snapshots, actual azkar section IDs, cards/gradients and greeting fixed height. White-on-bright gradients and non-flexible headings remain accessibility candidates requiring measurement; no new counted result."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/presentation/kids_stage_screen.dart",
