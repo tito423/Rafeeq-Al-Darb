@@ -4801,19 +4801,49 @@
     "path": "rafeeq_app/lib/features/kids/data/journey_store.dart",
     "lines": 172,
     "sha256": "a4796e156e7a6b8feed14a9a66b14be48c6b09c2491cd40f18fb4e0ad8f772b8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 172,
+    "notes": [
+      {
+        "lines": [
+          1,
+          172
+        ],
+        "note": "Reviewed JourneyStore point counts, memorized-set updates, bounded 400-day history and streak/level math; Quran-derived question generation and all graded stage surah ranges. Concurrent memorized updates and local DST streak calculations are candidates; corpus range tests already pass but are not religious certification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/data/kids_content.dart",
     "lines": 55,
     "sha256": "4d98cad70f5db82735020a29104eca65c8d8a77658152744d80277d39530a20e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 55,
+    "notes": [
+      {
+        "lines": [
+          1,
+          55
+        ],
+        "note": "Reviewed JourneyStore point counts, memorized-set updates, bounded 400-day history and streak/level math; Quran-derived question generation and all graded stage surah ranges. Concurrent memorized updates and local DST streak calculations are candidates; corpus range tests already pass but are not religious certification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/data/kids_stages.dart",
     "lines": 57,
     "sha256": "817c59b2d2c669e4fa5b94340906de0306a1dd904eac562d1a0094ce8a3720a1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 57,
+    "notes": [
+      {
+        "lines": [
+          1,
+          57
+        ],
+        "note": "Reviewed JourneyStore point counts, memorized-set updates, bounded 400-day history and streak/level math; Quran-derived question generation and all graded stage surah ranges. Concurrent memorized updates and local DST streak calculations are candidates; corpus range tests already pass but are not religious certification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/data/kids_stories.dart",
