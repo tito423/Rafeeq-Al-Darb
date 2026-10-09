@@ -4911,7 +4911,17 @@
     "path": "rafeeq_app/lib/features/kids/presentation/journey_details.dart",
     "lines": 475,
     "sha256": "24fc45b2faeafd66d4eb7e98006306d47072892e48ce2648849083c5c73a45af",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 475,
+    "notes": [
+      {
+        "lines": [
+          1,
+          475
+        ],
+        "note": "Reviewed journey detail sheets 1-475: point ladder/counts, 28-day grid, memorized names, navigation, badges and localized ratios. Duration-based local calendar grid/streak joins existing DST candidates; color contrast and generic azkar destination for tasbeeh need actual widget/caller proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/presentation/journey_screen.dart",
