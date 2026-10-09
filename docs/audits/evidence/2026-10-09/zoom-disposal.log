@@ -1,0 +1,4 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/zoom_disposal_audit_test.dart
+00:00 +0: audit: leaving zoomed text page reads disposed ref and leaves zoom true
+AUDIT_ZOOM_DISPOSAL: error=Bad state: Cannot use "ref" after the widget was disposed. zoom=true
+00:01 +1: All tests passed!

@@ -835,7 +835,17 @@
     "path": "rafeeq_app/lib/adhan_entry.dart",
     "lines": 111,
     "sha256": "26772f876c47644916399c24b9f1df8b2156a2ba8168f53cf972989b3452f114",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 111,
+    "notes": [
+      {
+        "lines": [
+          1,
+          111
+        ],
+        "note": "Reviewed alternate adhan entrypoint, minimal boot/locales and route spec fallback. Valid native spec pathway preserved; malformed fallback translation before locale mounting is only defensive path, no current finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/app/app_locale_provider.dart",
@@ -5034,73 +5044,207 @@
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/recite_bar.dart",
     "lines": 131,
     "sha256": "c9d1b9862b4a5dfbf4340b6c53ae5c4150ecccd24be1f7bc5093a8dfe66deabc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 131,
+    "notes": [
+      {
+        "lines": [
+          1,
+          131
+        ],
+        "note": "Reviewed recitation bar transport/waiting labels, measured toolbar entrance, compact/presentation transformations and ayah row/basmala/banner. Compact touch targets require sweep; no new confirmed functional issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/toolbar_bar.dart",
     "lines": 54,
     "sha256": "6f91e15b49e5e4e465bc3bdbeb5768d83f1443d523b3bfa87bede5318b93b0e7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 54,
+    "notes": [
+      {
+        "lines": [
+          1,
+          54
+        ],
+        "note": "Reviewed recitation bar transport/waiting labels, measured toolbar entrance, compact/presentation transformations and ayah row/basmala/banner. Compact touch targets require sweep; no new confirmed functional issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/toolbar_strip.dart",
     "lines": 89,
     "sha256": "73139403d082e2d76fd43f47f0a220ca9cf40436cd911147a935778d987be12e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 89,
+    "notes": [
+      {
+        "lines": [
+          1,
+          89
+        ],
+        "note": "Reviewed recitation bar transport/waiting labels, measured toolbar entrance, compact/presentation transformations and ayah row/basmala/banner. Compact touch targets require sweep; no new confirmed functional issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_ayah_row.dart",
     "lines": 218,
     "sha256": "4e4f7b2c4781301900696cf6aaec24120c25e9fe9fddd9d430c2843c9842aa0c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 218,
+    "notes": [
+      {
+        "lines": [
+          1,
+          218
+        ],
+        "note": "Reviewed recitation bar transport/waiting labels, measured toolbar entrance, compact/presentation transformations and ayah row/basmala/banner. Compact touch targets require sweep; no new confirmed functional issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_frame_painter.dart",
     "lines": 348,
     "sha256": "8f26db275c7d4cf85e5a1131465b934e6e9989bcae46148402ea02392b23ca6a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 348,
+    "notes": [
+      {
+        "lines": [
+          1,
+          348
+        ],
+        "note": "Read all frame styles and geometry, bounded small-size painting, matching repaint fields and pointer-safe overlay. No new finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_nav_sheets.dart",
     "lines": 392,
     "sha256": "d7f0cb54d3a1cfd9e7f96b2ae849074602d300eed47796c3a2d4a1667231a748",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 392,
+    "notes": [
+      {
+        "lines": [
+          1,
+          392
+        ],
+        "note": "Read jump sheet search/page/juz and goto dialog; A22 controls identified. Candidate: raw int.tryParse rejects Arabic-Indic typed page input and invalid page submits old selection; prove actual widget before reporting. Goto controller allocated in builder lacks disposal; impact unmeasured."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_page_view.dart",
     "lines": 661,
     "sha256": "107e6aa6dded83dc46dbc5ec1ef75cd85a21c451c4043df315a4cd958244424b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 661,
+    "notes": [
+      {
+        "lines": [
+          1,
+          504
+        ],
+        "note": "Reviewed page viewer through504, portrait/landscape scaling and raster cache/render setup. Candidate: dispose of zoomed page schedules ref.read after ConsumerState disposal at195; actual zoom/exit proof required. Raster load errors fall through to network; SVG legacy path is not current catalog."
+      },
+      {
+        "lines": [
+          505,
+          661
+        ],
+        "note": "Completed raster retry/layout/fitted coordinates and highlight painter. Paint fields correctly trigger repaint; zoom disposal candidate recorded above, test pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_text_page.dart",
     "lines": 983,
     "sha256": "3c289d31f9af009472a6d60cd3e680820b58186e164a0c58ae84ef709c70a086",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 983,
+    "notes": [
+      {
+        "lines": [
+          1,
+          521
+        ],
+        "note": "Read text page state, playing verse anchors, auto scroll timers, notification pauses and build521. Same disposed ref callback as raster at419; candidate reproducible with text page independently of network. Run keys accessed after frame may change; proof pending."
+      },
+      {
+        "lines": [
+          522,
+          983
+        ],
+        "note": "Completed text-page build/embedded/pinch and all flowing paragraph kashida, ranges and marker painting; religious display shaping proof stays separate. Zoomed disposal candidate identified in both implementations."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_theme_picker.dart",
     "lines": 470,
     "sha256": "ca3ad4701625e45c2f0612066ecb651c08a48343005d132074cdb7c725278daa",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 470,
+    "notes": [
+      {
+        "lines": [
+          1,
+          470
+        ],
+        "note": "Reviewed all theme/frame/accent picker tiles, app-follow option and exact preview text. Card route applies fixed dark theme previously reviewed; no inappropriate light-theme claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/quran_book_cover_thumbnail.dart",
     "lines": 383,
     "sha256": "2a628c3334d6faa85f12b0dbbd7d73e2908ddbefaac28b054b06cf483cdc814a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 383,
+    "notes": [
+      {
+        "lines": [
+          1,
+          383
+        ],
+        "note": "Read complete real/drawn cover rendering, fallback palettes, ribbon and frame. Only current edition real cover active; dormant style repaint false is not current dynamic bug."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/reciter_picker_sheet.dart",
     "lines": 298,
     "sha256": "a31db233281910f047b59d81539435f954356fc52900d50f4ce6c77da0269986",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 298,
+    "notes": [
+      {
+        "lines": [
+          1,
+          298
+        ],
+        "note": "Reviewed reciter/resume picker and reciting choice sheet, mounted guard after resume read, offline counts/source ordering and localized names. Comparator reflexivity candidate has no observed effect; async library loading error state needs device proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/reciting_ayah_choice_sheet.dart",
     "lines": 47,
     "sha256": "808303d9e3e4ce1c04ef5754ff12e01abf853583dc0bd1e463086b72ec777383",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 47,
+    "notes": [
+      {
+        "lines": [
+          1,
+          47
+        ],
+        "note": "Reviewed reciter/resume picker and reciting choice sheet, mounted guard after resume read, offline counts/source ordering and localized names. Comparator reflexivity candidate has no observed effect; async library loading error state needs device proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/ayah_download_notice.dart",
