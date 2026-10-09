@@ -4072,13 +4072,33 @@
     "path": "rafeeq_app/lib/features/hajj/data/hajj_summary.dart",
     "lines": 484,
     "sha256": "7d0d39919f30f227209980223b0ca6899b28b990bf46e51572653026b0a2dae8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 484,
+    "notes": [
+      {
+        "lines": [
+          1,
+          484
+        ],
+        "note": "Read HajjSummary all484 including source-derived verbatim dhikr/text and canonical ayah references, omitted passages separator and shared Hajj/Umrah stages; scale provider30 persistence/minmax. Source exact pieces tested previously but named-source licensing and full content mapping still require verification; no fiqh edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/data/hajj_text_scale.dart",
     "lines": 30,
     "sha256": "50ac559870925566a58a4f66c6b4f0489a9fc7c566042378b10900fa15be0c4a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 30,
+    "notes": [
+      {
+        "lines": [
+          1,
+          30
+        ],
+        "note": "Read HajjSummary all484 including source-derived verbatim dhikr/text and canonical ayah references, omitted passages separator and shared Hajj/Umrah stages; scale provider30 persistence/minmax. Source exact pieces tested previously but named-source licensing and full content mapping still require verification; no fiqh edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/hajj_screen.dart",
