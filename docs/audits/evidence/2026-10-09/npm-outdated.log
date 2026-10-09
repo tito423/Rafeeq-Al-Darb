@@ -1,0 +1,10 @@
+COMMAND: npm outdated
+START: 2026-10-09T20:34:00.3467349+04:00
+CWD: E:\My Projects\Rafiq-Al-Darb\sync_backend
+Package                         Current        Wanted        Latest  Location                                Depended by
+@cloudflare/workers-types  4.20260702.1  4.20260702.1  5.20261009.1  node_modules/@cloudflare/workers-types  sync_backend
+typescript                        5.9.3         5.9.3         7.0.2  node_modules/typescript                 sync_backend
+wrangler                       3.114.17      3.114.17       4.149.0  node_modules/wrangler                   sync_backend
+EXIT: 1
+SECONDS: 3.0556407
+END: 2026-10-09T20:34:03.4025401+04:00

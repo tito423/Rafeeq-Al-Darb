@@ -1,0 +1,5 @@
+{"id":"node-version","command":"node --version && npm --version","exit":0,"seconds":0.5800273,"started":"2026-10-09T20:33:50.2191908+04:00","log":"node-version.log"}
+{"id":"npm-ci","command":"npm ci","exit":0,"seconds":7.4803373,"started":"2026-10-09T20:33:50.8497349+04:00","log":"npm-ci.log"}
+{"id":"typescript","command":"npx --no-install tsc --noEmit","exit":0,"seconds":1.9977883,"started":"2026-10-09T20:33:58.3341651+04:00","log":"typescript.log"}
+{"id":"npm-outdated","command":"npm outdated","exit":1,"seconds":3.0556407,"started":"2026-10-09T20:34:00.3467349+04:00","log":"npm-outdated.log"}
+{"id":"npm-audit","command":"npm audit --json","exit":1,"seconds":2.3267469,"started":"2026-10-09T20:34:03.4051075+04:00","log":"npm-audit.log"}

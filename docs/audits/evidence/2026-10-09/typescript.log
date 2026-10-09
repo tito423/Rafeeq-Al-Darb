@@ -1,0 +1,6 @@
+COMMAND: npx --no-install tsc --noEmit
+START: 2026-10-09T20:33:58.3341651+04:00
+CWD: E:\My Projects\Rafiq-Al-Darb\sync_backend
+EXIT: 0
+SECONDS: 1.9977883
+END: 2026-10-09T20:34:00.3322623+04:00

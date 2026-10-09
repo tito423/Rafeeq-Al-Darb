@@ -2520,9 +2520,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-09 20:33 — IN PROGRESS — resume here**
+**2026-10-09 20:42 — IN PROGRESS — resume here**
 
-Audit 2026-10-09: baseline fetched; no code changed; next run recorded checks
+Audit 2026-10-09: 776 tests pass; R2 leak and sync truncation reproduced; review still incomplete
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**2026-10-09 AUDIT IN PROGRESS**: Run and preserve command outputs in docs/audits/evidence/2026-10-09; report docs/audits/AUDIT_2026-10-09.md is explicitly incomplete. Read prior audits, inventory/review every requested file, verify content endpoints and emulator scenarios, commit report before any fixes. Preserve all initial untracked files. No version bump or publication authorized.
+**2026-10-09 AUDIT IN PROGRESS (CHECKS SAVED)**: analyze clean; 776 pass/4 skipped; npm ci + tsc pass; npm audit 7 vulnerable dev packages. flutter build currently running (log docs/audits/evidence/2026-10-09/flutter-build.log; do not run Flutter commands concurrently). 883 HEAD probes pass but only 109/289 book URLs extracted (fix multiline parsing). Secret values still match 3 old public commits, never emitted. Backend local harness reproduced cap data loss (1001 -> 1000, 200), unauthenticated review writes and unbounded review body. No production writes. NEXT: finish build, all endpoint gaps/mirrors, historical file:line and notification-ID collision proof, continue full checklist (most entries pending), prior audit status table and emulator. Phase 1 not complete. Previous instruction: Run and preserve command outputs in docs/audits/evidence/2026-10-09; report docs/audits/AUDIT_2026-10-09.md is explicitly incomplete. Read prior audits, inventory/review every requested file, verify content endpoints and emulator scenarios, commit report before any fixes. Preserve all initial untracked files. No version bump or publication authorized.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-09 20:42 - Audit 2026-10-09: 776 tests pass; R2 leak and sync truncation reproduced; review still incomplete
 - 2026-10-09 20:33 - Audit 2026-10-09: baseline fetched; no code changed; next run recorded checks
 - 2026-10-09 00:00 - v3.87.0 published: home cards on mosques, swipeable full-screen sayings
 - 2026-10-08 22:36 - v3.86.0 published: adhkar by six real voices, photo backgrounds

@@ -1,0 +1,41 @@
+{
+  "scope": "Local execution of actual transpiled Worker with explicit Google and D1 test doubles; no live authenticated request or production write.",
+  "results": [
+    {
+      "scenario": "unauthenticated review write",
+      "status": 200,
+      "result": {
+        "saved": 1,
+        "at": 1791564005705
+      },
+      "statements": 2
+    },
+    {
+      "scenario": "1001 queued counters",
+      "status": 200,
+      "result": {
+        "success": true
+      },
+      "received": 1001,
+      "persisted": 1000,
+      "discarded": 1
+    },
+    {
+      "scenario": "review body over 2 MiB",
+      "status": 200,
+      "bytes": 2097220,
+      "result": {
+        "saved": 1,
+        "at": 1791564005723
+      }
+    },
+    {
+      "scenario": "non-numeric state timestamp",
+      "status": 200,
+      "passed_to_D1": "far-future-text",
+      "result": {
+        "success": true
+      }
+    }
+  ]
+}

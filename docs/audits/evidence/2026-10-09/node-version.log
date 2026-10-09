@@ -1,0 +1,8 @@
+COMMAND: node --version && npm --version
+START: 2026-10-09T20:33:50.2191908+04:00
+CWD: E:\My Projects\Rafiq-Al-Darb\sync_backend
+v24.21.0
+11.19.0
+EXIT: 0
+SECONDS: 0.5800273
+END: 2026-10-09T20:33:50.8060373+04:00

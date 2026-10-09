@@ -1,0 +1,5 @@
+{"id":"flutter-version","command":"flutter --version","exit":0,"seconds":4.2944851,"started":"2026-10-09T20:33:40.0576956+04:00","log":"flutter-version.log"}
+{"id":"flutter-pub-get","command":"flutter pub get","exit":0,"seconds":10.0622616,"started":"2026-10-09T20:33:44.4159232+04:00","log":"flutter-pub-get.log"}
+{"id":"flutter-analyze","command":"flutter analyze","exit":0,"seconds":43.2952898,"started":"2026-10-09T20:33:54.4859755+04:00","log":"flutter-analyze.log"}
+{"id":"flutter-test","command":"flutter test --reporter expanded","exit":0,"seconds":94.5799407,"started":"2026-10-09T20:34:37.7844557+04:00","log":"flutter-test.log"}
+{"id":"flutter-outdated","command":"flutter pub outdated","exit":0,"seconds":7.5648385,"started":"2026-10-09T20:36:12.3688471+04:00","log":"flutter-outdated.log"}

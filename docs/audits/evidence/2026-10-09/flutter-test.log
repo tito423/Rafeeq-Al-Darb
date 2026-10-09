@@ -1,0 +1,959 @@
+COMMAND: flutter test --reporter expanded
+START: 2026-10-09T20:34:37.7844557+04:00
+CWD: E:\My Projects\Rafiq-Al-Darb\rafeeq_app
+Resolving dependencies...
+Downloading packages...
+  archive 4.2.0 (4.3.0 available)
+! background_downloader 9.5.9 from path third_party\background_downloader (overridden)
+  cached_network_image 3.4.1 (4.0.4 available)
+  cached_network_image_platform_interface 4.1.1 (5.0.3 available)
+  cached_network_image_web 1.3.1 (2.0.3 available)
+  characters 1.4.0 (1.4.1 available)
+  cli_util 0.4.2 (0.6.0 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.2.1 (2.1.0 available)
+  connectivity_plus 7.3.1 (7.3.2 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  cupertino_icons 1.0.9 (2.0.0 available)
+  dbus 0.7.15 (0.8.0 available)
+  device_info_plus 12.4.0 (13.3.0 available)
+  device_info_plus_platform_interface 7.0.3 (8.1.0 available)
+  dio 5.11.0 (5.11.1 available)
+  dio_web_adapter 2.2.1 (2.2.2 available)
+  file_picker 11.0.3 (13.1.0 available)
+  flutter_cache_manager 3.4.2 (3.4.5 available)
+  flutter_native_splash 2.4.7 (2.4.8 available)
+  flutter_riverpod 2.6.1 (3.4.3 available)
+  flutter_timezone 3.0.1 (5.1.1 available)
+  geocoding 3.0.0 (5.0.0 available)
+  geocoding_android 3.3.1 (5.1.0 available)
+  geocoding_platform_interface 3.2.0 (5.0.0 available)
+  geolocator 13.0.4 (14.1.1 available)
+  geolocator_android 4.6.2 (5.1.1+1 available)
+  geolocator_platform_interface 4.3.0 (4.4.0 available)
+  google_fonts 6.3.3 (9.0.0 available)
+  google_sign_in 6.2.1 (7.2.0 available)
+  google_sign_in_android 6.2.1 (7.2.17 available)
+  google_sign_in_ios 5.9.0 (6.3.6 available)
+  google_sign_in_platform_interface 2.5.0 (3.1.0 available)
+  google_sign_in_web 0.12.4+4 (1.1.3 available)
+  hooks 2.0.2 (2.2.0 available)
+  intl 0.20.2 (0.20.3 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.2 (1.0.4+1 available)
+  matcher 0.12.17 (0.12.20 available)
+  material_color_utilities 0.11.1 (0.13.1 available)
+  meta 1.17.0 (1.19.0 available)
+  mime 2.0.0 (2.1.0 available)
+  native_toolchain_c 0.19.2 (0.19.5 available)
+  nm 0.5.0 (0.6.0 available)
+  objective_c 9.5.0 (9.6.2 available)
+  octo_image 2.1.0 (2.1.2 available)
+  package_config 2.2.0 (3.0.0 available)
+  package_info_plus 9.0.1 (10.2.2 available)
+  package_info_plus_platform_interface 3.2.1 (4.1.0 available)
+  permission_handler 12.0.3 (13.0.2 available)
+  permission_handler_android 13.0.1 (14.1.0 available)
+  permission_handler_apple 9.6.1 (9.6.2 available)
+  permission_handler_platform_interface 4.4.0 (4.4.1 available)
+  petitparser 7.0.2 (7.1.0 available)
+  platform 3.1.6 (3.2.0 available)
+  pub_semver 2.2.0 (2.2.1 available)
+  record 6.2.1 (7.1.2 available)
+  record_android 1.5.2 (2.2.0 available)
+  record_ios 1.2.1 (2.1.1 available)
+  record_linux 1.3.1 (2.1.3 available)
+  record_macos 1.2.2 (2.1.1 available)
+  record_platform_interface 1.6.0 (2.1.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  record_web 1.3.0 (2.1.3 available)
+  record_windows 1.0.7 (2.3.0 available)
+  riverpod 2.6.1 (3.4.3 available)
+  share_plus 12.0.2 (13.3.1 available)
+  share_plus_platform_interface 6.1.0 (7.2.0 available)
+  shared_preferences 2.5.5 (2.5.6 available)
+  shared_preferences_android 2.4.23 (2.4.28 available)
+  sqflite 2.4.2+1 (2.4.4+1 available)
+  sqflite_android 2.4.2+3 (2.4.4 available)
+  sqflite_common 2.5.8 (2.5.13+1 available)
+  sqflite_common_ffi 2.4.0+3 (2.4.3 available)
+  sqflite_darwin 2.4.2 (2.4.4 available)
+  sqflite_platform_interface 2.4.0 (2.4.2 available)
+  sqlite3 3.5.2 (3.7.0 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  synchronized 3.4.0 (3.4.2 available)
+  test_api 0.7.7 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  url_launcher_android 6.3.30 (6.3.33 available)
+  vector_math 2.2.0 (2.4.3 available)
+  vibration 3.1.8 (3.2.1 available)
+  video_player 2.11.1 (2.14.1 available)
+  video_player_android 2.9.5 (2.12.2 available)
+  video_player_avfoundation 2.11.1 (2.12.1 available)
+  wakelock_plus 1.5.2 (1.8.1 available)
+  wakelock_plus_platform_interface 1.5.1 (1.7.0 available)
+  win32 5.15.0 (6.4.0 available)
+  win32_registry 2.1.0 (3.0.3 available)
+  xml 6.6.1 (7.1.0 available)
+  yaml 3.1.3 (3.1.4 available)
+Got dependencies!
+92 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart
+00:00 +0: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: opening one card closes the other
+00:01 +1: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: back closes the open card, and only then leaves
+00:01 +2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: a card that STARTED open does not hold back
+00:01 +3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: a card that STARTED open does not hold back
+00:01 +4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: a card that STARTED open does not hold back
+00:01 +5: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: a card that STARTED open does not hold back
+00:01 +6: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: a card that STARTED open does not hold back
+00:01 +7: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/accordion_test.dart: a card that STARTED open does not hold back
+00:02 +8: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_fajr_resolution_test.dart: the catalogue has Fajr recordings, and every pair points at one
+00:02 +9: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_fajr_resolution_test.dart: whatever the default, Fajr gets a Fajr recording
+00:02 +10: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_fajr_resolution_test.dart: an ordinary adhan chosen for Fajr itself still yields a Fajr one
+00:02 +11: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_fajr_resolution_test.dart: a Fajr recording never sounds at the other four prayers
+00:02 +12: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_fajr_resolution_test.dart: a custom file is the user's to place, at any prayer
+00:02 +13: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_fajr_resolution_test.dart: Fajr in the catalogue is Fajr in the measured timings
+00:02 +14: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_full_vibrate_test.dart: full-screen mode carries the vibration when it is on
+00:02 +15: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_full_vibrate_test.dart: off stays off
+00:02 +16: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_full_vibrate_test.dart: the other modes never get the full-screen vibration
+00:02 +17: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_full_vibrate_test.dart: a stored spec without the field reads as off
+00:02 +18: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_names_test.dart: every catalogue adhan has a name in the six other languages
+00:03 +19: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_phrase_timings_test.dart: every bundled adhan was measured
+00:03 +20: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_phrase_timings_test.dart: measured line starts are inside the recording and in order
+00:03 +21: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_phrase_timings_test.dart: the text does not start over the opening silence
+00:03 +22: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_phrase_timings_test.dart: a Fajr text over a non-Fajr recording falls back to the spoken span
+00:03 +23: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/adhan_timelines_test.dart: every bundled adhan follows its text
+00:04 +24: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/android_permissions_test.dart: SYSTEM_ALERT_WINDOW is declared only together with its code
+00:04 +25: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/android_permissions_test.dart: only the assistant overlay draws over other apps
+00:04 +26: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/android_permissions_test.dart: the adhan still has what it needs to cross the lock screen
+00:04 +27: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/android_permissions_test.dart: no permission is declared twice
+00:04 +28: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_direction_test.dart: an LTR paragraph throws the full stop to the wrong end
+00:04 +29: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_direction_test.dart: a 12-hour time inside an RTL paragraph swaps the number and the marker when nothing pins it
+00:04 +30: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_direction_test.dart: a 12-hour time inside an RTL paragraph formatTime12h isolates it, so the order survives
+00:04 +31: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_direction_test.dart: ArabicText lays Arabic out RTL under an LTR ancestor
+00:05 +32: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_direction_test.dart: ArabicText lays Arabic out RTL under an LTR ancestor
+00:05 +33: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_direction_test.dart: ArabicText lays Arabic out RTL under an LTR ancestor
+00:05 +34: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_normalize_test.dart: normalizeArabic strict form correctly matches a word where the typed spelling DOES include the letter at the dagger-alif position (the P3‑9 bug report: "فاسقين" inside 5:25's "ٱلْفَٰسِقِينَ")
+00:05 +35: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_normalize_test.dart: normalizeArabic strips harakat from real hadith text (Bukhari #1)
+00:05 +36: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_normalize_test.dart: normalizeArabic unifies alef letterform variants
+00:05 +37: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_normalize_test.dart: normalizeArabic unifies alef maksura with yaa
+00:05 +38: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_normalize_test.dart: normalizeArabic is a no-op on already-plain text
+00:05 +39: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_phonetiser_test.dart: 304 sentences tokenise exactly as the Python does
+00:05 +40: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_proclitic_search_test.dart: the particles Arabic joins to the front of a word a space-only boundary loses them, which is the bug
+00:05 +41: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_proclitic_search_test.dart: the particles Arabic joins to the front of a word the proclitic test finds them
+00:05 +42: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_proclitic_search_test.dart: the particles Arabic joins to the front of a word it does NOT reopen the P3-9 defect it was built against
+00:05 +43: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_proclitic_search_test.dart: the definite article in the query it is stripped only when a real word is left behind
+00:05 +44: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/arabic_proclitic_search_test.dart: the definite article in the query so «الرحمة» can reach an ayah that says «ورحمة»
+00:06 +45: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:07 +46: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:07 +47: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:07 +48: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:07 +49: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:07 +50: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:07 +51: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +52: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +53: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +54: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +55: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +56: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +57: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +57: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a word said once opens the mushaf on it at once
+[34m[🌎 Easy Localization] [WARNING] Localization key [assistant.opening] not found[0m
+00:08 +58: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +59: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +60: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +61: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +62: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +63: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (setUpAll)
+00:08 +63: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:08 +64: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:08 +65: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:08 +66: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:08 +67: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:10 +68: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:10 +69: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:10 +70: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:10 +71: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:10 +72: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:10 +73: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+00:10 +74: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a common word gives a list, and a tap opens that ayah
+[34m[🌎 Easy Localization] [WARNING] Localization key [assistant.word_found] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [assistant.word_hint] not found[0m
+00:10 +75: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: screens, in the words people say
+00:10 +76: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/azkar_hisn_test.dart: every braced Qur'an passage is the mushaf's own words
+00:11 +76: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_quran_word_ui_test.dart: a word that is not there says so and opens nothing
+[34m[🌎 Easy Localization] [WARNING] Localization key [assistant.word_none] not found[0m
+00:11 +77: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/azkar_hisn_test.dart: every braced Qur'an passage is the mushaf's own words
+00:11 +78: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/azkar_hisn_test.dart: every braced Qur'an passage is the mushaf's own words
+00:11 +79: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a surah, with and without a reciter
+00:11 +80: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a surah, with and without a reciter
+00:11 +81: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a surah, with and without a reciter
+00:11 +82: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a surah, with and without a reciter
+00:11 +83: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: open the mushaf on a surah and an ayah
+00:11 +84: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/basmala_split_test.dart: basmala split 1:1 - al-Fatiha verse 1 IS the basmala and counts as a verse
+00:11 +85: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +86: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +87: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +88: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +89: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +90: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +91: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +92: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +93: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +94: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +95: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the owner sentence as the recogniser heard it
+00:11 +96: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the Arabic pack wording
+00:11 +97: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a surah with no play word opens, it does not play
+00:11 +98: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: play a surah from the ayah that was said
+00:11 +99: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: play a surah from the ayah that was said
+00:11 +100: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: play a surah from the ayah that was said
+00:11 +101: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: play a surah from the ayah that was said
+00:11 +102: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: play a surah from the ayah that was said
+00:12 +103: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: sunan surah commands use only the real four-surah catalogue
+00:12 +104: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: azkar section commands resolve only real database sections
+00:12 +105: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_catalog_no_duplicates_test.dart: the title key keeps the Arabic it is given
+00:12 +106: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every Quran word can be asked for by voice (owner, 2026-09-29)
+00:12 +107: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every Quran word can be asked for by voice (owner, 2026-09-29)
+00:12 +108: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every Quran word can be asked for by voice (owner, 2026-09-29)
+00:12 +109: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every Quran word can be asked for by voice (owner, 2026-09-29)
+00:12 +110: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every Quran word can be asked for by voice (owner, 2026-09-29)
+00:12 +111: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a reciter with no surah plays the open ayah (owner, 2026-10-02)
+00:12 +112: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a reciter with no surah plays the open ayah (owner, 2026-10-02)
+00:12 +113: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a reciter with no surah plays the open ayah (owner, 2026-10-02)
+00:12 +114: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a reciter with no surah plays the open ayah (owner, 2026-10-02)
+00:12 +115: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: a reciter with no surah plays the open ayah (owner, 2026-10-02)
+00:12 +116: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: ayah-by-ayah reciter uses only its verified provider catalogue
+00:13 +117: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: hadeeth encyclopedia category uses only real bundled database rows
+00:13 +118: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: hadeeth encyclopedia category uses only real bundled database rows
+00:13 +119: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: hadeeth encyclopedia category uses only real bundled database rows
+00:13 +120: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: hadeeth encyclopedia detail stays contextual, not an internal-id command
+00:13 +121: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:13 +122: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:13 +123: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:13 +124: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:13 +125: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:13 +126: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:13 +127: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:13 +128: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: nine-books commands use exact real bundled book names
+00:14 +129: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +130: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +131: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +132: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +133: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +134: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +135: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +136: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +137: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: no shipped book claims a printed scale it does not have
+00:14 +138: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: whole-surah reciter uses only the mp3quran catalogue
+00:14 +139: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_speaker_focus_test.dart: an adhan pauses the reading and the same chunk is read again after
+00:14 +140: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:14 +141: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:14 +142: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:15 +143: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:15 +144: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:15 +145: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:15 +146: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:15 +147: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:15 +148: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: every section in every shipped book opens the page it names
+00:15 +149: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Shamela: a title said with «الشاملة» (owner, 2026-09-27)
+00:15 +150: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Shamela: a title said with «الشاملة» (owner, 2026-09-27)
+00:15 +151: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Shamela: a title said with «الشاملة» (owner, 2026-09-27)
+00:15 +152: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: the counts a book reports are the ones it carries
+00:15 +153: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: the counts a book reports are the ones it carries
+00:15 +154: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: the counts a book reports are the ones it carries
+00:16 +155: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: the counts a book reports are the ones it carries
+00:16 +156: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: the counts a book reports are the ones it carries
+00:16 +157: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/book_page_numbering_test.dart: the counts a book reports are the ones it carries
+00:16 +158: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: options, in Arabic
+00:16 +159: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: options, in Arabic
+00:16 +160: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: English, as people say it
+00:16 +161: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/byte_formatter_is_the_only_one_test.dart: nothing builds its own byte label
+00:17 +162: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Spanish, French, Portuguese
+00:17 +163: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Spanish, French, Portuguese
+00:17 +164: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Spanish, French, Portuguese
+00:17 +165: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Spanish, French, Portuguese
+00:17 +166: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Spanish, French, Portuguese
+00:17 +167: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Spanish, French, Portuguese
+00:17 +168: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Spanish, French, Portuguese
+00:17 +169: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/calculation_methods_test.dart: the app lands on the published times, city by city
+compared 2400 times; worst disagreement 2m at University of Islamic Sciences, Karachi / london / 15-03-2026 / asr
+00:17 +170: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Russian and Urdu
+00:17 +171: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Russian and Urdu
+00:17 +172: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: Russian and Urdu
+00:17 +173: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/caravan_legs_test.dart: every key the journey shows is in all seven locales
+00:17 +174: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: what the recogniser actually wrote
+00:18 +175: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: what the recogniser actually wrote
+00:18 +176: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: what the recogniser actually wrote
+00:18 +177: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: what the recogniser actually wrote
+00:18 +178: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: what the recogniser actually wrote
+00:18 +179: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: what the recogniser actually wrote
+00:18 +180: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the VAD pipeline output
+00:19 +181: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the VAD pipeline output
+00:19 +182: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:19 +183: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:19 +184: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:20 +185: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:20 +186: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:20 +187: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:20 +188: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:20 +189: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:20 +190: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:20 +191: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:21 +192: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:21 +193: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:21 +194: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:21 +195: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: (setUpAll)
+00:21 +195: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:21 +196: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:21 +197: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +198: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +199: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +200: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +201: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +202: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +203: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +204: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +205: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: the kids corner and what is in it, as people say it
+00:22 +206: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: Arabic and Latin queries find the right place first
+00:23 +207: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: Arabic and Latin queries find the right place first
+00:23 +208: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: Arabic and Latin queries find the right place first
+00:23 +209: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: Arabic and Latin queries find the right place first
+00:23 +210: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/city_catalog_test.dart: Arabic and Latin queries find the right place first
+6 searches: 2409 ms
+00:24 +211: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +212: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +213: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +214: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +215: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +216: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +217: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +218: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:24 +219: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:25 +220: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:25 +221: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:25 +222: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:25 +223: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:25 +224: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:26 +225: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:26 +226: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:26 +227: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:27 +228: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:27 +229: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:27 +230: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:27 +231: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:27 +232: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:27 +233: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +234: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +235: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +236: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +237: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +237: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/export_highlight_rects_test.dart: (suite)
+  Skip: writes files under build/ for the pipeline scripts; run with: flutter test --tags export --run-skipped <file>
+00:28 +237 ~1: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +237 ~1: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/export_review_texts_test.dart: (suite)
+  Skip: writes files under build/ for the pipeline scripts; run with: flutter test --tags export --run-skipped <file>
+00:28 +237 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +238 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +239 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +240 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +241 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +242 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +243 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +244 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +245 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:28 +246 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:29 +247 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:29 +248 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:29 +249 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:29 +250 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:29 +251 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:29 +252 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:29 +253 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:30 +254 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:30 +255 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:30 +256 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:30 +257 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:30 +258 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/continuous_mushaf_view_test.dart: auto-scroll runs on through the page ends
+00:30 +259 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:30 +260 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:31 +261 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:31 +262 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:31 +263 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +264 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +265 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +266 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +267 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +268 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +269 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +270 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +271 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +272 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +273 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +274 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:32 +274 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/goto_page_range_test.dart: page 607 is reachable in a 611-page printing
+[34m[🌎 Easy Localization] [WARNING] Localization key [quran.jump_to] not found[0m
+00:33 +275 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +275 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/goto_page_range_test.dart: page 607 is reachable in a 611-page printing
+[34m[🌎 Easy Localization] [WARNING] Localization key [quran.page] not found[0m
+00:33 +276 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +276 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/goto_page_range_test.dart: page 607 is reachable in a 611-page printing
+[34m[🌎 Easy Localization] [WARNING] Localization key [common.cancel] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [common.save] not found[0m
+00:33 +277 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +278 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +279 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +280 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +281 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +281 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/goto_page_range_test.dart: page 600 is refused in a 521-page printing
+[34m[🌎 Easy Localization] [WARNING] Localization key [quran.jump_to] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [quran.page] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [common.cancel] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [common.save] not found[0m
+00:33 +282 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +282 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/goto_page_range_test.dart: the range is written where the reader can see it, and it reads left to right
+[34m[🌎 Easy Localization] [WARNING] Localization key [quran.jump_to] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [quran.page] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [common.cancel] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [common.save] not found[0m
+00:33 +283 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +284 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +285 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +286 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:33 +287 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +288 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +289 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +290 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +291 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +292 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +293 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +294 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +295 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:34 +296 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +297 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +298 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +299 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +300 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +301 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +302 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +303 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:35 +304 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +305 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +306 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +307 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +308 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +309 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +310 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +311 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +312 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:36 +313 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +314 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +315 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +316 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +317 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +318 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +319 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +320 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +321 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:37 +322 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:38 +323 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:38 +324 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:38 +325 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:38 +326 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:38 +327 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:38 +328 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +329 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +330 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +331 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +332 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +333 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +334 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +335 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +336 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +337 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +338 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +339 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:39 +340 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:40 +341 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:40 +342 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:40 +343 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +344 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +345 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +345 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/journey_store_test.dart: a question is an ayah minus its last word, from the real text
+*** sqflite warning ***
+
+You are changing sqflite default factory.
+Be aware of the potential side effects. Any library using sqflite
+will have this factory as the default for all operations.
+
+*** sqflite warning ***
+
+00:41 +346 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +346 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/journey_store_test.dart: no ayah is asked twice before the surah runs out
+*** sqflite warning ***
+
+You are changing sqflite default factory.
+Be aware of the potential side effects. Any library using sqflite
+will have this factory as the default for all operations.
+
+*** sqflite warning ***
+
+00:41 +347 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +348 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +349 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +350 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +351 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +352 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +353 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:41 +354 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +355 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +356 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +357 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +358 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +359 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +360 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +361 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +362 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +363 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +364 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:42 +365 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:43 +366 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:43 +367 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:43 +368 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:43 +369 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:44 +370 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:44 +371 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: every surah, as the Arabic model writes it
+00:44 +372 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/assistant_intent_test.dart: (tearDownAll)
+00:44 +372 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/kids_stories_test.dart: every story and shelf has its title in all seven languages
+00:44 +373 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/layering_test.dart: core/ does not import features/ or app/
+00:44 +374 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/layering_test.dart: core/ does not import features/ or app/
+00:45 +375 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lesson_heading_bare_test.dart: the normaliser keeps the Arabic jazariyyahBare
+00:45 +376 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lesson_heading_bare_test.dart: the normaliser keeps the Arabic tamhidBare
+00:45 +377 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lesson_heading_bare_test.dart: the normaliser keeps the Arabic tuhfaBare
+00:45 +378 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lesson_heading_bare_test.dart: two different headings do not collapse into each other
+00:45 +379 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lesson_heading_bare_test.dart: a heading still matches its own vowelled, marked form
+00:45 +380 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/library_featured_test.dart: each featured book is on the shelf that features it
+00:45 +381 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/library_featured_test.dart: التزكية والرقائق and طالب العلم have no featured list
+00:45 +382 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/library_featured_test.dart: every shelf with a list already opens on catalogued books
+00:46 +383 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/library_search_marks_test.dart: the same letters with other vowels are not a match
+00:46 +384 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/library_search_marks_test.dart: a phrase must appear together and in order
+00:46 +385 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/literal_translation_keys_test.dart: every literal .tr() key exists in the Arabic file
+00:46 +386 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/literal_translation_keys_test.dart: keys chosen inside (…).tr() exist too
+00:46 +387 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lock_screen_takeover_test.dart: MainActivity does not declare a lock-screen takeover
+00:46 +388 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lock_screen_takeover_test.dart: MainActivity does not ask for one in code either
+00:46 +389 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lock_screen_takeover_test.dart: the adhan alert still takes the lock screen — that is its job
+00:46 +390 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/lock_screen_takeover_test.dart: every adhan route opens the adhan screen, not the app
+00:47 +391 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: seventeen makharij, which is the number the book settles on
+00:47 +392 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: the five general regions are all present, once each
+00:47 +393 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: each region holds the number of makharij the book gives it
+00:47 +394 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: the letters come to the tally the matn enumerates
+00:47 +395 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: every makhraj is answerable: a place, letters, and a page
+00:47 +396 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: the makharij are walked in the book’s order, region by region
+00:47 +397 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: the source is named, with the edition and the pages
+00:47 +398 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: every makhraj has a movement, and a tongue one has a contact point
+00:47 +399 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: no articulation is described for a makhraj that does not exist
+00:47 +400 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: the ghunnah letters send their air out through the nose
+00:47 +401 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/makharij_test.dart: every region and place has its key in all seven languages
+00:47 +402 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mawaqit_today_test.dart: the five miqats, each with the ministry's sentence
+00:47 +403 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mawaqit_today_test.dart: a modern name is only one the sentence itself gives
+00:47 +404 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mawaqit_today_test.dart: the card sits under steps that exist
+00:48 +405 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/method_channel_names_test.dart: every channel Dart opens is registered somewhere in Kotlin
+00:48 +406 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/method_channel_names_test.dart: the names Kotlin declares are the ones Dart actually uses
+00:48 +407 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_inked_svg_test.dart: both kinds of glyph take the ink, and nothing is left black
+00:49 +408 ~2: loading E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_page_audit_test.dart
+Warning: A tag was used that wasn't specified in dart_test.yaml.
+  audit was used in the suite itself
+
+00:49 +408 ~2: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_page_audit_test.dart: every text page, line by line
+00:49 +408 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_pagination_test.dart: page count and the pagination flag agree, edition by edition
+00:49 +409 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_paper_test.dart: a scan at night: white page becomes the night ground, ink stays legible
+00:49 +410 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_paper_test.dart: warm paper: white becomes the warm ground, black ink stays black
+00:49 +411 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_paper_test.dart: vector pages: both inks read on their grounds
+00:49 +412 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_paper_test.dart: tajweed colours keep their hue at night (within 40°)
+00:49 +413 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_paper_test.dart: a dark-page printing is never filtered
+00:49 +414 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_paper_test.dart: normal paper stays white under dark and RGB app themes
+00:50 +415 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_polygon_fit_test.dart: the catalogue is exactly one printing: the vector Madinah Hafs
+00:50 +416 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_polygon_fit_test.dart: no printing that borrows another printing's coordinates is back
+00:50 +417 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_polygon_fit_test.dart: EVERY printing in the catalogue can highlight an ayah
+00:50 +418 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_polygon_fit_test.dart: the printing carries its own coordinates, not a fitted borrowing
+00:50 +419 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_polygon_fit_test.dart: its polygon layer really covers the whole mushaf
+00:50 +420 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_provenance_test.dart: every printing records its source and its licence
+00:50 +421 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_provenance_test.dart: every printing records its source and its licence
+00:50 +422 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_provenance_test.dart: every printing records its source and its licence
+00:50 +423 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_provenance_test.dart: the top-level licence line does not name a deleted printing
+00:50 +424 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_provenance_test.dart: a restrictive licence is spelled out, not left as a bare code
+00:50 +425 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_rtl_order_test.dart: KFGQPCHafs: first ayah at the right end of the line
+KFGQPCHafs first x=382.80859375 y=-0.1875  later x=258.0338439941406 y=-0.1875
+00:51 +426 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:51 +426 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_rtl_order_test.dart: AmiriQuran: first ayah at the right end of the line
+AmiriQuran first x=381.3758850097656 y=0.2239990234375  later x=260.7305603027344 y=0.2239990234375
+00:51 +427 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:51 +428 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:51 +429 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:51 +430 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:51 +431 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:51 +432 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:51 +433 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:52 +434 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen true
+00:52 +435 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/notification_router_test.dart: NotificationRouter is the only caller of plugin initialize
+00:52 +436 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, cards, full screen false
+00:52 +437 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/notification_router_test.dart: nothing installs a tap handler that throws the tap away
+00:52 +438 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_endless_spinner_test.dart: no screen renders a failed future as a spinner
+00:52 +439 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, page, full screen true
+00:52 +440 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_escaped_dollar_test.dart: no accidentally escaped interpolation anywhere in lib/
+00:53 +441 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_escaped_dollar_test.dart: no accidentally escaped interpolation anywhere in lib/
+00:53 +442 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_escaped_dollar_test.dart: no accidentally escaped interpolation anywhere in lib/
+00:53 +443 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/mushaf_text_page_paged_test.dart: page 303, reading, full screen false
+00:53 +444 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_removed_book_named_test.dart: ar names no removed book
+00:53 +445 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_removed_book_named_test.dart: en names no removed book
+00:53 +446 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_removed_book_named_test.dart: es names no removed book
+00:53 +447 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_removed_book_named_test.dart: fr names no removed book
+00:53 +448 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_removed_book_named_test.dart: pt names no removed book
+00:53 +449 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_removed_book_named_test.dart: ru names no removed book
+00:53 +450 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/no_removed_book_named_test.dart: ur names no removed book
+00:53 +451 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/official_hijri_test.dart: a real AlAdhan HJCoSA response parses to the declared dates
+00:53 +452 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/official_hijri_test.dart: a declared date overrides the table - a sighted Eid gets no reminder
+00:53 +453 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/official_hijri_test.dart: the reader's correction is applied on top of the declared date
+00:53 +454 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/official_hijri_test.dart: every screen date comes from the declared calendar when cached
+00:53 +455 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/on_this_day_hijri_test.dart: (setUpAll)
+00:54 +455 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/on_this_day_hijri_test.dart: all but the two days the source itself is silent on have events
+00:54 +456 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/on_this_day_hijri_test.dart: the years were parsed out of the lines, not left inside them
+00:54 +457 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/on_this_day_hijri_test.dart: no wiki markup survived into the text
+00:54 +458 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/on_this_day_hijri_test.dart: the days that matter most say what they should
+00:54 +459 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/on_this_day_hijri_test.dart: (tearDownAll)
+00:54 +459 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/own_irab_asset_test.dart: own i'rab asset is complete and its books are labelled
+00:54 +460 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/page_surahs_test.dart: a page where one surah ends and another begins names both
+00:54 +461 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/page_surahs_test.dart: a surah that opens a clean page does not drag the previous one in
+00:54 +462 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/page_surahs_test.dart: a page inside one surah names only that surah
+00:54 +463 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/page_surahs_test.dart: three surahs on one page are all named
+00:54 +464 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/page_surahs_test.dart: a page with no data still names something
+00:55 +465 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: upright: one a row, header first, footer last
+00:55 +466 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: upright: one a row, header first, footer last
+00:56 +467 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: upright: one a row, header first, footer last
+00:56 +468 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_card_schedule_test.dart: the schedule reaches past tomorrow, so no alarm can strand it
+00:56 +469 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: sideways: two a row in reading order, odd card alone
+00:56 +470 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: sideways: two a row in reading order, odd card alone
+00:56 +471 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: sideways: two a row in reading order, odd card alone
+00:56 +472 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: sideways: two a row in reading order, odd card alone
+00:56 +473 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/paired_list_view_test.dart: sideways: two a row in reading order, odd card alone
+00:56 +474 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_card_schedule_test.dart: an unreadable time is dropped, never invented
+00:56 +475 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: wrapToDay an ordinary time is itself
+00:56 +476 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: wrapToDay a reminder after a late Isha lands on the next day, not on -1
+00:56 +477 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: wrapToDay a warning before a Fajr just after midnight lands the day before
+00:56 +478 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: wrapToDay midnight itself is 00:00, not 24:00
+00:56 +479 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: wrapToDay every minute of a day round-trips to a legal clock time
+00:56 +480 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: the five prayers with reminders exclude sunrise
+00:56 +481 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: the Arabic reminder reads as Arabic the counted noun agrees with the count
+00:56 +482 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: the Arabic reminder reads as Arabic the digits are the ones the rest of the app writes
+00:56 +483 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: the Arabic reminder reads as Arabic the verb agrees with «صلاة», not with the prayer name
+00:56 +484 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_reminder_test.dart: the Arabic reminder reads as Arabic every locale can build all three bodies with no key left raw
+00:56 +485 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_times_place_test.dart: (setUpAll)
+00:56 +485 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_times_place_test.dart: a second place the same day gets its own times
+00:56 +486 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_times_place_test.dart: a second calculation method the same day gets its own times
+00:56 +487 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_times_place_test.dart: (tearDownAll)
+00:57 +487 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_time_digits_test.dart: ar_EG really does format HH:mm with Arabic-Indic digits
+00:57 +488 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_time_digits_test.dart: asciiDigits turns both Arabic-Indic digit sets into ASCII
+00:57 +489 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_time_digits_test.dart: parseHM reads a time written in Arabic-Indic digits
+00:57 +490 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/prayer_time_digits_test.dart: a minute offset applies to an Arabic-Indic time
+00:57 +491 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quotes_data_test.dart: there are quotes, from more than one book
+00:57 +492 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quotes_data_test.dart: every book names itself, its author and its printed edition
+00:57 +493 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quotes_data_test.dart: every quote exists in all seven languages
+00:57 +494 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quotes_data_test.dart: a translation is a translation, not a copy of the Arabic
+00:57 +495 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quotes_data_test.dart: no quote carries an ayah, a hadith or an isnad
+00:57 +496 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quotes_data_test.dart: every quote fits a card and is a whole fragment
+00:57 +497 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quotes_data_test.dart: no quote appears twice
+00:57 +498 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quote_background_test.dart: every background is public domain or CC0
+00:57 +499 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quote_background_test.dart: every background records where its licence can be checked
+00:57 +500 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quote_background_test.dart: every background clears 4.5:1 through the scrim
+00:57 +501 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quote_background_test.dart: the manifest and the bundled files are the same set
+00:57 +502 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quote_background_test.dart: the scrim the app draws is the scrim they were measured through
+00:58 +503 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quote_palette_contrast_test.dart: every quote palette clears 4.5:1 at both ends of its gradient
+00:58 +504 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quote_palette_contrast_test.dart: the gradient is dark enough for a light ink at both ends
+00:58 +505 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_catalogue_test.dart: a reciter with no name or no recitation is dropped
+00:58 +506 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_catalogue_test.dart: the surah list is read from the record, not assumed to be 1..114
+00:58 +507 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_catalogue_test.dart: a surah URL is the server folder plus a three-digit file name
+00:58 +508 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_catalogue_test.dart: a recitation survives the library index round trip
+00:58 +509 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_catalogue_test.dart: garbage is an empty list, not a crash
+00:58 +510 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_catalogue_test.dart: Urdu reads the Arabic catalogue
+00:58 +511 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_queue_order_test.dart: each task carries its own creation time
+00:58 +512 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_audio_queue_order_test.dart: a held task is queued, not running
+00:59 +513 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_font_ligatures_test.dart: every KFGQPC Hafs style keeps its ligatures
+00:59 +514 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_reader_controls_test.dart: display sheet reveals the auto-scroll speed while enabled
+00:59 +515 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_reader_controls_test.dart: a page tap clears a selected ayah before toggling full screen
+00:59 +516 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_reader_controls_test.dart: khatma previous and upcoming counts are real navigation buttons
+01:00 +517 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: modes «الصلاة» as anyone types it finds ٱلصَّلَوٰةَ (2:3)
+01:00 +518 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: modes all derivatives of «صبر» include ٱلصَّٰبِرِينَ (2:153)
+01:00 +519 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: modes an exact word takes its joined particles but nothing after it
+01:00 +520 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: modes with diacritics, the harakat must agree
+01:00 +521 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: topic patterns keep their false friends out Nuh, not «We reveal»
+01:00 +522 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: topic patterns keep their false friends out charity, not the hypocrites (loosely «المنفقين»)
+01:00 +523 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: topic patterns keep their false friends out honesty excludes alms even through the loose form «الصدقت»
+01:00 +524 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: topic patterns keep their false friends out knowledge, not «the worlds»
+01:00 +525 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: topic patterns keep their false friends out parents, not «and the blood»
+01:00 +526 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_search_match_test.dart: topic patterns keep their false friends out paradise, not «embryos»
+01:00 +527 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_typography_test.dart: standalone combining waqf signs attach to the preceding word
+01:00 +528 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_typography_test.dart: standalone structural symbols keep their own spacing
+01:00 +529 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_typography_test.dart: a non-izhar tanween is drawn as the open tanween
+01:00 +530 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_typography_test.dart: the iqlab meem after a kasratan stays
+01:00 +531 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_typography_test.dart: ordinary Arabic spacing and already-attached marks are unchanged
+01:00 +532 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_word_search_test.dart: (setUpAll)
+01:00 +532 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_word_search_test.dart: a word said once is one ayah: عسعس is 81:17
+01:01 +533 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_word_search_test.dart: a word said once is one ayah: عسعس is 81:17
+01:01 +534 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_word_search_test.dart: a word said once is one ayah: عسعس is 81:17
+01:01 +535 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_word_search_test.dart: a word said once is one ayah: عسعس is 81:17
+01:01 +536 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_word_search_test.dart: a word said once is one ayah: عسعس is 81:17
+01:01 +537 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/quran_word_search_test.dart: a common word is many, in mushaf order
+01:01 +538 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ratio_call_sites_test.dart: no hand-built «a / b» pair survives anywhere under lib/
+01:01 +539 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ratio_call_sites_test.dart: no hand-built «a / b» pair survives anywhere under lib/
+01:01 +540 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ratio_call_sites_test.dart: no hand-built «a / b» pair survives anywhere under lib/
+01:01 +541 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ratio_call_sites_test.dart: no hand-built «a / b» pair survives anywhere under lib/
+01:01 +542 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ratio_call_sites_test.dart: the same shape is absent from the translation files too
+01:01 +543 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ratio_call_sites_test.dart: nobody rebuilds the pair as a Row of Texts either
+01:01 +544 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ratio_direction_test.dart: a plain «a / b» string really does flip under RTL
+01:02 +545 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_edition_test.dart: no startContinuous call passes a mushaf edition id as the reciter
+01:02 +546 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_edition_test.dart: no startContinuous call passes a mushaf edition id as the reciter
+01:02 +547 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_edition_test.dart: no startContinuous call passes a mushaf edition id as the reciter
+01:02 +548 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_edition_test.dart: no startContinuous call passes a mushaf edition id as the reciter
+01:02 +549 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_edition_test.dart: no startContinuous call passes a mushaf edition id as the reciter
+01:02 +550 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_edition_test.dart: the default reciter has a verified per-ayah mirror
+01:02 +551 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_edition_test.dart: a mushaf id used as a reciter yields no verified mirror
+01:02 +552 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_hold_test.dart: ContinuousRecitation.waiting a hold keeps its verse — that verse is where it resumes
+01:02 +553 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_hold_test.dart: ContinuousRecitation.waiting copyWith keeps the hold unless told otherwise
+01:02 +554 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_hold_test.dart: ContinuousRecitation.waiting a fresh run is not waiting
+01:02 +555 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_hold_test.dart: httpStatusOf a local or malformed URL is "no answer", never a crash
+01:03 +556 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_mirrors_test.dart: the parts match the script that uploads them
+01:03 +557 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_mirrors_test.dart: an ayah is found in the part its surah starts
+01:03 +558 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_mirrors_test.dart: a listed whole-surah set plays from the copy, the origin behind it
+01:03 +559 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/recitation_mirrors_test.dart: a list for another layout or an older one is refused
+01:03 +560 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_and_storage_test.dart: a reciter can no longer be left to a default
+01:03 +561 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_and_storage_test.dart: both queue call sites pass the reader’s own reciter
+01:03 +562 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_and_storage_test.dart: the repeat banner ends with the audio, not with a timer
+01:03 +563 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_and_storage_test.dart: the SnackBar action has a colour of its own
+01:03 +564 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_and_storage_test.dart: the storage hub measures the database it cannot see as an artifact
+01:03 +565 ~3: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_builder_live_test.dart: (suite)
+  Skip: hits the network and needs the pipeline's gitignored scripts/book_text_build; run with: flutter test --tags live --run-skipped <file>
+01:03 +565 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: every mapped edition is a real, named Arabic audio edition
+01:04 +566 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: no two reciters are pointed at the same folder
+01:04 +567 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: a folder name is a plausible everyayah folder
+01:04 +568 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: the list is the 35 that were verified, not the whole catalogue
+01:04 +569 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: a reciter saved before the fix is dropped when it has no reachable file
+01:04 +570 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: a reciter saved before the fix is kept when it does have one
+01:04 +571 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: mirror first, and the public origin right behind it the app mirrors exactly the per-ayah folders the script uploads
+01:04 +572 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: mirror first, and the public origin right behind it and exactly the whole-surah sets
+01:04 +573 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: mirror first, and the public origin right behind it a mirrored reciter asks the bucket first, then everyayah, then the CDN
+01:04 +574 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: mirror first, and the public origin right behind it an unmirrored reciter is untouched: everyayah first
+01:04 +575 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: mirror first, and the public origin right behind it a mirrored surah recitation keeps mp3quran as its origin
+01:04 +576 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reciter_sources_test.dart: the default reciter is playable and mirrored on the bucket
+01:04 +577 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reminder_tap_routing_test.dart: an open: payload reaches onOpen with the screen name
+01:04 +578 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reminder_tap_routing_test.dart: a surah number still goes to onSurah, not onOpen
+01:04 +579 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reminder_tap_routing_test.dart: each screen reminder is armed with its open: payload
+01:04 +580 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/reminder_tap_routing_test.dart: every open: screen name has a destination
+01:04 +581 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_adhans_test.dart: no removed adhan is still on offer
+01:05 +582 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_adhans_test.dart: azan13 is back in the picker and no longer declared removed
+01:05 +583 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_adhans_test.dart: the owner's three adhans carry the neutral labels he asked for
+01:05 +584 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_adhans_test.dart: no adhan entry names a person the owner asked to keep unnamed
+01:05 +585 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_adhans_test.dart: every adhan still on offer has a file behind it
+01:05 +586 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: the exemptions are real, not stale
+01:05 +587 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: ar names none of the removed scholars
+01:05 +588 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: en names none of the removed scholars
+01:05 +589 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: es names none of the removed scholars
+01:05 +590 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: fr names none of the removed scholars
+01:05 +591 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: pt names none of the removed scholars
+01:05 +592 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: ru names none of the removed scholars
+01:05 +593 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: ur names none of the removed scholars
+01:05 +594 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: no library book is by one of them, or names one on its card
+01:05 +595 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: no book is AUTHORED by one of them
+01:05 +596 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: the Sources screen names none of them
+01:05 +597 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/removed_scholars_test.dart: the channel and website lists name none of them
+01:06 +598 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.justify, 330.0)
+01:06 +599 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.justify, 330.0)
+01:06 +600 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.justify, 330.0)
+01:06 +601 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.justify, 250.0)
+01:06 +602 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sciences_pack_test.dart: the pack is named after the database it unzips to
+01:06 +603 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.justify, 175.0)
+01:06 +604 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.justify, 175.0)
+01:06 +605 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.justify, 175.0)
+01:06 +606 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sciences_pack_test.dart: the size on the gate is the size on the bucket
+01:06 +607 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.right, 330.0)
+01:06 +608 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.right, 330.0)
+01:07 +609 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.right, 250.0)
+01:07 +610 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/rtl_ayah_marker_order_test.dart: each marker follows its own verse (TextAlign.right, 175.0)
+01:07 +611 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: (setUpAll)
+01:07 +611 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: the whole catalogue, placeholder dropped
+01:07 +612 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: a title finds its book first, with or without the article
+01:07 +613 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: a title SAID aloud finds the book (owner, 2026-09-27)
+01:07 +614 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: a pasted link or a bare id finds that book
+01:07 +615 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: nonsense finds nothing, and results are capped
+01:07 +616 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: every library book mapped to Shamela exists in its catalogue
+01:07 +617 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_catalog_test.dart: (tearDownAll)
+01:07 +617 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_editor_page_test.dart: a page whose text is all hamesh parses to nothing but is flagged
+01:07 +618 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_editor_page_test.dart: an ordinary page keeps its body
+01:08 +619 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_editor_page_test.dart: the reader model carries the flag
+01:08 +620 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/shamela_nass_test.dart: every page parses exactly as the pipeline parses it
+01:08 +621 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sheet_search_test.dart: a plainly typed name reaches a vocalised one
+01:08 +622 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sheet_search_test.dart: a fragment from the middle works — this is a list, not a corpus
+01:08 +623 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sheet_search_test.dart: the number is searchable too
+01:08 +624 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sheet_search_test.dart: an empty query shows everything
+01:08 +625 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sheet_search_test.dart: a name that does not match is filtered out
+01:09 +626 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sign_out_scope_test.dart: every synced counter is removed on sign-out
+01:09 +627 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sign_out_scope_test.dart: sign-out no longer clears every preference
+01:09 +628 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/source_rules_test.dart: defaults are the tested patterns and all compile
+01:09 +629 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/source_rules_test.dart: a newer published file replaces a rule
+01:09 +630 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/source_rules_test.dart: an older or equal version is ignored
+01:09 +631 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/source_rules_test.dart: a pattern that does not compile never replaces a working one
+01:09 +632 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/source_rules_test.dart: garbage is ignored
+01:09 +633 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/source_rules_test.dart: line patterns stop at the line end
+01:10 +634 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/speakable_passage_test.dart: ayah paragraphs and inline citations are left out, the rest is kept
+01:10 +635 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/speakable_passage_test.dart: the 80% line on the real bundled texts: the Jazariyya verses pass, the unvowelled Tamhid does not
+01:10 +636 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: the quoted hadith are the database's own words tirmidhi 747
+01:11 +637 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: the quoted hadith are the database's own words tirmidhi 761
+01:11 +638 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: the window really contains Ramadan and Dhu al-Hijjah
+01:11 +639 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: never a reminder for a day a voluntary fast is not kept
+01:11 +640 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: no Monday or Thursday reminder in Ramadan
+01:11 +641 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: the 13th of Dhu al-Hijjah (tashriq) is not a white day
+01:11 +642 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: every other month gets its white days, on the 13th
+01:11 +643 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: reminders come the evening before, at the chosen time
+01:11 +644 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: both off plans nothing
+01:11 +645 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sunnah_fasting_test.dart: the Hijri correction moves the white days
+01:11 +646 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/supported_locales_test.dart: kSupportedLocales matches assets/translations exactly
+01:11 +647 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/supported_locales_test.dart: both app entry points turn the real plural rules on
+01:11 +648 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/support_intro_gate_test.dart: the support sheet is gated on the More tab, not on being built
+01:11 +649 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/support_intro_gate_test.dart: no other screen opens it
+01:12 +650 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_fallback_test.dart: a missing surah falls back to al-Basit murattal, R2 first
+01:12 +651 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_fallback_test.dart: with no connection, no network voice is offered (only a local copy)
+01:12 +652 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_fallback_test.dart: al-Basit himself has no further backup, so the walk ends
+01:12 +653 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_fallback_test.dart: an imported device file is not a surah and gets no stand-in
+01:12 +654 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_fallback_test.dart: originOnly drops the mirror and keeps nothing to fall back to
+01:12 +655 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_name_plain_test.dart: marks go, letters stay
+01:12 +656 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_name_plain_test.dart: a madda written as a mark is a letter (Al Imran)
+01:12 +657 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_playlist_test.dart: Maryam from verse 1: basmala first, then verse 1
+01:12 +658 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_playlist_test.dart: Maryam from verse 5 skips the basmala
+01:12 +659 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/surah_playlist_test.dart: al-Fatiha and at-Tawba get none
+01:13 +660 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: (setUpAll)
+01:13 +660 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 names its source and has lessons with content
+01:13 +661 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +662 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +663 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +664 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +665 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +666 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +667 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +668 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +669 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +670 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +671 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +672 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +673 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +674 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +675 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +676 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +677 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +678 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +679 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +680 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +681 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +682 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +683 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +684 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +685 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +686 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +687 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +688 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +689 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +690 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +691 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +692 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +693 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:13 +694 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:14 +695 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:14 +696 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:14 +697 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:14 +698 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:14 +699 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:14 +700 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: taysir_ahkam_al_tajwid_1 every Qur'an span is the mushaf's words of the ayah it names
+01:14 +701 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid names its source and has lessons with content
+01:14 +702 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:14 +703 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:14 +704 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:14 +705 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:14 +706 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:14 +707 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:14 +708 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:14 +709 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +710 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +711 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +712 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +713 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +714 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +715 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +716 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +717 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +718 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +719 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +720 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:15 +721 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +722 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +723 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +724 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +725 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +726 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +727 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +728 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +729 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +730 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +731 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +732 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +732 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tasmee_compare_test.dart: one bad word at the start does not lose the rest (al-Nisa 1)
+al-Nisa 1: 21 of 28
+01:16 +733 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +734 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:16 +735 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +736 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +737 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +738 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +739 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +740 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +741 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +742 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +743 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:17 +744 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +745 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +746 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +747 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +748 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +749 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +750 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +751 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +752 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +753 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +754 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +755 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +756 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: ghayat_al_murid every Qur'an span is the mushaf's words of the ayah it names
+01:18 +757 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: the Taysir is question and answer
+01:18 +758 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: the Ghaya keeps each chapter's questions
+01:18 +759 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tajweed_course_books_test.dart: (tearDownAll)
+01:18 +759 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: (setUpAll)
+01:18 +759 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: every lesson names at least one range, forward and well formed
+01:18 +760 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: every range points at paragraphs the book really has
+01:18 +761 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: a lesson starts ON its own heading, in the book's own words
+01:18 +762 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: a range marked as commentary is one, and one not marked is not
+01:18 +763 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: the verses of the lessons do not overlap each other
+01:18 +764 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: the ten lessons walk the book from front to back
+01:19 +765 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: the source is named, with the author and the commentator
+01:19 +766 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_course_test.dart: (tearDownAll)
+01:19 +766 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_lesson_text_test.dart: (setUpAll)
+01:19 +766 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_lesson_text_test.dart: every lesson has something to show
+01:19 +767 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_lesson_text_test.dart: a lesson never repeats its own heading as its first line
+01:19 +768 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_lesson_text_test.dart: the commentary keeps its flag, and the verses do not carry one
+01:19 +769 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_lesson_text_test.dart: the commentary comes after the verses it explains
+01:19 +770 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_lesson_text_test.dart: a lesson with no book shows nothing rather than throwing
+01:19 +771 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tuhfa_lesson_text_test.dart: (tearDownAll)
+01:19 +771 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tutorial_quick_tour_test.dart: every stop of both tours has its title and body in every locale
+01:19 +772 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/tutorial_quick_tour_test.dart: the quick tour shows each main screen once, whole
+01:19 +773 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/ui_strings_translated_test.dart: no screen or service writes Arabic that a key should carry
+01:20 +774 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/unzip_path_safety_test.dart: an archive entry cannot be written outside its own directory
+01:20 +775 ~4: E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/unzip_path_safety_test.dart: the unzip routine actually applies that check
+01:20 +776 ~4: All tests passed!
+EXIT: 0
+SECONDS: 94.5799407
+END: 2026-10-09T20:36:12.3646665+04:00

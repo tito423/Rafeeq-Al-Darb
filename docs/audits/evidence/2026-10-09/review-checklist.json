@@ -1,0 +1,3380 @@
+[
+  {
+    "path": ".github/workflows/ci.yml",
+    "lines": 58,
+    "sha256": "a3d9d7d49370a9528049140903d06b344227a5e8f3c065e660325dc73e0552a2",
+    "review": "pending"
+  },
+  {
+    "path": "build_github_release.bat",
+    "lines": 24,
+    "sha256": "851cc776f8862f8a163ab3df62ac857894ab205660908b89b08e7f21d625a683",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/build.gradle.kts",
+    "lines": 191,
+    "sha256": "585c7fb90acdfb2c8cb86e277e2fd92d31cef5a3858051524dbb31752ec5f2a2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/proguard-rules.pro",
+    "lines": 27,
+    "sha256": "72a14428daf2833bfb5f819bac5e5ee7f740d1b621c84c3eefe8bcd6a41f4fd4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/debug/AndroidManifest.xml",
+    "lines": 13,
+    "sha256": "8d941ca9b7542181d1a68a7d59b484015dd17619aee87e8f5fe347be495bf49f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/debug/res/xml/network_security_config.xml",
+    "lines": 29,
+    "sha256": "24f56501343cef6f5e7be0697eb2e40d7866eac86b4434c3d4fe92d2fef0857d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/AndroidManifest.xml",
+    "lines": 330,
+    "sha256": "89073959ecb9b3bf359fefd339d61e515e4b5f43db82f721811e89ab79a14866",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/AssistantListenService.kt",
+    "lines": 167,
+    "sha256": "99a413157f0cbb3b544f603f82c3512aaa43ab512f8e9643f27e0c46b4862836",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/AssistantOverlay.kt",
+    "lines": 136,
+    "sha256": "042ad0bad7d128ca72843a6e33616f87452084c8d132ac2cd6dc1dad7bef0094",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/DownloadForegroundService.kt",
+    "lines": 243,
+    "sha256": "8cb20661521c19ac4f2571cbec35a406154935e25355d40484df5e96da506640",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/MainActivity.kt",
+    "lines": 182,
+    "sha256": "9f36e3ac1c3f21388091dbc6cecea93e441123b28f8e5d38fd430a95dc947811",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/NativeStrings.kt",
+    "lines": 96,
+    "sha256": "28fd129d40f26fc15943d50ac639daacde21e7fcf5fa803341e70037fb784fd2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/PrayerCard.kt",
+    "lines": 365,
+    "sha256": "083cc70d47a5c70cec9bd54be730f6a5a4e8888dbc4b5d7898104c39b814341d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/RafeeqApplication.kt",
+    "lines": 65,
+    "sha256": "d97f25ffed78a3adeafd2f6b2a0a0d02457cbb3f265358d841ae25d10a3929a8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanActivity.kt",
+    "lines": 149,
+    "sha256": "89a410fd43f40dc25446840f232f0311be55cca26420901c0a087b87ca228b68",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanAlarmReceiver.kt",
+    "lines": 68,
+    "sha256": "99b6afdf88cb2bd69355fdd054dcfb588872f2b0633b541118f0fe056c0a3ebb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanBootReceiver.kt",
+    "lines": 24,
+    "sha256": "c4c0d8e4d93d8bc4bd42d4f6b9ebddfe676e4e8ea9822fcb61d5b699c10744ba",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanChannels.kt",
+    "lines": 183,
+    "sha256": "ec420fad511247fe2ce0126bf55fabf11033b06a853119f24adb879cf04aff88",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanNotifications.kt",
+    "lines": 171,
+    "sha256": "e4c09e2ef7d49deba730f1428b8776494b6c1b6f9d21b06962fc628b0648b9ef",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanPlayer.kt",
+    "lines": 253,
+    "sha256": "d4eef93860e906ddd2b5a78a90f12f9dab131b3abbaab094895a1128b7acbb8c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanScheduler.kt",
+    "lines": 203,
+    "sha256": "ca30505d511760dc8102f1c7a33f4a3c0365d0353e7831e35cb3e37bea3e02de",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanService.kt",
+    "lines": 242,
+    "sha256": "7dc22d47b6b04b508aefa1ae786102447c46286f4609870743dcb60d6fce52e1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanSpec.kt",
+    "lines": 156,
+    "sha256": "e5a3777f94fcf5372fbfef7863b1275103f389937cb115a021e893c3d3c92526",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanVibration.kt",
+    "lines": 74,
+    "sha256": "fa05afc136f462835cb9ecd0420df8f656212cf9e1057d844c55baee70a4a149",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/AdhanControlChannel.kt",
+    "lines": 132,
+    "sha256": "f5c89a21b9b76d03fb099edd4596982d789762a6bdda423bb9ab956765c7fe3f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/AssistantChannel.kt",
+    "lines": 140,
+    "sha256": "1942545223b131e4cf6c13178ebcbc95987a8757a6d363ed29a42fc21a8d3964",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/ChannelNames.kt",
+    "lines": 22,
+    "sha256": "da120bd571f1371c04e072fb12a177dde34dfdf0aecba6fff8341882abf29588",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/DownloadServiceChannel.kt",
+    "lines": 87,
+    "sha256": "b96a0b1b559e9591a2201b2dd96dd4a5940e2b94bf22cbe3e177df5ed0c7ee65",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/MediaAudioChannel.kt",
+    "lines": 79,
+    "sha256": "637007a3444e36a598ab4010c74bb2650a9266ff4674ec87aee29582b85b44be",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/NativeStringsChannel.kt",
+    "lines": 45,
+    "sha256": "aad9fb2feea5517519dd760ed7c7f7233bb7cf679c3cdb5ea2a4b8d99b7a214f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/PrayerCardChannel.kt",
+    "lines": 65,
+    "sha256": "f00bad12e2842557fb766485ee16d2c8728139de75b17574fc0f9a4057047ee6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/channels/VoicePlayerChannel.kt",
+    "lines": 164,
+    "sha256": "c693c98fced83ddf6d67d3ed651674db36c247113c9e1b2976cb64a141d66978",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/drawable-night-v21/launch_background.xml",
+    "lines": 15,
+    "sha256": "6fec68e0386427563fef852827a60e378c7d35304668338830b9c5eec7ea93d1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/drawable-night/launch_background.xml",
+    "lines": 15,
+    "sha256": "6fec68e0386427563fef852827a60e378c7d35304668338830b9c5eec7ea93d1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/drawable-v21/launch_background.xml",
+    "lines": 9,
+    "sha256": "42b8d099f0a6d79e90a67949d7a655c09458c734aa1bd8c4d7c73a79b28397ea",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/drawable/launch_background.xml",
+    "lines": 9,
+    "sha256": "42b8d099f0a6d79e90a67949d7a655c09458c734aa1bd8c4d7c73a79b28397ea",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/layout/prayer_card.xml",
+    "lines": 65,
+    "sha256": "d078fbc2bee90f1c4d82c35751609da10ddca0a0afdb51fc7d357b0b052294d8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/layout/prayer_card_rtl.xml",
+    "lines": 48,
+    "sha256": "fc4831e70d314ce1933a308eaca36e07fb667b3aa6fb568887812f77fa554ea4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+    "lines": 9,
+    "sha256": "fe16ab84762f42e1166a008c9c77227fa3ba8399088bf9667e83d04bc4322af1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/values-ar/strings.xml",
+    "lines": 6,
+    "sha256": "1b8ec0af91d7c3a86e83d73dd7a0928896bb1cf04825a161db0b7d1c18a8b786",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/values-night-v31/styles.xml",
+    "lines": 21,
+    "sha256": "8a262509a6f5d8d996d720d7ebc5641d86843a56bebf103e3debc55be2ea65ca",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/values-night/styles.xml",
+    "lines": 22,
+    "sha256": "cb6b7d64537c92955a21cb460a5550c849381f9ac51ba93e505343b933dcd31b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/values-v31/styles.xml",
+    "lines": 21,
+    "sha256": "589ea7d42faf02538b35504b42f0ae29afa1f6c7e37f5bf24ddbc774603975b9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/values/colors.xml",
+    "lines": 4,
+    "sha256": "55b1a0714f582010edd1bf4cc6c9ab760af48ea2fff37d5fecd26b14eb838ca4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/values/strings.xml",
+    "lines": 17,
+    "sha256": "28b0d497455f07fe5a9e24cbb3d15d4ba17c39c18ea148555b0a389851c0e562",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/values/styles.xml",
+    "lines": 22,
+    "sha256": "ad400d5305a8292d473ee60f3fd0e5ce2a38299c474ea44a77b758109903afc8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/main/res/xml/file_paths.xml",
+    "lines": 8,
+    "sha256": "a0d79becae7956471c8de65ac648b2165aed1ee2affcada195d3ec7db3a01fb7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/app/src/profile/AndroidManifest.xml",
+    "lines": 7,
+    "sha256": "b01a4541a8144c15bc617bab7eb267c99fa1476368fbbda5a12cdbf4e316a34c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/build.gradle.kts",
+    "lines": 19,
+    "sha256": "3de78548a7b8b29fdc91980a8a618d99491bb794d5d09e0098b2d4e0f27e108f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/gradle.properties",
+    "lines": 4,
+    "sha256": "808fb9cef4d65a4f31ccaa6317256129a43656b713f66f202e38695a20325a40",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/gradle/wrapper/gradle-wrapper.properties",
+    "lines": 5,
+    "sha256": "1220fdd333a881e47441de07b23f9dd1ebd35459730543ae429cf249847d91bf",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/android/settings.gradle.kts",
+    "lines": 46,
+    "sha256": "46026cef519f70f15b2211c6d341633939043430afd63e9f5aa38deb48fded09",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/adhan_entry.dart",
+    "lines": 111,
+    "sha256": "26772f876c47644916399c24b9f1df8b2156a2ba8168f53cf972989b3452f114",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/app_locale_provider.dart",
+    "lines": 34,
+    "sha256": "707e7045aea8f7921a19ace50e0ef163b6057ffeaa652a3924afb67b3a4881b9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/navigation.dart",
+    "lines": 16,
+    "sha256": "7225ffb41581a21a5f19c387e59b3db9ebc26b56a2587e53694d63ce8ac6fcca",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/notification_open.dart",
+    "lines": 76,
+    "sha256": "f4c4ce7ee1e67c351821cdd5c81d351c021163c926f7da54ec24f654f17ab936",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/rafeeq_app.dart",
+    "lines": 220,
+    "sha256": "6bf6537404d4c9136481ae2fbb80bf52d111e80f5a6ae2aea546e731f8814fdc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/shell/app_shell.dart",
+    "lines": 587,
+    "sha256": "b2edaf36457a542142cd14d0ed7179267027b0af597d5d1d65ea49d8f192ff53",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/shell/home_button.dart",
+    "lines": 27,
+    "sha256": "89d5ec632c729a033e5a4d00249170bc51a2c447fbdb420aa258a495483c8fef",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/shell/side_tabs.dart",
+    "lines": 117,
+    "sha256": "b5fd9873e317e3d302c59ba61250f60ebee304996864f17dca9dd7db793db430",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/app/shell/tab_request_provider.dart",
+    "lines": 79,
+    "sha256": "53030588203106fdeb630cede03608423cd52a8c5b8324342e78116d5a2de670",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/config/app_config.dart",
+    "lines": 300,
+    "sha256": "6eea8d0c016057f3485cde2088dd832fc7fcc5976decc6edf21a083d7ad0303f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/config/content_mirrors.dart",
+    "lines": 122,
+    "sha256": "3a26e8368b336e3183de658de8df4e5c0c3000b7522ce40bb497d5885d257f1a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/config/prefs_provider.dart",
+    "lines": 8,
+    "sha256": "2fefe29803e23e80d1547de2b5ed6a2e2589090912162998f7f88c35cebeadc3",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/db/azkar_repository.dart",
+    "lines": 73,
+    "sha256": "52dd64ef1b21ea57a2436948ef663bf866a7dfb74e9466f35ea290c2b733fa8d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/db/db_helper.dart",
+    "lines": 113,
+    "sha256": "2e098098b8d6cd6db0fa2d54fef03e6d0473f63966537b337acac8801b5f7622",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/db/hadeethenc_repository.dart",
+    "lines": 305,
+    "sha256": "43fe1f80dc95012ebe9826fd31449e1b6d32012d514d3629d385c7e94357905c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/db/hadith_repository.dart",
+    "lines": 400,
+    "sha256": "9721ba7369d8e97ef2b39c487b099a86c2740733938235e1640402180ad20f6c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/db/models.dart",
+    "lines": 259,
+    "sha256": "1fbaa4ee0b1685bb0156f3508981161b5085b168cb68f41480784f53e8998ccb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/db/quran_repository.dart",
+    "lines": 310,
+    "sha256": "58e2296a75babac5bde88302892d8c1b91cf36754d8329562650babe8f375ebb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/db/sciences_repository.dart",
+    "lines": 311,
+    "sha256": "644c556987674be35ce22ffb33fbdff58cf8c3eaed6ce178a8d6ebe5ce99fcf0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/i18n/hadith_grade_i18n.dart",
+    "lines": 109,
+    "sha256": "5df8b644bf24799398d0722ec7e5e4247db5a90d2bcc845679de423a5f384aee",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/i18n/hijri_months.dart",
+    "lines": 31,
+    "sha256": "26b6c50305a0692df8087d0e8c3255cf2b8d1c12234a811e7da14d58cbf9b5f4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/i18n/isolate_strings.dart",
+    "lines": 92,
+    "sha256": "cb019462726da0b43ae9a37380ac612719a7219e02bd9752fdd4b9b0ceeb9c8d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/i18n/proper_name.dart",
+    "lines": 27,
+    "sha256": "85af9acc1cc2237bbb698dded23a73d9ca3d61b141e696e762ab5075e7e52f64",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/i18n/supported_locales.dart",
+    "lines": 40,
+    "sha256": "dece6a02e1511867321a87f5d592bfc62da69e979dc9db6a68d71ea14e9de584",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/models/adhan_mode.dart",
+    "lines": 25,
+    "sha256": "69dfbdef5c69cfc09e21933a1858ad06a007a8ab2ab7550a8db6d2843fccafce",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/models/adhan_option.dart",
+    "lines": 103,
+    "sha256": "a6995b1753d119d2aee7162acf40f54f5b78ff631e20840e81d5eb114e77e6fa",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/models/prayer_calculation_methods.dart",
+    "lines": 328,
+    "sha256": "a1de821d7d553d7d624d0e7a24a687425f1462a848f127d107d471660046c2ff",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/models/prayer_times.dart",
+    "lines": 105,
+    "sha256": "33c9047f2976f4b289939ded68257114d8dd5c6238820210052f1159447350ab",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/adhan_catalog_service.dart",
+    "lines": 132,
+    "sha256": "0d26945130caf3550515979f893d8b48335951943d736b87ed9da6b361b2d519",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/adhan_native.dart",
+    "lines": 402,
+    "sha256": "0d88f9848f3d95f5c4c8d864b169dad25374a51351407e267b9e2009575147ec",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/adhan_uri_bridge.dart",
+    "lines": 67,
+    "sha256": "af3d77d39a6b14ccd340dcf2eca19162da2e54dc38b963c4244f06a0169bdce0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/alarm_permissions_service.dart",
+    "lines": 191,
+    "sha256": "a2b2c7682f92a412324ec30ff711acbd2a74c70b51c5ade93babf379d71b6abc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/audio_exclusive.dart",
+    "lines": 71,
+    "sha256": "b913292efda986cbba842db427b2c527b8b4ff48dce0769f1b804e48967bda47",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/audio_failure.dart",
+    "lines": 88,
+    "sha256": "fc4972b2b8c1ca3d02f145e70deb73728c468b33ef7eec543ec4c44a34d5197e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/ayah_audio_service.dart",
+    "lines": 810,
+    "sha256": "3cd16ade4630aebd4867c9595651df88ef8d0be21d35f2146763ca88217cfef3",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/azkar_reminder_service.dart",
+    "lines": 102,
+    "sha256": "a2ba06b12219b02d920e1116cd7ac875dc868c8ae280f9f115ad4cc6638ba62c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/city_catalog.dart",
+    "lines": 253,
+    "sha256": "c7749059d5b6495a1f45ff17ea1c0c92f4ccaa5fd6419ec93e7ffd14082b75f1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/continuous_recitation.dart",
+    "lines": 75,
+    "sha256": "5a2eab6699372b1587ef9b9b05c52fb8437d1c3bef87519a82e176bf76e9dde6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/continuous_recovery.dart",
+    "lines": 277,
+    "sha256": "795b2d8a5b47eba626befa4a2a54904a15f287281b6990132b65f45dbd1e46c9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/download_engine.dart",
+    "lines": 455,
+    "sha256": "25d6bd26fd991e98c267e327a31e359c654dd4a32b10c024e89e0e24f8ca00fb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/download_foreground_service.dart",
+    "lines": 119,
+    "sha256": "722a65e78195e3152b156ddb4df679b30698fd7269dcefe831e47ebe0e2e72d8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/download_manager.dart",
+    "lines": 687,
+    "sha256": "87a6061bd89e5c52c639e498a1a06b2d95a0b7ba5b8729c7d266831687332ebd",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/download_notifications.dart",
+    "lines": 175,
+    "sha256": "94f7c305b055314c860155d6b4e8b4469707dc18709f020136ec6a8920cd1868",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/finish_pauser.dart",
+    "lines": 40,
+    "sha256": "d73a4a143302d3ce2c80469ca68bdaa44bfe27fbd99cdf4d8437df7f29170e32",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/khatma_reminder_service.dart",
+    "lines": 66,
+    "sha256": "e392f361f060e29593718414df004ea38947ba9b8ef7ebc1457c67a00c99dfae",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/location_service.dart",
+    "lines": 340,
+    "sha256": "5a8b6d59e1eac91c2ac406c70c83fd6e0014a9955c1f210a360c7000d6ff6785",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/manual_location.dart",
+    "lines": 102,
+    "sha256": "e4e15da7f25cdec01c53ad4f6049b167b1561840009190a796be7822e76a7a43",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/native_strings.dart",
+    "lines": 62,
+    "sha256": "590364605ce79fe3a8f7f965f13d2a43980cb8df7a526a845a9d5c04776dea66",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/notification_router.dart",
+    "lines": 131,
+    "sha256": "1dd7a5b9a2701a56e9b5a87fa91d23cc378afcb3d2c47bf35b04477d6ccb2c47",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/official_hijri.dart",
+    "lines": 128,
+    "sha256": "e2f219ee6a5e3989f4da53bf8f09085c781ef8874ac3a1704cf5181f0c72f941",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/official_hijri_provider.dart",
+    "lines": 12,
+    "sha256": "98d5b47d23120ebf18a5fcd450522bcbd182404378406e647cc4df6e4f8d48c2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/prayer_reminder_service.dart",
+    "lines": 210,
+    "sha256": "f6f0000fb4767f9206bd8a254f4a2ef13914398e234befa0bd3e1a24d5f1af98",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/prayer_status_notification.dart",
+    "lines": 281,
+    "sha256": "098e58bca0327f0e51c9e3b17e4619192a1c00ddf3d3c298a7094f3d6abeb4f0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/prayer_times_service.dart",
+    "lines": 194,
+    "sha256": "74a0dc829cc218d7cfa158db508ab17663a8078934df94d50cbb428ef8f45a5b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/quran_api_service.dart",
+    "lines": 239,
+    "sha256": "8bcfeff1303dfdacd6a4f6f4821ab57086f4cdd774a3626189419bec863727e9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/quran_translation_store.dart",
+    "lines": 191,
+    "sha256": "d2d19accea4b624acf4a465b0d7d9b2dec88f72a56ceb07614db2477453e8d32",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/recitation_mirrors.dart",
+    "lines": 109,
+    "sha256": "cd2eb0146039987ff3ee9c0f7b813bd8b18683ea4df8aa840ac54923aeaa47e6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/recitation_resume.dart",
+    "lines": 58,
+    "sha256": "7afd90835351d0df602a4623dae1c9ecd37e77fd8b3cd1221623def3d5268b46",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/recitation_source.dart",
+    "lines": 202,
+    "sha256": "2dd85f313896ffd4cd9480f776e1c0a2147117722f099efd472d30ab7e25ba49",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/source_rules.dart",
+    "lines": 183,
+    "sha256": "ae2b880372c20b7e21cad20c4e4e0478912abcebc653e9af4e5f2b2c48de4e84",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/sunan_suwar_reminder_service.dart",
+    "lines": 92,
+    "sha256": "0331cf23448a019c2c9ecfe7f5ebc81f43018fe5578d72398e1a0a942099c7e5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/surah_playlist.dart",
+    "lines": 35,
+    "sha256": "b1d2a49dcc7b0c35c9bf68967225080f72c3bb5d14356baf6a916f09eb75d18b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/sync_service.dart",
+    "lines": 361,
+    "sha256": "e090009175452c490f2b132a1d4b722972a25868713ee18ba203c3ff23b5c14d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/services/syncable_shared_preferences.dart",
+    "lines": 99,
+    "sha256": "824904c5f10572011d7c0a3f98f1a8300f112afc4879ef46aeb1d641b1add669",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/app_colors.dart",
+    "lines": 119,
+    "sha256": "582918002395c8332bebdc6efdf5f7fc17c4c6946dba47708033604603d68eec",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/app_font.dart",
+    "lines": 63,
+    "sha256": "4f6774e5a56b94a655cd1fc8faaa680e474b9d77681472b8d43e7611ede87ecf",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/app_spacing.dart",
+    "lines": 18,
+    "sha256": "e0bb2c16a2506702b129ea4370934ab5e6069187ec37c5264d419930f39e3f98",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/app_theme.dart",
+    "lines": 278,
+    "sha256": "9e42bb88a853e2f59697c610b999ac24e0fe6462b501f96109b42e0619f52892",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/app_typography.dart",
+    "lines": 116,
+    "sha256": "ebd3ab470211cf07dc863c461449670e0d1eba528b7f31b949eb0c251fb2c766",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/hero_surface.dart",
+    "lines": 155,
+    "sha256": "4370e02c1903583ab98a58b45b73a83db89fc5191036c92456a00fa005186bf4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/rgb_backdrop.dart",
+    "lines": 424,
+    "sha256": "d107ea6ce316b548e8bd36676ae50b8f67b63b2a7e9396c0390aa2e628cb205a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/theme/theme_controller.dart",
+    "lines": 101,
+    "sha256": "2b8920c4b611012746fea7cf12ff3537896fec7aa707eb3e0a5a30e91c0c5b48",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/arabic_normalize.dart",
+    "lines": 292,
+    "sha256": "ce890e7f5e9ece4e1042e2d95f533b0fc0b8e17a8f913e81ebd41ce0c46effc0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/byte_formatter.dart",
+    "lines": 121,
+    "sha256": "a76a9e15e42c361fad047a6604fd0c5ab14da0683a44f04de3219278c4e7b912",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/digits.dart",
+    "lines": 144,
+    "sha256": "24c5acd0dd55d9e65550b65f1ff675aff53680d83a0daf8bdb2ce53d5e6786e2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/external_link.dart",
+    "lines": 56,
+    "sha256": "8aaeb1dcc3469035de0e1ceb3e5815865227a377eeba3146f5185c3195e6251c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/http_status_probe.dart",
+    "lines": 29,
+    "sha256": "668d1276615187683e1304f6f2a425a3625661c2d613f96f9d9735f6a4e99c45",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/name_match.dart",
+    "lines": 71,
+    "sha256": "0b4a179a08cdfd5375121a84af3641fb26e8788ada7a5def58bb8e1cba9e5fa1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/quran_search_match.dart",
+    "lines": 160,
+    "sha256": "0b460145c6a1117c6c370fd39c564b869d9e534d8a9fd5bf06517c047ee103af",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/screen_class.dart",
+    "lines": 43,
+    "sha256": "7e7c514d4b42f1fa334b08ccd75d175599975b0b4a7ea9f500944bb2b047c492",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/stable_insets.dart",
+    "lines": 43,
+    "sha256": "187aa35387c3b08c41e8cf63fa051ea43bb848022e65e8fa2dafb6b97ef84a2c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/startup_trace.dart",
+    "lines": 65,
+    "sha256": "81cdb242ce6fd01c54821a6ffde84c3c4effcf14ab1251aac66802c0eaf74224",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/time_formatter.dart",
+    "lines": 126,
+    "sha256": "f44cc947730b35c8ab7ea5bdff8f07d223840addbc857f1617c0663708b62759",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/utils/user_error.dart",
+    "lines": 33,
+    "sha256": "9daef879f0c4fa762f1d7210121ba80bc94b3d990919ebae29b69e9b3661fc2c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/accordion.dart",
+    "lines": 336,
+    "sha256": "1a83babdfb1616fc9fc4bcf600d05a6c2d3d224435fea9102dee0502fa5e21eb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/arabic_text.dart",
+    "lines": 90,
+    "sha256": "7728dc188a0a9fa81b93a9ebd23d71532ffb535e5fb58cc66e396a774027d892",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/arrow_scrollbar.dart",
+    "lines": 320,
+    "sha256": "a7c9f119fa95569670a80dc574de251d1198d9ae72b7438743f26cf75d366c97",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/calm_card_ground.dart",
+    "lines": 220,
+    "sha256": "978d27bb1172c3a7f46de0b879a7ec0a36c6620f4f73cfb5e38a747d354b5e65",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/card_route.dart",
+    "lines": 401,
+    "sha256": "77e0c0764945f9cf058858d827ad355976027acf7f0b6069edc7a9347934d9a9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/error_retry.dart",
+    "lines": 45,
+    "sha256": "55b0ba676e03e9a5820ca256af7e0bade3a7c6167f174a20e0f01e9545f0783c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/fitted_sheet.dart",
+    "lines": 35,
+    "sha256": "26b019a91cbf50d46b3c072f4f01546e80d6aa3be0a73c8364800c0a23a997a7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/focus_ring_overlay.dart",
+    "lines": 143,
+    "sha256": "32bd8415885ca61f5988afc8420e4a10f16e657214cec54f688378da00121b2b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/future_view.dart",
+    "lines": 68,
+    "sha256": "346482bdf381e6020701e0f438757913982ffc5cef0a4b5a2969c623d114670c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/headed_list_layout.dart",
+    "lines": 57,
+    "sha256": "e34d3d0360fff2e302a3b11ab412bec7b1ac5da691f5c03528d0ca236e3abedf",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/islamic_action_card.dart",
+    "lines": 186,
+    "sha256": "d6865eb24fcfb759726a219cd2525411db9f6dc35a3f68314b8b87a7ca3df4bf",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/islamic_pattern.dart",
+    "lines": 180,
+    "sha256": "1c00750eb597c0e39f6279c5da56a1e6be966d81eeb8ee6212e0f54441b9e684",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/islamic_scene.dart",
+    "lines": 282,
+    "sha256": "fdc0f68c9f6dd1a013a529375907c45ebad59f9f43d280d29aba7b8b77192885",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/measure_size.dart",
+    "lines": 68,
+    "sha256": "40afe29f005fa7520bc632500993cca1f2d25b3bab165d5fd534504194edbd3e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/mirrored_network_image.dart",
+    "lines": 47,
+    "sha256": "3e3b0461eda8ca15da240f25f067c2f3bb970b4ed67f595ba787e73f3ed4541e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/more_group_accent.dart",
+    "lines": 27,
+    "sha256": "cf5f23b00a8d7eeed8a706ad40896b42ef4860f531eda40375311bd1c40a9288",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/mosque_backdrop.dart",
+    "lines": 89,
+    "sha256": "440996229733e303c882dbb63ec0619c36baac4e0e0d98f872cd3e87e68111ea",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/ornament_backdrop.dart",
+    "lines": 70,
+    "sha256": "3cbd13bc3dbd0a0a76e2f329fd2a796d7bd314124f49edadf3ea1b3bc4c2e8b5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/paired_list_view.dart",
+    "lines": 164,
+    "sha256": "9559bc19b5bf3fc815676be71e14dafc696498718164b031557e39fdb93f45c7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/readable_insets.dart",
+    "lines": 23,
+    "sha256": "98893ed3cca7286623336d02d9079c33360a3115e32baa02d94440a848f0730a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/recitation_failure_snackbar.dart",
+    "lines": 86,
+    "sha256": "1e7926473e2c2dda804e99880710c6c4b72b326fb34506f30893bf824149980a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/remote_tap.dart",
+    "lines": 45,
+    "sha256": "66772bf4a5114d94921a5b04e3af853898b54b87b5bbf35f2d6eeee334709d8a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/staggered_entrance.dart",
+    "lines": 83,
+    "sha256": "f0e2368e275051d5ed6fa50e5c26b680bd91f233618934952f9ca2e752637bb4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/toolbar_action.dart",
+    "lines": 221,
+    "sha256": "126da11d285e104e3e6a6b44bb3fe83d5320fd6d993774de762f4c49ea148dc8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/core/widgets/two_pane_scroll.dart",
+    "lines": 94,
+    "sha256": "4d6d22e8221c8779906d4bf9c8fee9addb3128118bb916d60b21769e0deafcbb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/adhan_background.dart",
+    "lines": 93,
+    "sha256": "0a556ca1d2a738e99fb7573f37df28047495a3e03d01543c097d9daf253a9155",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/adhan_catalog_provider.dart",
+    "lines": 30,
+    "sha256": "124458256b5d4c85ec3b7e8f227c887be85d62b82bba24ff82a1d4ea859989ed",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/adhan_scheduler.dart",
+    "lines": 157,
+    "sha256": "b7ff7d87655afbf2b783a63227c1d2bcb758004a9fa2ed451a8764f11a83bea5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/adhan_settings_provider.dart",
+    "lines": 272,
+    "sha256": "37279a74cf3647bfa5827f94b38a2ae1844aba840112890eec611109881feba1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/adhan_text.dart",
+    "lines": 23,
+    "sha256": "0c8b10197366ca0f41fac60705e3b560ea9f4bd8e5120378baede5d8820167f2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/azan_subtitle.dart",
+    "lines": 212,
+    "sha256": "b1dcf7b9ca455b63cde2051880989a27708fb6b14c89eef6d6d5e816f7b1d986",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/prayer_adjustments_provider.dart",
+    "lines": 123,
+    "sha256": "69b3e1bc12f4f2da3bdb31e3dcfe3b17d0fac9c64456c6c5b8b032b428767163",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/prayer_look.dart",
+    "lines": 10,
+    "sha256": "ea2b01fd6622b954cf1e1fe8088aa42b32a3026c31fd7beb28e6cb8691e93147",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/data/prayer_status_enabled_provider.dart",
+    "lines": 29,
+    "sha256": "295f466195ed6017254b1e5c39df847a716592916233b5d5e590240c4ca43e37",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/adhan_preview_launcher.dart",
+    "lines": 47,
+    "sha256": "2f4a112df3f8d34c8ce91728ec19144de486168fc3fb82f3cce434c4db81f7b7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/screens/adhan_background_screen.dart",
+    "lines": 205,
+    "sha256": "35653079aca01f10fb83113c7712785a4cb6f6cfae9f78823acaf151050d8500",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/screens/adhan_settings_screen.dart",
+    "lines": 681,
+    "sha256": "c9ec6640829a2eb1252356175bf6552ee4423679406a1c47ef7b937125c7682c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/screens/azan_player_screen.dart",
+    "lines": 542,
+    "sha256": "ffb0a9be38629c9ff5cba3075170265cb33cfe3bd71413f90da94410d5f0eeab",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/screens/prayer_adjustments_screen.dart",
+    "lines": 564,
+    "sha256": "500312eedd2334772fd2ff03040086a41251aa5c74421f57f207372bf82a4658",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/screens/prayer_location_screen.dart",
+    "lines": 369,
+    "sha256": "d483340c25914b8b66da33c8dfa979633f61a534b5c16fd756e332e8673bc968",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_background_painter.dart",
+    "lines": 518,
+    "sha256": "af873e22ed27566355aedf42ae777d84b220c1d6ccc8407e661536284d3243e3",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_backgrounds_card.dart",
+    "lines": 35,
+    "sha256": "8a459c9b63dbf984289dfcb85c8b5e11a5d0e73d0efda64652d2f308775c8ed1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_choice_cards.dart",
+    "lines": 456,
+    "sha256": "149b426a428e8cac3a190ab5ecb143dfde9e4754c14db4b2984529df7536e0d3",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_preview_card.dart",
+    "lines": 54,
+    "sha256": "5fba01acefd33f95f13fda85af897eae6c28be35408e40c39b3e59c0b3089c8d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/widgets/adhan_scene.dart",
+    "lines": 532,
+    "sha256": "f1b6bb9bfddfa9346b8957cff4893f0bfb31940fa4261907ad77724101a3f0c5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/adhan/presentation/widgets/alarm_volume_tile.dart",
+    "lines": 122,
+    "sha256": "c29b7b60888c99b85e29b2977ab66668b6ff4099847d2a43a9cabe84866d6a4b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_ayah_ref.dart",
+    "lines": 212,
+    "sha256": "1d4ca3612588547355c05c958832b1f7d52242305b2ca3387adcec71d2d624e6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_destination_match.dart",
+    "lines": 97,
+    "sha256": "ea506ea838fe52106a21268266fd449f1e1441c1263a445498b225cc33302930",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_detail_intents.dart",
+    "lines": 358,
+    "sha256": "ff9fc1140a92c6b4ff0f2ca7dda664919baeb29881c0ee1eb1cf8159c1ff0e1f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_distance.dart",
+    "lines": 108,
+    "sha256": "743ea86f38d315e757d941839501c4ceec1667c6888113d9dcf0cb9939f787c8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_intent.dart",
+    "lines": 790,
+    "sha256": "255e6a7f919887199671864b3cc179f5444edc9d9f0325c964883d80c2a0e130",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_lexicon.dart",
+    "lines": 652,
+    "sha256": "99c5779c40b92701cab4df1162cb7880e45eeed40cbfddf1ae6c86308b69b2e8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_screen.dart",
+    "lines": 94,
+    "sha256": "675ca3ac97efceb090780868bfe4f1cec93deaeed9a6397374577819364b1ba2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_settings.dart",
+    "lines": 45,
+    "sha256": "f6d788e89e57a23e6909e998e60c8a92eb84581673fa7ca32553aae883dcbdb8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_settings_map.dart",
+    "lines": 77,
+    "sha256": "057593b3b19682831288d51af08a06219ffe66203dc91a37b10dd854041f56b5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/assistant_wake_word.dart",
+    "lines": 52,
+    "sha256": "78a227a1c6b82942f6ee0bb1e1a364bab6664065d382bfd1111a10f5fabe73f0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/rafeeq_diag.dart",
+    "lines": 99,
+    "sha256": "b924fa9681eec0e353da77941b7c5ccf1be1b340ff0b50aac17ab302f9eee1d9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/rafeeq_ear.dart",
+    "lines": 301,
+    "sha256": "6c79b329909b41c26aba40b20943db64e5f733c16c81954a6a3044b6cd23a2f4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/data/rafeeq_voice_pack.dart",
+    "lines": 193,
+    "sha256": "ce8cfa1c1b503e8f37515a0ad30bcd676ed3652116c486dd81efb7e501565a0c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/presentation/assistant_describe.dart",
+    "lines": 63,
+    "sha256": "81824b7adeafb1dd3d11b1be38518ca681b391f8d9248c2989c3e2c312540eab",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/presentation/assistant_quran_word.dart",
+    "lines": 207,
+    "sha256": "13e16206ae80f6cce62973caddc2dc837d10fffa36e613dc9b1477e587637143",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/presentation/assistant_settings_card.dart",
+    "lines": 290,
+    "sha256": "c17c3f069669997040398a0ec2cb20f5755df6a62ef6f39f06f4ebf277e74c5a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/presentation/assistant_sheet.dart",
+    "lines": 660,
+    "sha256": "628e452e987f6aca7b05b872e01d7044e0a82d1f955405545519754b54e461f5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/presentation/assistant_wake_listener.dart",
+    "lines": 258,
+    "sha256": "c66271bd7b2dd4b30c0fe7552104d3b00955dd05552613fb09dd4a49e25ada67",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/assistant/presentation/rafeeq_diag_screen.dart",
+    "lines": 242,
+    "sha256": "11c789d8475fc34cbbdaf697116cb2d69b226f8670e49a895be6bda525bee78d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/data/adhkar_recitations.dart",
+    "lines": 200,
+    "sha256": "fc40ce06c453ed66b203b83e717db548d8e10fd0b0c171b96548fe3889c84ddc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/data/azkar_audio.dart",
+    "lines": 23,
+    "sha256": "4f3408992773371416f18fee029b2be977bf0d6d927a220d4974f7db47c5acd9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/data/azkar_backgrounds.dart",
+    "lines": 36,
+    "sha256": "803d42d70e9b1d47d3d8e85d9053f7dd1f116eff492c8b2a7fa442141240e081",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/data/azkar_categories.dart",
+    "lines": 267,
+    "sha256": "be5f982309dc632e6b5cc3c3d84f23fbf6eb3161d51a330428301ccbe9349c79",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/data/azkar_settings_provider.dart",
+    "lines": 174,
+    "sha256": "5830ce8e5ea411a09d02a93d64fd70b6badd276e5a0c1f0b86b80b9ec86049a4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/data/tasbeeh_catalog.dart",
+    "lines": 67,
+    "sha256": "65bb7c682fe2c726c8e71e5c8c5b4fba8e3aac80038dbe8b5695f8c705bfc618",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/presentation/screens/adhkar_listen_row.dart",
+    "lines": 213,
+    "sha256": "d9ae8b926aaf5f6f8dd686a6522969f702ab15bb69fc126a8f947a737ccd386b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/presentation/screens/adhkar_listen_screen.dart",
+    "lines": 433,
+    "sha256": "1ee1759487c1923ec99ea5601cb7a43a634aeda957a91b66295b83db0f3f9e0d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/presentation/screens/azkar_screen.dart",
+    "lines": 450,
+    "sha256": "11126fe7e7c3a0a77d2540eeabba9766d04593ffb03b6ef93122277044c95878",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/presentation/screens/azkar_section_screen.dart",
+    "lines": 603,
+    "sha256": "bbc0caaca00597e96be45b8d6f436d2707a0e4afa4e78d2c0a443c045449f566",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/presentation/screens/azkar_settings_sheet.dart",
+    "lines": 226,
+    "sha256": "4df3efbeb847edbfc4021ea574691fc7fe0574917e286d35fad461d056e549f4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/presentation/screens/tasbeeh_mathur_cards.dart",
+    "lines": 261,
+    "sha256": "17ca84d0d1fa021d3d84f927868f75cacee9f87a18fd9858b090a91d34e8579f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/azkar/presentation/screens/tasbeeh_screen.dart",
+    "lines": 783,
+    "sha256": "c05efa9043795e99630f0f66f7e8f803a84d62de6d5b47be521ba1125fb3b001",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/data/caravan_legs.dart",
+    "lines": 263,
+    "sha256": "0729ce311727b47cc17f2b76c8a842676c4f87cb1b19370f359d85ea70650622",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/data/caravan_progress.dart",
+    "lines": 54,
+    "sha256": "b55d24412544b811f2f069f1a3c70317ea03a834e54cd5d680815d76a78cf0d8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/data/caravan_world.dart",
+    "lines": 509,
+    "sha256": "59c0bd80848081008bd4722b668a9b1d9cc47f8fb74aa81c65fb56c95f9a34c2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/presentation/caravan_cards.dart",
+    "lines": 331,
+    "sha256": "e666b328340dbbd7b54c28a0bccb06c54c6b7e02aa382765e18afd12a1119cc0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/presentation/caravan_landmarks.dart",
+    "lines": 496,
+    "sha256": "11e1ff7aa54d427518329c597ef499f4555efacd98e9ee28b21a9cfe502f6365",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/presentation/caravan_map.dart",
+    "lines": 387,
+    "sha256": "ad8882bffcc438b6e54b79ea36f87081f63bde44748fc950622473eb446f5db0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/presentation/caravan_painter.dart",
+    "lines": 761,
+    "sha256": "bc1db7eca35849cd682b7b6f70306d802ae0126465cc65f631d81cf6f9477775",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/presentation/caravan_rides.dart",
+    "lines": 306,
+    "sha256": "abe8c7355f5828b4d57abcccea0151dd6763908ca28c203c3c1dc5701635e531",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/presentation/caravan_scenery.dart",
+    "lines": 436,
+    "sha256": "d0edb9af25ed1fa0100db3d3f3ca929e289a8487cb515dc832e126b102a2cc60",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/caravan/presentation/caravan_screen.dart",
+    "lines": 429,
+    "sha256": "66282874d35c73ce32295526e5b588c9a4cfbe5131e0974d37f4afba28366c2a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/channels/data/islamic_channels.dart",
+    "lines": 198,
+    "sha256": "6ee30225d359ea5613ad93f3d25e6f4af1e69f13d5a613848751f5a2293c22da",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dedications/data/dedication.dart",
+    "lines": 166,
+    "sha256": "78022b8f93897a614a5630a8cea3ca823a041aafe1d206e6db08909940f24b7a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dedications/presentation/dedication_counter_screen.dart",
+    "lines": 400,
+    "sha256": "09739882f820c49ec29955de89cfb468f292b2570de45caa6630ae8692e23f40",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dedications/presentation/dedication_look.dart",
+    "lines": 24,
+    "sha256": "4597207ae502d00c185d9f0004138ba3344e72edda3e957f312dd301a6e7a840",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dedications/presentation/dedications_screen.dart",
+    "lines": 785,
+    "sha256": "3c7822f3b040050a8efbd3f79b8bc7baffd46ac02303f6c7797aab483e3cba1c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/data/dorar_check.dart",
+    "lines": 218,
+    "sha256": "6917f3253674f58156109085895ea574c9167c10f38d81b3fc6d0a5c287ae122",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/data/dorar_encyclopedia.dart",
+    "lines": 367,
+    "sha256": "33d2521793555e7fd5b5b0ce1725862d6a0726928d07df8bf1dc2a234f3c36eb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/data/dorar_search.dart",
+    "lines": 73,
+    "sha256": "9c1bbee50b98c32da84a94af6a6b698a0aa20484a6693d1ff00a28ca82553708",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/data/dorar_service.dart",
+    "lines": 103,
+    "sha256": "0f436518b352d99859aee02cb4ce1145a0e7f3cbc5f518acda39e69b8caf466e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/presentation/dorar_check_sheet.dart",
+    "lines": 155,
+    "sha256": "d5c79598b7e9614663419cbcbe0b33c2d7b0697b5033f837ec1828f56cd7be59",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/presentation/dorar_history_screen.dart",
+    "lines": 177,
+    "sha256": "2a4c1fb777fe3db663a4d68f26d21bfd275eaaea57b4c8252fcf4ec429290b0e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/presentation/dorar_hub_screen.dart",
+    "lines": 337,
+    "sha256": "aa16bf56d9957f428d8cdd7886f9ee06836f27d753b09e2543bf5d276ced8355",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/presentation/dorar_screen.dart",
+    "lines": 198,
+    "sha256": "084bb7ae848334b0f3f5a53a3927e50ffee04c227cccbe306f6dea0774a01716",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/presentation/dorar_search_screen.dart",
+    "lines": 153,
+    "sha256": "7fe5b4276cbca97c2d53e55f191a52edb317bb039a1c7ee527c787c008d9c30f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/dorar/presentation/dorar_tafseer_screen.dart",
+    "lines": 219,
+    "sha256": "f29103203e7d7d7e2ee1472cd95fbd818ee11ff1b1f98e8ec218bb2a1281fdfb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/data/download_tap_channel.dart",
+    "lines": 57,
+    "sha256": "48d730d6745542a80abe6651edbd00f0143b23d7605cce05c56c50fd860616c3",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/data/downloads_controller.dart",
+    "lines": 263,
+    "sha256": "696d48eb5f19223bdba90eaf925c3dd4413a3a8194846747e4fefb883629e516",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/data/reciters_provider.dart",
+    "lines": 122,
+    "sha256": "c1b848f0202fd76d75c6191e532c063005d5e2aedc1470b9d8001b4eb2f84cbb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/download_navigation.dart",
+    "lines": 46,
+    "sha256": "8212a328422921455259dde1bbb40a26944bea541cafc794e74bf70d41b32214",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/screens/downloads_screen.dart",
+    "lines": 735,
+    "sha256": "4d2bbc78621702124b0f4927ecaf8b84c44753d51c8f559eed3c689ea8d552bf",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/active_downloads_panel.dart",
+    "lines": 310,
+    "sha256": "faff160321d75d325053d2b37f91aa6d3aa0e4f0cd28664d405ad401554ed775",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/download_category_style.dart",
+    "lines": 28,
+    "sha256": "184d014231d6da08e21dfb7c902264b5f053eac9c9a7e4f8c49f54903585a992",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/initial_downloads_entry.dart",
+    "lines": 36,
+    "sha256": "10b449faebf2cb6f2b425591b5beb1912311c45d0829d8e738713cd953516cb8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/library_route.dart",
+    "lines": 34,
+    "sha256": "d911f664a8a344e05f2ac9d3db648034e02c544f62f212de651eadc3c90d721e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_download_tile.dart",
+    "lines": 306,
+    "sha256": "035ea3e0478e77fcde22c3c3c8a62fcbc844bdf797701909a08bc4ca4db1a189",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_preview_sheet.dart",
+    "lines": 607,
+    "sha256": "2aed4faf16639487649561963b920603ce5947fa18ec9d191f4ae29001e0e8d6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_tiles.dart",
+    "lines": 30,
+    "sha256": "a9370f3e37bfb3cbafb33c63dba4370da1ff98884179e6c97aac752e07cf069a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/downloads/presentation/widgets/storage_auto_refresh.dart",
+    "lines": 67,
+    "sha256": "1228ede6ca805d470af425a8db2bbaee633fc797551cb8a163b9a324ccb5e0c0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/fasting/data/fasting_reminder_provider.dart",
+    "lines": 109,
+    "sha256": "b18107f22a0cc6158fdd6b22b4b3a00d80dfcfe628527fcf19a9fe461946ba97",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/fasting/data/fasting_reminder_service.dart",
+    "lines": 83,
+    "sha256": "68b5e60d6352ce5ebdeefaf5b916627057e78b1bbdcace14316827c89fe8545a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/fasting/data/sunnah_fasting.dart",
+    "lines": 138,
+    "sha256": "75f137e7441f4d08bad97b5220c6158a98774bc6d875906e9f53a8a76f4bcc82",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/fasting/presentation/fasting_reminder_section.dart",
+    "lines": 179,
+    "sha256": "1a72374bb52d113084d2661e632403ef65478e5a5894e9ed239d259aad359334",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hadeethenc/data/hadeethenc_providers.dart",
+    "lines": 230,
+    "sha256": "a4bb12800a3e62be0086078298f43470da48fbe790eb821967937fc849ce7528",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hadeethenc/presentation/screens/hadeethenc_category_screen.dart",
+    "lines": 181,
+    "sha256": "8482bae3c7153fdad287440bfc14bee637a7d65bdbe1a07dc07d9cc5c3adb2b7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hadeethenc/presentation/screens/hadeethenc_detail_screen.dart",
+    "lines": 371,
+    "sha256": "bec732aebcefa83aabb173f550e02ab6e92d28e97ec4ff0d6d03d72a725a7135",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hadeethenc/presentation/screens/hadeethenc_tab.dart",
+    "lines": 249,
+    "sha256": "bbc321c32d99987e19753e7ac8fad013df5eb09b8ed19a29c386c11bc5fdfada",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hadith_daily/data/daily_hadith_provider.dart",
+    "lines": 121,
+    "sha256": "9aac448ca68636b1e883e5e8e94478d3d397449e22714a8c65dcc54f0d93c1c7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hadith_daily/presentation/daily_hadith_card.dart",
+    "lines": 508,
+    "sha256": "f366be2a3024c25c68389da46ababf0cc436ca29b77771539266c6acb9ab6570",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/data/hajj_guide.dart",
+    "lines": 414,
+    "sha256": "c08b69a75dc0e3c538306740a168266336df966589fe50461057ed03eec5f93c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/data/hajj_step_text.dart",
+    "lines": 49,
+    "sha256": "b22393266003a02c6fb968228a2b88cd7d72dc14bcba4e11e650b76b9e2edbcc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/data/hajj_summary.dart",
+    "lines": 484,
+    "sha256": "7d0d39919f30f227209980223b0ca6899b28b990bf46e51572653026b0a2dae8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/data/hajj_text_scale.dart",
+    "lines": 30,
+    "sha256": "50ac559870925566a58a4f66c6b4f0489a9fc7c566042378b10900fa15be0c4a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/hajj_screen.dart",
+    "lines": 422,
+    "sha256": "9030730dd31a4147b9e7699a60c63bfb3bd169f438d6c33f9578852c1c7b4146",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/widgets/hajj_summary_card.dart",
+    "lines": 169,
+    "sha256": "aed555d187f2805fe014cb36c0367a7fafd26bd0bd5c62be7b8d14ff34294ce0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/widgets/jamarat_counter.dart",
+    "lines": 224,
+    "sha256": "69bfdd02bca2f7bd9f568361aa62db906547e5957f25666963564e711ddc1cea",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/widgets/journey_map.dart",
+    "lines": 167,
+    "sha256": "8651698b822c46c6ea0f0652548e5b826b04b3c5e7fb6f0b6f764dacf0ad411c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/widgets/madhahib_section.dart",
+    "lines": 202,
+    "sha256": "a6b539a870126ad29635f4c81ed29c73b3af8625ad44fda6b4d01fce8b2b3bcd",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/widgets/mawaqit_today_card.dart",
+    "lines": 192,
+    "sha256": "c53bb9379152034de728cbed6e0490039c43405c1a1cae7418b425289ab1575b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/widgets/sai_counter.dart",
+    "lines": 218,
+    "sha256": "d7e6d54ae28a4d9e4a3625e826a2ef8038747787e011a0159f255afd20316a31",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hajj/presentation/widgets/tawaf_counter.dart",
+    "lines": 245,
+    "sha256": "1214dacabd411dc30a0f223521412540430d14799307a9c3f39f2bc9a21ab5b9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/data/hifz_mask.dart",
+    "lines": 80,
+    "sha256": "2e67c93c1e188530e83fb8dbeb248b7106a3ac3dde31781ed8c941f5733ea4be",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/data/hifz_plans.dart",
+    "lines": 138,
+    "sha256": "bef9bb1c125e3173322e89ccd6629ca730e877759592e463794b3dc789c08121",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/data/hifz_store.dart",
+    "lines": 186,
+    "sha256": "5fb5ef71574f1d349b2fab6ace09bf5858abe1e2444c17c8e8ec3329c143b56a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/data/tasmee_audio.dart",
+    "lines": 56,
+    "sha256": "3590bce18770d82deb875379cb78460f092fa717a3ebd10af4a9de8a2403c8f0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/data/tasmee_engine.dart",
+    "lines": 593,
+    "sha256": "7a875fe229846a35a01636f504752ab613ed303dd7a080147016d4c7a9730eaf",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/data/tasmee_mic.dart",
+    "lines": 87,
+    "sha256": "fe766a4392ca6d7833ef64a8b2ee7ef8bfd5de36e739a4e2b0652b8b9d1c837f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/presentation/hifz_screen.dart",
+    "lines": 127,
+    "sha256": "8be5925083a4e32ec7d2d3a08c6b6a9e2c1feeb20c0cb1fe55380dafa0a5b56d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/presentation/hifz_session_screen.dart",
+    "lines": 483,
+    "sha256": "493c331e939839849956e24baeb7e8e299d5b6a0653bf3b0b138085a623c117e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/presentation/widgets/hifz_ayah_view.dart",
+    "lines": 174,
+    "sha256": "4212d4c056b0bd5f714840482bc8216391c80a37f8cb8ebdf6e4d027adea494b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/presentation/widgets/hifz_navigator.dart",
+    "lines": 324,
+    "sha256": "bb0823d32f3a1b1baf823ff407ff8e12261895ba7beac08cd520917a12a791b7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/presentation/widgets/hifz_plans_section.dart",
+    "lines": 332,
+    "sha256": "f26e36ac4d7f93a53075303b2d4e82b349e0cd7005ea9821e71626ba1e0b78f1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/hifz/presentation/widgets/tasmee_panel.dart",
+    "lines": 699,
+    "sha256": "09936b29481025176b8f1436fe988b40ef47887c7fa75504fbcfacea50c4de92",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/data/clock_settings_provider.dart",
+    "lines": 214,
+    "sha256": "e35990254442480c8249fe45e035566a7e27d3b8cdaabe5b1a7e6611525f3122",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/data/hijri_landmarks.dart",
+    "lines": 93,
+    "sha256": "b4aedcc07e4a7e01b93004c2a845383a678bc4dcf8f636c5e4b49e2c49a520eb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/data/islamic_event_keywords.dart",
+    "lines": 51,
+    "sha256": "a1c06c4cfe79469754f24a3285976d738146574fc4d1c616f72dd71a7ff63ea7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/data/islamic_occasions.dart",
+    "lines": 141,
+    "sha256": "223cd6fa00729570d1aebcd5da16dda1f6c85f38c452943ecda2ab33c821a58d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/data/on_this_day_repository.dart",
+    "lines": 130,
+    "sha256": "cce4fbc9ab503ca8d33df3a7620d80ca5f6d8026551e1d51a04cf321cab66761",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/data/prayer_controller.dart",
+    "lines": 223,
+    "sha256": "a8642415b9b0f5171d002eb84c145ee9d0b9b0c21ccb18d4165a7debc8f58441",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/data/prayer_hero_icons.dart",
+    "lines": 12,
+    "sha256": "97254c64e2e71fed374cb4137cc82d0c37ca1ced7921d20eee948fa01a344fef",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/screens/home_prayer_card.dart",
+    "lines": 494,
+    "sha256": "f6ef852371672a07f1277771ce83456cf155308ad26850cd1de11a659fc3cab2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/screens/home_screen.dart",
+    "lines": 599,
+    "sha256": "50004fbd2c070e6a6a8ee0716dc59c52683a72846f38a624cee3dd463a2c5ce6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/analog_clock_faces.dart",
+    "lines": 828,
+    "sha256": "a45059c0ee895f4bfa1db4aa20c64c6587c0ed523c243aca46ad86920d262f02",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/clock_gallery_sheet.dart",
+    "lines": 371,
+    "sha256": "b4de5f65ce51e8baea461c9a174789f5a9edec001a18a04aa142d4099e8d082f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/digital_clock_faces.dart",
+    "lines": 676,
+    "sha256": "61ef4aaa4f5e3d5d1837da5051df3505f0bb2a8e5a786094d173830b0a2ccd1d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/header_quick_actions.dart",
+    "lines": 209,
+    "sha256": "b39882401f44923edec0ab80589e7ed1f32b20e64251ddd5bc78ef1406ac6f79",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/islamic_occasions_sheet.dart",
+    "lines": 215,
+    "sha256": "de4d29ee7dd3ec0a46c6a7f42ed306bdfb85d0c7c5337161fe15b14e2ab05f90",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/on_this_day_sheet.dart",
+    "lines": 422,
+    "sha256": "ce185258de29c30b908ef94cf2bb06ccc556042fd2831fdbe08296be618b34a5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_countdown.dart",
+    "lines": 239,
+    "sha256": "ed597001005aacaf9dc882d0c71b41553db7b6eb61ec7cfc681a2be7da01f218",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_slide_adhan_extras.dart",
+    "lines": 127,
+    "sha256": "f5f4aaa439c492850b96fb4e28534fd9e4eee46b9141c30b3cbc9b6ab765ff69",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_slide_chip.dart",
+    "lines": 134,
+    "sha256": "bd0508f8a3cd91db425db296d044965e6e4d58e57aae853479c2667d0adc0312",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_slides.dart",
+    "lines": 675,
+    "sha256": "1ea5191a7bab40c13bea9f5d46879ce74f0baa89d243587ea34a0b2b934594a4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/home/presentation/widgets/worship_quick_links.dart",
+    "lines": 163,
+    "sha256": "3f83c65b413c547efe05248841e095a9d3472214652d1f24ed27a609169d0c72",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/data/ayah_opening.dart",
+    "lines": 40,
+    "sha256": "76bf4ea46c4010a08fcb9d62293b606246753bd0ed273c13b5fef690e649c579",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/data/khatma_model.dart",
+    "lines": 390,
+    "sha256": "360a9b2e19edc74ebea43cd37693fa5f421d5bff5dbcebb6b0e1e37c67a1265a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/data/khatma_range.dart",
+    "lines": 82,
+    "sha256": "2d78d45d7cf8be2a23807a6e13ac46ba5f8b9b68edf7fbdf78e5cb0c92831af5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/data/khatma_store.dart",
+    "lines": 216,
+    "sha256": "a0f322b97a7c3b97229b938e4fad412684e5d076d6cc4008e5b61927b4c9e734",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/presentation/create_khatma_sheet.dart",
+    "lines": 518,
+    "sha256": "144e884e3bb4f3fba3be7a9d4c6266515e9b4c295b57dbaabff209122bdd6af8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/presentation/khatma_card.dart",
+    "lines": 592,
+    "sha256": "a075f4eb26558297f7c01f8ff0c66fede0478e2af05718d28741f785b66b5f36",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/presentation/khatma_screen.dart",
+    "lines": 474,
+    "sha256": "8d26d2bd0792668ca15ecfc65e30d1ac1ad4ed8b74831019a94d6fed5b8b51ca",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/khatma/presentation/khatma_wirds_sheet.dart",
+    "lines": 263,
+    "sha256": "85783bb81f0d6a2ed0f9eb42da86b9ad422a5c2be39cccb6529e283aa4614498",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/data/journey_store.dart",
+    "lines": 172,
+    "sha256": "a4796e156e7a6b8feed14a9a66b14be48c6b09c2491cd40f18fb4e0ad8f772b8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/data/kids_content.dart",
+    "lines": 55,
+    "sha256": "4d98cad70f5db82735020a29104eca65c8d8a77658152744d80277d39530a20e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/data/kids_stages.dart",
+    "lines": 57,
+    "sha256": "817c59b2d2c669e4fa5b94340906de0306a1dd904eac562d1a0094ce8a3720a1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/data/kids_stories.dart",
+    "lines": 75,
+    "sha256": "f182c8c17772b5f658355a35ef20692e20ec98954aca10d0697b33407b356517",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/data/kids_stories_data.dart",
+    "lines": 451,
+    "sha256": "4a3c736027133c399cba99f496cd6f9f78cb32bd82f126a8d63369a64de6b728",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/presentation/ayah_game_screen.dart",
+    "lines": 231,
+    "sha256": "7453e4f96b9ee28184966478afb177a70e7bdd973ae0ba5b8d146776818690d6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/presentation/journey_details.dart",
+    "lines": 475,
+    "sha256": "24fc45b2faeafd66d4eb7e98006306d47072892e48ce2648849083c5c73a45af",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/presentation/journey_screen.dart",
+    "lines": 360,
+    "sha256": "1722781aa5abe93a989970656951b659eddd12878ea70a4cd83dc0a604fb6faf",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/presentation/kids_corner_screen.dart",
+    "lines": 390,
+    "sha256": "a65b456c873fc55ec0bff9f2b9d36163786bbd85977b7e4b7fb4ad20464c704c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/presentation/kids_stage_screen.dart",
+    "lines": 310,
+    "sha256": "c760e4b616d690d570c337ff2851d0a942f095c2e9b8882cc58ddbe5da4101bb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/presentation/kids_stories_screen.dart",
+    "lines": 193,
+    "sha256": "326828be81c0e65d5eca40d617e23028d7a59dec839fed9f309dfb28d5e8e675",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/kids/presentation/kids_story_player_screen.dart",
+    "lines": 584,
+    "sha256": "cf3757beafabe29c60f7eaf2b0e10079040a7edc9710b57e6247897ed70a8da5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "lines": 5663,
+    "sha256": "080aff9afb1dd0a2d722d45ee43a672efc0c687a26e17061a3fdd3577db6c096",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/book_category.dart",
+    "lines": 50,
+    "sha256": "bb6b9190afc872adeb8a19dc7792b6b25e05d143e1b03694c9031ea373f9d2e7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/book_speaker.dart",
+    "lines": 448,
+    "sha256": "552acd4f9f4e545361c4a3103e1bd7287119c36ed44a51a6516edf3695dfca72",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/book_text.dart",
+    "lines": 304,
+    "sha256": "7b65fcd9156a2b191c3b0cd5e133dfba21412fb4d002b46f6de4f80b7f988932",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/builtin_books.dart",
+    "lines": 41,
+    "sha256": "000636a087bab029727d86c8071eb8923c9379c738cd8b945b0eb10fdd224e68",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/hadith_imam_bios.dart",
+    "lines": 26,
+    "sha256": "a0430666231bdbead95fa751d861cacd5678697a535470020ae55b2ebaf97344",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/hidden_books.dart",
+    "lines": 43,
+    "sha256": "32dda1ea7bdb8d149df3ceb41270859f0208e06775850b5d419316fdc09ce6ed",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/islamic_websites.dart",
+    "lines": 82,
+    "sha256": "eea49b2ea31b648ddaf55eb7441b4a01be24299c25f5db5a184c1b530c613623",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/library_api_service.dart",
+    "lines": 523,
+    "sha256": "e9e6df1ad1089a9bd6f0dbabcbcbf9d69c0c238c95105e45a1eef43a00392c91",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/library_featured.dart",
+    "lines": 102,
+    "sha256": "f8113382cbc0a58716c48d3a48f3b462344d09b15e4857fb05588b65707c13ab",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/link_list_customization.dart",
+    "lines": 164,
+    "sha256": "78b37e326f4b4074eea947c2f03045b1846cf1a15c6834854bc20d2536d2ac8c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/my_shelves.dart",
+    "lines": 208,
+    "sha256": "2f8382856cdfd5e45e1d3dee36dcd0ed1528baf9507fd3f45fb37007da6dde4b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/shelf_calendar.dart",
+    "lines": 47,
+    "sha256": "ec0bef77b5ece890a4449fa345520b2638d600646390b671366b476b68d84fb0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/shelf_look.dart",
+    "lines": 33,
+    "sha256": "dd2df24f3f7ffbc987ae856e1dfba50cb8047314518df765ef5d245571a265ef",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/shelf_reminder_service.dart",
+    "lines": 90,
+    "sha256": "e9c4ea06268f6cca5642f6037dd54e55ee843548a626de0d74a2306f3637b939",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/tts/arabic_phonetiser.dart",
+    "lines": 335,
+    "sha256": "c55480bfbb2b28dbfa6576138e25be15581625dd35258821b412e927bbeac7e3",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/tts/book_voice_pref.dart",
+    "lines": 28,
+    "sha256": "2708cd95a8e1904af6cf0975056628ee7e56c776b0bc0d5d235c2e65466b692f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/data/tts/open_voice.dart",
+    "lines": 371,
+    "sha256": "5ae92dbe5e931761e74ccdfeabb6459088ec3f0d73d202568262e9fa33c03bd2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/my_library/my_library_tab.dart",
+    "lines": 487,
+    "sha256": "93a7a51db968100caa7034ace74aeafdfbd56dee181cc74fbdb07b9509846587",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/my_library/shelf_screen.dart",
+    "lines": 508,
+    "sha256": "33c1c8c81f0e00b975295fc8454442dcf82815cf1766fc987ac17382d66cea23",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/my_library/shelf_sheets.dart",
+    "lines": 545,
+    "sha256": "86b9200dda9187ab8e506b718ce8862f13fa49db9b77c138bbcf061758a50630",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/my_library/shelf_style.dart",
+    "lines": 112,
+    "sha256": "dee72c006bd78cc6a76fd80ed8b25aed732700ae72367f0b893dcaab4502015b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/screens/book_text_reader_screen.dart",
+    "lines": 1142,
+    "sha256": "d12790aa92e77497579d21d4760f3427a31497c618f0827895cf69982d452a76",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/screens/books_search_screen.dart",
+    "lines": 654,
+    "sha256": "0d69efd8316b1216fd6b3145cbc320b55579f5580991164f67c5072e937ebd0d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/screens/hadith_book_screen.dart",
+    "lines": 109,
+    "sha256": "84bc0e08dd41710e101ddb28e80d2eb526305a28212e5c574af0242699777a62",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/screens/hadith_chapter_screen.dart",
+    "lines": 94,
+    "sha256": "c066145fadbf4540c5ea81a75adaa1d20cfa0f3b3d853c9e994a0c08da8daea0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/screens/hadith_detail_screen.dart",
+    "lines": 280,
+    "sha256": "debc2e7ad2286845c0b71737d67682c91156b16802331bba40220d292dc14951",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/screens/library_screen.dart",
+    "lines": 199,
+    "sha256": "8029dd828d875f99175735a26f62983997721021b601ab4b9e71d1d94d917519",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/tabs/books_tab.dart",
+    "lines": 775,
+    "sha256": "1970a58ac6e224ee73120fa22de13708dc5eab2c03859aee410f88ba1df4e072",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/tabs/channels_tab.dart",
+    "lines": 173,
+    "sha256": "f999322daa0b1b5c3a916814f71ee61772229f83d009b4c474cce072963dbfe7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/tabs/hadith_tab.dart",
+    "lines": 639,
+    "sha256": "0db8a58bff23b0ea23779d2ea0a1d95ff6b50b494e15acd213619413eead40df",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/tabs/spoken_books_view.dart",
+    "lines": 121,
+    "sha256": "98f74e717fc3211701c38736d78648776e821f4d37019a63ceeca0c248210ebe",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/tabs/websites_tab.dart",
+    "lines": 143,
+    "sha256": "9745b4023fdf3e3b0de9f02ce69b4b32857f9acdd963c9bf41c101126c022cd6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/author_search_result.dart",
+    "lines": 149,
+    "sha256": "58d0c0dce87b1ef119df834dc17b4a12a87377ade60dcb6ccc39e10d051af2af",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/book_bulk_actions.dart",
+    "lines": 239,
+    "sha256": "102cda23dcf19ee34f926988a0a511e8d33718179d42a5746a918e556e9b7ebe",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/book_card.dart",
+    "lines": 163,
+    "sha256": "001de2edb33dcc8bbbd54c977b9f94daf199c054d104b43277992cb10f1b3a55",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/book_listen_action.dart",
+    "lines": 281,
+    "sha256": "e73c2a0834ebbad321bd09d29a2c064d40518684c62f82290be17128da463b45",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/book_page_rail.dart",
+    "lines": 149,
+    "sha256": "8b1f16a77f14db5028f86cfdd2899734c5ab323cc582f55bdfc01419622bc925",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/book_provenance_strip.dart",
+    "lines": 117,
+    "sha256": "31d54016129bb688c77375c97e1892f7aae229af7ff10bcd67f0e559de396d2d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/book_voice_section.dart",
+    "lines": 108,
+    "sha256": "f0821b8ffbe74336093469f20559a65bc32dff7dfc158abf0bab034f4746caa4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/external_sources_strip.dart",
+    "lines": 246,
+    "sha256": "9a5b2b4d6dd548c777815f36f344b8dc0a00ce30005e0ef953e4f01964dc66ee",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/hadith_translation.dart",
+    "lines": 84,
+    "sha256": "b54e3e007b075b49b02d926fc8e75ff739e4362a88a01da4a410e0a9868d2beb",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/hidden_books_sheet.dart",
+    "lines": 139,
+    "sha256": "c9c2691eee3c18817abe2588fcd6e5afd2319d32aa100ef06d6248254fd5a096",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/link_list_manage_screen.dart",
+    "lines": 303,
+    "sha256": "0e75806c0261fe2a386460e6a60a2b00e628631ee32bf9c8a5f173242ff5f6d2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/listen_text_button.dart",
+    "lines": 197,
+    "sha256": "d56493c47bcb49792b9bf9c8ba281ca9ca10e5dedba60fc92685690f496ddcb9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/library/presentation/widgets/open_voice_offer.dart",
+    "lines": 151,
+    "sha256": "3830a0f6233164e432b4a723afb86bf3241d64122a074e56a6769400a483d8fd",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/more/presentation/screens/more_screen.dart",
+    "lines": 346,
+    "sha256": "fc6c5ce439d51f4e1901d2f96155a37b36a1003426187fbaa85fde4488238979",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/more/presentation/widgets/more_group.dart",
+    "lines": 143,
+    "sha256": "4b6308c88a153609f323b805345a2ec23f1249657fba0b2475f476efea712bae",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/more/presentation/widgets/sign_in_offer.dart",
+    "lines": 92,
+    "sha256": "28e55b8963b484731a07d1982096305b0cc3db085157e4e6881440423c22f700",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/more/presentation/widgets/sync_account_card.dart",
+    "lines": 184,
+    "sha256": "2b51fcd82ae3e2f34afbe82113426cc603ad4d44bf41e87b816932e3206a8047",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/onboarding/data/offline_pack_sizes.dart",
+    "lines": 60,
+    "sha256": "54f4026f122c8f5866d4419a8d69ad01313735026e2ac4fa0314cd9d0d65e0cc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/onboarding/data/onboarding_state.dart",
+    "lines": 19,
+    "sha256": "ba1d42c6daa2ce3cbfe459017915edf44e379879f81867486c5b3f1e78f5daec",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/onboarding/presentation/screens/onboarding_screen.dart",
+    "lines": 350,
+    "sha256": "9c6a3538a7f73b33928d23cf7d8ec8c34e4d50403772681504e2342a1cc553fe",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/onboarding/presentation/screens/permissions_intro_screen.dart",
+    "lines": 324,
+    "sha256": "b03fc1860ded4b0f0ff0b7b0f8e0bc5a7438a2ed0f054d52d6a230ef9b85d952",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/onboarding/presentation/widgets/content_pack_tile.dart",
+    "lines": 86,
+    "sha256": "961e207d83928c5a7bc80ae4e79105df75f0aa43ed6adffa8518245f3b83f620",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/onboarding/presentation/widgets/offline_pack_row.dart",
+    "lines": 155,
+    "sha256": "0b51ca1814cb2ace0c1e4d340f1fc87d846870a92787bd16fb76b86629540ea4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/onboarding/presentation/widgets/offline_pack_tiles.dart",
+    "lines": 555,
+    "sha256": "6ceef6ad08fc767f2a25da39e1ecb48b82b171119ef39b6130843f9eb7493363",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/qibla/presentation/screens/qibla_screen.dart",
+    "lines": 798,
+    "sha256": "80e84671d29bd9136b4bc5eacc4ecad144dd02e642aae6429e4752480a7caa98",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quiz/data/history_quiz.dart",
+    "lines": 195,
+    "sha256": "f6907878e8ee5db9f074b5aea9121356f10f4962b59232a2bfc409e404c297e6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quiz/data/quiz_progress.dart",
+    "lines": 75,
+    "sha256": "89036156795e9b22e6ca359f852a4ccad9aa9f24a463a519f97b64d655b34eb7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quiz/presentation/quiz_home_screen.dart",
+    "lines": 464,
+    "sha256": "9faa830c2641705fc6761bb88ba6be3e1617b2c0cc1564379b6c23086b4cb9de",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quiz/presentation/quiz_play_screen.dart",
+    "lines": 662,
+    "sha256": "59109df11c0c5cae6a2d8f8204635c74362a2de3da9874348a5c4115de1e9081",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quiz/presentation/quiz_result_screen.dart",
+    "lines": 290,
+    "sha256": "7d8a7216144db0d313c9975cd4c36a599bc12bcf64927b1c895c8a82faa677e6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quiz/presentation/widgets/quiz_effects.dart",
+    "lines": 235,
+    "sha256": "2f869a634a92f9af3fa4d86ddcdb9f59c11cbe2c3afa04c10ad2b081c3cdff65",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/data/quote_background_catalog.dart",
+    "lines": 83,
+    "sha256": "0b12b1fd2ef215885d75c230563cf302a9b7837e5dbc4d32daba98de1c33e289",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/data/quote_palettes.dart",
+    "lines": 84,
+    "sha256": "6cc9cf5357e926d8a998d3cf1013edc6926a61ac46fb74a6aae7ae98a6c23b82",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/data/quote_reminder_provider.dart",
+    "lines": 86,
+    "sha256": "6671554a5f0bcd5dc14044181c8880fc0ecbc1803da4270ee91eeeb397003db0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/data/quote_reminder_service.dart",
+    "lines": 198,
+    "sha256": "e4aa1a0504b6cca2e88e67fe38f7bb7d01ac87e688b1159f6cf6929f8e88b5c4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/data/quote_repository.dart",
+    "lines": 174,
+    "sha256": "87dd7861afec7edfcaafe1d9303853253494e0b539d8991e28e6e657b0ba0378",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/presentation/quote_card_screen.dart",
+    "lines": 232,
+    "sha256": "375800fe768361d9d8d18accbde6f04310eed1e5be92999f2ccf7e350dcae1b8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/presentation/quote_navigation.dart",
+    "lines": 66,
+    "sha256": "f4812ade5a1e773f1f5baab01bf9e4c05c2c45fd1aad030c01b1711464c5b95a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/presentation/quote_reminder_section.dart",
+    "lines": 158,
+    "sha256": "8927cf621bba3bf084f72facddb2d64c30e49bbdeef9ebe37edf5e23aa1e38c0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quotes/presentation/widgets/home_quote_card.dart",
+    "lines": 308,
+    "sha256": "711c94bb63709757a94354577f0585f3a9a61f501db5582036af4594e7f89429",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/ayah_coords_repository.dart",
+    "lines": 210,
+    "sha256": "1fb7b2f60591e922191201f171fd0de07ce3153d288bc450809fdad09e19707e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/ayah_highlight_rects.dart",
+    "lines": 207,
+    "sha256": "6ead3eba852aaf03ab75f5b0eab3892caea485680e23e8b476e16540a622b985",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/ayah_notes_store.dart",
+    "lines": 52,
+    "sha256": "45006582951210d160feddb7005823c5ad8b3664c2dd6a3b225888ff4f29a4c9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/basmala.dart",
+    "lines": 88,
+    "sha256": "c529dd3523ab38542a84e0303a065a35c43733819f8ca19382c26cc896c4bc1c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/continuous_start.dart",
+    "lines": 24,
+    "sha256": "d03a7dd4da9f6869cfa396b19c19512b8722b17eb7b928a5b53c8cdb95ffae3f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/inked_svg.dart",
+    "lines": 32,
+    "sha256": "a4e3fd45a8abb5b0c009a3c5dfc1b6cd0dd42c34a457825bb58e17d0fc888814",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/kashida.dart",
+    "lines": 292,
+    "sha256": "743ee8c0957f7296c02898a2ffe73816d5d1bc8dbdb7f83a2e2d6da3c30a0876",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/mushaf_data_provider.dart",
+    "lines": 80,
+    "sha256": "f73182eba757ad2fb8f23c26494133f378457023d4920fa38918fbf8ff7e3f39",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/mushaf_edition.dart",
+    "lines": 362,
+    "sha256": "16a7bf936561146ed40fb4f36d36acbe482f87d2c3aed00d1de66e559770c463",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/mushaf_frame.dart",
+    "lines": 150,
+    "sha256": "fd35bb42b7ae3b2966ac68d1d07ee4cb166e9e5a0349d78a117deee3bd293349",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/mushaf_page_service.dart",
+    "lines": 565,
+    "sha256": "7091729876a59ebbb2693d08251b7ee1ca7448325130ed417c1cf01365de2852",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/mushaf_paper_provider.dart",
+    "lines": 177,
+    "sha256": "d52497d1628b122a0857c698091353d442571ea7f6d0db9bc3552a06f3ddcb38",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/mushaf_theme.dart",
+    "lines": 240,
+    "sha256": "a36e3099c306d10d8082bcc05654aa29a44d4acdbe9d42e754519d8fa56379cd",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/page_surahs.dart",
+    "lines": 38,
+    "sha256": "fad0d756017adf80ea15a80b347a6658826837b73dec3f8d7ec1e70c63db894d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/page_turn_provider.dart",
+    "lines": 38,
+    "sha256": "4b1ca734c3b28858fd5f4b2240391ae4e08352d08f4dc74b721a98462e881c8e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/quran_fullscreen_provider.dart",
+    "lines": 20,
+    "sha256": "56fbea9922b1c0dfb41af5ca42d1f275bc2b200a876fde69680967d2a2de32bc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/quran_jump_provider.dart",
+    "lines": 39,
+    "sha256": "1ae2fbb411137d7762af988c16f0577327c978d47ee2abc84c46b6acb766baf0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/quran_last_read.dart",
+    "lines": 41,
+    "sha256": "b1aa577bfbb40cbd74f95b8564dd4f12271a424691038da0cd4cbcbc8c07275d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/quran_translation_catalog.dart",
+    "lines": 94,
+    "sha256": "8b2e05e8097c8af0e739516bd3b146ac9682876344400c10cc649249876154f2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/quran_typography.dart",
+    "lines": 34,
+    "sha256": "880b3966031058f7419e736167f7c8e3e0f9048373076f7bebcbb91b570e9b7f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/quran_zoom_provider.dart",
+    "lines": 23,
+    "sha256": "a70715bf98bbc78378295d0ee2de107ebbf9f7ff1975b1eb216e60fa47b76662",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/recite_return_provider.dart",
+    "lines": 55,
+    "sha256": "49d5f1f4d11c6128a7b61f62735831e96b4834e7ba485d665df51edaa148727b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/tafseer_source_provider.dart",
+    "lines": 36,
+    "sha256": "eb97107280c9eaf7e42303c596b952e0e5a2c93330cf41343bf89a9a50722165",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/text_layout_provider.dart",
+    "lines": 66,
+    "sha256": "aaa5f65395d71b839a311af9a27e6c6ca598a622a83ab0f0c97c5fff313b8fb8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/data/translation_lang_provider.dart",
+    "lines": 72,
+    "sha256": "0cc3c28edb07b1e55fe2b977615fd15cdf9d7b7c95d79d3ac1cbb594f51ddcad",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/screens/quran_screen.dart",
+    "lines": 1054,
+    "sha256": "7600ad4463dba60876c581961bf41f71eee08c356ff7a7a1373c87d3ad8926cd",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/screens/quran_screen_views.dart",
+    "lines": 227,
+    "sha256": "b09687e8c431c8bcc10ac76113ab26c552d7d47a31942999a8b5d080671e91f5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/screens/sciences_pack_screen.dart",
+    "lines": 334,
+    "sha256": "f970ae267e315047b8026f888e953f8f0f7cadbe9899df7f43d2529e7404216a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/ayah_panel.dart",
+    "lines": 113,
+    "sha256": "2a7eada6d1cfce40f4efde2faa4dc88f673f6b1041964277c830a78d29463ae4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/irab_tab.dart",
+    "lines": 325,
+    "sha256": "51ffcb0cc0765ccf4d3b1340462981034a0c6fc8a29841f2af5b275c9ea4dd04",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/sciences_common.dart",
+    "lines": 149,
+    "sha256": "ac89fdecd148c6d34b74da1a8af57b34cd1f3a6ed0e1140872d0e0df0111d129",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/sciences_dialogs.dart",
+    "lines": 206,
+    "sha256": "0e4fbce9e2e9c1cc5820e5abeaa83b91bf851975b75835aa8736df005edc5d60",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/sciences_header.dart",
+    "lines": 402,
+    "sha256": "1db659f50399553cc856c618c5053baf8fa878e30f471731d022f66c5ec6675d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/tafseer_tab.dart",
+    "lines": 106,
+    "sha256": "6c36350eb33dbe380c24f754e46fa05d33e9c8b7849aa3b8602bcda0681d37bc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/translation_tab.dart",
+    "lines": 249,
+    "sha256": "1bfb1544fd038a10fea7ff28318c8dac27c95784455bad57eb16ac14685ff03b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences_sheet.dart",
+    "lines": 352,
+    "sha256": "95ae6e03159605d2ca61a9444fae5b95b99c33b90e729d939cb0d5f259c952e1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_share_card.dart",
+    "lines": 159,
+    "sha256": "0d459a07d23bb1e1c7584f2f6f63de2e4c776531c5e4f45cd37abed0f4e19582",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/continue_reading_card.dart",
+    "lines": 165,
+    "sha256": "9026232b731c213885dafcc494c074638e2b0e310446db42f01abe83cafc13d8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/auto_scroll_speed_bar.dart",
+    "lines": 69,
+    "sha256": "da0ecaef9d4205b2d6395c600d5a306872edd0e1c47754c297222fe6e952091f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/ayah_marker.dart",
+    "lines": 293,
+    "sha256": "028fb77a76be738b86e3a1578c0164ad56ccce60b7fa1d9f9b7703444c0087ec",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/ayah_wash_painter.dart",
+    "lines": 74,
+    "sha256": "198376c1d92d574d87f6012566d639ff6748d297f6ec0952f44168d10121912e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/chrome_auto_hide.dart",
+    "lines": 71,
+    "sha256": "4b6278b4fe356110f05c8ffaefc093ba091f9b90af2a7f462a3bd23488c9f3ed",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/chrome_fit.dart",
+    "lines": 102,
+    "sha256": "a1b671b48add7b9966e9131b132595b6d73f00af4b33680d4e641b7c4a55fd13",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/continuous_mushaf_view.dart",
+    "lines": 485,
+    "sha256": "15e14da5f36e8b26818ecb4a5ff0f271cd774c27cc2ba0b1c42319667da1914c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/fast_page_scroll_bar.dart",
+    "lines": 153,
+    "sha256": "39ea01f254122e3add80992d1caa7b28e428d7923ff2d62e2d4ac55151f9bc4a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/follows_recitation_note.dart",
+    "lines": 39,
+    "sha256": "15a5c3e56141bd365740718191be7ade2172aabcf3d2dce50502bb5119a5317c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_chrome.dart",
+    "lines": 334,
+    "sha256": "21b041677934edbb3de316df567bb7962ba8e4db4ed02eae2a6acbf0d2aa6d56",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_paper_chips.dart",
+    "lines": 55,
+    "sha256": "37c8fd5b0638550f60d880522c0c3cef54741ea741ac1c0cff55167745a42d33",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_remote_keys.dart",
+    "lines": 52,
+    "sha256": "b5231e972e2d44e181e6908fce04671e03fedf4a07f87c9c1bfc400a42280add",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/mushaf_toolbar.dart",
+    "lines": 222,
+    "sha256": "22478015839374b455cdebb6962983b8575848b31fb180171742f15a8ae68cba",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/page_overlay.dart",
+    "lines": 193,
+    "sha256": "eba885618cecff06cb08d5236be46ea86e1c20b3dc19e5c0396386e16abdff64",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/page_turn.dart",
+    "lines": 166,
+    "sha256": "a0b351161494abe2f74596afb123cd6d4504c9c53319b1b124bbb5451429e681",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/quran_display_sheet.dart",
+    "lines": 537,
+    "sha256": "e3f7ae45e227193d9346acbbb429552b005e445b1e5e03487ba88084d10620fa",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/recite_bar.dart",
+    "lines": 131,
+    "sha256": "c9d1b9862b4a5dfbf4340b6c53ae5c4150ecccd24be1f7bc5093a8dfe66deabc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/toolbar_bar.dart",
+    "lines": 54,
+    "sha256": "6f91e15b49e5e4e465bc3bdbeb5768d83f1443d523b3bfa87bede5318b93b0e7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf/toolbar_strip.dart",
+    "lines": 89,
+    "sha256": "73139403d082e2d76fd43f47f0a220ca9cf40436cd911147a935778d987be12e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_ayah_row.dart",
+    "lines": 218,
+    "sha256": "4e4f7b2c4781301900696cf6aaec24120c25e9fe9fddd9d430c2843c9842aa0c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_frame_painter.dart",
+    "lines": 348,
+    "sha256": "8f26db275c7d4cf85e5a1131465b934e6e9989bcae46148402ea02392b23ca6a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_nav_sheets.dart",
+    "lines": 392,
+    "sha256": "d7f0cb54d3a1cfd9e7f96b2ae849074602d300eed47796c3a2d4a1667231a748",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_page_view.dart",
+    "lines": 661,
+    "sha256": "107e6aa6dded83dc46dbc5ec1ef75cd85a21c451c4043df315a4cd958244424b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_text_page.dart",
+    "lines": 983,
+    "sha256": "3c289d31f9af009472a6d60cd3e680820b58186e164a0c58ae84ef709c70a086",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/mushaf_theme_picker.dart",
+    "lines": 470,
+    "sha256": "ca3ad4701625e45c2f0612066ecb651c08a48343005d132074cdb7c725278daa",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/quran_book_cover_thumbnail.dart",
+    "lines": 383,
+    "sha256": "2a628c3334d6faa85f12b0dbbd7d73e2908ddbefaac28b054b06cf483cdc814a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/reciter_picker_sheet.dart",
+    "lines": 298,
+    "sha256": "a31db233281910f047b59d81539435f954356fc52900d50f4ce6c77da0269986",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran/presentation/widgets/reciting_ayah_choice_sheet.dart",
+    "lines": 47,
+    "sha256": "808303d9e3e4ce1c04ef5754ff12e01abf853583dc0bd1e463086b72ec777383",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/ayah_download_notice.dart",
+    "lines": 92,
+    "sha256": "fc18127a685f9780ee0a0eea42f21a665f8c5c3abbbfb8db76ff98d8fbe49532",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/ayah_recitation_library.dart",
+    "lines": 737,
+    "sha256": "3966d2bf2a037557e50392f628489fe77831b170e0f0815f6fb4d1fc950c9ce4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/device_audio_scanner.dart",
+    "lines": 202,
+    "sha256": "3641e3e1051480b13c6f6c94636815405a643f0dc50dc9016c535e20472085bc",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/mp3quran_api.dart",
+    "lines": 163,
+    "sha256": "c242be2cf294de099a0e38c80e3fb3ea70fbe842b3891dc5610415f6dca65d01",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/player_theme.dart",
+    "lines": 115,
+    "sha256": "fe5968140ac272cfe3f131fb3fa18188f54f3e33e4e7a538fc8ee117c48e447d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/quran_audio_favorites.dart",
+    "lines": 56,
+    "sha256": "fbb40008c1c1bb23545aec685e243b398f4b97ad8ca347b4fbe6d743eaac4815",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/quran_audio_library.dart",
+    "lines": 624,
+    "sha256": "6a74a94a84fce120786435e000cc3331c744dce06f9695509fd2477db75ea0a8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/quran_audio_player.dart",
+    "lines": 451,
+    "sha256": "59d6f46a0e630bdbe07cd71e772738b4b792844e11c08afc206e6a783d3465e9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/recitation_sizes.dart",
+    "lines": 45,
+    "sha256": "7fa52e9ff3e7662498b70fb26e040727dd8b9be518a8738f404052da0a481435",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/data/surah_fallback.dart",
+    "lines": 69,
+    "sha256": "2a324d386863b66a628148eeffc5098f35cebeab5a65457e7fd6eed5db439ff0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/ayah_download_screen.dart",
+    "lines": 207,
+    "sha256": "1b9f105213c5e23b5d3ac9c23c5808c5520f12e6b358984dc39d45bcd204dc91",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/ayah_reciter_screen.dart",
+    "lines": 503,
+    "sha256": "f20197b0f4a8414c63be04da047098547c9741b32abdfab1334e45c79fd377e5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/player_screen.dart",
+    "lines": 949,
+    "sha256": "7741935b6be28a74d85bb38d4a72bd6b6bf6cc6752164b4e85384f488b2b3311",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/quran_audio_screen.dart",
+    "lines": 764,
+    "sha256": "a49c6aa3b4587f6141398a874b71e599ad7c08527cc3f36e175bc8215db6ab30",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/reciter_screen.dart",
+    "lines": 574,
+    "sha256": "179244a42831b3d88bbea68a62c53488edc1b87ae29920029e9bfe323c827e5f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/widgets/audio_common.dart",
+    "lines": 364,
+    "sha256": "159b2dca5eb08222d6dd9c7d01dbdc1fad1d773b7712ff2f6de3f49c801a8186",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/widgets/ayah_dl_ring.dart",
+    "lines": 72,
+    "sha256": "2d482044c45cbd546ca969c6a3182bd0f9d739e0b2b65edaaed60e3b1ca1804f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/quran_audio/presentation/widgets/mini_player.dart",
+    "lines": 242,
+    "sha256": "93fe40e821fe0a8540a8c06e9e1d2c6d5764ee4a7018ab44365c0d6be43fb303",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
+    "lines": 272,
+    "sha256": "71aef6a2c30e6b407e094049cdbf70b63cb0515058390c846d718fd5928a1847",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/ruqyah/presentation/screens/ruqyah_audio_screen.dart",
+    "lines": 392,
+    "sha256": "c17cbbe077daade9c314f1d648af59c8b45d91df19038690992bbf9ce0a47504",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/ruqyah/presentation/screens/ruqyah_screen.dart",
+    "lines": 415,
+    "sha256": "8ecf0bf446f5cc17b3cb61d3fed129b38777697a484708d2ee4962ef7873e23f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/search/data/topic_tree.dart",
+    "lines": 204,
+    "sha256": "ab084cea5ca619a87d4b79376e28fb8036bdceb75a32fc12a3a1daa0176a8e8f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/search/presentation/screens/search_screen.dart",
+    "lines": 536,
+    "sha256": "6de4bf153db72e8f18c4a1a9aa46edf96ee94adc687ddd88f2618e30d6453ab7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/data/focus_mode_provider.dart",
+    "lines": 125,
+    "sha256": "ece1a7252634cb925b335caef6b0d0ff0ab34af7ef32310a717227a2832246c3",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/data/reader_name_provider.dart",
+    "lines": 64,
+    "sha256": "d7f21fdd963e49f1c45f6a86ff23a3c1f546ba74fc62eb5332c7359e75f91718",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/data/sources_catalog.dart",
+    "lines": 428,
+    "sha256": "b5616f3e07504332a3a58fe581914e5cd7843e736df1ea91fd4d89ece8d60860",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/data/transliteration_settings_provider.dart",
+    "lines": 28,
+    "sha256": "e7f8eeaa95dc2cf19c1a62d83d2597d4a8ca6cdba78c20c193fd812154b9beb6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/screens/about_screen.dart",
+    "lines": 600,
+    "sha256": "59fa37c4c81f78819102b1dce2aa0b4425c742c2f17661864ec8261b6382be2d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/screens/settings_screen.dart",
+    "lines": 704,
+    "sha256": "3d740c373f2eb4c13dd41b4842dee51b516b550a4c0118a14ac794e1b35979de",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/screens/sources_screen.dart",
+    "lines": 146,
+    "sha256": "7ffffb8994c298ff266d1e26610ccaa62f2e775e40734aeaaca111e7221616ca",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/widgets/app_font_picker.dart",
+    "lines": 137,
+    "sha256": "cbdb4d9c874ad56ba634fd9fec0910f81881cdbc67972b663989eee9b233593b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/widgets/focus_mode_picker.dart",
+    "lines": 142,
+    "sha256": "938275b4452427c5e5a229a44ba2331189735045ae4988dd12f090db48556dff",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/widgets/non_arabic_reading_card.dart",
+    "lines": 196,
+    "sha256": "f0f981de0b25d2c40c55d7d7da40c487b93e0cc836208a7b682625e5566f3dff",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/widgets/permissions_section.dart",
+    "lines": 213,
+    "sha256": "3d6251f13ee2a06e67031ee00de13a516f326be27e01ddc25a3f9b8f96a58b06",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/settings/presentation/widgets/reader_name_sheet.dart",
+    "lines": 241,
+    "sha256": "4e1f99bbf3f9b7249623bdafa684a9ca31029fdc7676a7266b17ee9db09a46a7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/shamela/data/shamela_book_builder.dart",
+    "lines": 248,
+    "sha256": "014075b9c04c0fcf53bb2ea90fa93b876ee3edfcf0474d817f65e39ff73af942",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/shamela/data/shamela_catalog.dart",
+    "lines": 224,
+    "sha256": "57f8f7670ac006e665a18bc3712a646a29b6284d387b289f3ddaea7de8204b66",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/shamela/data/shamela_catalogue_ids.dart",
+    "lines": 243,
+    "sha256": "f5af5ee33f30dd96c4f83606605f4244f8f336a7cca450f742d8798271eb2fad",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/shamela/data/shamela_import_service.dart",
+    "lines": 172,
+    "sha256": "b57bf02c452918a9547374d8fa9473e8a24505c565a7d4e87dc6632f7a4cf620",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/shamela/data/shamela_library.dart",
+    "lines": 105,
+    "sha256": "96374d919e894544b5b7de994ab813bd29b70fd20d4fbcd3c7e85b643345b8c7",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/shamela/data/shamela_nass.dart",
+    "lines": 121,
+    "sha256": "31cc0cc1c5084671f02bbc48a6a8a33dcf3ecd3d46f761147f806c1b204fac2f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/shamela/presentation/shamela_screen.dart",
+    "lines": 493,
+    "sha256": "4acc8e92c48b83eb14b6b9080463d3ad82f6e01838e24753738e069e7d504e29",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/splash/data/splash_video_provider.dart",
+    "lines": 109,
+    "sha256": "de4674ebc88938091dde6cd0fb1b7b118447f86655f4cdce98679ec4f9fae9b0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/splash/presentation/screens/splash_preview_screen.dart",
+    "lines": 155,
+    "sha256": "fc8188c0eaffb687a581e0873d4b792b838976bbb4dec8109af7073a92bd026f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/splash/presentation/screens/splash_screen.dart",
+    "lines": 354,
+    "sha256": "6b2c07457a012dc98c6a7b0f3ee245b1249cd4c12625a4e93dfef14e228d598c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/splash/presentation/widgets/whole_clip.dart",
+    "lines": 60,
+    "sha256": "b3d2266e192fbbc6423ed2e27ae908b3caa77d6951c96dfe3284425e7410444b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/sunan_suwar/data/sunan_suwar_catalog.dart",
+    "lines": 33,
+    "sha256": "f4bc5ea4ff20ee60e26326feaea161617730d3c70cdf18021c1fe4643e6fe491",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/sunan_suwar/data/sunan_suwar_store.dart",
+    "lines": 112,
+    "sha256": "f85e7cbfec6e50e532f1026813fb53a02cad622b6114d765caf9114465971e45",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/sunan_suwar/presentation/selected_surahs_card.dart",
+    "lines": 104,
+    "sha256": "6087fc2c9c9b8a2e8ed925e998c850309f3bb6dda86e251995e09e9c611978e9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart",
+    "lines": 709,
+    "sha256": "7dddf2a6fea54e7d3a8cf135723f6928ce6f6bbc4507e2a4f2f1f3368a3a0fd2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_card.dart",
+    "lines": 255,
+    "sha256": "6708d7eb2478d6dc63613b9973bf4ec24a6e295c40102fccdde7dce70e604c2b",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_navigation.dart",
+    "lines": 20,
+    "sha256": "8792dba181cdd22c2547afc7e957240649010c59a5184686d60c3fee48b81040",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_reminders_section.dart",
+    "lines": 84,
+    "sha256": "759ecc85acc33dc7ac2c4027c3e2937b30f93a97f84e047df1ea9a719592e0b5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/support/presentation/screens/support_screen.dart",
+    "lines": 201,
+    "sha256": "4e5aa25d7954444720eb4f7178f9f6337475a3d01db3a10dbeb3ca6367f98502",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/articulation.dart",
+    "lines": 152,
+    "sha256": "963e2f42347d88ea9198262e4de8eaa1314740828ef30bff58db809f2476f715",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/bundled_matn.dart",
+    "lines": 18,
+    "sha256": "6dc6f2850eb775530610d11ca4b518f79e7c0afb4e72121f661ea32cc0ead1d6",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/course_book.dart",
+    "lines": 171,
+    "sha256": "14eb393afab98b4b3fd5ba0da5abf8bb914666a43f5c972e0072d732f928c610",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_course.dart",
+    "lines": 200,
+    "sha256": "523c67fb900b5aaed8baf47c2a0d3ec06ceaba6581f8ec2c851f14e13a8702b2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_examples.dart",
+    "lines": 113,
+    "sha256": "03d207e8235ad455dfc057d9d68fdb3b9de636626d331958d9943185686080d8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_lesson_text.dart",
+    "lines": 109,
+    "sha256": "d2fd910dd771036378f69666b5f7b96237ed7c29be7c92d5b841e6ba4fb7134a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_sharh.dart",
+    "lines": 49,
+    "sha256": "59fb5bed73aa5a85df0389cebcb75be698c701aaf0fa40c5a05a5e627e1e08fd",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/makharij.dart",
+    "lines": 309,
+    "sha256": "dfa7ddeabfbff3ab2aed647ed3c50904d2bb559f1c857dba6127838cfd0612be",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/tajweed_example.dart",
+    "lines": 31,
+    "sha256": "07bfee7daf4133bf1392a3513dff841bca6aa8a5643edea231c063c6ec278dc8",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/tamhid_course.dart",
+    "lines": 163,
+    "sha256": "55625f81384a03c25ba54ffe4e79718ab7c9a75bb4553d98c9f00505536ab31a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/tamhid_lesson_text.dart",
+    "lines": 68,
+    "sha256": "f2b54e859d3530dc26b8e39a82f59b2e732d2a5c889dcbd60b6d0cfabea441b0",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/text_corrections.dart",
+    "lines": 157,
+    "sha256": "c09b3563c9f6a6e97c5d34463f2589db3fe565335b390f773b4aa48d29bfce50",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/tuhfa_course.dart",
+    "lines": 148,
+    "sha256": "0c09a272679618e306345bd3b94519248d36513c04eac6d8436c59f3b4f9e725",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/data/tuhfa_lesson_text.dart",
+    "lines": 101,
+    "sha256": "b584f50f01acb01d1057256dba3dab0d2d8d07e64fbbaf083c5e135ce2bc798c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/screens/course_book_screen.dart",
+    "lines": 652,
+    "sha256": "4c6c559563e8f6f621c603b6234590a786767d3c74aaf4f437c29e75c6c7dd0a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/screens/jazariyyah_level_screen.dart",
+    "lines": 442,
+    "sha256": "57319e970f7fe4221039c6eb2a37c0f6415f875cebc9aa5707b3dd1ec94d3446",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/screens/makharij_screen.dart",
+    "lines": 400,
+    "sha256": "a0a0e1f2ddd3ed18d93fa729353cb37afab885c160329d259f6e614666c70b09",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/screens/tajweed_levels_screen.dart",
+    "lines": 268,
+    "sha256": "2137f8489f0bbe35d576ab90fe104fb43c94e71d24a5d31c4f365018275e5f21",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/screens/tamhid_level_screen.dart",
+    "lines": 305,
+    "sha256": "c79c7a9e453bd9b9524826ae756899b94e1bb821c1dbc5bfcc1cf8fb7a5e0b2d",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/screens/tuhfa_level_screen.dart",
+    "lines": 346,
+    "sha256": "d40df9f52725e03807a951090c3be8cb2a2f40d73843459113fbe1450e4ff50e",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/lesson_text.dart",
+    "lines": 97,
+    "sha256": "aadc313e6d9c0a4428c9f45ec0a1a0a9fcd21d6511af180d40cc247794385bc9",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/listen_card.dart",
+    "lines": 259,
+    "sha256": "9c188594510cbdd68aec8190919dbfde6e2851956b75a2518cd68c410a0defb4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/makharij_diagram.dart",
+    "lines": 485,
+    "sha256": "f2cebe1f488f8c4662f1d3bb893b3fd72bfb4b4d96a0b667a0455cd00935ea1f",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/makharij_entry.dart",
+    "lines": 72,
+    "sha256": "3aa6f0b30580394cafaa786f546caeecbae6bef1a39bdd51449c26d9816102d1",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tasbih_reminder/data/tasbih_items.dart",
+    "lines": 90,
+    "sha256": "94afa6befd14dc86a59d741de9b934e4c4ef6f59466f520946366bc12e3e2c3a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tasbih_reminder/data/tasbih_reminder_provider.dart",
+    "lines": 44,
+    "sha256": "c626558e43423703faf0cea247fffb5ac9b9401f55ec3fe20b45fb9a5b26245c",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tasbih_reminder/data/tasbih_reminder_service.dart",
+    "lines": 104,
+    "sha256": "b45a06b553c7a320b29c49a93901d4ed94c30bc904cce5e74e3fd145a0c70330",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tasbih_reminder/presentation/tasbih_reminder_section.dart",
+    "lines": 70,
+    "sha256": "2d22b3c2edd1659b5fb2a65880146907f89eba5a1dc4dafe7d8846643698876a",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tutorial/data/tutorial_anchors.dart",
+    "lines": 127,
+    "sha256": "33c46d8d829229b53c8837562977eca16f38ed59233576786ba23eaf54bc4180",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tutorial/data/tutorial_chapters.dart",
+    "lines": 362,
+    "sha256": "93f34f68aaab56b6e3b1a02aba09d10eeaf637a15061d50cae1916e9ab838fd5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tutorial/data/tutorial_state.dart",
+    "lines": 78,
+    "sha256": "8a7713db814d7640d48c2e9fab5b8cfecee2453bac957acbdb92ed7c4f06f786",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tour_pieces.dart",
+    "lines": 343,
+    "sha256": "a0ffb4a61874d720e472fd9950100275d1a3f26bb2b06193891b3c6c9443c1d2",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tour_slides.dart",
+    "lines": 177,
+    "sha256": "a327e3f24ec9a8ba0c5e97d8ac72ad6671448b4f5756add28bb0f931dff611e5",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tutorial_entry_card.dart",
+    "lines": 120,
+    "sha256": "3848143937d230d280fd5ca7fdbfa5c3e381cdfde94baca6e1ddb8cc4b921b16",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tutorial_overlay.dart",
+    "lines": 519,
+    "sha256": "d068effbfc9cdc8b9c7763b872c9c03f4984ca71643d041757336384c91127f4",
+    "review": "pending"
+  },
+  {
+    "path": "rafeeq_app/lib/main.dart",
+    "lines": 224,
+    "sha256": "842e238162dd79887eb4d712fe4a44a62b0c34972730013c0a544914848e93fa",
+    "review": "pending"
+  },
+  {
+    "path": "scripts/check.ps1",
+    "lines": 74,
+    "sha256": "9a2e13507634882cfb861091a460bda13d4e09a39af393526130665668e612ea",
+    "review": "pending"
+  },
+  {
+    "path": "scripts/check_apk_native.py",
+    "lines": 45,
+    "sha256": "1e40f3695680ba06a0cd7c4b4a1b6d4a3c87fe7aea1696002895345f4d0cfff2",
+    "review": "pending"
+  },
+  {
+    "path": "scripts/checkpoint.ps1",
+    "lines": 122,
+    "sha256": "fe4f4516d5e2be60d8226965e8f46cb256356640f01cbb8d045eefecf966213f",
+    "review": "pending"
+  },
+  {
+    "path": "scripts/sign_release.py",
+    "lines": 164,
+    "sha256": "1540e64a09d7cad79bec17b87086e864dbf19c6dfedfacef04436c9016db49c2",
+    "review": "pending"
+  },
+  {
+    "path": "sync_backend/package.json",
+    "lines": 14,
+    "sha256": "3a63ef35e58a4d099dcb8a8cf89ae7c3a1bebebdaaebe7263c630438934278ab",
+    "review": "pending"
+  },
+  {
+    "path": "sync_backend/schema.sql",
+    "lines": 15,
+    "sha256": "00ef34ed22290c3f03d4636699e32b9b1e99db119a6404ff639f7c1302e99681",
+    "review": "pending"
+  },
+  {
+    "path": "sync_backend/src/index.ts",
+    "lines": 276,
+    "sha256": "0eb3187892c4bb76c47532f04b06ca7603e7c5cabd8a935beb1b5eb1cdd7c6f2",
+    "review": "pending"
+  },
+  {
+    "path": "sync_backend/tsconfig.json",
+    "lines": 12,
+    "sha256": "70b6c43a00bc088aa10e531b32c5cfebd2df4d8690dfc4b37bc8402c6245133c",
+    "review": "pending"
+  },
+  {
+    "path": "sync_backend/wrangler.toml",
+    "lines": 8,
+    "sha256": "6a984a8143056bda2f4d1d31df50bce0a12eda410149eb9542586387b3404cfd",
+    "review": "pending"
+  }
+]
