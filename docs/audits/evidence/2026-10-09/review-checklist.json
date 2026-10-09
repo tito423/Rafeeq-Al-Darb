@@ -3113,25 +3113,65 @@
     "path": "rafeeq_app/lib/features/azkar/data/azkar_backgrounds.dart",
     "lines": 36,
     "sha256": "803d42d70e9b1d47d3d8e85d9053f7dd1f116eff492c8b2a7fa442141240e081",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 36,
+    "notes": [
+      {
+        "lines": [
+          1,
+          36
+        ],
+        "note": "Reviewed nine bundled-photo adhkar categories and all 133 section/category mappings, including separate morning/evening IDs27/28, deliberate Quran-dua omission and ruqyah route. Header historical shared-section description superseded by Sept29 map; current mapping is authoritative."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/data/azkar_categories.dart",
     "lines": 267,
     "sha256": "be5f982309dc632e6b5cc3c3d84f23fbf6eb3161d51a330428301ccbe9349c79",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 267,
+    "notes": [
+      {
+        "lines": [
+          1,
+          267
+        ],
+        "note": "Reviewed nine bundled-photo adhkar categories and all 133 section/category mappings, including separate morning/evening IDs27/28, deliberate Quran-dua omission and ruqyah route. Header historical shared-section description superseded by Sept29 map; current mapping is authoritative."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/data/azkar_settings_provider.dart",
     "lines": 174,
     "sha256": "5830ce8e5ea411a09d02a93d64fd70b6badd276e5a0c1f0b86b80b9ec86049a4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 174,
+    "notes": [
+      {
+        "lines": [
+          1,
+          174
+        ],
+        "note": "Reviewed persisted adhkar haptics/reminder/voice settings and constructor rearm, copyWith null clearing and TimeOfDay parsing; all tasbeeh short/long keys/colors, targets and buzz/celebration rules. Out-of-range restored times and async rearm races remain candidates only."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/data/tasbeeh_catalog.dart",
     "lines": 67,
     "sha256": "65bb7c682fe2c726c8e71e5c8c5b4fba8e3aac80038dbe8b5695f8c705bfc618",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 67,
+    "notes": [
+      {
+        "lines": [
+          1,
+          67
+        ],
+        "note": "Reviewed persisted adhkar haptics/reminder/voice settings and constructor rearm, copyWith null clearing and TimeOfDay parsing; all tasbeeh short/long keys/colors, targets and buzz/celebration rules. Out-of-range restored times and async rearm races remain candidates only."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/adhkar_listen_row.dart",
@@ -4993,19 +5033,49 @@
     "path": "rafeeq_app/lib/features/library/presentation/widgets/link_list_manage_screen.dart",
     "lines": 303,
     "sha256": "0e75806c0261fe2a386460e6a60a2b00e628631ee32bf9c8a5f173242ff5f6d2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 303,
+    "notes": [
+      {
+        "lines": [
+          1,
+          303
+        ],
+        "note": "Reviewed link-management reorder/hidden/delete/restore and HTTP URL validator, form controllers, open mode/failure feedback; ListenTextButton Quran-bracket filtering/80-percent gate/pulse/run and stop-on-dispose. Candidate: successful available reply after disposal proceeds into speak without mounted/run check; actual mocked TTS proof needed. Gold body text extends A22 candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/listen_text_button.dart",
     "lines": 197,
     "sha256": "d56493c47bcb49792b9bf9c8ba281ca9ca10e5dedba60fc92685690f496ddcb9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 197,
+    "notes": [
+      {
+        "lines": [
+          1,
+          197
+        ],
+        "note": "Reviewed link-management reorder/hidden/delete/restore and HTTP URL validator, form controllers, open mode/failure feedback; ListenTextButton Quran-bracket filtering/80-percent gate/pulse/run and stop-on-dispose. Candidate: successful available reply after disposal proceeds into speak without mounted/run check; actual mocked TTS proof needed. Gold body text extends A22 candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/open_voice_offer.dart",
     "lines": 151,
     "sha256": "3830a0f6233164e432b4a723afb86bf3241d64122a074e56a6769400a483d8fd",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 151,
+    "notes": [
+      {
+        "lines": [
+          1,
+          151
+        ],
+        "note": "Reviewed voice offer/device preference, mounted guards, progress merged-listenable and install dialog error/cancel/background behavior. Library prefix complete. No app code edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/more/presentation/screens/more_screen.dart",
