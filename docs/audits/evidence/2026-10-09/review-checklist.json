@@ -5870,19 +5870,49 @@
     "path": "rafeeq_app/lib/features/quotes/data/quote_background_catalog.dart",
     "lines": 83,
     "sha256": "0b12b1fd2ef215885d75c230563cf302a9b7837e5dbc4d32daba98de1c33e289",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 83,
+    "notes": [
+      {
+        "lines": [
+          1,
+          83
+        ],
+        "note": "Completed quote backgrounds/palettes/settings/repository. Corpus preserves Arabic original with print source/page and seven-language map; uniform quote selection. Asset-level quote provenance/translation verification still pending; restore overwrite remains candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/data/quote_palettes.dart",
     "lines": 84,
     "sha256": "6cc9cf5357e926d8a998d3cf1013edc6926a61ac46fb74a6aae7ae98a6c23b82",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 84,
+    "notes": [
+      {
+        "lines": [
+          1,
+          84
+        ],
+        "note": "Completed quote backgrounds/palettes/settings/repository. Corpus preserves Arabic original with print source/page and seven-language map; uniform quote selection. Asset-level quote provenance/translation verification still pending; restore overwrite remains candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/data/quote_reminder_provider.dart",
     "lines": 86,
     "sha256": "6671554a5f0bcd5dc14044181c8880fc0ecbc1803da4270ee91eeeb397003db0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 86,
+    "notes": [
+      {
+        "lines": [
+          1,
+          86
+        ],
+        "note": "Completed quote backgrounds/palettes/settings/repository. Corpus preserves Arabic original with print source/page and seven-language map; uniform quote selection. Asset-level quote provenance/translation verification still pending; restore overwrite remains candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/data/quote_reminder_service.dart",
@@ -5904,31 +5934,81 @@
     "path": "rafeeq_app/lib/features/quotes/data/quote_repository.dart",
     "lines": 174,
     "sha256": "87dd7861afec7edfcaafe1d9303853253494e0b539d8991e28e6e657b0ba0378",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 174,
+    "notes": [
+      {
+        "lines": [
+          1,
+          174
+        ],
+        "note": "Completed quote backgrounds/palettes/settings/repository. Corpus preserves Arabic original with print source/page and seven-language map; uniform quote selection. Asset-level quote provenance/translation verification still pending; restore overwrite remains candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/presentation/quote_card_screen.dart",
     "lines": 232,
     "sha256": "375800fe768361d9d8d18accbde6f04310eed1e5be92999f2ccf7e350dcae1b8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 232,
+    "notes": [
+      {
+        "lines": [
+          1,
+          232
+        ],
+        "note": "Completed quote full screen/navigation/settings. Notification navigation line 29 calls byKey without locale and defaults Arabic, while localized scheduled notifications use requested locale; actual navigation proof needed. Full screen omits quote page/sourceLabel; potential provenance gap, data verification pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/presentation/quote_navigation.dart",
     "lines": 66,
     "sha256": "f4812ade5a1e773f1f5baab01bf9e4c05c2c45fd1aad030c01b1711464c5b95a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 66,
+    "notes": [
+      {
+        "lines": [
+          1,
+          66
+        ],
+        "note": "Completed quote full screen/navigation/settings. Notification navigation line 29 calls byKey without locale and defaults Arabic, while localized scheduled notifications use requested locale; actual navigation proof needed. Full screen omits quote page/sourceLabel; potential provenance gap, data verification pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/presentation/quote_reminder_section.dart",
     "lines": 158,
     "sha256": "8927cf621bba3bf084f72facddb2d64c30e49bbdeef9ebe37edf5e23aa1e38c0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 158,
+    "notes": [
+      {
+        "lines": [
+          1,
+          158
+        ],
+        "note": "Completed quote full screen/navigation/settings. Notification navigation line 29 calls byKey without locale and defaults Arabic, while localized scheduled notifications use requested locale; actual navigation proof needed. Full screen omits quote page/sourceLabel; potential provenance gap, data verification pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/presentation/widgets/home_quote_card.dart",
     "lines": 308,
     "sha256": "711c94bb63709757a94354577f0585f3a9a61f501db5582036af4594e7f89429",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 308,
+    "notes": [
+      {
+        "lines": [
+          1,
+          308
+        ],
+        "note": "Completed home quote card. Strong candidate: QuoteLibrary.at returns new objects, all.indexOf(quote) at line196 is -1 and clamps every opened miniature to first item. Actual widget reproduction next; no confirmed finding before test."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/ayah_coords_repository.dart",
