@@ -4005,7 +4005,17 @@
     "path": "rafeeq_app/lib/features/hadeethenc/presentation/screens/hadeethenc_tab.dart",
     "lines": 249,
     "sha256": "bbc321c32d99987e19753e7ac8fad013df5eb09b8ed19a29c386c11bc5fdfada",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 249,
+    "notes": [
+      {
+        "lines": [
+          1,
+          249
+        ],
+        "note": "Completed HadeethEnc tab: locale-specific pack/provider selection, debounced search disposal, category/count/source credit and route metadata. Categories/results FutureBuilders do not handle hasError and can render indefinite spinner on repository query failure; scenario requires actual corrupt/mismatched DB proof. FutureBuilder cached data across locale/query changes needs widget timing proof before attributing stale content. Institutional grading acceptance remains separate from named edition/grader approval."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hadith_daily/data/daily_hadith_provider.dart",
