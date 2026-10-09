@@ -6533,13 +6533,40 @@
     "path": "rafeeq_app/lib/features/quran_audio/data/ayah_recitation_library.dart",
     "lines": 737,
     "sha256": "3966d2bf2a037557e50392f628489fe77831b170e0f0815f6fb4d1fc950c9ce4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 737,
+    "notes": [
+      {
+        "lines": [
+          1,
+          517
+        ],
+        "note": "AyahRecitationLibrary1-517 source read: Hafs counts match established tests; bounded handed/backlog queue traced. Nonzero mp3 only validation and index non-atomic overlapping writes candidates pending controlled proof/content samples; ANY status frees handed as queue submission intentional needs plugin trace before claim."
+      },
+      {
+        "lines": [
+          518,
+          737
+        ],
+        "note": "Ayah library completion/failed/pause/cancel/delete/repair remaining fully read; race delete then immediate redownload can clear new files candidate; _save unawaited overlapping file writes candidate. Device audio scanner whole read audio+storage fallback correct, arbitrary folder permission external needed. Theme restore and favorites whole read; no verified new defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/device_audio_scanner.dart",
     "lines": 202,
     "sha256": "3641e3e1051480b13c6f6c94636815405a643f0dc50dc9016c535e20472085bc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 202,
+    "notes": [
+      {
+        "lines": [
+          1,
+          202
+        ],
+        "note": "Ayah library completion/failed/pause/cancel/delete/repair remaining fully read; race delete then immediate redownload can clear new files candidate; _save unawaited overlapping file writes candidate. Device audio scanner whole read audio+storage fallback correct, arbitrary folder permission external needed. Theme restore and favorites whole read; no verified new defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/mp3quran_api.dart",
@@ -6561,31 +6588,88 @@
     "path": "rafeeq_app/lib/features/quran_audio/data/player_theme.dart",
     "lines": 115,
     "sha256": "fe5968140ac272cfe3f131fb3fa18188f54f3e33e4e7a538fc8ee117c48e447d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 115,
+    "notes": [
+      {
+        "lines": [
+          1,
+          115
+        ],
+        "note": "Ayah library completion/failed/pause/cancel/delete/repair remaining fully read; race delete then immediate redownload can clear new files candidate; _save unawaited overlapping file writes candidate. Device audio scanner whole read audio+storage fallback correct, arbitrary folder permission external needed. Theme restore and favorites whole read; no verified new defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/quran_audio_favorites.dart",
     "lines": 56,
     "sha256": "fbb40008c1c1bb23545aec685e243b398f4b97ad8ca347b4fbe6d743eaac4815",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 56,
+    "notes": [
+      {
+        "lines": [
+          1,
+          56
+        ],
+        "note": "Ayah library completion/failed/pause/cancel/delete/repair remaining fully read; race delete then immediate redownload can clear new files candidate; _save unawaited overlapping file writes candidate. Device audio scanner whole read audio+storage fallback correct, arbitrary folder permission external needed. Theme restore and favorites whole read; no verified new defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/quran_audio_library.dart",
     "lines": 624,
     "sha256": "6a74a94a84fce120786435e000cc3331c744dce06f9695509fd2477db75ea0a8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 624,
+    "notes": [
+      {
+        "lines": [
+          1,
+          551
+        ],
+        "note": "QuranAudioLibrary1-551 read. Strong candidate delayed retry333-338 checks entry/paused/disk but not pending; cancel/cancelSurah clear pending without removing entry so stale minute retry re-enqueues after cancel. Needs actual service controlled status proof. _onUpdate complete counts without exists check and late fallback after pause candidate. Registry overlapping non-atomic saves candidate."
+      },
+      {
+        "lines": [
+          552,
+          624
+        ],
+        "note": "AudioLibrary remaining imports/free/local read; cache-only rename preserves original external files. QuranAudioPlayer whole451 read, no generation guard in _startAt/_recover/claim await candidate stale queue after stop or replacement; _loading single boolean concurrent loads candidate. Sleep endOfTrack shuffle transition may stop after autoAdvance index change expected. Recitation sizes whole read."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/quran_audio_player.dart",
     "lines": 451,
     "sha256": "59d6f46a0e630bdbe07cd71e772738b4b792844e11c08afc206e6a783d3465e9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 451,
+    "notes": [
+      {
+        "lines": [
+          1,
+          451
+        ],
+        "note": "AudioLibrary remaining imports/free/local read; cache-only rename preserves original external files. QuranAudioPlayer whole451 read, no generation guard in _startAt/_recover/claim await candidate stale queue after stop or replacement; _loading single boolean concurrent loads candidate. Sleep endOfTrack shuffle transition may stop after autoAdvance index change expected. Recitation sizes whole read."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/recitation_sizes.dart",
     "lines": 45,
     "sha256": "7fa52e9ff3e7662498b70fb26e040727dd8b9be518a8738f404052da0a481435",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 45,
+    "notes": [
+      {
+        "lines": [
+          1,
+          45
+        ],
+        "note": "AudioLibrary remaining imports/free/local read; cache-only rename preserves original external files. QuranAudioPlayer whole451 read, no generation guard in _startAt/_recover/claim await candidate stale queue after stop or replacement; _loading single boolean concurrent loads candidate. Sleep endOfTrack shuffle transition may stop after autoAdvance index change expected. Recitation sizes whole read."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/surah_fallback.dart",

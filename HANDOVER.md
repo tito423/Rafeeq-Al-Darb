@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 02:06 — IN PROGRESS — resume here**
+**2026-10-10 02:07 — IN PROGRESS — resume here**
 
-audit: complete downloads feature source review (357 files)
+audit: review recitation libraries and shared player (364 files)
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
