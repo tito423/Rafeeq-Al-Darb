@@ -7508,13 +7508,33 @@
     "path": "rafeeq_app/lib/features/settings/data/sources_catalog.dart",
     "lines": 428,
     "sha256": "b5616f3e07504332a3a58fe581914e5cd7843e736df1ea91fd4d89ece8d60860",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 428,
+    "notes": [
+      {
+        "lines": [
+          1,
+          428
+        ],
+        "note": "Reviewed all source credit groups and actual catalog links, rights/source comments, generated ruqyah group, and synchronous transliteration preference provider. Live rights and corpus provenance remain content verification tasks, not established by comments."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/data/transliteration_settings_provider.dart",
     "lines": 28,
     "sha256": "e7f8eeaa95dc2cf19c1a62d83d2597d4a8ca6cdba78c20c193fd812154b9beb6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 28,
+    "notes": [
+      {
+        "lines": [
+          1,
+          28
+        ],
+        "note": "Reviewed all source credit groups and actual catalog links, rights/source comments, generated ruqyah group, and synchronous transliteration preference provider. Live rights and corpus provenance remain content verification tasks, not established by comments."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/screens/about_screen.dart",
