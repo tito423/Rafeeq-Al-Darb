@@ -8542,7 +8542,17 @@
     "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tutorial_entry_card.dart",
     "lines": 120,
     "sha256": "3848143937d230d280fd5ca7fdbfa5c3e381cdfde94baca6e1ddb8cc4b921b16",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 120,
+    "notes": [
+      {
+        "lines": [
+          1,
+          120
+        ],
+        "note": "Read tutorial entry card entirely: quick/detailed running mode state transitions and persistent every-launch switch are wired to actual providers; group accent governs quick-tour white button text and requires actual contrast comparison against each parent accent. Side-by-side Expanded controls still need seven-locale large-text layout verification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tutorial_overlay.dart",
