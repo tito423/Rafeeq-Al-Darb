@@ -3517,55 +3517,166 @@
     "path": "rafeeq_app/lib/features/downloads/presentation/screens/downloads_screen.dart",
     "lines": 735,
     "sha256": "4d2bbc78621702124b0f4927ecaf8b84c44753d51c8f559eed3c689ea8d552bf",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 735,
+    "notes": [
+      {
+        "lines": [
+          1,
+          519
+        ],
+        "note": "Downloads overview source1-519 read; category route and storage rendering traced; no new verified defect. Async freeCategory ref lifetime candidate awaiting controller trace."
+      },
+      {
+        "lines": [
+          520,
+          735
+        ],
+        "note": "Downloads screen remaining and active panel fully read; delete line566 ref after await/disposal candidate; repair catches timeout but operations continue, delayed refread caught; active Dio book progress correctly appears here unlike A29. Screen claim task tap often no-op candidate not severity yet."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/active_downloads_panel.dart",
     "lines": 310,
     "sha256": "faff160321d75d325053d2b37f91aa6d3aa0e4f0cd28664d405ad401554ed775",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 310,
+    "notes": [
+      {
+        "lines": [
+          1,
+          310
+        ],
+        "note": "Downloads screen remaining and active panel fully read; delete line566 ref after await/disposal candidate; repair catches timeout but operations continue, delayed refread caught; active Dio book progress correctly appears here unlike A29. Screen claim task tap often no-op candidate not severity yet."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/download_category_style.dart",
     "lines": 28,
     "sha256": "184d014231d6da08e21dfb7c902264b5f053eac9c9a7e4f8c49f54903585a992",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 28,
+    "notes": [
+      {
+        "lines": [
+          1,
+          26
+        ],
+        "note": "Downloads screen remaining and active panel fully read; delete line566 ref after await/disposal candidate; repair catches timeout but operations continue, delayed refread caught; active Dio book progress correctly appears here unlike A29. Screen claim task tap often no-op candidate not severity yet."
+      },
+      {
+        "lines": [
+          27,
+          28
+        ],
+        "note": "Category palette, onboarding entry, library route, mushaf tile fully read. LibraryRoute postframe provider mutation after dispose candidate (analog A26) not proven; mushaf fixed20-height progress text font scaling candidate; service-owned prefetch intentionally survives widget disposal."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/initial_downloads_entry.dart",
     "lines": 36,
     "sha256": "10b449faebf2cb6f2b425591b5beb1912311c45d0829d8e738713cd953516cb8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 36,
+    "notes": [
+      {
+        "lines": [
+          1,
+          36
+        ],
+        "note": "Category palette, onboarding entry, library route, mushaf tile fully read. LibraryRoute postframe provider mutation after dispose candidate (analog A26) not proven; mushaf fixed20-height progress text font scaling candidate; service-owned prefetch intentionally survives widget disposal."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/library_route.dart",
     "lines": 34,
     "sha256": "d911f664a8a344e05f2ac9d3db648034e02c544f62f212de651eadc3c90d721e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 34,
+    "notes": [
+      {
+        "lines": [
+          1,
+          34
+        ],
+        "note": "Category palette, onboarding entry, library route, mushaf tile fully read. LibraryRoute postframe provider mutation after dispose candidate (analog A26) not proven; mushaf fixed20-height progress text font scaling candidate; service-owned prefetch intentionally survives widget disposal."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_download_tile.dart",
     "lines": 306,
     "sha256": "035ea3e0478e77fcde22c3c3c8a62fcbc844bdf797701909a08bc4ca4db1a189",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 306,
+    "notes": [
+      {
+        "lines": [
+          1,
+          306
+        ],
+        "note": "Category palette, onboarding entry, library route, mushaf tile fully read. LibraryRoute postframe provider mutation after dispose candidate (analog A26) not proven; mushaf fixed20-height progress text font scaling candidate; service-owned prefetch intentionally survives widget disposal."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_preview_sheet.dart",
     "lines": 607,
     "sha256": "2aed4faf16639487649561963b920603ce5947fa18ec9d191f4ae29001e0e8d6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 607,
+    "notes": [
+      {
+        "lines": [
+          1,
+          525
+        ],
+        "note": "Mushaf preview1-525 fully read, raster paper intentional; fixed .85 height non-scroll column/large text and action Rows possible short-landscape overflow pending real-font render. Dormant SVG path not current raster defect."
+      },
+      {
+        "lines": [
+          526,
+          607
+        ],
+        "note": "Downloads remaining preview/mushaf list/storage refresh fully read; subscriptions disposed, mounted guards retained; storage refresh does not subscribe direct bookDownloads but BuiltinContent changes may invalidate provider - need trace, not finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/mushaf_tiles.dart",
     "lines": 30,
     "sha256": "a9370f3e37bfb3cbafb33c63dba4370da1ff98884179e6c97aac752e07cf069a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 30,
+    "notes": [
+      {
+        "lines": [
+          1,
+          30
+        ],
+        "note": "Downloads remaining preview/mushaf list/storage refresh fully read; subscriptions disposed, mounted guards retained; storage refresh does not subscribe direct bookDownloads but BuiltinContent changes may invalidate provider - need trace, not finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/widgets/storage_auto_refresh.dart",
     "lines": 67,
     "sha256": "1228ede6ca805d470af425a8db2bbaee633fc797551cb8a163b9a324ccb5e0c0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 67,
+    "notes": [
+      {
+        "lines": [
+          1,
+          67
+        ],
+        "note": "Downloads remaining preview/mushaf list/storage refresh fully read; subscriptions disposed, mounted guards retained; storage refresh does not subscribe direct bookDownloads but BuiltinContent changes may invalidate provider - need trace, not finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/fasting/data/fasting_reminder_provider.dart",
