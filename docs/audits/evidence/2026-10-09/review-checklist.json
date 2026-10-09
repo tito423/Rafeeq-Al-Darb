@@ -3225,25 +3225,79 @@
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/azkar_section_screen.dart",
     "lines": 603,
     "sha256": "bbc0caaca00597e96be45b8d6f436d2707a0e4afa4e78d2c0a443c045449f566",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 603,
+    "notes": [
+      {
+        "lines": [
+          1,
+          548
+        ],
+        "note": "Reviewed AzkarSection1-548: repository load, per-item count/local-sync/journey writes, delayed auto-next, own recording stop on page/route, exact source/body rendering and count/layout/indicator. Candidates: timer uses mutable _index so manual swipe before400ms can skip an unfinished next dhikr; deferred playTrack can outlive stop; query error lacks recovery. Need actual reproduction."
+      },
+      {
+        "lines": [
+          549,
+          603
+        ],
+        "note": "Finished adhkar indicator/done card and reminder sheet/time/reciter selectors; reviewed full long tasbeeh entry/picker/counter shapes/Arabic text/progress/ph hints. Unlimited long-counter count uses raw digits unlike ratio branch, a locale candidate requiring rendered proof. Several unlabeled edit/close settings controls extend accessibility check candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/azkar_settings_sheet.dart",
     "lines": 226,
     "sha256": "4df3efbeb847edbfc4021ea574691fc7fe0574917e286d35fad461d056e549f4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 226,
+    "notes": [
+      {
+        "lines": [
+          1,
+          226
+        ],
+        "note": "Finished adhkar indicator/done card and reminder sheet/time/reciter selectors; reviewed full long tasbeeh entry/picker/counter shapes/Arabic text/progress/ph hints. Unlimited long-counter count uses raw digits unlike ratio branch, a locale candidate requiring rendered proof. Several unlabeled edit/close settings controls extend accessibility check candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/tasbeeh_mathur_cards.dart",
     "lines": 261,
     "sha256": "17ca84d0d1fa021d3d84f927868f75cacee9f87a18fd9858b090a91d34e8579f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 261,
+    "notes": [
+      {
+        "lines": [
+          1,
+          261
+        ],
+        "note": "Finished adhkar indicator/done card and reminder sheet/time/reciter selectors; reviewed full long tasbeeh entry/picker/counter shapes/Arabic text/progress/ph hints. Unlimited long-counter count uses raw digits unlike ratio branch, a locale candidate requiring rendered proof. Several unlabeled edit/close settings controls extend accessibility check candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/azkar/presentation/screens/tasbeeh_screen.dart",
     "lines": 783,
     "sha256": "c05efa9043795e99630f0f66f7e8f803a84d62de6d5b47be521ba1125fb3b001",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 783,
+    "notes": [
+      {
+        "lines": [
+          1,
+          501
+        ],
+        "note": "Reviewed TasbeehScreen1-501 counter/finite rounds reset-at-next-tap, total sync increments and negative reset, haptic preference/custom target/dialog, milestones, selectors and responsive counter shape. Arabic digitsOnly custom input shares navigation candidate. Startup restored total overwriting pre-restore taps and raw unlimited count need controlled proof."
+      },
+      {
+        "lines": [
+          502,
+          783
+        ],
+        "note": "Finished TasbeehScreen502-783: short counter localizes unlimited digits (long-card branch differs), landscape/portrait controls caps, footer/reset, milestones/overlay/pill contrast. Overlay raw milestone digits and reduced motion not yet rendered; zero-height controls on very short portrait remains device matrix check."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/data/caravan_legs.dart",
