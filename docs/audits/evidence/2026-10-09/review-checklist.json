@@ -67,13 +67,33 @@
     "path": "rafeeq_app/android/app/src/debug/AndroidManifest.xml",
     "lines": 13,
     "sha256": "8d941ca9b7542181d1a68a7d59b484015dd17619aee87e8f5fe347be495bf49f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 13,
+    "notes": [
+      {
+        "lines": [
+          1,
+          13
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/debug/res/xml/network_security_config.xml",
     "lines": 29,
     "sha256": "24f56501343cef6f5e7be0697eb2e40d7866eac86b4434c3d4fe92d2fef0857d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 29,
+    "notes": [
+      {
+        "lines": [
+          1,
+          29
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/AndroidManifest.xml",
@@ -495,97 +515,257 @@
     "path": "rafeeq_app/android/app/src/main/res/drawable-night-v21/launch_background.xml",
     "lines": 15,
     "sha256": "6fec68e0386427563fef852827a60e378c7d35304668338830b9c5eec7ea93d1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 15,
+    "notes": [
+      {
+        "lines": [
+          1,
+          15
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/drawable-night/launch_background.xml",
     "lines": 15,
     "sha256": "6fec68e0386427563fef852827a60e378c7d35304668338830b9c5eec7ea93d1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 15,
+    "notes": [
+      {
+        "lines": [
+          1,
+          15
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/drawable-v21/launch_background.xml",
     "lines": 9,
     "sha256": "42b8d099f0a6d79e90a67949d7a655c09458c734aa1bd8c4d7c73a79b28397ea",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 9,
+    "notes": [
+      {
+        "lines": [
+          1,
+          9
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/drawable/launch_background.xml",
     "lines": 9,
     "sha256": "42b8d099f0a6d79e90a67949d7a655c09458c734aa1bd8c4d7c73a79b28397ea",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 9,
+    "notes": [
+      {
+        "lines": [
+          1,
+          9
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/layout/prayer_card.xml",
     "lines": 65,
     "sha256": "d078fbc2bee90f1c4d82c35751609da10ddca0a0afdb51fc7d357b0b052294d8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 65,
+    "notes": [
+      {
+        "lines": [
+          1,
+          65
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/layout/prayer_card_rtl.xml",
     "lines": 48,
     "sha256": "fc4831e70d314ce1933a308eaca36e07fb667b3aa6fb568887812f77fa554ea4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 48,
+    "notes": [
+      {
+        "lines": [
+          1,
+          48
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
     "lines": 9,
     "sha256": "fe16ab84762f42e1166a008c9c77227fa3ba8399088bf9667e83d04bc4322af1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 9,
+    "notes": [
+      {
+        "lines": [
+          1,
+          9
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/values-ar/strings.xml",
     "lines": 6,
     "sha256": "1b8ec0af91d7c3a86e83d73dd7a0928896bb1cf04825a161db0b7d1c18a8b786",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 6,
+    "notes": [
+      {
+        "lines": [
+          1,
+          6
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/values-night-v31/styles.xml",
     "lines": 21,
     "sha256": "8a262509a6f5d8d996d720d7ebc5641d86843a56bebf103e3debc55be2ea65ca",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 21,
+    "notes": [
+      {
+        "lines": [
+          1,
+          21
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/values-night/styles.xml",
     "lines": 22,
     "sha256": "cb6b7d64537c92955a21cb460a5550c849381f9ac51ba93e505343b933dcd31b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 22,
+    "notes": [
+      {
+        "lines": [
+          1,
+          22
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/values-v31/styles.xml",
     "lines": 21,
     "sha256": "589ea7d42faf02538b35504b42f0ae29afa1f6c7e37f5bf24ddbc774603975b9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 21,
+    "notes": [
+      {
+        "lines": [
+          1,
+          21
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/values/colors.xml",
     "lines": 4,
     "sha256": "55b1a0714f582010edd1bf4cc6c9ab760af48ea2fff37d5fecd26b14eb838ca4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 4,
+    "notes": [
+      {
+        "lines": [
+          1,
+          4
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/values/strings.xml",
     "lines": 17,
     "sha256": "28b0d497455f07fe5a9e24cbb3d15d4ba17c39c18ea148555b0a389851c0e562",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 17,
+    "notes": [
+      {
+        "lines": [
+          1,
+          17
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/values/styles.xml",
     "lines": 22,
     "sha256": "ad400d5305a8292d473ee60f3fd0e5ce2a38299c474ea44a77b758109903afc8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 22,
+    "notes": [
+      {
+        "lines": [
+          1,
+          22
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/main/res/xml/file_paths.xml",
     "lines": 8,
     "sha256": "a0d79becae7956471c8de65ac648b2165aed1ee2affcada195d3ec7db3a01fb7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 8,
+    "notes": [
+      {
+        "lines": [
+          1,
+          8
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/app/src/profile/AndroidManifest.xml",
     "lines": 7,
     "sha256": "b01a4541a8144c15bc617bab7eb267c99fa1476368fbbda5a12cdbf4e316a34c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 7,
+    "notes": [
+      {
+        "lines": [
+          1,
+          7
+        ],
+        "note": "Reviewed Android resources and build-variant trust configuration; debug-only CA configuration is scoped to src/debug; notification directions explicitly follow app language; FileProvider path breadth requires grant/export caller context already reviewed. No additional confirmed defect in these files."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/android/build.gradle.kts",
@@ -973,67 +1153,184 @@
     "path": "rafeeq_app/lib/core/services/adhan_catalog_service.dart",
     "lines": 132,
     "sha256": "0d26945130caf3550515979f893d8b48335951943d736b87ed9da6b361b2d519",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 132,
+    "notes": [
+      {
+        "lines": [
+          1,
+          132
+        ],
+        "note": "Reviewed catalogue import/removal and native spec, preview, state, scheduling interfaces in full. Introductory catalogue comment is stale relative to 14 verified catalogue entries; executable count comes from asset. Preview guard distinguishes actual firings; state-to-stop interleaving remains unproved, not a confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/adhan_native.dart",
     "lines": 402,
     "sha256": "0d88f9848f3d95f5c4c8d864b169dad25374a51351407e267b9e2009575147ec",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 402,
+    "notes": [
+      {
+        "lines": [
+          1,
+          402
+        ],
+        "note": "Reviewed catalogue import/removal and native spec, preview, state, scheduling interfaces in full. Introductory catalogue comment is stale relative to 14 verified catalogue entries; executable count comes from asset. Preview guard distinguishes actual firings; state-to-stop interleaving remains unproved, not a confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/adhan_uri_bridge.dart",
     "lines": 67,
     "sha256": "af3d77d39a6b14ccd340dcf2eca19162da2e54dc38b963c4244f06a0169bdce0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 67,
+    "notes": [
+      {
+        "lines": [
+          1,
+          67
+        ],
+        "note": "Reviewed OS settings bridges, permissions request guards, audio exclusivity and diagnostics in full. Notification double-ask fix retained. Candidate: audio grant status checks only Permission.audio although request also asks storage; must verify Android below API33 and native permission handler before finding. Diagnostic English is explicitly intentional."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/alarm_permissions_service.dart",
     "lines": 191,
     "sha256": "a2b2c7682f92a412324ec30ff711acbd2a74c70b51c5ade93babf379d71b6abc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 191,
+    "notes": [
+      {
+        "lines": [
+          1,
+          191
+        ],
+        "note": "Reviewed OS settings bridges, permissions request guards, audio exclusivity and diagnostics in full. Notification double-ask fix retained. Candidate: audio grant status checks only Permission.audio although request also asks storage; must verify Android below API33 and native permission handler before finding. Diagnostic English is explicitly intentional."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/audio_exclusive.dart",
     "lines": 71,
     "sha256": "b913292efda986cbba842db427b2c527b8b4ff48dce0769f1b804e48967bda47",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 71,
+    "notes": [
+      {
+        "lines": [
+          1,
+          71
+        ],
+        "note": "Reviewed OS settings bridges, permissions request guards, audio exclusivity and diagnostics in full. Notification double-ask fix retained. Candidate: audio grant status checks only Permission.audio although request also asks storage; must verify Android below API33 and native permission handler before finding. Diagnostic English is explicitly intentional."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/audio_failure.dart",
     "lines": 88,
     "sha256": "fc4972b2b8c1ca3d02f145e70deb73728c468b33ef7eec543ec4c44a34d5197e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 88,
+    "notes": [
+      {
+        "lines": [
+          1,
+          88
+        ],
+        "note": "Reviewed OS settings bridges, permissions request guards, audio exclusivity and diagnostics in full. Notification double-ask fix retained. Candidate: audio grant status checks only Permission.audio although request also asks storage; must verify Android below API33 and native permission handler before finding. Diagnostic English is explicitly intentional."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/ayah_audio_service.dart",
     "lines": 810,
     "sha256": "3cd16ade4630aebd4867c9595651df88ef8d0be21d35f2146763ca88217cfef3",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 810,
+    "notes": [
+      {
+        "lines": [
+          1,
+          525
+        ],
+        "note": "Read lines1-525; remaining required. Candidate queue generation resets to zero in stopQueue/startContinuous, allowing old token1 to match a new token1 after restart; must reproduce actual in-flight playback scenario. Single-ayah load has no cancellation token, requires caller checks."
+      },
+      {
+        "lines": [
+          526,
+          810
+        ],
+        "note": "Completed AyahAudioService and azkar reminder; queue reset candidate retained pending harness, continuous token monotonically advances. Azkar +24h arithmetic already covered by A16 DST proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/azkar_reminder_service.dart",
     "lines": 102,
     "sha256": "a2ba06b12219b02d920e1116cd7ac875dc868c8ae280f9f115ad4cc6638ba62c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 102,
+    "notes": [
+      {
+        "lines": [
+          1,
+          102
+        ],
+        "note": "Completed AyahAudioService and azkar reminder; queue reset candidate retained pending harness, continuous token monotonically advances. Azkar +24h arithmetic already covered by A16 DST proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/city_catalog.dart",
     "lines": 253,
     "sha256": "c7749059d5b6495a1f45ff17ea1c0c92f4ccaa5fd6419ec93e7ffd14082b75f1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 253,
+    "notes": [
+      {
+        "lines": [
+          1,
+          253
+        ],
+        "note": "Reviewed bundled city indexing/search, isolate boundaries and continuous state. Atomic pair writes recover when one missing; corpus/country layout and cached version require data tests already passed. No new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/continuous_recitation.dart",
     "lines": 75,
     "sha256": "5a2eab6699372b1587ef9b9b05c52fb8437d1c3bef87519a82e176bf76e9dde6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 75,
+    "notes": [
+      {
+        "lines": [
+          1,
+          75
+        ],
+        "note": "Reviewed bundled city indexing/search, isolate boundaries and continuous state. Atomic pair writes recover when one missing; corpus/country layout and cached version require data tests already passed. No new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/continuous_recovery.dart",
     "lines": 277,
     "sha256": "795b2d8a5b47eba626befa4a2a54904a15f287281b6990132b65f45dbd1e46c9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 277,
+    "notes": [
+      {
+        "lines": [
+          1,
+          277
+        ],
+        "note": "Reviewed full continuous recovery, download notification helper and finish pauser. Recovery guard token is checked before most awaits; post-await state mutations in load-failed path need concurrency proof. Download hash range intersects 4800 foreground id; inspect actual ids before confirmation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/download_engine.dart",
@@ -1087,13 +1384,33 @@
     "path": "rafeeq_app/lib/core/services/download_notifications.dart",
     "lines": 175,
     "sha256": "94f7c305b055314c860155d6b4e8b4469707dc18709f020136ec6a8920cd1868",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 175,
+    "notes": [
+      {
+        "lines": [
+          1,
+          175
+        ],
+        "note": "Reviewed full continuous recovery, download notification helper and finish pauser. Recovery guard token is checked before most awaits; post-await state mutations in load-failed path need concurrency proof. Download hash range intersects 4800 foreground id; inspect actual ids before confirmation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/finish_pauser.dart",
     "lines": 40,
     "sha256": "d73a4a143302d3ce2c80469ca68bdaa44bfe27fbd99cdf4d8437df7f29170e32",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 40,
+    "notes": [
+      {
+        "lines": [
+          1,
+          40
+        ],
+        "note": "Reviewed full continuous recovery, download notification helper and finish pauser. Recovery guard token is checked before most awaits; post-await state mutations in load-failed path need concurrency proof. Download hash range intersects 4800 foreground id; inspect actual ids before confirmation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/khatma_reminder_service.dart",
@@ -1115,13 +1432,33 @@
     "path": "rafeeq_app/lib/core/services/location_service.dart",
     "lines": 340,
     "sha256": "5a8b6d59e1eac91c2ac406c70c83fd6e0014a9955c1f210a360c7000d6ff6785",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 340,
+    "notes": [
+      {
+        "lines": [
+          1,
+          340
+        ],
+        "note": "Reviewed LocationService and ManualPlace/store in full. Candidate: second-tier getLastKnownPosition/reverse geocoding is outside outer15s timeout; native channel stall could remain unbounded. OS last-known timestamp not validated and restamped now; scope/location freshness policy requires scenario. No new finding yet."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/manual_location.dart",
     "lines": 102,
     "sha256": "e4e15da7f25cdec01c53ad4f6049b167b1561840009190a796be7822e76a7a43",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 102,
+    "notes": [
+      {
+        "lines": [
+          1,
+          102
+        ],
+        "note": "Reviewed LocationService and ManualPlace/store in full. Candidate: second-tier getLastKnownPosition/reverse geocoding is outside outer15s timeout; native channel stall could remain unbounded. OS last-known timestamp not validated and restamped now; scope/location freshness policy requires scenario. No new finding yet."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/services/native_strings.dart",

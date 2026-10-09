@@ -1,0 +1,8 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/queue_cancellation_audit_test.dart
+00:00 +0: audit: cancelled old queue is accepted by replacement queue token
+AyahAudioService.play failed: Bad state: audit controlled old load failure
+AUDIT_PROOF: cancelled queue emitted waiting notice 1:1 after replacement 1:2 started
+AUDIT_PROOF: cancelled queue retried its old ayah after the real 20-second recovery timer
+AyahAudioService.play failed: Bad state: audit controlled old load failure
+AyahAudioService.play failed: Bad state: audit controlled new load cleanup
+00:20 +1: All tests passed!
