@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-09 21:17 — IN PROGRESS — resume here**
+**2026-10-09 21:21 — IN PROGRESS — resume here**
 
-audit: checkpoint active credentials, mirrors, DST and device evidence
+audit: record APK census and complete handover history review
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
