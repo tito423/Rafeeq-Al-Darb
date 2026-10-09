@@ -7540,7 +7540,17 @@
     "path": "rafeeq_app/lib/features/settings/presentation/screens/about_screen.dart",
     "lines": 600,
     "sha256": "59fa37c4c81f78819102b1dce2aa0b4425c742c2f17661864ec8261b6382be2d",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 562,
+    "notes": [
+      {
+        "lines": [
+          1,
+          562
+        ],
+        "note": "Read AboutScreen 1-562: live package version and catalog/DB counts, sequence/repeat animations, theme ink and source comments. Reduced-motion handling and rebuilding CurvedAnimation are candidates requiring widget/performance measurement; no finding from source alone."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/screens/settings_screen.dart",
