@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 02:52 — IN PROGRESS — resume here**
+**2026-10-10 02:53 — IN PROGRESS — resume here**
 
-audit: review hajj and umrah summary source excerpts
+audit: prove kids video playback disposal and wakelock race
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
