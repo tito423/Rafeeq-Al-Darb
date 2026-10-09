@@ -3803,79 +3803,237 @@
     "path": "rafeeq_app/lib/features/home/presentation/screens/home_prayer_card.dart",
     "lines": 494,
     "sha256": "f6ef852371672a07f1277771ce83456cf155308ad26850cd1de11a659fc3cab2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 494,
+    "notes": [
+      {
+        "lines": [
+          1,
+          494
+        ],
+        "note": "Read full home prayer card, next/previous state, theme/photo washes, clock choices and scaling, location and carousel integration. Parent time refresh needs home_screen review; no new finding solely from fixed bounds."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/screens/home_screen.dart",
     "lines": 599,
     "sha256": "50004fbd2c070e6a6a8ee0716dc59c52683a72846f38a624cee3dd463a2c5ce6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 599,
+    "notes": [
+      {
+        "lines": [
+          1,
+          449
+        ],
+        "note": "Home screen lines 1-449 reviewed: timer, provider watches, const header, two-pane composition and date band; midnight refresh candidate needs reproduction."
+      },
+      {
+        "lines": [
+          450,
+          599
+        ],
+        "note": "Remaining Home screen: date actions, provider-driven prayer error/permission states and refresh action reviewed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/analog_clock_faces.dart",
     "lines": 828,
     "sha256": "a45059c0ee895f4bfa1db4aa20c64c6587c0ed523c243aca46ad86920d262f02",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 828,
+    "notes": [
+      {
+        "lines": [
+          1,
+          621
+        ],
+        "note": "Analog clock lifecycle, throttled ticker, ten-face dispatch, hand interpolation, custom text drawing and first seven painter implementations reviewed; backward system-clock throttle and dial semantics need reproduction."
+      },
+      {
+        "lines": [
+          622,
+          828
+        ],
+        "note": "Completed analogue painters and gallery: scoped clear layer, 24h arc, theme ink, controller disposal, responsive grids, provider selection and switches reviewed. Clock gallery meridiem is parent-build-time only; confirm before issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/clock_gallery_sheet.dart",
     "lines": 371,
     "sha256": "b4de5f65ce51e8baea461c9a174789f5a9edec001a18a04aa142d4099e8d082f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 371,
+    "notes": [
+      {
+        "lines": [
+          1,
+          371
+        ],
+        "note": "Completed analogue painters and gallery: scoped clear layer, 24h arc, theme ink, controller disposal, responsive grids, provider selection and switches reviewed. Clock gallery meridiem is parent-build-time only; confirm before issue."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/digital_clock_faces.dart",
     "lines": 676,
     "sha256": "61ef4aaa4f5e3d5d1837da5051df3505f0bb2a8e5a786094d173830b0a2ccd1d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 676,
+    "notes": [
+      {
+        "lines": [
+          1,
+          584
+        ],
+        "note": "Digital clock ticker, shared numeral conversion, ten face builders, theme contrast overrides, flip animation and segment maps reviewed through line 584. Painted faces lack time semantics; small labels and current-time updates remain device candidates."
+      },
+      {
+        "lines": [
+          585,
+          676
+        ],
+        "note": "Digital segment/dot drawing and repaint predicates, localized header actions, quick-button touch bounds, occasion plural/date rendering and draggable sheet reviewed. Painter ink-only repaint omission needs actual theme transition; no new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/header_quick_actions.dart",
     "lines": 209,
     "sha256": "b39882401f44923edec0ab80589e7ed1f32b20e64251ddd5bc78ef1406ac6f79",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 209,
+    "notes": [
+      {
+        "lines": [
+          1,
+          209
+        ],
+        "note": "Digital segment/dot drawing and repaint predicates, localized header actions, quick-button touch bounds, occasion plural/date rendering and draggable sheet reviewed. Painter ink-only repaint omission needs actual theme transition; no new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/islamic_occasions_sheet.dart",
     "lines": 215,
     "sha256": "de4d29ee7dd3ec0a46c6a7f42ed306bdfb85d0c7c5337161fe15b14e2ab05f90",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 215,
+    "notes": [
+      {
+        "lines": [
+          1,
+          215
+        ],
+        "note": "Digital segment/dot drawing and repaint predicates, localized header actions, quick-button touch bounds, occasion plural/date rendering and draggable sheet reviewed. Painter ink-only repaint omission needs actual theme transition; no new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/on_this_day_sheet.dart",
     "lines": 422,
     "sha256": "ce185258de29c30b908ef94cf2bb06ccc556042fd2831fdbe08296be618b34a5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 422,
+    "notes": [
+      {
+        "lines": [
+          1,
+          422
+        ],
+        "note": "Both calendar sheets: explicit source attribution, current locale/day filtering, curated non-Arabic Hijri landmarks, historical sort, negative-year labels, paragraph direction and error/empty states reviewed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_countdown.dart",
     "lines": 239,
     "sha256": "ed597001005aacaf9dc882d0c71b41553db7b6eb61ec7cfc681a2be7da01f218",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 239,
+    "notes": [
+      {
+        "lines": [
+          1,
+          239
+        ],
+        "note": "Countdown timer/disposal/target replacement/clamped elapsed and digit animation, preview stop sequencing and prayer chip theme/responsive text reviewed. Countdown target becomes zero until parent 30s next-prayer refresh; measure before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_slide_adhan_extras.dart",
     "lines": 127,
     "sha256": "f5f4aaa439c492850b96fb4e28534fd9e4eee46b9141c30b3cbc9b6ab765ff69",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 127,
+    "notes": [
+      {
+        "lines": [
+          1,
+          127
+        ],
+        "note": "Countdown timer/disposal/target replacement/clamped elapsed and digit animation, preview stop sequencing and prayer chip theme/responsive text reviewed. Countdown target becomes zero until parent 30s next-prayer refresh; measure before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_slide_chip.dart",
     "lines": 134,
     "sha256": "bd0508f8a3cd91db425db296d044965e6e4d58e57aae853479c2667d0adc0312",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 134,
+    "notes": [
+      {
+        "lines": [
+          1,
+          134
+        ],
+        "note": "Countdown timer/disposal/target replacement/clamped elapsed and digit animation, preview stop sequencing and prayer chip theme/responsive text reviewed. Countdown target becomes zero until parent 30s next-prayer refresh; measure before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/prayer_slides.dart",
     "lines": 675,
     "sha256": "1ea5191a7bab40c13bea9f5d46879ce74f0baa89d243587ea34a0b2b934594a4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 675,
+    "notes": [
+      {
+        "lines": [
+          1,
+          554
+        ],
+        "note": "Prayer carousel focus lifecycle/RTL/controller and editor mode/audio/offset providers reviewed through 554. Delayed native preview completing after disposal can bypass stop; reproduce with channel before finding. Post-await ref rescheduling and concurrent preview also candidates."
+      },
+      {
+        "lines": [
+          555,
+          675
+        ],
+        "note": "Prayer editor remaining rows, 28dp +/- stepper and pills reviewed; existing A23 broader target-size candidate requires rendered measurement. Quick links all 15 route mappings, localized labels and five-column wrap reviewed. All Home source complete."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/presentation/widgets/worship_quick_links.dart",
     "lines": 163,
     "sha256": "3f83c65b413c547efe05248841e095a9d3472214652d1f24ed27a609169d0c72",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 163,
+    "notes": [
+      {
+        "lines": [
+          1,
+          163
+        ],
+        "note": "Prayer editor remaining rows, 28dp +/- stepper and pills reviewed; existing A23 broader target-size candidate requires rendered measurement. Quick links all 15 route mappings, localized labels and five-column wrap reviewed. All Home source complete."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/data/ayah_opening.dart",

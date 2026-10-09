@@ -1,0 +1,42 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/prayer_preview_disposal_audit_test.dart
+00:00 +0: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +0: audit: closing a prayer card while preview starts leaves it playing
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.times_adjust] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.adjustments] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.notification_mode] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_full] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_audio] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_vibrate] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_silent] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.choose_adhan] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.use_default] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [adhan.backgrounds_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.preview_azan] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.times_adjust] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.adjustments] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.notification_mode] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_full] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_audio] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_vibrate] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.mode_silent] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.choose_adhan] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [common.lang_code] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.use_default] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.test] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [adhan.backgrounds_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.preview_azan] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [prayer.dhuhr] not found[0m
+AUDIT_PREVIEW_DISPOSAL: nativeStarted=true calls=[preview] after widget removal; no stop issued
+00:01 +1: (tearDownAll)
+00:01 +1: All tests passed!
