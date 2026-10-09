@@ -7618,19 +7618,49 @@
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/focus_mode_picker.dart",
     "lines": 142,
     "sha256": "938275b4452427c5e5a229a44ba2331189735045ae4988dd12f090db48556dff",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 142,
+    "notes": [
+      {
+        "lines": [
+          1,
+          142
+        ],
+        "note": "Reviewed focus target sheet and provider invocation, non-Arabic reading preview/gold ink, and PermissionsSection 1-203: sequential status queries, resume refresh, granted/revoked battery history, autostart settings and native intent bridge. No physical OEM permission outcome inferred from source."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/non_arabic_reading_card.dart",
     "lines": 196,
     "sha256": "f0f981de0b25d2c40c55d7d7da40c487b93e0cc836208a7b682625e5566f3dff",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 196,
+    "notes": [
+      {
+        "lines": [
+          1,
+          196
+        ],
+        "note": "Reviewed focus target sheet and provider invocation, non-Arabic reading preview/gold ink, and PermissionsSection 1-203: sequential status queries, resume refresh, granted/revoked battery history, autostart settings and native intent bridge. No physical OEM permission outcome inferred from source."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/permissions_section.dart",
     "lines": 213,
     "sha256": "3d6251f13ee2a06e67031ee00de13a516f326be27e01ddc25a3f9b8f96a58b06",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 203,
+    "notes": [
+      {
+        "lines": [
+          1,
+          203
+        ],
+        "note": "Reviewed focus target sheet and provider invocation, non-Arabic reading preview/gold ink, and PermissionsSection 1-203: sequential status queries, resume refresh, granted/revoked battery history, autostart settings and native intent bridge. No physical OEM permission outcome inferred from source."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/reader_name_sheet.dart",
