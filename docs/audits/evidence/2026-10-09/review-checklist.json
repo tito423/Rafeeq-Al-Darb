@@ -6028,13 +6028,33 @@
     "path": "rafeeq_app/lib/features/more/presentation/widgets/sign_in_offer.dart",
     "lines": 92,
     "sha256": "28e55b8963b484731a07d1982096305b0cc3db085157e4e6881440423c22f700",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 92,
+    "notes": [
+      {
+        "lines": [
+          1,
+          92
+        ],
+        "note": "Reviewed one-time optional sign-in and account card entirely: asynchronous error handling, current auth/status rendering, flip controller disposal, sign-out future and account photo display. Candidates: overlapping sign-in requests and unawaited sign-out error; require realistic provider/platform proof. Source lifetime of captured ScaffoldMessenger differs from widget mounted state and is not automatically a defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/more/presentation/widgets/sync_account_card.dart",
     "lines": 184,
     "sha256": "2b51fcd82ae3e2f34afbe82113426cc603ad4d44bf41e87b816932e3206a8047",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 184,
+    "notes": [
+      {
+        "lines": [
+          1,
+          184
+        ],
+        "note": "Reviewed one-time optional sign-in and account card entirely: asynchronous error handling, current auth/status rendering, flip controller disposal, sign-out future and account photo display. Candidates: overlapping sign-in requests and unawaited sign-out error; require realistic provider/platform proof. Source lifetime of captured ScaffoldMessenger differs from widget mounted state and is not automatically a defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/onboarding/data/offline_pack_sizes.dart",
