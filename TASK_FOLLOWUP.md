@@ -6,15 +6,12 @@ account, the other one, or another agent — reads this and continues from
 **Next step**. Newest entries at the top of the log. Log times are the PC clock, which IS Dubai time (checked against the owner: 14:23 real, 2026-09-24).
 
 ## Current task
-2026-10-02 evening: work runs from a CLOUD session (opened from the owner's
-phone), which reaches the laptop through `tito423/rafeeq-control` (CLAUDE.md
-§2.0b2). Latest release v3.75.0 (tag = 9094b7fe). Nothing on the owner's list
-is open except R7: the recitation copy to GitHub (`tito423/rafeeq-recitations`)
-runs by itself on the laptop under the scheduled task RafeeqMirrorWatchdog
-(surah at 400 files/h, ayah at 800 files/h). Stop it before any release
-(TRAPS #60). Otherwise: wait for the owner's next request.
+2026-10-09: Full audit requested in the attached owner brief. Phase 1 only: no application/backend code changes. Baseline 4a3f0b82 on master, fetched and up to date. Owner approved continuing with the pre-existing untracked files untouched.
 
 ## Next step (exact)
+
+**2026-10-09 AUDIT IN PROGRESS**: Run and preserve command outputs in docs/audits/evidence/2026-10-09; report docs/audits/AUDIT_2026-10-09.md is explicitly incomplete. Read prior audits, inventory/review every requested file, verify content endpoints and emulator scenarios, commit report before any fixes. Preserve all initial untracked files. No version bump or publication authorized.
+
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
 
@@ -1189,6 +1186,7 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-09 20:33 - Audit 2026-10-09: baseline fetched; no code changed; next run recorded checks
 - 2026-10-09 00:00 - v3.87.0 published: home cards on mosques, swipeable full-screen sayings
 - 2026-10-08 22:36 - v3.86.0 published: adhkar by six real voices, photo backgrounds
 - 2026-10-08 20:19 - v3.85.0 published: reader page makes room for the controls
