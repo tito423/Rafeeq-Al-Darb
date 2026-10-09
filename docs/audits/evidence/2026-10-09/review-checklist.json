@@ -3021,31 +3021,95 @@
     "path": "rafeeq_app/lib/features/assistant/data/assistant_intent.dart",
     "lines": 790,
     "sha256": "255e6a7f919887199671864b3cc179f5444edc9d9f0325c964883d80c2a0e130",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 790,
+    "notes": [
+      {
+        "lines": [
+          1,
+          537
+        ],
+        "note": "AssistantIntent1-537 line-by-line read; multilingual canonicalization and raw query separation inspected. No new confirmed defect."
+      },
+      {
+        "lines": [
+          538,
+          790
+        ],
+        "note": "AssistantIntent538-790 fully reviewed. Main ayah grammar numeric bound left to dispatcher; authors/books bestscore no ties candidate canambiguouslychoose. OnThisDay spoken ordinal month beforeday maychoose wrong e.g firstRabi withno date source candidate actualparse tests needed. All parser multilingual normalization traced."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_lexicon.dart",
     "lines": 652,
     "sha256": "99c5779c40b92701cab4df1162cb7880e45eeed40cbfddf1ae6c86308b69b2e8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 652,
+    "notes": [
+      {
+        "lines": [
+          1,
+          403
+        ],
+        "note": "AssistantLexicon1-403 full source read including7language commands, storiesprecedence and aliases; multilingual Sunan onlyArabic handaliases plus labels coverage pending actualASR. No invented religiousdata and no new confirmed."
+      },
+      {
+        "lines": [
+          404,
+          652
+        ],
+        "note": "Assistant lexicon remaining/settings/map/screen enum whole read; maps parserlabels to destination sections; story ordering concern generalIbrahim beforeDayf/Ihya alias may shadow longer command needs actualparse. No confirmed new assistant defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_screen.dart",
     "lines": 94,
     "sha256": "675ca3ac97efceb090780868bfe4f1cec93deaeed9a6397374577819364b1ba2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 94,
+    "notes": [
+      {
+        "lines": [
+          1,
+          94
+        ],
+        "note": "Assistant lexicon remaining/settings/map/screen enum whole read; maps parserlabels to destination sections; story ordering concern generalIbrahim beforeDayf/Ihya alias may shadow longer command needs actualparse. No confirmed new assistant defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_settings.dart",
     "lines": 45,
     "sha256": "f6d788e89e57a23e6909e998e60c8a92eb84581673fa7ca32553aae883dcbdb8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 45,
+    "notes": [
+      {
+        "lines": [
+          1,
+          45
+        ],
+        "note": "Assistant lexicon remaining/settings/map/screen enum whole read; maps parserlabels to destination sections; story ordering concern generalIbrahim beforeDayf/Ihya alias may shadow longer command needs actualparse. No confirmed new assistant defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_settings_map.dart",
     "lines": 77,
     "sha256": "057593b3b19682831288d51af08a06219ffe66203dc91a37b10dd854041f56b5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 77,
+    "notes": [
+      {
+        "lines": [
+          1,
+          77
+        ],
+        "note": "Assistant lexicon remaining/settings/map/screen enum whole read; maps parserlabels to destination sections; story ordering concern generalIbrahim beforeDayf/Ihya alias may shadow longer command needs actualparse. No confirmed new assistant defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_wake_word.dart",

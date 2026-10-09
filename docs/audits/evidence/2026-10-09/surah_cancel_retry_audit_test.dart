@@ -84,5 +84,5 @@ void main() {
     binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
     debugDefaultTargetPlatformOverride = null;
     await dir.delete(recursive: true);
-  });
+  }, timeout: const Timeout(Duration(seconds: 90)));
 }

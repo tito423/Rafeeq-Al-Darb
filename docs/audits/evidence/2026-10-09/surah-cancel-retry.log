@@ -8,8 +8,6 @@ AUDIT_NATIVE_CALL: allTasks
 AUDIT_NATIVE_CALL: requestPermission
 AUDIT_NATIVE_CALL: enqueue
 AUDIT_NATIVE_CALL: cancelTasksWithIds
-00:30 +0 -1: audit: minute retry restarts an explicitly canceled surah [E]
-  TimeoutException after 0:00:30.000000: Test timed out after 30 seconds. See https://pub.dev/packages/test#timeouts
-  dart:isolate  _RawReceivePort._handleMessage
-  
-00:30 +0 -1: Some tests failed.
+AUDIT_NATIVE_CALL: enqueue
+AUDIT_PROOF: cancelSurah cleared pending and status; actual 60-second retry enqueued qa_987654_1 again with pending still empty. Native transfer itself mocked, no network download.
+01:01 +1: All tests passed!
