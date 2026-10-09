@@ -4168,13 +4168,33 @@
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/madhahib_section.dart",
     "lines": 202,
     "sha256": "a6b539a870126ad29635f4c81ed29c73b3af8625ad44fda6b4d01fce8b2b3bcd",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 202,
+    "notes": [
+      {
+        "lines": [
+          1,
+          202
+        ],
+        "note": "Reviewed four-school JSON parsing/attribution and school-name rendering, ministry miqat asset/translations/original Arabic/cache. Lack of page/edition row is explicit owner preference; no bibliographic defect counted. Source paragraph alignment and live ministry statement/date still content checks; large-scale non-flexible heading is runtime candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/mawaqit_today_card.dart",
     "lines": 192,
     "sha256": "c53bb9379152034de728cbed6e0490039c43405c1a1cae7418b425289ab1575b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 192,
+    "notes": [
+      {
+        "lines": [
+          1,
+          192
+        ],
+        "note": "Reviewed four-school JSON parsing/attribution and school-name rendering, ministry miqat asset/translations/original Arabic/cache. Lack of page/edition row is explicit owner preference; no bibliographic defect counted. Source paragraph alignment and live ministry statement/date still content checks; large-scale non-flexible heading is runtime candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/sai_counter.dart",
