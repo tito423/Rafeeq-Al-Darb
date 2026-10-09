@@ -1959,13 +1959,33 @@
     "path": "rafeeq_app/lib/core/theme/rgb_backdrop.dart",
     "lines": 424,
     "sha256": "d107ea6ce316b548e8bd36676ae50b8f67b63b2a7e9396c0390aa2e628cb205a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 424,
+    "notes": [
+      {
+        "lines": [
+          1,
+          424
+        ],
+        "note": "Reviewed RGB painter paths, animation lifecycle, reduced-motion guard and bounded size cache; theme persistence and legacy read behavior. No new reproducible defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/theme/theme_controller.dart",
     "lines": 101,
     "sha256": "2b8920c4b611012746fea7cf12ff3537896fec7aa707eb3e0a5a30e91c0c5b48",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 101,
+    "notes": [
+      {
+        "lines": [
+          1,
+          101
+        ],
+        "note": "Reviewed RGB painter paths, animation lifecycle, reduced-motion guard and bounded size cache; theme persistence and legacy read behavior. No new reproducible defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/utils/arabic_normalize.dart",
@@ -2163,151 +2183,401 @@
     "path": "rafeeq_app/lib/core/widgets/accordion.dart",
     "lines": 336,
     "sha256": "1a83babdfb1616fc9fc4bcf600d05a6c2d3d224435fea9102dee0502fa5e21eb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 336,
+    "notes": [
+      {
+        "lines": [
+          1,
+          336
+        ],
+        "note": "Reviewed accordion route pop registry, nested membership, disposal and deferred scrolling guards; Arabic/translated direction wrappers. No new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/arabic_text.dart",
     "lines": 90,
     "sha256": "7728dc188a0a9fa81b93a9ebd23d71532ffb535e5fb58cc66e396a774027d892",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 90,
+    "notes": [
+      {
+        "lines": [
+          1,
+          90
+        ],
+        "note": "Reviewed accordion route pop registry, nested membership, disposal and deferred scrolling guards; Arabic/translated direction wrappers. No new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/arrow_scrollbar.dart",
     "lines": 320,
     "sha256": "a7c9f119fa95569670a80dc574de251d1198d9ae72b7438743f26cf75d366c97",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 320,
+    "notes": [
+      {
+        "lines": [
+          1,
+          320
+        ],
+        "note": "Reviewed scrollbar motion, controller dimensions, drag mapping and timers plus calm ground blending. Candidate accessibility issue: rail arrows are 22x26 logical pixels and have no explicit semantic label; requires rendered semantic verification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/calm_card_ground.dart",
     "lines": 220,
     "sha256": "978d27bb1172c3a7f46de0b879a7ec0a36c6620f4f73cfb5e38a747d354b5e65",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 220,
+    "notes": [
+      {
+        "lines": [
+          1,
+          220
+        ],
+        "note": "Reviewed scrollbar motion, controller dimensions, drag mapping and timers plus calm ground blending. Candidate accessibility issue: rail arrows are 22x26 logical pixels and have no explicit semantic label; requires rendered semantic verification."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/card_route.dart",
     "lines": 401,
     "sha256": "77e0c0764945f9cf058858d827ad355976027acf7f0b6069edc7a9347934d9a9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 401,
+    "notes": [
+      {
+        "lines": [
+          1,
+          401
+        ],
+        "note": "Reviewed card route transitions, card layout bounds, retry and fitted sheet helpers. CardRoute barrierLabel is hardcoded English Dismiss across locales; motion listener allocation remains unmeasured, not a confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/error_retry.dart",
     "lines": 45,
     "sha256": "55b0ba676e03e9a5820ca256af7e0bade3a7c6167f174a20e0f01e9545f0783c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 45,
+    "notes": [
+      {
+        "lines": [
+          1,
+          45
+        ],
+        "note": "Reviewed card route transitions, card layout bounds, retry and fitted sheet helpers. CardRoute barrierLabel is hardcoded English Dismiss across locales; motion listener allocation remains unmeasured, not a confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/fitted_sheet.dart",
     "lines": 35,
     "sha256": "26b019a91cbf50d46b3c072f4f01546e80d6aa3be0a73c8364800c0a23a997a7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 35,
+    "notes": [
+      {
+        "lines": [
+          1,
+          35
+        ],
+        "note": "Reviewed card route transitions, card layout bounds, retry and fitted sheet helpers. CardRoute barrierLabel is hardcoded English Dismiss across locales; motion listener allocation remains unmeasured, not a confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/focus_ring_overlay.dart",
     "lines": 143,
     "sha256": "32bd8415885ca61f5988afc8420e4a10f16e657214cec54f688378da00121b2b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 143,
+    "notes": [
+      {
+        "lines": [
+          1,
+          143
+        ],
+        "note": "Reviewed focus overlay ticker and focus listeners/disposal, future state handling, two-column layout and action-card direction/styles. Fitted titles can suppress font growth by design; actual accessibility matrix still pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/future_view.dart",
     "lines": 68,
     "sha256": "346482bdf381e6020701e0f438757913982ffc5cef0a4b5a2969c623d114670c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 68,
+    "notes": [
+      {
+        "lines": [
+          1,
+          68
+        ],
+        "note": "Reviewed focus overlay ticker and focus listeners/disposal, future state handling, two-column layout and action-card direction/styles. Fitted titles can suppress font growth by design; actual accessibility matrix still pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/headed_list_layout.dart",
     "lines": 57,
     "sha256": "e34d3d0360fff2e302a3b11ab412bec7b1ac5da691f5c03528d0ca236e3abedf",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 57,
+    "notes": [
+      {
+        "lines": [
+          1,
+          57
+        ],
+        "note": "Reviewed focus overlay ticker and focus listeners/disposal, future state handling, two-column layout and action-card direction/styles. Fitted titles can suppress font growth by design; actual accessibility matrix still pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/islamic_action_card.dart",
     "lines": 186,
     "sha256": "d6865eb24fcfb759726a219cd2525411db9f6dc35a3f68314b8b87a7ca3df4bf",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 186,
+    "notes": [
+      {
+        "lines": [
+          1,
+          186
+        ],
+        "note": "Reviewed focus overlay ticker and focus listeners/disposal, future state handling, two-column layout and action-card direction/styles. Fitted titles can suppress font growth by design; actual accessibility matrix still pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/islamic_pattern.dart",
     "lines": 180,
     "sha256": "1c00750eb597c0e39f6279c5da56a1e6be966d81eeb8ee6212e0f54441b9e684",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 180,
+    "notes": [
+      {
+        "lines": [
+          1,
+          180
+        ],
+        "note": "Reviewed all geometric scene/pattern painting and measured-size callback guards. Caller-constrained nonzero dimensions assumed; zero-height loop hypothesis requires actual caller evidence before finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/islamic_scene.dart",
     "lines": 282,
     "sha256": "fdc0f68c9f6dd1a013a529375907c45ebad59f9f43d280d29aba7b8b77192885",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 282,
+    "notes": [
+      {
+        "lines": [
+          1,
+          282
+        ],
+        "note": "Reviewed all geometric scene/pattern painting and measured-size callback guards. Caller-constrained nonzero dimensions assumed; zero-height loop hypothesis requires actual caller evidence before finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/measure_size.dart",
     "lines": 68,
     "sha256": "40afe29f005fa7520bc632500993cca1f2d25b3bab165d5fd534504194edbd3e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 68,
+    "notes": [
+      {
+        "lines": [
+          1,
+          68
+        ],
+        "note": "Reviewed all geometric scene/pattern painting and measured-size callback guards. Caller-constrained nonzero dimensions assumed; zero-height loop hypothesis requires actual caller evidence before finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/mirrored_network_image.dart",
     "lines": 47,
     "sha256": "3e3b0461eda8ca15da240f25f067c2f3bb970b4ed67f595ba787e73f3ed4541e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 47,
+    "notes": [
+      {
+        "lines": [
+          1,
+          47
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/more_group_accent.dart",
     "lines": 27,
     "sha256": "cf5f23b00a8d7eeed8a706ad40896b42ef4860f531eda40375311bd1c40a9288",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 27,
+    "notes": [
+      {
+        "lines": [
+          1,
+          27
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/mosque_backdrop.dart",
     "lines": 89,
     "sha256": "440996229733e303c882dbb63ec0619c36baac4e0e0d98f872cd3e87e68111ea",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 89,
+    "notes": [
+      {
+        "lines": [
+          1,
+          89
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/ornament_backdrop.dart",
     "lines": 70,
     "sha256": "3cbd13bc3dbd0a0a76e2f329fd2a796d7bd314124f49edadf3ea1b3bc4c2e8b5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 70,
+    "notes": [
+      {
+        "lines": [
+          1,
+          70
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/paired_list_view.dart",
     "lines": 164,
     "sha256": "9559bc19b5bf3fc815676be71e14dafc696498718164b031557e39fdb93f45c7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 164,
+    "notes": [
+      {
+        "lines": [
+          1,
+          164
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/readable_insets.dart",
     "lines": 23,
     "sha256": "98893ed3cca7286623336d02d9079c33360a3115e32baa02d94440a848f0730a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 23,
+    "notes": [
+      {
+        "lines": [
+          1,
+          23
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/recitation_failure_snackbar.dart",
     "lines": 86,
     "sha256": "1e7926473e2c2dda804e99880710c6c4b72b326fb34506f30893bf824149980a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 86,
+    "notes": [
+      {
+        "lines": [
+          1,
+          86
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/remote_tap.dart",
     "lines": 45,
     "sha256": "66772bf4a5114d94921a5b04e3af853898b54b87b5bbf35f2d6eeee334709d8a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 45,
+    "notes": [
+      {
+        "lines": [
+          1,
+          45
+        ],
+        "note": "Reviewed mirror fallback recursion, inherited accents, bundled image layers/cache widths, paired list indices, readable insets, failure UX and remote activation. Mosque overlay is intentionally above child; actual composed contrast pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/staggered_entrance.dart",
     "lines": 83,
     "sha256": "f0e2368e275051d5ed6fa50e5c26b680bd91f233618934952f9ca2e752637bb4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 83,
+    "notes": [
+      {
+        "lines": [
+          1,
+          83
+        ],
+        "note": "Reviewed stagger timers and reduced motion, toolbar activation/styles/animations and two-pane direction/layout. Candidate gold active 10px caption contrast and small touch targets require rendered evidence."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/toolbar_action.dart",
     "lines": 221,
     "sha256": "126da11d285e104e3e6a6b44bb3fe83d5320fd6d993774de762f4c49ea148dc8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 221,
+    "notes": [
+      {
+        "lines": [
+          1,
+          221
+        ],
+        "note": "Reviewed stagger timers and reduced motion, toolbar activation/styles/animations and two-pane direction/layout. Candidate gold active 10px caption contrast and small touch targets require rendered evidence."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/core/widgets/two_pane_scroll.dart",
     "lines": 94,
     "sha256": "4d6d22e8221c8779906d4bf9c8fee9addb3128118bb916d60b21769e0deafcbb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 94,
+    "notes": [
+      {
+        "lines": [
+          1,
+          94
+        ],
+        "note": "Reviewed stagger timers and reduced motion, toolbar activation/styles/animations and two-pane direction/layout. Candidate gold active 10px caption contrast and small touch targets require rendered evidence."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/adhan/data/adhan_background.dart",
@@ -2821,25 +3091,65 @@
     "path": "rafeeq_app/lib/features/downloads/data/download_tap_channel.dart",
     "lines": 57,
     "sha256": "48d730d6745542a80abe6651edbd00f0143b23d7605cce05c56c50fd860616c3",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 57,
+    "notes": [
+      {
+        "lines": [
+          1,
+          57
+        ],
+        "note": "Reviewed download tap channel cold/warm routing, category accounting/free paths and reciter catalog selection persistence. Quran science adopted-file deletion explicitly handled; async restore/select race remains only candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/data/downloads_controller.dart",
     "lines": 263,
     "sha256": "696d48eb5f19223bdba90eaf925c3dd4413a3a8194846747e4fefb883629e516",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 263,
+    "notes": [
+      {
+        "lines": [
+          1,
+          263
+        ],
+        "note": "Reviewed download tap channel cold/warm routing, category accounting/free paths and reciter catalog selection persistence. Quran science adopted-file deletion explicitly handled; async restore/select race remains only candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/data/reciters_provider.dart",
     "lines": 122,
     "sha256": "c1b848f0202fd76d75c6191e532c063005d5e2aedc1470b9d8001b4eb2f84cbb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 122,
+    "notes": [
+      {
+        "lines": [
+          1,
+          122
+        ],
+        "note": "Reviewed download tap channel cold/warm routing, category accounting/free paths and reciter catalog selection persistence. Quran science adopted-file deletion explicitly handled; async restore/select race remains only candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/download_navigation.dart",
     "lines": 46,
     "sha256": "8212a328422921455259dde1bbb40a26944bea541cafc794e74bf70d41b32214",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 46,
+    "notes": [
+      {
+        "lines": [
+          1,
+          46
+        ],
+        "note": "Reviewed root download payload navigation; adhkar notifications route to morning list regardless of completion period, intent choice requires device/owner confirmation before finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/presentation/screens/downloads_screen.dart",
