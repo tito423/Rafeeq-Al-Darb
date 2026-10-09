@@ -2957,25 +2957,65 @@
     "path": "rafeeq_app/lib/features/assistant/data/assistant_ayah_ref.dart",
     "lines": 212,
     "sha256": "1d4ca3612588547355c05c958832b1f7d52242305b2ca3387adcec71d2d624e6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 212,
+    "notes": [
+      {
+        "lines": [
+          1,
+          212
+        ],
+        "note": "Assistant ayah ref and destination match whole read: spokenNumber limits286 followup but main_ref allows n above286 delegate dispatcher clamps? pending trace; leading mixed nonnumber ignored intentional; longestphrase multilingual exact/tolerant source read no new verified defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_destination_match.dart",
     "lines": 97,
     "sha256": "ea506ea838fe52106a21268266fd449f1e1441c1263a445498b225cc33302930",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 97,
+    "notes": [
+      {
+        "lines": [
+          1,
+          97
+        ],
+        "note": "Assistant ayah ref and destination match whole read: spokenNumber limits286 followup but main_ref allows n above286 delegate dispatcher clamps? pending trace; leading mixed nonnumber ignored intentional; longestphrase multilingual exact/tolerant source read no new verified defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_detail_intents.dart",
     "lines": 358,
     "sha256": "ff9fc1140a92c6b4ff0f2ca7dda664919baeb29881c0ee1eb1cf8159c1ff0e1f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 358,
+    "notes": [
+      {
+        "lines": [
+          1,
+          358
+        ],
+        "note": "Assistant detail intents and distance whole read: nonnumeric chapter numbers retained correctly; longest phrase/correcting reciter defaults candidate ties silentlyfirst needs specific trace; QuranWord extraction strips context words and can truncate a quoted phrase containing في needs tested exact query before defect. No content changes."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_distance.dart",
     "lines": 108,
     "sha256": "743ea86f38d315e757d941839501c4ceec1667c6888113d9dcf0cb9939f787c8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 108,
+    "notes": [
+      {
+        "lines": [
+          1,
+          108
+        ],
+        "note": "Assistant detail intents and distance whole read: nonnumeric chapter numbers retained correctly; longest phrase/correcting reciter defaults candidate ties silentlyfirst needs specific trace; QuranWord extraction strips context words and can truncate a quoted phrase containing في needs tested exact query before defect. No content changes."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/assistant/data/assistant_intent.dart",

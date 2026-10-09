@@ -33,7 +33,7 @@ class AuditStorage extends Fake implements PersistentStorage {
 
 void main() {
   final binding = TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('audit: minute retry restarts an explicitly canceled surah', (tester) async {
+  test('audit: minute retry restarts an explicitly canceled surah', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
     SharedPreferences.setMockInitialValues({});
     final dir = Directory.systemTemp.createTempSync('rafeeq_surah_retry_audit_');
@@ -57,7 +57,7 @@ void main() {
     const moshaf = Mp3Moshaf(id: 987654, name: 'Audit fixture', server: 'https://example.invalid/audit/', surahs: [1]);
     const reciter = Mp3Reciter(id: 987654, name: 'Audit fixture', moshafs: [moshaf]);
     final library = QuranAudioLibrary.instance;
-    await tester.runAsync(() async {
+    await (() async {
       print('AUDIT_STAGE: ensureReady');
       await library.ensureReady().timeout(const Duration(seconds: 15));
       print('AUDIT_STAGE: ready');
@@ -65,25 +65,24 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 100));
       await library.download(reciter, moshaf, only: [1]).timeout(const Duration(seconds: 15));
       await Future<void>.delayed(const Duration(milliseconds: 50));
-    });
+    })();
     expect(enqueued, hasLength(1));
     final task = DownloadTask(taskId: QuranAudioLibrary.taskIdFor(moshaf.id, 1),
       url: moshaf.originUrlFor(1), filename: '001.mp3', group: DownloadEngine.groupQuranAudio);
     // Actual plugin update stream -> actual DownloadEngine -> actual library.
     FileDownloader().downloaderForTesting.updates.add(TaskStatusUpdate(task, TaskStatus.failed));
-    await tester.pump();
+    await Future<void>.delayed(const Duration(milliseconds: 50));
     expect(library.statusOf(moshaf.id, 1).state, SurahAudioState.failed);
-    await tester.runAsync(() => library.cancelSurah(moshaf.id, 1));
+    await library.cancelSurah(moshaf.id, 1);
     expect(library.entry(moshaf.id)!.pending, isEmpty);
     expect(library.statusOf(moshaf.id, 1).state, SurahAudioState.none);
-    await tester.pump(const Duration(seconds: 61));
-    await tester.pump();
+    await Future<void>.delayed(const Duration(seconds: 61));
     expect(enqueued, hasLength(2));
     expect(library.entry(moshaf.id)!.pending, isEmpty);
     expect(library.statusOf(moshaf.id, 1).state, SurahAudioState.queued);
     print('AUDIT_PROOF: cancelSurah cleared pending and status; actual 60-second retry enqueued qa_987654_1 again with pending still empty. Native transfer itself mocked, no network download.');
     binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
     debugDefaultTargetPlatformOverride = null;
-    await tester.runAsync(() async { await dir.delete(recursive: true); });
+    await dir.delete(recursive: true);
   });
 }

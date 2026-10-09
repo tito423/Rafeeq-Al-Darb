@@ -3,54 +3,13 @@
 AUDIT_STAGE: ensureReady
 AUDIT_NATIVE_CALL: configHoldingQueue
 AUDIT_NATIVE_CALL: configForegroundFileSize
-══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
-The following TimeoutException was thrown while running async test code:
-TimeoutException after 0:00:15.000000: Future not completed
-
-When the exception was thrown, this was the stack:
-<asynchronous suspension>
-#1      main.<anonymous closure>.<anonymous closure> (file:///E:/My%20Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/surah_cancel_retry_audit_test.dart:62:7)
-<asynchronous suspension>
-<asynchronous suspension>
-#3      main.<anonymous closure> (file:///E:/My%20Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/surah_cancel_retry_audit_test.dart:60:5)
-<asynchronous suspension>
-#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
-<asynchronous suspension>
-#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)
-<asynchronous suspension>
-<asynchronous suspension>
-(elided 3 frames from dart:async and package:stack_trace)
-
-The exception was caught asynchronously.
-════════════════════════════════════════════════════════════════════════════════════════════════════
-══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
-The following TestFailure was thrown running a test:
-Expected: an object with length of <1>
-  Actual: []
-   Which: has length of <0>
-
-When the exception was thrown, this was the stack:
-#4      main.<anonymous closure> (file:///E:/My%20Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/surah_cancel_retry_audit_test.dart:69:5)
-<asynchronous suspension>
-#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
-<asynchronous suspension>
-#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)
-<asynchronous suspension>
-<asynchronous suspension>
-(elided one frame from package:stack_trace)
-
-This was caught by the test expectation on the following line:
-  file:///E:/My%20Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/surah_cancel_retry_audit_test.dart line 69
-The test description was:
-  audit: minute retry restarts an explicitly canceled surah
-════════════════════════════════════════════════════════════════════════════════════════════════════
-══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
-The following message was thrown:
-Multiple exceptions (2) were detected during the running of the current test, and at least one was
-unexpected.
-════════════════════════════════════════════════════════════════════════════════════════════════════
-00:15 +0 -1: audit: minute retry restarts an explicitly canceled surah [E]
-  Test failed. See exception logs above.
-  The test description was: audit: minute retry restarts an explicitly canceled surah
+AUDIT_STAGE: ready
+AUDIT_NATIVE_CALL: allTasks
+AUDIT_NATIVE_CALL: requestPermission
+AUDIT_NATIVE_CALL: enqueue
+AUDIT_NATIVE_CALL: cancelTasksWithIds
+00:30 +0 -1: audit: minute retry restarts an explicitly canceled surah [E]
+  TimeoutException after 0:00:30.000000: Test timed out after 30 seconds. See https://pub.dev/packages/test#timeouts
+  dart:isolate  _RawReceivePort._handleMessage
   
-00:15 +0 -1: Some tests failed.
+00:30 +0 -1: Some tests failed.
