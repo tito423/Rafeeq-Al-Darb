@@ -3564,7 +3564,17 @@
     "path": "rafeeq_app/lib/features/channels/data/islamic_channels.dart",
     "lines": 198,
     "sha256": "6ee30225d359ea5613ad93f3d25e6f4af1e69f13d5a613848751f5a2293c22da",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 198,
+    "notes": [
+      {
+        "lines": [
+          1,
+          198
+        ],
+        "note": "Read entire nine-channel catalogue, permanent YouTube ids, multilingual description keys, optional avatar/photo handling and project-bucket URL construction. Historical comments refer to an older count and must not substitute for live verification. Current YouTube identity/status and seven photo URLs need live validation; no assertion that comments certify current official ownership."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dedications/data/dedication.dart",
