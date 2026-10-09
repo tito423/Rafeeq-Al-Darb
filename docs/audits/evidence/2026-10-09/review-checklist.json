@@ -6068,19 +6068,49 @@
     "path": "rafeeq_app/lib/features/onboarding/presentation/screens/permissions_intro_screen.dart",
     "lines": 324,
     "sha256": "b03fc1860ded4b0f0ff0b7b0f8e0bc5a7438a2ed0f054d52d6a230ef9b85d952",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 324,
+    "notes": [
+      {
+        "lines": [
+          1,
+          324
+        ],
+        "note": "Reviewed permission introduction complete: per-permission non-blocking request, always-enabled later, resume status query, locale/theme choice and own navigation context. Reviewed content pack stream subscription and fixed trailing slot state/progress/cancel/installed rendering. OEM grant effects and large-font FittedBox targets remain device checks."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/onboarding/presentation/widgets/content_pack_tile.dart",
     "lines": 86,
     "sha256": "961e207d83928c5a7bc80ae4e79105df75f0aa43ed6adffa8518245f3b83f620",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 86,
+    "notes": [
+      {
+        "lines": [
+          1,
+          86
+        ],
+        "note": "Reviewed permission introduction complete: per-permission non-blocking request, always-enabled later, resume status query, locale/theme choice and own navigation context. Reviewed content pack stream subscription and fixed trailing slot state/progress/cancel/installed rendering. OEM grant effects and large-font FittedBox targets remain device checks."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/onboarding/presentation/widgets/offline_pack_row.dart",
     "lines": 155,
     "sha256": "0b51ca1814cb2ace0c1e4d340f1fc87d846870a92787bd16fb76b86629540ea4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 155,
+    "notes": [
+      {
+        "lines": [
+          1,
+          155
+        ],
+        "note": "Reviewed permission introduction complete: per-permission non-blocking request, always-enabled later, resume status query, locale/theme choice and own navigation context. Reviewed content pack stream subscription and fixed trailing slot state/progress/cancel/installed rendering. OEM grant effects and large-font FittedBox targets remain device checks."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/onboarding/presentation/widgets/offline_pack_tiles.dart",
