@@ -4599,19 +4599,49 @@
     "path": "rafeeq_app/lib/features/khatma/data/ayah_opening.dart",
     "lines": 40,
     "sha256": "76bf4ea46c4010a08fcb9d62293b606246753bd0ed273c13b5fef690e649c579",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 40,
+    "notes": [
+      {
+        "lines": [
+          1,
+          40
+        ],
+        "note": "Completed ayah opening, khatma model and portion range. Opening preserves whole words; portions resolved from database. Target-date days and daysLeft use duration.inDays across DST; retained pacing calendar candidate pending actual date proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/data/khatma_model.dart",
     "lines": 390,
     "sha256": "360a9b2e19edc74ebea43cd37693fa5f421d5bff5dbcebb6b0e1e37c67a1265a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 390,
+    "notes": [
+      {
+        "lines": [
+          1,
+          390
+        ],
+        "note": "Completed ayah opening, khatma model and portion range. Opening preserves whole words; portions resolved from database. Target-date days and daysLeft use duration.inDays across DST; retained pacing calendar candidate pending actual date proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/data/khatma_range.dart",
     "lines": 82,
     "sha256": "2d78d45d7cf8be2a23807a6e13ac46ba5f8b9b68edf7fbdf78e5cb0c92831af5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 82,
+    "notes": [
+      {
+        "lines": [
+          1,
+          82
+        ],
+        "note": "Completed ayah opening, khatma model and portion range. Opening preserves whole words; portions resolved from database. Target-date days and daysLeft use duration.inDays across DST; retained pacing calendar candidate pending actual date proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/data/khatma_store.dart",
@@ -4633,25 +4663,72 @@
     "path": "rafeeq_app/lib/features/khatma/presentation/create_khatma_sheet.dart",
     "lines": 518,
     "sha256": "144e884e3bb4f3fba3be7a9d4c6266515e9b4c295b57dbaabff209122bdd6af8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 518,
+    "notes": [
+      {
+        "lines": [
+          1,
+          518
+        ],
+        "note": "Completed create khatma sheet: keyboard/safe scrolling present. Retained quarter dropdown stale initialValue after duration edits, amount recomputation under different units and missing timepicker mounted check for widget proof; gold reminder text within A-22 pattern."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/presentation/khatma_card.dart",
     "lines": 592,
     "sha256": "a075f4eb26558297f7c01f8ff0c66fede0478e2af05718d28741f785b66b5f36",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 592,
+    "notes": [
+      {
+        "lines": [
+          1,
+          589
+        ],
+        "note": "Read khatma card 1-589: original ayah preview whole-word cut, true DB boundaries, undo six-second timer canceled on disposal. Gold small labels extend contrast candidate; no new assertion."
+      },
+      {
+        "lines": [
+          590,
+          592
+        ],
+        "note": "Completed khatma card and manager. Source uses DB boundaries; original ayah previews preserved. Retained dialog callback disposal and fixed grid large-font candidates. No new finding without execution."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/presentation/khatma_screen.dart",
     "lines": 474,
     "sha256": "8d26d2bd0792668ca15ecfc65e30d1ac1ad4ed8b74831019a94d6fed5b8b51ca",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 474,
+    "notes": [
+      {
+        "lines": [
+          1,
+          474
+        ],
+        "note": "Completed khatma card and manager. Source uses DB boundaries; original ayah previews preserved. Retained dialog callback disposal and fixed grid large-font candidates. No new finding without execution."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/khatma/presentation/khatma_wirds_sheet.dart",
     "lines": 263,
     "sha256": "85783bb81f0d6a2ed0f9eb42da86b9ad422a5c2be39cccb6529e283aa4614498",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 263,
+    "notes": [
+      {
+        "lines": [
+          1,
+          263
+        ],
+        "note": "Completed khatma wird list. Confirmed rewind preserves known records; no fabricated dates for legacy history. Missing khatma leaves spinner candidate only; post-save navigator disposal pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/data/journey_store.dart",
