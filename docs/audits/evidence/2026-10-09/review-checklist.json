@@ -4104,7 +4104,17 @@
     "path": "rafeeq_app/lib/features/hajj/presentation/hajj_screen.dart",
     "lines": 422,
     "sha256": "9030730dd31a4147b9e7699a60c63bfb3bd169f438d6c33f9578852c1c7b4146",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 422,
+    "notes": [
+      {
+        "lines": [
+          1,
+          422
+        ],
+        "note": "Reviewed HajjScreen whole422: bundled manual provider error/retry, keyed track transitions, counter/map selection, Arabic body and non-Arabic descriptions, listen button and miqat/madhahib placement. Hidden page/book cites are explicit owner instruction here, not a provenance defect; stale Nawawi comments do not identify actual current source."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/hajj_summary_card.dart",
