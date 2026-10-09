@@ -8558,7 +8558,17 @@
     "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tutorial_overlay.dart",
     "lines": 519,
     "sha256": "d068effbfc9cdc8b9c7763b872c9c03f4984ca71643d041757336384c91127f4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 519,
+    "notes": [
+      {
+        "lines": [
+          1,
+          519
+        ],
+        "note": "Completed all 519 overlay lines: normal build renders screenshot TourSlides only, live walkthrough is RAFEEQ_TOUR_CAPTURE-only; unused live drawing is dead retained reference code. Capture guards mounted/index after reveal/measurement, clamps spotlight to screen, logs real rectangles, cycles locales and has finish guard. Normal tour does not instantiate chapter screen builders, so duplicate live screen anchor concern does not apply to ordinary tutorial. Screenshot pulse remains a separate rendered-animation candidate; capture-only async transitions are not reported as normal app failures."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/main.dart",
