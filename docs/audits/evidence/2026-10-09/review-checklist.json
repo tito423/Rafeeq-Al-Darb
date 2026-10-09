@@ -7563,7 +7563,17 @@
     "path": "rafeeq_app/lib/features/settings/presentation/screens/settings_screen.dart",
     "lines": 704,
     "sha256": "3d740c373f2eb4c13dd41b4842dee51b516b550a4c0118a14ac794e1b35979de",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 471,
+    "notes": [
+      {
+        "lines": [
+          1,
+          471
+        ],
+        "note": "Read SettingsBody 1-471: locale/theme selections, font/splash/clock/mushaf/permissions sections, reminder grouping, privacy/about/source links and paired layouts. Canonical const-child translation behavior requires checking child context dependencies before any locale claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/screens/sources_screen.dart",
