@@ -6838,7 +6838,17 @@
     "path": "rafeeq_app/lib/features/quran/presentation/screens/sciences_pack_screen.dart",
     "lines": 334,
     "sha256": "f970ae267e315047b8026f888e953f8f0f7cadbe9899df7f43d2529e7404216a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 334,
+    "notes": [
+      {
+        "lines": [
+          1,
+          334
+        ],
+        "note": "Completed sciences pack inventory UI: actual DB contents counts, AsyncValue loading/error/install gate, DownloadManager stream subscription cleanup, completed-only repository invalidation and failed retry/progress. Candidate: repo.contents() future reconstructed on every stream-driven build; needs measured query repetition/performance. Narrow large-text trailing counts need widget/device measurement. No claim of installed-pack CRC/source validation from UI counts."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/ayah_panel.dart",
