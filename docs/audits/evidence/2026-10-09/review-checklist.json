@@ -4281,14 +4281,24 @@
     "path": "rafeeq_app/lib/features/library/data/book_speaker.dart",
     "lines": 448,
     "sha256": "552acd4f9f4e545361c4a3103e1bd7287119c36ed44a51a6516edf3695dfca72",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 448,
+    "notes": [
+      {
+        "lines": [
+          1,
+          448
+        ],
+        "note": "Reviewed BookSpeaker complete: TTS setup/stop and generation ownership candidates require controlled reproduction; reviewed BookText metadata, TOC/page models through line 295, confirming editionCard is not retained for A-28."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/book_text.dart",
     "lines": 304,
     "sha256": "7b65fcd9156a2b191c3b0cd5e133dfba21412fb4d002b46f6de4f80b7f988932",
-    "review": "partial",
-    "read_through_line": 190,
+    "review": "source-reviewed",
+    "read_through_line": 304,
     "notes": [
       {
         "lines": [
@@ -4296,6 +4306,20 @@
           190
         ],
         "note": "Lines1-190 independently read: gzip magic decoding, noise filter, printed-scale validation, TOC remapping and metadata parsing; remaining lines pending."
+      },
+      {
+        "lines": [
+          191,
+          295
+        ],
+        "note": "Reviewed BookSpeaker complete: TTS setup/stop and generation ownership candidates require controlled reproduction; reviewed BookText metadata, TOC/page models through line 295, confirming editionCard is not retained for A-28."
+      },
+      {
+        "lines": [
+          296,
+          304
+        ],
+        "note": "Reviewed paragraph model, built-in/hosted classification, translated compiler-bio keys, hidden-book persistence and Islamic website catalog including owner reversals; hidden set writes snapshot after prefs await, no confirmed loss."
       }
     ]
   },
@@ -4303,91 +4327,248 @@
     "path": "rafeeq_app/lib/features/library/data/builtin_books.dart",
     "lines": 41,
     "sha256": "000636a087bab029727d86c8071eb8923c9379c738cd8b945b0eb10fdd224e68",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 41,
+    "notes": [
+      {
+        "lines": [
+          1,
+          41
+        ],
+        "note": "Reviewed paragraph model, built-in/hosted classification, translated compiler-bio keys, hidden-book persistence and Islamic website catalog including owner reversals; hidden set writes snapshot after prefs await, no confirmed loss."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/hadith_imam_bios.dart",
     "lines": 26,
     "sha256": "a0430666231bdbead95fa751d861cacd5678697a535470020ae55b2ebaf97344",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 26,
+    "notes": [
+      {
+        "lines": [
+          1,
+          26
+        ],
+        "note": "Reviewed paragraph model, built-in/hosted classification, translated compiler-bio keys, hidden-book persistence and Islamic website catalog including owner reversals; hidden set writes snapshot after prefs await, no confirmed loss."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/hidden_books.dart",
     "lines": 43,
     "sha256": "32dda1ea7bdb8d149df3ceb41270859f0208e06775850b5d419316fdc09ce6ed",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 43,
+    "notes": [
+      {
+        "lines": [
+          1,
+          43
+        ],
+        "note": "Reviewed paragraph model, built-in/hosted classification, translated compiler-bio keys, hidden-book persistence and Islamic website catalog including owner reversals; hidden set writes snapshot after prefs await, no confirmed loss."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/islamic_websites.dart",
     "lines": 82,
     "sha256": "eea49b2ea31b648ddaf55eb7441b4a01be24299c25f5db5a184c1b530c613623",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 82,
+    "notes": [
+      {
+        "lines": [
+          1,
+          82
+        ],
+        "note": "Reviewed paragraph model, built-in/hosted classification, translated compiler-bio keys, hidden-book persistence and Islamic website catalog including owner reversals; hidden set writes snapshot after prefs await, no confirmed loss."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/library_api_service.dart",
     "lines": 523,
     "sha256": "e9e6df1ad1089a9bd6f0dbabcbcbf9d69c0c238c95105e45a1eef43a00392c91",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 523,
+    "notes": [
+      {
+        "lines": [
+          1,
+          512
+        ],
+        "note": "Reviewed library download mirror acceptance, gzip parsing/isolate indexing, v3 normalized search backfill, local file/catalog size validation, transaction/delete/storage and cross-book search. Concurrent install/delete file/index atomicity and shared download ownership remain candidates; no confirmed new finding."
+      },
+      {
+        "lines": [
+          513,
+          523
+        ],
+        "note": "Reviewed featured book ordering, per-list customization serialization and default recovery, shelf models/state/persistence/reminder integration, Calendar template URI and fixed-index palettes. Calendar next-day Duration shares A-16 DST pattern; shelf async restoration/mutation remains unconfirmed candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/library_featured.dart",
     "lines": 102,
     "sha256": "f8113382cbc0a58716c48d3a48f3b462344d09b15e4857fb05588b65707c13ab",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 102,
+    "notes": [
+      {
+        "lines": [
+          1,
+          102
+        ],
+        "note": "Reviewed featured book ordering, per-list customization serialization and default recovery, shelf models/state/persistence/reminder integration, Calendar template URI and fixed-index palettes. Calendar next-day Duration shares A-16 DST pattern; shelf async restoration/mutation remains unconfirmed candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/link_list_customization.dart",
     "lines": 164,
     "sha256": "78b37e326f4b4074eea947c2f03045b1846cf1a15c6834854bc20d2536d2ac8c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 164,
+    "notes": [
+      {
+        "lines": [
+          1,
+          164
+        ],
+        "note": "Reviewed featured book ordering, per-list customization serialization and default recovery, shelf models/state/persistence/reminder integration, Calendar template URI and fixed-index palettes. Calendar next-day Duration shares A-16 DST pattern; shelf async restoration/mutation remains unconfirmed candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/my_shelves.dart",
     "lines": 208,
     "sha256": "2f8382856cdfd5e45e1d3dee36dcd0ed1528baf9507fd3f45fb37007da6dde4b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 208,
+    "notes": [
+      {
+        "lines": [
+          1,
+          208
+        ],
+        "note": "Reviewed featured book ordering, per-list customization serialization and default recovery, shelf models/state/persistence/reminder integration, Calendar template URI and fixed-index palettes. Calendar next-day Duration shares A-16 DST pattern; shelf async restoration/mutation remains unconfirmed candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/shelf_calendar.dart",
     "lines": 47,
     "sha256": "ec0bef77b5ece890a4449fa345520b2638d600646390b671366b476b68d84fb0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 47,
+    "notes": [
+      {
+        "lines": [
+          1,
+          47
+        ],
+        "note": "Reviewed featured book ordering, per-list customization serialization and default recovery, shelf models/state/persistence/reminder integration, Calendar template URI and fixed-index palettes. Calendar next-day Duration shares A-16 DST pattern; shelf async restoration/mutation remains unconfirmed candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/shelf_look.dart",
     "lines": 33,
     "sha256": "dd2df24f3f7ffbc987ae856e1dfba50cb8047314518df765ef5d245571a265ef",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 33,
+    "notes": [
+      {
+        "lines": [
+          1,
+          33
+        ],
+        "note": "Reviewed featured book ordering, per-list customization serialization and default recovery, shelf models/state/persistence/reminder integration, Calendar template URI and fixed-index palettes. Calendar next-day Duration shares A-16 DST pattern; shelf async restoration/mutation remains unconfirmed candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/shelf_reminder_service.dart",
     "lines": 90,
     "sha256": "e9c4ea06268f6cca5642f6037dd54e55ee843548a626de0d74a2306f3637b939",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 90,
+    "notes": [
+      {
+        "lines": [
+          1,
+          90
+        ],
+        "note": "Reviewed weekly shelf notification channel/range/cancellation and A-16 next-day loop; complete Arabic phonetiser tables, emphatic/diacritic/word preprocessing and Python-behavior parity comments, token folding/symbol ordering; device/open voice preference and fallback."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/tts/arabic_phonetiser.dart",
     "lines": 335,
     "sha256": "c55480bfbb2b28dbfa6576138e25be15581625dd35258821b412e927bbeac7e3",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 335,
+    "notes": [
+      {
+        "lines": [
+          1,
+          335
+        ],
+        "note": "Reviewed weekly shelf notification channel/range/cancellation and A-16 next-day loop; complete Arabic phonetiser tables, emphatic/diacritic/word preprocessing and Python-behavior parity comments, token folding/symbol ordering; device/open voice preference and fallback."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/tts/book_voice_pref.dart",
     "lines": 28,
     "sha256": "2708cd95a8e1904af6cf0975056628ee7e56c776b0bc0d5d235c2e65466b692f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 28,
+    "notes": [
+      {
+        "lines": [
+          1,
+          28
+        ],
+        "note": "Reviewed weekly shelf notification channel/range/cancellation and A-16 next-day loop; complete Arabic phonetiser tables, emphatic/diacritic/word preprocessing and Python-behavior parity comments, token folding/symbol ordering; device/open voice preference and fallback."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/tts/open_voice.dart",
     "lines": 371,
     "sha256": "5ae92dbe5e931761e74ccdfeabb6459088ec3f0d73d202568262e9fa33c03bd2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 371,
+    "notes": [
+      {
+        "lines": [
+          1,
+          371
+        ],
+        "note": "Reviewed entire OpenVoice install/adoption/progress/cancel/uninstall, ONNX input shapes and output resource handling, symbol filtering, normalization and little-endian PCM WAV. Candidates: cancel/remove completion ownership; concurrent release/loading and missing finally on inference errors require reproduction. Declared models=2 despite stale three-model comments."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/my_library/my_library_tab.dart",
     "lines": 487,
     "sha256": "93a7a51db968100caa7034ace74aeafdfbd56dee181cc74fbdb07b9509846587",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 487,
+    "notes": [
+      {
+        "lines": [
+          1,
+          487
+        ],
+        "note": "Reviewed full MyLibraryTab grid, shelf counts, animated spines/rise, shelf navigation/editor callbacks, cards and welcome states. Large-font/narrow-width shelf layout and reduced-motion remain device/widget checks."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/my_library/shelf_screen.dart",
