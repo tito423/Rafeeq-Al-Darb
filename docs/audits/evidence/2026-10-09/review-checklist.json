@@ -4574,115 +4574,340 @@
     "path": "rafeeq_app/lib/features/library/presentation/my_library/shelf_screen.dart",
     "lines": 508,
     "sha256": "33c1c8c81f0e00b975295fc8454442dcf82815cf1766fc987ac17382d66cea23",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 508,
+    "notes": [
+      {
+        "lines": [
+          1,
+          508
+        ],
+        "note": "Reviewed ShelfScreen lifecycle subscriptions/load, direct book download/open, picker/remove/undo/delete and reminder/calendar UI; post-download _load ref read after route disposal is candidate requiring controlled completion, as are overlapping scans. Shelf proper names/RTL/dismiss directions and theme handling read."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/my_library/shelf_sheets.dart",
     "lines": 545,
     "sha256": "86b9200dda9187ab8e506b718ce8862f13fa49db9b77c138bbcf061758a50630",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 545,
+    "notes": [
+      {
+        "lines": [
+          1,
+          545
+        ],
+        "note": "Reviewed shelf editor preview/forms/name limits, swatch/icon controls, reminder permission/save/clear and time-picker lifecycle, localized weekdays, book picker hidden catalog/order/search. Candidates: double-submit duplicate shelves, permission reply after sheet disposal ref access, unlabeled 36px swatches and 46px icons; require actual proofs before findings."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/my_library/shelf_style.dart",
     "lines": 112,
     "sha256": "dee72c006bd78cc6a76fd80ed8b25aed732700ae72367f0b893dcaab4502015b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 112,
+    "notes": [
+      {
+        "lines": [
+          1,
+          112
+        ],
+        "note": "Reviewed modulo palette/icon lookup and complete RTL book-spine painter, bounded drawing, decorative stable hashes and repaint dependencies; no confirmed functional defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/screens/book_text_reader_screen.dart",
     "lines": 1142,
     "sha256": "d12790aa92e77497579d21d4760f3427a31497c618f0827895cf69982d452a76",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 1142,
+    "notes": [
+      {
+        "lines": [
+          1,
+          535
+        ],
+        "note": "Reviewed book reader lines1-535: file/prefs load, saved index/font/marks/ink, page swipe direction/velocity, sheets/go-to/search, source popup confirming A28, GlobalKey listening across orientation and toolbar. Arabic-digit int.tryParse shares navigation-input candidate; empty document clamp and deferred sheet callback lifecycle need actual inputs."
+      },
+      {
+        "lines": [
+          536,
+          1065
+        ],
+        "note": "Reviewed reader layout536-1065, body/selectable actions/provenance/page rail, Quran para exemption, bookmark/index guards and in-book search. Empty pages have body guard, so no crash claim. New search snippet candidate: normalized match offset applied to original diacritized text may omit matched passage; actual corpus/widget proof needed."
+      },
+      {
+        "lines": [
+          1066,
+          1142
+        ],
+        "note": "Finished book-reader search UI/result rows and hit model; actual normalized-offset snippet issue still pending corpus reproduction. Search hit opens correct pageIndex; do not claim incorrect destination."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/screens/books_search_screen.dart",
     "lines": 654,
     "sha256": "0d69efd8316b1216fd6b3145cbc320b55579f5580991164f67c5072e937ebd0d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 654,
+    "notes": [
+      {
+        "lines": [
+          1,
+          559
+        ],
+        "note": "Reviewed all-books search through559: title/author whole-word preference, sequential author downloads, async text/on-device scans and UI scopes/hits/open. No request generation or query check across awaited searches; clear also leaves active query/debounce, stale results candidate needs channel-controlled proof. Source snippets here intentionally normalized, unlike in-book offset issue."
+      },
+      {
+        "lines": [
+          560,
+          654
+        ],
+        "note": "Finished cross-book search option controls/result header/book tiles; read hadith book/chapter screens complete with persistent futures/retry/empty guards, numeric chapter labels, locale-specific English gloss, Arabic previews and chapter-bound navigation; no new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/screens/hadith_book_screen.dart",
     "lines": 109,
     "sha256": "84bc0e08dd41710e101ddb28e80d2eb526305a28212e5c574af0242699777a62",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 109,
+    "notes": [
+      {
+        "lines": [
+          1,
+          109
+        ],
+        "note": "Finished cross-book search option controls/result header/book tiles; read hadith book/chapter screens complete with persistent futures/retry/empty guards, numeric chapter labels, locale-specific English gloss, Arabic previews and chapter-bound navigation; no new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/screens/hadith_chapter_screen.dart",
     "lines": 94,
     "sha256": "c066145fadbf4540c5ea81a75adaa1d20cfa0f3b3d853c9e994a0c08da8daea0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 94,
+    "notes": [
+      {
+        "lines": [
+          1,
+          94
+        ],
+        "note": "Finished cross-book search option controls/result header/book tiles; read hadith book/chapter screens complete with persistent futures/retry/empty guards, numeric chapter labels, locale-specific English gloss, Arabic previews and chapter-bound navigation; no new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/screens/hadith_detail_screen.dart",
     "lines": 280,
     "sha256": "debc2e7ad2286845c0b71737d67682c91156b16802331bba40220d292dc14951",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 280,
+    "notes": [
+      {
+        "lines": [
+          1,
+          280
+        ],
+        "note": "Reviewed full hadith detail PageView/text/translation/grade and grader/source behavior including source-based Sahihayn statement; grade gold style within A22 scope candidate, no religious edits. Library six-tab routing/controller, deepened pill contrast, landscape toolbar, clamped labels and external-source build gate read complete."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/screens/library_screen.dart",
     "lines": 199,
     "sha256": "8029dd828d875f99175735a26f62983997721021b601ab4b9e71d1d94d917519",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 199,
+    "notes": [
+      {
+        "lines": [
+          1,
+          199
+        ],
+        "note": "Reviewed full hadith detail PageView/text/translation/grade and grader/source behavior including source-based Sahihayn statement; grade gold style within A22 scope candidate, no religious edits. Library six-tab routing/controller, deepened pill contrast, landscape toolbar, clamped labels and external-source build gate read complete."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/tabs/books_tab.dart",
     "lines": 775,
     "sha256": "1970a58ac6e224ee73120fa22de13708dc5eab2c03859aee410f88ba1df4e072",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 775,
+    "notes": [
+      {
+        "lines": [
+          1,
+          563
+        ],
+        "note": "Reviewed BooksTab1-563 registry subscriptions and per-book DB/file scans, single local queue/failure aggregation, download/open/delete and responsive 4-way labels, author/category group sorting and selection. Repeated whole-catalog scans per DownloadManager progress and startup install changes is a measured-performance candidate, not yet measured defect."
+      },
+      {
+        "lines": [
+          564,
+          775
+        ],
+        "note": "Finished BooksTab staged/featured groups and downloaded-library merged catalog; reviewed ChannelsTab avatar mirror/cache/error fallback, edit/order/hidden state, proper-name/description and managed-link routing. Decorative spines and channel icons do not require content labels by themselves."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/tabs/channels_tab.dart",
     "lines": 173,
     "sha256": "f999322daa0b1b5c3a916814f71ee61772229f83d009b4c474cce072963dbfe7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 173,
+    "notes": [
+      {
+        "lines": [
+          1,
+          173
+        ],
+        "note": "Finished BooksTab staged/featured groups and downloaded-library merged catalog; reviewed ChannelsTab avatar mirror/cache/error fallback, edit/order/hidden state, proper-name/description and managed-link routing. Decorative spines and channel icons do not require content labels by themselves."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/tabs/hadith_tab.dart",
     "lines": 639,
     "sha256": "0db8a58bff23b0ea23779d2ea0a1d95ff6b50b494e15acd213619413eead40df",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 639,
+    "notes": [
+      {
+        "lines": [
+          1,
+          564
+        ],
+        "note": "Reviewed HadithTab1-564 repository gate/retry/debounce, download status, built-in registry and collection/author/bio/count cards. Completed hadith task invalidates repository on every unrelated download event; needs actual repeated-query impact proof. CountChip Row at large fonts remains layout candidate."
+      },
+      {
+        "lines": [
+          565,
+          639
+        ],
+        "note": "Finished hadith search future updates and single-hit navigation, read spoken books filtering/hidden/bulk UI, website customization and author search result expansion/download progress. Hadith search Future.wait recreated but underlying futures cached; do not call repeated DB search solely from Future.wait creation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/tabs/spoken_books_view.dart",
     "lines": 121,
     "sha256": "98f74e717fc3211701c38736d78648776e821f4d37019a63ceeca0c248210ebe",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 121,
+    "notes": [
+      {
+        "lines": [
+          1,
+          121
+        ],
+        "note": "Finished hadith search future updates and single-hit navigation, read spoken books filtering/hidden/bulk UI, website customization and author search result expansion/download progress. Hadith search Future.wait recreated but underlying futures cached; do not call repeated DB search solely from Future.wait creation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/tabs/websites_tab.dart",
     "lines": 143,
     "sha256": "9745b4023fdf3e3b0de9f02ce69b4b32857f9acdd963c9bf41c101126c022cd6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 143,
+    "notes": [
+      {
+        "lines": [
+          1,
+          143
+        ],
+        "note": "Finished hadith search future updates and single-hit navigation, read spoken books filtering/hidden/bulk UI, website customization and author search result expansion/download progress. Hadith search Future.wait recreated but underlying futures cached; do not call repeated DB search solely from Future.wait creation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/author_search_result.dart",
     "lines": 149,
     "sha256": "58d0c0dce87b1ef119df834dc17b4a12a87377ade60dcb6ccc39e10d051af2af",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 149,
+    "notes": [
+      {
+        "lines": [
+          1,
+          149
+        ],
+        "note": "Finished hadith search future updates and single-hit navigation, read spoken books filtering/hidden/bulk UI, website customization and author search result expansion/download progress. Hadith search Future.wait recreated but underlying futures cached; do not call repeated DB search solely from Future.wait creation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_bulk_actions.dart",
     "lines": 239,
     "sha256": "102cda23dcf19ee34f926988a0a511e8d33718179d42a5746a918e556e9b7ebe",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 239,
+    "notes": [
+      {
+        "lines": [
+          1,
+          239
+        ],
+        "note": "Reviewed full bulk selection/fetch/delete and BookCard. Confirmed source mismatch candidate: direct LibraryApiService downloads update bookDownloads, while BookCard observes only DownloadManager taskById for progress/busy/cancel. Actual card widget reproduction is next; queued pending books also lack local reservation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_card.dart",
     "lines": 163,
     "sha256": "001de2edb33dcc8bbbd54c977b9f94daf199c054d104b43277992cb10f1b3a55",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 163,
+    "notes": [
+      {
+        "lines": [
+          1,
+          163
+        ],
+        "note": "Reviewed full bulk selection/fetch/delete and BookCard. Confirmed source mismatch candidate: direct LibraryApiService downloads update bookDownloads, while BookCard observes only DownloadManager taskById for progress/busy/cancel. Actual card widget reproduction is next; queued pending books also lack local reservation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_listen_action.dart",
     "lines": 281,
     "sha256": "e73c2a0834ebbad321bd09d29a2c064d40518684c62f82290be17128da463b45",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 281,
+    "notes": [
+      {
+        "lines": [
+          1,
+          281
+        ],
+        "note": "Reviewed BookListenAction stop-on-page/dispose and whole-book run ownership, voice selection/warmup, page rail numbering and slider, settings voice preference. New concrete candidate: _pickVoice stops speaker without incrementing _run, allowing whole-book loop to advance/resume while choosing new voice; controlled actual speaker needed. Dispose consumer does stop speaker, so no standalone dispose leak claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_page_rail.dart",
     "lines": 149,
     "sha256": "8b1f16a77f14db5028f86cfdd2899734c5ab323cc582f55bdfc01419622bc925",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 149,
+    "notes": [
+      {
+        "lines": [
+          1,
+          149
+        ],
+        "note": "Reviewed BookListenAction stop-on-page/dispose and whole-book run ownership, voice selection/warmup, page rail numbering and slider, settings voice preference. New concrete candidate: _pickVoice stops speaker without incrementing _run, allowing whole-book loop to advance/resume while choosing new voice; controlled actual speaker needed. Dispose consumer does stop speaker, so no standalone dispose leak claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_provenance_strip.dart",
@@ -4704,25 +4929,65 @@
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_voice_section.dart",
     "lines": 108,
     "sha256": "f0821b8ffbe74336093469f20559a65bc32dff7dfc158abf0bab034f4746caa4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 108,
+    "notes": [
+      {
+        "lines": [
+          1,
+          108
+        ],
+        "note": "Reviewed BookListenAction stop-on-page/dispose and whole-book run ownership, voice selection/warmup, page rail numbering and slider, settings voice preference. New concrete candidate: _pickVoice stops speaker without incrementing _run, allowing whole-book loop to advance/resume while choosing new voice; controlled actual speaker needed. Dispose consumer does stop speaker, so no standalone dispose leak claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/external_sources_strip.dart",
     "lines": 246,
     "sha256": "9a5b2b4d6dd548c777815f36f344b8dc0a00ce30005e0ef953e4f01964dc66ee",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 246,
+    "notes": [
+      {
+        "lines": [
+          1,
+          246
+        ],
+        "note": "Reviewed external sources strip timed entrance/sheen/count and reduced-animation dependency handling, HadithTranslation declared English/source label/LTR rendering and missing translation state, hidden-book list/undo. Candidate: imported Shamela books included in visible catalog but omitted from hidden restore sheet; actual import/hide proof needed. Reduced-motion stop is potentially reversed by later start timer."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/hadith_translation.dart",
     "lines": 84,
     "sha256": "b54e3e007b075b49b02d926fc8e75ff739e4362a88a01da4a410e0a9868d2beb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 84,
+    "notes": [
+      {
+        "lines": [
+          1,
+          84
+        ],
+        "note": "Reviewed external sources strip timed entrance/sheen/count and reduced-animation dependency handling, HadithTranslation declared English/source label/LTR rendering and missing translation state, hidden-book list/undo. Candidate: imported Shamela books included in visible catalog but omitted from hidden restore sheet; actual import/hide proof needed. Reduced-motion stop is potentially reversed by later start timer."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/hidden_books_sheet.dart",
     "lines": 139,
     "sha256": "c9c2691eee3c18817abe2588fcd6e5afd2319d32aa100ef06d6248254fd5a096",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 139,
+    "notes": [
+      {
+        "lines": [
+          1,
+          139
+        ],
+        "note": "Reviewed external sources strip timed entrance/sheen/count and reduced-animation dependency handling, HadithTranslation declared English/source label/LTR rendering and missing translation state, hidden-book list/undo. Candidate: imported Shamela books included in visible catalog but omitted from hidden restore sheet; actual import/hide proof needed. Reduced-motion stop is potentially reversed by later start timer."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/link_list_manage_screen.dart",
