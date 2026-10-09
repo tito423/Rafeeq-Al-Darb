@@ -15,6 +15,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shamail_al_muhammadiyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 303,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mishkat_al_masabih.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 323,
@@ -43,6 +50,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mukhtasar_minhaj_al_qasidin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 403,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fawaid.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 424,
@@ -60,6 +74,13 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nawadir_al_usul.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 463,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_samt_wa_adab_al_lisan.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 481,
     "expected_bytes": null
   },
   {
@@ -92,9 +113,37 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_amr_bil_maruf_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 580,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ighathat_al_lahfan_fi_hukm_talaq_al_ghadban.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 598,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_amthal_fil_quran_ibn_al_qayyim.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 617,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ahwal.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 636,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_awliya_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 653,
     "expected_bytes": null
   },
   {
@@ -106,6 +155,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tibyan_fi_aqsam_al_quran.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 688,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ikhwan.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 706,
@@ -113,9 +169,37 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_jami_fi_amthal_al_quran.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 723,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_daa_wal_dawa.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 742,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_risalah_al_tabukiyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 759,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ishraf_fi_manazil_al_ashraf.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 778,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_itibar_wa_aqab_al_surur.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 796,
     "expected_bytes": null
   },
   {
@@ -130,6 +214,13 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ruh_ibn_al_qayyim.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 832,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tawbah_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 849,
     "expected_bytes": null
   },
   {
@@ -169,9 +260,37 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rida_an_allah_biqadaihi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 952,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_furusiyyah_al_muhammadiyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 970,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_riqqah_wal_buka.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 989,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_kalam_ala_masalat_al_sama.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1006,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_zuhd_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1025,
     "expected_bytes": null
   },
   {
@@ -193,6 +312,20 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shukr.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1077,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_sabr_wal_thawab_alayh.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1094,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tuhfat_al_mawdud_bi_ahkam_al_mawlud.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1112,
     "expected_bytes": null
   },
   {
@@ -232,9 +365,44 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_faraj_bad_al_shiddah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1216,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hadi_al_arwah_ila_bilad_al_afrah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1234,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/risalat_ibn_al_qayyim_ila_ahad_ikhwanih.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1252,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_qubur_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1270,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_qanaah_wal_taaffuf.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1288,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/raf_al_yadayn_fil_salah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1305,
     "expected_bytes": null
   },
   {
@@ -288,6 +456,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_matar_wal_rad_wal_barq.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1443,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_manamat.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1461,
@@ -305,6 +480,20 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/uddat_al_sabirin.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1495,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/faidah_jalilah_fi_qawaid_al_asma_al_husna.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1512,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fatya_fi_sighat_al_hamd.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1530,
     "expected_bytes": null
   },
   {
@@ -337,9 +526,23 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_wajal_wal_tawthuq_bil_amal.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1616,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_wara.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1634,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_yaqin_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1651,
     "expected_bytes": null
   },
   {
@@ -372,6 +575,27 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/akhbar_al_humqa_wal_mughaffalin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1738,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/akhbar_al_zuraf_wal_mutamajinin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1756,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/akhbar_al_nisa_ibn_al_jawzi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1774,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dhamm_al_dunya.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1791,
@@ -382,6 +606,20 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/amar_al_ayan.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1808,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ikhbar_ahl_al_rusukh_fil_fiqh.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1826,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dhamm_al_ghibah_wal_namimah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1844,
     "expected_bytes": null
   },
   {
@@ -400,6 +638,20 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ilam_al_alim_bi_naskh_al_hadith.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1896,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sifat_al_jannah_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1914,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adhkiya.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 1932,
@@ -414,6 +666,20 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fadail_ramadan_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1966,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_birr_wal_silah_ibn_al_jawzi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 1984,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qira_al_dayf.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2002,
@@ -424,6 +690,13 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qada_al_hawaij.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2019,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/kalam_al_layali_wal_ayyam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2036,
     "expected_bytes": null
   },
   {
@@ -449,6 +722,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_hathth_ala_hifz_al_ilm.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2105,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/muhasabat_al_nafs.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2123,
@@ -463,6 +743,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_qussas_wal_mudhakkirin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2157,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/maqtal_ali.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2174,
@@ -470,9 +757,23 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mujtaba_min_al_mujtana.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2191,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/makaid_al_shaytan.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2209,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/makarim_al_akhlaq_ibn_abi_al_dunya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2226,
     "expected_bytes": null
   },
   {
@@ -498,6 +799,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_musaffa_bi_akuff_ahl_al_rusukh.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2295,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_manahi.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2315,
@@ -519,6 +827,13 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_amthal_min_al_kitab_wal_sunnah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2366,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bustan_al_waizin.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2384,
@@ -529,6 +844,13 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_bayt_al_maqdis.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2400,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tadhkirat_al_arib_fi_tafsir_al_gharib.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2416,
     "expected_bytes": null
   },
   {
@@ -554,6 +876,20 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/talqih_fuhum_ahl_al_athar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2487,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tanbih_al_naim_al_ghamr.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2505,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tanwir_al_ghabash.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2523,
@@ -575,6 +911,34 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/funun_al_afnan_fi_uyun_ulum_al_quran.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2582,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/muthir_al_gharam_al_sakin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2600,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mashyakhat_ibn_al_jawzi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2618,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mawaiz_ibn_al_jawzi_al_yaqutah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2635,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nawasikh_al_quran.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2653,
@@ -582,9 +946,30 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_fatwa_wal_mufti.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2671,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_usul_wal_dawabit.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2694,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2727,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fiqh_al_manhaji_hajj.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2749,
     "expected_bytes": null
   },
   {
@@ -599,6 +984,13 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahrir_alfaz_al_tanbih.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2796,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2820,
     "expected_bytes": null
   },
   {
@@ -620,6 +1012,139 @@
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/minhaj_al_talibin.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 2874,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/seerat_ibn_hisham.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2891,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/zad_al_maad.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2912,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/uyun_al_athar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2932,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nur_al_yaqin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2952,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/as_seerah_ibn_kathir.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 2972,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adhkar_nawawi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3008,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/at_tibyan_hamalat_al_quran.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3033,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_arbaun_an_nawawiyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3054,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/at_taqrib_wat_taysir.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3077,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fadail_al_quran_ibn_kathir.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3100,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_baith_al_hathith.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3119,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fusul_fi_seerat_ar_rasul.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3137,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mujizat_an_nabi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3156,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/musnad_abi_bakr.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3174,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tabaqat_ash_shafiiyyin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3193,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_dukhul_al_hammam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3212,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/juz_bay_ummahat_al_awlad.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3230,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/rawdat_al_uqala.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3251,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hilyat_al_awliya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3270,
     "expected_bytes": null
   },
   {
@@ -757,9 +1282,744 @@
   },
   {
     "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_bidaya_wan_nihaya.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3651,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qisas_al_anbiya_ibn_kathir.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3676,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/futuh_al_buldan.json",
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "line": 3698,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_al_khulafa_suyuti.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3716,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ihya_ulum_al_din.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3755,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/madarij_al_salikin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3775,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jami_al_ulum_wal_hikam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3796,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_dunya_wal_din.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3817,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_akhlaq_wal_siyar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3836,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bidayat_al_hidayah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3855,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/lataif_al_maarif.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3873,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/risalat_al_mustarshidin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3892,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/maqasid_al_riayah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3910,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahdhib_al_akhlaq.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3929,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jami_bayan_al_ilm.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3951,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tadhkirat_al_sami_wal_mutakallim.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3973,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_imla_wal_istimla.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 3994,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_luma_fi_usul_al_fiqh.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4015,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_faqih_wal_mutafaqqih.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4036,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qawaid_al_ahkam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4057,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qut_al_qulub.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4093,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adab_al_shariyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4112,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_jami_li_akhlaq_al_rawi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4133,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/muqaddimat_ibn_al_salah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4155,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_risalah_lil_shafii.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4178,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_risalah_al_qushayriyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4214,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_burhan_fi_ulum_al_quran.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4235,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_itqan_fi_ulum_al_quran.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4257,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_muwafaqat.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4279,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_aqidah_al_tahawiyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4301,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_iqtisad_fil_itiqad.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4319,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qawaid_al_aqaid.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4337,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_lubab_fi_sharh_al_kitab.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4355,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ikhtiyar_li_talil_al_mukhtar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4373,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_thamar_al_dani.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4391,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fawakih_al_dawani.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4409,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/kifayat_al_akhyar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4427,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_iqna_fi_hall_alfaz_abi_shuja.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4445,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fath_al_qarib_al_mujib.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4463,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_uddah_sharh_al_umdah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4481,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rawd_al_murbi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4499,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bidayat_al_mujtahid.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4517,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ihkam_al_ahkam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4535,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tanwir_al_hawalik.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4553,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rahiq_al_makhtum.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4571,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_waraqat_al_mahalli.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4590,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_ajurrumiyyah_hifzi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4608,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ilam_al_muwaqqiin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4629,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_majmu_sharh_al_muhadhdhab.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4648,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_qurtubi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4667,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mughni_ibn_qudamah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4685,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_tabari.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4704,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fath_al_bari.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4722,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/siyar_alam_al_nubala.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4740,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahdhib_al_kamal.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4759,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/lisan_al_arab.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4780,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_arbain_ibn_daqiq.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4800,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dalil_al_falihin.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4817,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/subul_al_salam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4834,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_nawawi_ala_muslim.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4851,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jam_al_wasail.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4868,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mirqat_al_mafatih.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4885,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nayl_al_awtar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4902,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tajrid_al_sarih.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4919,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/maraqi_al_falah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4936,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bulghat_al_salik.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4953,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fiqh_ala_al_madhahib_al_arbaa.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4970,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ibanah_ashari.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 4987,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_asma_wal_sifat_bayhaqi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5004,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/lawami_al_anwar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5021,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shariah_ajurri.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5038,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_aqaid_al_islamiyyah_ibn_badis.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5055,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_ibn_kathir.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5072,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_jalalayn.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5089,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_baghawi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5106,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_nasafi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5123,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/zad_al_masir.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5140,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/asbab_al_nuzul_wahidi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5157,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fath_al_qadir_shawkani.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5174,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tashil_ibn_juzayy.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5191,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shifa_qadi_iyad.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5208,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jawami_al_seerah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5225,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rawd_al_unuf.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5242,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/khulasat_siyar_sayyid_al_bashar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5259,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mawahib_al_ladunniyyah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5276,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_al_tabari.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5293,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_kamil_fil_tarikh.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5310,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_ibn_khaldun.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5327,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ibar_dhahabi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5344,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/wafayat_al_ayan.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5361,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ghidha_al_albab.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5378,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_ishrah_ghazzi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5395,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mustatraf.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5412,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/uyun_al_akhbar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5429,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/iqtida_al_ilm_al_amal.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5447,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_qatr_al_nada.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5465,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jawahir_al_balaghah.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5483,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_ibn_aqil.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5501,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_shudhur_al_dhahab.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5519,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tadrib_al_rawi.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5537,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ashbah_wal_nazair_suyuti.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5555,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/manahil_al_irfan.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5573,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nur_al_zalam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5590,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahqiq_al_maqam.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5607,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tuhfat_al_murid.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5624,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/minah_al_rawd_al_azhar.json",
+    "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
+    "line": 5641,
     "expected_bytes": null
   },
   {
@@ -6177,6 +7437,1427 @@
     "kind": "sciences",
     "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/sciences/v2/quran_sciences.zip",
     "path": "rafeeq_app/lib/core/config/app_config.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/1.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/3.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/5.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/6.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/8.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/7.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/12.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/10.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/11.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/13.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/14.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/15.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/17.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/16.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/18.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/24.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/26.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/28.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/29.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/30.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/34.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/35.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/37.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/38.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/39.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/40.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/44.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/46.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/47.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/48.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/49.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/50.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/51.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/52.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/53.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/54.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/55.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/56.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/57.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/58.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/59.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/60.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/61.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/62.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/63.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/64.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/65.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/66.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/67.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/68.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/75.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/72.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/73.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/79.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/82.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/83.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/84.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/85.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/86.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/87.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/88.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/98.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/216.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/103.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/104.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/105.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/240.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/241.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/107.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/108.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/112.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/113.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/115.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/116.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/118.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/119.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/120.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/121.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/122.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/123.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/124.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/125.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/126.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/128.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/129.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/130.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/131.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/132.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/134.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/135.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/136.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/139.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/140.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/141.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/142.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/143.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/144.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/145.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/147.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/148.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/150.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/152.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/154.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/155.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/156.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/157.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/158.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/159.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/161.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/163.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/164.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/165.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/166.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/167.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/168.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/169.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/170.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/171.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/172.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/173.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/174.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/175.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/176.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/177.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/178.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/179.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/180.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/181.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/182.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/183.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/184.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/185.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/186.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/187.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/188.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/189.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/190.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/191.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/192.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/193.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/194.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/198.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/200.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/201.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/202.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/203.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/204.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/205.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/206.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/207.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/208.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/209.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/211.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/212.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/213.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/214.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/215.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/217.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/220.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/221.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/222.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/223.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/224.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/225.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/226.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/227.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/228.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/232.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/233.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/234.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/235.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/239.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/242.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/243.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/244.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/245.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/246.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/247.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/248.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/249.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/250.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/251.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/252.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/253.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/254.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/255.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/256.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/257.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/258.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/259.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/260.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/261.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/262.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/263.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "individual-dhikr",
+    "url": "https://www.hisnmuslim.com/audio/ar/264.mp3",
+    "path": "rafeeq_app/assets/data/azkar_audio.json",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book-voice",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/tts/open_ar_v1/fp_ms.onnx",
+    "path": "rafeeq_app/lib/features/library/data/tts/open_voice.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "book-voice",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/tts/open_ar_v1/vocos44.onnx",
+    "path": "rafeeq_app/lib/features/library/data/tts/open_voice.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "ruqyah",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/ruqyah/afasy.mp3",
+    "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "ruqyah",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/ruqyah/ajami.mp3",
+    "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "ruqyah",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/ruqyah/abkar.mp3",
+    "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "ruqyah",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/ruqyah/muaiqly.mp3",
+    "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "ruqyah",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/ruqyah/sudais.mp3",
+    "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
+    "line": 1,
+    "expected_bytes": null
+  },
+  {
+    "kind": "ruqyah",
+    "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/ruqyah/tarteel_hadi.m4a",
+    "path": "rafeeq_app/lib/features/ruqyah/data/ruqyah_catalog.dart",
     "line": 1,
     "expected_bytes": null
   }

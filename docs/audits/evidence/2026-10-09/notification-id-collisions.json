@@ -1,0 +1,20 @@
+{
+  "scope": "Run the actual Dart string hash used by KhatmaStore; these are valid microsecond IDs producible by create(). No device alarm was modified.",
+  "collisions": [
+    {
+      "khatma_id": "1791561600000138",
+      "notification_id": 7100,
+      "also_used_by": "Fajr pre reminder"
+    },
+    {
+      "khatma_id": "1791561600000375",
+      "notification_id": 7500,
+      "also_used_by": "quote reminder slot 0"
+    },
+    {
+      "khatma_id": "1791561600002504",
+      "notification_id": 7200,
+      "also_used_by": "Fajr post reminder"
+    }
+  ]
+}
