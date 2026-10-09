@@ -8462,19 +8462,49 @@
     "path": "rafeeq_app/lib/features/tutorial/data/tutorial_anchors.dart",
     "lines": 127,
     "sha256": "33c46d8d829229b53c8837562977eca16f38ed59233576786ba23eaf54bc4180",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 127,
+    "notes": [
+      {
+        "lines": [
+          1,
+          127
+        ],
+        "note": "Reviewed all tutorial anchor ids, global key registry, scroll reveal and offstage/opacity visibility guards; all quick/detailed chapter routes and owner-approved omission of library; seen/every-launch/running/mode providers and finish persistence. Candidates: duplicate ids when two copies of same settings/screen are mounted and offscreen clipping not represented by anchorRect; require actual route/overlay reproduction. No invented missing-feature finding for intentionally omitted library."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tutorial/data/tutorial_chapters.dart",
     "lines": 362,
     "sha256": "93f34f68aaab56b6e3b1a02aba09d10eeaf637a15061d50cae1916e9ab838fd5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 362,
+    "notes": [
+      {
+        "lines": [
+          1,
+          362
+        ],
+        "note": "Reviewed all tutorial anchor ids, global key registry, scroll reveal and offstage/opacity visibility guards; all quick/detailed chapter routes and owner-approved omission of library; seen/every-launch/running/mode providers and finish persistence. Candidates: duplicate ids when two copies of same settings/screen are mounted and offscreen clipping not represented by anchorRect; require actual route/overlay reproduction. No invented missing-feature finding for intentionally omitted library."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tutorial/data/tutorial_state.dart",
     "lines": 78,
     "sha256": "8a7713db814d7640d48c2e9fab5b8cfecee2453bac957acbdb92ed7c4f06f786",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 78,
+    "notes": [
+      {
+        "lines": [
+          1,
+          78
+        ],
+        "note": "Reviewed all tutorial anchor ids, global key registry, scroll reveal and offstage/opacity visibility guards; all quick/detailed chapter routes and owner-approved omission of library; seen/every-launch/running/mode providers and finish persistence. Candidates: duplicate ids when two copies of same settings/screen are mounted and offscreen clipping not represented by anchorRect; require actual route/overlay reproduction. No invented missing-feature finding for intentionally omitted library."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tutorial/presentation/widgets/tour_pieces.dart",
