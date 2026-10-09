@@ -8124,13 +8124,33 @@
     "path": "rafeeq_app/lib/features/splash/presentation/screens/splash_screen.dart",
     "lines": 354,
     "sha256": "6b2c07457a012dc98c6a7b0f3ee245b1249cd4c12625a4e93dfef14e228d598c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 354,
+    "notes": [
+      {
+        "lines": [
+          1,
+          354
+        ],
+        "note": "Completed SplashScreen and WholeClip: actual splash flags, notification launch bypass, foreground abandon, native splash removal, stalled clip timer, first-frame asset and full landscape framing. Candidate: ref.read sound after delayed initialize precedes mounted check and can leak local controller after unmount; compare actual video platform proof before reporting. Notification payload late arrival relative to skip requires timing proof. Correct lifecycle/background comments preserved and no audit claim of physical playback."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/splash/presentation/widgets/whole_clip.dart",
     "lines": 60,
     "sha256": "b3d2266e192fbbc6423ed2e27ae908b3caa77d6951c96dfe3284425e7410444b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 60,
+    "notes": [
+      {
+        "lines": [
+          1,
+          60
+        ],
+        "note": "Completed SplashScreen and WholeClip: actual splash flags, notification launch bypass, foreground abandon, native splash removal, stalled clip timer, first-frame asset and full landscape framing. Candidate: ref.read sound after delayed initialize precedes mounted check and can leak local controller after unmount; compare actual video platform proof before reporting. Notification payload late arrival relative to skip requires timing proof. Correct lifecycle/background comments preserved and no audit claim of physical playback."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/sunan_suwar/data/sunan_suwar_catalog.dart",
