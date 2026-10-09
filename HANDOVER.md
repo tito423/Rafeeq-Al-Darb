@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 02:32 — IN PROGRESS — resume here**
+**2026-10-10 02:34 — IN PROGRESS — resume here**
 
-audit: prove fasting cancellation overlaps iqama ids
+audit: review daily hadith and document compass verification gap
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

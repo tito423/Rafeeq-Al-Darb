@@ -1,0 +1,23 @@
+{
+  "status": "needs device confirmation",
+  "app_file": "rafeeq_app/lib/features/qibla/presentation/screens/qibla_screen.dart",
+  "app_lines": [
+    59,
+    112,
+    145,
+    155,
+    351
+  ],
+  "dependency": "flutter_compass 0.8.1",
+  "dependency_sha256": "31632965310c69e0882bf3f26816a8e8ff6c1156b703260ea592e3181dc611a9",
+  "dependency_lines": [
+    72,
+    178,
+    181,
+    289,
+    292,
+    295
+  ],
+  "observation": "Plugin forwards SensorManager.getOrientation azimuth (magnetic north). App compares this directly to great-circle true bearing; no declination/GeomagneticField call found in lib or native application source. Physical directional error not measured.",
+  "official_source": "https://developer.android.com/reference/android/hardware/SensorManager#getOrientation(float[],%20float[])"
+}

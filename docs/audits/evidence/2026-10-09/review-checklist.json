@@ -4001,13 +4001,40 @@
     "path": "rafeeq_app/lib/features/hadith_daily/data/daily_hadith_provider.dart",
     "lines": 121,
     "sha256": "9aac448ca68636b1e883e5e8e94478d3d397449e22714a8c65dcc54f0d93c1c7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 121,
+    "notes": [
+      {
+        "lines": [
+          1,
+          121
+        ],
+        "note": "Completed daily hadith provider: explained institutional corpus only, locale watch resets history, bounded retries exclude blank explanation. Retained asynchronous old-locale pick/history overwrite candidate requiring delayed repository test."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hadith_daily/presentation/daily_hadith_card.dart",
     "lines": 508,
     "sha256": "f366be2a3024c25c68389da46ababf0cc436ca29b77771539266c6acb9ab6570",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 508,
+    "notes": [
+      {
+        "lines": [
+          1,
+          488
+        ],
+        "note": "Read daily hadith card 1-488, including separately re-read frame 1-107 after combined output truncation. Institutional source attribution visible; ListenTextButton shares A-30. Swipe requests lack in-flight guard; reduced motion/layout candidates unproven."
+      },
+      {
+        "lines": [
+          489,
+          508
+        ],
+        "note": "Completed daily hadith presentation; locale appropriate explanation direction and attribution preserved; runtime race/accessibility candidates separated from confirmed findings."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/data/hajj_guide.dart",
