@@ -1,0 +1,19 @@
+{
+  "id": "ghidha_al_albab",
+  "meta": {
+    "titleAr": "غذاء الألباب في شرح منظومة الآداب",
+    "authorAr": "شمس الدين، أبو العون محمد بن أحمد بن سالم السفاريني الحنبلي (المتوفى : ١١٨٨هـ)",
+    "sourceLabel": "المكتبة الشاملة",
+    "shamelaId": 25791,
+    "shamelaUrl": "https://shamela.ws/book/25791",
+    "printMatches": true,
+    "printReliable": false,
+    "editionCard": "الكتاب : غذاء الألباب في شرح منظومة الآداب\nالمؤلف : شمس الدين، أبو العون محمد بن أحمد بن سالم السفاريني الحنبلي (المتوفى : ١١٨٨هـ)\nالناشر : مؤسسة قرطبة - مصر\nالطبعة : الثانية ، ١٤١٤ هـ / ١٩٩٣م\nعدد الأجزاء : ٢\n[ترقيم الكتاب موافق للمطبوع]",
+    "pageCount": 1066,
+    "sectionCount": 535,
+    "builtAt": "2026-10-03T06:29:11Z",
+    "builtFrom": "scripts/build_book_text.py (shamela.ws ajax/pageContent)"
+  },
+  "actual_pages": 1066,
+  "decoded_sha256": "d28026ccb00bc15b46b22a4e76b1600c797602fa02dde3bc3b12d675ad625bff"
+}

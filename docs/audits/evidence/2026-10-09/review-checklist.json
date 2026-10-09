@@ -4179,13 +4179,103 @@
     "path": "rafeeq_app/lib/features/library/data/book_catalog.dart",
     "lines": 5663,
     "sha256": "080aff9afb1dd0a2d722d45ee43a672efc0c687a26e17061a3fdd3577db6c096",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 5663,
+    "notes": [
+      {
+        "lines": [
+          1,
+          504
+        ],
+        "note": "LibraryBook/TextEdition models, edition metadata, per-book audio threshold, localized death/description/sort and first catalog entries reviewed through 504. Comments census stale but runtime catalog not assumed deleted. All 289 payload URLs already full hash compared; provenance is not authenticated by mirror equality."
+      },
+      {
+        "lines": [
+          505,
+          1037
+        ],
+        "note": "Catalog 505-1037 checked: IDs/title/author/edition labels, source URLs/byte declarations, editorial removal flags and diacritics gates for Ibn Abi al-Dunya/Ibn al-Qayyim. Al-Ahwal label records modern editor death1448; needs source verification, not correction by assumption."
+      },
+      {
+        "lines": [
+          1038,
+          1568
+        ],
+        "note": "Catalog 1038-1568 reviewed: source labels, sizes, per-book vowel/audio and editorial removal flags; some Ibn Qayyim edition labels say birth659 vs691 elsewhere, requiring source-card verification before any religious/bibliographic change."
+      },
+      {
+        "lines": [
+          1569,
+          2102
+        ],
+        "note": "Catalog 1569-2102 source/edition metadata and gates reviewed; Akhbar al-Nisa attribution explicitly distinguishes incorrect printed Ibn Qayyim credit. No text or grading edits."
+      },
+      {
+        "lines": [
+          2103,
+          2637
+        ],
+        "note": "Catalog2103-2637 checked all declaration fields and publisher/editor labels; explicit historical al-Albani edition removal rationale reviewed, no new removal authorized. Some categories broad; product taxonomy choice not automatically defect."
+      },
+      {
+        "lines": [
+          2638,
+          3141
+        ],
+        "note": "Catalog2638-3141 checked: deduplication historical rationale, al-Ijaz reconstructed edition exclusion, Hajj modern text entry remains owner-authorized, explicit two-volume Ibn Hisham limit, corrected Nawawi editor names and Ibn Kathir source-label specificity candidate."
+      },
+      {
+        "lines": [
+          3142,
+          3710
+        ],
+        "note": "Catalog3142-3710 reviewed: Ibn Kathir vague source edition candidates, Ibn Hajar/Abu Nuaym metadata, Nataij partial title honest, al-Bidaya historic edition/removal rationale. Source-label completeness must be checked against payload editionCard and rendered details."
+      },
+      {
+        "lines": [
+          3711,
+          4275
+        ],
+        "note": "Catalog3711-4275 checked all metadata, four ordered student stages and source labels. Many later title/author-only labels lack publisher/edition; trace actual BookText editionCard presentation before confirmed provenance finding."
+      },
+      {
+        "lines": [
+          4276,
+          4820
+        ],
+        "note": "Catalog4276-4820 reviewed: explained editions and large encyclopedias with real source labels and declared bytes, author separation, ordered lexicon. Phase1 no changes; modern authored text decisions referenced to owner history rather than unsolicited deletion."
+      },
+      {
+        "lines": [
+          4821,
+          5346
+        ],
+        "note": "Catalog4821-5346 read: commentary, tafsir, four-school and history author/title/source metadata, printed versus electronic page-count plausibility candidate for paginated tafsir, editor removal flags. All declarations reviewed without relying on stale comments."
+      },
+      {
+        "lines": [
+          5347,
+          5663
+        ],
+        "note": "Completed catalog5347-5663 and category enum. Ghidha al-Albab sourceLabel5382 is empty after publisher prefix; trace editionCard actual UI. New Jami-books sources explicitly identified, cached ID lookup and imported fallback reviewed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/book_category.dart",
     "lines": 50,
     "sha256": "bb6b9190afc872adeb8a19dc7792b6b25e05d143e1b03694c9031ea373f9d2e7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 50,
+    "notes": [
+      {
+        "lines": [
+          1,
+          50
+        ],
+        "note": "Completed catalog5347-5663 and category enum. Ghidha al-Albab sourceLabel5382 is empty after publisher prefix; trace editionCard actual UI. New Jami-books sources explicitly identified, cached ID lookup and imported fallback reviewed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/book_speaker.dart",
@@ -4197,7 +4287,17 @@
     "path": "rafeeq_app/lib/features/library/data/book_text.dart",
     "lines": 304,
     "sha256": "7b65fcd9156a2b191c3b0cd5e133dfba21412fb4d002b46f6de4f80b7f988932",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 190,
+    "notes": [
+      {
+        "lines": [
+          1,
+          190
+        ],
+        "note": "Lines1-190 independently read: gzip magic decoding, noise filter, printed-scale validation, TOC remapping and metadata parsing; remaining lines pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/data/builtin_books.dart",
@@ -4407,7 +4507,17 @@
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_provenance_strip.dart",
     "lines": 117,
     "sha256": "31d54016129bb688c77375c97e1892f7aae229af7ff10bcd67f0e559de396d2d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 117,
+    "notes": [
+      {
+        "lines": [
+          1,
+          117
+        ],
+        "note": "Full source read independently: actual provenance strip uses catalog label, one-line ellipsis, editor-removal/OCR badges, tap callback; A28 rendered proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/library/presentation/widgets/book_voice_section.dart",
