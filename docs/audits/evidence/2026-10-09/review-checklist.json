@@ -4865,8 +4865,8 @@
     "path": "rafeeq_app/lib/features/kids/data/kids_stories_data.dart",
     "lines": 451,
     "sha256": "4a3c736027133c399cba99f496cd6f9f78cb32bd82f126a8d63369a64de6b728",
-    "review": "partial",
-    "read_through_line": 443,
+    "review": "source-reviewed",
+    "read_through_line": 451,
     "notes": [
       {
         "lines": [
@@ -4881,6 +4881,13 @@
           443
         ],
         "note": "Read generated captions 230-443: rest of Yusuf through Khidr, timings, source-dependent paraphrases and recitation coordinates. Requires original edition/source and voiced-video verification; read-through does not certify religious accuracy."
+      },
+      {
+        "lines": [
+          444,
+          451
+        ],
+        "note": "Completed generated caption source and AyahGameScreen: repository question sequence, done set, point recording, surah selection and answer feedback. Overlapping _next calls and white-on-green large answer contrast remain candidates for controlled proof."
       }
     ]
   },
@@ -4888,7 +4895,17 @@
     "path": "rafeeq_app/lib/features/kids/presentation/ayah_game_screen.dart",
     "lines": 231,
     "sha256": "7453e4f96b9ee28184966478afb177a70e7bdd973ae0ba5b8d146776818690d6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 231,
+    "notes": [
+      {
+        "lines": [
+          1,
+          231
+        ],
+        "note": "Completed generated caption source and AyahGameScreen: repository question sequence, done set, point recording, surah selection and answer feedback. Overlapping _next calls and white-on-green large answer contrast remain candidates for controlled proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/kids/presentation/journey_details.dart",
