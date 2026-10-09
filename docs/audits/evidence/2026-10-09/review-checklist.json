@@ -4200,13 +4200,33 @@
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/sai_counter.dart",
     "lines": 218,
     "sha256": "d7e6d54ae28a4d9e4a3625e826a2ef8038747787e011a0159f255afd20316a31",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 218,
+    "notes": [
+      {
+        "lines": [
+          1,
+          218
+        ],
+        "note": "Completed Sai/Tawaf counters: seven counts, guarded in-flight animation, final Marwah and counterclockwise Kaaba-left geometry, compact looping header, RTL endpoints and labels. No rite count/direction defect found in source; rendered label contrast and painted semantics remain accessibility verification candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hajj/presentation/widgets/tawaf_counter.dart",
     "lines": 245,
     "sha256": "1214dacabd411dc30a0f223521412540430d14799307a9c3f39f2bc9a21ab5b9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 245,
+    "notes": [
+      {
+        "lines": [
+          1,
+          245
+        ],
+        "note": "Completed Sai/Tawaf counters: seven counts, guarded in-flight animation, final Marwah and counterclockwise Kaaba-left geometry, compact looping header, RTL endpoints and labels. No rite count/direction defect found in source; rendered label contrast and painted semantics remain accessibility verification candidates."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/hifz/data/hifz_mask.dart",
