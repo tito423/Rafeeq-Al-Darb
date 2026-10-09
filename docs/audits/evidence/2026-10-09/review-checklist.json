@@ -4161,13 +4161,33 @@
     "path": "rafeeq_app/lib/features/quran/data/ayah_coords_repository.dart",
     "lines": 210,
     "sha256": "1fb7b2f60591e922191201f171fd0de07ce3153d288bc450809fdad09e19707e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 210,
+    "notes": [
+      {
+        "lines": [
+          1,
+          210
+        ],
+        "note": "Reviewed complete polygon loading/cache/hit geometry and highlight grid math; basmala display splits only first verse and preserves source substrings. Header describes obsolete Tanzil source, while current constant comment identifies KFGQPC; religious codepoint comparison remains required."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/ayah_highlight_rects.dart",
     "lines": 207,
     "sha256": "6ead3eba852aaf03ab75f5b0eab3892caea485680e23e8b476e16540a622b985",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 207,
+    "notes": [
+      {
+        "lines": [
+          1,
+          207
+        ],
+        "note": "Reviewed complete polygon loading/cache/hit geometry and highlight grid math; basmala display splits only first verse and preserves source substrings. Header describes obsolete Tanzil source, while current constant comment identifies KFGQPC; religious codepoint comparison remains required."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/ayah_notes_store.dart",
@@ -4189,85 +4209,232 @@
     "path": "rafeeq_app/lib/features/quran/data/basmala.dart",
     "lines": 88,
     "sha256": "c529dd3523ab38542a84e0303a065a35c43733819f8ca19382c26cc896c4bc1c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 88,
+    "notes": [
+      {
+        "lines": [
+          1,
+          88
+        ],
+        "note": "Reviewed complete polygon loading/cache/hit geometry and highlight grid math; basmala display splits only first verse and preserves source substrings. Header describes obsolete Tanzil source, while current constant comment identifies KFGQPC; religious codepoint comparison remains required."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/continuous_start.dart",
     "lines": 24,
     "sha256": "d03a7dd4da9f6869cfa396b19c19512b8722b17eb7b928a5b53c8cdb95ffae3f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 24,
+    "notes": [
+      {
+        "lines": [
+          1,
+          24
+        ],
+        "note": "Reviewed continuous start precedence, SVG ink rewriting/memo, full kashida planning/shaping disposal and mushaf metadata provider. Hash-only SVG memo key needs actual collision evidence; no wrong-page claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/inked_svg.dart",
     "lines": 32,
     "sha256": "a4e3fd45a8abb5b0c009a3c5dfc1b6cd0dd42c34a457825bb58e17d0fc888814",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 32,
+    "notes": [
+      {
+        "lines": [
+          1,
+          32
+        ],
+        "note": "Reviewed continuous start precedence, SVG ink rewriting/memo, full kashida planning/shaping disposal and mushaf metadata provider. Hash-only SVG memo key needs actual collision evidence; no wrong-page claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/kashida.dart",
     "lines": 292,
     "sha256": "743ee8c0957f7296c02898a2ffe73816d5d1bc8dbdb7f83a2e2d6da3c30a0876",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 292,
+    "notes": [
+      {
+        "lines": [
+          1,
+          292
+        ],
+        "note": "Reviewed continuous start precedence, SVG ink rewriting/memo, full kashida planning/shaping disposal and mushaf metadata provider. Hash-only SVG memo key needs actual collision evidence; no wrong-page claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/mushaf_data_provider.dart",
     "lines": 80,
     "sha256": "f73182eba757ad2fb8f23c26494133f378457023d4920fa38918fbf8ff7e3f39",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 80,
+    "notes": [
+      {
+        "lines": [
+          1,
+          80
+        ],
+        "note": "Reviewed continuous start precedence, SVG ink rewriting/memo, full kashida planning/shaping disposal and mushaf metadata provider. Hash-only SVG memo key needs actual collision evidence; no wrong-page claim."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/mushaf_edition.dart",
     "lines": 362,
     "sha256": "16a7bf936561146ed40fb4f36d36acbe482f87d2c3aed00d1de66e559770c463",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 362,
+    "notes": [
+      {
+        "lines": [
+          1,
+          362
+        ],
+        "note": "Reviewed edition catalog decoding, numbering/pagination gates, live-id fallback, polygon transforms and frame persistence. Historical borrowed-layer comments retained as record; current catalog validated by suite, no invented religious fix."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/mushaf_frame.dart",
     "lines": 150,
     "sha256": "fd35bb42b7ae3b2966ac68d1d07ee4cb166e9e5a0349d78a117deee3bd293349",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 150,
+    "notes": [
+      {
+        "lines": [
+          1,
+          150
+        ],
+        "note": "Reviewed edition catalog decoding, numbering/pagination gates, live-id fallback, polygon transforms and frame persistence. Historical borrowed-layer comments retained as record; current catalog validated by suite, no invented religious fix."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/mushaf_page_service.dart",
     "lines": 565,
     "sha256": "7091729876a59ebbb2693d08251b7ee1ca7448325130ed417c1cf01365de2852",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 565,
+    "notes": [
+      {
+        "lines": [
+          1,
+          511
+        ],
+        "note": "Reviewed mushaf page service lines 1-511: full raster fetch/cache and retry generations, wanted flags and cancellation/finalization. Candidates: cachedPages counts incomplete files; old generation finalization may clear replacement native item; no actual corruption claim yet."
+      },
+      {
+        "lines": [
+          512,
+          565
+        ],
+        "note": "Reviewed remaining page storage clearing, paper matrices and persistence, all ten text themes, page-surah bounds and page-turn preferences. Cache-page filename census does not validate file length unlike reader paths; reproducible stale-completion candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/mushaf_paper_provider.dart",
     "lines": 177,
     "sha256": "d52497d1628b122a0857c698091353d442571ea7f6d0db9bc3552a06f3ddcb38",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 177,
+    "notes": [
+      {
+        "lines": [
+          1,
+          177
+        ],
+        "note": "Reviewed remaining page storage clearing, paper matrices and persistence, all ten text themes, page-surah bounds and page-turn preferences. Cache-page filename census does not validate file length unlike reader paths; reproducible stale-completion candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/mushaf_theme.dart",
     "lines": 240,
     "sha256": "a36e3099c306d10d8082bcc05654aa29a44d4acdbe9d42e754519d8fa56379cd",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 240,
+    "notes": [
+      {
+        "lines": [
+          1,
+          240
+        ],
+        "note": "Reviewed remaining page storage clearing, paper matrices and persistence, all ten text themes, page-surah bounds and page-turn preferences. Cache-page filename census does not validate file length unlike reader paths; reproducible stale-completion candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/page_surahs.dart",
     "lines": 38,
     "sha256": "fad0d756017adf80ea15a80b347a6658826837b73dec3f8d7ec1e70c63db894d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 38,
+    "notes": [
+      {
+        "lines": [
+          1,
+          38
+        ],
+        "note": "Reviewed remaining page storage clearing, paper matrices and persistence, all ten text themes, page-surah bounds and page-turn preferences. Cache-page filename census does not validate file length unlike reader paths; reproducible stale-completion candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/page_turn_provider.dart",
     "lines": 38,
     "sha256": "4b1ca734c3b28858fd5f4b2240391ae4e08352d08f4dc74b721a98462e881c8e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 38,
+    "notes": [
+      {
+        "lines": [
+          1,
+          38
+        ],
+        "note": "Reviewed remaining page storage clearing, paper matrices and persistence, all ten text themes, page-surah bounds and page-turn preferences. Cache-page filename census does not validate file length unlike reader paths; reproducible stale-completion candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/quran_fullscreen_provider.dart",
     "lines": 20,
     "sha256": "56fbea9922b1c0dfb41af5ca42d1f275bc2b200a876fde69680967d2a2de32bc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 20,
+    "notes": [
+      {
+        "lines": [
+          1,
+          20
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/quran_jump_provider.dart",
     "lines": 39,
     "sha256": "1ae2fbb411137d7762af988c16f0577327c978d47ee2abc84c46b6acb766baf0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 39,
+    "notes": [
+      {
+        "lines": [
+          1,
+          39
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/quran_last_read.dart",
@@ -4289,55 +4456,159 @@
     "path": "rafeeq_app/lib/features/quran/data/quran_translation_catalog.dart",
     "lines": 94,
     "sha256": "8b2e05e8097c8af0e739516bd3b146ac9682876344400c10cc649249876154f2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 94,
+    "notes": [
+      {
+        "lines": [
+          1,
+          94
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/quran_typography.dart",
     "lines": 34,
     "sha256": "880b3966031058f7419e736167f7c8e3e0f9048373076f7bebcbb91b570e9b7f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 34,
+    "notes": [
+      {
+        "lines": [
+          1,
+          34
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/quran_zoom_provider.dart",
     "lines": 23,
     "sha256": "a70715bf98bbc78378295d0ee2de107ebbf9f7ff1975b1eb216e60fa47b76662",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 23,
+    "notes": [
+      {
+        "lines": [
+          1,
+          23
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/recite_return_provider.dart",
     "lines": 55,
     "sha256": "49d5f1f4d11c6128a7b61f62735831e96b4834e7ba485d665df51edaa148727b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 55,
+    "notes": [
+      {
+        "lines": [
+          1,
+          55
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/tafseer_source_provider.dart",
     "lines": 36,
     "sha256": "eb97107280c9eaf7e42303c596b952e0e5a2c93330cf41343bf89a9a50722165",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 36,
+    "notes": [
+      {
+        "lines": [
+          1,
+          36
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/text_layout_provider.dart",
     "lines": 66,
     "sha256": "aaa5f65395d71b839a311af9a27e6c6ca598a622a83ab0f0c97c5fff313b8fb8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 66,
+    "notes": [
+      {
+        "lines": [
+          1,
+          66
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/data/translation_lang_provider.dart",
     "lines": 72,
     "sha256": "0cc3c28edb07b1e55fe2b977615fd15cdf9d7b7c95d79d3ac1cbb594f51ddcad",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 72,
+    "notes": [
+      {
+        "lines": [
+          1,
+          72
+        ],
+        "note": "Reviewed fullscreen/jump/zoom coordination, translation catalog, legacy display shaping, timer and source/layout/language preference notifiers. Candidate: nonbundled translation selection rejected by restore's supportedTranslationLangs gate; verify actual picker and persisted app-locale behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/screens/quran_screen.dart",
     "lines": 1054,
     "sha256": "7600ad4463dba60876c581961bf41f71eee08c356ff7a7a1373c87d3ad8926cd",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 1054,
+    "notes": [
+      {
+        "lines": [
+          1,
+          471
+        ],
+        "note": "Reviewed Quran screen 1-471: stored state bounds, toolbar/fullscreen/orientation, global system UI guards and auto-scroll controls. No fresh confirmed finding in this segment; remaining lifecycle/build still pending."
+      },
+      {
+        "lines": [
+          472,
+          916
+        ],
+        "note": "Reviewed Quran screen 472-916: continuous recitation start/stop/index interaction, audio listener disposal, page request handling and viewer/chrome layout. Deferred navigation/audio races require actual reproduction; no claim from asynchronous shape alone."
+      },
+      {
+        "lines": [
+          917,
+          1054
+        ],
+        "note": "Completed Quran screen/view extension, page reader, recitation following and continuous view bindings. Page FutureBuilder error becomes permanent spinner and future map retains errors; reproduce actual repository error path before reporting severity."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/screens/quran_screen_views.dart",
     "lines": 227,
     "sha256": "b09687e8c431c8bcc10ac76113ab26c552d7d47a31942999a8b5d080671e91f5",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 227,
+    "notes": [
+      {
+        "lines": [
+          1,
+          227
+        ],
+        "note": "Completed Quran screen/view extension, page reader, recitation following and continuous view bindings. Page FutureBuilder error becomes permanent spinner and future map retains errors; reproduce actual repository error path before reporting severity."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/screens/sciences_pack_screen.dart",
@@ -4349,43 +4620,113 @@
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/ayah_panel.dart",
     "lines": 113,
     "sha256": "2a7eada6d1cfce40f4efde2faa4dc88f673f6b1041964277c830a78d29463ae4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 113,
+    "notes": [
+      {
+        "lines": [
+          1,
+          113
+        ],
+        "note": "Reviewed ayah panel font/direction/transliteration gating, complete i'rab source/reference/split/own-word rendering. Hardcoded gold text on light ground requires measured rendered proof; religious content untouched and edition remains credited."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/irab_tab.dart",
     "lines": 325,
     "sha256": "51ffcb0cc0765ccf4d3b1340462981034a0c6fc8a29841f2af5b275c9ea4dd04",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 325,
+    "notes": [
+      {
+        "lines": [
+          1,
+          325
+        ],
+        "note": "Reviewed ayah panel font/direction/transliteration gating, complete i'rab source/reference/split/own-word rendering. Hardcoded gold text on light ground requires measured rendered proof; religious content untouched and edition remains credited."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/sciences_common.dart",
     "lines": 149,
     "sha256": "ac89fdecd148c6d34b74da1a8af57b34cd1f3a6ed0e1140872d0e0df0111d129",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 149,
+    "notes": [
+      {
+        "lines": [
+          1,
+          149
+        ],
+        "note": "Reviewed science async/notices/source block and repeat/note dialogs. Source subtitle lacks flexible width; repeat invalid typed value retains last valid count without feedback, UX candidate. Gold title and active toolbar contrast actual rendered verification underway."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/sciences_dialogs.dart",
     "lines": 206,
     "sha256": "0e4fbce9e2e9c1cc5820e5abeaa83b91bf851975b75835aa8736df005edc5d60",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 206,
+    "notes": [
+      {
+        "lines": [
+          1,
+          206
+        ],
+        "note": "Reviewed science async/notices/source block and repeat/note dialogs. Source subtitle lacks flexible width; repeat invalid typed value retains last valid count without feedback, UX candidate. Gold title and active toolbar contrast actual rendered verification underway."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/sciences_header.dart",
     "lines": 402,
     "sha256": "1db659f50399553cc856c618c5053baf8fa878e30f471731d022f66c5ec6675d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 402,
+    "notes": [
+      {
+        "lines": [
+          1,
+          402
+        ],
+        "note": "Reviewed full sciences header actions/menus/audio/share and reciter chip. Share reads only bundled translations and can omit chosen downloaded translation; actual image output comparison pending. Empty overflow tooltip is accessibility candidate."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/tafseer_tab.dart",
     "lines": 106,
     "sha256": "6c36350eb33dbe380c24f754e46fa05d33e9c8b7849aa3b8602bcda0681d37bc",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 106,
+    "notes": [
+      {
+        "lines": [
+          1,
+          106
+        ],
+        "note": "Reviewed tafsir actual-source availability selection and source block, dropdown persistence. Empty available fallback only if DB contains unknown source keys; corpus/query validation pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences/translation_tab.dart",
     "lines": 249,
     "sha256": "1bfb1544fd038a10fea7ff28318c8dac27c95784455bad57eb16ac14685ff03b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 249,
+    "notes": [
+      {
+        "lines": [
+          1,
+          249
+        ],
+        "note": "Reviewed actual translation tab catalog-driven dropdown calling select(v); nonbundled tr is selectable while restore accepts only six bundled codes. Reproduction against actual notifier underway."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran/presentation/widgets/ayah_sciences_sheet.dart",
@@ -4571,7 +4912,17 @@
     "path": "rafeeq_app/lib/features/quran_audio/data/ayah_download_notice.dart",
     "lines": 92,
     "sha256": "fc18127a685f9780ee0a0eea42f21a665f8c5c3abbbfb8db76ff98d8fbe49532",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 92,
+    "notes": [
+      {
+        "lines": [
+          1,
+          92
+        ],
+        "note": "Reviewed ayah notification active/completed/paused transitions and localization. Deferred ensureInitialized callbacks may overtake completion; actual init timing reproduction still required."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quran_audio/data/ayah_recitation_library.dart",

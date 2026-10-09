@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-09 21:51 — IN PROGRESS — resume here**
+**2026-10-09 21:57 — IN PROGRESS — resume here**
 
-audit: review shared widgets and reproduce scrollbar accessibility defects
+audit: review Quran reader and reproduce lost translation selection
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

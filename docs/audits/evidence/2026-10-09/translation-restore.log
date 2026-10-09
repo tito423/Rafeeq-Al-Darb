@@ -1,0 +1,4 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/translation_restore_audit_test.dart
+00:00 +0: audit: catalog translation choice is lost on notifier recreation
+AUDIT_TRANSLATION_RESTORE: disk=tr reopened=en followedLocale=en
+00:00 +1: All tests passed!
