@@ -7563,8 +7563,8 @@
     "path": "rafeeq_app/lib/features/settings/presentation/screens/settings_screen.dart",
     "lines": 704,
     "sha256": "3d740c373f2eb4c13dd41b4842dee51b516b550a4c0118a14ac794e1b35979de",
-    "review": "partial",
-    "read_through_line": 471,
+    "review": "source-reviewed",
+    "read_through_line": 704,
     "notes": [
       {
         "lines": [
@@ -7572,6 +7572,13 @@
           471
         ],
         "note": "Read SettingsBody 1-471: locale/theme selections, font/splash/clock/mushaf/permissions sections, reminder grouping, privacy/about/source links and paired layouts. Canonical const-child translation behavior requires checking child context dependencies before any locale claim."
+      },
+      {
+        "lines": [
+          472,
+          704
+        ],
+        "note": "Completed settings screen including accordion, pushed section child ValueNotifier updates, focus scroll and name locale dependency; reviewed SourcesScreen RTL names and links, font picker layout and selected semantics. Open section title/const child locale refresh remain runtime candidates; no new proven result."
       }
     ]
   },
@@ -7579,13 +7586,33 @@
     "path": "rafeeq_app/lib/features/settings/presentation/screens/sources_screen.dart",
     "lines": 146,
     "sha256": "7ffffb8994c298ff266d1e26610ccaa62f2e775e40734aeaaca111e7221616ca",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 146,
+    "notes": [
+      {
+        "lines": [
+          1,
+          146
+        ],
+        "note": "Completed settings screen including accordion, pushed section child ValueNotifier updates, focus scroll and name locale dependency; reviewed SourcesScreen RTL names and links, font picker layout and selected semantics. Open section title/const child locale refresh remain runtime candidates; no new proven result."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/app_font_picker.dart",
     "lines": 137,
     "sha256": "cbdb4d9c874ad56ba634fd9fec0910f81881cdbc67972b663989eee9b233593b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 137,
+    "notes": [
+      {
+        "lines": [
+          1,
+          137
+        ],
+        "note": "Completed settings screen including accordion, pushed section child ValueNotifier updates, focus scroll and name locale dependency; reviewed SourcesScreen RTL names and links, font picker layout and selected semantics. Open section title/const child locale refresh remain runtime candidates; no new proven result."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/settings/presentation/widgets/focus_mode_picker.dart",
