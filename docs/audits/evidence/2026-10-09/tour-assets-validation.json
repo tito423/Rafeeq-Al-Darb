@@ -1,0 +1,1444 @@
+{
+  "languages": [
+    "ar",
+    "en",
+    "es",
+    "fr",
+    "pt",
+    "ru",
+    "ur"
+  ],
+  "frames": 238,
+  "errors": [],
+  "scope": "JSON geometry, referenced file existence and WebP signature only; no visual or source certification",
+  "rows": [
+    {
+      "locale": "ar",
+      "key": "adhan_settings",
+      "bytes": 9816,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "azkar_category",
+      "bytes": 24134,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "focus",
+      "bytes": 23278,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "hadith_card",
+      "bytes": 30392,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "home_clock",
+      "bytes": 19870,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "home_countdown",
+      "bytes": 19628,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "home_location",
+      "bytes": 19222,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "home_slides",
+      "bytes": 19590,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "khatma",
+      "bytes": 21600,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "more_downloads",
+      "bytes": 24010,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "more_quran_audio",
+      "bytes": 26412,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "more_tajweed",
+      "bytes": 26412,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "prayer_adjustments",
+      "bytes": 9818,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "qibla_compass",
+      "bytes": 9818,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_azkar",
+      "bytes": 24134,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_hifz",
+      "bytes": 17002,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_home",
+      "bytes": 19800,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_prayer",
+      "bytes": 9816,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_quran",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_recite",
+      "bytes": 19028,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_tajweed",
+      "bytes": 11812,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quick_tasbeeh",
+      "bytes": 13768,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quote_card",
+      "bytes": 30392,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quran_editions",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quran_font",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quran_full_screen",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quran_jump",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quran_layout",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quran_search",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "quran_theme",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "recite",
+      "bytes": 14428,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "sunan_card",
+      "bytes": 21570,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "tasbeeh_mathur",
+      "bytes": 13768,
+      "valid": true
+    },
+    {
+      "locale": "ar",
+      "key": "tasbeeh_targets",
+      "bytes": 13768,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "adhan_settings",
+      "bytes": 10028,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "azkar_category",
+      "bytes": 24446,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "focus",
+      "bytes": 24602,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "hadith_card",
+      "bytes": 35034,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "home_clock",
+      "bytes": 23556,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "home_countdown",
+      "bytes": 22390,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "home_location",
+      "bytes": 21636,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "home_slides",
+      "bytes": 21776,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "khatma",
+      "bytes": 23170,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "more_downloads",
+      "bytes": 25996,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "more_quran_audio",
+      "bytes": 26500,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "more_tajweed",
+      "bytes": 26500,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "prayer_adjustments",
+      "bytes": 10028,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "qibla_compass",
+      "bytes": 10028,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_azkar",
+      "bytes": 24446,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_hifz",
+      "bytes": 17522,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_home",
+      "bytes": 23494,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_prayer",
+      "bytes": 10704,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_quran",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_recite",
+      "bytes": 24146,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_tajweed",
+      "bytes": 13596,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quick_tasbeeh",
+      "bytes": 14832,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quote_card",
+      "bytes": 35034,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quran_editions",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quran_font",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quran_full_screen",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quran_jump",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quran_layout",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quran_search",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "quran_theme",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "recite",
+      "bytes": 14414,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "sunan_card",
+      "bytes": 26278,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "tasbeeh_mathur",
+      "bytes": 14832,
+      "valid": true
+    },
+    {
+      "locale": "en",
+      "key": "tasbeeh_targets",
+      "bytes": 14832,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "adhan_settings",
+      "bytes": 10580,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "azkar_category",
+      "bytes": 24926,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "focus",
+      "bytes": 27860,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "hadith_card",
+      "bytes": 34374,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "home_clock",
+      "bytes": 23922,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "home_countdown",
+      "bytes": 22958,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "home_location",
+      "bytes": 22208,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "home_slides",
+      "bytes": 22218,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "khatma",
+      "bytes": 23428,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "more_downloads",
+      "bytes": 28878,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "more_quran_audio",
+      "bytes": 29118,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "more_tajweed",
+      "bytes": 29118,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "prayer_adjustments",
+      "bytes": 10580,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "qibla_compass",
+      "bytes": 10580,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_azkar",
+      "bytes": 24926,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_hifz",
+      "bytes": 17488,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_home",
+      "bytes": 23780,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_prayer",
+      "bytes": 10588,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_quran",
+      "bytes": 13816,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_recite",
+      "bytes": 24884,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_tajweed",
+      "bytes": 14000,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quick_tasbeeh",
+      "bytes": 15244,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quote_card",
+      "bytes": 34374,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quran_editions",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quran_font",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quran_full_screen",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quran_jump",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quran_layout",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quran_search",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "quran_theme",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "recite",
+      "bytes": 14510,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "sunan_card",
+      "bytes": 25650,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "tasbeeh_mathur",
+      "bytes": 15244,
+      "valid": true
+    },
+    {
+      "locale": "es",
+      "key": "tasbeeh_targets",
+      "bytes": 15244,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "adhan_settings",
+      "bytes": 10418,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "azkar_category",
+      "bytes": 24216,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "focus",
+      "bytes": 26660,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "hadith_card",
+      "bytes": 33984,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "home_clock",
+      "bytes": 24798,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "home_countdown",
+      "bytes": 24046,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "home_location",
+      "bytes": 22708,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "home_slides",
+      "bytes": 23086,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "khatma",
+      "bytes": 24254,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "more_downloads",
+      "bytes": 28354,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "more_quran_audio",
+      "bytes": 28926,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "more_tajweed",
+      "bytes": 28926,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "prayer_adjustments",
+      "bytes": 10418,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "qibla_compass",
+      "bytes": 10414,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_azkar",
+      "bytes": 24216,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_hifz",
+      "bytes": 20716,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_home",
+      "bytes": 24908,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_prayer",
+      "bytes": 10418,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_quran",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_recite",
+      "bytes": 25152,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_tajweed",
+      "bytes": 14122,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quick_tasbeeh",
+      "bytes": 15426,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quote_card",
+      "bytes": 33984,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quran_editions",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quran_font",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quran_full_screen",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quran_jump",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quran_layout",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quran_search",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "quran_theme",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "recite",
+      "bytes": 14508,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "sunan_card",
+      "bytes": 27120,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "tasbeeh_mathur",
+      "bytes": 15426,
+      "valid": true
+    },
+    {
+      "locale": "fr",
+      "key": "tasbeeh_targets",
+      "bytes": 15426,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "adhan_settings",
+      "bytes": 10330,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "azkar_category",
+      "bytes": 24476,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "focus",
+      "bytes": 25796,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "hadith_card",
+      "bytes": 32692,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "home_clock",
+      "bytes": 24214,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "home_countdown",
+      "bytes": 23286,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "home_location",
+      "bytes": 22294,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "home_slides",
+      "bytes": 22396,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "khatma",
+      "bytes": 23580,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "more_downloads",
+      "bytes": 27188,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "more_quran_audio",
+      "bytes": 27242,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "more_tajweed",
+      "bytes": 27242,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "prayer_adjustments",
+      "bytes": 10356,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "qibla_compass",
+      "bytes": 10330,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_azkar",
+      "bytes": 24476,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_hifz",
+      "bytes": 17722,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_home",
+      "bytes": 24386,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_prayer",
+      "bytes": 10356,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_quran",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_recite",
+      "bytes": 21702,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_tajweed",
+      "bytes": 13976,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quick_tasbeeh",
+      "bytes": 15238,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quote_card",
+      "bytes": 32692,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quran_editions",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quran_font",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quran_full_screen",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quran_jump",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quran_layout",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quran_search",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "quran_theme",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "recite",
+      "bytes": 14320,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "sunan_card",
+      "bytes": 25904,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "tasbeeh_mathur",
+      "bytes": 15238,
+      "valid": true
+    },
+    {
+      "locale": "pt",
+      "key": "tasbeeh_targets",
+      "bytes": 15238,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "adhan_settings",
+      "bytes": 11344,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "azkar_category",
+      "bytes": 25452,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "focus",
+      "bytes": 29988,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "hadith_card",
+      "bytes": 37200,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "home_clock",
+      "bytes": 25910,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "home_countdown",
+      "bytes": 25338,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "home_location",
+      "bytes": 24424,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "home_slides",
+      "bytes": 23886,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "khatma",
+      "bytes": 25100,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "more_downloads",
+      "bytes": 31668,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "more_quran_audio",
+      "bytes": 31750,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "more_tajweed",
+      "bytes": 31750,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "prayer_adjustments",
+      "bytes": 11344,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "qibla_compass",
+      "bytes": 11352,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_azkar",
+      "bytes": 25452,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_hifz",
+      "bytes": 19970,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_home",
+      "bytes": 25978,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_prayer",
+      "bytes": 11344,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_quran",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_recite",
+      "bytes": 22058,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_tajweed",
+      "bytes": 16848,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quick_tasbeeh",
+      "bytes": 15858,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quote_card",
+      "bytes": 37200,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quran_editions",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quran_font",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quran_full_screen",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quran_jump",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quran_layout",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quran_search",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "quran_theme",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "recite",
+      "bytes": 14850,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "sunan_card",
+      "bytes": 28442,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "tasbeeh_mathur",
+      "bytes": 15858,
+      "valid": true
+    },
+    {
+      "locale": "ru",
+      "key": "tasbeeh_targets",
+      "bytes": 15858,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "adhan_settings",
+      "bytes": 9454,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "azkar_category",
+      "bytes": 24000,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "focus",
+      "bytes": 23774,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "hadith_card",
+      "bytes": 33262,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "home_clock",
+      "bytes": 22054,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "home_countdown",
+      "bytes": 21790,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "home_location",
+      "bytes": 21354,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "home_slides",
+      "bytes": 21728,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "khatma",
+      "bytes": 22104,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "more_downloads",
+      "bytes": 24654,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "more_quran_audio",
+      "bytes": 24948,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "more_tajweed",
+      "bytes": 24948,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "prayer_adjustments",
+      "bytes": 9464,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "qibla_compass",
+      "bytes": 9454,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_azkar",
+      "bytes": 24000,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_hifz",
+      "bytes": 16332,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_home",
+      "bytes": 22242,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_prayer",
+      "bytes": 9452,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_quran",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_recite",
+      "bytes": 19188,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_tajweed",
+      "bytes": 11678,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quick_tasbeeh",
+      "bytes": 14812,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quote_card",
+      "bytes": 33262,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quran_editions",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quran_font",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quran_full_screen",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quran_jump",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quran_layout",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quran_search",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "quran_theme",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "recite",
+      "bytes": 14312,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "sunan_card",
+      "bytes": 25330,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "tasbeeh_mathur",
+      "bytes": 14812,
+      "valid": true
+    },
+    {
+      "locale": "ur",
+      "key": "tasbeeh_targets",
+      "bytes": 14812,
+      "valid": true
+    }
+  ]
+}
