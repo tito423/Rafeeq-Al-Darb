@@ -3691,25 +3691,65 @@
     "path": "rafeeq_app/lib/features/home/data/clock_settings_provider.dart",
     "lines": 214,
     "sha256": "e35990254442480c8249fe45e035566a7e27d3b8cdaabe5b1a7e6611525f3122",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 214,
+    "notes": [
+      {
+        "lines": [
+          1,
+          214
+        ],
+        "note": "Read clock preferences all faces and restore/set paths, translated Hijri landmark source references, Islamic relevance markers, occasions network/table/calendar offset. Candidate daysFrom .inDays under local DST truncates civil-day difference; test local TZ needed. Cached malformed occasions parse uncaught but corruption trigger unproved."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/data/hijri_landmarks.dart",
     "lines": 93,
     "sha256": "b4aedcc07e4a7e01b93004c2a845383a678bc4dcf8f636c5e4b49e2c49a520eb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 93,
+    "notes": [
+      {
+        "lines": [
+          1,
+          93
+        ],
+        "note": "Read clock preferences all faces and restore/set paths, translated Hijri landmark source references, Islamic relevance markers, occasions network/table/calendar offset. Candidate daysFrom .inDays under local DST truncates civil-day difference; test local TZ needed. Cached malformed occasions parse uncaught but corruption trigger unproved."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/data/islamic_event_keywords.dart",
     "lines": 51,
     "sha256": "a1c06c4cfe79469754f24a3285976d738146574fc4d1c616f72dd71a7ff63ea7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 51,
+    "notes": [
+      {
+        "lines": [
+          1,
+          51
+        ],
+        "note": "Read clock preferences all faces and restore/set paths, translated Hijri landmark source references, Islamic relevance markers, occasions network/table/calendar offset. Candidate daysFrom .inDays under local DST truncates civil-day difference; test local TZ needed. Cached malformed occasions parse uncaught but corruption trigger unproved."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/data/islamic_occasions.dart",
     "lines": 141,
     "sha256": "223cd6fa00729570d1aebcd5da16dda1f6c85f38c452943ecda2ab33c821a58d",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 141,
+    "notes": [
+      {
+        "lines": [
+          1,
+          141
+        ],
+        "note": "Read clock preferences all faces and restore/set paths, translated Hijri landmark source references, Islamic relevance markers, occasions network/table/calendar offset. Candidate daysFrom .inDays under local DST truncates civil-day difference; test local TZ needed. Cached malformed occasions parse uncaught but corruption trigger unproved."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/home/data/on_this_day_repository.dart",
