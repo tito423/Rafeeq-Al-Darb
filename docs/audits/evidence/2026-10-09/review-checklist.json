@@ -8221,13 +8221,33 @@
     "path": "rafeeq_app/lib/features/shamela/data/shamela_book_builder.dart",
     "lines": 248,
     "sha256": "014075b9c04c0fcf53bb2ea90fa93b876ee3edfcf0474d817f65e39ff73af942",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 248,
+    "notes": [
+      {
+        "lines": [
+          1,
+          248
+        ],
+        "note": "Read full ShamelaBookBuilder and catalogue: card/print reliability, nextId loop detection, JSONL resume/flush/cleanup, gzip meta+editionCard, request retries, cancellation boundaries, weekly cached catalogue validation, local normalized/voice/link/id search and ranking. Owner imports intentionally allow every author; do not flag curated exclusions as missing import restrictions. Candidate: cancellation during last pending request is not rechecked before final gzip/install; inspect import service for post-build guard and reproduce before reporting. Actual source schema/page-body/print fidelity remains content validation beyond321-page comment."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/shamela/data/shamela_catalog.dart",
     "lines": 224,
     "sha256": "57f8f7670ac006e665a18bc3712a646a29b6284d387b289f3ddaea7de8204b66",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 224,
+    "notes": [
+      {
+        "lines": [
+          1,
+          224
+        ],
+        "note": "Read full ShamelaBookBuilder and catalogue: card/print reliability, nextId loop detection, JSONL resume/flush/cleanup, gzip meta+editionCard, request retries, cancellation boundaries, weekly cached catalogue validation, local normalized/voice/link/id search and ranking. Owner imports intentionally allow every author; do not flag curated exclusions as missing import restrictions. Candidate: cancellation during last pending request is not rechecked before final gzip/install; inspect import service for post-build guard and reproduce before reporting. Actual source schema/page-body/print fidelity remains content validation beyond321-page comment."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/shamela/data/shamela_catalogue_ids.dart",
