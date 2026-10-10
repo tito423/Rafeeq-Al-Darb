@@ -9016,7 +9016,17 @@
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/makharij_screen.dart",
     "lines": 400,
     "sha256": "a0a0e1f2ddd3ed18d93fa729353cb37afab885c160329d259f6e614666c70b09",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 400,
+    "notes": [
+      {
+        "lines": [
+          1,
+          400
+        ],
+        "note": "Read full MakharijScreen: animation ownership, diagram sizing, wrapping letter controls, source/page attribution, and detail/region texts. The jawf example is indeed displayed as brace-separated words without surah/ayah; religious classification still requires exact project/source context. Detail matn uses literal gold alpha instead of goldText and Arabic content lacks explicit RTL; measure real light-theme contrast/layout. CurvedAnimation allocated during build has no explicit dispose, an allocation/listener candidate requiring measurement."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/tajweed_levels_screen.dart",
