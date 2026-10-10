@@ -1,0 +1,32 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/makharij_hit_test_audit_test.dart
+00:00 +0: E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/makharij_hit_test_audit_test.dart: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +0: E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/makharij_hit_test_audit_test.dart: actual zoomed diagram picks qaf when tapping displayed kaf
+00:00 +0: E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/caravan_bank_loading_audit_test.dart: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +0: E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/makharij_hit_test_audit_test.dart: actual zoomed diagram picks qaf when tapping displayed kaf
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+AUDIT_MAKHARIJ_HIT: selected=shafa_bmw; tap displayed kaf at Offset(464.2, 231.6); actual onPick=lisan_aqsa_qaf; diagram=Size(300.0, 453.3); articulation=1
+00:01 +1: E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/caravan_bank_loading_audit_test.dart: starting before actual bank loads permanently omits gate question
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+AUDIT_CARAVAN_BANK: started with bank pending; actual500-question asset subsequently loaded with matching first-leg IDs; real ticker reached atGate; no question/answer controls; remains atGate after2s.
+00:06 +2: E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/caravan_bank_loading_audit_test.dart: (tearDownAll)
+00:06 +2: All tests passed!
