@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 12:43 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 508/563; 36 interim findings. Reviewed sunan catalogue, reminder store and selected-surah card (508/563); verified primary sources contradict before-sleep comment, displayed material still to inspect. Exact NEXT: Continue single-surah and remaining sunan presentation files. Save HadeethEnc65260/Dorar4873 citations and inspect seven translated virtue notes before classifying content discrepancy. No religious changes authorized yet.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 12:44 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 508/563; 36 interim findings. Reviewed single-surah reader through501/709; recorded possible shared-last-page omission for immediate canonical DB validation. Exact NEXT: Validate actual page ranges against bundled Quran DB and complete remaining single-surah source; do not alter Quran content/ranges without final audit and religious-accuracy proof.. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 12:44 - audit: review bounded surah reader and shared-page candidate
+
+- 2026-10-10 12:44 Dubai — **AUDIT IN PROGRESS (2026-10-10 12:44 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 508/563; 36 interim findings. Reviewed single-surah reader through501/709; recorded possible shared-last-page omission for immediate canonical DB validation. Exact NEXT: Validate actual page ranges against bundled Quran DB and complete remaining single-surah source; do not alter Quran content/ranges without final audit and religious-accuracy proof.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 12:43 - audit: review selected surahs and reminder storage
 
 - 2026-10-10 12:43 Dubai — **AUDIT IN PROGRESS (2026-10-10 12:43 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 508/563; 36 interim findings. Reviewed sunan catalogue, reminder store and selected-surah card (508/563); verified primary sources contradict before-sleep comment, displayed material still to inspect. Exact NEXT: Continue single-surah and remaining sunan presentation files. Save HadeethEnc65260/Dorar4873 citations and inspect seven translated virtue notes before classifying content discrepancy. No religious changes authorized yet.. No app/backend edits; full source/content/device audit and final563-file report remain required.

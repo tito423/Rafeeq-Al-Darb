@@ -8375,7 +8375,17 @@
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart",
     "lines": 709,
     "sha256": "7dddf2a6fea54e7d3a8cf135723f6928ce6f6bbc4507e2a4f2f1f3368a3a0fd2",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 501,
+    "notes": [
+      {
+        "lines": [
+          1,
+          501
+        ],
+        "note": "Read SingleSurahScreen through501: selected reciter, bounded wholeMushaf=false recitation, cached filtered own-surah pages, image mode and full-screen/scroll controls. Strong candidate: endPage=(next surah startPage)-1 can omit this surah's own terminal verses when next surah starts on a shared page; compare actual canonical DB min/max before reporting. Pending reciter startup has mounted checks around picker and page future but no operation cancellation; shared service stop may affect another recitation. Remaining lines502-709 unread."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_card.dart",
