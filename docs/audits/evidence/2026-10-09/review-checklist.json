@@ -8253,19 +8253,49 @@
     "path": "rafeeq_app/lib/features/shamela/data/shamela_catalogue_ids.dart",
     "lines": 243,
     "sha256": "f5af5ee33f30dd96c4f83606605f4244f8f336a7cca450f742d8798271eb2fad",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 243,
+    "notes": [
+      {
+        "lines": [
+          1,
+          243
+        ],
+        "note": "Read full generated IDs, import queue, and persistent library. Cancellation has no post-build or job-identity guard; notification initialization occurs outside queue error handling; resume can rewrite pending IDs before later offline card failures. These are candidates requiring controlled reproductions, not confirmed findings. Generated mapping must be checked against current catalogue payloads."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/shamela/data/shamela_import_service.dart",
     "lines": 172,
     "sha256": "b57bf02c452918a9547374d8fa9473e8a24505c565a7d4e87dc6632f7a4cf620",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 172,
+    "notes": [
+      {
+        "lines": [
+          1,
+          172
+        ],
+        "note": "Read full generated IDs, import queue, and persistent library. Cancellation has no post-build or job-identity guard; notification initialization occurs outside queue error handling; resume can rewrite pending IDs before later offline card failures. These are candidates requiring controlled reproductions, not confirmed findings. Generated mapping must be checked against current catalogue payloads."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/shamela/data/shamela_library.dart",
     "lines": 105,
     "sha256": "96374d919e894544b5b7de994ab813bd29b70fd20d4fbcd3c7e85b643345b8c7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 105,
+    "notes": [
+      {
+        "lines": [
+          1,
+          105
+        ],
+        "note": "Read full generated IDs, import queue, and persistent library. Cancellation has no post-build or job-identity guard; notification initialization occurs outside queue error handling; resume can rewrite pending IDs before later offline card failures. These are candidates requiring controlled reproductions, not confirmed findings. Generated mapping must be checked against current catalogue payloads."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/shamela/data/shamela_nass.dart",
