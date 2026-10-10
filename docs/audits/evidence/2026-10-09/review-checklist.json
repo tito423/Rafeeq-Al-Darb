@@ -6317,8 +6317,8 @@
     "path": "rafeeq_app/lib/features/quiz/presentation/quiz_play_screen.dart",
     "lines": 662,
     "sha256": "59109df11c0c5cae6a2d8f8204635c74362a2de3da9874348a5c4115de1e9081",
-    "review": "partial",
-    "read_through_line": 597,
+    "review": "source-reviewed",
+    "read_through_line": 662,
     "notes": [
       {
         "lines": [
@@ -6326,6 +6326,13 @@
           597
         ],
         "note": "Read quiz play lines1-597: actual localized round, shuffled choices, single-answer lock, streak/results, async record then navigation, source book download/open and question/choice/explanation layout. Candidates: final-next no busy guard and ref.read after awaited record before mounted check (levels1-4); delayed completion/dispose needs widget proof. Round errors have no catch; actual platform failure scenario pending. Source book claim requires payload page/quote validation; no history text changed. Per-choice success contrast and close tooltip/semantic timing remain accessibility checks."
+      },
+      {
+        "lines": [
+          598,
+          662
+        ],
+        "note": "Completed quiz play remainder, full result screen and effects. Book quote/source name/author/printed page are displayed and navigate pageIndex; quote uses Arabic font without explicit RTL wrapper, requires non-Arabic UI proof. Result burst delayed callback mounted-safe; replay replaces results, back pops to levels; background/status colors intentional night. Reduced-motion candidates are actual repeating lattice and one-shot animations, not inferred crashes. Ring190 and inline badges may overflow at large text; verify rendered widgets. All effects controllers disposed."
       }
     ]
   },
@@ -6333,13 +6340,33 @@
     "path": "rafeeq_app/lib/features/quiz/presentation/quiz_result_screen.dart",
     "lines": 290,
     "sha256": "7d8a7216144db0d313c9975cd4c36a599bc12bcf64927b1c895c8a82faa677e6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 290,
+    "notes": [
+      {
+        "lines": [
+          1,
+          290
+        ],
+        "note": "Completed quiz play remainder, full result screen and effects. Book quote/source name/author/printed page are displayed and navigate pageIndex; quote uses Arabic font without explicit RTL wrapper, requires non-Arabic UI proof. Result burst delayed callback mounted-safe; replay replaces results, back pops to levels; background/status colors intentional night. Reduced-motion candidates are actual repeating lattice and one-shot animations, not inferred crashes. Ring190 and inline badges may overflow at large text; verify rendered widgets. All effects controllers disposed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quiz/presentation/widgets/quiz_effects.dart",
     "lines": 235,
     "sha256": "2f869a634a92f9af3fa4d86ddcdb9f59c11cbe2c3afa04c10ad2b081c3cdff65",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 235,
+    "notes": [
+      {
+        "lines": [
+          1,
+          235
+        ],
+        "note": "Completed quiz play remainder, full result screen and effects. Book quote/source name/author/printed page are displayed and navigate pageIndex; quote uses Arabic font without explicit RTL wrapper, requires non-Arabic UI proof. Result burst delayed callback mounted-safe; replay replaces results, back pops to levels; background/status colors intentional night. Reduced-motion candidates are actual repeating lattice and one-shot animations, not inferred crashes. Ring190 and inline badges may overflow at large text; verify rendered widgets. All effects controllers disposed."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quotes/data/quote_background_catalog.dart",
