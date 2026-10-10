@@ -8897,25 +8897,65 @@
     "path": "rafeeq_app/lib/features/tajweed/data/tamhid_course.dart",
     "lines": 163,
     "sha256": "55625f81384a03c25ba54ffe4e79718ab7c9a75bb4553d98c9f00505536ab31a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 163,
+    "notes": [
+      {
+        "lines": [
+          1,
+          163
+        ],
+        "note": "Read Tamhid course ranges/extractor, all text corrections and application, and Tuhfa lesson ranges/source/migration titles. Actual generated Tamhid list contains 13 lessons despite stale prose. Correction application iterates all kinds including aya, so claimed Quran exclusion must be checked against actual correction matches before any finding; do not alter words. Tuhfa notes subsets preserve shared commentary and renamed completion titles; range/content coverage still needs actual asset cross-check."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/tamhid_lesson_text.dart",
     "lines": 68,
     "sha256": "f2b54e859d3530dc26b8e39a82f59b2e732d2a5c889dcbd60b6d0cfabea441b0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 68,
+    "notes": [
+      {
+        "lines": [
+          1,
+          68
+        ],
+        "note": "Read Tamhid course ranges/extractor, all text corrections and application, and Tuhfa lesson ranges/source/migration titles. Actual generated Tamhid list contains 13 lessons despite stale prose. Correction application iterates all kinds including aya, so claimed Quran exclusion must be checked against actual correction matches before any finding; do not alter words. Tuhfa notes subsets preserve shared commentary and renamed completion titles; range/content coverage still needs actual asset cross-check."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/text_corrections.dart",
     "lines": 157,
     "sha256": "c09b3563c9f6a6e97c5d34463f2589db3fe565335b390f773b4aa48d29bfce50",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 157,
+    "notes": [
+      {
+        "lines": [
+          1,
+          157
+        ],
+        "note": "Read Tamhid course ranges/extractor, all text corrections and application, and Tuhfa lesson ranges/source/migration titles. Actual generated Tamhid list contains 13 lessons despite stale prose. Correction application iterates all kinds including aya, so claimed Quran exclusion must be checked against actual correction matches before any finding; do not alter words. Tuhfa notes subsets preserve shared commentary and renamed completion titles; range/content coverage still needs actual asset cross-check."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/tuhfa_course.dart",
     "lines": 148,
     "sha256": "0c09a272679618e306345bd3b94519248d36513c04eac6d8436c59f3b4f9e725",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 148,
+    "notes": [
+      {
+        "lines": [
+          1,
+          148
+        ],
+        "note": "Read Tamhid course ranges/extractor, all text corrections and application, and Tuhfa lesson ranges/source/migration titles. Actual generated Tamhid list contains 13 lessons despite stale prose. Correction application iterates all kinds including aya, so claimed Quran exclusion must be checked against actual correction matches before any finding; do not alter words. Tuhfa notes subsets preserve shared commentary and renamed completion titles; range/content coverage still needs actual asset cross-check."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/tuhfa_lesson_text.dart",
