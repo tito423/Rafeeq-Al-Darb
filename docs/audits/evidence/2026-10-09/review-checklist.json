@@ -3600,8 +3600,8 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_painter.dart",
     "lines": 761,
     "sha256": "bc1db7eca35849cd682b7b6f70306d802ae0126465cc65f631d81cf6f9477775",
-    "review": "partial",
-    "read_through_line": 636,
+    "review": "source-reviewed",
+    "read_through_line": 761,
     "notes": [
       {
         "lines": [
@@ -3609,6 +3609,13 @@
           636
         ],
         "note": "Reviewed CaravanPainter lines 1-636: composed scene order, scenery/ride variants, bounded finite transforms, collision visuals, popup TextPainter disposed, and canvas save/restore. Paint draws every future obstacle/lantern even when outside screen and allocates gradients/paths per frame; profiling is required before asserting performance impact. Popup direction is always RTL and text scale absent, but game float labels require product/UI validation."
+      },
+      {
+        "lines": [
+          637,
+          761
+        ],
+        "note": "Completed main painter plus horse/boat/hoopoe renderers: all canvas transform scopes balance, coat indices are actual 0..2, old.w identity repaint relies on world ChangeNotifier and next frame; no source crash found. Drawn ride bounds differ from shared camel collision model and are product/gameplay candidates requiring measured runs. Retained performance observations are unverified until profile measurement."
       }
     ]
   },
@@ -3616,7 +3623,17 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_rides.dart",
     "lines": 306,
     "sha256": "abe8c7355f5828b4d57abcccea0151dd6763908ca28c203c3c1dc5701635e531",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 306,
+    "notes": [
+      {
+        "lines": [
+          1,
+          306
+        ],
+        "note": "Completed main painter plus horse/boat/hoopoe renderers: all canvas transform scopes balance, coat indices are actual 0..2, old.w identity repaint relies on world ChangeNotifier and next frame; no source crash found. Drawn ride bounds differ from shared camel collision model and are product/gameplay candidates requiring measured runs. Retained performance observations are unverified until profile measurement."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_scenery.dart",
