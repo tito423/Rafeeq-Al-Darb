@@ -3635,7 +3635,17 @@
     "path": "rafeeq_app/lib/features/dedications/presentation/dedications_screen.dart",
     "lines": 785,
     "sha256": "3c7822f3b040050a8efbd3f79b8bc7baffd46ac02303f6c7797aab483e3cba1c",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 577,
+    "notes": [
+      {
+        "lines": [
+          1,
+          577
+        ],
+        "note": "Read dedications screen lines1-577: initial list/start cards, actual edit/share/delete/reset menu, dua excludes counter route via unit==null, persisted counts summary and color/layout. DedicationsScreen does not await notifier.loaded; inspect editing tail and realistic delayed restore before confirming race. _when computes local-midnight inDays, extending DST source candidate; menu reset keeps lastAt via copyWith, verify intended copy. Per-kind white button/text contrast and fixed grid/large-text layout need measurement."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/data/dorar_check.dart",
