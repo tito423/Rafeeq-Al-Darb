@@ -1,0 +1,65 @@
+[
+  {
+    "ref": "dc271f8f",
+    "sha": "dc271f8f130859047626d8c4ca0d7b5f5f7b58ba",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "dc271f8f Sign-out removes the account's data, not every setting on the phone (audit D1)"
+  },
+  {
+    "ref": "ff2fab92",
+    "sha": "ff2fab92e96bf7502446fa403d88281b5bfb2830",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "ff2fab92 Adhkar and new-Muslim backgrounds: bucket and GitHub first, Unsplash last (audit C1)"
+  },
+  {
+    "ref": "1a31331e",
+    "sha": "1a31331ea6dbe7dacf46226adc4b95706aac77a8",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "1a31331e checkpoint(wip): Audit stage 1: repo root organised - 14 plan/history docs to docs/history, 3 living docs to docs/, 31 reports to docs/reports, 4 script inputs to scripts/data, previous audit to docs/audits, empty  file removed; 65 code references rewritten (scripts write reports to docs/reports); local APKs/logs to gitignored .local-archive; 641 pass"
+  },
+  {
+    "ref": "7cd000ce",
+    "sha": "7cd000ce590111b4baaeae6088f74bb811d41e43",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "7cd000ce checkpoint(wip): Audit stage 2: core/ no longer imports features/ or app/ (8 violations -> 0, enforced by test/layering_test.dart). Reminder services moved to their features; mushaf_page_service to quran (it and mushaf_edition imported each other); prayer_calculation_methods down to core/models; RecitationSource gets downloaded ayahs through a hook the quran_audio feature registers (dependency inversion); MoreGroupAccent and sharedPrefsProvider moved down to core (app re-exports). scripts/dart_move.py moves a Dart file and fixes relative imports. 642 pass"
+  },
+  {
+    "ref": "0973c03a",
+    "sha": "0973c03ae49167a8ae17921d9aeb7240671e41ac",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "0973c03a checkpoint(wip): Audit stage 3: 10 stricter lints enabled, 1016 findings to 0 (dart fix + explicit unawaited, typed JSON casts, documented singleton ignores); grade maps proven identical; 642 pass; device check pending"
+  },
+  {
+    "ref": "895349ae",
+    "sha": "895349ae9f93c9459e8621c9e2579eaa0ed71bb9",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "895349ae checkpoint(wip): Audit stages 4-5 + a mic bug found on device: RafeeqEar threw RangeError on odd-offset PCM chunks (508/min, recogniser starved) - fixed + 3 tests; dead code out (buckwalter, tts_probe moved, 6 unused symbols, 351 lines); GitHub Actions CI (analyze+test, DBs from R2); 636 pass"
+  },
+  {
+    "ref": "4511141b",
+    "sha": "4511141b1cc79a17875a2a05a4ef9deec7b21183",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "4511141b checkpoint(wip): CI run 1 failed at asset bundling: assets/data/hadeethenc/ and hadith.zip are gitignored - workflow now fetches them from R2 (all 8 SHA-1-identical to local). ARCHITECTURE.md refreshed with measured facts (7 locales, 7 tabs, Google sync, 10 notification files, guards)"
+  },
+  {
+    "ref": "7919c6da",
+    "sha": "7919c6da0eb14305e187db4ae200b4d4c926f43a",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "7919c6da checkpoint(wip): CI run 2: book_speaker_focus_test waited 20 empty ticks for speak() to start - too few on the runner, interruption arrived first; now time-bounded (5 s). shamela_builder_live_test claimed to be skipped unless asked but dart_test.yaml had no live tag rule - added (it hit shamela.ws on every flutter test); still passes with --run-skipped. 634 pass"
+  },
+  {
+    "ref": "cfb36fa3",
+    "sha": "cfb36fa32fcd607ecc71bffccebc39fee5b08762",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "cfb36fa3 checkpoint(wip): v3.69.1: Rafeeq mic fix release build - installed on emulator over 3.69.0, versionName 3.69.1, 0 RangeErrors, mic recording, support button shown"
+  }
+]
