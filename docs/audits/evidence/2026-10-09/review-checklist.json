@@ -3600,7 +3600,17 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_painter.dart",
     "lines": 761,
     "sha256": "bc1db7eca35849cd682b7b6f70306d802ae0126465cc65f631d81cf6f9477775",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 636,
+    "notes": [
+      {
+        "lines": [
+          1,
+          636
+        ],
+        "note": "Reviewed CaravanPainter lines 1-636: composed scene order, scenery/ride variants, bounded finite transforms, collision visuals, popup TextPainter disposed, and canvas save/restore. Paint draws every future obstacle/lantern even when outside screen and allocates gradients/paths per frame; profiling is required before asserting performance impact. Popup direction is always RTL and text scale absent, but game float labels require product/UI validation."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_rides.dart",
