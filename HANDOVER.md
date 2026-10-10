@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 14:08 — IN PROGRESS — resume here**
+**2026-10-10 14:12 — IN PROGRESS — resume here**
 
-audit: measure reader and playing audio memory and preserve live Asr disagreement
+audit: resolve live Asr reference mismatch and confirm obsolete fixture generator path
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

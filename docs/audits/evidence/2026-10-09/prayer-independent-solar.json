@@ -1,0 +1,48 @@
+{
+  "engine": "PyEphem 4.2.1",
+  "pressure": 0,
+  "elevation": 0,
+  "scope": "Independent geometric solar-shadow crossing using actual computed Sun altitude; not a religious verdict or proposed adjustment. Compare app and API outputs separately.",
+  "sources": [
+    "https://rhodesmill.org/pyephem/quick.html",
+    "https://github.com/batoulapps/adhan-js/blob/develop/src/SolarTime.ts"
+  ],
+  "results": [
+    {
+      "date": "2026/10/10",
+      "shadow_factor": 1,
+      "geometric_transit_utc": "2026/10/10 11:47:31",
+      "noon_alt_deg": 31.7378741672441,
+      "noon_shadow": 1.616746555040756,
+      "target_alt_deg": 20.91455332622461,
+      "asr_geometric_utc": "2026/10/10 14:40:45"
+    },
+    {
+      "date": "2026/10/10",
+      "shadow_factor": 2,
+      "geometric_transit_utc": "2026/10/10 11:47:31",
+      "noon_alt_deg": 31.7378741672441,
+      "noon_shadow": 1.616746555040756,
+      "target_alt_deg": 15.45567399343402,
+      "asr_geometric_utc": "2026/10/10 15:25:16"
+    },
+    {
+      "date": "2026/10/25",
+      "shadow_factor": 1,
+      "geometric_transit_utc": "2026/10/25 11:44:35",
+      "noon_alt_deg": 26.295330134673236,
+      "noon_shadow": 2.0237614921952165,
+      "target_alt_deg": 18.299769373391072,
+      "asr_geometric_utc": "2026/10/25 14:16:16"
+    },
+    {
+      "date": "2026/10/25",
+      "shadow_factor": 2,
+      "geometric_transit_utc": "2026/10/25 11:44:35",
+      "noon_alt_deg": 26.295330134673236,
+      "noon_shadow": 2.0237614921952165,
+      "target_alt_deg": 13.956604469385981,
+      "asr_geometric_utc": "2026/10/25 14:56:29"
+    }
+  ]
+}
