@@ -3,12 +3,14 @@ import 'dart:isolate';
 
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/config/content_mirrors.dart';
+import 'voice_pack_http.dart';
 
 /// One file of «رفيق»'s voice pack, as it is on the bucket.
 class VoicePackFile {
@@ -84,7 +86,10 @@ class RafeeqVoicePack {
   /// 0..1 while downloading, null otherwise.
   final ValueNotifier<double?> progress = ValueNotifier(null);
 
-  final Dio _dio = Dio();
+  final Dio _dio = Dio()
+    ..httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: createVoicePackHttpClient,
+    );
   CancelToken? _cancel;
   Future<void>? _inFlight;
 

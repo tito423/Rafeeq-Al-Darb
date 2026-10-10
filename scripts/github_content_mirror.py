@@ -30,7 +30,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 RELEASES = {
     "content-mirror": ["books/text/", "hadeethenc/", "hadith/", "sciences/",
                        "quran/translations/", "channels/", "legal/",
-                       "asr/whisper-tiny-ar-quran/", "tts/open_ar_v1/", "ruqyah/",
+                       "asr/whisper-tiny-ar-quran/", "asr/rafeeq_v1/",
+                       "asr/rafeeq_ar_v1/", "tts/open_ar_v1/", "ruqyah/",
                        "images/backgrounds/", "geo/", "config/", "kids/", "azkar/"],
     "content-mushaf": ["mushaf/madinah_qc/"],
     "content-surah": ["recitations/surah/basit_murattal/",
