@@ -3639,7 +3639,17 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_scenery.dart",
     "lines": 436,
     "sha256": "d0edb9af25ed1fa0100db3d3f3ca929e289a8487cb515dc832e126b102a2cc60",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 436,
+    "notes": [
+      {
+        "lines": [
+          1,
+          436
+        ],
+        "note": "Read complete scenery renderer: sky/sun transforms balanced, clamped progress/color values, seeded clouds/stars, fixed-bound dune detail, finite road-print stepping under valid nonzero layout, shadows/dust/vignette. No confirmed source defect; costs from per-frame paths/blur/shaders require actual frame profiling, and stale leg-two commentary is not a runtime bug."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_screen.dart",
