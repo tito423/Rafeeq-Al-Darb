@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import androidx.core.app.NotificationCompat
 
 /**
  * P3-46: real-device feedback — starting a download, then switching away to
@@ -82,7 +83,7 @@ class DownloadForegroundService : Service() {
             val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             val id = itemId(key)
             items[key] = id
-            val builder = Notification.Builder(context, CHANNEL_ID)
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title ?: NativeStrings.get(context, NativeStrings.DL_TITLE))
                 .setContentText(text ?: "")
                 .setSmallIcon(context.applicationInfo.icon)
@@ -167,7 +168,7 @@ class DownloadForegroundService : Service() {
 
         fun build(context: android.content.Context, title: String?, text: String?, done: Int, total: Int): Notification {
             val pendingIntent = routeIntent(context, "mushaf")
-            val builder = Notification.Builder(context, CHANNEL_ID)
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title ?: NativeStrings.get(context, NativeStrings.DL_TITLE))
                 .setContentText(text ?: NativeStrings.get(context, NativeStrings.DL_BODY))
                 .setSmallIcon(context.applicationInfo.icon)
@@ -184,6 +185,7 @@ class DownloadForegroundService : Service() {
     }
 
     private fun ensureChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         // Deliberately NOT short-circuiting on an existing channel: creating it
         // again under the same id updates its name and description (importance

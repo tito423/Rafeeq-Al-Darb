@@ -42,6 +42,7 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
+        testInstrumentationRunner = "com.tito.rafeeq_aldarb.DownloadNotificationRegression"
     }
 
     buildTypes {
@@ -187,6 +188,10 @@ tasks.configureEach {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    // Keep the instrumentation classpath on cached, current runtime libraries.
+    // Flutter's integration_test runner otherwise pulls core-ktx 1.2.0.
+    androidTestImplementation("androidx.core:core-ktx:1.17.0")
+    androidTestImplementation("com.google.code.findbugs:jsr305:3.0.2")
 
     // Only so `RafeeqApplication` can implement `Configuration.Provider` and
     // stop WorkManager initialising itself at every process start — see that
