@@ -3722,13 +3722,33 @@
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_check_sheet.dart",
     "lines": 155,
     "sha256": "d5c79598b7e9614663419cbcbe0b33c2d7b0697b5033f837ec1828f56cd7be59",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 155,
+    "notes": [
+      {
+        "lines": [
+          1,
+          155
+        ],
+        "note": "Read Dorar check bottom sheet and history screens completely. Lookup retry resets its future; draggable scrolling is connected. History pagination has busy/mounted guards and fallback to original site. Later-page errors set failed but render an unlabeled More retry rather than error; Arabic source direction and scaled date row require real layout validation. No new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_history_screen.dart",
     "lines": 177,
     "sha256": "2a4c1fb777fe3db663a4d68f26d21bfd275eaaea57b4c8252fcf4ec429290b0e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 177,
+    "notes": [
+      {
+        "lines": [
+          1,
+          177
+        ],
+        "note": "Read Dorar check bottom sheet and history screens completely. Lookup retry resets its future; draggable scrolling is connected. History pagination has busy/mounted guards and fallback to original site. Later-page errors set failed but render an unlabeled More retry rather than error; Arabic source direction and scaled date row require real layout validation. No new confirmed finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_hub_screen.dart",
