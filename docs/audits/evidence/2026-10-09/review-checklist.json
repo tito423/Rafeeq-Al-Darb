@@ -9119,13 +9119,33 @@
     "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/makharij_diagram.dart",
     "lines": 485,
     "sha256": "f2cebe1f488f8c4662f1d3bb893b3fd72bfb4b4d96a0b667a0455cd00935ea1f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 485,
+    "notes": [
+      {
+        "lines": [
+          1,
+          485
+        ],
+        "note": "Reviewed final diagram/entry whole files: transformed painting but untransformed nearest-point picking is an unverified interaction candidate; per-frame TextPainter lifetime/performance needs measurement. Entry navigation and translated bounded text inspected. No source edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/makharij_entry.dart",
     "lines": 72,
     "sha256": "3aa6f0b30580394cafaa786f546caeecbae6bef1a39bdd51449c26d9816102d1",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 72,
+    "notes": [
+      {
+        "lines": [
+          1,
+          72
+        ],
+        "note": "Reviewed final diagram/entry whole files: transformed painting but untransformed nearest-point picking is an unverified interaction candidate; per-frame TextPainter lifetime/performance needs measurement. Entry navigation and translated bounded text inspected. No source edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tasbih_reminder/data/tasbih_items.dart",

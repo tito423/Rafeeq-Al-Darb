@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 13:12 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 561/563; 40 interim findings. Reviewed ListenCard (561/563); recorded unverified audio ownership and actual long-phrase layout candidates. Exact NEXT: Read MakharijDiagram and entry to complete source inventory; then measured content/UI checks.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 13:17 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 563/563; 40 interim findings. Completed line-by-line source reading: 563/563 checklist entries, with source SHA verification. Source completion does not complete Phase 1. Exact NEXT: Measure diagram hit testing and delayed caravan quiz loading; then finish live content semantics/media, device/performance and prior-audit status tables. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 13:17 - audit: finish the 563-file source review, keep runtime checks open
+
+- 2026-10-10 13:17 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:17 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 563/563; 40 interim findings. Completed line-by-line source reading: 563/563 checklist entries, with source SHA verification. Source completion does not complete Phase 1. Exact NEXT: Measure diagram hit testing and delayed caravan quiz loading; then finish live content semantics/media, device/performance and prior-audit status tables. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 13:12 - audit: review Tajweed audio example card lifecycle
 
 - 2026-10-10 13:12 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:12 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 561/563; 40 interim findings. Reviewed ListenCard (561/563); recorded unverified audio ownership and actual long-phrase layout candidates. Exact NEXT: Read MakharijDiagram and entry to complete source inventory; then measured content/UI checks.. No app/backend edits; full source/content/device audit and final563-file report remain required.
