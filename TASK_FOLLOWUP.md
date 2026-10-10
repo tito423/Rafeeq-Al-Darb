@@ -1186,6 +1186,8 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 14:44 - audit: record A-02 fix commit and A-09 legacy alarm cleanup next step; refresh completed audit state
+- 2026-10-10 14:44 Dubai — A-02 fix21193654 pushed, analyze clean/784 pass/4 skipped. Updated stale HANDOVER state row (was20 findings/96 files). A-09 planning: KhatmaStore uses7000+hash%900; fasting cancel7300..7349 overlaps iqama7300..7304; quotes7500..7523/tasbih7400 block also intersect khatma. Khatma reminders carry NotificationRouter.openPrefix+khatma payload, so pending notifications can identify legacy khatma ownership before cleanup. Changing only the base would leave old recurring alarms; DO NOT do a bare constant swap. No A-09 code changed. Exact NEXT: inspect all native/Dart ID ranges, plugin pending request data, khatma restore/rearm lifecycle; implement disjoint IDs with safe cancellation/rearming of existing reminders, regression including already-scheduled alarms; full analyze/test. No schema/pref migration without owner approval. Quota14:42:3% five-hour remaining/54% weekly; async question asks explicit approval to consume ONE available reset, unanswered. Do not consume without owner's reply. Only emulator5554 attached; phone/account validation pending.
 - 2026-10-10 14:41 - Fix A-02: batch sync within Worker caps and retain unacknowledged queue rows; analyze clean and 784 tests pass, Google device check pending
 - 2026-10-10 14:25 - audit: correct A-02 evidence scope to Worker runtime and client source review
 
