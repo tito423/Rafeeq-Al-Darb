@@ -73,6 +73,10 @@ class SyncService {
   late Database _localQueueDb;
   bool _isSyncing = false;
   Future<void>? _initialization;
+  Future<void>? _queueProcessing;
+  bool _queueRequested = false;
+  Future<void>? _accountRestoration;
+  String? _restoringAccountId;
   StreamSubscription<GoogleSignInAccount?>? _accountSubscription;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _disposed = false;
@@ -120,7 +124,7 @@ class SyncService {
       if (_disposed) return;
       _ref.read(authStateProvider.notifier).state = account;
       if (account != null) {
-        _fullSync();
+        unawaited(_restoreAccount(account));
       }
     });
 
@@ -134,8 +138,43 @@ class SyncService {
     });
 
     try {
-      await _googleSignIn.signInSilently();
+      final account = await _googleSignIn.signInSilently();
+      if (!_disposed && account != null) {
+        _ref.read(authStateProvider.notifier).state = account;
+        unawaited(_restoreAccount(account));
+      }
     } catch (_) {}
+  }
+
+  Future<void> _restoreAccount(GoogleSignInAccount account) {
+    if (_disposed) return Future<void>.value();
+    final current = _accountRestoration;
+    if (current != null) {
+      if (_restoringAccountId == account.id) return current;
+      return current.then((_) => _restoreAccount(account));
+    }
+    _restoringAccountId = account.id;
+    return _accountRestoration = _pushBeforePull(account).whenComplete(() {
+      _accountRestoration = null;
+      _restoringAccountId = null;
+    });
+  }
+
+  Future<void> _pushBeforePull(GoogleSignInAccount account) async {
+    try {
+      if (_disposed || _ref.read(authStateProvider)?.id != account.id) return;
+      await _processQueue();
+      if (_disposed || _ref.read(authStateProvider)?.id != account.id) return;
+      // A rejected upload stays local; pulling now could restore an older state.
+      final pending = await _localQueueDb.query('queue', limit: 1);
+      if (pending.isNotEmpty || _disposed) return;
+      if (_ref.read(authStateProvider)?.id != account.id) return;
+      await _fullSync();
+    } catch (_) {
+      if (!_disposed) {
+        _ref.read(syncStatusProvider.notifier).state = SyncStatus.failed;
+      }
+    }
   }
 
   void dispose() {
@@ -162,6 +201,7 @@ class SyncService {
     final account = await _googleSignIn.signIn();
     if (_disposed) return account;
     _ref.read(authStateProvider.notifier).state = account;
+    if (account != null) unawaited(_restoreAccount(account));
     return account;
   }
 
@@ -266,33 +306,48 @@ class SyncService {
     unawaited(_processQueue());
   }
 
-  Future<void> _processQueue() async {
-    if (_disposed || _isSyncing) return;
+  Future<void> _processQueue() {
+    if (_disposed) return Future<void>.value();
+    _queueRequested = true;
+    return _queueProcessing ??= _drainRequestedQueue().whenComplete(() {
+      _queueProcessing = null;
+    });
+  }
+
+  Future<void> _drainRequestedQueue() async {
+    do {
+      _queueRequested = false;
+      if (!await _deliverQueue()) return;
+    } while (_queueRequested && !_disposed);
+  }
+
+  Future<bool> _deliverQueue() async {
+    if (_disposed || _isSyncing) return false;
     final account = _ref.read(authStateProvider);
-    if (account == null) return;
+    if (account == null) return true;
 
     final connectivity = await Connectivity().checkConnectivity();
-    if (_disposed) return;
-    if (connectivity.contains(ConnectivityResult.none)) return;
+    if (_disposed) return false;
+    if (connectivity.contains(ConnectivityResult.none)) return true;
 
     _isSyncing = true;
     _ref.read(syncStatusProvider.notifier).state = SyncStatus.syncing;
 
     try {
       final auth = await account.authentication;
-      if (_disposed) return;
+      if (_disposed) return false;
       final idToken = auth.idToken;
       if (idToken == null) throw Exception('No idToken');
 
       while (true) {
-        if (_disposed) return;
+        if (_disposed) return false;
         // Bound the database read too; each row can contain multiple states.
         final queuedItems = await _localQueueDb.query(
           'queue',
           orderBy: 'id ASC',
           limit: SyncQueueBatch.maxCounters,
         );
-        if (_disposed) return;
+        if (_disposed) return false;
         if (queuedItems.isEmpty) break;
         for (final batch in syncQueueBatches(queuedItems)) {
           final response = await _withTimeout(
@@ -305,10 +360,10 @@ class SyncService {
               body: batch.body,
             ),
           );
-          if (_disposed) return;
+          if (_disposed) return false;
           if (response.statusCode != 200) {
             _ref.read(syncStatusProvider.notifier).state = SyncStatus.error;
-            return;
+            return false;
           }
           await _localQueueDb.transaction((txn) async {
             final deletes = txn.batch();
@@ -321,9 +376,11 @@ class SyncService {
       }
       _ref.read(lastSyncTimeProvider.notifier).state = DateTime.now();
       _ref.read(syncStatusProvider.notifier).state = SyncStatus.done;
+      return true;
     } catch (e) {
-      if (_disposed) return;
+      if (_disposed) return false;
       _ref.read(syncStatusProvider.notifier).state = SyncStatus.failed;
+      return false;
     } finally {
       _isSyncing = false;
     }
