@@ -61,5 +61,12 @@
     "resolved": true,
     "ancestor_exit": 0,
     "summary": "cfb36fa3 checkpoint(wip): v3.69.1: Rafeeq mic fix release build - installed on emulator over 3.69.0, versionName 3.69.1, 0 RangeErrors, mic recording, support button shown"
+  },
+  {
+    "ref": "f218642d",
+    "sha": "f218642dbe3d649252addf0aace8b742a64c76e3",
+    "resolved": true,
+    "ancestor_exit": 0,
+    "summary": "f218642d Sync Worker: fence /sync (audit B1) and create review_notes once per isolate (B5); deployed"
   }
 ]

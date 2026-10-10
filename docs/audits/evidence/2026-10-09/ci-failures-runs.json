@@ -1,0 +1,38 @@
+[
+  {
+    "conclusion": "failure",
+    "createdAt": "2026-10-08T08:10:53Z",
+    "databaseId": 37748135654,
+    "displayTitle": "Fix what the emulator showed in French before 3.82.0",
+    "headSha": "64f8765ec09005d046aa5b2a3348f41fac8f38d5",
+    "status": "completed",
+    "url": "https://github.com/tito423/Rafeeq-Al-Darb/actions/runs/37748135654"
+  },
+  {
+    "conclusion": "failure",
+    "createdAt": "2026-10-07T21:23:46Z",
+    "databaseId": 37689084743,
+    "displayTitle": "Kids stories: Russian captions (355 lines, checker passes, no mixed-s\u00e2\u20ac\u00a6",
+    "headSha": "57870a98ac4145fdd736b705868a209898bc91be",
+    "status": "completed",
+    "url": "https://github.com/tito423/Rafeeq-Al-Darb/actions/runs/37689084743"
+  },
+  {
+    "conclusion": "failure",
+    "createdAt": "2026-10-07T21:06:00Z",
+    "databaseId": 37686957625,
+    "displayTitle": "Seven languages: adhan names; Urdu lanterns line keeps its order",
+    "headSha": "302a954ba26971b816f3b154e2bca63f8f770905",
+    "status": "completed",
+    "url": "https://github.com/tito423/Rafeeq-Al-Darb/actions/runs/37686957625"
+  },
+  {
+    "conclusion": "failure",
+    "createdAt": "2026-10-07T20:59:05Z",
+    "databaseId": 37686111912,
+    "displayTitle": "Seven languages: miqat card and quote card no longer Arabic-only",
+    "headSha": "9985f81d78b3718147ad527af2e90aadc88ddfc0",
+    "status": "completed",
+    "url": "https://github.com/tito423/Rafeeq-Al-Darb/actions/runs/37686111912"
+  }
+]
