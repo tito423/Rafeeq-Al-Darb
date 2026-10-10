@@ -1,0 +1,216 @@
+{
+  "stable_commit": {
+    "exit": 0,
+    "data": {
+      "date": "2026-10-08T16:51:21Z",
+      "message": "[flutter-3.47-candidate.0] Sync engine.version to deb287481e3ce9468f3434937ced4240a70539ca (#193957)\n\nUpdates the engine.version file from `692136cb6582dbfc5af3fb33c2515a069f2f66d0` to `deb287481e3ce9468f3434937ced4240a70539ca`.",
+      "sha": "abaf9c523780a608bd46686fd5e53740a07077f8"
+    }
+  },
+  "tags": {
+    "exit": 0,
+    "data": [
+      {
+        "name": "v1.16.3",
+        "sha": "be3a4b37b3e9ab4e80d45b59bed53708b96d211f"
+      },
+      {
+        "name": "v1.16.2",
+        "sha": "58cad787d89cc12e72f1f0ec3f1df6a9796ef029"
+      },
+      {
+        "name": "v1.16.1",
+        "sha": "e6b0f5f238d7c67a686e54d09c91e654fa8f215d"
+      },
+      {
+        "name": "v1.16.0",
+        "sha": "08768e87e408fd3df8f848b468b876fef1a49f76"
+      },
+      {
+        "name": "v1.15.22",
+        "sha": "1606d878348e98fb1c401679ca8e006c7b7eb41f"
+      },
+      {
+        "name": "v1.15.21",
+        "sha": "e2b4edd2865794e4ce9d4e8c40d732ed14eb6fa1"
+      },
+      {
+        "name": "v1.15.20",
+        "sha": "4049889d9eecc8fb3eda316a5c371eeb636b2ae5"
+      },
+      {
+        "name": "v1.15.19",
+        "sha": "60d0fef17ae60b88cb52e6158bda2d91b600299c"
+      },
+      {
+        "name": "v1.15.18",
+        "sha": "9437639590adaa91e3df31cd9ce85133e401cd51"
+      },
+      {
+        "name": "v1.15.17",
+        "sha": "2294d75bfa8d067ba90230c0fc2268f3636d7584"
+      },
+      {
+        "name": "v1.15.16",
+        "sha": "fc3f03886dd715dda8e640e0b8bf3871213c1420"
+      },
+      {
+        "name": "v1.15.15",
+        "sha": "ed94c9d856c8de67f183d8ac18b06f61f5405219"
+      },
+      {
+        "name": "v1.15.14",
+        "sha": "a68f96ae3f51c0339477f8b4711ba1f11daffb71"
+      },
+      {
+        "name": "v1.15.13",
+        "sha": "92ce53cc6e9e85e8a9f3f496c8318e556ca8f974"
+      },
+      {
+        "name": "v1.15.12",
+        "sha": "b127868db4944013c65232af46ce02d5b5bde93e"
+      },
+      {
+        "name": "v1.15.11",
+        "sha": "1dce0a51e613df290b894e28e6a7d44f5fd87eb1"
+      },
+      {
+        "name": "v1.15.10",
+        "sha": "3018d8ddb3b40156b6d5a32ee4deaaa80277ea71"
+      },
+      {
+        "name": "v1.15.9",
+        "sha": "cc52a903a8639a8f59e84942172456629eb1aa8f"
+      },
+      {
+        "name": "v1.15.8",
+        "sha": "83dba9bc16be4aba56df6c5752f91e777d4331d6"
+      },
+      {
+        "name": "v1.15.7",
+        "sha": "db94472aeb03eb91e833686223e8d930eb8e8d45"
+      },
+      {
+        "name": "v1.15.6",
+        "sha": "0b8129db1f6b01924c82f3acccc498108c0e1ff4"
+      },
+      {
+        "name": "v1.15.5",
+        "sha": "cbbb7ec5a7031187cc906ac9f375f340c16d51af"
+      },
+      {
+        "name": "v1.15.4",
+        "sha": "a5bd678585ceda542205a54d6e650b1b4297bd0a"
+      },
+      {
+        "name": "v1.15.3",
+        "sha": "67826bdce54505760fe83b7ead70bdb5af6fe9f2"
+      },
+      {
+        "name": "v1.15.2",
+        "sha": "d94ff4bdbec7f1141d16cf97d3ceed485c9a1d36"
+      },
+      {
+        "name": "v1.15.1",
+        "sha": "4d2ce7be2cd4622cede017b0fe2b8a66c821fe48"
+      },
+      {
+        "name": "v1.15.0",
+        "sha": "9b3e1639db189866af55ed3a0dfd47b217106fcd"
+      },
+      {
+        "name": "v1.14.6",
+        "sha": "fabeb2a16f1d008ab8230f450c49141d35669798"
+      },
+      {
+        "name": "v1.14.5",
+        "sha": "92cbaa3efe985cc8370d0d70fef5058c971b2eee"
+      },
+      {
+        "name": "v1.14.4",
+        "sha": "5e1000cd8540a6305df5a999d4dcb0b59fe3c66a"
+      },
+      {
+        "name": "v1.14.3",
+        "sha": "b5a23fdf5bc01e292238627f031a34ed0adb80b0"
+      },
+      {
+        "name": "v1.14.2",
+        "sha": "ec1044a8773e31b4630bf162d9c374236ad1eaaf"
+      },
+      {
+        "name": "v1.14.1",
+        "sha": "c88320458ea86da379aec43dcd24057ad1d79652"
+      },
+      {
+        "name": "v1.14.0",
+        "sha": "bc6f270c584d1fdba81330090ef6e822b9082919"
+      },
+      {
+        "name": "v1.13.9",
+        "sha": "d291de086c0840eb63d82bcde11af2ec521e2a0c"
+      },
+      {
+        "name": "v1.13.8",
+        "sha": "1c79347ef659402a17bf9405b3305564530d3bd2"
+      },
+      {
+        "name": "v1.13.7",
+        "sha": "a3bbdfb23acb173b1bac7cbcd7c4ac723eb584b9"
+      },
+      {
+        "name": "v1.13.6",
+        "sha": "659dc8129d4edb9166e9a0d600439d135740933f"
+      },
+      {
+        "name": "v1.13.5",
+        "sha": "41a911099b7d06f7b1c29f4420cfcfe41fd26e46"
+      },
+      {
+        "name": "v1.13.4",
+        "sha": "bd25f70c66ccd832d53644bd33a1368e96a7aa75"
+      },
+      {
+        "name": "v1.13.3",
+        "sha": "4af66e335f8d87da5cb8c7f2a3e89c1ee02ef23b"
+      },
+      {
+        "name": "v1.13.2",
+        "sha": "4944622b5d8e7a8ee5dbf658b0d0e8ab94b8efd3"
+      },
+      {
+        "name": "v1.13.1",
+        "sha": "4938ea03858e178541d723dff430e6c9d044e6ae"
+      },
+      {
+        "name": "v1.13.0",
+        "sha": "09126abb222d0f25b03318a1ab4a99d27d9aaa8d"
+      },
+      {
+        "name": "v1.12.16",
+        "sha": "37f9c541165c3516f727cd36bd502d411fdad3b8"
+      },
+      {
+        "name": "v1.12.15",
+        "sha": "459c7fb884d9234c45b353087e0ec8a33dde90d1"
+      },
+      {
+        "name": "v1.12.14",
+        "sha": "7726910a5bc4135a9f1fd497c872c9e5cb1e51b5"
+      },
+      {
+        "name": "v1.12.13",
+        "sha": "cf37c2cd07a1d3ba296efff2dc75e19ba65e1665"
+      },
+      {
+        "name": "v1.12.13+hotfix.9",
+        "sha": "f139b11009aeb8ed2a3a3aa8b0066e482709dde3"
+      },
+      {
+        "name": "v1.12.13+hotfix.8",
+        "sha": "0b8abb4724aa590dd0f429683339b1e045a1594d"
+      }
+    ]
+  },
+  "archive_json_error": "Official storage releases_windows.json GET404; GitHub releases/latest is an old prerelease and cannot establish current stable."
+}
