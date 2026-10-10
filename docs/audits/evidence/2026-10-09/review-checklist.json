@@ -3568,7 +3568,17 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_landmarks.dart",
     "lines": 496,
     "sha256": "11e1ff7aa54d427518329c597ef499f4555efacd98e9ee28b21a9cfe502f6365",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 496,
+    "notes": [
+      {
+        "lines": [
+          1,
+          496
+        ],
+        "note": "Reviewed complete landmark painter: all save/layer/clip scopes restore, radius glow guards, finite geometry at valid screen sizes, sea/island/northern gate/cloud scenes and seeded effects. Night veil creates glow work for off-screen untaken lanterns and paint loops are frame-driven; performance impact requires profile measurements. Historical leg-two header is stale after twenty-leg expansion, not a runtime finding."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_map.dart",
