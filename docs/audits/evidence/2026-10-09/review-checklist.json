@@ -3635,8 +3635,8 @@
     "path": "rafeeq_app/lib/features/dedications/presentation/dedications_screen.dart",
     "lines": 785,
     "sha256": "3c7822f3b040050a8efbd3f79b8bc7baffd46ac02303f6c7797aab483e3cba1c",
-    "review": "partial",
-    "read_through_line": 577,
+    "review": "source-reviewed",
+    "read_through_line": 785,
     "notes": [
       {
         "lines": [
@@ -3644,6 +3644,13 @@
           577
         ],
         "note": "Read dedications screen lines1-577: initial list/start cards, actual edit/share/delete/reset menu, dua excludes counter route via unit==null, persisted counts summary and color/layout. DedicationsScreen does not await notifier.loaded; inspect editing tail and realistic delayed restore before confirming race. _when computes local-midnight inDays, extending DST source candidate; menu reset keeps lastAt via copyWith, verify intended copy. Per-kind white button/text contrast and fixed grid/large-text layout need measurement."
+      },
+      {
+        "lines": [
+          578,
+          785
+        ],
+        "note": "Completed edit sheet, keyboard-aware scroll, non-empty-name gating, mounted-after-save navigation, kind/goal controls and preserved nonstandard goal values. No loaded wait and no in-flight save gate in actual screen; potential delayed-restore overwrite and duplicate-save/double-pop require realistic widget proof. Changing dedication kind preserves count/lastAt in copyWith, potentially reinterpreting dhikr as pages; classify only after owner semantics/proof, do not change religious feature. Summary labels ellipsize; source claims not screenshot evidence."
       }
     ]
   },
