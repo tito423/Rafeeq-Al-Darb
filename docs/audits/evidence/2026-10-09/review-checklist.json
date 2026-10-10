@@ -3504,13 +3504,33 @@
     "path": "rafeeq_app/lib/features/caravan/data/caravan_legs.dart",
     "lines": 263,
     "sha256": "0729ce311727b47cc17f2b76c8a842676c4f87cb1b19370f359d85ea70650622",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 263,
+    "notes": [
+      {
+        "lines": [
+          1,
+          263
+        ],
+        "note": "Read all twenty leg definitions and progress persistence. Gate IDs refer to the actual bank, including source quote/page requirements; historical ordering/edition matching still needs data validation. Progress load clamps star values, replay retains maximum, all-open remains a compile-time audit-only gate. record does not itself clamp public input, but actual UI award range must be traced before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/data/caravan_progress.dart",
     "lines": 54,
     "sha256": "b55d24412544b811f2f069f1a3c70317ea03a834e54cd5d680815d76a78cf0d8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 54,
+    "notes": [
+      {
+        "lines": [
+          1,
+          54
+        ],
+        "note": "Read all twenty leg definitions and progress persistence. Gate IDs refer to the actual bank, including source quote/page requirements; historical ordering/edition matching still needs data validation. Progress load clamps star values, replay retains maximum, all-open remains a compile-time audit-only gate. record does not itself clamp public input, but actual UI award range must be traced before classifying."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/data/caravan_world.dart",
