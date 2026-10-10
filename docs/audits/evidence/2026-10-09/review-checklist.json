@@ -8375,8 +8375,8 @@
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart",
     "lines": 709,
     "sha256": "7dddf2a6fea54e7d3a8cf135723f6928ce6f6bbc4507e2a4f2f1f3368a3a0fd2",
-    "review": "partial",
-    "read_through_line": 501,
+    "review": "source-reviewed",
+    "read_through_line": 709,
     "notes": [
       {
         "lines": [
@@ -8384,6 +8384,13 @@
           501
         ],
         "note": "Read SingleSurahScreen through501: selected reciter, bounded wholeMushaf=false recitation, cached filtered own-surah pages, image mode and full-screen/scroll controls. Strong candidate: endPage=(next surah startPage)-1 can omit this surah's own terminal verses when next surah starts on a shared page; compare actual canonical DB min/max before reporting. Pending reciter startup has mounted checks around picker and page future but no operation cancellation; shared service stop may affect another recitation. Remaining lines502-709 unread."
+      },
+      {
+        "lines": [
+          502,
+          709
+        ],
+        "note": "Completed SingleSurahScreen through709, SunanSuwarCard/ReminderSheet and notification navigation, reminders section through78/84. Confirmed A-37 page bounds used by PageView and continuous lastPage; bottom reader counter repeats same bound. Previous/next IconButtons omit tooltip and shrink38dp, actual semantics/target measurement pending. Reminder weekdays/time buttons use actual store and mounted checks after save/remove; TimePicker result setState lacks mounted check but realistic parent removal needs proof. Notification payload parses int with no range guard but invalid id displays generic error; not automatically crash."
       }
     ]
   },
@@ -8391,19 +8398,49 @@
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_card.dart",
     "lines": 255,
     "sha256": "6708d7eb2478d6dc63613b9973bf4ec24a6e295c40102fccdde7dce70e604c2b",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 255,
+    "notes": [
+      {
+        "lines": [
+          1,
+          255
+        ],
+        "note": "Completed SingleSurahScreen through709, SunanSuwarCard/ReminderSheet and notification navigation, reminders section through78/84. Confirmed A-37 page bounds used by PageView and continuous lastPage; bottom reader counter repeats same bound. Previous/next IconButtons omit tooltip and shrink38dp, actual semantics/target measurement pending. Reminder weekdays/time buttons use actual store and mounted checks after save/remove; TimePicker result setState lacks mounted check but realistic parent removal needs proof. Notification payload parses int with no range guard but invalid id displays generic error; not automatically crash."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_navigation.dart",
     "lines": 20,
     "sha256": "8792dba181cdd22c2547afc7e957240649010c59a5184686d60c3fee48b81040",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 20,
+    "notes": [
+      {
+        "lines": [
+          1,
+          20
+        ],
+        "note": "Completed SingleSurahScreen through709, SunanSuwarCard/ReminderSheet and notification navigation, reminders section through78/84. Confirmed A-37 page bounds used by PageView and continuous lastPage; bottom reader counter repeats same bound. Previous/next IconButtons omit tooltip and shrink38dp, actual semantics/target measurement pending. Reminder weekdays/time buttons use actual store and mounted checks after save/remove; TimePicker result setState lacks mounted check but realistic parent removal needs proof. Notification payload parses int with no range guard but invalid id displays generic error; not automatically crash."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_reminders_section.dart",
     "lines": 84,
     "sha256": "759ecc85acc33dc7ac2c4027c3e2937b30f93a97f84e047df1ea9a719592e0b5",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 78,
+    "notes": [
+      {
+        "lines": [
+          1,
+          78
+        ],
+        "note": "Completed SingleSurahScreen through709, SunanSuwarCard/ReminderSheet and notification navigation, reminders section through78/84. Confirmed A-37 page bounds used by PageView and continuous lastPage; bottom reader counter repeats same bound. Previous/next IconButtons omit tooltip and shrink38dp, actual semantics/target measurement pending. Reminder weekdays/time buttons use actual store and mounted checks after save/remove; TimePicker result setState lacks mounted check but realistic parent removal needs proof. Notification payload parses int with no range guard but invalid id displays generic error; not automatically crash."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/support/presentation/screens/support_screen.dart",
