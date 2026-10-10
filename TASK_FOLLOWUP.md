@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 13:02 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 532/563; 37 interim findings. Reviewed full CaravanWorld (532/563). Dorar corrupt-cache test passes; stale-query test transport timing remains unresolved and no finding has yet been added. Exact NEXT: Complete Dorar controlled proof, read Caravan painter and game screens, then Tajweed.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 13:03 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 533/563; 39 interim findings. Dorar lifecycle reproduction now passes both actual-code tests: A-38 stale replacement search and A-39 corrupt cache prevents refetch. Read Caravan cards (533/563); interim findings 39. Exact NEXT: Read remaining Caravan files, then all 24 Tajweed files; full content/device verification and final Arabic report remain pending.. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 13:03 - audit: prove Dorar stale search and corrupt cache failures
+
+- 2026-10-10 13:03 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:03 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 533/563; 39 interim findings. Dorar lifecycle reproduction now passes both actual-code tests: A-38 stale replacement search and A-39 corrupt cache prevents refetch. Read Caravan cards (533/563); interim findings 39. Exact NEXT: Read remaining Caravan files, then all 24 Tajweed files; full content/device verification and final Arabic report remain pending.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 13:02 - audit: review Caravan physics and game state
 
 - 2026-10-10 13:02 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:02 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 532/563; 37 interim findings. Reviewed full CaravanWorld (532/563). Dorar corrupt-cache test passes; stale-query test transport timing remains unresolved and no finding has yet been added. Exact NEXT: Complete Dorar controlled proof, read Caravan painter and game screens, then Tajweed.. No app/backend edits; full source/content/device audit and final563-file report remain required.

@@ -3552,7 +3552,17 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_cards.dart",
     "lines": 331,
     "sha256": "e666b328340dbbd7b54c28a0bccb06c54c6b7e02aa382765e18afd12a1119cc0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 331,
+    "notes": [
+      {
+        "lines": [
+          1,
+          331
+        ],
+        "note": "Read all Caravan cards: question answers, scrollable arrival source quote with explicit RTL and book/page attribution, win replay/next, and loss cards. Scrollable panel accommodates height. Gold next-leg button white text needs measured contrast and dark-mode TextButton inherited text needs composite check; no new confirmed issue yet."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_landmarks.dart",
