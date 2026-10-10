@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../utils/calendar_time.dart';
 import 'notification_router.dart';
 
 /// Weekly "read your sunnah surah" reminders (P2‑12) — one per surah, fired
@@ -80,13 +81,6 @@ class SunanSuwarReminderService {
 
   Future<void> cancel(int id) => _plugin.cancel(id: id);
 
-  tz.TZDateTime _nextInstanceOfWeekday(int weekday, int hour, int minute) {
-    var scheduled = tz.TZDateTime.now(tz.local);
-    scheduled = tz.TZDateTime(
-        tz.local, scheduled.year, scheduled.month, scheduled.day, hour, minute);
-    while (scheduled.weekday != weekday || !scheduled.isAfter(tz.TZDateTime.now(tz.local))) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-    return scheduled;
-  }
+  tz.TZDateTime _nextInstanceOfWeekday(int weekday, int hour, int minute) =>
+      nextReminderTime(hour, minute, weekdays: {weekday});
 }

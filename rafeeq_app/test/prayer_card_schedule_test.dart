@@ -11,6 +11,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:rafeeq_app/core/models/prayer_times.dart';
 import 'package:rafeeq_app/core/services/prayer_status_notification.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 
 /// The ongoing prayer card, after the owner photographed it telling the wrong
 /// time.
@@ -53,6 +55,16 @@ void main() {
 
   List<Map<String, Object>> at(DateTime now) =>
       PrayerStatusNotification.instance.schedule(times, now, 'ar');
+
+  test('late-night spring rollover includes the next calendar date', () {
+    tzdata.initializeTimeZones();
+    final now = tz.TZDateTime(tz.getLocation('Europe/London'), 2026, 3, 28, 23, 30);
+    final events = at(now);
+    final dates = events.map((e) =>
+        DateTime.fromMillisecondsSinceEpoch(e['when'] as int).day).toSet();
+    expect(events, hasLength(6));
+    expect(dates, {29});
+  });
 
   test('sunrise is an event — it is what the reader is watching at 06:06', () {
     final labels =

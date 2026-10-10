@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../utils/calendar_time.dart';
 import 'notification_router.dart';
 
 /// Daily "read your khatma portion" reminders — one per khatma, at whatever
@@ -75,13 +76,6 @@ class KhatmaReminderService {
 
   Future<void> cancel(int id) => _plugin.cancel(id: id);
 
-  tz.TZDateTime _nextInstanceOf(int hour, int minute) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduled =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-    if (!scheduled.isAfter(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-    return scheduled;
-  }
+  tz.TZDateTime _nextInstanceOf(int hour, int minute) =>
+      nextReminderTime(hour, minute);
 }

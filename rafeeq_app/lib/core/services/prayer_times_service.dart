@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/prayer_calculation_methods.dart';
 import '../models/prayer_times.dart';
+import '../utils/calendar_time.dart';
 import '../utils/digits.dart';
 
 /// Real prayer times calculated offline using the 'adhan' package.
@@ -143,7 +144,7 @@ class PrayerTimesService {
     for (final e in entries) {
       if (e.$2.isAfter(now)) return e;
     }
-    final fajr = _todayAt(pt.fajr, now).add(const Duration(days: 1));
+    final fajr = addCalendarDays(_todayAt(pt.fajr, now), 1);
     return ('fajr', fajr);
   }
 
@@ -168,7 +169,7 @@ class PrayerTimesService {
       if (!e.$2.isAfter(now)) last = e;
     }
     if (last != null) return last;
-    final isha = _todayAt(pt.isha, now).subtract(const Duration(days: 1));
+    final isha = addCalendarDays(_todayAt(pt.isha, now), -1);
     return ('isha', isha);
   }
 
@@ -178,7 +179,7 @@ class PrayerTimesService {
   /// still cannot be read is left for tomorrow's fetch, never a year away.
   DateTime _todayAt(String hhmm, DateTime now) {
     final hm = parseHM(hhmm);
-    if (hm == null) return now.add(const Duration(days: 1));
+    if (hm == null) return addCalendarDays(now, 1);
     return DateTime(now.year, now.month, now.day, hm.$1, hm.$2);
   }
 

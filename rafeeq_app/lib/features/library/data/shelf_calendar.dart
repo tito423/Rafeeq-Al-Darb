@@ -12,6 +12,7 @@ library;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../../core/utils/calendar_time.dart';
 import 'my_shelves.dart';
 
 const _byDay = {1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU'};
@@ -26,14 +27,11 @@ String _stamp(DateTime t) =>
 /// The link for [shelf]'s reminder, or null when it has none. The first
 /// occurrence is the next chosen weekday at the chosen time; the event lasts
 /// [minutes] and repeats weekly on every chosen day.
-Uri? shelfCalendarLink(Shelf shelf, {int minutes = 30}) {
+Uri? shelfCalendarLink(Shelf shelf, {int minutes = 30, tz.TZDateTime? now}) {
   final r = shelf.reminder;
   if (r == null || r.weekdays.isEmpty) return null;
-  final now = DateTime.now();
-  var start = DateTime(now.year, now.month, now.day, r.hour, r.minute);
-  while (!r.weekdays.contains(start.weekday) || !start.isAfter(now)) {
-    start = start.add(const Duration(days: 1));
-  }
+  final start = nextReminderTime(r.hour, r.minute,
+      weekdays: r.weekdays, now: now);
   final end = start.add(Duration(minutes: minutes));
   final days = (r.weekdays.toList()..sort()).map((d) => _byDay[d]).join(',');
   return Uri.https('calendar.google.com', '/calendar/render', {
@@ -41,7 +39,7 @@ Uri? shelfCalendarLink(Shelf shelf, {int minutes = 30}) {
     'text': 'shelves.calendar_title'.tr(args: [shelf.name]),
     'details': 'shelves.calendar_details'.tr(),
     'dates': '${_stamp(start)}/${_stamp(end)}',
-    'ctz': tz.local.name,
+    'ctz': start.location.name,
     'recur': 'RRULE:FREQ=WEEKLY;BYDAY=$days',
   });
 }

@@ -4,6 +4,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../../core/config/notification_ids.dart';
 import '../../../core/services/notification_router.dart';
+import '../../../core/utils/calendar_time.dart';
 import 'tasbih_items.dart';
 
 /// The waking hours the tasbih reminders fall in. Nobody is woken at 3 a.m.
@@ -76,8 +77,7 @@ class TasbihReminderService {
       final (h, m) = slots[i];
       final item = tasbihItemFor(i, shift);
       final body = '«${item.text}»\n${item.citationKey.tr()}';
-      var at = tz.TZDateTime(tz.local, now.year, now.month, now.day, h, m);
-      if (!at.isAfter(now)) at = at.add(const Duration(days: 1));
+      final at = nextReminderTime(h, m, now: now);
       await _plugin.zonedSchedule(
         id: _firstId + i,
         title: item.titleKey.tr(),

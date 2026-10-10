@@ -4,6 +4,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../config/notification_ids.dart';
 import '../models/prayer_times.dart';
+import '../utils/calendar_time.dart';
 import '../utils/digits.dart';
 import 'prayer_times_service.dart';
 
@@ -199,13 +200,6 @@ class PrayerReminderService {
     return (minutes ~/ 60, minutes % 60);
   }
 
-  tz.TZDateTime _nextInstanceOf(int hour, int minute) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduled =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-    if (!scheduled.isAfter(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-    return scheduled;
-  }
+  tz.TZDateTime _nextInstanceOf(int hour, int minute) =>
+      nextReminderTime(hour, minute);
 }

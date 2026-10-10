@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../config/notification_ids.dart';
+import '../utils/calendar_time.dart';
 import 'notification_router.dart';
 
 /// Daily "time for your adhkar" reminders, at whatever time the user picked
@@ -91,13 +92,6 @@ class AzkarReminderService {
     );
   }
 
-  tz.TZDateTime _nextInstanceOf(int hour, int minute) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduled =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-    if (!scheduled.isAfter(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-    return scheduled;
-  }
+  tz.TZDateTime _nextInstanceOf(int hour, int minute) =>
+      nextReminderTime(hour, minute);
 }

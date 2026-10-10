@@ -12,6 +12,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../../core/config/notification_ids.dart';
 import '../../../core/services/notification_router.dart';
+import '../../../core/utils/calendar_time.dart';
 import 'my_shelves.dart';
 
 class ShelfReminderService {
@@ -79,12 +80,6 @@ class ShelfReminderService {
     }
   }
 
-  tz.TZDateTime _next(int weekday, int hour, int minute) {
-    final now = tz.TZDateTime.now(tz.local);
-    var t = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-    while (t.weekday != weekday || !t.isAfter(now)) {
-      t = t.add(const Duration(days: 1));
-    }
-    return t;
-  }
+  tz.TZDateTime _next(int weekday, int hour, int minute) =>
+      nextReminderTime(hour, minute, weekdays: {weekday});
 }

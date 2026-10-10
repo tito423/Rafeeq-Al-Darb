@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../config/notification_ids.dart';
 import '../i18n/hijri_months.dart';
 import '../models/prayer_times.dart';
+import '../utils/calendar_time.dart';
 import '../utils/digits.dart';
 import '../utils/time_formatter.dart';
 import 'notification_router.dart';
@@ -170,7 +171,7 @@ class PrayerStatusNotification {
     String localeCode,
   ) {
     final entries = <(String, DateTime)>[];
-    for (final day in [now, now.add(const Duration(days: 1))]) {
+    for (final day in [now, addCalendarDays(now, 1)]) {
       for (final e in [
         ('fajr', times.fajr),
         ('sunrise', times.sunrise),
