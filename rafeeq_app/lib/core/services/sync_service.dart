@@ -13,12 +13,15 @@ import 'package:uuid/uuid.dart';
 import '../config/app_config.dart';
 import 'sync_queue_batch.dart';
 
-final googleSignInProvider = Provider((ref) => GoogleSignIn(
-      serverClientId: AppConfig.googleServerClientId,
-      scopes: ['email', 'profile'],
-    ));
+final googleSignInProvider = Provider(
+  (ref) => GoogleSignIn(
+    serverClientId: AppConfig.googleServerClientId,
+    scopes: ['email', 'profile'],
+  ),
+);
 
 final authStateProvider = StateProvider<GoogleSignInAccount?>((ref) => null);
+
 /// What the sync card says, as a STATE rather than as a sentence.
 ///
 /// It used to be a `String` holding Arabic — «لم تتم المزامنة», «جاري
@@ -38,6 +41,7 @@ final syncServiceProvider = Provider<SyncService>((ref) {
     ref.read(sharedPreferencesProvider),
     ref,
   );
+  ref.onDispose(service.dispose);
   return service;
 });
 
@@ -62,16 +66,20 @@ class SyncService {
   final SharedPreferences _prefs;
   final Ref _ref;
   final http.Client? _client;
-  
+
   static String get _syncApiUrl => '${AppConfig.syncBackendUrl}/sync';
-  
+
   Timer? _debounceTimer;
   late Database _localQueueDb;
   bool _isSyncing = false;
+  Future<void>? _initialization;
+  StreamSubscription<GoogleSignInAccount?>? _accountSubscription;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _disposed = false;
+  bool _databaseOpened = false;
 
   SyncService(this._googleSignIn, this._prefs, this._ref, {http.Client? client})
-      : _client = client;
-
+    : _client = client;
 
   /// Every call to the sync backend is bounded.
   ///
@@ -82,7 +90,12 @@ class SyncService {
   static Future<http.Response> _withTimeout(Future<http.Response> call) =>
       call.timeout(const Duration(seconds: 20));
 
-  Future<void> init() async {
+  Future<void> init() {
+    if (_disposed) return Future<void>.value();
+    return _initialization ??= _initialize();
+  }
+
+  Future<void> _initialize() async {
     final dbPath = p.join(await getDatabasesPath(), 'sync_queue.db');
     _localQueueDb = await openDatabase(
       dbPath,
@@ -97,15 +110,24 @@ class SyncService {
         ''');
       },
     );
+    _databaseOpened = true;
+    if (_disposed) {
+      await _localQueueDb.close();
+      return;
+    }
 
-    _googleSignIn.onCurrentUserChanged.listen((account) {
+    _accountSubscription = _googleSignIn.onCurrentUserChanged.listen((account) {
+      if (_disposed) return;
       _ref.read(authStateProvider.notifier).state = account;
       if (account != null) {
         _fullSync();
       }
     });
 
-    Connectivity().onConnectivityChanged.listen((results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) {
+      if (_disposed) return;
       if (results.contains(ConnectivityResult.none) == false) {
         _processQueue();
       }
@@ -114,6 +136,15 @@ class SyncService {
     try {
       await _googleSignIn.signInSilently();
     } catch (_) {}
+  }
+
+  void dispose() {
+    if (_disposed) return;
+    _disposed = true;
+    _debounceTimer?.cancel();
+    unawaited(_accountSubscription?.cancel());
+    unawaited(_connectivitySubscription?.cancel());
+    if (_databaseOpened) unawaited(_localQueueDb.close());
   }
 
   /// Signs in, and - the part that was missing - **publishes the result**.
@@ -129,6 +160,7 @@ class SyncService {
   /// nothing thrown. A real failure is rethrown so the caller can say so.
   Future<GoogleSignInAccount?> signIn() async {
     final account = await _googleSignIn.signIn();
+    if (_disposed) return account;
     _ref.read(authStateProvider.notifier).state = account;
     return account;
   }
@@ -143,6 +175,7 @@ class SyncService {
 
   Future<void> signOut() async {
     await _googleSignIn.signOut();
+    if (_disposed) return;
     _ref.read(authStateProvider.notifier).state = null;
     for (final key in {...syncedStateKeys, ...syncedCounterKeys}) {
       await _prefs.remove(key);
@@ -151,27 +184,29 @@ class SyncService {
   }
 
   void notifySettingsChanged() {
+    if (_disposed) return;
     if (_ref.read(authStateProvider) == null) return;
-    
+
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(seconds: 2), _queueStateSync);
   }
 
   Future<void> incrementCounter(String key, int amount) async {
+    if (_disposed) return;
     if (_ref.read(authStateProvider) == null) return;
-    
+
     final eventId = const Uuid().v4();
     final payload = {
       'key': key,
       'event_id': eventId,
       'increment_value': amount,
     };
-    
+
     await _localQueueDb.insert('queue', {
       'type': 'counter',
       'payload': jsonEncode(payload),
     });
-    
+
     unawaited(_processQueue());
   }
 
@@ -205,6 +240,7 @@ class SyncService {
   };
 
   Future<void> _queueStateSync() async {
+    if (_disposed) return;
     final keys = _prefs.getKeys();
     final List<Map<String, dynamic>> updates = [];
     final now = DateTime.now().millisecondsSinceEpoch;
@@ -231,11 +267,12 @@ class SyncService {
   }
 
   Future<void> _processQueue() async {
-    if (_isSyncing) return;
+    if (_disposed || _isSyncing) return;
     final account = _ref.read(authStateProvider);
     if (account == null) return;
 
     final connectivity = await Connectivity().checkConnectivity();
+    if (_disposed) return;
     if (connectivity.contains(ConnectivityResult.none)) return;
 
     _isSyncing = true;
@@ -243,24 +280,32 @@ class SyncService {
 
     try {
       final auth = await account.authentication;
+      if (_disposed) return;
       final idToken = auth.idToken;
       if (idToken == null) throw Exception('No idToken');
 
       while (true) {
+        if (_disposed) return;
         // Bound the database read too; each row can contain multiple states.
         final queuedItems = await _localQueueDb.query(
-          'queue', orderBy: 'id ASC', limit: SyncQueueBatch.maxCounters,
+          'queue',
+          orderBy: 'id ASC',
+          limit: SyncQueueBatch.maxCounters,
         );
+        if (_disposed) return;
         if (queuedItems.isEmpty) break;
         for (final batch in syncQueueBatches(queuedItems)) {
-          final response = await _withTimeout((_client?.post ?? http.post)(
-            Uri.parse(_syncApiUrl),
-            headers: {
-              'Authorization': 'Bearer $idToken',
-              'Content-Type': 'application/json; charset=utf-8',
-            },
-            body: batch.body,
-          ));
+          final response = await _withTimeout(
+            (_client?.post ?? http.post)(
+              Uri.parse(_syncApiUrl),
+              headers: {
+                'Authorization': 'Bearer $idToken',
+                'Content-Type': 'application/json; charset=utf-8',
+              },
+              body: batch.body,
+            ),
+          );
+          if (_disposed) return;
           if (response.statusCode != 200) {
             _ref.read(syncStatusProvider.notifier).state = SyncStatus.error;
             return;
@@ -277,6 +322,7 @@ class SyncService {
       _ref.read(lastSyncTimeProvider.notifier).state = DateTime.now();
       _ref.read(syncStatusProvider.notifier).state = SyncStatus.done;
     } catch (e) {
+      if (_disposed) return;
       _ref.read(syncStatusProvider.notifier).state = SyncStatus.failed;
     } finally {
       _isSyncing = false;
@@ -284,34 +330,39 @@ class SyncService {
   }
 
   Future<void> _fullSync() async {
+    if (_disposed) return;
     final account = _ref.read(authStateProvider);
     if (account == null) return;
 
     try {
       final auth = await account.authentication;
+      if (_disposed) return;
       final idToken = auth.idToken;
       if (idToken == null) return;
 
-      final response = await _withTimeout((_client?.get ?? http.get)(
-        Uri.parse(_syncApiUrl),
-        headers: {
-          'Authorization': 'Bearer $idToken',
-        },
-      ));
+      final response = await _withTimeout(
+        (_client?.get ?? http.get)(
+          Uri.parse(_syncApiUrl),
+          headers: {'Authorization': 'Bearer $idToken'},
+        ),
+      );
+      if (_disposed) return;
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         final rawPrefs = await SharedPreferences.getInstance();
-        
+        if (_disposed) return;
+
         final stateItems = (data['state'] as List).cast<Map<String, dynamic>>();
         for (final item in stateItems) {
+          if (_disposed) return;
           final key = item['key'] as String;
           // THE PULL FILTERS TOO, and it matters more than the push: the
           // server still holds every setting an older build sent it, and
           // without this line it would keep restoring them for ever.
           if (!syncedStateKeys.contains(key)) continue;
           final value = jsonDecode(item['value'] as String);
-          
+
           if (value is String) {
             await rawPrefs.setString(key, value);
           } else if (value is int) {
@@ -324,23 +375,30 @@ class SyncService {
             await rawPrefs.setStringList(key, List<String>.from(value));
           }
         }
-        
+
         // Handling downloaded counters
-        final queuedCounters = await _localQueueDb.query('queue', where: 'type = ?', whereArgs: ['counter']);
+        final queuedCounters = await _localQueueDb.query(
+          'queue',
+          where: 'type = ?',
+          whereArgs: ['counter'],
+        );
         final Map<String, int> unsynced = {};
         for (final row in queuedCounters) {
-           final payload = jsonDecode(row['payload'] as String) as Map<String, dynamic>;
-           final k = payload['key'] as String;
-           final inc = payload['increment_value'] as int;
-           unsynced[k] = (unsynced[k] ?? 0) + inc;
+          final payload =
+              jsonDecode(row['payload'] as String) as Map<String, dynamic>;
+          final k = payload['key'] as String;
+          final inc = payload['increment_value'] as int;
+          unsynced[k] = (unsynced[k] ?? 0) + inc;
         }
 
-        final counterItems = (data['counters'] as List).cast<Map<String, dynamic>>();
+        final counterItems = (data['counters'] as List)
+            .cast<Map<String, dynamic>>();
         for (final item in counterItems) {
-           final key = item['key'] as String;
-           final total = item['total'] as int;
-           final finalTotal = total + (unsynced[key] ?? 0);
-           await rawPrefs.setInt(key, finalTotal);
+          if (_disposed) return;
+          final key = item['key'] as String;
+          final total = item['total'] as int;
+          final finalTotal = total + (unsynced[key] ?? 0);
+          await rawPrefs.setInt(key, finalTotal);
         }
       }
     } catch (e) {

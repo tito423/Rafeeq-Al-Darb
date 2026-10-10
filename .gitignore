@@ -143,3 +143,6 @@ scripts/own_irab/books_cache/
 
 # Local Phase 2 raw logs/screenshots; concise verification stays in the audit.
 .local-audit/
+
+# Generated Kotlin daemon sessions and crash logs.
+rafeeq_app/android/.kotlin/
