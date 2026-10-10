@@ -6317,7 +6317,17 @@
     "path": "rafeeq_app/lib/features/quiz/presentation/quiz_play_screen.dart",
     "lines": 662,
     "sha256": "59109df11c0c5cae6a2d8f8204635c74362a2de3da9874348a5c4115de1e9081",
-    "review": "pending"
+    "review": "partial",
+    "read_through_line": 597,
+    "notes": [
+      {
+        "lines": [
+          1,
+          597
+        ],
+        "note": "Read quiz play lines1-597: actual localized round, shuffled choices, single-answer lock, streak/results, async record then navigation, source book download/open and question/choice/explanation layout. Candidates: final-next no busy guard and ref.read after awaited record before mounted check (levels1-4); delayed completion/dispose needs widget proof. Round errors have no catch; actual platform failure scenario pending. Source book claim requires payload page/quote validation; no history text changed. Per-choice success contrast and close tooltip/semantic timing remain accessibility checks."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quiz/presentation/quiz_result_screen.dart",
