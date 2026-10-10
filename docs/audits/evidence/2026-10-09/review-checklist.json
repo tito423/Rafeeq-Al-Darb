@@ -6301,7 +6301,17 @@
     "path": "rafeeq_app/lib/features/quiz/presentation/quiz_home_screen.dart",
     "lines": 464,
     "sha256": "9faa830c2641705fc6761bb88ba6be3e1617b2c0cc1564379b6c23086b4cb9de",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 464,
+    "notes": [
+      {
+        "lines": [
+          1,
+          464
+        ],
+        "note": "Read full quiz home: real bank future, stage counts/unlock gating, best-score stars, localized stats/source book titles, gradient cards and animation disposal. Query load error becomes empty bank/disabled cards without retry, but actual failure scenario needs evidence. Fixed star/count Row and white text over bright green/orange gradients need measured seven-language layout/contrast. Continuous hero motion lacks explicit reduce-motion check; actual animation proof pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quiz/presentation/quiz_play_screen.dart",
