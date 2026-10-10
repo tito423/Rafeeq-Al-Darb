@@ -3584,7 +3584,17 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_map.dart",
     "lines": 387,
     "sha256": "ad8882bffcc438b6e54b79ea36f87081f63bde44748fc950622473eb446f5db0",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 387,
+    "notes": [
+      {
+        "lines": [
+          1,
+          387
+        ],
+        "note": "Read CaravanMap and road painter completely. Auto-reveal checks controller clients, controllers dispose, positions support twenty stations, stars are persisted max 60 under actual awards. Directionality forces whole station subtree LTR including Arabic labels; fixed rows and header need 2x-font/landscape checks, repeating pulse ignores reduced-motion, custom tap stations lack explicit locked-state/star semantics, and BackButtonIcon lacks localized tooltip. Road done parameter only invalidates paint, no completed-stretch paint exists despite comment; cosmetic claim mismatch, not confirmed runtime defect."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_painter.dart",
