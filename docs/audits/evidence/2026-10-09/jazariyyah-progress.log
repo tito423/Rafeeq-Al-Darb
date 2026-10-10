@@ -1,0 +1,4 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/jazariyyah_progress_audit_test.dart
+00:00 +0: one Jazariyyah title tick completes two distinct lessons
+AUDIT_JAZARIYYAH_PROGRESS: lessons 8 (printed70-72) and10 (printed76-78) have one persisted title; one toggle completes2; reopen retains both; unticking either removes both
+00:00 +1: All tests passed!
