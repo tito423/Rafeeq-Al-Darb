@@ -1,0 +1,497 @@
+{
+  "databases": [
+    {
+      "name": "quran_local.db",
+      "bytes": 5611520,
+      "sha256": "3b27c8ab9c1a15a9db12e89c844680cf40aedb659168b6f3a3ae97b52a361679",
+      "quick_check": [
+        [
+          "ok"
+        ]
+      ],
+      "indexes": [],
+      "tables": [
+        [
+          "surahs"
+        ],
+        [
+          "ayahs"
+        ],
+        [
+          "tafsir_names"
+        ],
+        [
+          "sqlite_sequence"
+        ],
+        [
+          "ayah_details"
+        ],
+        [
+          "ayahs_search_data"
+        ],
+        [
+          "ayahs_search_idx"
+        ],
+        [
+          "ayahs_search_content"
+        ],
+        [
+          "ayahs_search_docsize"
+        ],
+        [
+          "ayahs_search_config"
+        ],
+        [
+          "ayahs_search"
+        ]
+      ],
+      "sqlite_version": "3.50.3",
+      "queries": [
+        {
+          "label": "page564",
+          "sql": "SELECT * FROM ayahs WHERE page_number=? ORDER BY id",
+          "params": [
+            564
+          ],
+          "rows": 19,
+          "query_plan": [
+            [
+              3,
+              0,
+              216,
+              "SCAN ayahs"
+            ]
+          ],
+          "first_query_ms": 4.1185,
+          "warm_runs": 30,
+          "median_ms": 2.9573,
+          "p95_ms": 3.2689,
+          "max_ms": 3.5497
+        },
+        {
+          "label": "surah2",
+          "sql": "SELECT * FROM ayahs WHERE surah_id=? ORDER BY ayah_number",
+          "params": [
+            2
+          ],
+          "rows": 286,
+          "query_plan": [
+            [
+              3,
+              0,
+              216,
+              "SCAN ayahs"
+            ],
+            [
+              17,
+              0,
+              0,
+              "USE TEMP B-TREE FOR ORDER BY"
+            ]
+          ],
+          "first_query_ms": 4.2648,
+          "warm_runs": 30,
+          "median_ms": 4.6486,
+          "p95_ms": 5.4921,
+          "max_ms": 6.9343
+        },
+        {
+          "label": "ayah4_115",
+          "sql": "SELECT * FROM ayahs WHERE surah_id=? AND ayah_number=? LIMIT 1",
+          "params": [
+            4,
+            115
+          ],
+          "rows": 1,
+          "query_plan": [
+            [
+              3,
+              0,
+              216,
+              "SCAN ayahs"
+            ]
+          ],
+          "first_query_ms": 0.7856,
+          "warm_runs": 30,
+          "median_ms": 0.07365,
+          "p95_ms": 0.0965,
+          "max_ms": 0.0996
+        },
+        {
+          "label": "audio_global4_115",
+          "sql": "SELECT COUNT(*) AS c FROM ayahs WHERE surah_id < ? OR (surah_id=? AND ayah_number<=?)",
+          "params": [
+            4,
+            4,
+            115
+          ],
+          "rows": 1,
+          "query_plan": [
+            [
+              3,
+              0,
+              216,
+              "SCAN ayahs"
+            ]
+          ],
+          "first_query_ms": 2.632,
+          "warm_runs": 30,
+          "median_ms": 2.856,
+          "p95_ms": 3.1067,
+          "max_ms": 4.2103
+        }
+      ]
+    },
+    {
+      "name": "hadith.db",
+      "bytes": 109731840,
+      "sha256": "539dea009e718a12afe37052cd4fd6110f8347c1afc70b56184bbdd2428fb252",
+      "quick_check": [
+        [
+          "ok"
+        ]
+      ],
+      "indexes": [
+        [
+          "sqlite_autoindex_books_1",
+          "books",
+          null
+        ],
+        [
+          "sqlite_autoindex_chapters_1",
+          "chapters",
+          null
+        ],
+        [
+          "idx_hadiths_book_chapter_num",
+          "hadiths",
+          "CREATE INDEX idx_hadiths_book_chapter_num\n  ON hadiths(book_id, chapter_no, number_in_book)"
+        ],
+        [
+          "idx_hadiths_book_num",
+          "hadiths",
+          "CREATE INDEX idx_hadiths_book_num ON hadiths(book_id, number_in_book)"
+        ]
+      ],
+      "tables": [
+        [
+          "books"
+        ],
+        [
+          "chapters"
+        ],
+        [
+          "hadiths"
+        ],
+        [
+          "sqlite_sequence"
+        ],
+        [
+          "hadiths_fts_data"
+        ],
+        [
+          "hadiths_fts_idx"
+        ],
+        [
+          "hadiths_fts_docsize"
+        ],
+        [
+          "hadiths_fts_config"
+        ],
+        [
+          "hadiths_fts"
+        ]
+      ],
+      "sqlite_version": "3.50.3",
+      "queries": [
+        {
+          "label": "first_search_batch",
+          "sql": "SELECT * FROM hadiths ORDER BY book_id,number_in_book LIMIT 2000 OFFSET 0",
+          "params": [],
+          "rows": 2000,
+          "query_plan": [
+            [
+              8,
+              0,
+              223,
+              "SCAN hadiths USING INDEX idx_hadiths_book_num"
+            ]
+          ],
+          "first_query_ms": 20.4293,
+          "warm_runs": 30,
+          "median_ms": 19.03545,
+          "p95_ms": 22.737,
+          "max_ms": 23.1299
+        },
+        {
+          "label": "last_search_batch",
+          "sql": "SELECT * FROM hadiths ORDER BY book_id,number_in_book LIMIT 2000 OFFSET 66000",
+          "params": [],
+          "rows": 1153,
+          "query_plan": [
+            [
+              8,
+              0,
+              223,
+              "SCAN hadiths USING INDEX idx_hadiths_book_num"
+            ]
+          ],
+          "first_query_ms": 10.5838,
+          "warm_runs": 30,
+          "median_ms": 7.79575,
+          "p95_ms": 9.053,
+          "max_ms": 10.1523
+        },
+        {
+          "label": "daily_random",
+          "sql": "SELECT * FROM hadiths WHERE book_id IN (1,2,3,4,5,6,9) ORDER BY RANDOM() LIMIT 1",
+          "params": [],
+          "rows": 1,
+          "query_plan": [
+            [
+              5,
+              0,
+              89,
+              "SEARCH hadiths USING INDEX idx_hadiths_book_num (book_id=?)"
+            ],
+            [
+              58,
+              0,
+              0,
+              "USE TEMP B-TREE FOR ORDER BY"
+            ]
+          ],
+          "first_query_ms": 8.3672,
+          "warm_runs": 30,
+          "median_ms": 10.386,
+          "p95_ms": 14.6641,
+          "max_ms": 18.84
+        },
+        {
+          "label": "hadith_lookup",
+          "sql": "SELECT * FROM hadiths WHERE book_id=? AND number_in_book=? LIMIT 1",
+          "params": [
+            4,
+            1
+          ],
+          "rows": 1,
+          "query_plan": [
+            [
+              4,
+              0,
+              60,
+              "SEARCH hadiths USING INDEX idx_hadiths_book_num (book_id=? AND number_in_book=?)"
+            ]
+          ],
+          "first_query_ms": 0.2016,
+          "warm_runs": 30,
+          "median_ms": 0.06505,
+          "p95_ms": 0.1032,
+          "max_ms": 0.1035
+        }
+      ],
+      "hadith_count": 67153,
+      "by_grader": [
+        [
+          null,
+          21934
+        ],
+        [
+          "Al-Albani",
+          4898
+        ],
+        [
+          "Darussalam",
+          13149
+        ],
+        [
+          "حسين سليم أسد الداراني",
+          2642
+        ],
+        [
+          "شعيب الأرناؤوط",
+          24530
+        ]
+      ],
+      "graded_without_grader": 0,
+      "books": [
+        [
+          "bukhari",
+          7277,
+          0,
+          7277
+        ],
+        [
+          "muslim",
+          7459,
+          0,
+          7459
+        ],
+        [
+          "abudawud",
+          5276,
+          4896,
+          5276
+        ],
+        [
+          "tirmidhi",
+          4053,
+          3898,
+          4053
+        ],
+        [
+          "nasai",
+          5768,
+          5321,
+          5768
+        ],
+        [
+          "ibnmajah",
+          4345,
+          3932,
+          4345
+        ],
+        [
+          "ahmed",
+          27584,
+          24530,
+          27584
+        ],
+        [
+          "malik",
+          1985,
+          0,
+          1985
+        ],
+        [
+          "darimi",
+          3406,
+          2642,
+          3406
+        ]
+      ],
+      "darussalam_collections": [
+        [
+          "tirmidhi",
+          3897
+        ],
+        [
+          "nasai",
+          5321
+        ],
+        [
+          "ibnmajah",
+          3931
+        ]
+      ]
+    },
+    {
+      "name": "azkar.db",
+      "bytes": 188416,
+      "sha256": "ff8ec3921559df81c00ea6899ad56eaf1454185bf256452eaa427fede6c488dd",
+      "quick_check": [
+        [
+          "ok"
+        ]
+      ],
+      "indexes": [],
+      "tables": [
+        [
+          "azkar_sections"
+        ],
+        [
+          "sqlite_sequence"
+        ],
+        [
+          "azkar_items"
+        ]
+      ],
+      "sqlite_version": "3.50.3",
+      "queries": []
+    },
+    {
+      "name": "quran_sciences.db",
+      "bytes": 138215424,
+      "sha256": "9c1a7d2cfaa64c4cbea53381f8eddabb48ddff063971e5c9a526e2ee6bb426ae",
+      "quick_check": [
+        [
+          "ok"
+        ]
+      ],
+      "indexes": [
+        [
+          "sqlite_autoindex_word_meanings_1",
+          "word_meanings",
+          null
+        ],
+        [
+          "sqlite_autoindex_translations_1",
+          "translations",
+          null
+        ],
+        [
+          "sqlite_autoindex_translation_editions_1",
+          "translation_editions",
+          null
+        ],
+        [
+          "sqlite_autoindex_irab_daas_1",
+          "irab_daas",
+          null
+        ],
+        [
+          "idx_wm",
+          "word_meanings",
+          "CREATE INDEX idx_wm ON word_meanings(surah, ayah)"
+        ],
+        [
+          "idx_tt",
+          "tafseer_texts",
+          "CREATE INDEX idx_tt ON tafseer_texts(source, surah, ayah_start, ayah_end)"
+        ],
+        [
+          "idx_translations_ayah",
+          "translations",
+          "CREATE INDEX idx_translations_ayah ON translations(surah, ayah)"
+        ],
+        [
+          "idx_irab_refs",
+          "irab_daas_refs",
+          "CREATE INDEX idx_irab_refs ON irab_daas_refs(surah, ayah_from)"
+        ]
+      ],
+      "tables": [
+        [
+          "tafseer_texts"
+        ],
+        [
+          "sqlite_sequence"
+        ],
+        [
+          "word_meanings"
+        ],
+        [
+          "azkar_sections"
+        ],
+        [
+          "azkar_items"
+        ],
+        [
+          "translations"
+        ],
+        [
+          "translation_editions"
+        ],
+        [
+          "irab_daas"
+        ],
+        [
+          "irab_daas_refs"
+        ]
+      ],
+      "sqlite_version": "3.50.3",
+      "queries": []
+    }
+  ],
+  "scope": "Actual read-only bundled databases. First/warm SQL timings on host SQLite only; excludes Arabic normalization, Dart parsing, Android IPC and UI."
+}

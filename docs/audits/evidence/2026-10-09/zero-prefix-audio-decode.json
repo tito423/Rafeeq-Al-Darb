@@ -1,0 +1,20 @@
+[
+  {
+    "url": "https://server7.mp3quran.net/basit/001.mp3",
+    "download_exit": 0,
+    "bytes": 188417,
+    "sha256": "b9b3180e7357d3b8959351528a56d6c0cf92096f40f193c20cedab2f2c8b13fe",
+    "decode_exit": 0,
+    "decode_errors": "",
+    "scope": "Full ffmpeg audio decode, no listening or reciter-identity claim"
+  },
+  {
+    "url": "https://server7.mp3quran.net/basit/114.mp3",
+    "download_exit": 0,
+    "bytes": 140352,
+    "sha256": "7265f83a4452a0c4089c16422dd84818a14533c71965f12a93f0c633b80e9255",
+    "decode_exit": 0,
+    "decode_errors": "",
+    "scope": "Full ffmpeg audio decode, no listening or reciter-identity claim"
+  }
+]

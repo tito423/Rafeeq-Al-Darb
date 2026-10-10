@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 13:31 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 563/563; 43 interim findings. Confirmed A-43 real-font ListenCard overflow in14cases across7locales;43findings. Strengthened A-42 subtype button assertion and reran successfully. Live930binary ranges are running, incrementally stored media-ranges.jsonl. Exact NEXT: Resume running media range job (session65351; rerun script resumes if stopped), then verify channel identities and finish device/prior-audit tables. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 13:37 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 563/563; 43 interim findings. All930binary range GETs succeeded;9channel IDs verified from current primary metadata; two zero-prefix MP3 files fully decode with ffmpeg exit0. Four bundled DB quick_check=ok; bounded host SQL timings recorded. Exact NEXT: Verify Darussalam named grading attribution using current primary about-page, then emulator Quran/audio memory, seven-locale UI and prior-audit table. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 13:37 - audit: verify 930 binary ranges and measure bundled database queries
+
+- 2026-10-10 13:37 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:37 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 563/563; 43 interim findings. All930binary range GETs succeeded;9channel IDs verified from current primary metadata; two zero-prefix MP3 files fully decode with ffmpeg exit0. Four bundled DB quick_check=ok; bounded host SQL timings recorded. Exact NEXT: Verify Darussalam named grading attribution using current primary about-page, then emulator Quran/audio memory, seven-locale UI and prior-audit table. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 13:31 - audit: prove A-43 ListenCard overflow with real fonts in seven locales
 
 - 2026-10-10 13:31 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:31 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 563/563; 43 interim findings. Confirmed A-43 real-font ListenCard overflow in14cases across7locales;43findings. Strengthened A-42 subtype button assertion and reran successfully. Live930binary ranges are running, incrementally stored media-ranges.jsonl. Exact NEXT: Resume running media range job (session65351; rerun script resumes if stopped), then verify channel identities and finish device/prior-audit tables. No app/backend edits; full source/content/device audit and final563-file report remain required.
