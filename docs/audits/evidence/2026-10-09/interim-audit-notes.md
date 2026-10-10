@@ -1,0 +1,515 @@
+# أوديت رفيق الدرب — 2026-10-09
+
+<!-- Interim findings are maintained below until the final report is assembled. -->
+
+
+**الحالة: قيد التنفيذ؛ هذا ليس تقريرًا نهائيًا.** لا تعديلات على كود التطبيق أو الباك إند خلال المرحلة الأولى.
+
+نقطة البداية: `4a3f0b82` على `master`. سمح المالك بإكمال الأوديت مع ترك الملفات غير المتتبعة الموجودة قبل الجلسة كما هي. الإصدار المنشور لا يتغير.
+
+## الفحوصات
+
+المخرجات الفعلية محفوظة في `docs/audits/evidence/2026-10-09/`، مع كود الخروج والوقت.
+
+| الأمر | النتيجة المرصودة |
+|---|---|
+| `flutter --version` | نجح؛ Flutter 3.38.7 stable، Dart 3.10.7 |
+| `flutter pub get` | نجح؛ لم يتغير ملف القفل المتتبع |
+| `flutter analyze` | نجح؛ No issues found |
+| `flutter test --reporter expanded` | نجح؛ 776 passed، 4 skipped |
+| `flutter pub outdated` | نجح؛ 14 اعتمادًا مقفولًا أقدم من القابل للترقية، و26 مقيدًا دون النسخة القابلة للحل؛ التفاصيل في السجل |
+| `flutter analyze lib test` (أمر CI) | نجح؛ السجل `ci-analyze.log` |
+| `scripts/check.ps1` | نجح؛ ملخص CLEAN في `check-script.log` |
+| `flutter build apk --release` | نجح في 241.9 ثانية؛ APK حجمه 301.3 MB حسب Flutter، audit فقط دون نشر؛ المكتبات الأصلية ORT 1.28.2 في المعماريات الثلاث |
+| `npm ci` | نجح |
+| `npx --no-install tsc --noEmit` | نجح |
+| `npm test` | لم يُشغّل: `package.json` لا يحتوي script بهذا الاسم |
+| `npm outdated` | exit 1 بسبب وجود تحديثات؛ Wrangler 3.114.17 مقابل 4.149.0، TypeScript 5.9.3 مقابل 7.0.2، workers-types 4.20260702.1 مقابل 5.20261009.1 |
+| `npm audit --json` | exit 1؛ 7 حزم: 5 High و2 Moderate؛ كلها ضمن أدوات التطوير، لا نساويها تلقائيًا بثغرة في Worker المنشور |
+
+## نتائج مؤكدة حتى الآن
+
+هذه القائمة مؤقتة، ولا تعني انتهاء مراجعة بقية الملفات. لم تُصلح أي نتيجة بعد.
+
+| ID | الخطورة | التصنيف | file:line | السيناريو والمشكلة | التأثير | الحل | الحالة |
+|---|---|---|---|---|---|---|---|
+| A-01 | Critical | أسرار | `scripts/upload_quranflash_coords.dart` في commit `3747f715`:7–8 (محذوف من الشجرة الحالية) | قارئ لتاريخ المستودع العام يحصل على قيمتي R2 المطابقتين للملف المحلي اليوم؛ تطابق أيضًا في `ecbb820d` و`eae5036d` | انكشاف بيانات الوصول؛ المفتاح صالح لطلب ListObjectsV2 الآن (200)؛ صلاحيات الكتابة لم تُختبر | تدوير المفتاح من Cloudflare وتحديث الملف المحلي؛ حذف الملف الحالي لا يسحب السر من التاريخ | إجراء المالك مطلوب |
+| A-02 | High | فقد بيانات | `rafeeq_app/lib/core/services/sync_service.dart:282` + `sync_backend/src/index.ts:246` | تسبيح 1001 مرة أثناء انقطاع الاتصال ثم عودته: التطبيق يرسل كامل الطابور، Worker يحفظ أول 1000 فقط ويرجع 200، والتطبيق يحذف الجميع | فقد دائم لأحداث بعد الحد؛ ينطبق أيضًا على حد 100 تحديث حالة | تقسيم الطابور إلى طلبات ضمن حدود السيرفر وحذف IDs الدفعة المقبولة فقط | غير مُصلح؛ الاختبار المعزول أثبت 1001 → 1000 مع 200 |
+| A-03 | High | سلامة المراجعات | `sync_backend/src/index.ts:179` + `sync_backend/src/index.ts:103` | إرسال POST باسم أي مراجع دون اعتماد؛ يمكن كتابة/استبدال/حذف ملاحظاته | انتحال وإفساد ملاحظات مراجعة المحتوى | اعتماد للمراجع وربط الاسم به؛ تغيير API يحتاج موافقة | مستني موافقة بعد التقرير؛ مثبت محليًا، GET العام حيًّا 200 |
+| A-04 | High | صحة المزامنة | `rafeeq_app/lib/core/services/sync_service.dart:327` | بدء التطبيق بحساب سابق أو تسجيل الدخول يسحب النسخة القديمة ويكتبها فوق إعدادات الحالة دون مقارنة `updated_at` أو التغييرات المحلية | ضياع تقدم ختمة أو ملاحظات أحدث؛ notifiers المفتوحة تحتفظ بنسخة مختلفة من التخزين | سياسة تعارض وطوابع زمنية محلية وتحديث الحالة التفاعلية بعد السحب | مثبت بقراءة المسار؛ تحقق الجهاز/الحساب مطلوب |
+| A-05 | Medium | حجم المدخلات | `sync_backend/src/index.ts:99` | POST إلى `/review` يتجاوز 2 MiB يُقرأ ويُحلل كاملًا قبل تقصير الملاحظة | استهلاك ذاكرة/CPU غير محدود بحد التطبيق، بعكس التعليق الذي يزعم size cap | حد فعلي لحجم الجسم قبل التحليل، ورفض الزيادة | مثبت بتشغيل Worker المعزول: 2,097,220 B → 200 |
+| A-06 | Medium | تحقق المدخلات | `sync_backend/src/index.ts:236` | قيمة `updated_at` نصية تمر إلى SQLite بلا تحقق؛ عمود INTEGER في SQLite يقبل TEXT | قد يمنع تحديثات عددية لاحقة بسبب ترتيب أنواع SQLite | قبول عدد صحيح آمن ضمن مجال زمني واضح | مثبت بإرسال النص إلى D1 وتجربة SQLite: يخزن TEXT ثم مقارنة timestamp عددي أكبر منه ترجع false |
+| A-07 | Medium | اعتماديات التطوير | `sync_backend/package.json:13` | أدوات Wrangler القديمة تسحب 7 حزم عليها تنبيهات أمنية مثبتة بواسطة npm | أخطار أدوات التطوير حسب الاستعمال؛ ليست برهانًا على استغلال Worker | ترقية مدروسة مع اختبار؛ الإصلاح الذي يقترحه npm ينتقل إلى Wrangler 4 | مستني موافقة على major upgrade |
+| A-08 | Medium | CI | `.github/workflows/ci.yml:23` | تغيير TypeScript أو SQL لا يشغّل npm ci أو tsc أو اختبار backend في CI | خطأ الباك إند يمكن أن يدخل master مع CI أخضر | إضافة مهمة backend وفحوصات سلوك مستقلة | مثبت بقراءة workflow؛ غير مُصلح |
+
+| A-09 | High | التنبيهات | `rafeeq_app/lib/features/khatma/data/khatma_store.dart:42` | إنشاء ختمة ذات ID معين يحسب لها رقمًا من 7000–7899؛ المجال يتداخل مع الصلاة 7100/7200/7300 والأقوال 7500 والتنبيه الأصلي للأذان 7301 | جدولة/إلغاء ختمة قد تستبدل/تلغي تذكيرًا آخر؛ إظهار إشعار إقامة الظهر 7301 يتداخل أيضًا مع إشعار الأذان | مجالات IDs منفصلة وثابتة، مع إلغاء القديم بحذر | غير مُصلح؛ تنفيذ Dart أوجد ثلاثة تصادمات فعلية؛ تشغيل التنبيهات على الجهاز لم يكتمل |
+| A-11 | High | توقيت الأذان | `rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/adhan/AdhanScheduler.kt:63` | ترك التطبيق مغلقًا أيامًا: كل إعادة تسليح تستعمل hour/minute القديمة، لا مواقيت اليوم الجديد؛ تغيير timezone يعيد نفس الساعة القديمة | الأذان يستمر لكن عند توقيت قديم، ويزداد الفرق مع الأيام أو تغيير المنطقة | حساب يومي من الموقع/الطريقة والتعديلات المحفوظة، مع تحقق offline/DST | مثبت بالمسار الأصلي؛ اختبار أيام/هاتف قيد الاستكمال |
+| A-12 | High | الأذان بعد إعادة التشغيل | `rafeeq_app/android/app/src/main/AndroidManifest.xml:219` | إعادة تشغيل هاتف عليه PIN وتركه دون أول unlock: receiver لا يسمع LOCKED_BOOT_COMPLETED، والجدول في credential-protected preferences | لا يعاد تسليح الأذان قبل أول فتح للقفل، رغم directBootAware | استقبال locked boot وحفظ بيانات المنبه الضرورية في device-protected storage | غير مُصلح؛ نقل التخزين يحتاج موافقة على migration؛ جهاز بقفل لم يُختبر |
+| A-13 | High | توافق Android 7 | `rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/DownloadForegroundService.kt:191` | بدء تحميل مصحف على API24/25 يشغّل الخدمة فتُنشئ NotificationChannel وتستعمل Notification.Builder(context, channel) دون SDK guard؛ كلاهما API26 | كراش أصلي في نظام داخل الحد الأدنى المدعوم minSdk24؛ catch في Dart لا يمسك LinkageError في الخدمة | فحص API26 للقناة واستعمال NotificationCompat.Builder | مصدر مؤكد؛ لم يُشغّل على محاكي API24/25 بعد |
+| A-10 | Medium | دورة حياة المزامنة | `rafeeq_app/lib/app/rafeeq_app.dart:75` | تغيير الثيم أو اللغة يعيد build فيستدعي init؛ كل init يضيف listener لحساب Google وآخر للشبكة دون حارس/إلغاء | تراكم listeners وطلبات سحب مكررة ومتسابقة؛ _isSyncing يمنع بعض المعالجة لكنه لا يحرس init/pull | init واحد قابل للانتظار، subscriptions محفوظة وإلغاء عند dispose | غير مُصلح؛ مثبت بقراءة المسارين |
+| A-14 | Medium | حدود الخلفية | `rafeeq_app/android/app/src/main/kotlin/com/tito/rafeeq_aldarb/DownloadForegroundService.kt:38` | تنزيل طويل والتطبيق في الخلفية على Android15+: خدمة dataSync لا تنفذ onTimeout ولا stopSelf عند نهاية ميزانية النظام | عند استنفاد 6 ساعات للخدمات من هذا النوع يرفع Android RemoteServiceException ويقتل العملية | تنفيذ onTimeout وإنهاء الخدمة وتنظيم استكمال التحميل | مصدر مؤكد مع توثيق Android؛ سيناريو timeout على الجهاز لم يُشغّل |
+| A-15 | Medium | بدائل المحتوى | `rafeeq_app/lib/core/config/content_mirrors.dart:44` | تعطل R2 وقت تنزيل حزمة رفيق الأساسية/العربية: mapping يشمل whisper القديم فقط، بينما الملفات الجديدة تحت asr/rafeeq_v1 وasr/rafeeq_ar_v1 | لا يحاول التطبيق GitHub رغم أن ملفات الحزمتين الخمسة هناك رجعت HEAD200 | إضافة prefixes لخريطة التطبيق والنسخ المتطابقة في script/test | غير مُصلح؛ المرايا الخمسة موجودة حيًا لكن غير موصولة |
+| A-16 | Medium | DST والتذكيرات | `rafeeq_app/lib/core/services/prayer_reminder_service.dart:206` | تسليح تذكير 08:00 بعد فواته ليلة بداية الصيفي في London: +24 ساعة ينتج غدًا09:00؛ المنطق نفسه في الختمة/الأذكار/السنن/رف/تسبيح | التذكير يتأخر ساعة؛ توليد يوم الغد بآخر الليل قد يتخطى تاريخ الغد بالكامل | بناء تاريخ اليوم التالي بالحقول التقويمية، لا مدة 24 ساعة | مثبت بتنفيذ حزمة timezone المقفولة: 2026-03-28 08:00 → 2026-03-29 09:00 |
+| A-17 | Medium | اعتماد Google | `sync_backend/src/index.ts:16` | كل طلب مزامنة يطلب tokeninfo البعيد؛ مشكلة Google/التقييد تحولها الخدمة إلى401 كأن اعتماد المستخدم خاطئ | طلب Google لكل GET/POST وتأثر المزامنة بتوفر endpoint المخصص للتشخيص | JWT verification محلي مع JWKS cache والتحقق iss/aud/exp | B2 القديم ما زال مفتوحًا؛ لا API change لازم للحل الداخلي |
+| A-18 | Medium | تحديد المعدّل | `sync_backend/src/index.ts:163` | إرسال طلبات /review دون اعتماد بالمعدل الذي يسمح به الزائر: كل طلب يبدأ D1 work، ولا limiter في Worker | إساءة استخدام D1 وزيادة التكلفة/الأحمال؛ لا يوجد برهان على إعدادات Cloudflare الخارجية | تحديد المعدل داخل Worker أو قاعدة Cloudflare موثقة | B3 القديم مفتوح في الكود؛ إعداد خارجي محتاج تأكيد |
+| A-19 | Medium | المزامنة عند الدخول | `rafeeq_app/lib/core/services/sync_service.dart:101` | وجود أحداث محلية أثناء تسجيل الخروج ثم الدخول مع شبكة مستقرة: listener يشغل GET فقط، ولا يدفع الطابور | الطابور ينتظر تغيير الاتصال أو كتابة محلية أخرى؛ الحساب الآخر لا يرى التقدم في هذه الفترة | بدء معالجة الطابور عند توفر الحساب بعد initialization | مثبت بالمسار؛ اختبار الحساب لم يُشغّل |
+| A-20 | Low | أداة الأوديت | `scripts/db_type_audit.py:45` | تشغيل db_type_audit اليوم يلتقط المثال as int داخل تعليق يصف البج القديم | exit1 وادعاء كراش في chapter_no رغم أن الكود الحي يقرأ as num? بالفعل | تجاهل التعليقات عند استخراج casts، واختبار المثال التاريخي والـcast الحقيقي | false positive مؤكد؛ سجل الاختبار محفوظ، ليس كراشًا في التطبيق |
+| A-21 | Medium | إلغاء الصوت | `rafeeq_app/lib/core/services/ayah_audio_service.dart:195` + `:277` | إيقاف قائمة أثناء انتظار عملية تحميل، ثم بدء قائمة جديدة: stopQueue يعيد token إلى0، فتأخذ القائمة الجديدة نفس token1 الذي تحمله القديمة | القائمة الملغاة تظهر انتظار الآية القديمة وتعيد محاولتها بعد20ث؛ احتمال تبديل صوت القائمة الجديدة يحتاج تجربة تشغيل إضافية ولا ندّعي سماعه | رقم جيل يزداد دائمًا، مع فصل حالة active عن رقم الجيل والتحقق بعد تحميل المصدر | مثبت باختبار على الخدمة الفعلية؛ الاعتماد/المنصة بدائل اختبار، لا اختبار صوت على الهاتف |
+
+| A-22 | Medium | تباين النص | `rafeeq_app/lib/core/theme/app_theme.dart:176` + `:187` | الوضع الفاتح: زر الإلغاء في `reader_name_sheet.dart:151` وأزرار الانتقال في `mushaf_nav_sheets.dart:221` يرثان primarySoft على خلفية بيضاء | نسبة التباين الفعلية 3.28067:1 للنص 14/15px، دون 4.5:1؛ يصعب قراءة الأزرار خصوصًا مع ضعف البصر | لون نص أغمق يحافظ على اللون المميز ويحقق النسبة، مع قياس الوضعين | مثبت بقياس RenderParagraph الناتج من AppTheme الحقيقي؛ لا يشمل الأزرار التي تستبدل اللون صراحة |
+
+| A-23 | Medium | وصولية التمرير | `rafeeq_app/lib/core/widgets/arrow_scrollbar.dart:310` | التمرير في قائمة طويلة يظهر سهام السكة المشتركة؛ كل سهم GestureDetector بعرض22 وارتفاع26 دون اسم دلالي | مساحة لمس صغيرة، وقارئ الشاشة يجد فعل tap بلا اسم يوضح أعلى/أسفل | إبقاء الرسم رفيعًا مع توسيع هدف اللمس وتسميات مترجمة واتجاهات تفعيل واضحة | قياس widget وSemantics الفعليين أكد 22×26 وlabel فارغ؛ تجربة TalkBack على هاتف لم تكتمل |
+
+| A-24 | Medium | حفظ اختيار الترجمة | `rafeeq_app/lib/features/quran/data/translation_lang_provider.dart:30` | اختيار التركية tr من القائمة ثم إعادة فتح التطبيق بنفس لغة الواجهة؛ select يحفظها لكن restore لا يقبل إلا الست لغات المدمجة | يرجع العرض إلى الإنجليزية رغم أن التركية ما زالت محفوظة ومنزّلة؛ يشمل اللغات غير المدمجة | التحقق من الاختيار ضد الكتالوج الكامل، مع احترام متابعة تغيير لغة الواجهة | مثبت على notifier الحقيقي: disk=tr، reopened=en، followedLocale=en؛ لم نغير ترجمة أو نصًا |
+
+| A-25 | Medium | مؤشر الانتقال | `rafeeq_app/lib/features/quran/presentation/widgets/mushaf/fast_page_scroll_bar.dart:92` + `:95` | لمسة واحدة للشريط تحدّث _dragFraction؛ الإفلات يمسحها فقط عند نهاية سحب، وليس نهاية اللمسة. تغيير الصفحة لاحقًا لا يحدّث المؤشر | المؤشر يعرض موضعًا قديمًا رغم تغيّر الصفحة بالتمرير/البحث/التلاوة | إنهاء الحالة المؤقتة عند انتهاء اللمس أو إلغائه، مع إبقاء متابعة السحب | مثبت على widget الحقيقي: الصفحة182 ثم604، المؤشر120px في المرتين بدل387px عند النهاية |
+
+| A-26 | Medium | دورة حياة القارئ | `rafeeq_app/lib/features/quran/presentation/widgets/mushaf_text_page.dart:419` + `mushaf_page_view.dart:195` | تكبير الصفحة ثم مغادرة القارئ؛ dispose يؤجل ref.read إلى post-frame بعد التخلص من ConsumerState | استثناء Bad state، وحالة الزوم تظل true؛ PageView يستخدمها لمنع تقليب الصفحات عند العودة | حفظ مرجع notifier صالح قبل dispose وإدارة تصفير الحالة دون استخدام ref الميت، والتحقق من خروج الصفحة المكبّرة في الوضعين | مثبت على الصفحة النصية الحقيقية: Cannot use ref after the widget was disposed، zoom=true؛ مسار الورقي مماثل ويحتاج تجربة إضافية |
+
+دليل التخلص من الصفحة: `zoom_disposal_audit_test.dart` و`zoom-disposal.log`؛ نص الاختبار من fixture القرآن القائمة، لا كتابة أو تعديل في النص الديني.
+
+دليل المؤشر: `page_scrubber_tap_audit_test.dart` و`page-scrubber-tap.log`؛ انتقال الصفحة صحيح، العيب في موضع المؤشر المرئي.
+
+دليل الاختيار: `translation_restore_audit_test.dart` و`translation-restore.log`. القائمة الحقيقية تستدعي select(v) في `translation_tab.dart:131`، والكتالوج الحقيقي يتضمن tr غير مدمجة؛ الاختبار يحاكي إعادة إنشاء حالة التطبيق مع SharedPreferences بديل اختبار.
+
+امتداد A-22: قياس المكونات الحقيقية أكد أيضًا عنوان مصدر التفسير/الترجمة الذهبي في `sciences_common.dart:115` عند 14px بنسبة **2.10282:1**، وعنوان خيار شريط القرآن النشط في `toolbar_action.dart:158` عند10px بنسبة **1.90783:1** على خلفيته المركبة الفعلية. نفس اختبار التباين وسجله يحملان هذه القياسات؛ الحل يحتاج اختيار لون نص ملائم للوضع الفاتح في هذه المواضع أيضًا.
+
+دليل سهام التمرير: `scrollbar_accessibility_audit_test.dart` و`scrollbar-accessibility.log`؛ القياس يشمل مستطيل عقدة Semantics، وليس حجم الأيقونة فقط. [توصية Android لمساحة الضغط 48dp على الأقل](https://support.google.com/accessibility/android/answer/7101858?hl=en-GB). هذه توصية Android؛ لا ندّعي أن معيار WCAG 2.1 يفرض المقاس نفسه لكل عنصر.
+
+دليل التباين: `light_action_contrast_audit_test.dart` و`light-action-contrast.log`. القياس للألوان الفعلية قبل تنعيم الحواف؛ النص بهذه الأحجام لا يدخل استثناء النص الكبير. [مرجع W3C للحد الأدنى للتباين](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html).
+
+دليل الاختبار المعزول: `backend-reproduction.json` يشغّل نفس ملف Worker بعد transpile، مع بدائل اختبار صريحة لـGoogle وD1. لا كتابة على الإنتاج، ولا ندّعي تحقق اعتماد Google الحقيقي بهذا الاختبار.
+
+دليل الأسرار: `credential-check.json` لا يحمل قيم الأسرار. فحص الشجرة المتتبعة الحالية لم يجد القيم، لكن المقارنة بالقيمة مع commits التسريب وجدت الاثنين في كل commit. اكتمل فحص 12,216 blob نصيًا يمكن الوصول إليها من refs المحلية: 28 موضعًا مطابقًا. `credential-history.json` يحدد الملفات والسطور. نطاقه مطابقة قيم R2 الحالية، لا يثبت غياب أي سر آخر مختلف. `credential-live-readonly.json` يثبت طلب قراءة معتمد 200، بدون حفظ أسماء كائنات أو قيم الأسرار.
+
+
+| A-27 | Medium | معاينة الأذان بعد إغلاق الكارت | `rafeeq_app/lib/features/home/presentation/widgets/prayer_slides.dart:273` + `:292` + `:301` | بدء المعاينة ثم إزالة الكارت قبل اكتمال رد Native؛ dispose يرى _previewing=false فلا يوقف الصوت، والرد اللاحق يرجع عند !mounted دون Stop | المعاينة تستمر بلا تحكم ظاهر حتى انتهاء التسجيل أو مغادرة التطبيق؛ guard يتابع lifecycle للتطبيق لا قفل الكارت | تتبع عملية البدء وتحرير المعاينة عند إغلاق مالكها، مع تجنب إيقاف أذان حقيقي أو معاينة أحدث | اختبار widget الفعلي وقناة Native مؤجلة: calls=[preview] وplaying=true بعد الإزالة؛ سماع Android فعليًا محتاج تأكيد |
+
+| A-28 | Medium | بيانات طبعة الكتاب | `rafeeq_app/lib/features/library/data/book_catalog.dart:5382`؛ `book_provenance_strip.dart:70`؛ `book_text_reader_screen.dart:405` | فتح غذاء الألباب ثم عرض مصدره؛ sourceLabel مجرد «المكتبة الشاملة — » والواجهة لا تستعمل editionCard | لا يستطيع القارئ تحديد الطبعة من نافذة المصدر رغم توفرها في ملف الكتاب؛ يخالف شرط نسبة النسخة §1.2 | استعادة الناشر/الطبعة من البطاقة الموثقة؛ تصحيح البيانات يحتاج موافقة المالك في المرحلة2 | اختبار widget فعلي نجح؛ meta محفوظ، وبطاقة الشاملة الحالية طابقت الناشر مؤسسة قرطبة والطبعة الثانية1414هـ/1993م |
+
+| A-29 | Medium | تنزيل الكتب / حالة الواجهة | `rafeeq_app/lib/features/library/presentation/widgets/book_card.dart:37`؛ `library_api_service.dart:177`؛ `books_tab.dart:120` | تنزيل كتاب عبر خدمة المكتبة؛ الحالة bookDownloads=0.5 بينما البطاقة تبحث عن task في DownloadManager | لا تقدم أو زر إلغاء، وزر تحميل يقبل ضغطة أخرى؛ صف الكتب المحلي يضيف تنزيلًا مكررًا | ربط البطاقة بحالة خدمة المكتبة ومنع طلب مكرر وإلغاء الطلب الفعلي؛ إصلاح محلي بعد انتهاء المرحلة1 | اختبار البطاقة الفعلية نجح: progress hidden/cancel absent/enabled duplicate callback؛ لم ندّع تشغيل نقلين حقيقيين أو قياس استهلاكهما |
+
+| A-30 | Medium | عمر البطاقة / نطق النص | `rafeeq_app/lib/features/library/presentation/widgets/listen_text_button.dart:103`؛ `:110`؛ `:112` | اضغط استماع، أغلق البطاقة قبل رد isLanguageAvailable، ثم يعود true | يبدأ طلب نطق بعد dispose رغم وعد التوقف عند الإغلاق، ولا يوجد زر إيقاف للبطاقة المغلقة | فحص mounted وهوية العملية بعد كل انتظار وقبل speak؛ إبطال العملية في dispose/stop؛ إصلاح محلي | اختبار widget+BookSpeaker+FlutterTts الفعلي نجح برد منصة مؤجل: stop ثم setLanguage/getVoices/setSpeechRate/awaitSpeakCompletion/speak بعد الإغلاق؛ الصوت المسموع على الهاتف محتاج تأكيد |
+
+| A-31 | Medium | إلغاء تنزيل التلاوة / استهلاك البيانات | `rafeeq_app/lib/features/quran_audio/data/quran_audio_library.dart:333`؛ `:335`؛ `:451`؛ `:462`؛ زر الإلغاء `presentation/reciter_screen.dart:329` | تنزيل سورة يفشل على آخر مصدر، ثم المستخدم يلغي قبل مرور دقيقة | المؤقت يعيد طلب تنزيل السورة الملغاة رغم أن pending فارغة؛ وقد يستهلك بيانات خلاف طلب الإلغاء | فحص pending وهوية المحاولة داخل المؤقت، وإبطال المحاولات المؤجلة عند الإلغاء/الحذف؛ إصلاح محلي | مثبت باختبار الخدمة الفعلية ومؤقت 60 ثانية: إلغاء qa_987654_1 ثم enqueue مرة ثانية وpending فارغة؛ قناة Android والتخزين التجريبي فقط مستبدلان، لم يحدث تنزيل شبكة فعلي |
+
+| A-32 | Low | اختيار القصة في المساعد | `rafeeq_app/lib/features/assistant/data/assistant_intent.dart:568`؛ `assistant_screen.dart:69`؛ `:72`؛ `assistant_lexicon.dart:437`؛ `:440` | طلب «افتح قصة إبراهيم والطيور» أو «افتح قصة سليمان والهدهد» | يختار القصة العامة لإبراهيم أو سليمان رغم وجود عبارة مطابقة للقصة المحددة | ترجيح أطول عبارة مطابقة في القصص بدل أول قصة؛ إصلاح محلي لا يغير مادة القصة | مثبت بالمحلل الفعلي، أسماء السور الحقيقية وترجمات اللغات السبع؛ لم يتطلب تعرفًا صوتيًا أو تغيير نص ديني |
+
+| A-33 | Medium | إغلاق التسميع أثناء طلب الإذن | `rafeeq_app/lib/features/hifz/presentation/widgets/tasmee_panel.dart:138`؛ `:187`؛ `:189`؛ `:190`؛ `:340` | الضغط على بدء التسميع، إغلاق الشاشة أثناء انتظار رد إذن الميكروفون، ثم رفض الإذن | تبقى tasmeeRecordingProvider=true رغم عدم بدء التسجيل؛ تعطّل زر الاستماع في جلسة الحفظ وتمنع المساعد من فتح ميكروفونه ما دامت الحالة باقية | مرحلة starting وهوية عملية وإلغاء/تنظيف دائم للحالة عند الخروج أو الفشل؛ إصلاح محلي | مثبت بلوحة TasmeePanel ومزوّد Riverpod الفعليين مع رد إذن مؤجل؛ لا تسجيل ميكروفون فعلي في الاختبار |
+
+| A-34 | Medium | فتح المقولة المختارة | `rafeeq_app/lib/features/quotes/presentation/widgets/home_quote_card.dart:192`؛ `:196`؛ `quote_repository.dart:102` | التنقل إلى المقولة الثانية أو التالية في الكارت المصغر ثم الضغط عليها | تفتح الشاشة الكبيرة المقولة الأولى؛ indexOf لا يجد كائن Quote لأن المكتبة تنشئ كائنًا جديدًا لكل قراءة، ثم clamp يحول -1 إلى 0 | تمرير فهرس الاختيار المطابق للقائمة أو مفتاح ثابت؛ إصلاح محلي دون تعديل النصوص | مثبت بالكارت الحقيقي والبيانات المضمنة: الضغط على الصفحة 1 فتح initialIndex=0 بينما quotes[1] تطابق النص المضغوط |
+
+| A-35 | Medium | إغلاق فيديو القصة أثناء بدء التشغيل | `rafeeq_app/lib/features/kids/presentation/kids_story_player_screen.dart:108`؛ `:109`؛ `:110`؛ `:111`؛ `:227` | فيديو تمت تهيئته، الشاشة أغلقت أثناء انتظار رد play ثم اكتمل الرد | لا يُغلق المشغّل لأنه لم يُحفظ في _c بعد؛ يتفعّل wakelock بعد أن ألغاه dispose، ويُستدعى setState بعد إغلاق الشاشة | امتلاك المشغّل منذ إنشائه وإبطال عملية الفتح وتنظيفها بعد كل await وعند الخروج؛ إصلاح محلي | مثبت بشاشة القصة وVideoPlayerController الفعليين مع منصة فيديو مؤجلة: wakelock=[false,true]؛ disposed=false؛ خطأ setState بعد dispose. استمرار الصوت/الشاشة على هاتف محتاج تأكيد |
+
+| A-36 | Medium | عمر صفحة الإعدادات داخل المزيد | `rafeeq_app/lib/features/more/presentation/widgets/more_group.dart:58`؛ `:61`؛ `:120`؛ `settings/presentation/screens/settings_screen.dart:570`؛ `:595`؛ `:198`؛ تركيب الشاشة `more_screen.dart:312` | افتح مجموعة الإعدادات ثم قسم شاشة البداية وانتظر أكثر من 450ms قبل الضغط على المفتاح | المجموعة تُزيل SettingsBody وCollapsibleSection بينما الصفحة المفتوحة تستخدم عناصرهما؛ callbacks تستعمل ref بعد dispose فتفشل، ومزوّد عناصر الصفحة يُغلق فتتوقف تحديثاتها | امتلاك صفحة الإعدادات لحالتها ومزوّدها طوال عمرها، أو إبقاء منشئ العناصر حيًا حتى الرجوع مع حفظ سلوك طي المجموعة؛ إصلاح محلي بعد انتهاء المرحلة1 | اختبار MoreGroup وCollapsibleSection والمزوّد الدائم الفعليين نجح في حالتين: داخل المجموعة خطأ Cannot use ref after dispose ولا حفظ؛ خارجها حفظ صحيح ومفتاح ظاهر قديم. تركيب Consumer يحاكي موضع SettingsBody؛ لم يُختبر الهاتف بعد |
+
+| A-37 | High | اكتمال السورة في القارئ المحدود | `rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart:244`؛ `:245`؛ `:246`؛ `:323`؛ `:462` | افتح الملك من سنن السور، أو مريم/الرحمن/الواقعة/ق من السور المختارة ثم اقرأ حتى نهاية القارئ | حساب نهاية السورة بصفحة بداية التالية ناقص1 يحذف الصفحة المشتركة: الملك27–30؛ مريم96–98؛ الرحمن68–78؛ الواقعة77–96؛ ق36–45. مجموع48 آية لا يمكن الوصول إليها في5 من10 مسارات السور | استعمال surahEndPages المشتقة من MAX(page_number) للسورة نفسها مع فحص بداية/نهاية؛ الإبقاء على ترشيح الآيات للسورة في الوضع النصي. إصلاح حدود عرض محلي دون تعديل النص القرآني | مثبت بقاعدة quran_local.db الحقيقية واختبار SingleSurahScreen الفعلي: الملك يبدأ562 وينتهي564 لكن PageView يعرض صفحتين562–563. المتن لم يُعدل؛ المطابقة البصرية للطبعة وعلى الهاتف ما زالت مطلوبة |
+
+## حالة كل نتيجة في الأوديتين السابقين (المراجعة الحالية)
+
+| التاريخ / ID | الحالة | الدليل الحالي |
+|---|---|---|
+| 09-24 / S1 | Still open | A-01؛ نفس القيم نشطة في طلب قراءة الآن |
+| 09-24 / D1 | Fixed `dc271f8f` | signOut يمسح نطاق synced keys فقط؛ كود الخدمة مقروء |
+| 09-24 / B1 | Fixed `f218642d`، مع أثر جانبي جديد | caps موجودة؛ A-02 يفقد ما بعد الحد بسبب تعامل العميل مع200 |
+| 09-24 / B2 | Still open | `sync_backend/src/index.ts:16`؛ A-17 |
+| 09-24 / B3 | Still open | `sync_backend/src/index.ts:165`؛ A-18؛ قواعد Cloudflare الخارجية غير مفحوصة |
+| 09-24 / B4 | Still open | `sync_backend/src/index.ts:103`؛ A-03 |
+| 09-24 / B5 | Fixed `f218642d` | reviewTableReady يحرس إنشاء الجدول مرة لكل isolate؛ سباق أول طلبين لم يُختبر |
+| 09-24 / I1 | Still open، مؤجل بقرار المالك | `rafeeq_app/lib/core/config/app_config.dart` contentBaseUrl ما زال r2.dev؛ المرايا موجودة لكن لا تعطي caching لـR2 |
+| 09-24 / C1 | Fixed `ff2fab92` | ContentMirrors.of يضيف R2/GitHub لصور Unsplash قبل المصدر |
+| 09-24 / DB1 | No longer relevant كبج حالي | لا schema جديدة هنا؛ ضرورة migration عند أول تغيير قائمة، ولا نفترض كسرًا بدون تغيير |
+| 09-24 / DB2 | No longer relevant كطلب إصلاح | كانت نتيجة سلامة؛ census الحالي `db-census.json` يسجل indexes وquick_check؛ تكلفة queries لم تكتمل |
+| 09-24 / AR1 | Still open، استثناء مُوثق | test/code_layout_test.dart يحرس7 ملفات grandfathered؛ بقية الملفات تنجح؛ استخراج controllers دين تقني |
+| 09-24 / AR2 | Still open | `rafeeq_app/lib/features/library/data/book_catalog.dart:1`؛ 5663 سطر بيانات289كتابًا |
+| 09-24 / AR3 | No longer relevant كطلب إصلاح | النمطان مقبولان أصلًا، ليست نتيجة كسر |
+| 09-24 / P1 | No longer relevant للأرقام القديمة | ثلاث بدايات حالية على المحاكي1.694/1.462/1.412ث؛ قياس الهاتف مطلوب قبل قرار تحسين |
+| 09-24 / P2 | No longer relevant للحجم القديم | APK الحالي في audit-build أكبر؛ تحليل zip الحالي قيد الاستكمال؛ المعماريات الثلاث مقصودة |
+| 09-24 / A1 | Still open، sweep لم يكتمل | لازم إعادة قياس الأزرار المحددة وfont scaling؛ لا ادعاء أنها اتصلحت |
+| 09-27 / stages1–6 | Fixed `1a31331e`, `7cd000ce`, `0973c03a`, `895349ae`, `4511141b`, `7919c6da` | layout/layering/lints/dead-code/CI موثقة واختباراتها نجحت اليوم؛ CI backend ناقص A-08 |
+| 09-27 / A1 | Fixed `cfb36fa3` | pcm16ToFloat + test envelope نجح اليوم؛ صوت حقيقي على هاتف لم يُختبر في الأوديت الحالي |
+| 09-27 / A2 | Fixed `7919c6da` | live tag skipped؛4skipped في suite الحالي |
+| 09-27 / A3 | Fixed `7919c6da` | book_speaker_focus ضمن776pass |
+| 09-27 / A4 | Fixed `4511141b` | CI fetch موجود وروابط الحزم الحالية200؛ hash verification في CI غير موجود |
+| 09-27 / A5 | Fixed `0973c03a` | analyze/build اليوم نجحا؛ nullable banner closure مقصود |
+| 09-27 / A6 | No longer relevant كبج حالي | defaults مقبولة عند نفس الاعتماد؛ إعادة التحقق عند ترقية sherpa مطلوبة |
+| 09-27 / A7 | No longer relevant كبج التطبيق | المحاكي الحالي بدأ مع audio واستمر؛ الـno-audio قيد بيئة معروف |
+
+## نطاق المراجعة
+
+الحصر الأولي: **563 ملفًا / 125,820 سطرًا**، منها **502 ملفًا في lib**. القائمة مع عدد السطور وبصمة كل ملف وحالة مراجعته في `review-checklist.json`. لا تُعد فحوصات الأنماط وحدها مراجعة سطرية.
+
+فحص endpoints الأساسي اكتمل: **1266 طلب HEAD، صفر فشل**، مع فحص Content-Type ضد soft-404 HTML. يشمل 289 كتابًا، أول وآخر سورة متاحة لكل مصحف صوتي في الكتالوج، أول وآخر آية لـ35 قارئًا، 28 فيديو قصة وصورها، 14 تسجيل أذكار كاملًا، 195 URL فريدًا للأذكار الفردية، 45 ترجمة وملفات الحزم بما فيها التسميع وقارئ الكتب. هذا فحص توفر، وليس إثباتًا لصحة النص أو كامل الملفات أو hash. المرايا:1039طلبًا،1038نجحوا أول مرة وواحد500 عابر؛ إعادة HEAD للكتاب al_ikhwan رجعت200/31448B. حزم الصوت الجديدة على GitHub200، لكن التطبيق لا يحاولها A-15. snapshot القائمة الحية فيه23مجموعة آيات و284مصحفًا صوتيًا مكتملًا.
+
+اكتملت مقارنة المحتوى الكامل لـ**343 زوجًا** بين المصدر والمرآة: 289 كتابًا، 45 ترجمة، 7 حزم HadeethEnc، وحزمتا الحديث والعلوم. البصمات SHA256 بعد فك gzip متطابقة في الجميع، ولا إخفاقات؛ الكتب وحدها 192,634,418 بايت من المصدر. جميع الترجمات تحمل مراجع الآيات الـ6236 الصحيحة دون مراجع مفقودة أو زائدة أو نصوص فارغة، والحزم المضغوطة اجتازت CRC لكل مدخل. الأدلة `content-full-comparison.jsonl` و`content-full-comparison-summary.json`، والأداة `rafeeq_audit_content.py`. هذا يثبت اكتمال البنية وتطابق النسخ، لا صحة المعنى الديني؛ بقية ملفات الصوت والفيديو المذكورة أعلاه لم تخضع بعد لمقارنة كاملة بالبصمة.
+
+براهين جديدة قيد استكمال التقرير:
+
+- `notification-id-collisions.json`: تنفيذ معادلة Dart الحقيقية أوجد IDs ختمة تصطدم بـ7100 و7200 للصلاة و7500 للأقوال. لم نغير تنبيهات الجهاز.
+- `RafeeqApp.build` يستدعي `SyncService.init` مع كل rebuild؛ init يضيف listeners بدون حارس أو إلغاء. مراجعة السلوك والاختبارات مستمرة.
+- المحاكي emulator-5554 يعمل بالنسخة الأصلية الموقعة 3.87.0+102، وليس APK الأوديت الموقّع debug. شوهدت الرئيسية في Urdu/light دون overflow ظاهر؛ لقطة `home.png`. قياس واحد: PSS 145385 KB. اختبارات بقية الشاشات واللغات لم تكتمل.
+
+## الخطوة التالية
+
+استكمال المراجعة السطرية (129/563 ملفًا مكتملًا حاليًا)، وتجارب اللغات/الثيم/الخط والصوت والجهاز، ومقارنة المحتوى والـhash. سجلّا HANDOVER وTASK_FOLLOWUP قُرئا كاملين؛ المرايا والتاريخ ومسح APK والقياسات الأساسية محفوظة. لا تبدأ الإصلاحات قبل اكتمال التقرير.
+
+`queue_cancellation_audit_test.dart` يستورد خدمة الصوت الحقيقية؛ repository مؤجل عمدًا وقنوات المنصة بدائل اختبار. أثبت أن القائمة الملغاة للآية1:1 تظهر رسالة انتظار بعدما بدأت1:2، ثم تعيد محاولة1:1 بعد مؤقت الاسترداد الحقيقي20ث. الاختبار نجح؛ `queue-cancellation.log`. لا يثبت هذا الاختبار سماع تسجيل خاطئ على هاتف.
+
+## ملاحظات تتطلب استكمالًا، ولا تُعد نتائج مؤكدة بعد
+
+- HadeethEncDetail ينسب الدرجة للموسوعة، لكنه يصرح بعدم اسم عالم لكل حديث (`hadeethenc_detail_screen.dart:19`). نص §1.2 يطلب عالمًا وطبعة. HANDOVER كاملًا اتقرأ: سجل09-10 يوثّق تعمد النسبة المؤسسية وإظهار المراجع وعدم اختراع عالم. توافق القرار مع شرط العالم/الطبعة الحالي محتاج حسم، ولا تعديل ديني دون موافقة المالك.
+- contrast لاسم القارئ في light، وتجربة UI في dark/font scaling/RTL، وبقية الشاشات ما زالت قيد القياس.
+- download completion بعد قتل العملية، وإعادة resumeFailed وتسجيل الملفات المتزامن: follow-through إلى consumers/package source لم يكتمل؛ لا نسميها bugs حتى يتثبت السيناريو.
+
+## مصادر نظام Android (مستخدمة لتدقيق السلوك، لا تغني عن الهاتف)
+
+- [Direct Boot والتخزين قبل unlock](https://developer.android.com/privacy-and-security/direct-boot): locked boot يحتاج receiver مسجل وdevice-encrypted storage.
+- [مهلة foreground dataSync](https://developer.android.com/develop/background-work/services/fgs/timeout): حد6ساعات بالخلفية، وonTimeout يلزم stopSelf.
+- [Google backend authentication](https://developers.google.com/identity/sign-in/web/backend-auth): tokeninfo للتطوير/التشخيص؛ التحقق الإنتاجي من توقيعJWT ومفاتيحGoogle.
+
+## تحليل APK — قياس فعلي
+
+حجم audit APK: **315,956,036 بايت**. تفاصيل المجموعات وأكبر35entry والبصمة في `apk-census-and-secrets.json`. فُكّت كل ZIP entry وفُحصت بقيم مفاتيح/توكنات ملف البيئة المحلي مع أنماط private-key وGitHub وAWS: **صفر تطابق**. النتيجة محدودة بهذا النطاق؛ المفتاح التاريخي النشط A-01 باقٍ. ملف `mirror-retries.json` يوثّق500العابر ثم200/31448بايت بدون headers حساسة.
+
+## مسح أسرار إضافي في التاريخ
+
+`generic-history-secrets.json`: **12,357 blob / 1,110,382,443 بايت** ضمن امتدادات المصدر/الإعدادات/المستندات المسجلة. الفحص بكل قيم key/token/secret الحالية في البيئة مع أنماط private-key وGitHub وAWS أعاد28موضعًا لمفاتيحR2 ومفتاحPEMواحدًا من Miniflare في node_modules القديم. الشهادة ثابتة ذاتية التوقيع باسمCloudflare/Workers، والملف مش tracked حاليًا؛ `generic-history-triage.json` يسجل سبب استبعادها كسر خاص بالمالك. ده مسح محدد النطاق، ولا يثبت غياب كل تنسيقات الأسرار أو الملفات الثنائية.
+
+نقطة مراجعة المصحف: تمت قراءة 239 من563 ملفًا سطرًا بسطر حتى لوحة إعدادات عرض المصحف. A-25 مثبت بتجربة اللمس؛ بقية المراجعة والفحص على الأجهزة ما زالت جارية.
+
+اكتملت القراءة السطرية لجزء القرآن وبداية الأذان المستقلة؛ إجمالي252/563. مرشح إضافي غير مؤكد: إدخال رقم الصفحة بأرقام عربية/فارسية لا يحوله int.tryParse في صفحة الانتقال؛ تجربة widget مطلوبة قبل تسجيله كعيب.
+
+نقطة مراجعة الأذان: تمت قراءة كل ملفات الميزة كاملة؛ إجمالي273/563. الحالات المرشحة في سجل الملفات ليست نتائج مؤكدة؛ التجارب العملية للصوت والأذونات والتشغيل بعد Doze/reboot مطلوبة لاستكمال المرحلة الأولى.
+
+المراجعة السطرية الحالية:279/563؛ انتهى data في Home، وبقيت واجهاته وبقية الميزات. لا توجد دفعة قراءة غير مؤكدة عند هذه النقطة.
+
+نقطة مراجعة Home: **292/563 ملفًا مكتملًا**؛ انتهت قراءة كل ملفات Home. `prayer_preview_disposal_audit_test.dart` مع `prayer-preview-disposal.log` يثبتان A-27 على widget وخدمة Dart الفعليين ببديل اختبار لقناة Native؛ لا ادعاء بسماع Android. باقي مرشحات منتصف الليل/الخط/الأرقام تحتاج إثباتًا. الكود والإصدار لم يتغيرا.
+
+اكتملت القراءة السطرية للكتالوج5663سطرًا والفئات وشريط المصدر؛ الإجمالي**295/563**. A-28 مثبت بالكتالوج/widget وبطاقة الملف الكامل `ghidha-provenance-payload.json`. [بطاقة الشاملة](https://shamela.ws/book/25791) تذكر مؤسسة قرطبة بمصر، الثانية1414هـ/1993م، وتطابق البطاقة داخل الملف؛ الشريط ونافذة المصدر يقرآن sourceLabel الناقص. إثبات العرض `book_provenance_audit_test.dart` و`book-provenance.log`. بقية الكتب ذات labels المختصرة تحتاج تتبعًا منفصلًا، ولا نعمم العيب عليها بدون إثبات.
+
+تحديث 2026-10-10 01:52 دبي: اكتملت القراءة السطرية لخدمات وبيانات المكتبة المذكورة في سجل المتابعة، وتبويب مكتبتي؛ الإجمالي **312/563**. حلقة اليوم التالي في shelf_calendar.dart:35 تشترك في نمط A-16. ملكية إلغاء الصوت/تحميل ONNX واستعادة الرفوف غير مثبتة بعد؛ لا نتائج جديدة بدون إعادة إنتاج.
+
+تحديث 2026-10-10 01:57 دبي: **335/563** ملفًا مكتمل القراءة السطرية؛ شاشات المكتبة والحديث والتبويبات وخدمات الصوت مكتملة، وبقية widgets المكتبة تالية. A-29 مثبت بحالة خدمة التنزيل الفعلية وبطاقة BookCard الفعلية؛ `book_download_card_audit_test.dart` و`book-download-card.log`. محاولة التشغيل الأولى أخفقت بسبب مسار ملف الاختبار، وصححنا المسار وأعدنا التشغيل بنجاح. تحذيرات الترجمة ناتجة عن loader الاختبار المختصر. مرشحات مقتطف البحث/نتائج قديمة/استعادة الكتب المستوردة/الحركة المخفضة لم تصبح نتائج مؤكدة.
+
+تحديث 2026-10-10 01:59 دبي: جميع ملفات المكتبة اكتملت قراءتها السطرية، وبيانات الأذكار بما فيها خريطة133قسمًا والإعدادات وكتالوج التسبيح؛ الإجمالي **342/563**. قراءة ListenTextButton أظهرت مرشح بدء صوت بعد إغلاق البطاقة عند تأخر رد available؛ تاليًا إثبات platform-controlled. المتبقي من المصدر محفوظ في checklist؛ لا نعتبر المرحلة1 منتهية. الحصة الحالية28٪/20٪.
+
+تحديث 2026-10-10 02:01 دبي: **344/563**؛ A-30 مثبت باختبار `listen_disposal_audit_test.dart` وسجل `listen-disposal.log`. النص التجريبي لغوي مختصر، ولا تغييرات في أي محتوى ديني. تمت القراءة الكاملة لشاشة تسجيلات الصباح/المساء وشاشة فئات الأذكار. تشغيل التسجيل في الخلفية مقصود، بينما وعد ListenTextButton هو التوقف عند إغلاق البطاقة.
+
+تحديث 2026-10-10 02:05 دبي: القراءة المصدرية **348/563**. Azkar entire feature fully source reviewed, including section/settings/mathur/tasbeeh screens. Mutable index in delayed auto-advance is a candidate pending actual proof; religious content untouched. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:06 دبي: القراءة المصدرية **357/563**. Downloads entire feature source review complete; direct Dio book progress seen in active panel. Preview fixed-height landscape/font scaling and delete-after-dispose candidates remain unverified. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:07 دبي: القراءة المصدرية **364/563**. Quran audio four data files plus player/library/size files reviewed; source364/563. Delayed canceled-download retry and stale playback recovery remain candidates, not verified findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:13 دبي: القراءة المصدرية **373/563**. Entire quran_audio source review complete. Delayed canceled-surah retry strong source candidate; actual proof currently FAILED during ensureReady initialization timeout (not a confirmed app defect). Proof outside app/test uses Android channel and injected plugin storage; no network or app/backend edits. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:14 دبي: القراءة المصدرية **377/563**. Quran audio entire feature reviewed; assistant ayah/destination/detail/distance reviewed. Pending retry proof corrected from fake-widget clock to real timer; running actual60-second test, no confirmed result yet. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+**إثبات A-31:** `surah_cancel_retry_audit_test.dart` و`surah-cancel-retry.log` نجحا في 61 ثانية. الاختبار مرر فشلًا عبر stream الإضافة الفعلية ثم DownloadEngine والخدمة الفعلية؛ `cancelSurah` أفرغ pending وأعاد الحالة none، وبعد دقيقة أصبحت queued وتم استدعاء enqueue ثانيًا. لا قياس لحجم بيانات مستهلكة أو تنزيل ملف فعلي في هذا الاختبار. محاولات تجهيز الاختبار الأولى لم تنجح بسبب انتظار fake zone ومعها مهلة الاختبار الافتراضية 30 ثانية؛ ذلك لا يمثل عيبًا في التطبيق، والإثبات المعتمد هو التشغيل الناجح بالمؤقت الحقيقي.
+
+تحديث 2026-10-10 02:16 دبي: القراءة المصدرية **382/563**. A31 CONFIRMED by actual service, plugin update stream and real60-second timer; cancelSurah clears pending but delayed retry re-enqueues canceled surah. Test PASS61s; Android transfer/storage mocked, no network transfer. Assistant parser/lexicon/settings/maps reviewed; no active test or unconfirmed batch. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:20 دبي: القراءة المصدرية **388/563**. Reviewed assistant word search and settings; 388 files complete. Kept unproven lifecycle candidates separate from confirmed findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:21 دبي: القراءة المصدرية **391/563**. Completed assistant presentation review (391 files); lifecycle and queue candidates remain unconfirmed pending actual reproduction. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+**إثبات A-32:** `story_precedence_audit_test.dart` و`story-precedence.log` نجحا؛ العبارتان أعادتا `open kidsStoryIbrahim` و`open kidsStorySulayman` بدل `kidsStoryIhya` و`kidsStoryHudhud`. اختبار توجيه النص المعترف به فقط؛ جودة التعرف الصوتي تحتاج تأكيدًا على الهاتف.
+
+تحديث 2026-10-10 02:22 دبي: القراءة المصدرية **391/563**. Confirmed A-32 with actual parser: specific Ibrahim birds and Sulayman hoopoe story requests open the general story. 391 files complete; 32 findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:25 دبي: القراءة المصدرية **403/563**. Completed all 12 hifz files (403 total); isolated pending microphone startup/disposal candidate for actual widget reproduction. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:28 دبي: القراءة المصدرية **410/563**. Completed khatma source review (410 files). Tasmee pending permission disposal proof under preparation; first test harness stalled on fake-zone disk I/O, not an app result. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+**إثبات A-33:** `tasmee_start_disposal_audit_test.dart` و`tasmee-start-disposal.log` نجحا: بعد فتح طلب الإذن أُزيلت الشاشة ثم أُعيد false، وظلت الحالة المشتركة true، ونداءات إضافة التسجيل كانت `[create, listInputDevices, hasPermission, dispose]` بلا start. دليل بقاء الحالة هو المثبت؛ تعطيل الاستماع يتبع شرط الزر في `hifz_session_screen.dart:409` ومنع المساعد شرط `assistant_wake_listener.dart:142`. حالة وجود النموذج وقنوات الجهاز استُبدلت في تجهيز الاختبار؛ لم يُقَس التسجيل أو التعرف على الهاتف. المحاولة الأولى توقفت داخل إعداد I/O بساعة الاختبار ولم تنتج إثباتًا؛ التشغيل المعتمد ناجح.
+
+تحديث 2026-10-10 02:29 دبي: القراءة المصدرية **410/563**. Confirmed A-33 with real TasmeePanel: delayed permission denied after disposal leaves global recording flag true although recorder never started. 410 files complete, 33 confirmed findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:31 دبي: القراءة المصدرية **421/563**. Completed fasting, tasbih reminders and ruqyah (421 files); found fasting IDs overlapping iqama A-09. Actual cancellation proof needs plugin registration harness correction. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+**توسيع مثبت لـ A-09 — الصيام/الإقامة:** `features/fasting/data/fasting_reminder_service.dart:21` يبدأ IDs عند 7300، و`:43–50` يلغي 50 ID حتى عند `reschedule([])`، بينما الإقامة تستخدم 7300–7304 في `core/services/prayer_reminder_service.dart:63` و`:142`. الاختبار `fasting_iqama_ids_audit_test.dart` و`fasting-iqama-ids.log` نجح بالخدمة وإضافة الإشعارات الفعليتين وقناة Android التجريبية: تعطيل الصيام أرسل cancel لكل 7300–7349. هذه ليست مشكلة PendingIntent مختلف المستقبِل؛ الخدمتان هنا تستخدمان إضافة Flutter نفسها. لم يُفحص وصول التنبيه على جهاز في هذا الإثبات. يلزم تخصيص نطاق منفصل للصيام أيضًا في إصلاح A-09. محاولة التجهيز الأولى افتقدت تسجيل إضافة Android وانتهت بخطأ اختبار؛ التشغيل المعتمد بعد التسجيل ناجح.
+
+تحديث 2026-10-10 02:32 دبي: القراءة المصدرية **422/563**. Confirmed A-09 additional scope: actual fasting reschedule([]) cancels all iqama IDs 7300-7304. Completed qibla source; 422 files reviewed. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+**مرشح القبلة — محتاج تأكيد على جهاز:** إضافة flutter_compass 0.8.1 ترسل azimuth من `SensorManager.getOrientation`، الذي تعرّفه [وثائق Android](https://developer.android.com/reference/android/hardware/SensorManager#getOrientation(float[],%20float[])) بالنسبة للشمال المغناطيسي. الشاشة تحسب bearing جغرافيًا وتطرح القراءة مباشرة (`qibla_screen.dart:112` و`:351`) بلا تصحيح declination في كود التطبيق أو الإضافة المفحوص. لم أَقِس انحراف اتجاه على هاتف؛ لذلك محفوظ كمرشح للتحقق مع بوصلة معايرة وموقع ذي انحراف معروف، وليس نتيجة جهاز مثبتة أو عيبًا ضمن العدد الحالي. دليل المصدر: `qibla-declination-source.json`.
+
+تحديث 2026-10-10 02:34 دبي: القراءة المصدرية **424/563**. Completed daily hadith (424 files); documented qibla magnetic versus true north source evidence as device-confirmation candidate, excluded from confirmed finding count. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:36 دبي: القراءة المصدرية **432/563**. Completed all quotes files (432 total). Isolated home quote card identity lookup opening first quote regardless selected card; preparing real widget proof. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+**إثبات A-34:** `home_quote_selection_audit_test.dart` و`home-quote-selection.log` نجحا. الاختبار حمّل مجموعة المقولات والترجمة الإنجليزية المضمنتين، حرّك PageController الفعلي إلى الصفحة الثانية، وضغط ScriptText المرئي، ثم فحص الشاشة المفتوحة. جرى استبدال مزوّد الخلفيات فقط؛ النصوص الدينية لم تتغير.
+
+تحديث 2026-10-10 02:43 دبي: القراءة المصدرية **432/563**. Confirmed A-34: tapping a non-first Home quote opens index zero; actual widget and bundled data proof passed. 432 files reviewed, 34 findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:43 دبي: القراءة المصدرية **434/563**. Settings persistence providers reviewed; 434 files complete. No new confirmed result. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:43 دبي: القراءة المصدرية **436/563**. Sources catalog and transliteration settings reviewed; 436 files complete. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:44 دبي: القراءة المصدرية **436/563**. Read AboutScreen through line 562; still 436 fully reviewed files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:44 دبي: القراءة المصدرية **437/563**. AboutScreen fully reviewed; 437/563 source complete. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:44 دبي: القراءة المصدرية **437/563**. SettingsBody reviewed through 471; 437 complete files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:45 دبي: القراءة المصدرية **440/563**. Settings screen, SourcesScreen and font picker complete; 440 files reviewed. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:45 دبي: القراءة المصدرية **442/563**. Focus picker and non-Arabic reading card complete; permissions read through 203. 442 complete files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:45 دبي: القراءة المصدرية **444/563**. ALL 12 settings files complete; total 444/563, 34 findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:46 دبي: القراءة المصدرية **447/563**. Kids journey/content/stages reviewed; 447 source files complete. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:46 دبي: القراءة المصدرية **447/563**. Read generated kids captions through 229; 447 fully reviewed files, religious source/media comparison still pending. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:46 دبي: القراءة المصدرية **447/563**. Kids caption data read through 443; 447 files complete. No content edits. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:47 دبي: القراءة المصدرية **449/563**. Generated kids captions and AyahGameScreen complete; 449/563 files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:47 دبي: القراءة المصدرية **450/563**. Journey details fully reviewed; 450/563 files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:48 دبي: القراءة المصدرية **451/563**. JourneyScreen complete; 451/563 source files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:48 دبي: القراءة المصدرية **452/563**. KidsCornerScreen complete; 452/563 source files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:49 دبي: القراءة المصدرية **454/563**. Kids stage and stories shelf complete; 454/563 source files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:49 دبي: القراءة المصدرية **454/563**. Kids video player reviewed through 551, 454 complete files. Delayed play/disposal candidate recorded in checklist. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:49 دبي: القراءة المصدرية **455/563**. ALL kids files reviewed; 455/563 source files and 34 confirmed findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:51 دبي: القراءة المصدرية **457/563**. Hajj guide and text slicing reviewed; 457/563 files. First video proof exposed expected disposal exception but harness needs controlled error capture. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:52 دبي: القراءة المصدرية **459/563**. Hajj summary and text scale complete; 459/563. Video lifecycle proof passed; log clarity/assertions tightened for final evidence. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+**إثبات A-35:** `kids_video_disposal_audit_test.dart` و`kids-video-disposal.log` نجحا. الاختبار فتح القصة المضمنة والترجمة الفعلية واستبدل منصة الفيديو وwakelock للتحكم في توقيت رد play؛ تهيئة الفيديو سبقت إغلاق الشاشة، ثم اكتمل الرد. القراءة والتشغيل في Dart حقيقيان، ولم يحدث تشغيل فيديو أو تسجيل صوت فعلي. أول محاولة أظهرت الاستثناء المتوقع لكن طريقة التقاطه في الاختبار لم تكن صحيحة؛ النسخة المعتمدة تلتقطه في منطقة Dart وتثبت ترتيب [false,true] وعدم dispose.
+
+تحديث 2026-10-10 02:53 دبي: القراءة المصدرية **459/563**. Confirmed A35 actual story widget/controller delayed play disposal: uncaught setState after disposal, player not disposed and wakelock re-enabled. 459 source files and 35 results; 16 percent 5h quota remains. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:53 دبي: القراءة المصدرية **460/563**. Hajj screen complete; 460/563 source files and 35 findings. A35 evidence pushed d6698c36. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:53 دبي: القراءة المصدرية **463/563**. Hajj summary/counter/map complete; 463/563 source files, 35 findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:54 دبي: القراءة المصدرية **465/563**. Madhahib and modern miqat widgets reviewed; 465/563 complete. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:54 دبي: القراءة المصدرية **467/563**. ALL 12 Hajj files complete; 467/563 reviewed and 35 findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:55 دبي: القراءة المصدرية **470/563**. Onboarding size/state/screen complete; 470/563 source files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:55 دبي: القراءة المصدرية **473/563**. Permission intro and offline content/row widgets complete; 473/563 files. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:55 دبي: القراءة المصدرية **474/563**. ALL onboarding files complete; 474/563 reviewed and 35 findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:59 دبي: القراءة المصدرية **476/563**. Reviewed MoreScreen and MoreGroup completely; recorded section-route notifier lifetime candidate for reproduction. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:59 دبي: القراءة المصدرية **478/563**. Completed all four More feature files (478 of 563 source-reviewed). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 02:59 دبي: القراءة المصدرية **480/563**. Reviewed splash providers and preview lifecycle (480 source-reviewed). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:00 دبي: القراءة المصدرية **482/563**. Completed all splash source files (482 of 563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:00 دبي: القراءة المصدرية **483/563**. Reviewed Quran topic tree and its search patterns (483 source-reviewed). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:00 دبي: القراءة المصدرية **484/563**. Completed Search source review (484 of 563); recorded timing, per-ayah reciter and text-scaling candidates. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+دليل A-36: `evidence/2026-10-09/more_section_lifetime_audit_test.dart` و`more-section-lifetime.log`؛ اختباران ناجحان على عناصر الإنتاج مع مقدمات اختبار محددة. مصدر عناصر الإعدادات الحقيقي Consumer داخل MoreGroup، لذلك رد المفتاح يمسك WidgetRef الذي أغلقه طي المجموعة. الاختبار الأول يعزل توقف تحديثات ValueNotifier، والثاني يكرر موضع Consumer الحقيقي ويثبت فشل الحفظ.
+
+تحديث 2026-10-10 03:04 دبي: القراءة المصدرية **484/563**. Confirmed A-36 with two passing production-widget/provider lifetime tests: More group auto-collapse disposes settings ref and page notifier, breaking visible settings callbacks and updates. Report now has 36 findings; source count 484/563. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:04 دبي: القراءة المصدرية **485/563**. Reviewed channel catalogue (485/563) and committed A-36 settings lifetime proof as f850e0cd. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:05 دبي: القراءة المصدرية **486/563**. Completed every Quran feature source file, including sciences inventory (486/563). A-36 proof is pushed. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:05 دبي: القراءة المصدرية **487/563**. Completed HadeethEnc feature source review (487/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:06 دبي: القراءة المصدرية **490/563**. Reviewed tutorial anchors, both chapter lists and state (490/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:06 دبي: القراءة المصدرية **492/563**. Reviewed tutorial rendering pieces and slides (492/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:06 دبي: القراءة المصدرية **493/563**. Reviewed tutorial entry controls (493/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:07 دبي: القراءة المصدرية **494/563**. Completed all seven tutorial feature files (494/563), separating production slides from capture-only/dead live overlay paths. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:07 دبي: القراءة المصدرية **495/563**. Completed support feature (495/563), all tutorial sources and A-36 proof pushed. User offered phone/new session; no new session required merely for context, device still needed for physical audio/compass/background tests. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:08 دبي: القراءة المصدرية **495/563**. Read-only tutorial frame asset validation completed; check tour-assets-validation.json for all seven locales, geometry, file existence and WebP signatures only. ADB at 03:08 shows emulator-5554 only; no physical phone. Usage at 03:07 was 99% used/1% remaining. Source count 495/563 and 36 findings; app/backend untouched. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 03:08 دبي: القراءة المصدرية **497/563**. Reviewed dedication model/store and full counter; dedication_look.dart is partial through line20 (497/563 complete). Usage was 99% at 03:08, all progress committed and pushed; physical phone not attached. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:39 دبي: القراءة المصدرية **498/563**. Completed dedication appearance mapping (498/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:40 دبي: القراءة المصدرية **498/563**. Reviewed dedications_screen.dart through577/785; dua counter null-unit candidate ruled out by real route gating. Current usage window reset, fresh read reports1% used; prior99% warning is stale. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:40 دبي: القراءة المصدرية **499/563**. Completed all dedication feature files (499/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:41 دبي: القراءة المصدرية **501/563**. Reviewed history quiz bank/refresh/round logic and progress (501/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:41 دبي: القراءة المصدرية **502/563**. Reviewed quiz home (502/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:42 دبي: القراءة المصدرية **502/563**. Reviewed quiz play through597/662 (502 complete sources); final-record lifecycle candidate recorded. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:42 دبي: القراءة المصدرية **505/563**. Completed all six quiz feature sources (505/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:43 دبي: القراءة المصدرية **508/563**. Reviewed sunan catalogue, reminder store and selected-surah card (508/563); verified primary sources contradict before-sleep comment, displayed material still to inspect. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:44 دبي: القراءة المصدرية **508/563**. Reviewed single-surah reader through501/709; recorded possible shared-last-page omission for immediate canonical DB validation. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+دليل A-37: `evidence/2026-10-09/single_surah_bounds_audit_test.dart` و`single-surah-bounds.log` ناجحان، و`single-surah-bounds.json` يراجع كل مسارات سنن السور الأربع والسور المختارة الست. قاعدة البيانات فُتحت read-only، والمزوّد يحمل QuranRepository وقوائم البداية والنهاية الفعلية، وكتالوج المصحف من الأصل؛ استُبعد فقط تنظيف كاش النسخ الورقية غير المرتبط باختبار الحدود.
+
+فحص مصدر تعليقات سنن السور: `sunan-comment-source-check.json` يحفظ مقارنة اللغات السبع. التعليق المصدرّي18–20 يستبعد قراءة السجدة مع الملك قبل النوم، بينما [HadeethEnc65260](https://hadeethenc.com/ar/browse/hadith/65260) ينسبها للترمذي بتصحيح مؤسسي، و[الدرر — الألباني، صحيح الجامع4873](https://dorar.net/h/JD4cuhNa?osoul=1) يثبت تصحيحه. النص المعروض للسجدة يذكر فجر الجمعة ولا ينفي القراءة قبل النوم؛ لذلك هذا اختلاف في تعليق المطوّر، وليس ادعاء بأن فضيلة معروضة مختلقة أو أن إضافة فضيلة جديدة مطلوبة دون موافقة.
+
+تحديث 2026-10-10 12:47 دبي: القراءة المصدرية **508/563**. Confirmed High A-37: actual single-surah widget excludes final shared page; canonical DB proves48 omitted ayahs across5 of10 exposed surah routes. Proof passed. Saved primary source comparison for sunan comment; displayed Sajdah text is not false. Report37 findings; source508/563. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:48 دبي: القراءة المصدرية **511/563**. Completed single-surah reader, sunnah-surah card and notification route; reminders section partial78/84 (511/563 complete). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:48 دبي: القراءة المصدرية **512/563**. Completed all sunan_suwar source files (512/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:49 دبي: القراءة المصدرية **514/563**. Reviewed Shamela builder and local catalogue (514/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:54 دبي: القراءة المصدرية **517/563**. Reviewed Shamela ID map, import lifecycle, and persistent library; recorded cancellation and offline-resume candidates without promoting them to confirmed defects. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:54 دبي: القراءة المصدرية **518/563**. Reviewed Shamela HTML parser and screen through line 452, including library-copy downloads, deletion confirmation, and card loading. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:54 دبي: القراءة المصدرية **519/563**. Completed all Shamela source files (519/563); cancellation/resume candidates remain unverified. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:55 دبي: القراءة المصدرية **520/563**. Reviewed DorarCheck normalization, cache, and match threshold; religious false-match candidate requires live exact-source evidence. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:55 دبي: القراءة المصدرية **523/563**. Reviewed Dorar encyclopedia service, TOC/section/history parsers, title search, and named-grader API parser (523/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:56 دبي: القراءة المصدرية **525/563**. Reviewed Dorar check sheet and history paging UI (525/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:56 دبي: القراءة المصدرية **527/563**. Reviewed Dorar hub and grading search (527/563); identified query replacement during an in-flight request as a candidate. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:56 دبي: القراءة المصدرية **529/563**. Completed every Dorar source file (529/563); queue/query and corrupt-cache candidates will be reproduced before reporting. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 12:59 دبي: القراءة المصدرية **531/563**. Reviewed Caravan legs and progress (531/563). Dorar lifecycle reproduction is in progress: initial loopback widget harness did not receive a request, so no stale-query conclusion is asserted yet; cache fixture being refined. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:02 دبي: القراءة المصدرية **532/563**. Reviewed full CaravanWorld (532/563). Dorar corrupt-cache test passes; stale-query test transport timing remains unresolved and no finding has yet been added. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:03 دبي: القراءة المصدرية **533/563**. Dorar lifecycle reproduction now passes both actual-code tests: A-38 stale replacement search and A-39 corrupt cache prevents refetch. Read Caravan cards (533/563); interim findings 39. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+
+## نتائج الدرر المثبتة أثناء الاستكمال
+
+| ID | الخطورة | التصنيف | file:line | السيناريو والمشكلة | التأثير | الحل | الحالة |
+|---|---|---|---|---|---|---|---|
+| A-38 | Medium | نتائج بحث الحديث المتداخلة | `rafeeq_app/lib/features/dorar/presentation/dorar_screen.dart:45`؛ `:58`؛ `:64`؛ `:67` | بدء بحث ثم إرسال بحث مختلف قبل وصول الرد؛ البحث الجديد يمسح النتائج ويغير query لكن busy يمنع طلبه، وبعدها تُعرض نتائج الطلب القديم تحت حقل البحث الجديد | نتائج تخريج لا تخص البحث الظاهر؛ وقد يبدأ «المزيد» من الصفحة2 للبحث الجديد فوق النتائج القديمة | هوية مستقلة لكل بحث والتحقق منها عند العودة؛ بدء/استبدال الطلب الجديد وتنظيم الصفحة وحالة busy | مثبت بالشاشة والخدمة والمحلل الفعليين مع خادم HTTP محلي ورد fixture أصلي مؤجل؛ غير مُصلح |
+| A-39 | Medium | استعادة كاش الدرر التالف | `rafeeq_app/lib/features/dorar/data/dorar_encyclopedia.dart:309`؛ `:312`؛ `:314` | وجود ملف gzip تالف وحديث داخل كاش فهرس الموسوعة؛ قراءة وفك الملف تتم قبل try الذي يجلب الشبكة | الفتح وإعادة المحاولة يفشلان عند نفس الملف باستمرار؛ لا يحاول التطبيق تحميل نسخة سليمة | معالجة فشل قراءة/فك الكاش كـcache miss، ثم جلب وفحص النسخة الجديدة وكتابتها بأمان | مثبت باستدعاء toc الحقيقي مرتين على ملف توقيعه تالف؛ الفشل FormatException والملف باقٍ؛ غير مُصلح |
+
+دليل A-38 وA-39: `dorar_lifecycle_audit_test.dart` و`dorar-lifecycle.log`، **اختباران ناجحان**. اختبار البحث يمرر رد الدرر الموجود في fixture المستودع دون تعديل الحديث أو درجته، ويغيّر عنوان API إلى خادم loopback داخل عملية الاختبار فقط. أُرسل طلب «إنما الأعمال» وحده، بينما الحقل أصبح «الراحمون» وعرضت الشاشة كروت الرد الأول؛ ليس ادعاءً أن موقع الدرر أرسل ردًا خاطئًا، ولم يُكتب على الموقع أو الجهاز. اختبار الكاش يستعمل مجلدًا مؤقتًا منفصلًا؛ لا يدّعي رصد تلف قائم على هاتف المستخدم.
+
+تحديث 2026-10-10 13:04 دبي: القراءة المصدرية **534/563**. Reviewed Caravan landmarks (534/563); organized A-38/A-39 under a readable findings table, retaining all proof scope limits. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:04 دبي: القراءة المصدرية **535/563**. Reviewed Caravan map and auto-reveal (535/563); exact visual/accessibility checks remain pending. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:04 دبي: القراءة المصدرية **535/563**. Read Caravan painter through line 636; completed count remains535/563 because this file is partial. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:05 دبي: القراءة المصدرية **537/563**. Completed Caravan painter and ride renderers (537/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:05 دبي: القراءة المصدرية **538/563**. Completed Caravan scenery source review (538/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:06 دبي: القراءة المصدرية **539/563**. Reviewed CaravanScreen (539/563); recorded unverified start-before-question-bank stall and UI accessibility candidates. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:06 دبي: القراءة المصدرية **544/563**. Reviewed first five Tajweed data files (544/563); noted duplicate Jazariyyah lesson title for actual progress-path validation. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:07 دبي: القراءة المصدرية **548/563**. Reviewed four more Tajweed data files (548/563), preserving all religious text while recording canonical-reference verification needs. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:07 دبي: القراءة المصدرية **552/563**. Reviewed Tamhid ranges, Tuhfa lessons, and every text-correction rule (552/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:08 دبي: القراءة المصدرية **553/563**. Completed Tuhfa lesson extraction (553/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:08 دبي: القراءة المصدرية **553/563**. Read CourseBookScreen through line570; source total553/563 remains partial. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:09 دبي: القراءة المصدرية **555/563**. Completed CourseBookScreen and Jazariyyah screen (555/563); duplicate title follows actual persisted completion identity. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+
+## تقدم دروس الجزرية — دليل مستقل
+
+| ID | الخطورة | التصنيف | file:line | السيناريو والمشكلة | التأثير | الحل | الحالة |
+|---|---|---|---|---|---|---|---|
+| A-40 | Medium | حفظ تقدم التعلم | `rafeeq_app/lib/features/tajweed/data/jazariyyah_course.dart:111`؛ `:120`؛ `presentation/screens/jazariyyah_level_screen.dart:40`؛ `:119`؛ `:131`؛ `:323` | درسان منفصلان: الثامن ص70–72 والعاشر ص76–78، كلاهما بعنوان «في التحذيرات»؛ الحفظ والفحص يعتمدان على العنوان وحده | وضع علامة على واحد يكمل الاثنين ويزيد العداد2؛ إلغاء أي منهما يمسح الاثنين، ويستمر ذلك بعد إعادة الفتح | هوية ثابتة لكل درس من موضعه دون تغيير عنوان الكتاب؛ حسم تحويل القيمة القديمة المشتركة يحتاج موافقة المالك | مثبت بالـnotifier الحقيقي والدرسَين الحقيقيين؛ اختبار حفظ وإعادة فتح وإلغاء ناجح؛ غير مُصلح |
+
+الدليل: `jazariyyah_progress_audit_test.dart` و`jazariyyah-progress.log`. المخزن المستخدم SharedPreferences بديل اختبار، ولا تعديل في النص أو أصول التطبيق. صيغة عد الدروس هي نفسها في رأس الشاشة الفعلي؛ الاختبار لا يدّعي تشغيل قارئ الجزرية كاملًا على هاتف.
+
+تحديث 2026-10-10 13:10 دبي: القراءة المصدرية **555/563**. Confirmed A-40 with actual Jazariyyah progress notifier: one stored title completes two distinct lessons, survives reopening, and either untick clears both. Interim findings40, source555/563. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:11 دبي: القراءة المصدرية **556/563**. Reviewed MakharijScreen (556/563), including displayed source and Quran-example handling. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:11 دبي: القراءة المصدرية **557/563**. Completed Tajweed hub and Tamhid screen through295 (557/563); A-40 count also used in hub, and modern prose restoration has recorded owner scope. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:11 دبي: القراءة المصدرية **560/563**. Completed Tamhid/Tuhfa screens and shared verse/prose typography (560/563). لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:12 دبي: القراءة المصدرية **561/563**. Reviewed ListenCard (561/563); recorded unverified audio ownership and actual long-phrase layout candidates. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:17 دبي: القراءة المصدرية **563/563**. Completed line-by-line source reading: 563/563 checklist entries, with source SHA verification. Source completion does not complete Phase 1. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+## اختبارات رسم المخارج وتحميل اللعبة
+
+| ID | الخطورة | التصنيف | file:line | السيناريو والمشكلة | التأثير | الحل | الحالة |
+|---|---|---|---|---|---|---|---|
+| A-41 | Medium | إصابة نقاط الرسم | `rafeeq_app/lib/features/tajweed/presentation/widgets/makharij_diagram.dart:101`؛ `:110`؛ `:211`؛ `:217` | اختيار الشفتين ثم الضغط على نقطة الكاف بعد اكتمال التكبير؛ الرسم يتحول بمقياس1.16 لكن حساب أقرب نقطة يستعمل إحداثيات قبل التحويل | callback الفعلي يختار القاف رغم الضغط على مركز الكاف المرسوم | تحويل موضع الضغط إلى إحداثيات الرسم بواسطة معكوس مصفوفة التكبير أو تطبيق نفس التحويل على نقاط الاختيار | مثبت باختبار widget حقيقي يستعمل RenderBox.localToGlobal للتحويل المعروض؛ غير مُصلح |
+| A-42 | Medium | سباق تحميل اللعبة | `rafeeq_app/lib/features/caravan/presentation/caravan_screen.dart:72`؛ `:76`؛ `:92`؛ `:95`؛ `:237` | بدء المرحلة الأولى قبل اكتمال قراءة بنك الأسئلة؛ قائمة الاختيار فارغة فتحفظ gateId=null؛ اكتمال التحميل يملأ البنك ولا يختار سؤالًا للرحلة الحالية | الوصول إلى البوابة يوقف الرحلة بلا سؤال أو إجابات؛ الانتظار بعد وصول البنك لا يفك التوقف؛ العودة للخريطة وإعادة البدء تتجاوز الحالة | منع البدء حتى جاهزية البنك مع حالة تحميل/إعادة محاولة، أو تهيئة سؤال الرحلة الحالية عند اكتمال التحميل | مثبت بالشاشة والبنك الحقيقيين وبالتقدم عبر ticker الفعلي حتى البوابة؛ غير مُصلح |
+
+الدليل: `makharij_hit_test_audit_test.dart` و`caravan_bank_loading_audit_test.dart`؛ `diagram-caravan-runtime.log`: اختباران ناجحان. اختبار اللعبة يؤخر تسليم ملف الأسئلة الحقيقي دون تغيير محتواه، ويستخدم SharedPreferences ومسار دعم معزولين للاختبار. لم تُعدَّل حالة العالم لتجاوز الطريق؛ جرى تقديم الإطارات الفعلية حتى البوابة ثم ثانيتين إضافيتين. لا ادعاء بإعادة إنتاج السباق على هاتف المالك.
+
+## فحص المحتوى بعد القراءة المصدرية
+
+`content-structure.json` أحصى289كتابًا من النسخ الأساسية المحملة بالكامل: **297,611 صفحة و1,765,706 فقرة**؛ لا كتاب فارغ ولا نوع غير صالح في حقول أرقام الصفحات/نص الفقرات المفحوصة. الفحص الأولي وجد15كتابًا فيها فهرس خام خارج المجال؛ الاختبار اللاحق بالمحلّل الحقيقي `BookText.fromBytes` مرّ على كل289ملفًا وأثبت أن كل وجهات الفهرس المحسوبة داخل الحدود وأن العدادات تأتي من الصفحات الفعلية. لذلك لا نعدّ الفهرس الخام وحده كراشًا أو نتيجة جديدة. دليل التشغيل: `book_parser_census_audit_test.dart` و`book-parser-census.log` و`book-parser-census.json`.
+
+قاعدة القرآن الحالية:114سورة/6236آية، أعداد الآيات لكل سورة تطابق صفوفها، `PRAGMA quick_check=ok`. اقتباسات القرآن داخل مقرري غاية المريد وتيسير الأحكام:1391+187=**1578إحالة**؛ لكل اقتباس مرجع موجود، والنص جزء حرفي من الآية المقابلة في قاعدة التطبيق دون أي normalization. لا اختلاف مسجل. هذا تحقق إحالات ومطابقة قاعدة التطبيق، وليس شهادة مطابقة المصحف المطبوع.
+
+فحص التصحيحات الفعلية في المتون المدمجة: الاختبار استعمل `correctedBookText` الحقيقي وسجل كل فقرة تغيرت مع نوعها ومرجعها؛ لم يتغير أي نص موسوم`aya` في الملفات الحالية. هذا يستبعد مرشح «تغيير فقرة aya حاليًا»، ولا يثبت أن التصنيف التلقائي يلتقط كل اقتباس غير موسوم. ملفات المصدر والمحتوى لم تتغير.
+
+## قياس بطاقة الاستماع باللغات السبع
+
+| ID | الخطورة | التصنيف | file:line | السيناريو والمشكلة | التأثير | الحل | الحالة |
+|---|---|---|---|---|---|---|---|
+| A-43 | Medium | تجاوز عرض بطاقة الاستماع | `rafeeq_app/lib/features/tajweed/presentation/widgets/listen_card.dart:158`؛ `:164`؛ `:203`؛ `rafeeq_app/lib/features/tajweed/presentation/screens/course_book_screen.dart:311` | الضغط على الاقتباس القرآني 4:115 في غاية المريد يمرر النص كاملًا كـphrase؛ صف البطاقة يضعه دون قيود عرض بجوار زر الاستماع | على شاشة360dp وبطاقة328dp، تجاوز422–452px عند حجم الخط1، و990–1051px عند حجم2 في اللغات السبع؛ زر الاستماع خارج حدود الشاشة في en/fr/es/pt/ru، وفي ar/ur يظل داخلها مع تجاوز النص | وضع النص في مساحة قابلة للالتفاف أو نقل الزر إلى صف مستقل؛ التحقق بنفس النص والخطوط واللغات السبع |14حالة widget ناجحة تؤكد السلوك المعطوب بالخطوط المدمجة الحقيقية؛ غير مُصلح |
+
+الدليل: `listen_card_layout_audit_test.dart`، `listen-card-layout.log`، `listen-card-layout.json`. النص مأخوذ من ملف المقرر الحقيقي، lesson index3/block37، وتأكد الاختبار من مطابقته الكاملة للآية4:115 في قاعدة القرآن المقروءة فقط. الخطوط المحملة: Cairo وAmiriQuran وKFGQPCHafs من ملفات التطبيق؛ لم يُستخدم خط Ahem لتقدير العرض. القياس داخل الاختبار وليس لقطة هاتف، ولا تعديل في النص الديني.
+
+مصادر الكتب الأربع التي لا تحمل shamelaUrl في المسح الأولي موجودة: `nur_al_zalam` و`tahqiq_al_maqam` و`tuhfat_al_murid` و`minah_al_rawd_al_azhar` تحمل ketabUrl وsourceLabel والطبعة في meta. لذلك لا تُعدّ هذه الكتب بلا مصدر؛ استمرار رابطها في الواجهة يحتاج تحقق منفصل.
+
+## نسبة درجات الحديث والتخلص من زر مخفي
+
+| ID | الخطورة | التصنيف | file:line | السيناريو والمشكلة | التأثير | الحل | الحالة |
+|---|---|---|---|---|---|---|---|
+| A-44 | Medium | نسبة التخريج | `rafeeq_app/lib/core/i18n/hadith_grade_i18n.dart:92`؛ `rafeeq_app/lib/features/library/presentation/screens/hadith_detail_screen.dart:241`؛ `rafeeq_app/lib/features/settings/data/sources_catalog.dart:145` | فتح الترمذي1: الشاشة تعرض Sahih — Darussalam؛ في القاعدة13149حكمًا بهذه النسبة موزعة على الترمذي3897 والنسائي5321 وابن ماجه3931؛ لا اسم عالم أو طبعة محددين في العرض | يخالف اشتراط المشروع نسبة الحكم إلى عالم وطبعة؛ المصدر الأولي يوضح اسم صاحب الأحكام لكن التطبيق يحتفظ باسم الناشر وحده | توثيق العالم والطبعة وربطهما بالمصدر مع الحفاظ على الحكم الأصلي؛ أي تعديل نسبة/بيانات يحتاج موافقة المالك | مثبت بالشاشة والقاعدة الفعليتين ومصدر أولي مباشر؛ لا ادعاء بأن الأحكام خاطئة؛ غير مُصلح |
+| A-45 | Low | إنشاء متحكم أثناء dispose | `rafeeq_app/lib/features/library/presentation/widgets/listen_text_button.dart:64`؛ `:89`؛ `:125` | فتح حديث الترمذي1 ثم إغلاقه دون تشغيل؛ النص دون عتبة80٪ تشكيل فيُخفى الزر ولا يُنشأ pulse؛ dispose يقرأ الحقل late لأول مرة فينشئ AnimationController على عنصر أُوقف | استثناء Flutter: Looking up a deactivated widget's ancestor is unsafe في الاختبار مع assertions؛ لا دليل كراش في APK المنشور | إنشاء المتحكم في initState قبل استعماله، أو إدارة nullable controller دون إنشائه أثناء التخلص | مثبت أثناء التخلص من شاشة الحديث الحقيقية؛ نطاق التأثير التشغيلي على release غير مثبت؛ غير مُصلح |
+
+`hadith_grader_attribution_audit_test.dart` و`hadith-grader-attribution.log`: اختبار ناجح يستعمل DB الحالية للترمذي1/id20013 ويثبت عرض النسبة ثم استثناء التخلص المتوقع. صفحة [Sunnah.com — Sources, numbering, and grading](https://sunnah.com/about) التي فُتحت2026-10-10 تنسب أحكامDarussalam إلى حافظ زبير علي زئي؛ [الترمذي1](https://sunnah.com/tirmidhi:1) يحمل نفس حكمSahih(Darussalam). `grader-primary-source-check.json` يسجل نطاق الاستدلال؛ معلومات الطبعة المطبوعة لم تستكمل بعد، ولا يجوز إضافتها تخمينًا.
+
+## قياسات المحتوى وقواعد البيانات والواجهة
+
+نجحت **930طلب GET Range0–1023**، مجموع البيانات المستلمة952320بايت:820MP3 تبدأID3،35بعلامة MPEG،29MP4/M4A،35JPEG،2PNG،2ملف tokens وخمسة نماذجONNX. ملفا عبد الباسط1/114 بدآ بأصفار في العينة؛ حُمّلا كاملين188417/140352بايت وفكهماFFmpeg بلا خطأ، فلا نعدّهما محتوى مكسورًا. `media-ranges.jsonl` و`zero-prefix-audio-decode.json`. العينات لا تثبت هوية صوت القارئ ولا صحة النموذج أو كل صفحة/سورة غير مأخوذة في جرد العينات. القنوات التسع رجعت200وطابقتchannelIdالمتوقع فيmetadataالصفحة نفسها؛ الصور السبع في عينةJPEG. `channel-identities.json`.
+
+قواعدhadith/azkar/quran_local/quran_sciences: `quick_check=ok`؛67153حديثًا،45219يحملونgrade،0حكم من دونgrader. تعدادgrader والتجميع لكل كتاب في`db-census-query-timings.json`. لم تُغيَّر النصوص أو الدرجات أو قواعد البيانات.
+
+قياسSQL على Windows/Python/SQLite فقط،30تكرارًا دافئًا: استعلام صفحة القرآن564 median2.957ms/p95 3.269ms، البقرة4.649/5.492ms، lookupآية4:115 0.074/0.097ms؛ أول دفعة بحث2000حديث19.035/22.737ms وآخر دفعة7.796/9.053ms، lookupحديث0.065/0.103ms. خطط القرآنSCAN، والحديث يستعملidx_hadiths_book_num. لا تشمل الأرقام تطبيع العربية أو Dart أو عبور قناةAndroid؛ لا نستنتج منهاjankعلى الهاتف أو حاجة مؤكدة لإضافةindex.
+
+شاشةHomeفي7لغات على المحاكي بالإصدار الموقع3.87.0+102: اللقطات`device-home-{ar,en,fr,es,pt,ru,ur}.png`أُخذت بعد اختيارchipحقيقي وفحصXMLجديد، وشوهدت كلها. العناوين والقوائم وبلدالموقع تتغير مع اللغة، دون overflow واضح في الكروت المرئية بحجم الخط1. لقطةUrduعندfont_scale2في`device-home-ur-font2.png`شُوهدت؛ عادfont_scaleإلى1.0واللغةUrduكماكانت. لا تعميم على بقية الشاشات، والآثار البصرية المتقطعة لبعض الأرقام العربية على محاكيImpeller لا نعدّها عيب هاتف دون تحقق مستقل(TRAPS48).
+
+تحديث 2026-10-10 13:22 دبي: القراءة المصدرية **563/563**. Confirmed A-41 transformed diagram hit mismatch and A-42 start-before-bank gate stall with two passing production-widget proofs;42 interim findings. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:26 دبي: القراءة المصدرية **563/563**. Actual parser validated all289 fetched books/297611pages;1578 Tajweed Quran spans match existing canonical references exactly; no currently marked aya changed by correction rules. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:31 دبي: القراءة المصدرية **563/563**. Confirmed A-43 real-font ListenCard overflow in14cases across7locales;43findings. Strengthened A-42 subtype button assertion and reran successfully. Live930binary ranges are running, incrementally stored media-ranges.jsonl. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:37 دبي: القراءة المصدرية **563/563**. All930binary range GETs succeeded;9channel IDs verified from current primary metadata; two zero-prefix MP3 files fully decode with ffmpeg exit0. Four bundled DB quick_check=ok; bounded host SQL timings recorded. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:46 دبي: القراءة المصدرية **563/563**. Confirmed A-44 missing named Darussalam scholar/edition presentation and A-45 lazy unused-listen-controller disposal assertion.45findings. Actual Home seen in7locales/font2Urdu, restoredfont1/Urdu. Livequota60%used5h/41%weekly. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 13:56 دبي: القراءة المصدرية **563/563**. Observed signed baseline Quran header541/AlHadid with actual Fatiha page1 after cold start; fresh screenshot after settling confirms mismatch, explicit Go541 restores correct Hadid scan. RestoreState updates _current but only continuous view is repositioned; actual QWidget reproduction next. Captured Quran PSS179182KB/RSS335416KB. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+| A-46 | High | استرجاع موضع المصحف | `rafeeq_app/lib/features/quran/presentation/screens/quran_screen.dart:170`؛ `:181`؛ `:183`؛ `:981` | عند بناء PageView قبل اكتمال قراءة التفضيلات المحفوظة، يتغير العنوان والرقم إلى آخر صفحة (541/الحديد)، بينما يبقى PageController عند1 وتظهر الفاتحة؛ تقليب الصفحة بعدها يعتمد موضع1 | محتوى الصفحة لا يوافق العنوان ولا موضع القراءة المحفوظ؛ التقليب التالي يحفظ موضعًا خاطئًا | نقل PageController أيضًا إلى الصفحة المحفوظة بعد الاسترجاع، مع مراعاة عمره واتصاله؛ لا تغيير في نص القرآن أو صور الطبعة | مثبت بصريًا على APK الموقع: الفاتحة تحت عنوان الحديد/541، واختيار اذهب541 أعاد صورة الحديد؛ اختبار QuranScreen الفعلي نجح: badge541/controller0/آيات1:1–7؛ سباق الاسترجاع مشروط بترتيب اكتمال البيانات، وليس كل تشغيل بارد |
+
+تحديث 2026-10-10 14:00 دبي: القراءة المصدرية **563/563**. A-46 confirmed High: actual QuranScreen restore badge541/controller0/actual Fatiha verses1:1-7; widget1pass plus signed APK screenshots and Go541 corrected image. Recent CI green c5911503; previous failed37748135654 failed actual flutter-test step. Ancestor f218642d verified. Cold-repeat navigation opened Fajr options, renamed and excluded from Quran memory proof. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+تحديث 2026-10-10 14:08 دبي: القراءة المصدرية **563/563**. Device audio actual PLAYING after screen sleep/forced Doze10s and UI elapsed1:08 on return; paused137717ms then Urdu/font1/light restored. Quran541 PSS142146KB/RSS303748KB, audio147711/311776KB. Live AlAdhan400requests pass; current2400-time comparison FAILS 40 London STANDARD Asr cases (3mOct10/4mOct25), others within2m; investigating independent primary algorithms before identifying incorrect source. Audit copier corrected old fixture-generator path; original offered_ids also FileNotFoundError, main not executed/no app edits. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+| A-47 | Low | أداة تجديد مرجع المواقيت | `scripts/build_prayer_method_fixtures.py:78`؛ `:79`؛ `:83` | تشغيل أداة تحديث مرجع AlAdhan بعد نقل كتالوج الطرق إلى core/models | offered_ids يفتح المسار القديم غير الموجود فيرفع FileNotFoundError؛ main يكتب جدول الطرق قبل الوصول إليه، فلا يكتمل تحديث جدول المواقيت | تصحيح مسار الكتالوج إلى core/models؛ لا تغيير في زوايا الطرق أو بيانات الصلاة | مثبت باستيراد الوحدة الفعلية واستدعاء offered_ids فقط؛ main لم يُنفذ ولم تُكتب fixtures التطبيق؛ ملف إضافي خارج حصر563 الأصلي |
+
+تحديث 2026-10-10 14:12 دبي: القراءة المصدرية **563/563**. A-47 Low original fixture generator obsolete path confirmed via actual offered_ids. Independent PyEphem4.2.1 geometric noon-shadow crossing London Standard14:40:45 Oct10 and14:16:16 Oct25UTC; app14:40/14:15 is closer than AlAdhan14:43/14:19. No prayer-incorrect finding; live reference2min test40fail remains honestly preserved. All563review SHA unchanged,125820lines. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.
+
+| A-48 | Medium | صيانة Flutter والأدوات | `.github/workflows/ci.yml:34`؛ `rafeeq_app/android/settings.gradle.kts:22`؛ `:23` | البيئة وCI ثابتان على Flutter3.38.7 بينما فرع stable الرسمي الحالي SHA abaf9c5237 مطابق تمامًا لوسم3.47.7 | أحدث stable متاح ولا يوجد في الملفات سبب موثق لإبقاء نسخة SDK القديمة؛ التوافق مع الاعتمادات والتوقيع عند الترقية لم يُختبر | تجربة SDK الحالي في بيئة منفصلة وتوثيق ما يحتاج إبقاءً قبل نقل البيئة/CI؛ ترقية major أو بناء release للتحقق تحتاج موافقة المالك | فرق الإصدار ثابت من GitHub الرسمي؛ توافق3.47.7 مع المشروع محتاج تأكيد، ولا ندعي أن3.38.7 الحالية غير متوافقة أو أن الترقية آمنة |
+
+تحديث 2026-10-10 14:15 دبي: القراءة المصدرية **563/563**. A-48 current Flutter stable3.47.7 exact tag matches stable HEAD abaf9c5237; local/CI3.38.7 verified; compatibility of new SDK remains untested.48findings includes this maintenance gap, not an assertion that upgrade is safe. Source filepoints ci34/settings22-23 checked. No app edits. لا تعديل في كود التطبيق أو الخادم. الاختبارات الفعلية منفصلة عن القراءة المصدرية، والمرحلة الأولى ما زالت قيد التنفيذ.

@@ -1,0 +1,15 @@
+{
+  "findings": 48,
+  "severity_counts": {
+    "Critical": 1,
+    "High": 9,
+    "Medium": 34,
+    "Low": 4
+  },
+  "source_reviewed": 563,
+  "source_lines": 125820,
+  "changed_review_sha": [],
+  "application_changes": [],
+  "report_bytes": 132436,
+  "scope": "Report assembly validation; runtime evidence and phone limits remain explicit."
+}
