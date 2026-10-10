@@ -3655,7 +3655,17 @@
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_screen.dart",
     "lines": 429,
     "sha256": "66282874d35c73ce32295526e5b588c9a4cfbe5131e0974d37f4afba28366c2a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 429,
+    "notes": [
+      {
+        "lines": [
+          1,
+          429
+        ],
+        "note": "Reviewed CaravanScreen fully: ticker ownership/disposal, map transitions, gate bank loading, awards, pointer controls, HUD and cards. Strong candidate: first leg is playable before HistoryQuiz.all completes, _start captures null gateId and late bank completion never selects a gate, leaving atGate without a question; reproduce using delayed asset loading. load errors are not caught, also a candidate. No background lifecycle pause control; frame suppression/clamped dt may mitigate, needs device check. HUD fixed text can overflow at large font and full-screen Listener has no keyboard/semantic alternative; require actual layout/semantics proof."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/channels/data/islamic_channels.dart",
