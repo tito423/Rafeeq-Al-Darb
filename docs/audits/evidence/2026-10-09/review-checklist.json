@@ -9048,8 +9048,8 @@
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/tamhid_level_screen.dart",
     "lines": 305,
     "sha256": "c79c7a9e453bd9b9524826ae756899b94e1bb821c1dbc5bfcc1cf8fb7a5e0b2d",
-    "review": "partial",
-    "read_through_line": 295,
+    "review": "source-reviewed",
+    "read_through_line": 305,
     "notes": [
       {
         "lines": [
@@ -9057,6 +9057,13 @@
           295
         ],
         "note": "Reviewed complete five-level hub and Tamhid screen through295. Hub documents owner's 2026-10-02 explicit restoration of prose courses; old removal comments do not by themselves establish unauthorized scope. A-40 also affects hub Jazariyyah count. Tamhid uses unique lesson titles, per-level store, guarded range extraction and book retry. Footer paired labels and aya RTL remain measurement candidates."
+      },
+      {
+        "lines": [
+          296,
+          305
+        ],
+        "note": "Completed Tamhid screen tail, whole Tuhfa screen, and lesson typography. Tuhfa title migration is explicit and current titles unique; commentary labels distinguish author vs commentator and verse/prose widgets force Arabic direction. Source attribution remains in header. Literal gold commentary labels inherit known contrast risk, but need actual composite measurement before extending A-22. Restore-before-toggle race remains unverified; GoogleFonts bundled face availability already in project assets, not assumed network requirement."
       }
     ]
   },
@@ -9064,13 +9071,33 @@
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/tuhfa_level_screen.dart",
     "lines": 346,
     "sha256": "d40df9f52725e03807a951090c3be8cb2a2f40d73843459113fbe1450e4ff50e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 346,
+    "notes": [
+      {
+        "lines": [
+          1,
+          346
+        ],
+        "note": "Completed Tamhid screen tail, whole Tuhfa screen, and lesson typography. Tuhfa title migration is explicit and current titles unique; commentary labels distinguish author vs commentator and verse/prose widgets force Arabic direction. Source attribution remains in header. Literal gold commentary labels inherit known contrast risk, but need actual composite measurement before extending A-22. Restore-before-toggle race remains unverified; GoogleFonts bundled face availability already in project assets, not assumed network requirement."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/lesson_text.dart",
     "lines": 97,
     "sha256": "aadc313e6d9c0a4428c9f45ec0a1a0a9fcd21d6511af180d40cc247794385bc9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 97,
+    "notes": [
+      {
+        "lines": [
+          1,
+          97
+        ],
+        "note": "Completed Tamhid screen tail, whole Tuhfa screen, and lesson typography. Tuhfa title migration is explicit and current titles unique; commentary labels distinguish author vs commentator and verse/prose widgets force Arabic direction. Source attribution remains in header. Literal gold commentary labels inherit known contrast risk, but need actual composite measurement before extending A-22. Restore-before-toggle race remains unverified; GoogleFonts bundled face availability already in project assets, not assumed network requirement."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/listen_card.dart",

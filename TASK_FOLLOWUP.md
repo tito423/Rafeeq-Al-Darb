@@ -10,7 +10,7 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
-**AUDIT IN PROGRESS (2026-10-10 13:11 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 557/563; 40 interim findings. Completed Tajweed hub and Tamhid screen through295 (557/563); A-40 count also used in hub, and modern prose restoration has recorded owner scope. Exact NEXT: Read Tamhid296-305, Tuhfa screen, then final lesson/audio/diagram widgets.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+**AUDIT IN PROGRESS (2026-10-10 13:11 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 560/563; 40 interim findings. Completed Tamhid/Tuhfa screens and shared verse/prose typography (560/563). Exact NEXT: Read final ListenCard, MakharijDiagram, and MakharijEntry; finish all563 source checklist before remaining actual content/device checks.. No app/backend edits; full source/content/device audit and final563-file report remain required.
 
 
 **2026-10-08 22:40 Dubai - v3.86.0 PUBLISHED** (tag 903aa906 == HEAD; v3.85.0 + tag deleted; v3.51.0 + content-* kept). https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.86.0 , RafeeqAlDarb-v3.86.0.apk 316,006,832 B (206). Adhkar listening: 6 real voices per time (Alafasy IslamHouse streamed; Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim, Faisal Labban on R2 azkar/recitations/ + content-mirror, sizes checked) + Gemini; every file transcribed (scripts/verify_adhkar_recordings.py, report scripts/out/adhkar_verify.json); turned away Hassan Saleh, Muhammad Jibreel, Yahya Hawwa. Photo backgrounds (sunrise / sunset), hub of two photo cards, honest per-time descriptions, Sources + CONTENT-LICENSES. SEEN with the signed APK (ur): hub, morning + evening lists of 7, white titles, Fares Abbad morning PLAYING from R2. Content-mirror sync also pushed 60 missing assets (50 books updated since the last sync + the 10 adhkar). R7: 20/35 ayah sets, Abdullah Matroud in progress; watchdog re-enabled. Nothing pending.
@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 13:11 - audit: review Tuhfa progress and shared lesson typography
+
+- 2026-10-10 13:11 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:11 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 560/563; 40 interim findings. Completed Tamhid/Tuhfa screens and shared verse/prose typography (560/563). Exact NEXT: Read final ListenCard, MakharijDiagram, and MakharijEntry; finish all563 source checklist before remaining actual content/device checks.. No app/backend edits; full source/content/device audit and final563-file report remain required.
+
 - 2026-10-10 13:11 - audit: review Tajweed hub and Tamhid learning state
 
 - 2026-10-10 13:11 Dubai — **AUDIT IN PROGRESS (2026-10-10 13:11 Dubai CHECKPOINT)**: Phase1 docs/evidence only; source-reviewed 557/563; 40 interim findings. Completed Tajweed hub and Tamhid screen through295 (557/563); A-40 count also used in hub, and modern prose restoration has recorded owner scope. Exact NEXT: Read Tamhid296-305, Tuhfa screen, then final lesson/audio/diagram widgets.. No app/backend edits; full source/content/device audit and final563-file report remain required.
