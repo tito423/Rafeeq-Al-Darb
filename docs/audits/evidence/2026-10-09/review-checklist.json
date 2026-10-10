@@ -8961,7 +8961,17 @@
     "path": "rafeeq_app/lib/features/tajweed/data/tuhfa_lesson_text.dart",
     "lines": 101,
     "sha256": "b584f50f01acb01d1057256dba3dab0d2d8d07e64fbbaf083c5e135ce2bc798c",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 101,
+    "notes": [
+      {
+        "lines": [
+          1,
+          101
+        ],
+        "note": "Completed Tuhfa paragraph/note extractor: printed-page ranges, commentary note subsets, normalized-heading exclusion, Arabic-Indic note parsing retain source wording. Current built ranges nonnegative; a generic negative fromPara would index out of range, but no actual source path supplies it, so no defect promoted. Stale comment about stray marks remaining is documentation inconsistency after correction pipeline."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/course_book_screen.dart",
