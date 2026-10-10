@@ -8317,8 +8317,8 @@
     "path": "rafeeq_app/lib/features/shamela/presentation/shamela_screen.dart",
     "lines": 493,
     "sha256": "4acc8e92c48b83eb14b6b9080463d3ad82f6e01838e24753738e069e7d504e29",
-    "review": "partial",
-    "read_through_line": 452,
+    "review": "source-reviewed",
+    "read_through_line": 493,
     "notes": [
       {
         "lines": [
@@ -8326,6 +8326,13 @@
           452
         ],
         "note": "Reviewed entire HTML parser and screen through line 452: footnote stripping matches documented pipeline policy and needs content provenance checks rather than automatic religious edits; lifecycle mounted guards cover opening reads, but overlapping downloads use a single busy ID, retry lacks current typed-query restoration, close import lacks accessible tooltip, and Arabic book text has no explicit direction. Candidates need targeted UI or import reproduction."
+      },
+      {
+        "lines": [
+          453,
+          493
+        ],
+        "note": "Completed Shamela screen: imported-card button disables active imports and renders edition card plus localized source notice. No additional confirmed defect in the last 41 lines."
       }
     ]
   },
