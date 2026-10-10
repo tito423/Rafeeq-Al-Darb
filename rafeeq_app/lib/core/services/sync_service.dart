@@ -11,6 +11,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
 import '../config/app_config.dart';
+import 'sync_queue_batch.dart';
 
 final googleSignInProvider = Provider((ref) => GoogleSignIn(
       serverClientId: AppConfig.googleServerClientId,
@@ -60,6 +61,7 @@ class SyncService {
   final GoogleSignIn _googleSignIn;
   final SharedPreferences _prefs;
   final Ref _ref;
+  final http.Client? _client;
   
   static String get _syncApiUrl => '${AppConfig.syncBackendUrl}/sync';
   
@@ -67,7 +69,8 @@ class SyncService {
   late Database _localQueueDb;
   bool _isSyncing = false;
 
-  SyncService(this._googleSignIn, this._prefs, this._ref);
+  SyncService(this._googleSignIn, this._prefs, this._ref, {http.Client? client})
+      : _client = client;
 
 
   /// Every call to the sync backend is bounded.
@@ -243,50 +246,36 @@ class SyncService {
       final idToken = auth.idToken;
       if (idToken == null) throw Exception('No idToken');
 
-      final queuedItems = await _localQueueDb.query('queue', orderBy: 'id ASC');
-      if (queuedItems.isEmpty) {
-        _isSyncing = false;
-        _ref.read(syncStatusProvider.notifier).state = SyncStatus.done;
-        return;
-      }
-
-      final List<Map<String, dynamic>> stateUpdates = [];
-      final List<Map<String, dynamic>> counterUpdates = [];
-      final List<int> processedIds = [];
-
-      for (final item in queuedItems) {
-        final payload = jsonDecode(item['payload'] as String);
-        if (item['type'] == 'state') {
-          stateUpdates.addAll(List<Map<String, dynamic>>.from(payload));
-        } else if (item['type'] == 'counter') {
-          counterUpdates.add(payload);
+      while (true) {
+        // Bound the database read too; each row can contain multiple states.
+        final queuedItems = await _localQueueDb.query(
+          'queue', orderBy: 'id ASC', limit: SyncQueueBatch.maxCounters,
+        );
+        if (queuedItems.isEmpty) break;
+        for (final batch in syncQueueBatches(queuedItems)) {
+          final response = await _withTimeout((_client?.post ?? http.post)(
+            Uri.parse(_syncApiUrl),
+            headers: {
+              'Authorization': 'Bearer $idToken',
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            body: batch.body,
+          ));
+          if (response.statusCode != 200) {
+            _ref.read(syncStatusProvider.notifier).state = SyncStatus.error;
+            return;
+          }
+          await _localQueueDb.transaction((txn) async {
+            final deletes = txn.batch();
+            for (final id in batch.completedIds) {
+              deletes.delete('queue', where: 'id = ?', whereArgs: [id]);
+            }
+            await deletes.commit(noResult: true);
+          });
         }
-        processedIds.add(item['id'] as int);
       }
-
-      final body = {
-        'updates': stateUpdates,
-        'counters': counterUpdates,
-      };
-
-      final response = await _withTimeout(http.post(
-        Uri.parse(_syncApiUrl),
-        headers: {
-          'Authorization': 'Bearer $idToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(body),
-      ));
-
-      if (response.statusCode == 200) {
-        for (final id in processedIds) {
-          await _localQueueDb.delete('queue', where: 'id = ?', whereArgs: [id]);
-        }
-        _ref.read(lastSyncTimeProvider.notifier).state = DateTime.now();
-        _ref.read(syncStatusProvider.notifier).state = SyncStatus.done;
-      } else {
-        _ref.read(syncStatusProvider.notifier).state = SyncStatus.error;
-      }
+      _ref.read(lastSyncTimeProvider.notifier).state = DateTime.now();
+      _ref.read(syncStatusProvider.notifier).state = SyncStatus.done;
     } catch (e) {
       _ref.read(syncStatusProvider.notifier).state = SyncStatus.failed;
     } finally {
@@ -303,7 +292,7 @@ class SyncService {
       final idToken = auth.idToken;
       if (idToken == null) return;
 
-      final response = await _withTimeout(http.get(
+      final response = await _withTimeout((_client?.get ?? http.get)(
         Uri.parse(_syncApiUrl),
         headers: {
           'Authorization': 'Bearer $idToken',

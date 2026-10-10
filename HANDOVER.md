@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 14:25 — IN PROGRESS — resume here**
+**2026-10-10 14:41 — IN PROGRESS — resume here**
 
-audit: correct A-02 evidence scope to Worker runtime and client source review
+Fix A-02: batch sync within Worker caps and retain unacknowledged queue rows; analyze clean and 784 tests pass, Google device check pending
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

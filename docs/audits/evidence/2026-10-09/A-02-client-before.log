@@ -1,0 +1,80 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/rafeeq_app/test/sync_queue_delivery_test.dart
+00:00 +0: 1001 queued counters survive the Worker cap
+*** sqflite warning ***
+
+You are changing sqflite default factory.
+Be aware of the potential side effects. Any library using sqflite
+will have this factory as the default for all operations.
+
+*** sqflite warning ***
+
+00:08 +0 -1: 1001 queued counters survive the Worker cap [E]
+  Expected: an object with length of <1001>
+    Actual: Set:[
+              '0e2a1acb-2a66-420d-a582-22f0a0955afb',
+              '1b26d094-3283-4e37-8629-e38871dd6a91',
+              '1b862454-0eca-4ff5-b5f6-ba86cffe69a7',
+              '8bc2aa4a-ecea-4a61-8756-ecdad3466c1e',
+              'ec52db06-0b62-4a63-af90-0ea0f6190e36',
+              '361242a3-6eea-4db6-8f45-97b253afdc05',
+              'c24542cb-d6b7-446f-9c20-2884c05a6240',
+              '8cc7aac0-1fc1-4c29-8bc5-45c87a3a6fc6',
+              'af8feddd-aa2f-4111-a4d0-d0efa2a49e16',
+              '58d37365-a56c-40ad-b576-ef2887690656',
+              'dffe2695-af21-4904-a793-db80875f5c93',
+              'cb0b0b7c-1c87-409b-a781-2663824a4d85',
+              '5d630669-595f-4a6b-92fc-8a68f9297611',
+              'ff46e04c-a2ad-48eb-af7d-9b9950d8a91a',
+              '94b0ba93-96c9-4950-a452-289c923d3f6c',
+              '5dd80206-9727-432a-af16-45d4a8fadacd',
+              'ba8c9743-71e1-446a-a75f-0eeea90c1a7f',
+              '76f8a633-dcfb-4870-b4c7-466f88f7d621',
+              '304123b6-ebcc-4ee6-b741-1273446c9325',
+              '1084538c-58eb-461b-917b-18051c05fccf',
+              '2948a2b3-eac3-4e03-b62e-a018a53c48ed',
+              'f3632fc4-7c38-4113-8cb7-9904bf9211cc',
+              'd9ddbfa8-cf6c-47d0-9074-ac3ea5454c58',
+              '7560ddbc-7c71-46d5-a64f-33ee0270d3c8',
+              ...
+            ]
+     Which: has length of <1000>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\sync_queue_delivery_test.dart 91:7             main.<fn>
+  
+*** sqflite warning ***
+
+You are changing sqflite default factory.
+Be aware of the potential side effects. Any library using sqflite
+will have this factory as the default for all operations.
+
+*** sqflite warning ***
+
+00:08 +0 -1: 1001 queued counters survive a failed second batch
+*** sqflite warning ***
+
+You are changing sqflite default factory.
+Be aware of the potential side effects. Any library using sqflite
+will have this factory as the default for all operations.
+
+*** sqflite warning ***
+
+00:17 +0 -2: 1001 queued counters survive a failed second batch [E]
+  Expected: an object with length of <1>
+    Actual: []
+     Which: has length of <0>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\sync_queue_delivery_test.dart 92:7             main.<fn>
+  
+*** sqflite warning ***
+
+You are changing sqflite default factory.
+Be aware of the potential side effects. Any library using sqflite
+will have this factory as the default for all operations.
+
+*** sqflite warning ***
+
+00:17 +0 -2: Some tests failed.
