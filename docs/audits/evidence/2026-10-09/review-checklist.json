@@ -8977,8 +8977,8 @@
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/course_book_screen.dart",
     "lines": 652,
     "sha256": "4c6c559563e8f6f621c603b6234590a786767d3c74aaf4f437c29e75c6c7dd0a",
-    "review": "partial",
-    "read_through_line": 570,
+    "review": "source-reviewed",
+    "read_through_line": 652,
     "notes": [
       {
         "lines": [
@@ -8986,6 +8986,13 @@
           570
         ],
         "note": "Read prose-course list/lesson and rich-block renderer through line570. Provider retry, source title/author/edition attribution, done-by-title, next lesson, inline Quran taps, recognizer disposal/replacement, table/verse/note rendering checked. Invalidated/error course provider on an already-open lesson yields perpetual spinner; needs actual provider failure. Potential badge/heading contrast and scaled label rows require measurement. No new confirmed issue."
+      },
+      {
+        "lines": [
+          571,
+          652
+        ],
+        "note": "Completed prose course renderer and entire Jazariyyah screen. Actual JazariyyahProgress persists titles and both distinct fi al-tahdhirat lessons use that title for toggle/check/header count, confirming the source path for a completion collision; run actual notifier reproduction next. Book/sharh providers correctly separate errors but failed sharh silently disappears. Quran aya Text branches lack explicit RTL compared with LessonProse; layout and source reference verification pending."
       }
     ]
   },
@@ -8993,7 +9000,17 @@
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/jazariyyah_level_screen.dart",
     "lines": 442,
     "sha256": "57319e970f7fe4221039c6eb2a37c0f6415f875cebc9aa5707b3dd1ec94d3446",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 442,
+    "notes": [
+      {
+        "lines": [
+          1,
+          442
+        ],
+        "note": "Completed prose course renderer and entire Jazariyyah screen. Actual JazariyyahProgress persists titles and both distinct fi al-tahdhirat lessons use that title for toggle/check/header count, confirming the source path for a completion collision; run actual notifier reproduction next. Book/sharh providers correctly separate errors but failed sharh silently disappears. Quran aya Text branches lack explicit RTL compared with LessonProse; layout and source reference verification pending."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/presentation/screens/makharij_screen.dart",
