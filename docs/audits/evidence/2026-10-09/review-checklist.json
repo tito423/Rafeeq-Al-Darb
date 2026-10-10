@@ -3754,13 +3754,33 @@
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_hub_screen.dart",
     "lines": 337,
     "sha256": "aa16bf56d9957f428d8cdd7886f9ee06836f27d753b09e2543bf5d276ced8355",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 337,
+    "notes": [
+      {
+        "lines": [
+          1,
+          337
+        ],
+        "note": "Reviewed complete hub, recursive TOC, section reader, source fallback, and hadith grading screen. A new submitted query resets state during an active request while _more rejects it as busy, then old results populate the new query; strong stale religious-search candidate requiring controlled actual-widget reproduction. Fixed-height hub tile text scaling and nested TOC indentation need measured layouts. Section future recreated on inherited rebuild may refetch cache but is not an infinite self-loop."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_screen.dart",
     "lines": 198,
     "sha256": "084bb7ae848334b0f3f5a53a3927e50ffee04c227cccbe306f6dea0774a01716",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 198,
+    "notes": [
+      {
+        "lines": [
+          1,
+          198
+        ],
+        "note": "Reviewed complete hub, recursive TOC, section reader, source fallback, and hadith grading screen. A new submitted query resets state during an active request while _more rejects it as busy, then old results populate the new query; strong stale religious-search candidate requiring controlled actual-widget reproduction. Fixed-height hub tile text scaling and nested TOC indentation need measured layouts. Section future recreated on inherited rebuild may refetch cache but is not an infinite self-loop."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_search_screen.dart",
