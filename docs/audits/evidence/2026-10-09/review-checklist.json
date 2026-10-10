@@ -3674,19 +3674,49 @@
     "path": "rafeeq_app/lib/features/dorar/data/dorar_encyclopedia.dart",
     "lines": 367,
     "sha256": "33d2521793555e7fd5b5b0ce1725862d6a0726928d07df8bf1dc2a234f3c36eb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 367,
+    "notes": [
+      {
+        "lines": [
+          1,
+          367
+        ],
+        "note": "Reviewed encyclopedia HTML parsers, title search, and named-grader API parser. Soft-404 null/empty handling is explicit; encyclopedia cache decoding occurs before network try, so interrupted/corrupt gzip may permanently block refetch and needs controlled cache test. API drops missing graders but allows empty source/page/grade; verify live response completeness before finding. TOC/chain parsing needs live coverage beyond historical fixtures."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/data/dorar_search.dart",
     "lines": 73,
     "sha256": "9c1bbee50b98c32da84a94af6a6b698a0aa20484a6693d1ff00a28ca82553708",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 73,
+    "notes": [
+      {
+        "lines": [
+          1,
+          73
+        ],
+        "note": "Reviewed encyclopedia HTML parsers, title search, and named-grader API parser. Soft-404 null/empty handling is explicit; encyclopedia cache decoding occurs before network try, so interrupted/corrupt gzip may permanently block refetch and needs controlled cache test. API drops missing graders but allows empty source/page/grade; verify live response completeness before finding. TOC/chain parsing needs live coverage beyond historical fixtures."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/data/dorar_service.dart",
     "lines": 103,
     "sha256": "0f436518b352d99859aee02cb4ce1145a0e7f3cbc5f518acda39e69b8caf466e",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 103,
+    "notes": [
+      {
+        "lines": [
+          1,
+          103
+        ],
+        "note": "Reviewed encyclopedia HTML parsers, title search, and named-grader API parser. Soft-404 null/empty handling is explicit; encyclopedia cache decoding occurs before network try, so interrupted/corrupt gzip may permanently block refetch and needs controlled cache test. API drops missing graders but allows empty source/page/grade; verify live response completeness before finding. TOC/chain parsing needs live coverage beyond historical fixtures."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_check_sheet.dart",
