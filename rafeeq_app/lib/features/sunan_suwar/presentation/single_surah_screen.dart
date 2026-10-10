@@ -31,7 +31,7 @@ enum _Mode { text, image }
 
 /// P2‑12's "locked reader" — the same page rendering as `QuranScreen`
 /// (`MushafTextPage`/`MushafPageView`), but bounded to a single surah's real
-/// page range (resolved from `mushafDataProvider.surahStartPages`, never
+/// page range (resolved from the bundled DB's surah start/end pages, never
 /// hardcoded) with every whole-mushaf navigation affordance removed:
 /// no surah/juz list, no goto-page, no edition picker, and the `PageView`
 /// itself cannot page past the surah's own first/last page.
@@ -238,11 +238,12 @@ class _SingleSurahScreenState extends ConsumerState<SingleSurahScreen> {
       ),
       data: (data) {
         final startPage = data.surahStartPages[widget.surahId];
-        if (startPage == null) {
+        final endPage = data.surahEndPages[widget.surahId];
+        if (startPage == null || endPage == null || endPage < startPage) {
           return Scaffold(body: Center(child: Text('errors.generic'.tr())));
         }
-        final nextStart = data.surahStartPages[widget.surahId + 1];
-        final endPage = (nextStart ?? 605) - 1;
+        // The final page can also contain the next surah. MAX(page_number)
+        // for this surah includes it; next-surah-start minus one does not.
         final pageCount = endPage - startPage + 1;
         _startPage = startPage;
         _endPage = endPage;
