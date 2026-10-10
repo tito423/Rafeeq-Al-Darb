@@ -8753,31 +8753,81 @@
     "path": "rafeeq_app/lib/features/tajweed/data/articulation.dart",
     "lines": 152,
     "sha256": "963e2f42347d88ea9198262e4de8eaa1314740828ef30bff58db809f2476f715",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 152,
+    "notes": [
+      {
+        "lines": [
+          1,
+          152
+        ],
+        "note": "Reviewed articulation specs, bundled matn loader, prose course parser/progress, Jazariyyah lesson ranges, and Quran example pointers. Two generated Jazariyyah titles are identical (fi al-tahdhirat) at distinct ranges; determine actual progress key before reporting duplicated completion. CourseProgress asynchronous restore can overwrite an immediate toggle; requires delayed-preferences proof. Quran phrase/example references and anatomical simplifications require primary-source verification, not religious edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/bundled_matn.dart",
     "lines": 18,
     "sha256": "6dc6f2850eb775530610d11ca4b518f79e7c0afb4e72121f661ea32cc0ead1d6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 18,
+    "notes": [
+      {
+        "lines": [
+          1,
+          18
+        ],
+        "note": "Reviewed articulation specs, bundled matn loader, prose course parser/progress, Jazariyyah lesson ranges, and Quran example pointers. Two generated Jazariyyah titles are identical (fi al-tahdhirat) at distinct ranges; determine actual progress key before reporting duplicated completion. CourseProgress asynchronous restore can overwrite an immediate toggle; requires delayed-preferences proof. Quran phrase/example references and anatomical simplifications require primary-source verification, not religious edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/course_book.dart",
     "lines": 171,
     "sha256": "14eb393afab98b4b3fd5ba0da5abf8bb914666a43f5c972e0072d732f928c610",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 171,
+    "notes": [
+      {
+        "lines": [
+          1,
+          171
+        ],
+        "note": "Reviewed articulation specs, bundled matn loader, prose course parser/progress, Jazariyyah lesson ranges, and Quran example pointers. Two generated Jazariyyah titles are identical (fi al-tahdhirat) at distinct ranges; determine actual progress key before reporting duplicated completion. CourseProgress asynchronous restore can overwrite an immediate toggle; requires delayed-preferences proof. Quran phrase/example references and anatomical simplifications require primary-source verification, not religious edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_course.dart",
     "lines": 200,
     "sha256": "523c67fb900b5aaed8baf47c2a0d3ec06ceaba6581f8ec2c851f14e13a8702b2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 200,
+    "notes": [
+      {
+        "lines": [
+          1,
+          200
+        ],
+        "note": "Reviewed articulation specs, bundled matn loader, prose course parser/progress, Jazariyyah lesson ranges, and Quran example pointers. Two generated Jazariyyah titles are identical (fi al-tahdhirat) at distinct ranges; determine actual progress key before reporting duplicated completion. CourseProgress asynchronous restore can overwrite an immediate toggle; requires delayed-preferences proof. Quran phrase/example references and anatomical simplifications require primary-source verification, not religious edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_examples.dart",
     "lines": 113,
     "sha256": "03d207e8235ad455dfc057d9d68fdb3b9de636626d331958d9943185686080d8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 113,
+    "notes": [
+      {
+        "lines": [
+          1,
+          113
+        ],
+        "note": "Reviewed articulation specs, bundled matn loader, prose course parser/progress, Jazariyyah lesson ranges, and Quran example pointers. Two generated Jazariyyah titles are identical (fi al-tahdhirat) at distinct ranges; determine actual progress key before reporting duplicated completion. CourseProgress asynchronous restore can overwrite an immediate toggle; requires delayed-preferences proof. Quran phrase/example references and anatomical simplifications require primary-source verification, not religious edits."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_lesson_text.dart",
