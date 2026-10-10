@@ -8430,8 +8430,8 @@
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/sunan_suwar_reminders_section.dart",
     "lines": 84,
     "sha256": "759ecc85acc33dc7ac2c4027c3e2937b30f93a97f84e047df1ea9a719592e0b5",
-    "review": "partial",
-    "read_through_line": 78,
+    "review": "source-reviewed",
+    "read_through_line": 84,
     "notes": [
       {
         "lines": [
@@ -8439,6 +8439,13 @@
           78
         ],
         "note": "Completed SingleSurahScreen through709, SunanSuwarCard/ReminderSheet and notification navigation, reminders section through78/84. Confirmed A-37 page bounds used by PageView and continuous lastPage; bottom reader counter repeats same bound. Previous/next IconButtons omit tooltip and shrink38dp, actual semantics/target measurement pending. Reminder weekdays/time buttons use actual store and mounted checks after save/remove; TimePicker result setState lacks mounted check but realistic parent removal needs proof. Notification payload parses int with no range guard but invalid id displays generic error; not automatically crash."
+      },
+      {
+        "lines": [
+          79,
+          84
+        ],
+        "note": "Completed remaining weekday translation map Wednesday throughSunday; map covers all seven Dart weekday values and matches Saturday-first sunanWeekOrder. All seven sunan feature files now source-reviewed."
       }
     ]
   },
