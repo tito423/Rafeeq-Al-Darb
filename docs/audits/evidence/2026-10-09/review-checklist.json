@@ -3658,7 +3658,17 @@
     "path": "rafeeq_app/lib/features/dorar/data/dorar_check.dart",
     "lines": 218,
     "sha256": "6917f3253674f58156109085895ea574c9167c10f38d81b3fc6d0a5c287ae122",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 218,
+    "notes": [
+      {
+        "lines": [
+          1,
+          218
+        ],
+        "note": "Reviewed Dorar lookup cache, isnad extraction, and matching. Displayed text remains unmodified, but matching uses only the first ten normalized words and unordered 80-percent overlap, so common-prefix or opposing-later-matn false matches need live primary-source examples before any religious finding. Cache has no expiry and simultaneous writes are not atomic; no confirmed failure yet."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/data/dorar_encyclopedia.dart",
