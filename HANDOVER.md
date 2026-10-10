@@ -2523,7 +2523,7 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 <!-- WIP:START -->
 **2026-10-10 12:54 — IN PROGRESS — resume here**
 
-audit: review Shamela import lifecycle and registry
+audit: review Shamela parser and screen lifecycle
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
