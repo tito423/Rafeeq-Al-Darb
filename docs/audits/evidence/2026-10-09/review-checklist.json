@@ -6269,13 +6269,33 @@
     "path": "rafeeq_app/lib/features/quiz/data/history_quiz.dart",
     "lines": 195,
     "sha256": "f6907878e8ee5db9f074b5aea9121356f10f4962b59232a2bfc409e404c297e6",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 195,
+    "notes": [
+      {
+        "lines": [
+          1,
+          195
+        ],
+        "note": "Reviewed history quiz model/localization, bundled/cache/host refresh parsing, version selection, seen-cycle round selection and persistent level progress. All religious/historical quotes require source substring/page checks beyond comments. Candidate: _all memoized future means refreshed bank only loaded after process restart, contrary to next-opening comment; compare owner freshness expectation. Cache parse/version failure handling and concurrent record calls require realistic scenarios. Actual five-level pass threshold6 and star fractions read, no invented timer behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quiz/data/quiz_progress.dart",
     "lines": 75,
     "sha256": "89036156795e9b22e6ca359f852a4ccad9aa9f24a463a519f97b64d655b34eb7",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 75,
+    "notes": [
+      {
+        "lines": [
+          1,
+          75
+        ],
+        "note": "Reviewed history quiz model/localization, bundled/cache/host refresh parsing, version selection, seen-cycle round selection and persistent level progress. All religious/historical quotes require source substring/page checks beyond comments. Candidate: _all memoized future means refreshed bank only loaded after process restart, contrary to next-opening comment; compare owner freshness expectation. Cache parse/version failure handling and concurrent record calls require realistic scenarios. Actual five-level pass threshold6 and star fractions read, no invented timer behavior."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/quiz/presentation/quiz_home_screen.dart",
