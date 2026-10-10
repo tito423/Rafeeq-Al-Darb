@@ -9103,7 +9103,17 @@
     "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/listen_card.dart",
     "lines": 259,
     "sha256": "9c188594510cbdd68aec8190919dbfde6e2851956b75a2518cd68c410a0defb4",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 259,
+    "notes": [
+      {
+        "lines": [
+          1,
+          259
+        ],
+        "note": "Reviewed ListenCard: real repository ayah text, subscriptions/controllers disposed, non-queue single playback uses service default reading despite header claiming selected recitation. _toggle has no mounted/generation guard after awaiting repository and dispose does not stop owned/pending audio; actual continuation proof needed. _mine resets on every false event, including play's internal stop; inspect service events before classifying. Phrase+Spacer+button row can overflow with real long course quotes/font scaling and must be measured."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/presentation/widgets/makharij_diagram.dart",
