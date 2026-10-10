@@ -1186,6 +1186,10 @@ ALL 8 VERIFIED on build 3.
   reviewed by eye.
 
 ## Log
+- 2026-10-10 14:25 - audit: correct A-02 evidence scope to Worker runtime and client source review
+
+- 2026-10-10 14:26 Dubai — Corrected A-02 detail: original reproduction ran actual Worker with explicit Google/D1 doubles; client full queue deletion was source proof, not client-runtime proof. Phase2 will add actual SyncService regression before fix.
+
 - 2026-10-10 14:24 - audit: complete Arabic Phase1 report with 48 findings and all 563 reviewed files
 
 - 2026-10-10 14:24 Dubai — **AUDIT PHASE1 COMPLETE (2026-10-10 14:24 Dubai CHECKPOINT)**: Arabic report assembled:48findings (1Critical/9High/34Medium/4Low), all563original files listed/125820lines/SHA unchanged; one extra fixture-builder file reviewed. No application/backend/source changes in Phase1. Full checks/live content/DB timings/signed baseline reader/audio/Home evidence saved; phone/account/API24/profile/model-loading limits explicit, live prayer-reference comparison40fail honestly preserved and independently chased. Exact NEXT: Start Phase2 A-02 client sync batching: read SyncService/queue actual code and existing audit proof, add regression for1001counters and101updates, fix one finding, run flutter analyze + full flutter test, commit/push; account/device validation remains pending, no version/release or API/religious/schema edits without approval.
