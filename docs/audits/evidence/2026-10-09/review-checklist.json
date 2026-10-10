@@ -3536,7 +3536,17 @@
     "path": "rafeeq_app/lib/features/caravan/data/caravan_world.dart",
     "lines": 509,
     "sha256": "59c0bd80848081008bd4722b668a9b1d9cc47f8fb74aa81c65fb56c95f9a34c2",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 509,
+    "notes": [
+      {
+        "lines": [
+          1,
+          509
+        ],
+        "note": "Read full CaravanWorld: bounded per-frame integration, jump/duck/flying physics, obstacle layout, collisions, shield, stars, arrival, and cleanup. Star awards always 1..3, ruling out invalid stars through current UI. Collision hit flags and atGate clearing prevent repeated stationary hits. Frame-index follower trail differs across refresh rates and localization only converts Arabic digits; these are observations needing measured UX evidence, not confirmed defects."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/caravan/presentation/caravan_cards.dart",
