@@ -88,8 +88,8 @@ extension _ContinuousRecovery on AyahAudioService {
   /// of the chosen reciter could give: the same verse in the default voice,
   /// which the app keeps on its own bucket, rather than silence.
   Future<bool> _playBackupVoice(
-      Ayah ayah, QuranRepository repo, String? title) async {
-    final ok = await play(ayah, repo, title: title);
+      Ayah ayah, QuranRepository repo, String? title, {int? queueToken}) async {
+    final ok = await _playAyah(ayah, repo, title: title, queueToken: queueToken);
     if (ok) _noticeVoice();
     return ok;
   }
@@ -99,7 +99,7 @@ extension _ContinuousRecovery on AyahAudioService {
   /// is first, then asks the loop to try the SAME verse again. False only
   /// when the loop was stopped or superseded meanwhile.
   Future<bool> _waitForSource(int token, Ayah a) async {
-    if (token != _queueToken) return false;
+    if (!_queueIsCurrent(token)) return false;
     ayahWaitingNotice?.call('${a.surahId}:${a.ayahNumber}');
     final done = Completer<void>();
     final sub = Connectivity().onConnectivityChanged.listen((r) {
@@ -108,12 +108,12 @@ extension _ContinuousRecovery on AyahAudioService {
       }
     });
     final poll = Timer.periodic(const Duration(milliseconds: 500), (_) {
-      if (token != _queueToken && !done.isCompleted) done.complete();
+      if (!_queueIsCurrent(token) && !done.isCompleted) done.complete();
     });
     await done.future.timeout(_retryAfter, onTimeout: () {});
     poll.cancel();
     await sub.cancel();
-    return token == _queueToken;
+    return _queueIsCurrent(token);
   }
 
   /// Which of the reciter's hosts every verse comes from; back to the first,

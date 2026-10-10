@@ -24,6 +24,7 @@ import 'surah_playlist.dart';
 export 'continuous_recitation.dart';
 
 part 'continuous_recovery.dart';
+part 'ayah_queue.dart';
 
 /// Ayah-level recitation: streaming, on-disk caching, whole-surah downloads,
 /// and continuous auto-advancing playback.
@@ -174,7 +175,9 @@ class AyahAudioService {
   /// racing a newer one.
   int _queueToken = 0;
 
-  bool get isQueuePlaying => _queueToken != 0;
+  bool _queueActive = false;
+
+  bool get isQueuePlaying => _queueActive;
 
   /// Plays [ayahs] one after another, waiting for each to finish before
   /// starting the next. Used for both the memorization repeat-loop (the same
@@ -190,27 +193,14 @@ class AyahAudioService {
     Duration gap = Duration.zero,
     String Function(Ayah ayah, int index)? titleFor,
     void Function(int index)? onIndex,
-  }) async {
-    await stopContinuous();
-    final token = ++_queueToken;
-    for (var i = 0; i < ayahs.length; i++) {
-      if (token != _queueToken) return; // superseded by a newer call/stop
-      onIndex?.call(i);
-      final started = await play(
-        ayahs[i],
-        repo,
-        edition: edition,
-        title: titleFor?.call(ayahs[i], i),
-      );
-      // Nothing played: wait, then THIS verse again — never the next one.
-      if (!started && await _waitForSource(token, ayahs[i--])) continue;
-      if (!started) break;
-      await _waitForCompletionOrToken(token);
-      if (token != _queueToken) return;
-      if (gap > Duration.zero) await Future<void>.delayed(gap);
-    }
-    if (token == _queueToken) _queueToken = 0;
-  }
+  }) => _runQueue(
+    ayahs,
+    repo,
+    edition: edition,
+    gap: gap,
+    titleFor: titleFor,
+    onIndex: onIndex,
+  );
 
   /// Convenience for the memorization loop: the same ayah, [times] times,
   /// with [gap] of silence between repetitions.
@@ -231,40 +221,6 @@ class AyahAudioService {
     );
   }
 
-  /// Returns when the ayah has finished — or when it never will.
-  ///
-  /// It used to wait for `completed` and nothing else, so a player that
-  /// errored, was stopped from outside, or was paused by another app or the
-  /// tasmee microphone taking the audio focus left the loop waiting for ever
-  /// and the button on «إيقاف». Now an `idle` player (stopped or failed), a
-  /// playback error, or a pause that lasts [_stallLimit] all end the wait.
-  Future<void> _waitForCompletionOrToken(int token) async {
-    final completer = Completer<void>();
-    void done() {
-      if (!completer.isCompleted) completer.complete();
-    }
-
-    Timer? stall;
-    late final StreamSubscription<PlayerState> sub;
-    sub = _player.playerStateStream.listen((s) {
-      if (token != _queueToken ||
-          s.processingState == ProcessingState.completed ||
-          s.processingState == ProcessingState.idle) {
-        done();
-        return;
-      }
-      if (!s.playing) {
-        stall ??= Timer(_stallLimit, done);
-      } else {
-        stall?.cancel();
-        stall = null;
-      }
-    }, onError: (Object _) => done());
-    await completer.future;
-    stall?.cancel();
-    await sub.cancel();
-  }
-
   static const _stallLimit = Duration(seconds: 20);
 
   /// How long one source may take to load before the next host is tried.
@@ -274,7 +230,8 @@ class AyahAudioService {
 
   /// Cancels any in-flight `playQueue`/`playRepeated` loop and stops audio.
   Future<void> stopQueue() async {
-    _queueToken = 0;
+    _queueToken++;
+    _queueActive = false;
     await stop();
   }
 
@@ -296,47 +253,7 @@ class AyahAudioService {
     QuranRepository repo, {
     String edition = defaultEdition,
     String? title,
-  }) async {
-    musicOwnsPlayer.value = false;
-    try {
-      final global = await repo.globalAyahNumber(ayah.surahId, ayah.ayahNumber);
-      final tag = _tag(edition, global, ayah, title);
-
-      // A single ayah supersedes continuous recitation *properly* — see the
-      // history in `stopContinuous`: stopping only the player left a live
-      // completion listener that later jumped to a surah nobody asked for.
-      if (continuous.value.active) {
-        await stopContinuous();
-      }
-
-      await _player.stop();
-
-      final urls = RecitationSource.urlsFor(
-        edition: edition,
-        surah: ayah.surahId,
-        ayah: ayah.ayahNumber,
-        globalAyah: global,
-      );
-      for (final url in urls) {
-        try {
-          await _player
-              .setAudioSource(AudioSource.uri(Uri.parse(url), tag: tag))
-              .timeout(_loadLimit);
-          _finish.play(_player);
-          AudioFailure.instance.clear();
-          debugPrint('recitation from ${Uri.parse(url).host}${Uri.parse(url).path}');
-          return true;
-        } catch (e) {
-          AudioFailure.instance.record(url, e); // the last host wins
-        }
-      }
-      debugPrint('nothing played: ${AudioFailure.instance.last.value}');
-    } catch (e) {
-      AudioFailure.instance.last.value = e.toString();
-      debugPrint('AyahAudioService.play failed: $e');
-    }
-    return edition == defaultEdition ? false : _playBackupVoice(ayah, repo, title);
-  }
+  }) => _playAyah(ayah, repo, edition: edition, title: title);
 
   Future<void> stop() async {
     try {
@@ -482,7 +399,8 @@ class AyahAudioService {
     String edition = defaultEdition,
     bool wholeMushaf = true,
   }) async {
-    _queueToken = 0; // supersede any repeat-loop/playlist run
+    _queueToken++; // supersede any repeat-loop/playlist run
+    _queueActive = false;
     musicOwnsPlayer.value = false;
 
     // «لو التلاوة شغّالة وأنا رجعت لآيات في الخلف أو اخترت سورة تانية ينتقل
