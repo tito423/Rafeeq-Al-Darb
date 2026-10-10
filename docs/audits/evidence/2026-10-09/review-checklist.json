@@ -3786,13 +3786,33 @@
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_search_screen.dart",
     "lines": 153,
     "sha256": "7fe5b4276cbca97c2d53e55f191a52edb317bb039a1c7ee527c787c008d9c30f",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 153,
+    "notes": [
+      {
+        "lines": [
+          1,
+          153
+        ],
+        "note": "Completed Dorar title search and chained tafseer reader. Parallel nine-TOC loading reports failures; zero parsed trees still count as success, requiring live parser coverage. FutureBuilder keeps previous data while changing chain paths, so previous navigation can remain enabled transiently; stale body is gated on connection done. Disposal and debounce guards are present. No new confirmed defect from this batch."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/dorar/presentation/dorar_tafseer_screen.dart",
     "lines": 219,
     "sha256": "f29103203e7d7d7e2ee1472cd95fbd818ee11ff1b1f98e8ec218bb2a1281fdfb",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 219,
+    "notes": [
+      {
+        "lines": [
+          1,
+          219
+        ],
+        "note": "Completed Dorar title search and chained tafseer reader. Parallel nine-TOC loading reports failures; zero parsed trees still count as success, requiring live parser coverage. FutureBuilder keeps previous data while changing chain paths, so previous navigation can remain enabled transiently; stale body is gated on connection done. Disposal and debounce guards are present. No new confirmed defect from this batch."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/downloads/data/download_tap_channel.dart",
