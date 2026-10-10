@@ -177,11 +177,9 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       if (autoScrollSpeed != null) _autoScrollSpeed = autoScrollSpeed;
       if (pageFillScreen != null) _pageFillScreen = pageFillScreen;
     });
-    // The continuous view may have been built before the stored page was
-    // read; send it there too.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _isContinuous) _continuous.currentState?.jumpToPage(_current);
-    });
+    // Either view may have been built before the stored page was read.
+    // Move its actual viewport as well as the restored header/page number.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _restoreViewport());
     ref.read(quranFullScreenProvider.notifier).state = _pageFillScreen;
     // Only if this tab is the one on screen. On a cold start it is not —
     // `IndexedStack` builds every tab, Home is showing, and applying the mode

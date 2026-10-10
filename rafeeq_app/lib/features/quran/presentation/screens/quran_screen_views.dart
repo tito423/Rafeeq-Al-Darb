@@ -6,6 +6,17 @@ part of 'quran_screen.dart';
 /// 2026-10-02 when the continuous view was added, so `quran_screen.dart`
 /// shrinks instead of growing past its ceiling (`code_layout_test.dart`).
 extension _QuranViews on _QuranScreenState {
+  /// Match the displayed viewport to the page restored from preferences.
+  /// A controller attached before restoration needs moving explicitly.
+  void _restoreViewport() {
+    if (!mounted) return;
+    if (_isContinuous) {
+      _continuous.currentState?.jumpToPage(_current);
+    } else if (_pages?.hasClients ?? false) {
+      _pages!.jumpToPage(_current - 1);
+    }
+  }
+
   /// Turns to the recited ayah's page when it is not the one in view.
   Future<void> _followRecitationTo(int surah, int ayah) async {
     final repo = ref.read(mushafDataProvider).valueOrNull?.repo;
