@@ -117,14 +117,15 @@ class AdhanPlaybackState {
     firing: false,
   );
 
-  static AdhanPlaybackState fromMap(Map<Object?, Object?> m) =>
-      AdhanPlaybackState(
-        playing: m['playing'] as bool? ?? false,
-        muted: m['muted'] as bool? ?? false,
-        position: Duration(milliseconds: (m['positionMs'] as num?)?.toInt() ?? 0),
-        duration: Duration(milliseconds: (m['durationMs'] as num?)?.toInt() ?? 0),
-        firing: m['firing'] as bool? ?? false,
-      );
+  static AdhanPlaybackState fromMap(
+    Map<Object?, Object?> m,
+  ) => AdhanPlaybackState(
+    playing: m['playing'] as bool? ?? false,
+    muted: m['muted'] as bool? ?? false,
+    position: Duration(milliseconds: (m['positionMs'] as num?)?.toInt() ?? 0),
+    duration: Duration(milliseconds: (m['durationMs'] as num?)?.toInt() ?? 0),
+    firing: m['firing'] as bool? ?? false,
+  );
 }
 
 /// The Dart face of the native Adhan engine (`android/.../kotlin/.../adhan/`).
@@ -235,7 +236,9 @@ class AdhanNative {
   static Future<AdhanPlaybackState> state() async {
     try {
       final m = await _player.invokeMethod<Map<Object?, Object?>>('state');
-      return m == null ? AdhanPlaybackState.idle : AdhanPlaybackState.fromMap(m);
+      return m == null
+          ? AdhanPlaybackState.idle
+          : AdhanPlaybackState.fromMap(m);
     } catch (_) {
       return AdhanPlaybackState.idle;
     }
@@ -253,10 +256,16 @@ class AdhanNative {
 
   /// Replaces the whole daily schedule. Returns false when the OS refused
   /// *exact* alarms and armed them approximately instead.
-  static Future<bool> scheduleDaily(List<AdhanSpec> prayers) async {
+  static Future<bool> scheduleDaily(
+    List<AdhanSpec> prayers, {
+    Map<String, Object>? calculation,
+    Map<String, int>? triggers,
+  }) async {
     try {
       return await _alarm.invokeMethod<bool>('scheduleDaily', {
             'prayers': prayers.map((p) => p.toMap()).toList(),
+            'calculation': ?calculation,
+            'triggers': ?triggers,
           }) ??
           false;
     } catch (_) {
@@ -293,10 +302,9 @@ class AdhanNative {
   /// changes nothing.
   static Future<bool> setAlarmVolume(int value) async {
     try {
-      return await _alarm.invokeMethod<bool>(
-            'setAlarmVolume',
-            {'value': value},
-          ) ??
+      return await _alarm.invokeMethod<bool>('setAlarmVolume', {
+            'value': value,
+          }) ??
           false;
     } catch (_) {
       return false;

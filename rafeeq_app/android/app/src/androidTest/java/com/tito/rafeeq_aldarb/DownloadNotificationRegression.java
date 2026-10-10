@@ -12,14 +12,20 @@ import android.service.notification.StatusBarNotification;
 
 /** Real platform regression: run on API 24 and a current Android emulator. */
 public final class DownloadNotificationRegression extends Instrumentation {
+    private String suite;
     @Override
     public void onCreate(Bundle arguments) {
         super.onCreate(arguments);
+        suite = arguments.getString("suite", "downloads");
         start();
     }
 
     @Override
     public void onStart() {
+        if ("adhan".equals(suite)) {
+            AdhanRecomputeRegression.run(this);
+            return;
+        }
         Bundle result = new Bundle();
         int resultCode = Activity.RESULT_CANCELED;
         Context context = getTargetContext();

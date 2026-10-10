@@ -18,7 +18,10 @@ class AdhanBootReceiver : BroadcastReceiver() {
             Intent.ACTION_TIME_CHANGED,
             Intent.ACTION_TIMEZONE_CHANGED,
             "android.intent.action.QUICKBOOT_POWERON",
-            -> AdhanScheduler.rearmPersisted(context)
+            -> {
+                val pending = goAsync()
+                AdhanScheduler.rearmPersisted(context) { pending.finish() }
+            }
         }
     }
 }

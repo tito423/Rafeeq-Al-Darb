@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.Calendar
 
 /**
@@ -31,6 +32,8 @@ object AdhanScheduler {
     private const val TAG = "AdhanScheduler"
     private const val PREFS = "rafeeq_adhan_alarms"
     private const val KEY_ENTRIES = "daily_entries_v1"
+    private const val KEY_CALCULATION = "calculation_v1"
+    private var generation = 0L
 
     /**
      * Replaces the whole daily schedule with [specs] (one per prayer that
@@ -39,13 +42,24 @@ object AdhanScheduler {
      * approximately instead — the caller surfaces that to the user rather
      * than pretending the adhan is precise.
      */
-    fun scheduleDaily(context: Context, specs: List<AdhanSpec>): Boolean {
+    fun scheduleDaily(
+        context: Context,
+        specs: List<AdhanSpec>,
+        calculation: Map<String, Any>?,
+        targets: Map<String, Long>?,
+    ): Boolean {
+        if (calculation == null || targets == null || specs.any { targets[it.prayerKey] == null }) return false
         cancelDaily(context)
-        persist(context, specs)
+        generation++
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString(KEY_CALCULATION, JSONObject(calculation).toString()).apply()
+        val updated = specs.map { withTime(it, targets.getValue(it.prayerKey)) }
+        persist(context, updated)
         var exact = true
-        for (spec in specs) {
-            if (!armAt(context, spec, nextOccurrence(spec.hour, spec.minute))) exact = false
+        for (spec in updated) {
+            if (!armAt(context, spec, targets.getValue(spec.prayerKey))) exact = false
         }
+        if (updated.isEmpty()) AdhanRecomputeJob.cancel(context) else AdhanRecomputeJob.ensureScheduled(context)
         return exact
     }
 
@@ -55,14 +69,8 @@ object AdhanScheduler {
      * that lands a few milliseconds *early* would otherwise compute "today"
      * as its own next occurrence and fire a second time seconds later.
      */
-    fun rearmAfterFiring(context: Context) {
-        val specs = load(context)
-        if (specs.isEmpty()) return
-        val floor = System.currentTimeMillis() + 60_000L
-        for (spec in specs) {
-            armAt(context, spec, nextOccurrence(spec.hour, spec.minute, floor))
-        }
-    }
+    fun rearmAfterFiring(context: Context, complete: (Boolean) -> Unit = {}) =
+        recompute(context, System.currentTimeMillis() + 60_000L, complete)
 
     /**
      * The "تجربة" button: fires [spec] once, [delayMs] from now, under its
@@ -82,6 +90,8 @@ object AdhanScheduler {
     }
 
     fun cancelAll(context: Context) {
+        generation++
+        AdhanRecomputeJob.cancel(context)
         val am = alarmManager(context) ?: return
         for (spec in load(context)) {
             am.cancel(operationFor(context, spec))
@@ -91,13 +101,48 @@ object AdhanScheduler {
     }
 
     /** Re-arms everything after a reboot or an app update. */
-    fun rearmPersisted(context: Context) {
+    fun rearmPersisted(context: Context, complete: (Boolean) -> Unit = {}) =
+        recompute(context, System.currentTimeMillis(), complete)
+
+    private fun recompute(context: Context, floor: Long, complete: (Boolean) -> Unit) {
         val specs = load(context)
-        if (specs.isEmpty()) return
-        for (spec in specs) {
-            armAt(context, spec, nextOccurrence(spec.hour, spec.minute))
+        if (specs.isEmpty()) {
+            complete(true)
+            return
         }
-        Log.i(TAG, "re-armed ${specs.size} adhan alarms after boot")
+        val inputs = calculation(context) ?: AdhanCalculation.savedInputs(context)
+        if (inputs == null) {
+            Log.w(TAG, "cannot recalculate adhan without saved coordinates")
+            complete(false)
+            return
+        }
+        AdhanRecomputeJob.ensureScheduled(context)
+        val requestGeneration = ++generation
+        AdhanCalculation.compute(context, inputs, floor) { targets ->
+            if (requestGeneration != generation) {
+                complete(true) // A newer settings/time change already replaced this request.
+            } else if (targets == null || specs.any { targets[it.prayerKey] == null }) {
+                complete(false)
+            } else {
+                scheduleDaily(context, specs, inputs, targets)
+                complete(true) // Approximate alarms still count as a completed calculation.
+                Log.i(TAG, "recalculated ${specs.size} adhan targets from saved inputs")
+            }
+        }
+    }
+
+    private fun calculation(context: Context): Map<String, Any>? {
+        val raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_CALCULATION, null) ?: return null
+        fun toMap(json: JSONObject): Map<String, Any> = json.keys().asSequence().associateWith { key ->
+            val value = json.get(key)
+            if (value is JSONObject) toMap(value) else value
+        }
+        return try { toMap(JSONObject(raw)) } catch (_: Exception) { null }
+    }
+
+    private fun withTime(spec: AdhanSpec, timestamp: Long): AdhanSpec {
+        val time = Calendar.getInstance().apply { timeInMillis = timestamp }
+        return spec.copy(hour = time.get(Calendar.HOUR_OF_DAY), minute = time.get(Calendar.MINUTE))
     }
 
     fun canScheduleExact(context: Context): Boolean {
@@ -158,23 +203,6 @@ object AdhanScheduler {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
-    }
-
-    private fun nextOccurrence(
-        hour: Int,
-        minute: Int,
-        notBefore: Long = System.currentTimeMillis(),
-    ): Long {
-        val now = Calendar.getInstance().apply { timeInMillis = notBefore }
-        val target = Calendar.getInstance().apply {
-            timeInMillis = notBefore
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-        if (!target.after(now)) target.add(Calendar.DAY_OF_YEAR, 1)
-        return target.timeInMillis
     }
 
     private fun alarmManager(context: Context): AlarmManager? =

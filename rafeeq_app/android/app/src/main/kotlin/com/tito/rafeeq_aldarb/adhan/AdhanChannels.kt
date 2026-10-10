@@ -92,7 +92,9 @@ object AdhanChannels {
                 "scheduleDaily" -> {
                     val raw = call.argument<List<Map<String, Any?>>>("prayers").orEmpty()
                     val specs = raw.map { AdhanSpec.fromMap(it) }
-                    result.success(AdhanScheduler.scheduleDaily(appContext, specs))
+                    val calculation = call.argument<Map<String, Any>>("calculation")
+                    val targets = call.argument<Map<String, Number>>("triggers")?.mapValues { it.value.toLong() }
+                    result.success(AdhanScheduler.scheduleDaily(appContext, specs, calculation, targets))
                 }
                 "scheduleTest" -> {
                     val spec = specFromCall(call.argument<Map<String, Any?>>("prayer"))

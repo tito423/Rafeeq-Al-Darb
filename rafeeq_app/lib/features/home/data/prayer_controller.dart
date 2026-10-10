@@ -39,10 +39,7 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       adhanSettingsProvider.select(
         (s) => (s.autoLocationUpdate, s.locationUpdateMinutes),
       ),
-      (_, next) => _restartAutoRefresh(
-        enabled: next.$1,
-        minutes: next.$2,
-      ),
+      (_, next) => _restartAutoRefresh(enabled: next.$1, minutes: next.$2),
       fireImmediately: true,
     );
     // Re-fetch when the manual corrections change so the card, the alarms and
@@ -64,8 +61,9 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
   /// «كارت مواقيت الصلاة … بيحمّل متأخر» (2026-09-19): it used to wait for a
   /// fresh GPS fix (up to 15 s indoors) before drawing anything.
   Future<PrayerTimesResult> _firstLoad() async {
-    final saved = await LocationService.instance
-        .lastSaved(localeCode: ref.read(appLocaleProvider));
+    final saved = await LocationService.instance.lastSaved(
+      localeCode: ref.read(appLocaleProvider),
+    );
     if (saved == null) return _load();
     final quick = await _timesAt(saved);
     if (quick.isEmpty) return _load();
@@ -76,8 +74,9 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
   /// New corrections applied to the last saved position at once; the alarms
   /// are re-armed behind it. Falls back to a full refresh with no position.
   Future<void> _recompute() async {
-    final saved = await LocationService.instance
-        .lastSaved(localeCode: ref.read(appLocaleProvider));
+    final saved = await LocationService.instance.lastSaved(
+      localeCode: ref.read(appLocaleProvider),
+    );
     if (saved == null) return refresh();
     final times = await _timesAt(saved);
     if (times.isEmpty) return refresh();
@@ -88,7 +87,7 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
         ? times
         : times.withPlace(prev.cityName, prev.countryName);
     state = AsyncData(PrayerTimesResult(times: shown, locationDenied: false));
-    unawaited(_reschedule(shown).catchError((_) {}));
+    unawaited(_reschedule(shown, saved).catchError((_) {}));
   }
 
   Future<PrayerTimes> _timesAt(AppPosition pos) async {
@@ -142,13 +141,12 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
     state = await AsyncValue.guard(_load);
   }
 
-  /// Re-runs only the scheduling step against the last real fetch — used
-  /// when Adhan settings change and there's no need to hit the network
-  /// again for the same day's times.
+  /// Recalculates from the saved position when Adhan settings change.
+  /// No fresh GPS fix is needed; the card and absolute alarms stay aligned.
   Future<void> rescheduleFromCache() async {
     final current = state.valueOrNull;
     if (current == null || current.times.isEmpty) return;
-    await _reschedule(current.times);
+    await _recompute();
   }
 
   /// Re-read the place name in the language the app is in NOW.
@@ -166,26 +164,39 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
     // The saved coordinates first (Geocoder only): going through
     // getCurrentPosition waited up to 15 s for a GPS fix, and the Arabic
     // Home card read «Dubai, United Arab Emirates» meanwhile (2026-09-24).
-    final pos = await LocationService.instance.savedIn(locale) ??
+    final pos =
+        await LocationService.instance.savedIn(locale) ??
         await LocationService.instance.getCurrentPosition(localeCode: locale);
-    final city = pos?.locality ?? '';
-    final country = pos?.country ?? '';
+    if (pos == null) return;
+    final city = pos.locality ?? '';
+    final country = pos.country ?? '';
     if (city.isEmpty && country.isEmpty) return;
     if (city == current.times.cityName &&
         country == current.times.countryName) {
       return;
     }
-    state = AsyncData(PrayerTimesResult(
-      times: current.times.withPlace(city, country),
-      locationDenied: current.locationDenied,
-    ));
+    state = AsyncData(
+      PrayerTimesResult(
+        times: current.times.withPlace(city, country),
+        locationDenied: current.locationDenied,
+      ),
+    );
     // The ongoing card carries the city in its body, and its text is frozen
     // when it is posted - so it has to be re-posted, not merely left.
-    await _reschedule(current.times.withPlace(city, country));
+    await _reschedule(current.times.withPlace(city, country), pos);
   }
 
-  Future<void> _reschedule(PrayerTimes times) async {
+  Future<void> _reschedule(PrayerTimes times, AppPosition position) async {
     final settings = ref.read(adhanSettingsProvider);
+    final adjustments = ref.read(prayerAdjustmentsProvider);
+    final calculation = <String, Object>{
+      'lat': position.latitude,
+      'lon': position.longitude,
+      'method': settings.calculationMethod,
+      'madhab': settings.asrMadhab.name,
+      'highLatitude': settings.highLatitudeRule.name,
+      'offsets': adjustments.minuteOffsets,
+    };
     // The three "before / after / iqama" nudges ride on the same trigger as
     // the adhan alarms — a real times fetch — so they can never be armed
     // against yesterday's times.
@@ -199,7 +210,7 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       localeCode: ref.read(appLocaleProvider),
     );
     final catalog = await ref.read(adhanCatalogProvider.future);
-    await rescheduleAdhans(times, settings, catalog);
+    await rescheduleAdhans(times, settings, catalog, calculation: calculation);
   }
 
   Future<PrayerTimesResult> _load() async {
@@ -207,11 +218,14 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
       localeCode: ref.read(appLocaleProvider),
     );
     if (pos == null) {
-      return PrayerTimesResult(times: PrayerTimes.empty(), locationDenied: true);
+      return PrayerTimesResult(
+        times: PrayerTimes.empty(),
+        locationDenied: true,
+      );
     }
     final times = await _timesAt(pos);
     if (!times.isEmpty) {
-      await _reschedule(times);
+      await _reschedule(times, pos);
     }
     return PrayerTimesResult(times: times, locationDenied: false);
   }
@@ -219,5 +233,5 @@ class PrayerController extends AsyncNotifier<PrayerTimesResult> {
 
 final prayerControllerProvider =
     AsyncNotifierProvider<PrayerController, PrayerTimesResult>(
-  PrayerController.new,
-);
+      PrayerController.new,
+    );

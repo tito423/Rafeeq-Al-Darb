@@ -44,6 +44,7 @@ android {
         multiDexEnabled = true
         testInstrumentationRunner = "com.tito.rafeeq_aldarb.DownloadNotificationRegression"
     }
+    sourceSets.getByName("androidTest").assets.srcDir("../../test/fixtures")
 
     buildTypes {
         release {

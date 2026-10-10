@@ -14,6 +14,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'adhan_entry.dart';
+import 'adhan_recompute_entry.dart';
 import 'app/navigation.dart';
 import 'app/notification_open.dart';
 import 'app/rafeeq_app.dart';
@@ -56,6 +57,9 @@ import 'features/sunan_suwar/presentation/sunan_suwar_navigation.dart';
 /// `adhan_entry.dart`, which this library imports (and thereby compiles).
 @pragma('vm:entry-point')
 Future<void> adhanMain() => runAdhanAlertApp();
+
+@pragma('vm:entry-point')
+Future<void> adhanRecomputeMain() => runAdhanRecompute();
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -182,12 +186,17 @@ Future<void> main() async {
   // skipped surah) through the root messenger.
   QuranAudioPlayer.onNotice = showPlayerNotice;
   ayahWaitingNotice = (verse) => rootScaffoldMessengerKey.currentState
-      ?..clearSnackBars()
-      ..showSnackBar(SnackBar(
-        content: Text('quran.recite_waiting'.tr(args: [localizeDigits(verse, 'ar')])),
+    ?..clearSnackBars()
+    ..showSnackBar(
+      SnackBar(
+        content: Text(
+          'quran.recite_waiting'.tr(args: [localizeDigits(verse, 'ar')]),
+        ),
         duration: const Duration(seconds: 6),
-      ));
-  continuousVoiceNotice = () => rootScaffoldMessengerKey.currentState?.showSnackBar(
+      ),
+    );
+  continuousVoiceNotice = () =>
+      rootScaffoldMessengerKey.currentState?.showSnackBar(
         SnackBar(
           content: Text('quran.recite_voice_substituted'.tr()),
           duration: const Duration(seconds: 6),
@@ -213,7 +222,8 @@ Future<void> main() async {
       child: ProviderScope(
         overrides: [
           sharedPrefsProvider.overrideWith(
-              (ref) => SyncableSharedPreferences(sharedPreferences, ref)),
+            (ref) => SyncableSharedPreferences(sharedPreferences, ref),
+          ),
           // Without this the provider's default THREW on every read,
           // and it is read on every settings write during start-up.
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
@@ -222,5 +232,4 @@ Future<void> main() async {
       ),
     ),
   );
-
 }

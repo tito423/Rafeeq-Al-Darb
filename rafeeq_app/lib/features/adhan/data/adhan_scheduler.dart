@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 
+import '../../../core/models/adhan_calculation.dart';
 import '../../../core/models/adhan_mode.dart';
 import '../../../core/models/adhan_option.dart';
 import '../../../core/models/prayer_times.dart';
@@ -92,8 +93,9 @@ AdhanSpec _specFor({
 Future<bool> rescheduleAdhans(
   PrayerTimes times,
   AdhanSettings settings,
-  List<AdhanOption> catalog,
-) async {
+  List<AdhanOption> catalog, {
+  required Map<String, Object> calculation,
+}) async {
   if (times.isEmpty || catalog.isEmpty) return true;
 
   final specs = <AdhanSpec>[];
@@ -112,7 +114,17 @@ Future<bool> rescheduleAdhans(
     );
   }
   if (specs.isEmpty) return true;
-  return AdhanNative.scheduleDaily(specs);
+  final now = DateTime.now();
+  final triggers = nextAdhanTriggers({
+    'calculation': calculation,
+    'notBefore': now.millisecondsSinceEpoch,
+    'dates': adhanCalculationDates(now),
+  });
+  return AdhanNative.scheduleDaily(
+    specs,
+    calculation: calculation,
+    triggers: triggers,
+  );
 }
 
 /// Fires one prayer's Adhan a few seconds from now through the *identical*

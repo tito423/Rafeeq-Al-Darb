@@ -215,6 +215,10 @@
 
         <!-- Re-arms the persisted schedule after a reboot / app update /
              clock change, since AlarmManager forgets everything then. -->
+        <service
+            android:name=".adhan.AdhanRecomputeJob"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
         <receiver
             android:name=".adhan.AdhanBootReceiver"
             android:exported="false"

@@ -10,12 +10,12 @@ import androidx.core.app.NotificationManagerCompat
  * The real BroadcastReceiver the exact alarm wakes.
  *
  * This is the entry point for every Adhan firing, and it runs natively —
- * no Flutter engine, no Dart isolate, so it works identically whether the
+ * audio starts without a Flutter engine, so it works identically whether the
  * app is in the foreground, backgrounded, swiped away, or has never been
  * opened since the last reboot.
  *
  * What happens here is deliberately minimal and fast (a receiver gets ~10
- * seconds): re-arm tomorrow's alarm, then hand the firing to
+ * seconds): start a headless offline calculation of future alarms while handing the firing to
  * [AdhanService] (for the two modes that make noise) or post the quiet
  * notification directly (for the two that do not).
  */
@@ -31,7 +31,8 @@ class AdhanAlarmReceiver : BroadcastReceiver() {
         // must still call the adhan tomorrow, so the receiver owns its own
         // continuation rather than depending on the UI ever running.
         if (spec.daily) {
-            AdhanScheduler.rearmAfterFiring(context)
+            val pending = goAsync()
+            AdhanScheduler.rearmAfterFiring(context) { pending.finish() }
         }
 
         when (spec.mode) {
