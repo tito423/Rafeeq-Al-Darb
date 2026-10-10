@@ -1,0 +1,20 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/hadith_grader_attribution_audit_test.dart
+00:00 +0: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +0: actual Tirmidhi1 attribution and unused listen-button disposal
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+AUDIT_GRADER_ATTRIBUTION: actual DB id20013 Tirmidhi1 -> production screen Sahih — Darussalam; no named scholar or edition. Primary Sunnah.com/about identifies Darussalam attribution separately.
+AUDIT_UNUSED_LISTEN_DISPOSAL: closing actual Tirmidhi1 without listening creates the lazy pulse controller during dispose and raises: Looking up a deactivated widget's ancestor is unsafe.
+At this point the state of the widget's element tree is no longer stable.
+To safely refer to a widget's ancestor in its dispose() method, save a reference to the ancestor by calling dependOnInheritedWidgetOfExactType() in the widget's didChangeDependencies() method.
+00:01 +1: (tearDownAll)
+00:01 +1: All tests passed!

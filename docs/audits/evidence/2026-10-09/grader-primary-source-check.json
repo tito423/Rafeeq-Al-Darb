@@ -1,0 +1,10 @@
+{
+  "checked_date_dubai": "2026-10-10",
+  "primary_sources": [
+    {"url": "https://sunnah.com/about", "section": "Sources, numbering, and grading", "observed": "The source identifies Darussalam gradings with Hafiz Zubair Ali Zai; the application stores/displays only Darussalam."},
+    {"url": "https://sunnah.com/tirmidhi:1", "observed_grade": "Sahih (Darussalam)", "application_db_id": 20013},
+    {"url": "https://sunnah.com/nasai:1", "observed_grade": "Sahih (Darussalam)"},
+    {"url": "https://sunnah.com/ibnmajah/1", "observed": "Sunan Ibn Majah267 is displayed with Darussalam attribution; source numbering is distinct from application book-local numbering."}
+  ],
+  "scope": "Provenance/attribution gap against project CLAUDE.md1.2. No assertion that a hadith verdict is wrong, no new grade or scholar name applied, no religious content changed. Exact printed edition metadata still needs verification before any data change."
+}

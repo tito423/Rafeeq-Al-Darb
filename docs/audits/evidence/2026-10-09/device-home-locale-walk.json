@@ -1,0 +1,93 @@
+[
+  {
+    "lang": "ar",
+    "screenshot": "device-home-ar.png",
+    "device_date": "Sat Oct 10 13:41:01 +04 2026",
+    "selection_label": "العربية",
+    "selection_bounds": [
+      109,
+      2022,
+      289,
+      2148
+    ],
+    "scope": "Actual signed baseline emulator screenshot; requires visual inspection, not all-screen certification."
+  },
+  {
+    "lang": "en",
+    "screenshot": "device-home-en.png",
+    "device_date": "Sat Oct 10 13:41:07 +04 2026",
+    "selection_label": "English",
+    "selection_bounds": [
+      576,
+      2022,
+      770,
+      2148
+    ],
+    "scope": "Actual signed baseline emulator screenshot; requires visual inspection, not all-screen certification."
+  },
+  {
+    "lang": "fr",
+    "screenshot": "device-home-fr.png",
+    "device_date": "Sat Oct 10 13:41:12 +04 2026",
+    "selection_label": "Français",
+    "selection_bounds": [
+      483,
+      2169,
+      693,
+      2295
+    ],
+    "scope": "Actual signed baseline emulator screenshot; requires visual inspection, not all-screen certification."
+  },
+  {
+    "lang": "es",
+    "screenshot": "device-home-es.png",
+    "device_date": "Sat Oct 10 13:41:18 +04 2026",
+    "selection_label": "Español",
+    "selection_bounds": [
+      525,
+      2022,
+      729,
+      2148
+    ],
+    "scope": "Actual signed baseline emulator screenshot; requires visual inspection, not all-screen certification."
+  },
+  {
+    "lang": "pt",
+    "screenshot": "device-home-pt.png",
+    "device_date": "Sat Oct 10 13:41:23 +04 2026",
+    "selection_label": "Português",
+    "selection_bounds": [
+      223,
+      2169,
+      462,
+      2295
+    ],
+    "scope": "Actual signed baseline emulator screenshot; requires visual inspection, not all-screen certification."
+  },
+  {
+    "lang": "ru",
+    "screenshot": "device-home-ru.png",
+    "device_date": "Sat Oct 10 13:41:28 +04 2026",
+    "selection_label": "Русский",
+    "selection_bounds": [
+      750,
+      2022,
+      971,
+      2148
+    ],
+    "scope": "Actual signed baseline emulator screenshot; requires visual inspection, not all-screen certification."
+  },
+  {
+    "lang": "ur",
+    "screenshot": "device-home-ur.png",
+    "device_date": "Sat Oct 10 13:41:34 +04 2026",
+    "selection_label": "اردو",
+    "selection_bounds": [
+      714,
+      2169,
+      857,
+      2295
+    ],
+    "scope": "Actual signed baseline emulator screenshot; requires visual inspection, not all-screen certification."
+  }
+]
