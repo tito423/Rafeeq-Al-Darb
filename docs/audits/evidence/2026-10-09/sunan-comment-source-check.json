@@ -1,0 +1,68 @@
+{
+  "sourceComment": "sunan_suwar_catalog.dart:18-20",
+  "scope": "Comment excludes pairing; displayed Sajdah note presents Friday Fajr only, which is not a false practice claim. No religious text edited. Primary source check is a maintainer-comment correction candidate, not a newly invented feature requirement.",
+  "references": [
+    {
+      "url": "https://hadeethenc.com/ar/browse/hadith/65260",
+      "grading": "Institutional sahih; Tirmidhi2892; includes both surahs at bedtime"
+    },
+    {
+      "url": "https://dorar.net/h/JD4cuhNa?osoul=1",
+      "grader": "Al-Albani",
+      "work": "Sahih al-Jami",
+      "number": 4873,
+      "grading": "sahih"
+    }
+  ],
+  "displayedNotes": [
+    {
+      "locale": "ar",
+      "note_sajdah": "كان النبي ﷺ يقرؤها مع سورة الإنسان في فجر يوم الجمعة",
+      "source_sajdah": "صحيح البخاري",
+      "note_mulk": "ثلاثون آية تشفع لصاحبها حتى يُغفر له",
+      "source_mulk": "سنن أبي داود والترمذي (حسن)"
+    },
+    {
+      "locale": "en",
+      "note_sajdah": "The Prophet ﷺ used to recite it with Surah al-Insan in the Friday Fajr prayer",
+      "source_sajdah": "Sahih al-Bukhari",
+      "note_mulk": "Thirty verses that intercede for their reciter until he is forgiven",
+      "source_mulk": "Sunan Abi Dawud & al-Tirmidhi (hasan)"
+    },
+    {
+      "locale": "fr",
+      "note_sajdah": "Le Prophète ﷺ avait l'habitude de la réciter avec la sourate al-Insan à la prière du Fajr du vendredi",
+      "source_sajdah": "Sahih al-Bukhari",
+      "note_mulk": "Trente versets qui intercèdent pour celui qui les récite jusqu'à ce qu'il soit pardonné",
+      "source_mulk": "Sunan Abi Dawud et al-Tirmidhi (hasan)"
+    },
+    {
+      "locale": "es",
+      "note_sajdah": "El Profeta ﷺ solía recitarla junto con la Surah al-Insan en la oración del Fayr del viernes",
+      "source_sajdah": "Sahih al-Bujari",
+      "note_mulk": "Treinta versículos que interceden por quien la recita hasta que es perdonado",
+      "source_mulk": "Sunan Abi Dawud y al-Tirmidhi (hasan)"
+    },
+    {
+      "locale": "pt",
+      "note_sajdah": "O Profeta ﷺ costumava recitá-la com a Surah al-Insan na oração do Fajr de sexta-feira",
+      "source_sajdah": "Sahih al-Bukhari",
+      "note_mulk": "Trinta versículos que intercedem pelo seu recitador até ser perdoado",
+      "source_mulk": "Sunan Abi Dawud e al-Tirmidhi (hasan)"
+    },
+    {
+      "locale": "ru",
+      "note_sajdah": "Пророк ﷺ читал её вместе с сурой аль-Инсан в пятничном фаджре",
+      "source_sajdah": "Сахих аль-Бухари",
+      "note_mulk": "Тридцать аятов, заступающихся за читающего, пока он не будет прощён",
+      "source_mulk": "Сунан Абу Дауда и ат-Тирмизи (хасан)"
+    },
+    {
+      "locale": "ur",
+      "note_sajdah": "نبی ﷺ جمعہ کی فجر میں اسے سورۃ الانسان کے ساتھ پڑھا کرتے تھے",
+      "source_sajdah": "صحیح البخاری",
+      "note_mulk": "تیس آیات جو اپنے پڑھنے والے کی سفارش کرتی ہیں یہاں تک کہ اس کی مغفرت ہو جائے",
+      "source_mulk": "سنن ابی داؤد و ترمذی (حسن)"
+    }
+  ]
+}

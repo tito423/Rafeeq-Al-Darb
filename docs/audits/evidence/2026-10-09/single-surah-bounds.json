@@ -1,0 +1,141 @@
+{
+  "scope": "All four sunan and six selected-surah routes; read-only bundled database comparison with production source line245. No Quran text edited.",
+  "databaseSha256": "3b27c8ab9c1a15a9db12e89c844680cf40aedb659168b6f3a3ae97b52a361679",
+  "affectedSurahs": 5,
+  "omittedAyahs": 48,
+  "rows": [
+    {
+      "surah": 2,
+      "actualFirstPage": 2,
+      "actualLastPage": 49,
+      "nextSurahFirstPage": 50,
+      "screenLastPage": 49,
+      "missingAyahs": []
+    },
+    {
+      "surah": 18,
+      "actualFirstPage": 293,
+      "actualLastPage": 304,
+      "nextSurahFirstPage": 305,
+      "screenLastPage": 304,
+      "missingAyahs": []
+    },
+    {
+      "surah": 67,
+      "actualFirstPage": 562,
+      "actualLastPage": 564,
+      "nextSurahFirstPage": 564,
+      "screenLastPage": 563,
+      "missingAyahs": [
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "surah": 32,
+      "actualFirstPage": 415,
+      "actualLastPage": 417,
+      "nextSurahFirstPage": 418,
+      "screenLastPage": 417,
+      "missingAyahs": []
+    },
+    {
+      "surah": 12,
+      "actualFirstPage": 235,
+      "actualLastPage": 248,
+      "nextSurahFirstPage": 249,
+      "screenLastPage": 248,
+      "missingAyahs": []
+    },
+    {
+      "surah": 19,
+      "actualFirstPage": 305,
+      "actualLastPage": 312,
+      "nextSurahFirstPage": 312,
+      "screenLastPage": 311,
+      "missingAyahs": [
+        96,
+        97,
+        98
+      ]
+    },
+    {
+      "surah": 55,
+      "actualFirstPage": 531,
+      "actualLastPage": 534,
+      "nextSurahFirstPage": 534,
+      "screenLastPage": 533,
+      "missingAyahs": [
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78
+      ]
+    },
+    {
+      "surah": 56,
+      "actualFirstPage": 534,
+      "actualLastPage": 537,
+      "nextSurahFirstPage": 537,
+      "screenLastPage": 536,
+      "missingAyahs": [
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96
+      ]
+    },
+    {
+      "surah": 36,
+      "actualFirstPage": 440,
+      "actualLastPage": 445,
+      "nextSurahFirstPage": 446,
+      "screenLastPage": 445,
+      "missingAyahs": []
+    },
+    {
+      "surah": 50,
+      "actualFirstPage": 518,
+      "actualLastPage": 520,
+      "nextSurahFirstPage": 520,
+      "screenLastPage": 519,
+      "missingAyahs": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ]
+    }
+  ]
+}
