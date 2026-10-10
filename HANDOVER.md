@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 13:26 — IN PROGRESS — resume here**
+**2026-10-10 13:31 — IN PROGRESS — resume here**
 
-audit: validate all 289 books and 1578 Quran course references
+audit: prove A-43 ListenCard overflow with real fonts in seven locales
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

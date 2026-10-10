@@ -1,0 +1,296 @@
+[
+  {
+    "lang": "ar",
+    "scale": 1.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 436 pixels on the right."
+    ],
+    "buttonRect": [
+      31.0,
+      153.0,
+      135.24400329589844,
+      193.0
+    ],
+    "buttonOutsideViewport": false,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "ar",
+    "scale": 2.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 1019 pixels on the right."
+    ],
+    "buttonRect": [
+      31.0,
+      426.5,
+      148.9879913330078,
+      466.5
+    ],
+    "buttonOutsideViewport": false,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "en",
+    "scale": 1.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 434 pixels on the right."
+    ],
+    "buttonRect": [
+      661.060302734375,
+      153.0,
+      763.4863052368164,
+      193.0
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "en",
+    "scale": 2.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 1016 pixels on the right."
+    ],
+    "buttonRect": [
+      1230.3701171875,
+      462.5,
+      1344.6221237182617,
+      502.5
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "fr",
+    "scale": 1.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 444 pixels on the right."
+    ],
+    "buttonRect": [
+      661.060302734375,
+      153.0,
+      773.1203193664551,
+      193.0
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "fr",
+    "scale": 2.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 1035 pixels on the right."
+    ],
+    "buttonRect": [
+      1230.3701171875,
+      462.5,
+      1363.7901153564453,
+      502.5
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "es",
+    "scale": 1.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 452 pixels on the right."
+    ],
+    "buttonRect": [
+      661.060302734375,
+      153.0,
+      781.2003135681152,
+      193.0
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "es",
+    "scale": 2.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 1051 pixels on the right."
+    ],
+    "buttonRect": [
+      1230.3701171875,
+      462.5,
+      1379.8501281738281,
+      502.5
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "pt",
+    "scale": 1.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 430 pixels on the right."
+    ],
+    "buttonRect": [
+      661.060302734375,
+      153.0,
+      758.9483032226562,
+      193.0
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "pt",
+    "scale": 2.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 1007 pixels on the right."
+    ],
+    "buttonRect": [
+      1230.3701171875,
+      462.5,
+      1335.6461181640625,
+      502.5
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "ru",
+    "scale": 1.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 422 pixels on the right."
+    ],
+    "buttonRect": [
+      661.060302734375,
+      153.0,
+      750.7902565002441,
+      193.0
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "ru",
+    "scale": 2.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 990 pixels on the right."
+    ],
+    "buttonRect": [
+      1230.3701171875,
+      426.5,
+      1319.1301307678223,
+      466.5
+    ],
+    "buttonOutsideViewport": true,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "ur",
+    "scale": 1.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 428 pixels on the right."
+    ],
+    "buttonRect": [
+      31.0,
+      153.0,
+      126.99599266052246,
+      193.0
+    ],
+    "buttonOutsideViewport": false,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  },
+  {
+    "lang": "ur",
+    "scale": 2.0,
+    "screenDp": [
+      360,
+      800
+    ],
+    "cardWidthDp": 328,
+    "source": "ghayat_al_murid lesson3 block37 q span 4:115",
+    "errors": [
+      "A RenderFlex overflowed by 1003 pixels on the right."
+    ],
+    "buttonRect": [
+      31.0,
+      462.5,
+      132.59200286865234,
+      502.5
+    ],
+    "buttonOutsideViewport": false,
+    "fonts": "real bundled Cairo/AmiriQuran/KFGQPCHafs; no Ahem measurement"
+  }
+]

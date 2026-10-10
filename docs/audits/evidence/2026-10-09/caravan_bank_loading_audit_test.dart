@@ -85,7 +85,7 @@ void main() {
     expect(world.phase, CaravanPhase.atGate);
     final firstQuestion = bank.firstWhere((q) => CaravanLeg.first.gateIds.contains(q.id)).localized('en');
     expect(find.text(firstQuestion.question), findsNothing);
-    expect(find.byType(FilledButton), findsNothing);
+    expect(find.byWidgetPredicate((w) => w is FilledButton), findsNothing);
     for (var frame = 0; frame < 40; frame++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
