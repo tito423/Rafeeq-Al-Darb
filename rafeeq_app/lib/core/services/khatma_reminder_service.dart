@@ -18,6 +18,27 @@ class KhatmaReminderService {
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
   bool _channelReady = false;
+  Future<void> _pendingReplacement = Future<void>.value();
+
+  /// Serialize replacement so two quick edits cannot leave a deleted plan
+  /// armed. Only khatma payloads are cancelled, including old hashed IDs.
+  Future<void> replaceAll(List<(int, int, int)> reminders) {
+    final replacement = _pendingReplacement
+        .then<void>((_) {}, onError: (Object error, StackTrace stack) {})
+        .then((_) async {
+          final pending = await _plugin.pendingNotificationRequests();
+          for (final notification in pending) {
+            if (notification.payload == '${NotificationRouter.openPrefix}khatma') {
+              await cancel(notification.id);
+            }
+          }
+          for (final (id, hour, minute) in reminders) {
+            await schedule(id, hour, minute);
+          }
+        });
+    _pendingReplacement = replacement;
+    return replacement;
+  }
 
   Future<void> _ensureChannel() async {
     if (_channelReady) return;

@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../../core/config/notification_ids.dart';
 import '../../../core/services/notification_router.dart';
 import 'quote_repository.dart';
 
@@ -33,7 +34,7 @@ class QuoteReminderService {
 
   /// One id block, so a re-arm replaces the previous window rather than
   /// stacking a second one on top of it.
-  static const _baseId = 7500;
+  static const _baseId = NotificationIds.quotes;
 
   /// How many notifications one window holds.
   ///
@@ -41,7 +42,7 @@ class QuoteReminderService {
   /// them is a lot to ask of the system for a nudge. At the owner's default
   /// half-hour that is twelve hours of coverage, re-armed every time the app
   /// is opened.
-  static const maxSlots = 24;
+  static const maxSlots = NotificationIds.quotesCount;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();

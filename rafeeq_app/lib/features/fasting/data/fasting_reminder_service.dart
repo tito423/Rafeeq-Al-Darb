@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../../core/config/notification_ids.dart';
 import '../../../core/services/notification_router.dart';
 import 'sunnah_fasting.dart';
 
@@ -18,8 +19,8 @@ class FastingReminderService {
   static final FastingReminderService instance = FastingReminderService._();
 
   static const _channelId = 'rafeeq_fasting_reminder';
-  static const _firstId = 7300;
-  static const _maxCount = 50;
+  static const _firstId = NotificationIds.fasting;
+  static const _maxCount = NotificationIds.fastingCount;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();

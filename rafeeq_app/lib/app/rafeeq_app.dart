@@ -16,13 +16,18 @@ import '../core/widgets/arrow_scrollbar.dart';
 import '../core/widgets/focus_ring_overlay.dart';
 import '../features/adhan/data/prayer_adjustments_provider.dart';
 import '../features/assistant/presentation/assistant_wake_listener.dart';
+import '../features/azkar/data/azkar_settings_provider.dart';
 import '../features/fasting/data/fasting_reminder_provider.dart';
 import '../features/home/data/prayer_controller.dart';
+import '../features/khatma/data/khatma_store.dart';
+import '../features/library/data/my_shelves.dart';
 import '../features/quotes/data/quote_reminder_provider.dart';
 import '../features/quotes/data/quote_reminder_service.dart';
 import '../features/quotes/data/quote_repository.dart';
+import '../features/quran/data/mushaf_data_provider.dart';
 import '../features/quran/data/translation_lang_provider.dart';
 import '../features/splash/presentation/screens/splash_screen.dart';
+import '../features/sunan_suwar/data/sunan_suwar_store.dart';
 import '../features/tasbih_reminder/data/tasbih_reminder_provider.dart';
 import 'app_locale_provider.dart';
 import 'navigation.dart';
@@ -92,6 +97,24 @@ class RafeeqApp extends ConsumerWidget {
         final first = _lastLocale == null;
         _lastLocale = localeCode;
         rootScaffoldMessengerKey.currentState?.clearSnackBars();
+        // Legacy overlapping alarms were cleaned before runApp. Restore all
+        // affected reminders from saved choices, also with an offline position.
+        ref.read(khatmaStoreProvider.notifier).rearmReminders();
+        ref.read(shelvesProvider.notifier).rearmReminders();
+        final azkar = ref.read(azkarSettingsProvider.notifier);
+        if (!first) azkar.rearmReminders();
+        ref.read(mushafDataProvider.future).then((mushaf) {
+          if (!context.mounted) return;
+          ref.read(sunanSuwarStoreProvider.notifier).rearmReminders({
+            for (final surah in mushaf.surahs) surah.id: mushaf.surahNameAr(surah.id),
+          });
+        });
+        if (first) {
+          ref.read(prayerControllerProvider.future).then((_) {
+            if (!context.mounted) return;
+            ref.read(prayerControllerProvider.notifier).rescheduleFromCache();
+          });
+        }
         // The fifteen prayer reminders carry their title and body as literal
         // text inside AlarmManager — `.tr()` runs when they are *armed*, not
         // when they fire. Nothing re-armed them on a language change, so

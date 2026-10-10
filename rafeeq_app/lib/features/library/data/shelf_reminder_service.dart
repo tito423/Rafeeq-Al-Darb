@@ -2,8 +2,7 @@
 ///
 /// One notification per chosen weekday, repeating every week at the chosen
 /// time (`DateTimeComponents.dayOfWeekAndTime`, the same mechanism as the
-/// sunan-surah reminders). Ids are `20000 + shelf * 10 + weekday`, clear of
-/// every other reminder's range (sunan surahs end at 10147). The tap opens
+/// sunan-surah reminders). IDs belong to the central shelf range. The tap opens
 /// that shelf through `NotificationRouter`'s `open:shelf:<id>`.
 library;
 
@@ -11,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../../core/config/notification_ids.dart';
 import '../../../core/services/notification_router.dart';
 import 'my_shelves.dart';
 
@@ -25,7 +25,7 @@ class ShelfReminderService {
   bool _channelReady = false;
 
   static int notificationId(int shelfId, int weekday) =>
-      20000 + shelfId * 10 + weekday;
+      NotificationIds.shelfId(shelfId, weekday);
 
   Future<void> _ensureChannel() async {
     if (_channelReady) return;

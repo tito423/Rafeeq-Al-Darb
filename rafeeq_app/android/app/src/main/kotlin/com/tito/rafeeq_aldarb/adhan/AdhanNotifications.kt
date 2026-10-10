@@ -1,5 +1,7 @@
 package com.tito.rafeeq_aldarb.adhan
 
+import com.tito.rafeeq_aldarb.BuildConfig
+
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -26,7 +28,7 @@ object AdhanNotifications {
     const val CHANNEL_SILENT = "rafeeq_adhan_silent_v2"
 
     /** Every Adhan alert posts under this single id — one adhan at a time. */
-    const val NOTIFICATION_ID = 7301
+    const val NOTIFICATION_ID = BuildConfig.NOTIFICATION_ADHAN
 
     fun ensureChannels(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return

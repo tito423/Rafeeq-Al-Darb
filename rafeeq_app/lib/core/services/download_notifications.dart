@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../config/notification_ids.dart';
 import 'notification_router.dart';
 
 /// Android status-bar progress for the one download path that is **not** a
@@ -43,14 +44,14 @@ class DownloadNotifications {
     }
   }
 
-  int _notificationId(String id) => 4700 + _hash(id);
+  int _notificationId(String id) => NotificationIds.downloadProgress + _hash(id);
 
   static int _hash(String s) {
     var h = 0;
     for (final c in s.codeUnits) {
       h = (h * 31 + c) & 0x7fffffff;
     }
-    return h % 300;
+    return h % NotificationIds.downloadCount;
   }
 
   /// Last time a progress notification was posted for an id — used to throttle
@@ -135,7 +136,7 @@ class DownloadNotifications {
         groupKey: _channelId,
       );
       await plugin.show(
-        id: _notificationId(id) + 1000,
+        id: NotificationIds.downloadComplete + _hash(id),
         title: title,
         body: 'notif.dl_done'.tr(),
         notificationDetails: const NotificationDetails(android: android),
@@ -158,8 +159,16 @@ class DownloadNotifications {
       final active = await plugin.getActiveNotifications();
       for (final n in active) {
         final id = n.id;
-        if (id == null || id == 4800) continue;
-        if (id >= 4700 && id < 5000) await plugin.cancel(id: id);
+        if (id == null || id == NotificationIds.downloadForeground ||
+            id == NotificationIds.legacyDownloadForeground ||
+            id == NotificationIds.legacyAssistant) {
+          continue;
+        }
+        final current = id >= NotificationIds.downloadProgress &&
+            id < NotificationIds.downloadProgress + NotificationIds.downloadCount;
+        final legacy = id >= NotificationIds.legacyDownloadProgress &&
+            id < NotificationIds.legacyDownloadProgress + NotificationIds.downloadCount;
+        if (current || legacy) await plugin.cancel(id: id);
       }
     } catch (_) {}
   }

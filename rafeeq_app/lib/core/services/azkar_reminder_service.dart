@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../config/notification_ids.dart';
 import 'notification_router.dart';
 
 /// Daily "time for your adhkar" reminders, at whatever time the user picked
@@ -23,13 +24,13 @@ class AzkarReminderService {
       FlutterLocalNotificationsPlugin();
   bool _channelReady = false;
 
-  static const _morningId = 6001;
-  static const _eveningId = 6002;
+  static const _morningId = NotificationIds.azkar;
+  static const _eveningId = NotificationIds.azkar + 1;
 
   /// The sleep adhkar reminder, asked for on 2026-09-17. Same shape as the
   /// other two so there is nothing new to reason about: one id, one exact
   /// daily alarm, cancelled by the same path.
-  static const _sleepId = 6003;
+  static const _sleepId = NotificationIds.azkar + 2;
 
   Future<void> _ensureChannel() async {
     if (_channelReady) return;

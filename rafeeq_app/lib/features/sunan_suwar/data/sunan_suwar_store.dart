@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/rafeeq_app.dart';
+import '../../../core/config/notification_ids.dart';
 import '../../../core/services/sunan_suwar_reminder_service.dart';
 
 /// One surah's reminder: `weekday` is Dart's `DateTime.weekday`
@@ -65,10 +66,16 @@ class SunanSuwarStore extends StateNotifier<Map<int, SunanReminder>> {
   /// Distinct, stable notification id per surah — offset well clear of
   /// every other notification id range this app already uses.
   /// The id a reminder had when it could fire on one day only.
-  int _legacyId(int surahId) => 8000 + surahId;
+  int _legacyId(int surahId) => NotificationIds.sunanLegacy + surahId;
 
   /// One alarm per day: 9000 + surah × 10 + weekday (at most 10147).
-  int _dayId(int surahId, int weekday) => 9000 + surahId * 10 + weekday;
+  int _dayId(int surahId, int weekday) => NotificationIds.sunan + surahId * 10 + weekday;
+
+  Future<void> rearmReminders(Map<int, String> labels) async {
+    for (final entry in state.entries) {
+      await _arm(entry.key, labels[entry.key]!, entry.value);
+    }
+  }
 
   Future<void> _cancelAll(int surahId) async {
     final service = SunanSuwarReminderService.instance;
@@ -85,6 +92,10 @@ class SunanSuwarStore extends StateNotifier<Map<int, SunanReminder>> {
   ) async {
     state = {...state, surahId: reminder};
     await _persist();
+    await _arm(surahId, surahLabel, reminder);
+  }
+
+  Future<void> _arm(int surahId, String surahLabel, SunanReminder reminder) async {
     await _cancelAll(surahId);
     for (final weekday in reminder.weekdays) {
       await SunanSuwarReminderService.instance.schedule(

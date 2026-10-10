@@ -31,7 +31,7 @@ import com.ryanheise.audioservice.AudioService
 class AssistantListenService : Service() {
     companion object {
         const val CHANNEL_ID = "rafeeq_assistant"
-        const val NOTIFICATION_ID = 4711
+        const val NOTIFICATION_ID = BuildConfig.NOTIFICATION_ASSISTANT
         const val ACTION_STOP = "com.tito.rafeeq_aldarb.ASSISTANT_STOP"
         const val EXTRA_TITLE = "title"
         const val EXTRA_TEXT = "text"

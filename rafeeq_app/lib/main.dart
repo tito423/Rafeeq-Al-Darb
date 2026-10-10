@@ -21,6 +21,7 @@ import 'core/i18n/supported_locales.dart';
 import 'core/services/alarm_permissions_service.dart';
 import 'core/services/ayah_audio_service.dart';
 import 'core/services/download_engine.dart';
+import 'core/services/notification_id_upgrade.dart';
 import 'core/services/notification_router.dart';
 import 'core/services/quran_translation_store.dart';
 import 'core/services/recitation_mirrors.dart';
@@ -146,6 +147,7 @@ Future<void> main() async {
   // whole point. All that is left for main() is the notifications plugin
   // and the permission gates.
   await AlarmPermissionsService.instance.initialize();
+  await NotificationIdUpgrade.cleanLegacy(sharedPreferences);
   StartupTrace.step('AlarmPermissionsService.initialize');
 
   // Which downloaded Quran translations are already on disk. Cheap (one

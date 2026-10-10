@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/rafeeq_app.dart';
+import '../../../core/config/notification_ids.dart';
 import '../../../core/services/khatma_reminder_service.dart';
 import 'khatma_model.dart';
 
@@ -36,10 +37,16 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     );
   }
 
-  /// Reminder ids are derived from the khatma's own id so they stay stable
-  /// (and distinct from every other notification id this app uses) without
-  /// needing a separate id-allocation table.
-  int _reminderId(String khatmaId) => 7000 + (khatmaId.hashCode.abs() % 900);
+  /// No hash collisions and no persisted allocation table. Replacing the
+  /// complete set also removes obsolete IDs after a plan is deleted.
+  Future<void> rearmReminders() {
+    final ids = NotificationIds.khatmaIds(state.map((k) => k.id));
+    return KhatmaReminderService.instance.replaceAll([
+      for (final k in state)
+        if (!k.isCompleted && k.reminderTime != null)
+          (ids[k.id]!, k.reminderTime!.hour, k.reminderTime!.minute),
+    ]);
+  }
 
   Khatma? _current(String id) {
     for (final k in state) {
@@ -74,7 +81,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     );
     state = [...state, khatma];
     await _persist();
-    if (reminderTime != null) await _armReminder(khatma);
+    if (state.any((k) => k.reminderTime != null)) await rearmReminders();
     return khatma;
   }
 
@@ -116,7 +123,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     );
     await _replace(updated);
     if (completed) {
-      await KhatmaReminderService.instance.cancel(_reminderId(khatma.id));
+      await rearmReminders();
     }
     return updated;
   }
@@ -140,7 +147,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     // completeWird() cancels the reminder on completion; undo that too if
     // the wird being undone was the one that completed this khatma.
     if (base.isCompleted && updated.reminderTime != null) {
-      await _armReminder(updated);
+      await rearmReminders();
     }
     return updated;
   }
@@ -163,27 +170,13 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
       reminderTime: time,
     );
     await _replace(updated);
-    if (time != null) {
-      await _armReminder(updated);
-    } else {
-      await KhatmaReminderService.instance.cancel(_reminderId(khatma.id));
-    }
-  }
-
-  Future<void> _armReminder(Khatma khatma) async {
-    final time = khatma.reminderTime;
-    if (time == null) return;
-    await KhatmaReminderService.instance.schedule(
-      _reminderId(khatma.id),
-      time.hour,
-      time.minute,
-    );
+    await rearmReminders();
   }
 
   Future<void> delete(Khatma khatma) async {
     state = state.where((k) => k.id != khatma.id).toList();
     await _persist();
-    await KhatmaReminderService.instance.cancel(_reminderId(khatma.id));
+    await rearmReminders();
   }
 }
 

@@ -35,7 +35,7 @@ object PrayerCard {
     /** The card's first post this process: its fixed `when` (see [post]). */
     private var cardWhen = 0L
 
-    const val ID = 6100
+    const val ID = BuildConfig.NOTIFICATION_PRAYER_STATUS
     private const val CHANNEL_ID = "rafeeq_prayer_status"
     private const val PREFS = "rafeeq_prayer_card"
     const val ACTION_REPOST = "com.tito.rafeeq_aldarb.PRAYER_CARD_REPOST"

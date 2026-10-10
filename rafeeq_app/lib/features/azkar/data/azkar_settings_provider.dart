@@ -89,6 +89,21 @@ class AzkarSettingsNotifier extends StateNotifier<AzkarSettings> {
 
   final SharedPreferences _prefs;
 
+  Future<void> rearmReminders() async {
+    final reminders = [state.morningReminder, state.eveningReminder, state.sleepReminder];
+    final service = AzkarReminderService.instance;
+    final schedules = [service.scheduleMorning, service.scheduleEvening, service.scheduleSleep];
+    final cancels = [service.cancelMorning, service.cancelEvening, service.cancelSleep];
+    for (var i = 0; i < reminders.length; i++) {
+      final time = reminders[i];
+      if (time == null) {
+        await cancels[i]();
+      } else {
+        await schedules[i](time.hour, time.minute);
+      }
+    }
+  }
+
   static const _hapticsKey = 'azkar_haptics_v1';
   static const _morningKey = 'azkar_morning_reminder_v1';
   static const _eveningKey = 'azkar_evening_reminder_v1';

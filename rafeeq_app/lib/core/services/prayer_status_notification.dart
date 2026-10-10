@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../config/notification_ids.dart';
 import '../i18n/hijri_months.dart';
 import '../models/prayer_times.dart';
 import '../utils/digits.dart';
@@ -32,12 +33,12 @@ class PrayerStatusNotification {
   static final PrayerStatusNotification instance = PrayerStatusNotification._();
 
   static const _channelId = 'rafeeq_prayer_status';
-  static const _liveId = 6100;
+  static const _liveId = NotificationIds.prayerStatus;
 
   /// The scheduled re-post earlier builds kept in the plugin's own storage.
   /// Cancelled on every refresh, or it would post a second card at the next
   /// prayer.
-  static const _legacyRolloverId = 6101;
+  static const _legacyRolloverId = NotificationIds.prayerStatus + 1;
 
   static const _native = MethodChannel('com.tito.rafeeq_aldarb/prayer_card');
 

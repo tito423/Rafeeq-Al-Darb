@@ -10,6 +10,14 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
+    // Dart and Kotlin share one authoritative notification ID table.
+    // Fail the build if a native ID is missing; never invent a fallback.
+    val notificationIdsFile = file("../../lib/core/config/notification_ids.dart")
+    val notificationIds = Regex("static const int (\\w+) = (\\d+);")
+        .findAll(notificationIdsFile.readText())
+        .associate { it.groupValues[1] to it.groupValues[2] }
+    buildFeatures { buildConfig = true }
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
@@ -21,6 +29,10 @@ android {
     }
 
     defaultConfig {
+        for (key in listOf("adhan", "assistant", "downloadForeground", "downloadItems", "downloadItemsCount", "prayerStatus")) {
+            val field = key.replace(Regex("([a-z])([A-Z])"), "$1_$2").uppercase()
+            buildConfigField("int", "NOTIFICATION_$field", notificationIds.getValue(key))
+        }
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.tito.rafeeq_aldarb"
         // You can update the following values to match your application needs.

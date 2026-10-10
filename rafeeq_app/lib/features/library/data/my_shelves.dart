@@ -102,15 +102,25 @@ class Shelf {
 
 class ShelvesNotifier extends StateNotifier<List<Shelf>> {
   ShelvesNotifier() : super(const []) {
-    _restore();
+    loaded = _restore();
   }
 
   static const _key = 'library.my_shelves_v1';
+  late final Future<void> loaded;
+
+  /// Startup/locale re-arming must wait for the asynchronous saved shelves.
+  Future<void> rearmReminders() async {
+    await loaded;
+    if (!mounted) return;
+    for (final shelf in state) {
+      await ShelfReminderService.instance.apply(shelf);
+    }
+  }
 
   Future<void> _restore() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_key);
-    if (raw == null) return;
+    if (raw == null || !mounted) return;
     try {
       state = [
         for (final j in jsonDecode(raw) as List)

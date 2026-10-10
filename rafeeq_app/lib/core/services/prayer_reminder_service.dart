@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../config/notification_ids.dart';
 import '../models/prayer_times.dart';
 import '../utils/digits.dart';
 import 'prayer_times_service.dart';
@@ -56,11 +57,11 @@ class PrayerReminderService {
   /// it has no adhan (see `prayer.sunrise_no_adhan`) and gets no iqama.
   static const prayerKeys = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
-  /// One id block per kind, five apart — 7100s before, 7200s after, 7300s
+  /// One id block per kind — 7100s before, 7200s after, 7600s
   /// iqama. Fixed so a re-arm replaces yesterday's rather than stacking.
-  static const _preBase = 7100;
-  static const _postBase = 7200;
-  static const _iqamaBase = 7300;
+  static const _preBase = NotificationIds.prayerPre;
+  static const _postBase = NotificationIds.prayerPost;
+  static const _iqamaBase = NotificationIds.prayerIqama;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();

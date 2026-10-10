@@ -39,7 +39,7 @@ class DownloadForegroundService : Service() {
 
     companion object {
         private const val CHANNEL_ID = "rafeeq_download_service"
-        private const val NOTIFICATION_ID = 4800
+        private const val NOTIFICATION_ID = BuildConfig.NOTIFICATION_DOWNLOAD_FOREGROUND
         const val ACTION_START = "start"
         const val ACTION_STOP = "stop"
         const val EXTRA_TITLE = "title"
@@ -56,7 +56,8 @@ class DownloadForegroundService : Service() {
         /** Downloads with a notification of their own, by key. */
         private val items = java.util.concurrent.ConcurrentHashMap<String, Int>()
 
-        private fun itemId(key: String): Int = 4900 + (key.hashCode() and 0x7fffffff) % 90
+        private fun itemId(key: String): Int = BuildConfig.NOTIFICATION_DOWNLOAD_ITEMS +
+            (key.hashCode() and 0x7fffffff) % BuildConfig.NOTIFICATION_DOWNLOAD_ITEMS_COUNT
 
         /**
          * One notification per download — «يتم الآن تحميل مصحف كذا وتحتها مصحف

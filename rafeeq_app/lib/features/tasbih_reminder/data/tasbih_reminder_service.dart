@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../../core/config/notification_ids.dart';
 import '../../../core/services/notification_router.dart';
 import 'tasbih_items.dart';
 
@@ -37,8 +38,8 @@ class TasbihReminderService {
   static final TasbihReminderService instance = TasbihReminderService._();
 
   static const _channelId = 'rafeeq_tasbih_reminder';
-  static const _firstId = 7400;
-  static const _maxSlots = 20;
+  static const _firstId = NotificationIds.tasbih;
+  static const _maxSlots = NotificationIds.tasbihCount;
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
