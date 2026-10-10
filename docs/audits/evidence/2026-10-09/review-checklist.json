@@ -8327,19 +8327,49 @@
     "path": "rafeeq_app/lib/features/sunan_suwar/data/sunan_suwar_catalog.dart",
     "lines": 33,
     "sha256": "f4bc5ea4ff20ee60e26326feaea161617730d3c70cdf18021c1fe4643e6fe491",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 33,
+    "notes": [
+      {
+        "lines": [
+          1,
+          33
+        ],
+        "note": "Read sunan catalogue virtues/comments, reminder model migration/store per-day id cancellation/scheduling and selected surahs card. Catalogue comment19 falsely excludes authentic Sajdah+Mulk before-sleep pairing relative to HadeethEnc65260 and Dorar Albani4873/2096; this is a source-comment discrepancy only until displayed note corpus checked. No religious content edits without owner approval. Store async overlapping set/clear can race native alarms; realistic schedule-delay proof pending. Selected grid font shrinks via FittedBox and actual readableOn contrast guard noted."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/sunan_suwar/data/sunan_suwar_store.dart",
     "lines": 112,
     "sha256": "f85e7cbfec6e50e532f1026813fb53a02cad622b6114d765caf9114465971e45",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 112,
+    "notes": [
+      {
+        "lines": [
+          1,
+          112
+        ],
+        "note": "Read sunan catalogue virtues/comments, reminder model migration/store per-day id cancellation/scheduling and selected surahs card. Catalogue comment19 falsely excludes authentic Sajdah+Mulk before-sleep pairing relative to HadeethEnc65260 and Dorar Albani4873/2096; this is a source-comment discrepancy only until displayed note corpus checked. No religious content edits without owner approval. Store async overlapping set/clear can race native alarms; realistic schedule-delay proof pending. Selected grid font shrinks via FittedBox and actual readableOn contrast guard noted."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/selected_surahs_card.dart",
     "lines": 104,
     "sha256": "6087fc2c9c9b8a2e8ed925e998c850309f3bb6dda86e251995e09e9c611978e9",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 104,
+    "notes": [
+      {
+        "lines": [
+          1,
+          104
+        ],
+        "note": "Read sunan catalogue virtues/comments, reminder model migration/store per-day id cancellation/scheduling and selected surahs card. Catalogue comment19 falsely excludes authentic Sajdah+Mulk before-sleep pairing relative to HadeethEnc65260 and Dorar Albani4873/2096; this is a source-comment discrepancy only until displayed note corpus checked. No religious content edits without owner approval. Store async overlapping set/clear can race native alarms; realistic schedule-delay proof pending. Selected grid font shrinks via FittedBox and actual readableOn contrast guard noted."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/sunan_suwar/presentation/single_surah_screen.dart",
