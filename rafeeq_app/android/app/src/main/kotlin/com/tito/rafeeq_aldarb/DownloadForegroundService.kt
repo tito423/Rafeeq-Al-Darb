@@ -242,5 +242,14 @@ class DownloadForegroundService : Service() {
         super.onDestroy()
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        // Android 15+ requires prompt shutdown when its dataSync budget ends.
+        // Dart owns transfers and resumable files; only their protection stops.
+        running = false
+        cancelItems(this)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
     override fun onBind(intent: Intent?): IBinder? = null
 }

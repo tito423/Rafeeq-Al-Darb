@@ -1,6 +1,7 @@
 package com.tito.rafeeq_aldarb;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Instrumentation;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -72,8 +73,53 @@ public final class DownloadNotificationRegression extends Instrumentation {
             }
             if (!summary || !item) throw new AssertionError("Missing summary or progress item: "
                 + summary + "/" + item + ", running=" + DownloadForegroundService.Companion.getRunning());
+            if ("timeout".equals(suite)) {
+                if (Build.VERSION.SDK_INT < 35) throw new AssertionError("Timeout suite requires API 35+");
+                Intent home = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(home);
+                for (int i = 0; i < 200 && DownloadForegroundService.Companion.getRunning(); i++) {
+                    SystemClock.sleep(100);
+                }
+                if (DownloadForegroundService.Companion.getRunning()) {
+                    throw new AssertionError("Timed-out foreground service remains running");
+                }
+                ActivityManager activities = (ActivityManager)
+                    context.getSystemService(Context.ACTIVITY_SERVICE);
+                for (int i = 0; i < 100; i++) {
+                    boolean registered = false;
+                    for (ActivityManager.RunningServiceInfo info : activities.getRunningServices(100)) {
+                        if (info.service.getClassName().equals(DownloadForegroundService.class.getName())) {
+                            registered = true;
+                        }
+                    }
+                    if (!registered) break;
+                    if (i == 99) throw new AssertionError("Timed-out service did not stopSelf");
+                    SystemClock.sleep(50);
+                }
+                // Notification cancellation is asynchronous too.
+                for (int i = 0; i < 100; i++) {
+                    boolean present = false;
+                    for (StatusBarNotification notification : manager.getActiveNotifications()) {
+                        if (notification.getId() == itemId || notification.getId()
+                            == BuildConfig.NOTIFICATION_DOWNLOAD_FOREGROUND) present = true;
+                    }
+                    if (!present) break;
+                    if (i == 99) throw new AssertionError("Timeout left download notifications behind");
+                    SystemClock.sleep(50);
+                }
+                context.startActivity(launcher);
+                SystemClock.sleep(2000);
+                context.startForegroundService(service);
+                for (int i = 0; i < 100 && !DownloadForegroundService.Companion.getRunning(); i++) {
+                    SystemClock.sleep(50);
+                }
+                if (!DownloadForegroundService.Companion.getRunning()) {
+                    throw new AssertionError("Foreground return cannot restart download protection");
+                }
+            }
             result.putString("stream", "PASS: summary, channel, foreground service and item on API "
-                + Build.VERSION.SDK_INT);
+                + Build.VERSION.SDK_INT + ("timeout".equals(suite) ? ", timeout cleanup and foreground restart" : ""));
             resultCode = Activity.RESULT_OK;
         } catch (Throwable failure) {
             result.putString("stream", "FAIL: " + failure);

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import '../utils/byte_formatter.dart' show ratio;
 import '../utils/digits.dart';
@@ -23,20 +26,33 @@ import '../utils/digits.dart';
 class DownloadForegroundServiceBridge {
   DownloadForegroundServiceBridge._();
 
-  static const _channel = MethodChannel('com.tito.rafeeq_aldarb/download_service');
+  static const _channel = MethodChannel(
+    'com.tito.rafeeq_aldarb/download_service',
+  );
   static int _active = 0;
+  static String? _title;
+  static final _observer = _DownloadServiceObserver();
   static DateTime _lastUpdate = DateTime.fromMillisecondsSinceEpoch(0);
 
   /// Call right before starting a download; pair with [release] in a
   /// `finally` once it settles (success, failure, or cancel).
   static Future<void> acquire({required String title}) async {
+    _title = title;
     _active++;
     if (_active == 1) {
-      try {
-        await _channel.invokeMethod<bool>('start', {'title': title});
-      } catch (_) {
-        // Best-effort — see class doc.
-      }
+      WidgetsBinding.instance.addObserver(_observer);
+      await _restartIfActive();
+    }
+  }
+
+  // Returning to the foreground renews Android's dataSync time budget.
+  // Re-arm protection for transfers that outlived the previous service.
+  static Future<void> _restartIfActive() async {
+    if (_active == 0) return;
+    try {
+      await _channel.invokeMethod<bool>('start', {'title': _title});
+    } catch (_) {
+      // Best-effort — see class doc.
     }
   }
 
@@ -51,7 +67,8 @@ class DownloadForegroundServiceBridge {
   }) async {
     if (_active == 0) return;
     final now = DateTime.now();
-    if (!force && now.difference(_lastUpdate) < const Duration(milliseconds: 900)) {
+    if (!force &&
+        now.difference(_lastUpdate) < const Duration(milliseconds: 900)) {
       return;
     }
     _lastUpdate = now;
@@ -106,14 +123,27 @@ class DownloadForegroundServiceBridge {
   }
 
   static Future<void> release() async {
-    if (_active == 0) return; // defensive: an unmatched release is a no-op, not a crash
+    if (_active == 0) {
+      return; // defensive: an unmatched release is a no-op, not a crash
+    }
     _active--;
     if (_active == 0) {
+      WidgetsBinding.instance.removeObserver(_observer);
+      _title = null;
       try {
         await _channel.invokeMethod<void>('stop');
       } catch (_) {
         // Best-effort — see class doc.
       }
+    }
+  }
+}
+
+class _DownloadServiceObserver extends WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(DownloadForegroundServiceBridge._restartIfActive());
     }
   }
 }
