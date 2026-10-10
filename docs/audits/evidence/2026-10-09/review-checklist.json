@@ -8833,25 +8833,65 @@
     "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_lesson_text.dart",
     "lines": 109,
     "sha256": "d2fd910dd771036378f69666b5f7b96237ed7c29be7c92d5b841e6ba4fb7134a",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 109,
+    "notes": [
+      {
+        "lines": [
+          1,
+          109
+        ],
+        "note": "Reviewed Jazariyyah matn/sharh range extraction and all makharij/example definitions. Range guards and editor-note filtering are present; strict provenance needs compare actual asset/source paragraphs. Makhraj jawf ayahExample is a brace-separated group without surah/ayah and lesson qalqalah phrase points to beginning instead of final stopping letter; trace displayed treatment and primary text before religious classification. Historical licence comments disagree with reintroduced modern prose courses; require owner/source permissions evidence, no legal conclusion or deletions inferred."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/jazariyyah_sharh.dart",
     "lines": 49,
     "sha256": "59fb5bed73aa5a85df0389cebcb75be698c701aaf0fa40c5a05a5e627e1e08fd",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 49,
+    "notes": [
+      {
+        "lines": [
+          1,
+          49
+        ],
+        "note": "Reviewed Jazariyyah matn/sharh range extraction and all makharij/example definitions. Range guards and editor-note filtering are present; strict provenance needs compare actual asset/source paragraphs. Makhraj jawf ayahExample is a brace-separated group without surah/ayah and lesson qalqalah phrase points to beginning instead of final stopping letter; trace displayed treatment and primary text before religious classification. Historical licence comments disagree with reintroduced modern prose courses; require owner/source permissions evidence, no legal conclusion or deletions inferred."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/makharij.dart",
     "lines": 309,
     "sha256": "dfa7ddeabfbff3ab2aed647ed3c50904d2bb559f1c857dba6127838cfd0612be",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 309,
+    "notes": [
+      {
+        "lines": [
+          1,
+          309
+        ],
+        "note": "Reviewed Jazariyyah matn/sharh range extraction and all makharij/example definitions. Range guards and editor-note filtering are present; strict provenance needs compare actual asset/source paragraphs. Makhraj jawf ayahExample is a brace-separated group without surah/ayah and lesson qalqalah phrase points to beginning instead of final stopping letter; trace displayed treatment and primary text before religious classification. Historical licence comments disagree with reintroduced modern prose courses; require owner/source permissions evidence, no legal conclusion or deletions inferred."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/tajweed_example.dart",
     "lines": 31,
     "sha256": "07bfee7daf4133bf1392a3513dff841bca6aa8a5643edea231c063c6ec278dc8",
-    "review": "pending"
+    "review": "source-reviewed",
+    "read_through_line": 31,
+    "notes": [
+      {
+        "lines": [
+          1,
+          31
+        ],
+        "note": "Reviewed Jazariyyah matn/sharh range extraction and all makharij/example definitions. Range guards and editor-note filtering are present; strict provenance needs compare actual asset/source paragraphs. Makhraj jawf ayahExample is a brace-separated group without surah/ayah and lesson qalqalah phrase points to beginning instead of final stopping letter; trace displayed treatment and primary text before religious classification. Historical licence comments disagree with reintroduced modern prose courses; require owner/source permissions evidence, no legal conclusion or deletions inferred."
+      }
+    ]
   },
   {
     "path": "rafeeq_app/lib/features/tajweed/data/tamhid_course.dart",
