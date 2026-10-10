@@ -1,0 +1,1931 @@
+{
+  "books": [
+    {
+      "id": "bulugh_al_maram",
+      "pages": 1522,
+      "sections": 1101,
+      "printReliable": false
+    },
+    {
+      "id": "al_adab_al_mufrad",
+      "pages": 2010,
+      "sections": 644,
+      "printReliable": false
+    },
+    {
+      "id": "al_shamail_al_muhammadiyyah",
+      "pages": 247,
+      "sections": 60,
+      "printReliable": true
+    },
+    {
+      "id": "mishkat_al_masabih",
+      "pages": 7436,
+      "sections": 1154,
+      "printReliable": false
+    },
+    {
+      "id": "al_targhib_wal_tarhib",
+      "pages": 1411,
+      "sections": 65,
+      "printReliable": false
+    },
+    {
+      "id": "umdat_al_ahkam",
+      "pages": 428,
+      "sections": 120,
+      "printReliable": true
+    },
+    {
+      "id": "riyad_as_salihin",
+      "pages": 810,
+      "sections": 387,
+      "printReliable": false
+    },
+    {
+      "id": "mukhtasar_minhaj_al_qasidin",
+      "pages": 408,
+      "sections": 226,
+      "printReliable": true
+    },
+    {
+      "id": "al_fawaid",
+      "pages": 209,
+      "sections": 105,
+      "printReliable": true
+    },
+    {
+      "id": "sayd_al_khatir",
+      "pages": 893,
+      "sections": 394,
+      "printReliable": false
+    },
+    {
+      "id": "nawadir_al_usul",
+      "pages": 1237,
+      "sections": 550,
+      "printReliable": false
+    },
+    {
+      "id": "al_samt_wa_adab_al_lisan",
+      "pages": 787,
+      "sections": 26,
+      "printReliable": false
+    },
+    {
+      "id": "qasr_al_amal",
+      "pages": 345,
+      "sections": 4,
+      "printReliable": false
+    },
+    {
+      "id": "adab_al_nafs",
+      "pages": 110,
+      "sections": 8,
+      "printReliable": true
+    },
+    {
+      "id": "islah_al_mal",
+      "pages": 497,
+      "sections": 17,
+      "printReliable": false
+    },
+    {
+      "id": "istina_al_maruf",
+      "pages": 182,
+      "sections": 10,
+      "printReliable": false
+    },
+    {
+      "id": "al_amr_bil_maruf_ibn_abi_al_dunya",
+      "pages": 122,
+      "sections": 122,
+      "printReliable": false
+    },
+    {
+      "id": "ighathat_al_lahfan_fi_hukm_talaq_al_ghadban",
+      "pages": 111,
+      "sections": 76,
+      "printReliable": true
+    },
+    {
+      "id": "al_amthal_fil_quran_ibn_al_qayyim",
+      "pages": 58,
+      "sections": 46,
+      "printReliable": true
+    },
+    {
+      "id": "al_ahwal",
+      "pages": 271,
+      "sections": 7,
+      "printReliable": false
+    },
+    {
+      "id": "al_awliya_ibn_abi_al_dunya",
+      "pages": 158,
+      "sections": 35,
+      "printReliable": false
+    },
+    {
+      "id": "al_ikhlas_wal_niyyah",
+      "pages": 52,
+      "sections": 52,
+      "printReliable": false
+    },
+    {
+      "id": "al_tibyan_fi_aqsam_al_quran",
+      "pages": 431,
+      "sections": 2,
+      "printReliable": true
+    },
+    {
+      "id": "al_ikhwan",
+      "pages": 242,
+      "sections": 16,
+      "printReliable": false
+    },
+    {
+      "id": "al_jami_fi_amthal_al_quran",
+      "pages": 238,
+      "sections": 55,
+      "printReliable": true
+    },
+    {
+      "id": "al_daa_wal_dawa",
+      "pages": 237,
+      "sections": 106,
+      "printReliable": true
+    },
+    {
+      "id": "al_risalah_al_tabukiyyah",
+      "pages": 109,
+      "sections": 74,
+      "printReliable": false
+    },
+    {
+      "id": "al_ishraf_fi_manazil_al_ashraf",
+      "pages": 518,
+      "sections": 507,
+      "printReliable": false
+    },
+    {
+      "id": "al_itibar_wa_aqab_al_surur",
+      "pages": 69,
+      "sections": 69,
+      "printReliable": false
+    },
+    {
+      "id": "al_tawadu_wal_khumul",
+      "pages": 259,
+      "sections": 7,
+      "printReliable": false
+    },
+    {
+      "id": "al_ruh_ibn_al_qayyim",
+      "pages": 263,
+      "sections": 129,
+      "printReliable": true
+    },
+    {
+      "id": "al_tawbah_ibn_abi_al_dunya",
+      "pages": 345,
+      "sections": 144,
+      "printReliable": false
+    },
+    {
+      "id": "al_tawakkul_ala_allah",
+      "pages": 62,
+      "sections": 62,
+      "printReliable": false
+    },
+    {
+      "id": "al_tibb_al_nabawi",
+      "pages": 318,
+      "sections": 115,
+      "printReliable": true
+    },
+    {
+      "id": "al_turuq_al_hukmiyyah",
+      "pages": 274,
+      "sections": 94,
+      "printReliable": true
+    },
+    {
+      "id": "al_ju",
+      "pages": 550,
+      "sections": 228,
+      "printReliable": false
+    },
+    {
+      "id": "al_hilm",
+      "pages": 148,
+      "sections": 22,
+      "printReliable": false
+    },
+    {
+      "id": "al_rida_an_allah_biqadaihi",
+      "pages": 150,
+      "sections": 46,
+      "printReliable": false
+    },
+    {
+      "id": "al_furusiyyah_al_muhammadiyyah",
+      "pages": 529,
+      "sections": 312,
+      "printReliable": false
+    },
+    {
+      "id": "al_riqqah_wal_buka",
+      "pages": 446,
+      "sections": 22,
+      "printReliable": false
+    },
+    {
+      "id": "al_kalam_ala_masalat_al_sama",
+      "pages": 502,
+      "sections": 301,
+      "printReliable": false
+    },
+    {
+      "id": "al_zuhd_ibn_abi_al_dunya",
+      "pages": 563,
+      "sections": 562,
+      "printReliable": false
+    },
+    {
+      "id": "al_manar_al_munif",
+      "pages": 135,
+      "sections": 46,
+      "printReliable": true
+    },
+    {
+      "id": "al_wabil_al_sayyib",
+      "pages": 148,
+      "sections": 90,
+      "printReliable": false
+    },
+    {
+      "id": "al_shukr",
+      "pages": 205,
+      "sections": 205,
+      "printReliable": false
+    },
+    {
+      "id": "al_sabr_wal_thawab_alayh",
+      "pages": 200,
+      "sections": 200,
+      "printReliable": false
+    },
+    {
+      "id": "tuhfat_al_mawdud_bi_ahkam_al_mawlud",
+      "pages": 309,
+      "sections": 62,
+      "printReliable": true
+    },
+    {
+      "id": "al_uzlah_wal_infirad",
+      "pages": 222,
+      "sections": 111,
+      "printReliable": false
+    },
+    {
+      "id": "al_aql_wa_fadluh",
+      "pages": 172,
+      "sections": 59,
+      "printReliable": false
+    },
+    {
+      "id": "jala_al_afham",
+      "pages": 451,
+      "sections": 100,
+      "printReliable": true
+    },
+    {
+      "id": "al_uqubat",
+      "pages": 426,
+      "sections": 66,
+      "printReliable": false
+    },
+    {
+      "id": "al_umr_wal_shayb",
+      "pages": 86,
+      "sections": 2,
+      "printReliable": false
+    },
+    {
+      "id": "al_faraj_bad_al_shiddah",
+      "pages": 115,
+      "sections": 115,
+      "printReliable": false
+    },
+    {
+      "id": "hadi_al_arwah_ila_bilad_al_afrah",
+      "pages": 415,
+      "sections": 71,
+      "printReliable": false
+    },
+    {
+      "id": "risalat_ibn_al_qayyim_ila_ahad_ikhwanih",
+      "pages": 84,
+      "sections": 40,
+      "printReliable": false
+    },
+    {
+      "id": "al_qubur_ibn_abi_al_dunya",
+      "pages": 275,
+      "sections": 7,
+      "printReliable": false
+    },
+    {
+      "id": "al_qanaah_wal_taaffuf",
+      "pages": 64,
+      "sections": 44,
+      "printReliable": true
+    },
+    {
+      "id": "raf_al_yadayn_fil_salah",
+      "pages": 327,
+      "sections": 99,
+      "printReliable": false
+    },
+    {
+      "id": "al_mutamannin",
+      "pages": 166,
+      "sections": 166,
+      "printReliable": false
+    },
+    {
+      "id": "al_muhtadirin",
+      "pages": 369,
+      "sections": 9,
+      "printReliable": false
+    },
+    {
+      "id": "rawdat_al_muhibbin",
+      "pages": 482,
+      "sections": 30,
+      "printReliable": false
+    },
+    {
+      "id": "al_marad_wal_kaffarat",
+      "pages": 261,
+      "sections": 261,
+      "printReliable": false
+    },
+    {
+      "id": "shifa_al_alil",
+      "pages": 333,
+      "sections": 31,
+      "printReliable": false
+    },
+    {
+      "id": "sifat_al_munafiqin",
+      "pages": 20,
+      "sections": 2,
+      "printReliable": true
+    },
+    {
+      "id": "sigh_al_hamd",
+      "pages": 48,
+      "sections": 3,
+      "printReliable": true
+    },
+    {
+      "id": "al_matar_wal_rad_wal_barq",
+      "pages": 185,
+      "sections": 4,
+      "printReliable": false
+    },
+    {
+      "id": "al_manamat",
+      "pages": 465,
+      "sections": 118,
+      "printReliable": false
+    },
+    {
+      "id": "tariq_al_hijratayn",
+      "pages": 443,
+      "sections": 23,
+      "printReliable": false
+    },
+    {
+      "id": "uddat_al_sabirin",
+      "pages": 301,
+      "sections": 27,
+      "printReliable": false
+    },
+    {
+      "id": "faidah_jalilah_fi_qawaid_al_asma_al_husna",
+      "pages": 59,
+      "sections": 23,
+      "printReliable": false
+    },
+    {
+      "id": "fatya_fi_sighat_al_hamd",
+      "pages": 61,
+      "sections": 47,
+      "printReliable": false
+    },
+    {
+      "id": "al_nafaqah_ala_al_iyal",
+      "pages": 701,
+      "sections": 35,
+      "printReliable": false
+    },
+    {
+      "id": "al_hamm_wal_huzn",
+      "pages": 252,
+      "sections": 73,
+      "printReliable": false
+    },
+    {
+      "id": "nuniyyat_ibn_al_qayyim",
+      "pages": 423,
+      "sections": 97,
+      "printReliable": false
+    },
+    {
+      "id": "al_hawatif",
+      "pages": 178,
+      "sections": 3,
+      "printReliable": false
+    },
+    {
+      "id": "al_wajal_wal_tawthuq_bil_amal",
+      "pages": 52,
+      "sections": 24,
+      "printReliable": false
+    },
+    {
+      "id": "al_wara",
+      "pages": 243,
+      "sections": 12,
+      "printReliable": false
+    },
+    {
+      "id": "al_yaqin_ibn_abi_al_dunya",
+      "pages": 42,
+      "sections": 42,
+      "printReliable": false
+    },
+    {
+      "id": "hidayat_al_hayara",
+      "pages": 516,
+      "sections": 106,
+      "printReliable": false
+    },
+    {
+      "id": "husn_al_zann_billah",
+      "pages": 152,
+      "sections": 152,
+      "printReliable": false
+    },
+    {
+      "id": "hilm_muawiyah",
+      "pages": 40,
+      "sections": 3,
+      "printReliable": false
+    },
+    {
+      "id": "dhamm_al_baghy",
+      "pages": 57,
+      "sections": 18,
+      "printReliable": false
+    },
+    {
+      "id": "akhbar_al_humqa_wal_mughaffalin",
+      "pages": 192,
+      "sections": 182,
+      "printReliable": true
+    },
+    {
+      "id": "akhbar_al_zuraf_wal_mutamajinin",
+      "pages": 116,
+      "sections": 15,
+      "printReliable": true
+    },
+    {
+      "id": "akhbar_al_nisa_ibn_al_jawzi",
+      "pages": 242,
+      "sections": 9,
+      "printReliable": false
+    },
+    {
+      "id": "dhamm_al_dunya",
+      "pages": 503,
+      "sections": 3,
+      "printReliable": false
+    },
+    {
+      "id": "amar_al_ayan",
+      "pages": 184,
+      "sections": 58,
+      "printReliable": false
+    },
+    {
+      "id": "ikhbar_ahl_al_rusukh_fil_fiqh",
+      "pages": 38,
+      "sections": 22,
+      "printReliable": true
+    },
+    {
+      "id": "dhamm_al_ghibah_wal_namimah",
+      "pages": 171,
+      "sections": 11,
+      "printReliable": false
+    },
+    {
+      "id": "dhamm_al_muskir",
+      "pages": 99,
+      "sections": 30,
+      "printReliable": false
+    },
+    {
+      "id": "dhamm_al_malahi",
+      "pages": 183,
+      "sections": 11,
+      "printReliable": false
+    },
+    {
+      "id": "ilam_al_alim_bi_naskh_al_hadith",
+      "pages": 386,
+      "sections": 200,
+      "printReliable": true
+    },
+    {
+      "id": "sifat_al_jannah_ibn_abi_al_dunya",
+      "pages": 366,
+      "sections": 23,
+      "printReliable": false
+    },
+    {
+      "id": "al_adhkiya",
+      "pages": 241,
+      "sections": 33,
+      "printReliable": false
+    },
+    {
+      "id": "sifat_al_nar",
+      "pages": 268,
+      "sections": 10,
+      "printReliable": false
+    },
+    {
+      "id": "fadail_ramadan_ibn_abi_al_dunya",
+      "pages": 66,
+      "sections": 3,
+      "printReliable": false
+    },
+    {
+      "id": "al_birr_wal_silah_ibn_al_jawzi",
+      "pages": 225,
+      "sections": 54,
+      "printReliable": true
+    },
+    {
+      "id": "qira_al_dayf",
+      "pages": 67,
+      "sections": 67,
+      "printReliable": false
+    },
+    {
+      "id": "qada_al_hawaij",
+      "pages": 118,
+      "sections": 3,
+      "printReliable": false
+    },
+    {
+      "id": "kalam_al_layali_wal_ayyam",
+      "pages": 65,
+      "sections": 65,
+      "printReliable": false
+    },
+    {
+      "id": "al_tadhkirah_fil_waz",
+      "pages": 214,
+      "sections": 75,
+      "printReliable": true
+    },
+    {
+      "id": "mujabu_al_dawah",
+      "pages": 194,
+      "sections": 73,
+      "printReliable": false
+    },
+    {
+      "id": "al_thabat_ind_al_mamat",
+      "pages": 157,
+      "sections": 90,
+      "printReliable": true
+    },
+    {
+      "id": "al_hathth_ala_hifz_al_ilm",
+      "pages": 72,
+      "sections": 59,
+      "printReliable": true
+    },
+    {
+      "id": "muhasabat_al_nafs",
+      "pages": 155,
+      "sections": 5,
+      "printReliable": false
+    },
+    {
+      "id": "mudarat_al_nas",
+      "pages": 187,
+      "sections": 11,
+      "printReliable": false
+    },
+    {
+      "id": "al_qussas_wal_mudhakkirin",
+      "pages": 209,
+      "sections": 81,
+      "printReliable": false
+    },
+    {
+      "id": "maqtal_ali",
+      "pages": 143,
+      "sections": 13,
+      "printReliable": false
+    },
+    {
+      "id": "al_mujtaba_min_al_mujtana",
+      "pages": 97,
+      "sections": 55,
+      "printReliable": true
+    },
+    {
+      "id": "makaid_al_shaytan",
+      "pages": 129,
+      "sections": 52,
+      "printReliable": false
+    },
+    {
+      "id": "makarim_al_akhlaq_ibn_abi_al_dunya",
+      "pages": 490,
+      "sections": 9,
+      "printReliable": false
+    },
+    {
+      "id": "man_asha_bad_al_mawt",
+      "pages": 56,
+      "sections": 56,
+      "printReliable": false
+    },
+    {
+      "id": "riyadat_al_nafs",
+      "pages": 48,
+      "sections": 2,
+      "printReliable": true
+    },
+    {
+      "id": "al_mudhish",
+      "pages": 530,
+      "sections": 163,
+      "printReliable": true
+    },
+    {
+      "id": "al_musaffa_bi_akuff_ahl_al_rusukh",
+      "pages": 50,
+      "sections": 31,
+      "printReliable": true
+    },
+    {
+      "id": "al_manahi",
+      "pages": 233,
+      "sections": 142,
+      "printReliable": true
+    },
+    {
+      "id": "al_muqliq_ibn_al_jawzi",
+      "pages": 122,
+      "sections": 6,
+      "printReliable": false
+    },
+    {
+      "id": "bahr_al_dumu",
+      "pages": 150,
+      "sections": 33,
+      "printReliable": true
+    },
+    {
+      "id": "al_amthal_min_al_kitab_wal_sunnah",
+      "pages": 318,
+      "sections": 205,
+      "printReliable": false
+    },
+    {
+      "id": "bustan_al_waizin",
+      "pages": 301,
+      "sections": 287,
+      "printReliable": false
+    },
+    {
+      "id": "tarikh_bayt_al_maqdis",
+      "pages": 40,
+      "sections": 13,
+      "printReliable": true
+    },
+    {
+      "id": "tadhkirat_al_arib_fi_tafsir_al_gharib",
+      "pages": 466,
+      "sections": 112,
+      "printReliable": true
+    },
+    {
+      "id": "tazim_al_fatya",
+      "pages": 63,
+      "sections": 11,
+      "printReliable": false
+    },
+    {
+      "id": "taqwim_al_lisan",
+      "pages": 140,
+      "sections": 29,
+      "printReliable": true
+    },
+    {
+      "id": "talbis_iblis",
+      "pages": 419,
+      "sections": 85,
+      "printReliable": false
+    },
+    {
+      "id": "talqih_fuhum_ahl_al_athar",
+      "pages": 521,
+      "sections": 251,
+      "printReliable": false
+    },
+    {
+      "id": "tanbih_al_naim_al_ghamr",
+      "pages": 41,
+      "sections": 8,
+      "printReliable": true
+    },
+    {
+      "id": "tanwir_al_ghabash",
+      "pages": 233,
+      "sections": 29,
+      "printReliable": true
+    },
+    {
+      "id": "hifz_al_umr",
+      "pages": 42,
+      "sections": 5,
+      "printReliable": true
+    },
+    {
+      "id": "fadail_bayt_al_maqdis",
+      "pages": 113,
+      "sections": 41,
+      "printReliable": true
+    },
+    {
+      "id": "funun_al_afnan_fi_uyun_ulum_al_quran",
+      "pages": 341,
+      "sections": 93,
+      "printReliable": true
+    },
+    {
+      "id": "muthir_al_gharam_al_sakin",
+      "pages": 465,
+      "sections": 211,
+      "printReliable": true
+    },
+    {
+      "id": "mashyakhat_ibn_al_jawzi",
+      "pages": 150,
+      "sections": 87,
+      "printReliable": true
+    },
+    {
+      "id": "mawaiz_ibn_al_jawzi_al_yaqutah",
+      "pages": 27,
+      "sections": 27,
+      "printReliable": false
+    },
+    {
+      "id": "nawasikh_al_quran",
+      "pages": 210,
+      "sections": 174,
+      "printReliable": true
+    },
+    {
+      "id": "adab_al_fatwa_wal_mufti",
+      "pages": 74,
+      "sections": 9,
+      "printReliable": true
+    },
+    {
+      "id": "al_usul_wal_dawabit",
+      "pages": 27,
+      "sections": 2,
+      "printReliable": true
+    },
+    {
+      "id": "al_idah_fi_manasik_al_hajj_wal_umrah",
+      "pages": 519,
+      "sections": 66,
+      "printReliable": true
+    },
+    {
+      "id": "al_fiqh_al_manhaji_hajj",
+      "pages": 77,
+      "sections": 31,
+      "printReliable": true
+    },
+    {
+      "id": "bstan_alaarfyn_llnwwy",
+      "pages": 72,
+      "sections": 10,
+      "printReliable": true
+    },
+    {
+      "id": "tahrir_alfaz_al_tanbih",
+      "pages": 303,
+      "sections": 2,
+      "printReliable": true
+    },
+    {
+      "id": "juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat",
+      "pages": 86,
+      "sections": 20,
+      "printReliable": false
+    },
+    {
+      "id": "daqaiq_al_minhaj",
+      "pages": 52,
+      "sections": 6,
+      "printReliable": true
+    },
+    {
+      "id": "fatawa_al_nawawi",
+      "pages": 260,
+      "sections": 199,
+      "printReliable": true
+    },
+    {
+      "id": "minhaj_al_talibin",
+      "pages": 406,
+      "sections": 138,
+      "printReliable": false
+    },
+    {
+      "id": "seerat_ibn_hisham",
+      "pages": 594,
+      "sections": 6,
+      "printReliable": false
+    },
+    {
+      "id": "zad_al_maad",
+      "pages": 2628,
+      "sections": 1085,
+      "printReliable": false
+    },
+    {
+      "id": "uyun_al_athar",
+      "pages": 766,
+      "sections": 253,
+      "printReliable": false
+    },
+    {
+      "id": "nur_al_yaqin",
+      "pages": 278,
+      "sections": 183,
+      "printReliable": true
+    },
+    {
+      "id": "as_seerah_ibn_kathir",
+      "pages": 2495,
+      "sections": 118,
+      "printReliable": false
+    },
+    {
+      "id": "aladhkar_llnwwy_t_alarnwwt",
+      "pages": 411,
+      "sections": 251,
+      "printReliable": true
+    },
+    {
+      "id": "altbyan_fy_adab_hmlh_alqran",
+      "pages": 213,
+      "sections": 106,
+      "printReliable": true
+    },
+    {
+      "id": "alarbawn_alnwwyh",
+      "pages": 81,
+      "sections": 43,
+      "printReliable": true
+    },
+    {
+      "id": "altqryb_waltysyr_llnwwy",
+      "pages": 100,
+      "sections": 54,
+      "printReliable": true
+    },
+    {
+      "id": "fdayl_alqran_labn_kthyr",
+      "pages": 298,
+      "sections": 37,
+      "printReliable": true
+    },
+    {
+      "id": "albaath_alhthyth_ila_akhtsar_alwm_alhdyth",
+      "pages": 197,
+      "sections": 122,
+      "printReliable": true
+    },
+    {
+      "id": "alfswl_fy_syrh_alrswl",
+      "pages": 262,
+      "sections": 92,
+      "printReliable": true
+    },
+    {
+      "id": "majzat_alnby_mn_albdayh_walnhayh_t_alsyd_ibr",
+      "pages": 448,
+      "sections": 195,
+      "printReliable": true
+    },
+    {
+      "id": "msnd_aby_bkr_alsdyq_labn_kthyr",
+      "pages": 701,
+      "sections": 264,
+      "printReliable": true
+    },
+    {
+      "id": "tbqat_alshafayyn",
+      "pages": 907,
+      "sections": 696,
+      "printReliable": true
+    },
+    {
+      "id": "aladab_walahkam_almtalqh_bdkhwl_alhmam",
+      "pages": 76,
+      "sections": 1,
+      "printReliable": true
+    },
+    {
+      "id": "jz_fy_bya_amhat_alawlad",
+      "pages": 128,
+      "sections": 71,
+      "printReliable": true
+    },
+    {
+      "id": "rawdat_al_uqala",
+      "pages": 276,
+      "sections": 56,
+      "printReliable": true
+    },
+    {
+      "id": "hilyat_al_awliya",
+      "pages": 3891,
+      "sections": 826,
+      "printReliable": false
+    },
+    {
+      "id": "tqryb_althdhyb",
+      "pages": 688,
+      "sections": 168,
+      "printReliable": true
+    },
+    {
+      "id": "nzhh_alnzr_fy_twdyh_nkhbh_alfkr_t_atr",
+      "pages": 154,
+      "sections": 105,
+      "printReliable": true
+    },
+    {
+      "id": "hdy_alsary_mqdmh_fth_albary_t_alslfyh",
+      "pages": 488,
+      "sections": 319,
+      "printReliable": true
+    },
+    {
+      "id": "alamaly_almtlqh",
+      "pages": 255,
+      "sections": 79,
+      "printReliable": false
+    },
+    {
+      "id": "almajm_almfhrs_tjryd_asanyd_alktb_almshhwrh_",
+      "pages": 389,
+      "sections": 65,
+      "printReliable": true
+    },
+    {
+      "id": "rfa_alisr_an_qdah_msr",
+      "pages": 485,
+      "sections": 33,
+      "printReliable": true
+    },
+    {
+      "id": "aliythar_bmarfh_rwah_alathar",
+      "pages": 181,
+      "sections": 29,
+      "printReliable": true
+    },
+    {
+      "id": "qtah_mn_ntayj_alafkar_fy_tkhryj_ahadyth_alad",
+      "pages": 370,
+      "sections": 116,
+      "printReliable": false
+    },
+    {
+      "id": "alwqwf_ala_almwqwf",
+      "pages": 118,
+      "sections": 29,
+      "printReliable": true
+    },
+    {
+      "id": "slslh_aldhhb",
+      "pages": 67,
+      "sections": 2,
+      "printReliable": false
+    },
+    {
+      "id": "dlayl_alnbwh_abw_naym_alasbhany",
+      "pages": 721,
+      "sections": 140,
+      "printReliable": false
+    },
+    {
+      "id": "alimamh_walrd_ala_alrafdh",
+      "pages": 178,
+      "sections": 145,
+      "printReliable": true
+    },
+    {
+      "id": "msnd_aby_hnyfh_rwayh_aby_naym",
+      "pages": 662,
+      "sections": 280,
+      "printReliable": false
+    },
+    {
+      "id": "sfh_alnfaq_wnat_almnafqyn_laby_naym",
+      "pages": 161,
+      "sections": 132,
+      "printReliable": true
+    },
+    {
+      "id": "fdayl_alkhlfa_alrashdyn_laby_naym_alasbhany",
+      "pages": 366,
+      "sections": 127,
+      "printReliable": false
+    },
+    {
+      "id": "ryadh_alabdan_laby_naym_alasbhany",
+      "pages": 22,
+      "sections": 22,
+      "printReliable": true
+    },
+    {
+      "id": "alarbawn_ala_mdhhb_almthqqyn_mn_alswfyh_laby",
+      "pages": 100,
+      "sections": 40,
+      "printReliable": false
+    },
+    {
+      "id": "hdyth_in_llh_tsah_wtsayn_asma_laby_naym_alas",
+      "pages": 47,
+      "sections": 45,
+      "printReliable": false
+    },
+    {
+      "id": "fdylh_alaadlyn_mn_alwlah_laby_naym",
+      "pages": 48,
+      "sections": 46,
+      "printReliable": false
+    },
+    {
+      "id": "al_bidaya_wan_nihaya",
+      "pages": 4918,
+      "sections": 2565,
+      "printReliable": false
+    },
+    {
+      "id": "qisas_al_anbiya_ibn_kathir",
+      "pages": 888,
+      "sections": 49,
+      "printReliable": false
+    },
+    {
+      "id": "futuh_al_buldan",
+      "pages": 453,
+      "sections": 96,
+      "printReliable": true
+    },
+    {
+      "id": "tarikh_al_khulafa_suyuti",
+      "pages": 782,
+      "sections": 535,
+      "printReliable": true
+    },
+    {
+      "id": "ihya_ulum_al_din",
+      "pages": 1706,
+      "sections": 272,
+      "printReliable": false
+    },
+    {
+      "id": "madarij_al_salikin",
+      "pages": 1459,
+      "sections": 629,
+      "printReliable": false
+    },
+    {
+      "id": "jami_al_ulum_wal_hikam",
+      "pages": 940,
+      "sections": 67,
+      "printReliable": true
+    },
+    {
+      "id": "adab_al_dunya_wal_din",
+      "pages": 342,
+      "sections": 29,
+      "printReliable": true
+    },
+    {
+      "id": "al_akhlaq_wal_siyar",
+      "pages": 85,
+      "sections": 15,
+      "printReliable": true
+    },
+    {
+      "id": "bidayat_al_hidayah",
+      "pages": 46,
+      "sections": 30,
+      "printReliable": true
+    },
+    {
+      "id": "lataif_al_maarif",
+      "pages": 360,
+      "sections": 39,
+      "printReliable": false
+    },
+    {
+      "id": "risalat_al_mustarshidin",
+      "pages": 110,
+      "sections": 2,
+      "printReliable": true
+    },
+    {
+      "id": "maqasid_al_riayah",
+      "pages": 164,
+      "sections": 86,
+      "printReliable": true
+    },
+    {
+      "id": "tahdhib_al_akhlaq",
+      "pages": 210,
+      "sections": 68,
+      "printReliable": true
+    },
+    {
+      "id": "jami_bayan_al_ilm",
+      "pages": 1585,
+      "sections": 80,
+      "printReliable": false
+    },
+    {
+      "id": "tadhkirat_al_sami_wal_mutakallim",
+      "pages": 204,
+      "sections": 101,
+      "printReliable": true
+    },
+    {
+      "id": "adab_al_imla_wal_istimla",
+      "pages": 180,
+      "sections": 10,
+      "printReliable": true
+    },
+    {
+      "id": "al_luma_fi_usul_al_fiqh",
+      "pages": 184,
+      "sections": 75,
+      "printReliable": false
+    },
+    {
+      "id": "al_faqih_wal_mutafaqqih",
+      "pages": 1462,
+      "sections": 132,
+      "printReliable": false
+    },
+    {
+      "id": "qawaid_al_ahkam",
+      "pages": 489,
+      "sections": 172,
+      "printReliable": false
+    },
+    {
+      "id": "qut_al_qulub",
+      "pages": 929,
+      "sections": 195,
+      "printReliable": false
+    },
+    {
+      "id": "al_adab_al_shariyyah",
+      "pages": 1529,
+      "sections": 496,
+      "printReliable": false
+    },
+    {
+      "id": "al_jami_li_akhlaq_al_rawi",
+      "pages": 2224,
+      "sections": 284,
+      "printReliable": false
+    },
+    {
+      "id": "muqaddimat_ibn_al_salah",
+      "pages": 405,
+      "sections": 84,
+      "printReliable": true
+    },
+    {
+      "id": "al_risalah_lil_shafii",
+      "pages": 667,
+      "sections": 73,
+      "printReliable": false
+    },
+    {
+      "id": "al_risalah_al_qushayriyyah",
+      "pages": 562,
+      "sections": 11,
+      "printReliable": true
+    },
+    {
+      "id": "al_burhan_fi_ulum_al_quran",
+      "pages": 1944,
+      "sections": 59,
+      "printReliable": false
+    },
+    {
+      "id": "al_itqan_fi_ulum_al_quran",
+      "pages": 1459,
+      "sections": 81,
+      "printReliable": false
+    },
+    {
+      "id": "al_muwafaqat",
+      "pages": 3112,
+      "sections": 103,
+      "printReliable": false
+    },
+    {
+      "id": "sharh_al_aqidah_al_tahawiyyah",
+      "pages": 797,
+      "sections": 363,
+      "printReliable": true
+    },
+    {
+      "id": "al_iqtisad_fil_itiqad",
+      "pages": 128,
+      "sections": 50,
+      "printReliable": true
+    },
+    {
+      "id": "qawaid_al_aqaid",
+      "pages": 224,
+      "sections": 67,
+      "printReliable": true
+    },
+    {
+      "id": "al_lubab_fi_sharh_al_kitab",
+      "pages": 904,
+      "sections": 126,
+      "printReliable": false
+    },
+    {
+      "id": "al_ikhtiyar_li_talil_al_mukhtar",
+      "pages": 834,
+      "sections": 283,
+      "printReliable": false
+    },
+    {
+      "id": "al_thamar_al_dani",
+      "pages": 751,
+      "sections": 46,
+      "printReliable": false
+    },
+    {
+      "id": "al_fawakih_al_dawani",
+      "pages": 778,
+      "sections": 297,
+      "printReliable": false
+    },
+    {
+      "id": "kifayat_al_akhyar",
+      "pages": 576,
+      "sections": 156,
+      "printReliable": true
+    },
+    {
+      "id": "al_iqna_fi_hall_alfaz_abi_shuja",
+      "pages": 661,
+      "sections": 126,
+      "printReliable": true
+    },
+    {
+      "id": "fath_al_qarib_al_mujib",
+      "pages": 329,
+      "sections": 195,
+      "printReliable": true
+    },
+    {
+      "id": "al_uddah_sharh_al_umdah",
+      "pages": 682,
+      "sections": 204,
+      "printReliable": true
+    },
+    {
+      "id": "al_rawd_al_murbi",
+      "pages": 1600,
+      "sections": 292,
+      "printReliable": false
+    },
+    {
+      "id": "bidayat_al_mujtahid",
+      "pages": 945,
+      "sections": 415,
+      "printReliable": false
+    },
+    {
+      "id": "ihkam_al_ahkam",
+      "pages": 659,
+      "sections": 524,
+      "printReliable": false
+    },
+    {
+      "id": "tanwir_al_hawalik",
+      "pages": 414,
+      "sections": 23,
+      "printReliable": false
+    },
+    {
+      "id": "al_rahiq_al_makhtum",
+      "pages": 452,
+      "sections": 330,
+      "printReliable": true
+    },
+    {
+      "id": "sharh_al_waraqat_al_mahalli",
+      "pages": 226,
+      "sections": 119,
+      "printReliable": true
+    },
+    {
+      "id": "sharh_al_ajurrumiyyah_hifzi",
+      "pages": 302,
+      "sections": 52,
+      "printReliable": false
+    },
+    {
+      "id": "ilam_al_muwaqqiin",
+      "pages": 1221,
+      "sections": 519,
+      "printReliable": false
+    },
+    {
+      "id": "al_majmu_sharh_al_muhadhdhab",
+      "pages": 4869,
+      "sections": 162,
+      "printReliable": false
+    },
+    {
+      "id": "tafsir_al_qurtubi",
+      "pages": 7453,
+      "sections": 3023,
+      "printReliable": false
+    },
+    {
+      "id": "al_mughni_ibn_qudamah",
+      "pages": 7955,
+      "sections": 3089,
+      "printReliable": false
+    },
+    {
+      "id": "tafsir_al_tabari",
+      "pages": 16699,
+      "sections": 6152,
+      "printReliable": false
+    },
+    {
+      "id": "fath_al_bari",
+      "pages": 7993,
+      "sections": 3966,
+      "printReliable": false
+    },
+    {
+      "id": "siyar_alam_al_nubala",
+      "pages": 14208,
+      "sections": 5590,
+      "printReliable": false
+    },
+    {
+      "id": "tahdhib_al_kamal",
+      "pages": 18994,
+      "sections": 7960,
+      "printReliable": false
+    },
+    {
+      "id": "lisan_al_arab",
+      "pages": 8101,
+      "sections": 714,
+      "printReliable": false
+    },
+    {
+      "id": "sharh_al_arbain_ibn_daqiq",
+      "pages": 129,
+      "sections": 43,
+      "printReliable": true
+    },
+    {
+      "id": "dalil_al_falihin",
+      "pages": 2249,
+      "sections": 308,
+      "printReliable": false
+    },
+    {
+      "id": "subul_al_salam",
+      "pages": 1336,
+      "sections": 960,
+      "printReliable": false
+    },
+    {
+      "id": "sharh_al_nawawi_ala_muslim",
+      "pages": 4086,
+      "sections": 1116,
+      "printReliable": false
+    },
+    {
+      "id": "jam_al_wasail",
+      "pages": 494,
+      "sections": 57,
+      "printReliable": false
+    },
+    {
+      "id": "mirqat_al_mafatih",
+      "pages": 8758,
+      "sections": 298,
+      "printReliable": false
+    },
+    {
+      "id": "nayl_al_awtar",
+      "pages": 3079,
+      "sections": 1142,
+      "printReliable": false
+    },
+    {
+      "id": "al_tajrid_al_sarih",
+      "pages": 2553,
+      "sections": 206,
+      "printReliable": false
+    },
+    {
+      "id": "maraqi_al_falah",
+      "pages": 343,
+      "sections": 110,
+      "printReliable": false
+    },
+    {
+      "id": "bulghat_al_salik",
+      "pages": 2984,
+      "sections": 1240,
+      "printReliable": false
+    },
+    {
+      "id": "al_fiqh_ala_al_madhahib_al_arbaa",
+      "pages": 929,
+      "sections": 753,
+      "printReliable": false
+    },
+    {
+      "id": "al_ibanah_ashari",
+      "pages": 246,
+      "sections": 71,
+      "printReliable": false
+    },
+    {
+      "id": "al_asma_wal_sifat_bayhaqi",
+      "pages": 1135,
+      "sections": 101,
+      "printReliable": false
+    },
+    {
+      "id": "lawami_al_anwar",
+      "pages": 921,
+      "sections": 264,
+      "printReliable": false
+    },
+    {
+      "id": "al_shariah_ajurri",
+      "pages": 2385,
+      "sections": 289,
+      "printReliable": false
+    },
+    {
+      "id": "al_aqaid_al_islamiyyah_ibn_badis",
+      "pages": 109,
+      "sections": 83,
+      "printReliable": true
+    },
+    {
+      "id": "tafsir_ibn_kathir",
+      "pages": 4527,
+      "sections": 139,
+      "printReliable": false
+    },
+    {
+      "id": "tafsir_al_jalalayn",
+      "pages": 6242,
+      "sections": 6231,
+      "printReliable": false
+    },
+    {
+      "id": "tafsir_al_baghawi",
+      "pages": 3526,
+      "sections": 2479,
+      "printReliable": false
+    },
+    {
+      "id": "tafsir_al_nasafi",
+      "pages": 7814,
+      "sections": 6153,
+      "printReliable": false
+    },
+    {
+      "id": "zad_al_masir",
+      "pages": 2306,
+      "sections": 1760,
+      "printReliable": false
+    },
+    {
+      "id": "asbab_al_nuzul_wahidi",
+      "pages": 500,
+      "sections": 86,
+      "printReliable": true
+    },
+    {
+      "id": "fath_al_qadir_shawkani",
+      "pages": 3576,
+      "sections": 1280,
+      "printReliable": false
+    },
+    {
+      "id": "al_tashil_ibn_juzayy",
+      "pages": 2989,
+      "sections": 157,
+      "printReliable": false
+    },
+    {
+      "id": "al_shifa_qadi_iyad",
+      "pages": 1438,
+      "sections": 189,
+      "printReliable": false
+    },
+    {
+      "id": "jawami_al_seerah",
+      "pages": 266,
+      "sections": 69,
+      "printReliable": false
+    },
+    {
+      "id": "al_rawd_al_unuf",
+      "pages": 2405,
+      "sections": 173,
+      "printReliable": false
+    },
+    {
+      "id": "khulasat_siyar_sayyid_al_bashar",
+      "pages": 166,
+      "sections": 44,
+      "printReliable": true
+    },
+    {
+      "id": "al_mawahib_al_ladunniyyah",
+      "pages": 1976,
+      "sections": 359,
+      "printReliable": false
+    },
+    {
+      "id": "tarikh_al_tabari",
+      "pages": 6431,
+      "sections": 1696,
+      "printReliable": false
+    },
+    {
+      "id": "al_kamil_fil_tarikh",
+      "pages": 6163,
+      "sections": 914,
+      "printReliable": false
+    },
+    {
+      "id": "tarikh_ibn_khaldun",
+      "pages": 5510,
+      "sections": 2497,
+      "printReliable": false
+    },
+    {
+      "id": "al_ibar_dhahabi",
+      "pages": 1559,
+      "sections": 742,
+      "printReliable": false
+    },
+    {
+      "id": "wafayat_al_ayan",
+      "pages": 3164,
+      "sections": 967,
+      "printReliable": false
+    },
+    {
+      "id": "ghidha_al_albab",
+      "pages": 1066,
+      "sections": 535,
+      "printReliable": false
+    },
+    {
+      "id": "adab_al_ishrah_ghazzi",
+      "pages": 70,
+      "sections": 66,
+      "printReliable": true
+    },
+    {
+      "id": "al_mustatraf",
+      "pages": 515,
+      "sections": 231,
+      "printReliable": true
+    },
+    {
+      "id": "uyun_al_akhbar",
+      "pages": 1290,
+      "sections": 273,
+      "printReliable": false
+    },
+    {
+      "id": "iqtida_al_ilm_al_amal",
+      "pages": 216,
+      "sections": 12,
+      "printReliable": false
+    },
+    {
+      "id": "sharh_qatr_al_nada",
+      "pages": 309,
+      "sections": 86,
+      "printReliable": true
+    },
+    {
+      "id": "jawahir_al_balaghah",
+      "pages": 311,
+      "sections": 81,
+      "printReliable": false
+    },
+    {
+      "id": "sharh_ibn_aqil",
+      "pages": 1285,
+      "sections": 80,
+      "printReliable": false
+    },
+    {
+      "id": "sharh_shudhur_al_dhahab",
+      "pages": 572,
+      "sections": 6,
+      "printReliable": true
+    },
+    {
+      "id": "tadrib_al_rawi",
+      "pages": 925,
+      "sections": 262,
+      "printReliable": true
+    },
+    {
+      "id": "al_ashbah_wal_nazair_suyuti",
+      "pages": 540,
+      "sections": 345,
+      "printReliable": true
+    },
+    {
+      "id": "manahil_al_irfan",
+      "pages": 1045,
+      "sections": 221,
+      "printReliable": false
+    },
+    {
+      "id": "nur_al_zalam",
+      "pages": 159,
+      "sections": 1,
+      "printReliable": false
+    },
+    {
+      "id": "tahqiq_al_maqam",
+      "pages": 202,
+      "sections": 27,
+      "printReliable": false
+    },
+    {
+      "id": "tuhfat_al_murid",
+      "pages": 338,
+      "sections": 198,
+      "printReliable": false
+    },
+    {
+      "id": "minah_al_rawd_al_azhar",
+      "pages": 499,
+      "sections": 6,
+      "printReliable": true
+    }
+  ],
+  "corrections": [
+    {
+      "id": "tuhfat_al_atfal",
+      "changedParagraphs": [
+        {
+          "pageIndex": 1,
+          "printedPage": 2,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 1,
+          "printedPage": 2,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 1,
+          "printedPage": 2,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 2,
+          "printedPage": 3,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 2,
+          "printedPage": 3,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 3,
+          "printedPage": 4,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 3,
+          "printedPage": 4,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 4,
+          "printedPage": 5,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 5,
+          "printedPage": 6,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 6,
+          "printedPage": 7,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 6,
+          "printedPage": 7,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 6,
+          "printedPage": 7,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 7,
+          "printedPage": 8,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 7,
+          "printedPage": 8,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 7,
+          "printedPage": 8,
+          "kind": "body",
+          "ref": null
+        }
+      ]
+    },
+    {
+      "id": "fath_rabb_al_bariyyah_sharh_al_jazariyyah",
+      "changedParagraphs": [
+        {
+          "pageIndex": 5,
+          "printedPage": 29,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 8,
+          "printedPage": 32,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 24,
+          "printedPage": 50,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 26,
+          "printedPage": 53,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 26,
+          "printedPage": 53,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 26,
+          "printedPage": 53,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 26,
+          "printedPage": 53,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 36,
+          "printedPage": 64,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 42,
+          "printedPage": 71,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 46,
+          "printedPage": 75,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 59,
+          "printedPage": 88,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 71,
+          "printedPage": 101,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 74,
+          "printedPage": 104,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 78,
+          "printedPage": 108,
+          "kind": "body",
+          "ref": null
+        },
+        {
+          "pageIndex": 80,
+          "printedPage": 111,
+          "kind": "body",
+          "ref": null
+        }
+      ]
+    }
+  ],
+  "scope": "Actual production parser on all289 fetched primary files. No correctness claim for unmarked scripture or transcription against print."
+}

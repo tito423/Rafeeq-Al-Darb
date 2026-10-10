@@ -1,0 +1,5693 @@
+{
+  "books": [
+    {
+      "id": "bulugh_al_maram",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bulugh_al_maram.json",
+      "sha256_wire": "3cb7095a6b8dde4ba41aae797b10d10a4ed560230650439dd3ed545cb886f12b",
+      "pages": 1522,
+      "paragraphs": 3569,
+      "toc": 1101,
+      "kinds": {
+        "body": 3568,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1522,
+      "declared_section_count": 1101
+    },
+    {
+      "id": "al_adab_al_mufrad",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adab_al_mufrad.json",
+      "sha256_wire": "69b919c2bef53b56de5f077e053e3db055605b13238971820cac91ba3aca2b06",
+      "pages": 2010,
+      "paragraphs": 3414,
+      "toc": 644,
+      "kinds": {
+        "body": 3408,
+        "head": 5,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2010,
+      "declared_section_count": 644
+    },
+    {
+      "id": "al_shamail_al_muhammadiyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shamail_al_muhammadiyyah.json",
+      "sha256_wire": "0b0f92888fc6b120de8b7342e33059cd3d9c5bf7717d06e9b6b5c74e04106db2",
+      "pages": 247,
+      "paragraphs": 1875,
+      "toc": 60,
+      "kinds": {
+        "head": 57,
+        "body": 1818
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 247,
+      "declared_section_count": 60
+    },
+    {
+      "id": "mishkat_al_masabih",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mishkat_al_masabih.json",
+      "sha256_wire": "d84e7b6e30df73a8787b33e1d2c9cce1e0dd5f8f2c4305132d57479c49e480f0",
+      "pages": 7436,
+      "paragraphs": 15399,
+      "toc": 1154,
+      "kinds": {
+        "body": 15398,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 7436,
+      "declared_section_count": 1154
+    },
+    {
+      "id": "al_targhib_wal_tarhib",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_targhib_wal_tarhib.json",
+      "sha256_wire": "2059d546aa06831f66955b52a474c0bb78958101aba987588399f67ab92cb373",
+      "pages": 1411,
+      "paragraphs": 17122,
+      "toc": 65,
+      "kinds": {
+        "body": 17118,
+        "aya": 4
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1411,
+      "declared_section_count": 65
+    },
+    {
+      "id": "umdat_al_ahkam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/umdat_al_ahkam.json",
+      "sha256_wire": "4efd862e610cad7582622d5d27540240d4dc23c70477539fccdeb2a84e46377f",
+      "pages": 428,
+      "paragraphs": 1921,
+      "toc": 120,
+      "kinds": {
+        "body": 1920,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        119
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 448,
+      "declared_section_count": 120
+    },
+    {
+      "id": "riyad_as_salihin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/riyad_as_salihin.json",
+      "sha256_wire": "f6759d033908fd536630921b2debf0f0ef7ef97d5cb24a5693c10ad105f394d6",
+      "pages": 810,
+      "paragraphs": 3575,
+      "toc": 387,
+      "kinds": {
+        "head": 12,
+        "body": 3419,
+        "aya": 144
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 810,
+      "declared_section_count": 387
+    },
+    {
+      "id": "mukhtasar_minhaj_al_qasidin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mukhtasar_minhaj_al_qasidin.json",
+      "sha256_wire": "a5256e9207d0d8afabf1b85faa5fe41856376605102c2b04bcd21574c2937353",
+      "pages": 408,
+      "paragraphs": 3636,
+      "toc": 226,
+      "kinds": {
+        "body": 3400,
+        "head": 223,
+        "aya": 13
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 408,
+      "declared_section_count": 226
+    },
+    {
+      "id": "al_fawaid",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fawaid.json",
+      "sha256_wire": "df50ef5a17b687000435e8529948555f481fda013b05bb0f76aa0d9692c4b8f6",
+      "pages": 209,
+      "paragraphs": 725,
+      "toc": 105,
+      "kinds": {
+        "body": 720,
+        "aya": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 209,
+      "declared_section_count": 105
+    },
+    {
+      "id": "sayd_al_khatir",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sayd_al_khatir.json",
+      "sha256_wire": "3f4b69a12cd4a4d3a24e7debd0d74b7030f5703823ebe5aab2965b32654ce586",
+      "pages": 893,
+      "paragraphs": 6063,
+      "toc": 394,
+      "kinds": {
+        "head": 16,
+        "body": 5852,
+        "aya": 195
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 893,
+      "declared_section_count": 394
+    },
+    {
+      "id": "nawadir_al_usul",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nawadir_al_usul.json",
+      "sha256_wire": "e417ad550e814b76d77a6d2ef0edc8bcb8ee7a9cd70f45fc961122ea29df4f99",
+      "pages": 1237,
+      "paragraphs": 5200,
+      "toc": 550,
+      "kinds": {
+        "body": 5139,
+        "aya": 61
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1237,
+      "declared_section_count": 550
+    },
+    {
+      "id": "al_samt_wa_adab_al_lisan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_samt_wa_adab_al_lisan.json",
+      "sha256_wire": "3c1ea22117792c6264a031e004aaa8bfda9953b1c6621db0a9e88d55801e5884",
+      "pages": 787,
+      "paragraphs": 850,
+      "toc": 26,
+      "kinds": {
+        "body": 837,
+        "head": 13
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 787,
+      "declared_section_count": 26
+    },
+    {
+      "id": "qasr_al_amal",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qasr_al_amal.json",
+      "sha256_wire": "2b1e6d69b2ca6ad7bc737a910e3e5c4e5fd580d0de9154047cbcbbe2122598ac",
+      "pages": 345,
+      "paragraphs": 550,
+      "toc": 4,
+      "kinds": {
+        "body": 515,
+        "head": 35
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 345,
+      "declared_section_count": 4
+    },
+    {
+      "id": "adab_al_nafs",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_nafs.json",
+      "sha256_wire": "ca3ab3dc8fe152c10518137c169b599ce38f4555eb6cad7e988fe9a5b11b5361",
+      "pages": 110,
+      "paragraphs": 215,
+      "toc": 8,
+      "kinds": {
+        "body": 215
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 110,
+      "declared_section_count": 8
+    },
+    {
+      "id": "islah_al_mal",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/islah_al_mal.json",
+      "sha256_wire": "eb864da00df4a6db05186968af444c0fa77840aff78f6e4a410deac2303dd70b",
+      "pages": 497,
+      "paragraphs": 668,
+      "toc": 17,
+      "kinds": {
+        "body": 643,
+        "head": 25
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 497,
+      "declared_section_count": 17
+    },
+    {
+      "id": "istina_al_maruf",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/istina_al_maruf.json",
+      "sha256_wire": "93abd223df8a34582fcebea40e06b29ddfb2a75e0785f373059c1ef2a7910123",
+      "pages": 182,
+      "paragraphs": 352,
+      "toc": 10,
+      "kinds": {
+        "body": 347,
+        "head": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 182,
+      "declared_section_count": 10
+    },
+    {
+      "id": "al_amr_bil_maruf_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_amr_bil_maruf_ibn_abi_al_dunya.json",
+      "sha256_wire": "58e27acf7744bce6591350efe4f1a2a6e0eb97a7be6e2de41d3c9429ae43d1c7",
+      "pages": 122,
+      "paragraphs": 126,
+      "toc": 122,
+      "kinds": {
+        "body": 125,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 122,
+      "declared_section_count": 122
+    },
+    {
+      "id": "ighathat_al_lahfan_fi_hukm_talaq_al_ghadban",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ighathat_al_lahfan_fi_hukm_talaq_al_ghadban.json",
+      "sha256_wire": "eaaabc92d419a9c508c6a495ebbe9ad590dc5ea486855284eb777bea39375fb6",
+      "pages": 111,
+      "paragraphs": 543,
+      "toc": 76,
+      "kinds": {
+        "body": 542,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 111,
+      "declared_section_count": 76
+    },
+    {
+      "id": "al_amthal_fil_quran_ibn_al_qayyim",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_amthal_fil_quran_ibn_al_qayyim.json",
+      "sha256_wire": "167e18eeb6497166129b6d3f8f1ab0a43c9f3fb28554c9017af1552776f01914",
+      "pages": 58,
+      "paragraphs": 266,
+      "toc": 46,
+      "kinds": {
+        "body": 266
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 58,
+      "declared_section_count": 46
+    },
+    {
+      "id": "al_ahwal",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ahwal.json",
+      "sha256_wire": "ff0aaf265dbfd4e744a73df90dbc85b10f6d18d9b5474ba6059ffc92dbe64028",
+      "pages": 271,
+      "paragraphs": 289,
+      "toc": 7,
+      "kinds": {
+        "body": 287,
+        "head": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 271,
+      "declared_section_count": 7
+    },
+    {
+      "id": "al_awliya_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_awliya_ibn_abi_al_dunya.json",
+      "sha256_wire": "d49b6cabf2f83a0bbe3513a645781063a45a1f076095cb23629a6d05954430ed",
+      "pages": 158,
+      "paragraphs": 158,
+      "toc": 35,
+      "kinds": {
+        "body": 158
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 158,
+      "declared_section_count": 35
+    },
+    {
+      "id": "al_ikhlas_wal_niyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ikhlas_wal_niyyah.json",
+      "sha256_wire": "5a4b0b693f947253121159bedde3c4c6d2b8f4544ffbb35b13ae7877a5d7bc4c",
+      "pages": 52,
+      "paragraphs": 54,
+      "toc": 52,
+      "kinds": {
+        "body": 54
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 52,
+      "declared_section_count": 52
+    },
+    {
+      "id": "al_tibyan_fi_aqsam_al_quran",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tibyan_fi_aqsam_al_quran.json",
+      "sha256_wire": "f818c08a2a2dffbef5dff4e1250de37f6c88f2a0dbb58b08d3becc8d06d14753",
+      "pages": 431,
+      "paragraphs": 1459,
+      "toc": 2,
+      "kinds": {
+        "body": 1280,
+        "head": 151,
+        "aya": 28
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 431,
+      "declared_section_count": 2
+    },
+    {
+      "id": "al_ikhwan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ikhwan.json",
+      "sha256_wire": "17b27cfd67c6f4f9082c81e9f9620abdf97013ef9148e9939f50300029864308",
+      "pages": 242,
+      "paragraphs": 295,
+      "toc": 16,
+      "kinds": {
+        "body": 283,
+        "head": 12
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 242,
+      "declared_section_count": 16
+    },
+    {
+      "id": "al_jami_fi_amthal_al_quran",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_jami_fi_amthal_al_quran.json",
+      "sha256_wire": "431193922e1b2a8563c74828b7cc27c744e2bf826731ce47997051d769923da6",
+      "pages": 238,
+      "paragraphs": 1253,
+      "toc": 55,
+      "kinds": {
+        "body": 1217,
+        "head": 36
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        54
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 243,
+      "declared_section_count": 55
+    },
+    {
+      "id": "al_daa_wal_dawa",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_daa_wal_dawa.json",
+      "sha256_wire": "788df50f1430294a6860518df1a4dd2316ada894e86b01ee8d0c255373b82714",
+      "pages": 237,
+      "paragraphs": 2512,
+      "toc": 106,
+      "kinds": {
+        "head": 117,
+        "body": 2316,
+        "aya": 79
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 237,
+      "declared_section_count": 106
+    },
+    {
+      "id": "al_risalah_al_tabukiyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_risalah_al_tabukiyyah.json",
+      "sha256_wire": "d3eaec38ebd83b67d141a609e3a222183ecfed0a4efe5cff9b54d6ac6411c684",
+      "pages": 109,
+      "paragraphs": 584,
+      "toc": 74,
+      "kinds": {
+        "body": 583,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 109,
+      "declared_section_count": 74
+    },
+    {
+      "id": "al_ishraf_fi_manazil_al_ashraf",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ishraf_fi_manazil_al_ashraf.json",
+      "sha256_wire": "e68c948419c9ac838869266b6e39cb79c04add8af9085c001fa6b4c434ea5c22",
+      "pages": 518,
+      "paragraphs": 1206,
+      "toc": 507,
+      "kinds": {
+        "body": 1111,
+        "head": 95
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 518,
+      "declared_section_count": 507
+    },
+    {
+      "id": "al_itibar_wa_aqab_al_surur",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_itibar_wa_aqab_al_surur.json",
+      "sha256_wire": "44238bd8ed7d837bea307114dc211b7202d2bdf8d0c9c9601fe18802ca13fa0e",
+      "pages": 69,
+      "paragraphs": 188,
+      "toc": 69,
+      "kinds": {
+        "body": 162,
+        "head": 26
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 69,
+      "declared_section_count": 69
+    },
+    {
+      "id": "al_tawadu_wal_khumul",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tawadu_wal_khumul.json",
+      "sha256_wire": "7132c371b0092c767e00b1c58301b4c87910aabf51e29e12b9f674a71dcf1abb",
+      "pages": 259,
+      "paragraphs": 269,
+      "toc": 7,
+      "kinds": {
+        "body": 269
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 259,
+      "declared_section_count": 7
+    },
+    {
+      "id": "al_ruh_ibn_al_qayyim",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ruh_ibn_al_qayyim.json",
+      "sha256_wire": "4d1936cc0b63b4c55959319f8bc92c1fa3eb47e595a96a27a71f6fb30b78ce48",
+      "pages": 263,
+      "paragraphs": 1763,
+      "toc": 129,
+      "kinds": {
+        "body": 1759,
+        "aya": 4
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 263,
+      "declared_section_count": 129
+    },
+    {
+      "id": "al_tawbah_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tawbah_ibn_abi_al_dunya.json",
+      "sha256_wire": "1539b0191d48efbc9a7012578c3ba78ee80947efc5fd0b96c7c7a605300e35b3",
+      "pages": 345,
+      "paragraphs": 455,
+      "toc": 144,
+      "kinds": {
+        "body": 435,
+        "head": 20
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 345,
+      "declared_section_count": 144
+    },
+    {
+      "id": "al_tawakkul_ala_allah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tawakkul_ala_allah.json",
+      "sha256_wire": "ab87412f235e0b0bf2d73319848bbafe136ed3a311734f1b9fcd433cf453db81",
+      "pages": 62,
+      "paragraphs": 68,
+      "toc": 62,
+      "kinds": {
+        "body": 67,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 62,
+      "declared_section_count": 62
+    },
+    {
+      "id": "al_tibb_al_nabawi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tibb_al_nabawi.json",
+      "sha256_wire": "32535d949441fa4f808aefe54c35bf85edf8617a71f52a06adffa5535be91467",
+      "pages": 318,
+      "paragraphs": 2431,
+      "toc": 115,
+      "kinds": {
+        "head": 12,
+        "body": 2419
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 318,
+      "declared_section_count": 115
+    },
+    {
+      "id": "al_turuq_al_hukmiyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_turuq_al_hukmiyyah.json",
+      "sha256_wire": "8bd3a1fe6dc29027ecbfcab995f229892da938b696d1ed7b2f44bd47a82e18f2",
+      "pages": 274,
+      "paragraphs": 2250,
+      "toc": 94,
+      "kinds": {
+        "head": 102,
+        "body": 2140,
+        "aya": 8
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 274,
+      "declared_section_count": 94
+    },
+    {
+      "id": "al_ju",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ju.json",
+      "sha256_wire": "032d4941fe703289825605be2f9abdbadfe6d130d6970f07308fc7bba59d7a53",
+      "pages": 550,
+      "paragraphs": 576,
+      "toc": 228,
+      "kinds": {
+        "body": 574,
+        "head": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 550,
+      "declared_section_count": 228
+    },
+    {
+      "id": "al_hilm",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_hilm.json",
+      "sha256_wire": "c5f683254c24d49e89fc841f35e8c046bad19bdea9c284b9a51167b3d9ec1e70",
+      "pages": 148,
+      "paragraphs": 312,
+      "toc": 22,
+      "kinds": {
+        "body": 293,
+        "head": 19
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 148,
+      "declared_section_count": 22
+    },
+    {
+      "id": "al_rida_an_allah_biqadaihi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rida_an_allah_biqadaihi.json",
+      "sha256_wire": "440b6dd31568f87a683404661e2132720022a5671e275fc6ac392212d1a444ef",
+      "pages": 150,
+      "paragraphs": 153,
+      "toc": 46,
+      "kinds": {
+        "body": 152,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 150,
+      "declared_section_count": 46
+    },
+    {
+      "id": "al_furusiyyah_al_muhammadiyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_furusiyyah_al_muhammadiyyah.json",
+      "sha256_wire": "659be1365fa6538029fea3da9dc815e508f289a88b17d7db26a43e61d13cc4be",
+      "pages": 529,
+      "paragraphs": 3566,
+      "toc": 312,
+      "kinds": {
+        "head": 20,
+        "body": 3546
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        311
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 530,
+      "declared_section_count": 312
+    },
+    {
+      "id": "al_riqqah_wal_buka",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_riqqah_wal_buka.json",
+      "sha256_wire": "bc1d668b621e29a558abf0a85f4052270debb47b116b67fc834a99154422cff0",
+      "pages": 446,
+      "paragraphs": 480,
+      "toc": 22,
+      "kinds": {
+        "body": 473,
+        "head": 7
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 446,
+      "declared_section_count": 22
+    },
+    {
+      "id": "al_kalam_ala_masalat_al_sama",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_kalam_ala_masalat_al_sama.json",
+      "sha256_wire": "8e64b25a30b52e3c2ac641d06ec0726573cbf0a2790274febdd96a3683cc8e53",
+      "pages": 502,
+      "paragraphs": 2524,
+      "toc": 301,
+      "kinds": {
+        "body": 2512,
+        "head": 3,
+        "aya": 9
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        299,
+        300
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 508,
+      "declared_section_count": 301
+    },
+    {
+      "id": "al_zuhd_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_zuhd_ibn_abi_al_dunya.json",
+      "sha256_wire": "de49782031a44e352f0bbf0fc64994717ae7b7e948389c12168dce0c57434a21",
+      "pages": 563,
+      "paragraphs": 1051,
+      "toc": 562,
+      "kinds": {
+        "body": 970,
+        "head": 81
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 563,
+      "declared_section_count": 562
+    },
+    {
+      "id": "al_manar_al_munif",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_manar_al_munif.json",
+      "sha256_wire": "fb0c03fb6ee1fe4aaf7fac1f82e074cca92f87cd39e5fd7acfc8444ae405b5ec",
+      "pages": 135,
+      "paragraphs": 622,
+      "toc": 46,
+      "kinds": {
+        "body": 608,
+        "head": 11,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 135,
+      "declared_section_count": 46
+    },
+    {
+      "id": "al_wabil_al_sayyib",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_wabil_al_sayyib.json",
+      "sha256_wire": "582c0ebc5a984d0422cae48c9e11b6d6908ee2d811c160ecac84d3dc100e2ede",
+      "pages": 148,
+      "paragraphs": 1472,
+      "toc": 90,
+      "kinds": {
+        "head": 151,
+        "body": 1306,
+        "aya": 15
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 148,
+      "declared_section_count": 90
+    },
+    {
+      "id": "al_shukr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shukr.json",
+      "sha256_wire": "cd35374e043d690a59a97816e1a9bfef9fea89bf0ab8e54dcfbaf125ef6e36af",
+      "pages": 205,
+      "paragraphs": 218,
+      "toc": 205,
+      "kinds": {
+        "body": 215,
+        "head": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 205,
+      "declared_section_count": 205
+    },
+    {
+      "id": "al_sabr_wal_thawab_alayh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_sabr_wal_thawab_alayh.json",
+      "sha256_wire": "e72af35f35ec732ff164a745f9520ca765b9dbd2128ae6066e942fa9d541d1a9",
+      "pages": 200,
+      "paragraphs": 228,
+      "toc": 200,
+      "kinds": {
+        "body": 222,
+        "head": 6
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 200,
+      "declared_section_count": 200
+    },
+    {
+      "id": "tuhfat_al_mawdud_bi_ahkam_al_mawlud",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tuhfat_al_mawdud_bi_ahkam_al_mawlud.json",
+      "sha256_wire": "a8bac2d4547cdd2af31bfda0bb4ac207ce4bae68ddf3a743f6e112f1b5b939ff",
+      "pages": 309,
+      "paragraphs": 1081,
+      "toc": 62,
+      "kinds": {
+        "body": 1071,
+        "aya": 10
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 309,
+      "declared_section_count": 62
+    },
+    {
+      "id": "al_uzlah_wal_infirad",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_uzlah_wal_infirad.json",
+      "sha256_wire": "8fcf4b74fd90cab10dc66608c7908d1286f12cd6fa171b0b92d894ffffe18634",
+      "pages": 222,
+      "paragraphs": 699,
+      "toc": 111,
+      "kinds": {
+        "body": 687,
+        "head": 12
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 225,
+      "declared_section_count": 111
+    },
+    {
+      "id": "al_aql_wa_fadluh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_aql_wa_fadluh.json",
+      "sha256_wire": "43ca6c6b1f9fe85834bec86fe9a9a514ffbbad844555ddef88fa036e98d0853a",
+      "pages": 172,
+      "paragraphs": 200,
+      "toc": 59,
+      "kinds": {
+        "body": 197,
+        "head": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 172,
+      "declared_section_count": 59
+    },
+    {
+      "id": "jala_al_afham",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jala_al_afham.json",
+      "sha256_wire": "ca835541d62f16aff2af82160fbf0d4bf0f496d113b2daf979dc951d21296320",
+      "pages": 451,
+      "paragraphs": 2126,
+      "toc": 100,
+      "kinds": {
+        "body": 2006,
+        "aya": 66,
+        "head": 54
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 451,
+      "declared_section_count": 100
+    },
+    {
+      "id": "al_uqubat",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_uqubat.json",
+      "sha256_wire": "e4a09b8b7eaf1044ca2d5cfaddc2f647061ee0d37f78c7422f45df97b3ab343a",
+      "pages": 426,
+      "paragraphs": 435,
+      "toc": 66,
+      "kinds": {
+        "body": 433,
+        "head": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 426,
+      "declared_section_count": 66
+    },
+    {
+      "id": "al_umr_wal_shayb",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_umr_wal_shayb.json",
+      "sha256_wire": "f1035c63b8d2bfcb69d947431465b87fc9ed1da51ac1b31582e4ff5debbba18d",
+      "pages": 86,
+      "paragraphs": 208,
+      "toc": 2,
+      "kinds": {
+        "body": 187,
+        "head": 21
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 86,
+      "declared_section_count": 2
+    },
+    {
+      "id": "al_faraj_bad_al_shiddah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_faraj_bad_al_shiddah.json",
+      "sha256_wire": "7c3fbea7b7d8492c0faa9610e48b7d1a63df8b9f1e315d79466ef0592d17f025",
+      "pages": 115,
+      "paragraphs": 221,
+      "toc": 115,
+      "kinds": {
+        "body": 196,
+        "head": 25
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 115,
+      "declared_section_count": 115
+    },
+    {
+      "id": "hadi_al_arwah_ila_bilad_al_afrah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hadi_al_arwah_ila_bilad_al_afrah.json",
+      "sha256_wire": "0aabfeaaad763228b798da1cf32342adfeecebb10844576f1962977a4df4bec7",
+      "pages": 415,
+      "paragraphs": 1483,
+      "toc": 71,
+      "kinds": {
+        "head": 42,
+        "body": 1420,
+        "aya": 21
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 415,
+      "declared_section_count": 71
+    },
+    {
+      "id": "risalat_ibn_al_qayyim_ila_ahad_ikhwanih",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/risalat_ibn_al_qayyim_ila_ahad_ikhwanih.json",
+      "sha256_wire": "1240f2a0d7392654bec991431d75e2dcea09402adda1a44f270b8733c15a22b7",
+      "pages": 84,
+      "paragraphs": 425,
+      "toc": 40,
+      "kinds": {
+        "body": 415,
+        "head": 10
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 84,
+      "declared_section_count": 40
+    },
+    {
+      "id": "al_qubur_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_qubur_ibn_abi_al_dunya.json",
+      "sha256_wire": "9b4931e0cfa308aee0738a1830bb4aa3698b43b989e40009485e9903109305fb",
+      "pages": 275,
+      "paragraphs": 639,
+      "toc": 7,
+      "kinds": {
+        "body": 633,
+        "head": 6
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 275,
+      "declared_section_count": 7
+    },
+    {
+      "id": "al_qanaah_wal_taaffuf",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_qanaah_wal_taaffuf.json",
+      "sha256_wire": "d273c841fa562f6d6367582c054606256d493ea8a51ad6415fc01d1d3792cac2",
+      "pages": 64,
+      "paragraphs": 551,
+      "toc": 44,
+      "kinds": {
+        "body": 551
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 64,
+      "declared_section_count": 44
+    },
+    {
+      "id": "raf_al_yadayn_fil_salah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/raf_al_yadayn_fil_salah.json",
+      "sha256_wire": "da17cf2b434e82692706cf677a4a48a5019361b6ca1e5d3d33eccd270b204767",
+      "pages": 327,
+      "paragraphs": 1954,
+      "toc": 99,
+      "kinds": {
+        "body": 1941,
+        "head": 11,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        97,
+        98
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 343,
+      "declared_section_count": 99
+    },
+    {
+      "id": "al_mutamannin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mutamannin.json",
+      "sha256_wire": "d11585dd3eea9e0c07a8dd22bb15c18302e1974c303e2a56fa95c287c96e80d0",
+      "pages": 166,
+      "paragraphs": 203,
+      "toc": 166,
+      "kinds": {
+        "body": 196,
+        "head": 7
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 166,
+      "declared_section_count": 166
+    },
+    {
+      "id": "al_muhtadirin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_muhtadirin.json",
+      "sha256_wire": "dafe01661f1751abb53440a1db28ffdd342fe9fffec17797ab9c429c780a3884",
+      "pages": 369,
+      "paragraphs": 602,
+      "toc": 9,
+      "kinds": {
+        "body": 542,
+        "head": 60
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 369,
+      "declared_section_count": 9
+    },
+    {
+      "id": "rawdat_al_muhibbin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/rawdat_al_muhibbin.json",
+      "sha256_wire": "6adcfbe2d44c1b17d0c2f7a2f8ddc3f24988abd3ceee5d67148fdf766f05e3f6",
+      "pages": 482,
+      "paragraphs": 2780,
+      "toc": 30,
+      "kinds": {
+        "head": 20,
+        "body": 2750,
+        "aya": 10
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 482,
+      "declared_section_count": 30
+    },
+    {
+      "id": "al_marad_wal_kaffarat",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_marad_wal_kaffarat.json",
+      "sha256_wire": "d69412256cefa033504db92ee88fd439316f1c5b3af83bdca4086a192a5fdfdd",
+      "pages": 261,
+      "paragraphs": 283,
+      "toc": 261,
+      "kinds": {
+        "body": 281,
+        "head": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 261,
+      "declared_section_count": 261
+    },
+    {
+      "id": "shifa_al_alil",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/shifa_al_alil.json",
+      "sha256_wire": "14969b2bb6c87872a23d378f3ea492243fac9fc286f2c4f13dcf4a41875066f9",
+      "pages": 333,
+      "paragraphs": 650,
+      "toc": 31,
+      "kinds": {
+        "head": 20,
+        "body": 613,
+        "aya": 17
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 333,
+      "declared_section_count": 31
+    },
+    {
+      "id": "sifat_al_munafiqin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sifat_al_munafiqin.json",
+      "sha256_wire": "b51bcec31b80f4edb0deb199335d1fd6e98a1d25868f4ea08c88d141bf74c132",
+      "pages": 20,
+      "paragraphs": 34,
+      "toc": 2,
+      "kinds": {
+        "head": 2,
+        "body": 31,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 20,
+      "declared_section_count": 2
+    },
+    {
+      "id": "sigh_al_hamd",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sigh_al_hamd.json",
+      "sha256_wire": "896c70c1e8892fb8be624cf6a3d29c957075bf1abe0ede63603377660c524bc0",
+      "pages": 48,
+      "paragraphs": 128,
+      "toc": 3,
+      "kinds": {
+        "body": 121,
+        "aya": 7
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 48,
+      "declared_section_count": 3
+    },
+    {
+      "id": "al_matar_wal_rad_wal_barq",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_matar_wal_rad_wal_barq.json",
+      "sha256_wire": "e0a340150c88116dee86ee7714305c1bb527a67d07982cea9e7b4eb05e612265",
+      "pages": 185,
+      "paragraphs": 246,
+      "toc": 4,
+      "kinds": {
+        "body": 236,
+        "head": 10
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 185,
+      "declared_section_count": 4
+    },
+    {
+      "id": "al_manamat",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_manamat.json",
+      "sha256_wire": "b20ee00d09183fb291000d69f8f14bf46431d98080a3ba9ccdff7fbd3e2a79bc",
+      "pages": 465,
+      "paragraphs": 565,
+      "toc": 118,
+      "kinds": {
+        "body": 543,
+        "head": 22
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 465,
+      "declared_section_count": 118
+    },
+    {
+      "id": "tariq_al_hijratayn",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tariq_al_hijratayn.json",
+      "sha256_wire": "4d04361a067666fc82b1161ba522140654a6a149813c38c04c36c7d1e21257a7",
+      "pages": 443,
+      "paragraphs": 2403,
+      "toc": 23,
+      "kinds": {
+        "head": 18,
+        "body": 2346,
+        "aya": 39
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 443,
+      "declared_section_count": 23
+    },
+    {
+      "id": "uddat_al_sabirin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/uddat_al_sabirin.json",
+      "sha256_wire": "884e5830ef3e07cf10c80113d196b9fd578a54ae35a2706c0fd19cc6cecf7b24",
+      "pages": 301,
+      "paragraphs": 1276,
+      "toc": 27,
+      "kinds": {
+        "body": 1246,
+        "aya": 14,
+        "head": 16
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 301,
+      "declared_section_count": 27
+    },
+    {
+      "id": "faidah_jalilah_fi_qawaid_al_asma_al_husna",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/faidah_jalilah_fi_qawaid_al_asma_al_husna.json",
+      "sha256_wire": "d460666653307fdf4676959e07e252ba9d3ceaf6649b07a4c16eb9344fa12190",
+      "pages": 59,
+      "paragraphs": 228,
+      "toc": 23,
+      "kinds": {
+        "body": 209,
+        "head": 18,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 59,
+      "declared_section_count": 23
+    },
+    {
+      "id": "fatya_fi_sighat_al_hamd",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fatya_fi_sighat_al_hamd.json",
+      "sha256_wire": "4fb6e2cbb6b3cc773b4bfd593f8d70f5383d124828444a66e26959886ce0ffc7",
+      "pages": 61,
+      "paragraphs": 369,
+      "toc": 47,
+      "kinds": {
+        "body": 356,
+        "head": 9,
+        "aya": 4
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 61,
+      "declared_section_count": 47
+    },
+    {
+      "id": "al_nafaqah_ala_al_iyal",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_nafaqah_ala_al_iyal.json",
+      "sha256_wire": "aa58e275abeb711a37e40780bfeef15c3345323ab91a9b20eb5b470db54473ba",
+      "pages": 701,
+      "paragraphs": 903,
+      "toc": 35,
+      "kinds": {
+        "body": 866,
+        "head": 37
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 701,
+      "declared_section_count": 35
+    },
+    {
+      "id": "al_hamm_wal_huzn",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_hamm_wal_huzn.json",
+      "sha256_wire": "fac3d374056b56fc392624898ba691d9332f02ca4fa317936977f7b2dc4101e9",
+      "pages": 252,
+      "paragraphs": 269,
+      "toc": 73,
+      "kinds": {
+        "body": 265,
+        "head": 4
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 252,
+      "declared_section_count": 73
+    },
+    {
+      "id": "nuniyyat_ibn_al_qayyim",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nuniyyat_ibn_al_qayyim.json",
+      "sha256_wire": "8da849e938191f4208e27db42cdd202f058d17bdaddbcc9df88e064e942e4413",
+      "pages": 423,
+      "paragraphs": 6032,
+      "toc": 97,
+      "kinds": {
+        "head": 92,
+        "body": 5940
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 423,
+      "declared_section_count": 97
+    },
+    {
+      "id": "al_hawatif",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_hawatif.json",
+      "sha256_wire": "eb2ae4fe257e52281cce917674283ef50d0187d3a02634ca3b77465ac48a659a",
+      "pages": 178,
+      "paragraphs": 513,
+      "toc": 3,
+      "kinds": {
+        "body": 458,
+        "head": 55
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 178,
+      "declared_section_count": 3
+    },
+    {
+      "id": "al_wajal_wal_tawthuq_bil_amal",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_wajal_wal_tawthuq_bil_amal.json",
+      "sha256_wire": "d4acda2f467ec3f5d09dd05bbdbcb8aab514e96388961220f6f71eff24e925d7",
+      "pages": 52,
+      "paragraphs": 53,
+      "toc": 24,
+      "kinds": {
+        "body": 53
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 52,
+      "declared_section_count": 24
+    },
+    {
+      "id": "al_wara",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_wara.json",
+      "sha256_wire": "5c668ed856f4793a2cac74fe1ef5aa621f22b6f8ab940f4e9fea2c034b482556",
+      "pages": 243,
+      "paragraphs": 251,
+      "toc": 12,
+      "kinds": {
+        "body": 249,
+        "head": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 243,
+      "declared_section_count": 12
+    },
+    {
+      "id": "al_yaqin_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_yaqin_ibn_abi_al_dunya.json",
+      "sha256_wire": "915f5f461d100c2be1c5d60c8f1b2de1f9c86c447e35113838685f7623eec237",
+      "pages": 42,
+      "paragraphs": 47,
+      "toc": 42,
+      "kinds": {
+        "body": 46,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 42,
+      "declared_section_count": 42
+    },
+    {
+      "id": "hidayat_al_hayara",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hidayat_al_hayara.json",
+      "sha256_wire": "a8954b2dd4f53d8ce9da0b721f08261061840bd3f1c67fd1909564629725a413",
+      "pages": 516,
+      "paragraphs": 2847,
+      "toc": 106,
+      "kinds": {
+        "head": 19,
+        "body": 2828
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 517,
+      "declared_section_count": 106
+    },
+    {
+      "id": "husn_al_zann_billah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/husn_al_zann_billah.json",
+      "sha256_wire": "40b93e5c0bec245154db57a7dd189ad36593bb1b4fcb4cdf86c72d5af416eb60",
+      "pages": 152,
+      "paragraphs": 171,
+      "toc": 152,
+      "kinds": {
+        "body": 166,
+        "head": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 152,
+      "declared_section_count": 152
+    },
+    {
+      "id": "hilm_muawiyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hilm_muawiyah.json",
+      "sha256_wire": "f6b6699396e1e2e5e30fe6740bae89b6f19462ab85f11c705ccd7efc36595a2c",
+      "pages": 40,
+      "paragraphs": 75,
+      "toc": 3,
+      "kinds": {
+        "body": 75
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 40,
+      "declared_section_count": 3
+    },
+    {
+      "id": "dhamm_al_baghy",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dhamm_al_baghy.json",
+      "sha256_wire": "e828b1c09b1cf42a7c7c54d8270f4e78dfcb892af4f6c32e3521850c2f1803cc",
+      "pages": 57,
+      "paragraphs": 103,
+      "toc": 18,
+      "kinds": {
+        "body": 93,
+        "head": 10
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 57,
+      "declared_section_count": 18
+    },
+    {
+      "id": "akhbar_al_humqa_wal_mughaffalin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/akhbar_al_humqa_wal_mughaffalin.json",
+      "sha256_wire": "99dddb80d574522ed8a04d00f6060bc7ffc8f134f80763a49801824f39479905",
+      "pages": 192,
+      "paragraphs": 1552,
+      "toc": 182,
+      "kinds": {
+        "body": 1060,
+        "head": 492
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 192,
+      "declared_section_count": 182
+    },
+    {
+      "id": "akhbar_al_zuraf_wal_mutamajinin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/akhbar_al_zuraf_wal_mutamajinin.json",
+      "sha256_wire": "439e7f8be247a17f69c42205a71e34eb550b45151fdce54372cce254f23cdaee",
+      "pages": 116,
+      "paragraphs": 614,
+      "toc": 15,
+      "kinds": {
+        "body": 597,
+        "head": 16,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 116,
+      "declared_section_count": 15
+    },
+    {
+      "id": "akhbar_al_nisa_ibn_al_jawzi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/akhbar_al_nisa_ibn_al_jawzi.json",
+      "sha256_wire": "5d3a87a4602399bc353cb63f197df53b26ede12a4abd9bd2a16c7ca64f016a66",
+      "pages": 242,
+      "paragraphs": 1676,
+      "toc": 9,
+      "kinds": {
+        "body": 1673,
+        "head": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 242,
+      "declared_section_count": 9
+    },
+    {
+      "id": "dhamm_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dhamm_al_dunya.json",
+      "sha256_wire": "7b6c55df9b88ce1a8cae0fc708ad15e8f670382a2efe09a538d8d20401f3f607",
+      "pages": 503,
+      "paragraphs": 1077,
+      "toc": 3,
+      "kinds": {
+        "body": 1074,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 503,
+      "declared_section_count": 3
+    },
+    {
+      "id": "amar_al_ayan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/amar_al_ayan.json",
+      "sha256_wire": "da560549540c62e524886c150580b5f492966430ae138bbc0056ced279e1dff3",
+      "pages": 184,
+      "paragraphs": 1117,
+      "toc": 58,
+      "kinds": {
+        "body": 1070,
+        "head": 46,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        54,
+        55,
+        56,
+        57
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 191,
+      "declared_section_count": 58
+    },
+    {
+      "id": "ikhbar_ahl_al_rusukh_fil_fiqh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ikhbar_ahl_al_rusukh_fil_fiqh.json",
+      "sha256_wire": "9931e67261c920a4c6b82eb8646a59e4947d7e6b22a77b5b3cd821e4692ab2b7",
+      "pages": 38,
+      "paragraphs": 143,
+      "toc": 22,
+      "kinds": {
+        "body": 121,
+        "head": 22
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 38,
+      "declared_section_count": 22
+    },
+    {
+      "id": "dhamm_al_ghibah_wal_namimah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dhamm_al_ghibah_wal_namimah.json",
+      "sha256_wire": "b829d72052b16bc24bf4a22618ee4862dbeca610253a631fb1828da992169281",
+      "pages": 171,
+      "paragraphs": 173,
+      "toc": 11,
+      "kinds": {
+        "body": 173
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 171,
+      "declared_section_count": 11
+    },
+    {
+      "id": "dhamm_al_muskir",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dhamm_al_muskir.json",
+      "sha256_wire": "012488e4497c21d0d027696a0ecf3c4b581ce469b7458124a43d29c8ece742c1",
+      "pages": 99,
+      "paragraphs": 299,
+      "toc": 30,
+      "kinds": {
+        "body": 279,
+        "head": 20
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 99,
+      "declared_section_count": 30
+    },
+    {
+      "id": "dhamm_al_malahi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dhamm_al_malahi.json",
+      "sha256_wire": "272ed51b993dfa21162037e54a1dd836bbfa85e05d72dff0c4a96f7d96c9866f",
+      "pages": 183,
+      "paragraphs": 186,
+      "toc": 11,
+      "kinds": {
+        "body": 185,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 183,
+      "declared_section_count": 11
+    },
+    {
+      "id": "ilam_al_alim_bi_naskh_al_hadith",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ilam_al_alim_bi_naskh_al_hadith.json",
+      "sha256_wire": "dfea062bb5a49c0577c0bd85f016876957a0d48211cf57d1b23f6cac204e6eb4",
+      "pages": 386,
+      "paragraphs": 1259,
+      "toc": 200,
+      "kinds": {
+        "body": 1258,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 386,
+      "declared_section_count": 200
+    },
+    {
+      "id": "sifat_al_jannah_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sifat_al_jannah_ibn_abi_al_dunya.json",
+      "sha256_wire": "2f394039be021018e4ac761f0729c48f92612c5488980ac6e557a158b91955d2",
+      "pages": 366,
+      "paragraphs": 446,
+      "toc": 23,
+      "kinds": {
+        "body": 442,
+        "head": 4
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 366,
+      "declared_section_count": 23
+    },
+    {
+      "id": "al_adhkiya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adhkiya.json",
+      "sha256_wire": "0e6f1b70ce92acf0961fabd7a184e698c11480831a7165f0631722a05c27720e",
+      "pages": 241,
+      "paragraphs": 901,
+      "toc": 33,
+      "kinds": {
+        "body": 900,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 241,
+      "declared_section_count": 33
+    },
+    {
+      "id": "sifat_al_nar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sifat_al_nar.json",
+      "sha256_wire": "723c01ec03991016dcea75be42dfdea412d04b275a9c814d2e00e506d3665b4b",
+      "pages": 268,
+      "paragraphs": 282,
+      "toc": 10,
+      "kinds": {
+        "body": 280,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 268,
+      "declared_section_count": 10
+    },
+    {
+      "id": "fadail_ramadan_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fadail_ramadan_ibn_abi_al_dunya.json",
+      "sha256_wire": "836d57d718f3ebeccf69f61114622c86447408d7959f0c9cbc42243c330be9c6",
+      "pages": 66,
+      "paragraphs": 66,
+      "toc": 3,
+      "kinds": {
+        "body": 66
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 66,
+      "declared_section_count": 3
+    },
+    {
+      "id": "al_birr_wal_silah_ibn_al_jawzi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_birr_wal_silah_ibn_al_jawzi.json",
+      "sha256_wire": "e2aa57248ab992d8086268f2dbaf53912b704ee5cd2c9575a6301648e6df02ac",
+      "pages": 225,
+      "paragraphs": 1011,
+      "toc": 54,
+      "kinds": {
+        "body": 1011
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 225,
+      "declared_section_count": 54
+    },
+    {
+      "id": "qira_al_dayf",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qira_al_dayf.json",
+      "sha256_wire": "de314388bf84ffefba19456aebe099a38501340f24b51e01a11872283c48b9d6",
+      "pages": 67,
+      "paragraphs": 133,
+      "toc": 67,
+      "kinds": {
+        "body": 122,
+        "head": 11
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 67,
+      "declared_section_count": 67
+    },
+    {
+      "id": "qada_al_hawaij",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qada_al_hawaij.json",
+      "sha256_wire": "915e017175248518fc7383d8fe3138e072a23797a953de46604d589f088c03c6",
+      "pages": 118,
+      "paragraphs": 240,
+      "toc": 3,
+      "kinds": {
+        "body": 218,
+        "head": 22
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 118,
+      "declared_section_count": 3
+    },
+    {
+      "id": "kalam_al_layali_wal_ayyam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/kalam_al_layali_wal_ayyam.json",
+      "sha256_wire": "db9127f5d4b079c06fb92794d8d00666f2153695fe6197dbfa153a6b654af944",
+      "pages": 65,
+      "paragraphs": 136,
+      "toc": 65,
+      "kinds": {
+        "body": 123,
+        "head": 13
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 65,
+      "declared_section_count": 65
+    },
+    {
+      "id": "al_tadhkirah_fil_waz",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tadhkirah_fil_waz.json",
+      "sha256_wire": "99f93b3d9028173e84e45917e6b0ccd6c21d79008ffc8609d32b25caeb08e995",
+      "pages": 214,
+      "paragraphs": 337,
+      "toc": 75,
+      "kinds": {
+        "body": 329,
+        "head": 8
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 214,
+      "declared_section_count": 75
+    },
+    {
+      "id": "mujabu_al_dawah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mujabu_al_dawah.json",
+      "sha256_wire": "594df9a0366d960a14176b34f8495b36f5638d6cf8650b6c572506c774d84821",
+      "pages": 194,
+      "paragraphs": 243,
+      "toc": 73,
+      "kinds": {
+        "body": 236,
+        "head": 7
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 194,
+      "declared_section_count": 73
+    },
+    {
+      "id": "al_thabat_ind_al_mamat",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_thabat_ind_al_mamat.json",
+      "sha256_wire": "8092399a24ae8a2e1eb131f6b50dcb274e9c631988c2e7ccb8fc5f681bf1a091",
+      "pages": 157,
+      "paragraphs": 740,
+      "toc": 90,
+      "kinds": {
+        "body": 738,
+        "head": 1,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 157,
+      "declared_section_count": 90
+    },
+    {
+      "id": "al_hathth_ala_hifz_al_ilm",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_hathth_ala_hifz_al_ilm.json",
+      "sha256_wire": "91fbc043b2fd6dcc5a63857940ae47306016e7e35c86fe6eda4e48d8dca60efa",
+      "pages": 72,
+      "paragraphs": 413,
+      "toc": 59,
+      "kinds": {
+        "body": 413
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 72,
+      "declared_section_count": 59
+    },
+    {
+      "id": "muhasabat_al_nafs",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/muhasabat_al_nafs.json",
+      "sha256_wire": "004ce1e03efea0bf717d972e05b9c0c1d1d9ba0abf27b560472eba0bd717f9d8",
+      "pages": 155,
+      "paragraphs": 213,
+      "toc": 5,
+      "kinds": {
+        "body": 201,
+        "head": 12
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 155,
+      "declared_section_count": 5
+    },
+    {
+      "id": "mudarat_al_nas",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mudarat_al_nas.json",
+      "sha256_wire": "bd0ec5a5198f26346e9b29bb89000b865f41ba3909811e46c112ffc675b77805",
+      "pages": 187,
+      "paragraphs": 201,
+      "toc": 11,
+      "kinds": {
+        "body": 198,
+        "head": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 187,
+      "declared_section_count": 11
+    },
+    {
+      "id": "al_qussas_wal_mudhakkirin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_qussas_wal_mudhakkirin.json",
+      "sha256_wire": "32d29fc270a795eff27aa30452bff5a980bfc0b95e5057b920421da924fcebf1",
+      "pages": 209,
+      "paragraphs": 744,
+      "toc": 81,
+      "kinds": {
+        "body": 736,
+        "head": 6,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 209,
+      "declared_section_count": 81
+    },
+    {
+      "id": "maqtal_ali",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/maqtal_ali.json",
+      "sha256_wire": "513b76da7006dc313a70bc0d3e7c932df45319c0f39248061e8f721467da8d02",
+      "pages": 143,
+      "paragraphs": 226,
+      "toc": 13,
+      "kinds": {
+        "body": 216,
+        "head": 10
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 143,
+      "declared_section_count": 13
+    },
+    {
+      "id": "al_mujtaba_min_al_mujtana",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mujtaba_min_al_mujtana.json",
+      "sha256_wire": "d2743214374b15c42593c57118bd92bc8762b2e1e143dfd1f2903c6ee9141f65",
+      "pages": 97,
+      "paragraphs": 1192,
+      "toc": 55,
+      "kinds": {
+        "body": 1046,
+        "head": 52,
+        "aya": 94
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 97,
+      "declared_section_count": 55
+    },
+    {
+      "id": "makaid_al_shaytan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/makaid_al_shaytan.json",
+      "sha256_wire": "c1dafcf7e654709dd5d0a718de036c6f9043cc923e864bdcafa655df718d3bbc",
+      "pages": 129,
+      "paragraphs": 352,
+      "toc": 52,
+      "kinds": {
+        "body": 350,
+        "aya": 1,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 129,
+      "declared_section_count": 52
+    },
+    {
+      "id": "makarim_al_akhlaq_ibn_abi_al_dunya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/makarim_al_akhlaq_ibn_abi_al_dunya.json",
+      "sha256_wire": "f08bfe97b3b056c4089e65fc0c9bbe678bff1960ea0e33e167c6e0c49777098f",
+      "pages": 490,
+      "paragraphs": 861,
+      "toc": 9,
+      "kinds": {
+        "body": 799,
+        "head": 62
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 490,
+      "declared_section_count": 9
+    },
+    {
+      "id": "man_asha_bad_al_mawt",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/man_asha_bad_al_mawt.json",
+      "sha256_wire": "f0961921d5a752cea9420f242e505b21b23c623e76f02cc38267cf8772508a04",
+      "pages": 56,
+      "paragraphs": 77,
+      "toc": 56,
+      "kinds": {
+        "body": 76,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 56,
+      "declared_section_count": 56
+    },
+    {
+      "id": "riyadat_al_nafs",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/riyadat_al_nafs.json",
+      "sha256_wire": "53a39885ff96c46c3145696c04641b59ec9a41f53eaba08eabb3dc15ca6b4047",
+      "pages": 48,
+      "paragraphs": 120,
+      "toc": 2,
+      "kinds": {
+        "head": 2,
+        "body": 118
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 48,
+      "declared_section_count": 2
+    },
+    {
+      "id": "al_mudhish",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mudhish.json",
+      "sha256_wire": "520b208748923f17d283cd23b34af2ba73c8d9d1c5e213038b7b368f22f6537a",
+      "pages": 530,
+      "paragraphs": 5360,
+      "toc": 163,
+      "kinds": {
+        "body": 5277,
+        "head": 37,
+        "aya": 46
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 530,
+      "declared_section_count": 163
+    },
+    {
+      "id": "al_musaffa_bi_akuff_ahl_al_rusukh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_musaffa_bi_akuff_ahl_al_rusukh.json",
+      "sha256_wire": "9f693a106a00d18daf1f341fad85b741bc833717ae1724bb23a980a8fe6b2610",
+      "pages": 50,
+      "paragraphs": 279,
+      "toc": 31,
+      "kinds": {
+        "body": 215,
+        "head": 40,
+        "aya": 24
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 50,
+      "declared_section_count": 31
+    },
+    {
+      "id": "al_manahi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_manahi.json",
+      "sha256_wire": "5656e667be2013f280ff7982bc45688c17305619a547cbbf388de636447f5e38",
+      "pages": 233,
+      "paragraphs": 1047,
+      "toc": 142,
+      "kinds": {
+        "head": 164,
+        "body": 883
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 233,
+      "declared_section_count": 142
+    },
+    {
+      "id": "al_muqliq_ibn_al_jawzi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_muqliq_ibn_al_jawzi.json",
+      "sha256_wire": "9357725b6fbd784b2743d248f85867b37d3b7844df1e1c25dc37cfb4a7cd006b",
+      "pages": 122,
+      "paragraphs": 205,
+      "toc": 6,
+      "kinds": {
+        "body": 204,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 122,
+      "declared_section_count": 6
+    },
+    {
+      "id": "bahr_al_dumu",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bahr_al_dumu.json",
+      "sha256_wire": "c841e9726f6e7c5918422370bce31213b228121744645f2d19e9408d8b9f8359",
+      "pages": 150,
+      "paragraphs": 1392,
+      "toc": 33,
+      "kinds": {
+        "body": 1346,
+        "head": 34,
+        "aya": 12
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 150,
+      "declared_section_count": 33
+    },
+    {
+      "id": "al_amthal_min_al_kitab_wal_sunnah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_amthal_min_al_kitab_wal_sunnah.json",
+      "sha256_wire": "f8ea9b4792b1e3e799df6c95e19564f9920d5ed3a1813eba35da5fc7115b45e7",
+      "pages": 318,
+      "paragraphs": 1361,
+      "toc": 205,
+      "kinds": {
+        "body": 1320,
+        "aya": 32,
+        "head": 9
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 318,
+      "declared_section_count": 205
+    },
+    {
+      "id": "bustan_al_waizin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bustan_al_waizin.json",
+      "sha256_wire": "de85544cdc01039a7cccbc26f9f2cb90a50b5626af4759582b9448685ccecca8",
+      "pages": 301,
+      "paragraphs": 3605,
+      "toc": 287,
+      "kinds": {
+        "body": 3594,
+        "aya": 11
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 301,
+      "declared_section_count": 287
+    },
+    {
+      "id": "tarikh_bayt_al_maqdis",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_bayt_al_maqdis.json",
+      "sha256_wire": "1f371ad7643b4ecad4a8df6dd88be5b3c840acff17f41c887fe7ac833201195f",
+      "pages": 40,
+      "paragraphs": 140,
+      "toc": 13,
+      "kinds": {
+        "body": 140
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 40,
+      "declared_section_count": 13
+    },
+    {
+      "id": "tadhkirat_al_arib_fi_tafsir_al_gharib",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tadhkirat_al_arib_fi_tafsir_al_gharib.json",
+      "sha256_wire": "81b3a1859d0416b5ee9ca8eec14a85043dd5ae34309d13e2c100b0d77b726ea2",
+      "pages": 466,
+      "paragraphs": 5159,
+      "toc": 112,
+      "kinds": {
+        "body": 4858,
+        "head": 94,
+        "aya": 207
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 466,
+      "declared_section_count": 112
+    },
+    {
+      "id": "tazim_al_fatya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tazim_al_fatya.json",
+      "sha256_wire": "494d66496d5b74fe90f374cd978cddf02f49869c3597eaf07ff717a441f06c2f",
+      "pages": 63,
+      "paragraphs": 113,
+      "toc": 11,
+      "kinds": {
+        "body": 112,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 63,
+      "declared_section_count": 11
+    },
+    {
+      "id": "taqwim_al_lisan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/taqwim_al_lisan.json",
+      "sha256_wire": "a013b94cfab9f75488f6e275c04b301b9454ebaf15fe885905e35da3e7772fe9",
+      "pages": 140,
+      "paragraphs": 1440,
+      "toc": 29,
+      "kinds": {
+        "body": 1411,
+        "head": 29
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 140,
+      "declared_section_count": 29
+    },
+    {
+      "id": "talbis_iblis",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/talbis_iblis.json",
+      "sha256_wire": "c2b1d94426df9bb05a7029d3635a30a6e42a3b236a0dff475e9b10dfc6fb61cb",
+      "pages": 419,
+      "paragraphs": 1492,
+      "toc": 85,
+      "kinds": {
+        "body": 1445,
+        "head": 47
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 419,
+      "declared_section_count": 85
+    },
+    {
+      "id": "talqih_fuhum_ahl_al_athar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/talqih_fuhum_ahl_al_athar.json",
+      "sha256_wire": "873e13262fc737e5a1d06f1c276e9f63800ecde6a45ac7c04f9b88b4d38ceb99",
+      "pages": 521,
+      "paragraphs": 3497,
+      "toc": 251,
+      "kinds": {
+        "body": 3453,
+        "head": 44
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 521,
+      "declared_section_count": 251
+    },
+    {
+      "id": "tanbih_al_naim_al_ghamr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tanbih_al_naim_al_ghamr.json",
+      "sha256_wire": "28afc3514da4829a747e02f072ab294f7d4a0d8a0ff992a54f605546da79c9c0",
+      "pages": 41,
+      "paragraphs": 168,
+      "toc": 8,
+      "kinds": {
+        "body": 159,
+        "head": 9
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 41,
+      "declared_section_count": 8
+    },
+    {
+      "id": "tanwir_al_ghabash",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tanwir_al_ghabash.json",
+      "sha256_wire": "31a359e1909464963a09b279eeac84807f2d878d905ff7c226844eb2bcb08cc6",
+      "pages": 233,
+      "paragraphs": 993,
+      "toc": 29,
+      "kinds": {
+        "body": 993
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 233,
+      "declared_section_count": 29
+    },
+    {
+      "id": "hifz_al_umr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hifz_al_umr.json",
+      "sha256_wire": "fb48f6f8c6f61a3aa116edd65cef1434975e81a26e1e8b42d0e7b6ca745430ee",
+      "pages": 42,
+      "paragraphs": 210,
+      "toc": 5,
+      "kinds": {
+        "body": 209,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 42,
+      "declared_section_count": 5
+    },
+    {
+      "id": "fadail_bayt_al_maqdis",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fadail_bayt_al_maqdis.json",
+      "sha256_wire": "5a6af7f3094e286de1101ff6d451a9c06be9819153e17cb48860831cf88a1f52",
+      "pages": 113,
+      "paragraphs": 678,
+      "toc": 41,
+      "kinds": {
+        "body": 675,
+        "head": 1,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        39,
+        40
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 119,
+      "declared_section_count": 41
+    },
+    {
+      "id": "funun_al_afnan_fi_uyun_ulum_al_quran",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/funun_al_afnan_fi_uyun_ulum_al_quran.json",
+      "sha256_wire": "f46b71351e435e273ed2cdc8e5a7bdf6bd7775b9cee32357db65b5ce0ebb1e89",
+      "pages": 341,
+      "paragraphs": 3347,
+      "toc": 93,
+      "kinds": {
+        "body": 3256,
+        "head": 91
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 341,
+      "declared_section_count": 93
+    },
+    {
+      "id": "muthir_al_gharam_al_sakin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/muthir_al_gharam_al_sakin.json",
+      "sha256_wire": "c48f6fcd783a661b1b456f886e2aca175e0bff9feb355af0991c0deb0e2e000c",
+      "pages": 465,
+      "paragraphs": 3857,
+      "toc": 211,
+      "kinds": {
+        "body": 3855,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 465,
+      "declared_section_count": 211
+    },
+    {
+      "id": "mashyakhat_ibn_al_jawzi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mashyakhat_ibn_al_jawzi.json",
+      "sha256_wire": "ca5459aac3dde43f3f4fd7ce469b5397d40357db3947b19840f1358179fedf18",
+      "pages": 150,
+      "paragraphs": 754,
+      "toc": 87,
+      "kinds": {
+        "body": 754
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 150,
+      "declared_section_count": 87
+    },
+    {
+      "id": "mawaiz_ibn_al_jawzi_al_yaqutah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mawaiz_ibn_al_jawzi_al_yaqutah.json",
+      "sha256_wire": "9af1b91b2a559a404ea7489d016ae84f4a7dcbc2d833f7d524fb1c636073f4ef",
+      "pages": 27,
+      "paragraphs": 365,
+      "toc": 27,
+      "kinds": {
+        "head": 26,
+        "body": 338,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 27,
+      "declared_section_count": 27
+    },
+    {
+      "id": "nawasikh_al_quran",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nawasikh_al_quran.json",
+      "sha256_wire": "cfe5895bf940b6f39f6529afcca7d94c8cee30e123d2d14054da51afb0454cd0",
+      "pages": 210,
+      "paragraphs": 2351,
+      "toc": 174,
+      "kinds": {
+        "body": 2065,
+        "head": 286
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        173
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 211,
+      "declared_section_count": 174
+    },
+    {
+      "id": "adab_al_fatwa_wal_mufti",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_fatwa_wal_mufti.json",
+      "sha256_wire": "9f89682cb1fe747b70f5cf52c22783e2af62f19318b99672924140510666d972",
+      "pages": 74,
+      "paragraphs": 308,
+      "toc": 9,
+      "kinds": {
+        "body": 308
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 74,
+      "declared_section_count": 9
+    },
+    {
+      "id": "al_usul_wal_dawabit",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_usul_wal_dawabit.json",
+      "sha256_wire": "e209faa850228cbeb123fe06c661d71f8ed73ec899b64ba68d86c5881100d5ce",
+      "pages": 27,
+      "paragraphs": 150,
+      "toc": 2,
+      "kinds": {
+        "body": 150
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 27,
+      "declared_section_count": 2
+    },
+    {
+      "id": "al_idah_fi_manasik_al_hajj_wal_umrah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_idah_fi_manasik_al_hajj_wal_umrah.json",
+      "sha256_wire": "dc607cd78125326963bb619edd302fca197cd49037d194ba1b04913dbe6cec7f",
+      "pages": 519,
+      "paragraphs": 1270,
+      "toc": 66,
+      "kinds": {
+        "body": 1265,
+        "head": 4,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 519,
+      "declared_section_count": 66
+    },
+    {
+      "id": "al_fiqh_al_manhaji_hajj",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fiqh_al_manhaji_hajj.json",
+      "sha256_wire": "17893dbbcf9b8a3b2ad40c0d412f6fcb58864042ad5f9ff5368f357dc7aca141",
+      "pages": 77,
+      "paragraphs": 544,
+      "toc": 31,
+      "kinds": {
+        "body": 518,
+        "head": 21,
+        "aya": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 77,
+      "declared_section_count": 31
+    },
+    {
+      "id": "bstan_alaarfyn_llnwwy",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bustan_al_arifin.json",
+      "sha256_wire": "ddac481d624942690daa72e1b46b583002dc7b9dbffd783ac79d7e85c7675f55",
+      "pages": 72,
+      "paragraphs": 215,
+      "toc": 10,
+      "kinds": {
+        "head": 21,
+        "body": 194
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 72,
+      "declared_section_count": 10
+    },
+    {
+      "id": "tahrir_alfaz_al_tanbih",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahrir_alfaz_al_tanbih.json",
+      "sha256_wire": "2e775e8a31e15392bda71e48511f22da8adbd77682b9b360ff6c9909b5cd7e8e",
+      "pages": 303,
+      "paragraphs": 1802,
+      "toc": 2,
+      "kinds": {
+        "body": 1800,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 303,
+      "declared_section_count": 2
+    },
+    {
+      "id": "juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/juz_fih_dhikr_iiqad_al_salaf_fil_huruf_wal_aswat.json",
+      "sha256_wire": "e221f4a1d40de491ad95d162312e5591a87c03dc54cf1224279eb17183d61576",
+      "pages": 86,
+      "paragraphs": 525,
+      "toc": 20,
+      "kinds": {
+        "body": 494,
+        "head": 17,
+        "aya": 14
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 86,
+      "declared_section_count": 20
+    },
+    {
+      "id": "daqaiq_al_minhaj",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/daqaiq_al_minhaj.json",
+      "sha256_wire": "7c61106c44f1a2f6e72829c0d86e83f1b3ba80d80f5c353b0646360cb42478d8",
+      "pages": 52,
+      "paragraphs": 334,
+      "toc": 6,
+      "kinds": {
+        "body": 333,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 52,
+      "declared_section_count": 6
+    },
+    {
+      "id": "fatawa_al_nawawi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fatawa_al_nawawi.json",
+      "sha256_wire": "b78c62f39a572a67c710085d0c5a9beca34045580545f7af8ff3f650f0a9143a",
+      "pages": 260,
+      "paragraphs": 1512,
+      "toc": 199,
+      "kinds": {
+        "body": 1343,
+        "head": 164,
+        "aya": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 278,
+      "declared_section_count": 199
+    },
+    {
+      "id": "minhaj_al_talibin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/minhaj_al_talibin.json",
+      "sha256_wire": "0d98014f3e22a1c4661df6f3bcb43e816077862dea5841a7799d86cc489e5e33",
+      "pages": 406,
+      "paragraphs": 1255,
+      "toc": 138,
+      "kinds": {
+        "head": 151,
+        "body": 1104
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 406,
+      "declared_section_count": 138
+    },
+    {
+      "id": "seerat_ibn_hisham",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/seerat_ibn_hisham.json",
+      "sha256_wire": "776db428bd8b13919a60af864f905bdbd98c8bdd0c323d029fe1eea125ebbd46",
+      "pages": 594,
+      "paragraphs": 5350,
+      "toc": 6,
+      "kinds": {
+        "head": 6,
+        "body": 5298,
+        "aya": 46
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 594,
+      "declared_section_count": 6
+    },
+    {
+      "id": "zad_al_maad",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/zad_al_maad.json",
+      "sha256_wire": "f09c2888457bd315b77ad02ff62658e4bbd11696512c5cb195b9097ca0d922be",
+      "pages": 2628,
+      "paragraphs": 14312,
+      "toc": 1085,
+      "kinds": {
+        "head": 1163,
+        "body": 13113,
+        "aya": 36
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2628,
+      "declared_section_count": 1085
+    },
+    {
+      "id": "uyun_al_athar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/uyun_al_athar.json",
+      "sha256_wire": "56bdbaded73eedb01a18a64dde6d3bd3c793787ccd5ab1fee7358d23626399f1",
+      "pages": 766,
+      "paragraphs": 4969,
+      "toc": 253,
+      "kinds": {
+        "body": 4881,
+        "head": 88
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 766,
+      "declared_section_count": 253
+    },
+    {
+      "id": "nur_al_yaqin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nur_al_yaqin.json",
+      "sha256_wire": "0a7db4172ec647c0c7eca641defc6aa79179e7d7cce749550a6382e3de560da1",
+      "pages": 278,
+      "paragraphs": 1609,
+      "toc": 183,
+      "kinds": {
+        "body": 1450,
+        "head": 159
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 278,
+      "declared_section_count": 183
+    },
+    {
+      "id": "as_seerah_ibn_kathir",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/as_seerah_ibn_kathir.json",
+      "sha256_wire": "df8e779faee20ff08d3082bd2c797eb039582c6a1e520f5dc98fe9c82fcf868c",
+      "pages": 2495,
+      "paragraphs": 23900,
+      "toc": 118,
+      "kinds": {
+        "body": 23900
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2495,
+      "declared_section_count": 118
+    },
+    {
+      "id": "aladhkar_llnwwy_t_alarnwwt",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adhkar_nawawi.json",
+      "sha256_wire": "8dbc913e6188226555c616ef52f8ffe77c092aa219103c1a15954af9b1cd27eb",
+      "pages": 411,
+      "paragraphs": 4074,
+      "toc": 251,
+      "kinds": {
+        "body": 4055,
+        "head": 19
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 411,
+      "declared_section_count": 251
+    },
+    {
+      "id": "altbyan_fy_adab_hmlh_alqran",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/at_tibyan_hamalat_al_quran.json",
+      "sha256_wire": "2ab1d3c1489b593f8a5ab5edabb6ea1a92fa1a1bbd2d83ca581d240dc8a002c6",
+      "pages": 213,
+      "paragraphs": 645,
+      "toc": 106,
+      "kinds": {
+        "head": 27,
+        "body": 618
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        103,
+        104,
+        105
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 224,
+      "declared_section_count": 106
+    },
+    {
+      "id": "alarbawn_alnwwyh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_arbaun_an_nawawiyyah.json",
+      "sha256_wire": "0a9a7017e0dd65a47e940aa448306d4029541315a8311f0c3e5a6a13e1dd3501",
+      "pages": 81,
+      "paragraphs": 181,
+      "toc": 43,
+      "kinds": {
+        "body": 138,
+        "head": 43
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 81,
+      "declared_section_count": 43
+    },
+    {
+      "id": "altqryb_waltysyr_llnwwy",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/at_taqrib_wat_taysir.json",
+      "sha256_wire": "ecf4a4dabaf3a98a99ebec349196278236618ba8b2739a17356aa46102e845fb",
+      "pages": 100,
+      "paragraphs": 476,
+      "toc": 54,
+      "kinds": {
+        "body": 470,
+        "head": 6
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 100,
+      "declared_section_count": 54
+    },
+    {
+      "id": "fdayl_alqran_labn_kthyr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fadail_al_quran_ibn_kathir.json",
+      "sha256_wire": "706332a1ecc195eb8c481bf276edd073b593a27f2167b268ae9a90cafa6cad81",
+      "pages": 298,
+      "paragraphs": 1486,
+      "toc": 37,
+      "kinds": {
+        "body": 1457,
+        "head": 22,
+        "aya": 7
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 305,
+      "declared_section_count": 37
+    },
+    {
+      "id": "albaath_alhthyth_ila_akhtsar_alwm_alhdyth",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_baith_al_hathith.json",
+      "sha256_wire": "eae8d906890b496a5fc8836b034f39b6e61dd355e3b17513a076b2546d8f984d",
+      "pages": 197,
+      "paragraphs": 953,
+      "toc": 122,
+      "kinds": {
+        "body": 784,
+        "head": 169
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 197,
+      "declared_section_count": 122
+    },
+    {
+      "id": "alfswl_fy_syrh_alrswl",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fusul_fi_seerat_ar_rasul.json",
+      "sha256_wire": "4de5cf52a6343c5c527216b494e0664663c55778f549b279dfb6dbed45403797",
+      "pages": 262,
+      "paragraphs": 1517,
+      "toc": 92,
+      "kinds": {
+        "head": 97,
+        "body": 1418,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 262,
+      "declared_section_count": 92
+    },
+    {
+      "id": "majzat_alnby_mn_albdayh_walnhayh_t_alsyd_ibr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mujizat_an_nabi.json",
+      "sha256_wire": "f762644ccf8c6537bbf04e96a482b1a04d2f890a967fd97bf7cdfae0414172d8",
+      "pages": 448,
+      "paragraphs": 2590,
+      "toc": 195,
+      "kinds": {
+        "head": 64,
+        "body": 2526
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 448,
+      "declared_section_count": 195
+    },
+    {
+      "id": "msnd_aby_bkr_alsdyq_labn_kthyr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/musnad_abi_bakr.json",
+      "sha256_wire": "529d88832a99ce70c4244fd72bd68a9dc24262085ede77a1f4d580ba98ff0123",
+      "pages": 701,
+      "paragraphs": 2830,
+      "toc": 264,
+      "kinds": {
+        "body": 2659,
+        "head": 171
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 701,
+      "declared_section_count": 264
+    },
+    {
+      "id": "tbqat_alshafayyn",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tabaqat_ash_shafiiyyin.json",
+      "sha256_wire": "d7beb3229480d352cafe0b85547cd7fb2f64d04cc66d1cb9c4f684998974267d",
+      "pages": 907,
+      "paragraphs": 4897,
+      "toc": 696,
+      "kinds": {
+        "body": 4105,
+        "head": 788,
+        "aya": 4
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 907,
+      "declared_section_count": 696
+    },
+    {
+      "id": "aladab_walahkam_almtalqh_bdkhwl_alhmam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_dukhul_al_hammam.json",
+      "sha256_wire": "d634070c3dba0e885e8ae1f5f685d62f3abdc7e96d1ce5ea5e95db1835bc7778",
+      "pages": 76,
+      "paragraphs": 340,
+      "toc": 1,
+      "kinds": {
+        "body": 320,
+        "head": 18,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 76,
+      "declared_section_count": 1
+    },
+    {
+      "id": "jz_fy_bya_amhat_alawlad",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/juz_bay_ummahat_al_awlad.json",
+      "sha256_wire": "f060c4cbbf3c64282fa6bf1f3c12fc898ea762f0fedd0fcf7f23ed6dd88866b4",
+      "pages": 128,
+      "paragraphs": 761,
+      "toc": 71,
+      "kinds": {
+        "body": 744,
+        "aya": 3,
+        "head": 14
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        70
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 152,
+      "declared_section_count": 71
+    },
+    {
+      "id": "rawdat_al_uqala",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/rawdat_al_uqala.json",
+      "sha256_wire": "1883c4f6ec3a7c103361240f9378e5b584a0b4ce033331fe3129e203b670093f",
+      "pages": 276,
+      "paragraphs": 2366,
+      "toc": 56,
+      "kinds": {
+        "body": 2333,
+        "head": 32,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 276,
+      "declared_section_count": 56
+    },
+    {
+      "id": "hilyat_al_awliya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hilyat_al_awliya.json",
+      "sha256_wire": "62dccb279594a0009a25b24d2eff31d65819c3642cf5b53312f2b778953d6da6",
+      "pages": 3891,
+      "paragraphs": 28004,
+      "toc": 826,
+      "kinds": {
+        "body": 27571,
+        "head": 433
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 3891,
+      "declared_section_count": 826
+    },
+    {
+      "id": "tqryb_althdhyb",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/taqrib_al_tahdhib.json",
+      "sha256_wire": "d4e32a8f4fdd7f26db463ade66bbbab41bb61080a31b8460bc956661d4913e53",
+      "pages": 688,
+      "paragraphs": 12286,
+      "toc": 168,
+      "kinds": {
+        "body": 12019,
+        "head": 267
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 688,
+      "declared_section_count": 168
+    },
+    {
+      "id": "nzhh_alnzr_fy_twdyh_nkhbh_alfkr_t_atr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nuzhat_al_nazar.json",
+      "sha256_wire": "7b63991894dbf16785a9a99ab30aab77c0ae7ef542a611c76f6a3843dcb6ba87",
+      "pages": 154,
+      "paragraphs": 1010,
+      "toc": 105,
+      "kinds": {
+        "body": 1003,
+        "head": 7
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        102,
+        103,
+        104
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 157,
+      "declared_section_count": 105
+    },
+    {
+      "id": "hdy_alsary_mqdmh_fth_albary_t_alslfyh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hady_al_sari.json",
+      "sha256_wire": "f1759d5d586ee8991cd46f25655f583ec253322148451a9a1a653995ce225829",
+      "pages": 488,
+      "paragraphs": 8600,
+      "toc": 319,
+      "kinds": {
+        "body": 7913,
+        "head": 687
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 488,
+      "declared_section_count": 319
+    },
+    {
+      "id": "alamaly_almtlqh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_amali_al_mutlaqah.json",
+      "sha256_wire": "0ab1843de062d408f1e0cd69e002a07a851844beeafa3837677f161d7a58105d",
+      "pages": 255,
+      "paragraphs": 2058,
+      "toc": 79,
+      "kinds": {
+        "body": 2056,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 255,
+      "declared_section_count": 79
+    },
+    {
+      "id": "almajm_almfhrs_tjryd_asanyd_alktb_almshhwrh_",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mujam_al_mufahras.json",
+      "sha256_wire": "dd015d5bb1afe8b3838a00321790b225323625bb13c7c449eafa871c54219150",
+      "pages": 389,
+      "paragraphs": 5942,
+      "toc": 65,
+      "kinds": {
+        "body": 5939,
+        "aya": 1,
+        "head": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 389,
+      "declared_section_count": 65
+    },
+    {
+      "id": "rfa_alisr_an_qdah_msr",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/raf_al_isr_an_qudat_misr.json",
+      "sha256_wire": "4972ca71668fcb2fb3a7a73d11d3e3f28c2ae9721643b699a4e4e93daa049cd8",
+      "pages": 485,
+      "paragraphs": 3536,
+      "toc": 33,
+      "kinds": {
+        "body": 3504,
+        "head": 32
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 485,
+      "declared_section_count": 33
+    },
+    {
+      "id": "aliythar_bmarfh_rwah_alathar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ithar_bi_marifat_ruwat_al_athar.json",
+      "sha256_wire": "d6ed04f8563a0cf5e83989f58f3b1e908cb41389145eee111396ec642e5b1c27",
+      "pages": 181,
+      "paragraphs": 426,
+      "toc": 29,
+      "kinds": {
+        "body": 425,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 181,
+      "declared_section_count": 29
+    },
+    {
+      "id": "qtah_mn_ntayj_alafkar_fy_tkhryj_ahadyth_alad",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nataij_al_afkar.json",
+      "sha256_wire": "1739707398332d8e2e165b09ec22df49ed7e616e6244f7798ae6db3e4b1fc7b5",
+      "pages": 370,
+      "paragraphs": 2810,
+      "toc": 116,
+      "kinds": {
+        "body": 2809,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 370,
+      "declared_section_count": 116
+    },
+    {
+      "id": "alwqwf_ala_almwqwf",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_wuquf_ala_al_mawquf.json",
+      "sha256_wire": "5a3a7b29546d51a8abd498e7832443c233e4d92aef7e6afa40874c88e94503c6",
+      "pages": 118,
+      "paragraphs": 448,
+      "toc": 29,
+      "kinds": {
+        "body": 448
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 118,
+      "declared_section_count": 29
+    },
+    {
+      "id": "slslh_aldhhb",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/silsilat_al_dhahab.json",
+      "sha256_wire": "07cf0ccba3f0967244b9651bd84f93f94c4fba43295a6cf536f7213ae3d14eb3",
+      "pages": 67,
+      "paragraphs": 125,
+      "toc": 2,
+      "kinds": {
+        "body": 125
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 67,
+      "declared_section_count": 2
+    },
+    {
+      "id": "dlayl_alnbwh_abw_naym_alasbhany",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dalail_al_nubuwwah_abu_nuaym.json",
+      "sha256_wire": "42f3fb84cda036f648109b2762e86ed53296ef93a94a9795c5751094c18b4ac7",
+      "pages": 721,
+      "paragraphs": 1211,
+      "toc": 140,
+      "kinds": {
+        "body": 1144,
+        "head": 67
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 721,
+      "declared_section_count": 140
+    },
+    {
+      "id": "alimamh_walrd_ala_alrafdh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_imamah_wal_radd_ala_al_rafidah.json",
+      "sha256_wire": "a31739d7fcb8f9ad98e1445fb0c0c05f98c3dd6048788a375765a0ef31bfd4d6",
+      "pages": 178,
+      "paragraphs": 703,
+      "toc": 145,
+      "kinds": {
+        "body": 692,
+        "aya": 11
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 178,
+      "declared_section_count": 145
+    },
+    {
+      "id": "msnd_aby_hnyfh_rwayh_aby_naym",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/musnad_abi_hanifah_abu_nuaym.json",
+      "sha256_wire": "ec2ab0f4dad609bae309aad6c4921f29853059ba7a87ce3fc1705dcf21b778b4",
+      "pages": 662,
+      "paragraphs": 702,
+      "toc": 280,
+      "kinds": {
+        "body": 701,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 662,
+      "declared_section_count": 280
+    },
+    {
+      "id": "sfh_alnfaq_wnat_almnafqyn_laby_naym",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sifat_al_nifaq.json",
+      "sha256_wire": "3a59f2d4567eef3e324a9f9ec7438561c1522f4f5d0b55ad44ad1e4733f372d1",
+      "pages": 161,
+      "paragraphs": 528,
+      "toc": 132,
+      "kinds": {
+        "body": 519,
+        "aya": 9
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 161,
+      "declared_section_count": 132
+    },
+    {
+      "id": "fdayl_alkhlfa_alrashdyn_laby_naym_alasbhany",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fadail_al_khulafa_al_rashidin.json",
+      "sha256_wire": "d7b72f3cd6fe691a4209b3790d6c457fbe1fc6fa10ff61e5f1616850505569c5",
+      "pages": 366,
+      "paragraphs": 366,
+      "toc": 127,
+      "kinds": {
+        "body": 366
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 366,
+      "declared_section_count": 127
+    },
+    {
+      "id": "ryadh_alabdan_laby_naym_alasbhany",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/riyadat_al_abdan.json",
+      "sha256_wire": "5cd707cd35f6427eca1bdc345fb052ea7d6293205d59cda5bc3b843e8cf9e187",
+      "pages": 22,
+      "paragraphs": 24,
+      "toc": 22,
+      "kinds": {
+        "body": 24
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 22,
+      "declared_section_count": 22
+    },
+    {
+      "id": "alarbawn_ala_mdhhb_almthqqyn_mn_alswfyh_laby",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_arbaun_ala_madhhab_al_mutahaqqiqin.json",
+      "sha256_wire": "5bde4ae77c27829db97cba202ef7fe890fcb06720d578c51d7a185f500e37949",
+      "pages": 100,
+      "paragraphs": 107,
+      "toc": 40,
+      "kinds": {
+        "body": 105,
+        "head": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 100,
+      "declared_section_count": 40
+    },
+    {
+      "id": "hdyth_in_llh_tsah_wtsayn_asma_laby_naym_alas",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/hadith_asma_allah_al_husna.json",
+      "sha256_wire": "e615b0514aeafce1c35c42f04b2ef90fe31e91cf9f8560d0d135a1cde8a69585",
+      "pages": 47,
+      "paragraphs": 116,
+      "toc": 45,
+      "kinds": {
+        "body": 116
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 47,
+      "declared_section_count": 45
+    },
+    {
+      "id": "fdylh_alaadlyn_mn_alwlah_laby_naym",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fadilat_al_adilin_min_al_wulat.json",
+      "sha256_wire": "5761f1d02cd1f4fd38e0e7373c23a308a9e801534922cd69a72f46cdc9771283",
+      "pages": 48,
+      "paragraphs": 48,
+      "toc": 46,
+      "kinds": {
+        "body": 48
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 48,
+      "declared_section_count": 46
+    },
+    {
+      "id": "al_bidaya_wan_nihaya",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_bidaya_wan_nihaya.json",
+      "sha256_wire": "4aecac38be1b88575274b2b3e99953efdb6dd6fdd759b7644ad20c8f3171c3a2",
+      "pages": 4918,
+      "paragraphs": 37640,
+      "toc": 2565,
+      "kinds": {
+        "body": 32435,
+        "head": 5205
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 4918,
+      "declared_section_count": 2565
+    },
+    {
+      "id": "qisas_al_anbiya_ibn_kathir",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qisas_al_anbiya_ibn_kathir.json",
+      "sha256_wire": "60fbffe0ecbb0e9b0a498e4f32fb2232f79ceb6a34a53a323bcc5fe60d44c728",
+      "pages": 888,
+      "paragraphs": 6962,
+      "toc": 49,
+      "kinds": {
+        "body": 6962
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 888,
+      "declared_section_count": 49
+    },
+    {
+      "id": "futuh_al_buldan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/futuh_al_buldan.json",
+      "sha256_wire": "9b31a8c0677e58562aec5c60302b8a5d5019d34dbfd3afb7ef8572f7f02b81b3",
+      "pages": 453,
+      "paragraphs": 2007,
+      "toc": 96,
+      "kinds": {
+        "body": 1917,
+        "head": 90
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 453,
+      "declared_section_count": 96
+    },
+    {
+      "id": "tarikh_al_khulafa_suyuti",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_al_khulafa_suyuti.json",
+      "sha256_wire": "0ec31f0afa7c2f281028817b99934133037dc15f17e85ea5c2e01c4d43a53263",
+      "pages": 782,
+      "paragraphs": 6799,
+      "toc": 535,
+      "kinds": {
+        "body": 6187,
+        "head": 612
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        534
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 783,
+      "declared_section_count": 535
+    },
+    {
+      "id": "ihya_ulum_al_din",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ihya_ulum_al_din.json",
+      "sha256_wire": "34d3c5bbc6532213587892931df872b61a9a677c6b5be600d70ff8851435d675",
+      "pages": 1706,
+      "paragraphs": 17204,
+      "toc": 272,
+      "kinds": {
+        "body": 16983,
+        "head": 205,
+        "aya": 16
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1706,
+      "declared_section_count": 272
+    },
+    {
+      "id": "madarij_al_salikin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/madarij_al_salikin.json",
+      "sha256_wire": "7da931394277284cfa87b2b63eda4507f1835cf952d2d478676633b0eef8f852",
+      "pages": 1459,
+      "paragraphs": 12127,
+      "toc": 629,
+      "kinds": {
+        "head": 750,
+        "body": 11268,
+        "aya": 109
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1459,
+      "declared_section_count": 629
+    },
+    {
+      "id": "jami_al_ulum_wal_hikam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jami_al_ulum_wal_hikam.json",
+      "sha256_wire": "9e5790de4b1905872b6ae6cc2702dd540123c96af72ed848edabdf0110d54a55",
+      "pages": 940,
+      "paragraphs": 7315,
+      "toc": 67,
+      "kinds": {
+        "body": 7133,
+        "aya": 112,
+        "head": 70
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 945,
+      "declared_section_count": 67
+    },
+    {
+      "id": "adab_al_dunya_wal_din",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_dunya_wal_din.json",
+      "sha256_wire": "172a33fa71e4cddd14090b7d92907a4814cca9e6558a0323412ee9d3fb921c84",
+      "pages": 342,
+      "paragraphs": 3314,
+      "toc": 29,
+      "kinds": {
+        "head": 28,
+        "body": 3277,
+        "aya": 9
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 342,
+      "declared_section_count": 29
+    },
+    {
+      "id": "al_akhlaq_wal_siyar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_akhlaq_wal_siyar.json",
+      "sha256_wire": "94f3450a7a083c249659048361cf13f0a2cd5713534569aa0a83f2819aada163",
+      "pages": 85,
+      "paragraphs": 90,
+      "toc": 15,
+      "kinds": {
+        "body": 90
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 85,
+      "declared_section_count": 15
+    },
+    {
+      "id": "bidayat_al_hidayah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bidayat_al_hidayah.json",
+      "sha256_wire": "7e233e6240cc0e0e782079806d8cb3bfc45805576096a9d9a8a8115f06788b77",
+      "pages": 46,
+      "paragraphs": 391,
+      "toc": 30,
+      "kinds": {
+        "head": 40,
+        "body": 351
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 46,
+      "declared_section_count": 30
+    },
+    {
+      "id": "lataif_al_maarif",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/lataif_al_maarif.json",
+      "sha256_wire": "8a42f50e65ee09d3c35b115e28cbf6e480061974ad24fb0228f8554b171c30b4",
+      "pages": 360,
+      "paragraphs": 2388,
+      "toc": 39,
+      "kinds": {
+        "body": 2351,
+        "aya": 19,
+        "head": 18
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 360,
+      "declared_section_count": 39
+    },
+    {
+      "id": "risalat_al_mustarshidin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/risalat_al_mustarshidin.json",
+      "sha256_wire": "1953a270faa68eb3ed0b18263dad2821be9166cdda63429f095ff4598fd57cdd",
+      "pages": 110,
+      "paragraphs": 282,
+      "toc": 2,
+      "kinds": {
+        "body": 279,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 110,
+      "declared_section_count": 2
+    },
+    {
+      "id": "maqasid_al_riayah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/maqasid_al_riayah.json",
+      "sha256_wire": "04639cedf6b2e65797556716467dff33c8b3f5041031c2de2e3bf7fc8d74909f",
+      "pages": 164,
+      "paragraphs": 856,
+      "toc": 86,
+      "kinds": {
+        "body": 855,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 164,
+      "declared_section_count": 86
+    },
+    {
+      "id": "tahdhib_al_akhlaq",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahdhib_al_akhlaq.json",
+      "sha256_wire": "a53194876d0645cbf6b4051fc9c17bc7a5ee9093c2d6827716c1903d25a7cac9",
+      "pages": 210,
+      "paragraphs": 551,
+      "toc": 68,
+      "kinds": {
+        "head": 64,
+        "body": 487
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 210,
+      "declared_section_count": 68
+    },
+    {
+      "id": "jami_bayan_al_ilm",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jami_bayan_al_ilm.json",
+      "sha256_wire": "fc87e731ce02695f754e687bd5ab71cdf3ca5b79abf91ae37981318144fd3fea",
+      "pages": 1585,
+      "paragraphs": 3629,
+      "toc": 80,
+      "kinds": {
+        "body": 3403,
+        "head": 225,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1585,
+      "declared_section_count": 80
+    },
+    {
+      "id": "tadhkirat_al_sami_wal_mutakallim",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tadhkirat_al_sami_wal_mutakallim.json",
+      "sha256_wire": "b29558df55c07aa1f82adc2430e33035a9c208054f15391de49afba3684d8089",
+      "pages": 204,
+      "paragraphs": 758,
+      "toc": 101,
+      "kinds": {
+        "body": 655,
+        "head": 102,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 204,
+      "declared_section_count": 101
+    },
+    {
+      "id": "adab_al_imla_wal_istimla",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_imla_wal_istimla.json",
+      "sha256_wire": "ad0237009418417ecb24c37b46ff255abdc63a313b08de07fcceb2cd211516bf",
+      "pages": 180,
+      "paragraphs": 777,
+      "toc": 10,
+      "kinds": {
+        "body": 777
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 180,
+      "declared_section_count": 10
+    },
+    {
+      "id": "al_luma_fi_usul_al_fiqh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_luma_fi_usul_al_fiqh.json",
+      "sha256_wire": "a13fcc115ca297edacc674fb557b5cc961037d3510731aae57ea4fa94957bb08",
+      "pages": 184,
+      "paragraphs": 947,
+      "toc": 75,
+      "kinds": {
+        "head": 76,
+        "body": 869,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 184,
+      "declared_section_count": 75
+    },
+    {
+      "id": "al_faqih_wal_mutafaqqih",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_faqih_wal_mutafaqqih.json",
+      "sha256_wire": "cbdbec4449efaeb85e8e2358f126c5db0ba6f57b88cfd7b4566aece5ae66ef46",
+      "pages": 1462,
+      "paragraphs": 1567,
+      "toc": 132,
+      "kinds": {
+        "body": 1537,
+        "head": 27,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1462,
+      "declared_section_count": 132
+    },
+    {
+      "id": "qawaid_al_ahkam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qawaid_al_ahkam.json",
+      "sha256_wire": "2ae578a053bdf55aea3832233064a39e6e3a0226997ff3a8cf8a70497039550f",
+      "pages": 489,
+      "paragraphs": 2843,
+      "toc": 172,
+      "kinds": {
+        "head": 194,
+        "body": 2646,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 489,
+      "declared_section_count": 172
+    },
+    {
+      "id": "qut_al_qulub",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qut_al_qulub.json",
+      "sha256_wire": "67e51a6b05d76704942b54eade8f78e68f99b28039adc4b66509e2694026ac24",
+      "pages": 929,
+      "paragraphs": 2794,
+      "toc": 195,
+      "kinds": {
+        "body": 2671,
+        "head": 123
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 929,
+      "declared_section_count": 195
+    },
+    {
+      "id": "al_adab_al_shariyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_adab_al_shariyyah.json",
+      "sha256_wire": "1ad8edd8ebc0b8e0d02ca0dda78bd7edd055987e0a73bd9a89450e9418d142e2",
+      "pages": 1529,
+      "paragraphs": 8806,
+      "toc": 496,
+      "kinds": {
+        "head": 496,
+        "body": 8281,
+        "aya": 29
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1529,
+      "declared_section_count": 496
+    },
+    {
+      "id": "al_jami_li_akhlaq_al_rawi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_jami_li_akhlaq_al_rawi.json",
+      "sha256_wire": "f21fd27e48b3ae81b813ec4e30f01405ef207d545e58f165ae1e51895d93c704",
+      "pages": 2224,
+      "paragraphs": 2595,
+      "toc": 284,
+      "kinds": {
+        "body": 2530,
+        "head": 65
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2224,
+      "declared_section_count": 284
+    },
+    {
+      "id": "muqaddimat_ibn_al_salah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/muqaddimat_ibn_al_salah.json",
+      "sha256_wire": "7c9901c287595d90fc720ba8d8b19c1d7e24443cf98560bd8f9ed726a7181463",
+      "pages": 405,
+      "paragraphs": 2186,
+      "toc": 84,
+      "kinds": {
+        "body": 2185,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 405,
+      "declared_section_count": 84
+    },
+    {
+      "id": "al_risalah_lil_shafii",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_risalah_lil_shafii.json",
+      "sha256_wire": "f6c4bcb1ebbbd27cc6719d68eba84a863539cc6b622d9b0850784594aadf73ef",
+      "pages": 667,
+      "paragraphs": 3148,
+      "toc": 73,
+      "kinds": {
+        "head": 20,
+        "body": 3128
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        72
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 685,
+      "declared_section_count": 73
+    },
+    {
+      "id": "al_risalah_al_qushayriyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_risalah_al_qushayriyyah.json",
+      "sha256_wire": "5b29bd2d20272764e4e46a2acafdd70685cd9c379b4a1e7e45ef443528b98084",
+      "pages": 562,
+      "paragraphs": 3057,
+      "toc": 11,
+      "kinds": {
+        "body": 3045,
+        "aya": 12
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 562,
+      "declared_section_count": 11
+    },
+    {
+      "id": "al_burhan_fi_ulum_al_quran",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_burhan_fi_ulum_al_quran.json",
+      "sha256_wire": "04f8d53e94c29175c9efd7b2f12a0aadeedb24e2a02cbdbd7106fdeb9975a1dd",
+      "pages": 1944,
+      "paragraphs": 12562,
+      "toc": 59,
+      "kinds": {
+        "body": 11130,
+        "head": 20,
+        "aya": 1412
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1944,
+      "declared_section_count": 59
+    },
+    {
+      "id": "al_itqan_fi_ulum_al_quran",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_itqan_fi_ulum_al_quran.json",
+      "sha256_wire": "f75f00dfed097cc03806a63a09ffcfdb15f534f924b2849375b616af48c1a65c",
+      "pages": 1459,
+      "paragraphs": 10554,
+      "toc": 81,
+      "kinds": {
+        "head": 7,
+        "body": 9723,
+        "aya": 824
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1459,
+      "declared_section_count": 81
+    },
+    {
+      "id": "al_muwafaqat",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_muwafaqat.json",
+      "sha256_wire": "bf4e8da116dadc834c61840c895cdd2b6639ad6914669e848262e18edb1aa13a",
+      "pages": 3112,
+      "paragraphs": 25338,
+      "toc": 103,
+      "kinds": {
+        "head": 97,
+        "body": 24721,
+        "aya": 520
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102
+      ],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 3112,
+      "declared_section_count": 104
+    },
+    {
+      "id": "sharh_al_aqidah_al_tahawiyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_aqidah_al_tahawiyyah.json",
+      "sha256_wire": "fbc5880122f2a69271bb611cd9d8fc86052db302521ff275e7b76bd6d2edf846",
+      "pages": 797,
+      "paragraphs": 3115,
+      "toc": 363,
+      "kinds": {
+        "head": 389,
+        "body": 2646,
+        "aya": 80
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 797,
+      "declared_section_count": 363
+    },
+    {
+      "id": "al_iqtisad_fil_itiqad",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_iqtisad_fil_itiqad.json",
+      "sha256_wire": "f86a9d134e53520d22cfeec336ea1c06f018569bd51b43710597f48fcbf96404",
+      "pages": 128,
+      "paragraphs": 454,
+      "toc": 50,
+      "kinds": {
+        "head": 61,
+        "body": 393
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 128,
+      "declared_section_count": 50
+    },
+    {
+      "id": "qawaid_al_aqaid",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/qawaid_al_aqaid.json",
+      "sha256_wire": "1a35451189c0fd8007faa62bdefa5403cedd7bebf901206ce4e6a6b7ebe45f31",
+      "pages": 224,
+      "paragraphs": 831,
+      "toc": 67,
+      "kinds": {
+        "body": 765,
+        "head": 1,
+        "aya": 65
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 224,
+      "declared_section_count": 67
+    },
+    {
+      "id": "al_lubab_fi_sharh_al_kitab",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_lubab_fi_sharh_al_kitab.json",
+      "sha256_wire": "00e224e2a922101a2cc65a3e9e3fae4fa8400b1c537c074154391d8bd96947c4",
+      "pages": 904,
+      "paragraphs": 5348,
+      "toc": 126,
+      "kinds": {
+        "body": 5196,
+        "head": 150,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 904,
+      "declared_section_count": 126
+    },
+    {
+      "id": "al_ikhtiyar_li_talil_al_mukhtar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ikhtiyar_li_talil_al_mukhtar.json",
+      "sha256_wire": "5b9fd207eac944cb287baef468839fc9fabf8b2e36debc5fdf3703717fe5136d",
+      "pages": 834,
+      "paragraphs": 7693,
+      "toc": 283,
+      "kinds": {
+        "head": 288,
+        "body": 7402,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 834,
+      "declared_section_count": 283
+    },
+    {
+      "id": "al_thamar_al_dani",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_thamar_al_dani.json",
+      "sha256_wire": "96743e242b7fd79310a679b5ec61c0efedf023e76190da0ec343763dd13c5b05",
+      "pages": 751,
+      "paragraphs": 2402,
+      "toc": 46,
+      "kinds": {
+        "head": 16,
+        "body": 2384,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 751,
+      "declared_section_count": 46
+    },
+    {
+      "id": "al_fawakih_al_dawani",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fawakih_al_dawani.json",
+      "sha256_wire": "9f5de8b1892d2115f677c9bee51b89fe75c1d2b7479abd08db8b998051a82a1e",
+      "pages": 778,
+      "paragraphs": 10309,
+      "toc": 297,
+      "kinds": {
+        "head": 324,
+        "body": 9969,
+        "aya": 16
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 778,
+      "declared_section_count": 297
+    },
+    {
+      "id": "kifayat_al_akhyar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/kifayat_al_akhyar.json",
+      "sha256_wire": "4636d343d564ceaea67d6ebdc0fdbd6b3d381efb0d789602af60b55bf16e8fec",
+      "pages": 576,
+      "paragraphs": 3385,
+      "toc": 156,
+      "kinds": {
+        "body": 3382,
+        "head": 1,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 576,
+      "declared_section_count": 156
+    },
+    {
+      "id": "al_iqna_fi_hall_alfaz_abi_shuja",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_iqna_fi_hall_alfaz_abi_shuja.json",
+      "sha256_wire": "044c15157994ba39d9cf2c5b43db60a30c6f52c7a0ed56c5cc4522491887f393",
+      "pages": 661,
+      "paragraphs": 7337,
+      "toc": 126,
+      "kinds": {
+        "body": 7322,
+        "aya": 14,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 661,
+      "declared_section_count": 126
+    },
+    {
+      "id": "fath_al_qarib_al_mujib",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fath_al_qarib_al_mujib.json",
+      "sha256_wire": "c86f25ebf4aa252d46f903e4a22482f9370ec9c5b61d8156f1fce0602ee7cf70",
+      "pages": 329,
+      "paragraphs": 1124,
+      "toc": 195,
+      "kinds": {
+        "body": 927,
+        "head": 197
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 329,
+      "declared_section_count": 195
+    },
+    {
+      "id": "al_uddah_sharh_al_umdah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_uddah_sharh_al_umdah.json",
+      "sha256_wire": "500dabd52d42f01372de9af4681a70f5b03e055a5355824c7ae27afee7e93492",
+      "pages": 682,
+      "paragraphs": 5834,
+      "toc": 204,
+      "kinds": {
+        "head": 186,
+        "body": 5637,
+        "aya": 11
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 682,
+      "declared_section_count": 204
+    },
+    {
+      "id": "al_rawd_al_murbi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rawd_al_murbi.json",
+      "sha256_wire": "f09e120a54a59d33c7d3a7d85315e12a9798b49d85e7888bba9fbb8d602abde9",
+      "pages": 1600,
+      "paragraphs": 7462,
+      "toc": 292,
+      "kinds": {
+        "body": 7449,
+        "head": 13
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1600,
+      "declared_section_count": 292
+    },
+    {
+      "id": "bidayat_al_mujtahid",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bidayat_al_mujtahid.json",
+      "sha256_wire": "92f23ede33b6d71a65d20a534988dbff6e55b81f7935dd71706503a403885f13",
+      "pages": 945,
+      "paragraphs": 8198,
+      "toc": 415,
+      "kinds": {
+        "head": 430,
+        "body": 7763,
+        "aya": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 945,
+      "declared_section_count": 415
+    },
+    {
+      "id": "ihkam_al_ahkam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ihkam_al_ahkam.json",
+      "sha256_wire": "e7f53fdfc851419881c6baf4fd3fbd1a3a08754be0963dea62798d58d7b3ac76",
+      "pages": 659,
+      "paragraphs": 4665,
+      "toc": 524,
+      "kinds": {
+        "head": 456,
+        "body": 4209
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 659,
+      "declared_section_count": 524
+    },
+    {
+      "id": "tanwir_al_hawalik",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tanwir_al_hawalik.json",
+      "sha256_wire": "5e518ea5ccf89428b93e7544b081321b2b49646bd7fb011fde70cfde5f1ab0fe",
+      "pages": 414,
+      "paragraphs": 866,
+      "toc": 23,
+      "kinds": {
+        "body": 866
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 414,
+      "declared_section_count": 23
+    },
+    {
+      "id": "al_rahiq_al_makhtum",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rahiq_al_makhtum.json",
+      "sha256_wire": "a54550047045f940238ae38ecced7e857c318e16e284822a4ec33948947cd708",
+      "pages": 452,
+      "paragraphs": 3949,
+      "toc": 330,
+      "kinds": {
+        "head": 424,
+        "body": 3525
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 452,
+      "declared_section_count": 330
+    },
+    {
+      "id": "sharh_al_waraqat_al_mahalli",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_waraqat_al_mahalli.json",
+      "sha256_wire": "5e918602731aeabc4b5dc8e0b0dee175c82f5e25189206b07e74b01aff06cc77",
+      "pages": 226,
+      "paragraphs": 1148,
+      "toc": 119,
+      "kinds": {
+        "body": 1035,
+        "head": 108,
+        "aya": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 226,
+      "declared_section_count": 119
+    },
+    {
+      "id": "sharh_al_ajurrumiyyah_hifzi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_ajurrumiyyah_hifzi.json",
+      "sha256_wire": "211be849c0f643d491f7122826687758311778e016226763b48f9a0cd73cbb64",
+      "pages": 302,
+      "paragraphs": 1568,
+      "toc": 52,
+      "kinds": {
+        "head": 20,
+        "body": 1548
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 302,
+      "declared_section_count": 52
+    },
+    {
+      "id": "ilam_al_muwaqqiin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ilam_al_muwaqqiin.json",
+      "sha256_wire": "75c2d69f4978e91c0482c78bd43e523946feec74cd190543f6f3286f0e368e5d",
+      "pages": 1221,
+      "paragraphs": 8350,
+      "toc": 519,
+      "kinds": {
+        "head": 1066,
+        "body": 7253,
+        "aya": 31
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1221,
+      "declared_section_count": 519
+    },
+    {
+      "id": "al_majmu_sharh_al_muhadhdhab",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_majmu_sharh_al_muhadhdhab.json",
+      "sha256_wire": "24b583f539da36f45bfabe1fbc169fa4df6b5267fa291bf951c0ba99bcaeb625",
+      "pages": 4869,
+      "paragraphs": 29308,
+      "toc": 162,
+      "kinds": {
+        "body": 29240,
+        "head": 12,
+        "aya": 56
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 4869,
+      "declared_section_count": 162
+    },
+    {
+      "id": "tafsir_al_qurtubi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_qurtubi.json",
+      "sha256_wire": "908dac906ae8d38f2363e7df31fd7e9573b320c7853ab2b180c2dd2eba77912f",
+      "pages": 7453,
+      "paragraphs": 26008,
+      "toc": 3023,
+      "kinds": {
+        "body": 22609,
+        "head": 3399
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 7453,
+      "declared_section_count": 3023
+    },
+    {
+      "id": "al_mughni_ibn_qudamah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mughni_ibn_qudamah.json",
+      "sha256_wire": "7781e73e81341df5b81f087383c9dcbbb96ca33f226547570f2888845a3ba5de",
+      "pages": 7955,
+      "paragraphs": 19617,
+      "toc": 3089,
+      "kinds": {
+        "body": 19610,
+        "head": 6,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 7955,
+      "declared_section_count": 3089
+    },
+    {
+      "id": "tafsir_al_tabari",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_tabari.json",
+      "sha256_wire": "d6e50f4130fea1cb12384ea7955bd5238f636640377cd175b38bbfd75f7e3949",
+      "pages": 16699,
+      "paragraphs": 96647,
+      "toc": 6152,
+      "kinds": {
+        "body": 96543,
+        "head": 104
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 16699,
+      "declared_section_count": 6152
+    },
+    {
+      "id": "fath_al_bari",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fath_al_bari.json",
+      "sha256_wire": "384f680f52670984a3221c21a166b46f803e5833466fbc0d619631202ead5f41",
+      "pages": 7993,
+      "paragraphs": 78674,
+      "toc": 3966,
+      "kinds": {
+        "body": 76274,
+        "head": 2400
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 7993,
+      "declared_section_count": 3966
+    },
+    {
+      "id": "siyar_alam_al_nubala",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/siyar_alam_al_nubala.json",
+      "sha256_wire": "0f009fc0c9e524c73ffde5c97ed3274792703f6941d74aa3a57f7ecdae447383",
+      "pages": 14208,
+      "paragraphs": 136271,
+      "toc": 5590,
+      "kinds": {
+        "body": 136015,
+        "head": 169,
+        "aya": 87
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 14208,
+      "declared_section_count": 5590
+    },
+    {
+      "id": "tahdhib_al_kamal",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahdhib_al_kamal.json",
+      "sha256_wire": "3a07415b11472e3146e4c3d3376f899d0af8d88056b36848c890c957c4e8b0cd",
+      "pages": 18994,
+      "paragraphs": 103568,
+      "toc": 7960,
+      "kinds": {
+        "body": 103150,
+        "head": 418
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 18994,
+      "declared_section_count": 7960
+    },
+    {
+      "id": "lisan_al_arab",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/lisan_al_arab.json",
+      "sha256_wire": "586d9cc64e2ee0609db3c06e4648ad505a71d9b32db7a801d40bb145bd362b00",
+      "pages": 8101,
+      "paragraphs": 135150,
+      "toc": 714,
+      "kinds": {
+        "body": 134403,
+        "head": 747
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 8101,
+      "declared_section_count": 714
+    },
+    {
+      "id": "sharh_al_arbain_ibn_daqiq",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_arbain_ibn_daqiq.json",
+      "sha256_wire": "1ae95583367c005517ef05d820148fd2a7bd142d34c1057eb866a3e874010bb4",
+      "pages": 129,
+      "paragraphs": 509,
+      "toc": 43,
+      "kinds": {
+        "body": 477,
+        "head": 31,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 129,
+      "declared_section_count": 43
+    },
+    {
+      "id": "dalil_al_falihin",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/dalil_al_falihin.json",
+      "sha256_wire": "9b5a1bc84a26a9fd20bc3abf404e15bdc7fd8d83042d6742fe8831d185bd798c",
+      "pages": 2249,
+      "paragraphs": 8560,
+      "toc": 308,
+      "kinds": {
+        "head": 61,
+        "body": 8494,
+        "aya": 5
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2249,
+      "declared_section_count": 308
+    },
+    {
+      "id": "subul_al_salam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/subul_al_salam.json",
+      "sha256_wire": "98a6f425995c44b807acf2a28e2d6c82cb31a494677e7123661dd75b992a3b2b",
+      "pages": 1336,
+      "paragraphs": 7356,
+      "toc": 960,
+      "kinds": {
+        "body": 7316,
+        "head": 38,
+        "aya": 2
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1336,
+      "declared_section_count": 960
+    },
+    {
+      "id": "sharh_al_nawawi_ala_muslim",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_al_nawawi_ala_muslim.json",
+      "sha256_wire": "2f36eef3f93538da16f9ec28887e317d6216ea53109982280d4a5df979a24591",
+      "pages": 4086,
+      "paragraphs": 7630,
+      "toc": 1116,
+      "kinds": {
+        "body": 7344,
+        "head": 286
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 4086,
+      "declared_section_count": 1116
+    },
+    {
+      "id": "jam_al_wasail",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jam_al_wasail.json",
+      "sha256_wire": "5f0b7f5090ff890b0474d4465a8912e34b3adb8f6c07c40209de182361597cea",
+      "pages": 494,
+      "paragraphs": 2679,
+      "toc": 57,
+      "kinds": {
+        "body": 2678,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 494,
+      "declared_section_count": 57
+    },
+    {
+      "id": "mirqat_al_mafatih",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/mirqat_al_mafatih.json",
+      "sha256_wire": "6ea272eb94d18c3c07f311615d470f4638b0a4d6448bc7540675f4375b2b7637",
+      "pages": 8758,
+      "paragraphs": 29303,
+      "toc": 298,
+      "kinds": {
+        "head": 312,
+        "body": 28991
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 8758,
+      "declared_section_count": 298
+    },
+    {
+      "id": "nayl_al_awtar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nayl_al_awtar.json",
+      "sha256_wire": "050e31f15f0fd238738b6d419d3456465c6a0b7613c4b835a93ead85e2fbb123",
+      "pages": 3079,
+      "paragraphs": 23022,
+      "toc": 1142,
+      "kinds": {
+        "head": 1067,
+        "body": 21955
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 3079,
+      "declared_section_count": 1142
+    },
+    {
+      "id": "al_tajrid_al_sarih",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tajrid_al_sarih.json",
+      "sha256_wire": "fe5e343f552affcd66a8b1cdabbab0eab860b6688a398fdf7fc9ba6d747da902",
+      "pages": 2553,
+      "paragraphs": 2885,
+      "toc": 206,
+      "kinds": {
+        "body": 2804,
+        "head": 2,
+        "aya": 79
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2553,
+      "declared_section_count": 206
+    },
+    {
+      "id": "maraqi_al_falah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/maraqi_al_falah.json",
+      "sha256_wire": "40fb3a503d153514fcecb2a07fa4ee705ab93e1141620185f474e35c4ef7b9c0",
+      "pages": 343,
+      "paragraphs": 1467,
+      "toc": 110,
+      "kinds": {
+        "head": 151,
+        "body": 1315,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 343,
+      "declared_section_count": 110
+    },
+    {
+      "id": "bulghat_al_salik",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/bulghat_al_salik.json",
+      "sha256_wire": "43b303cec8c9b6e5ec75038671a430ea08dfb7d350faec19abfce6209611d63c",
+      "pages": 2984,
+      "paragraphs": 28293,
+      "toc": 1240,
+      "kinds": {
+        "head": 1196,
+        "body": 27089,
+        "aya": 8
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2984,
+      "declared_section_count": 1240
+    },
+    {
+      "id": "al_fiqh_ala_al_madhahib_al_arbaa",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_fiqh_ala_al_madhahib_al_arbaa.json",
+      "sha256_wire": "2bafb93f3f8cb458714ab7af8dbd2eccfaf4b521dacbe49e10fdf765e04c7a59",
+      "pages": 929,
+      "paragraphs": 3029,
+      "toc": 753,
+      "kinds": {
+        "head": 914,
+        "body": 2112,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 929,
+      "declared_section_count": 753
+    },
+    {
+      "id": "al_ibanah_ashari",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ibanah_ashari.json",
+      "sha256_wire": "1d40e8b0ad2c1f5d45120abc39f7a4126013636f53daa633fe1bd03cd437ed8d",
+      "pages": 246,
+      "paragraphs": 1041,
+      "toc": 71,
+      "kinds": {
+        "body": 909,
+        "head": 132
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 246,
+      "declared_section_count": 71
+    },
+    {
+      "id": "al_asma_wal_sifat_bayhaqi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_asma_wal_sifat_bayhaqi.json",
+      "sha256_wire": "c662bb108efc437cd19e9ffbdc1aefd33d12632f3e84cca8206d17a07f0db7f7",
+      "pages": 1135,
+      "paragraphs": 1332,
+      "toc": 101,
+      "kinds": {
+        "body": 1289,
+        "head": 23,
+        "aya": 20
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1135,
+      "declared_section_count": 101
+    },
+    {
+      "id": "lawami_al_anwar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/lawami_al_anwar.json",
+      "sha256_wire": "090eacd82a9bfeb9586220727af53277c74c2f164c66782a553c75447c590d54",
+      "pages": 921,
+      "paragraphs": 4784,
+      "toc": 264,
+      "kinds": {
+        "head": 285,
+        "body": 4488,
+        "aya": 11
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 921,
+      "declared_section_count": 264
+    },
+    {
+      "id": "al_shariah_ajurri",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shariah_ajurri.json",
+      "sha256_wire": "aebed51e5e392f252ee533e881446b02cd953d600df6e09a760652bccdbaab4d",
+      "pages": 2385,
+      "paragraphs": 2816,
+      "toc": 289,
+      "kinds": {
+        "body": 2758,
+        "aya": 18,
+        "head": 40
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2385,
+      "declared_section_count": 289
+    },
+    {
+      "id": "al_aqaid_al_islamiyyah_ibn_badis",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_aqaid_al_islamiyyah_ibn_badis.json",
+      "sha256_wire": "0eb1b2c5f2541c5314e64c3528e969dfb0b9d8c980d815142bf6b692444999d4",
+      "pages": 109,
+      "paragraphs": 598,
+      "toc": 83,
+      "kinds": {
+        "body": 494,
+        "aya": 103,
+        "head": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 109,
+      "declared_section_count": 83
+    },
+    {
+      "id": "tafsir_ibn_kathir",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_ibn_kathir.json",
+      "sha256_wire": "82e49b99e854dddf10346c87229b7d8f90694a09e8ad45e049d38f43a3280ae9",
+      "pages": 4527,
+      "paragraphs": 34811,
+      "toc": 139,
+      "kinds": {
+        "body": 34689,
+        "head": 122
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 4527,
+      "declared_section_count": 139
+    },
+    {
+      "id": "tafsir_al_jalalayn",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_jalalayn.json",
+      "sha256_wire": "c4b0f042add255f96f40948c2d14ca2bd82d412308ed39b0231400b06399a0b3",
+      "pages": 6242,
+      "paragraphs": 6362,
+      "toc": 6231,
+      "kinds": {
+        "body": 4868,
+        "aya": 1494
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 6242,
+      "declared_section_count": 6231
+    },
+    {
+      "id": "tafsir_al_baghawi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_baghawi.json",
+      "sha256_wire": "12a9594cef0374a24f769ee3019cf1002b73ae28866f823639c8bc55ee1b192a",
+      "pages": 3526,
+      "paragraphs": 17791,
+      "toc": 2479,
+      "kinds": {
+        "body": 17243,
+        "aya": 548
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 3526,
+      "declared_section_count": 2479
+    },
+    {
+      "id": "tafsir_al_nasafi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tafsir_al_nasafi.json",
+      "sha256_wire": "8ba46f8d906f211b3a96f74c88ba50247d4d542a0fc7250eac3c5b475cddfe1c",
+      "pages": 7814,
+      "paragraphs": 16587,
+      "toc": 6153,
+      "kinds": {
+        "head": 2,
+        "body": 15776,
+        "aya": 809
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 7814,
+      "declared_section_count": 6153
+    },
+    {
+      "id": "zad_al_masir",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/zad_al_masir.json",
+      "sha256_wire": "68d6193d6cbc4b52a814fbb50f650370622b32ff707615802e228bf6f8d235e4",
+      "pages": 2306,
+      "paragraphs": 23597,
+      "toc": 1760,
+      "kinds": {
+        "head": 2305,
+        "body": 21292
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2306,
+      "declared_section_count": 1760
+    },
+    {
+      "id": "asbab_al_nuzul_wahidi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/asbab_al_nuzul_wahidi.json",
+      "sha256_wire": "3f88c1758cfa1259ee2b6fb260902c11aca0c3d6789f7d4b428f8df26fea2cfd",
+      "pages": 500,
+      "paragraphs": 3142,
+      "toc": 86,
+      "kinds": {
+        "head": 53,
+        "body": 3086,
+        "aya": 3
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 500,
+      "declared_section_count": 86
+    },
+    {
+      "id": "fath_al_qadir_shawkani",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/fath_al_qadir_shawkani.json",
+      "sha256_wire": "6451fc5c210b7211d57314f8dd11349ea3401ad8cbfecd23bd9123a6905a6dbe",
+      "pages": 3576,
+      "paragraphs": 25105,
+      "toc": 1280,
+      "kinds": {
+        "body": 23846,
+        "head": 1259
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 3576,
+      "declared_section_count": 1280
+    },
+    {
+      "id": "al_tashil_ibn_juzayy",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_tashil_ibn_juzayy.json",
+      "sha256_wire": "d55735e86c31d97a7548b3f415d9d808771d211231ed992f02dde178b69ab7d9",
+      "pages": 2989,
+      "paragraphs": 27067,
+      "toc": 157,
+      "kinds": {
+        "body": 26933,
+        "head": 134
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2989,
+      "declared_section_count": 157
+    },
+    {
+      "id": "al_shifa_qadi_iyad",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_shifa_qadi_iyad.json",
+      "sha256_wire": "d682fa7e98f1c8eb454f85ecec3412106fd1530bdd1e84a6a4fc05146f9ca27a",
+      "pages": 1438,
+      "paragraphs": 10193,
+      "toc": 189,
+      "kinds": {
+        "body": 10169,
+        "head": 24
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1438,
+      "declared_section_count": 189
+    },
+    {
+      "id": "jawami_al_seerah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jawami_al_seerah.json",
+      "sha256_wire": "1e84dc4187e47c00549233aecf6bd93b435e80784061acf0b8b04e9bebe5d802",
+      "pages": 266,
+      "paragraphs": 1793,
+      "toc": 69,
+      "kinds": {
+        "body": 1786,
+        "head": 7
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 266,
+      "declared_section_count": 69
+    },
+    {
+      "id": "al_rawd_al_unuf",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_rawd_al_unuf.json",
+      "sha256_wire": "0332a3ab01acc1ad257f214ed60dad05232fdb2ca973e43bf54c3b177360aa61",
+      "pages": 2405,
+      "paragraphs": 21991,
+      "toc": 173,
+      "kinds": {
+        "body": 21915,
+        "aya": 68,
+        "head": 8
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 2405,
+      "declared_section_count": 173
+    },
+    {
+      "id": "khulasat_siyar_sayyid_al_bashar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/khulasat_siyar_sayyid_al_bashar.json",
+      "sha256_wire": "25cfc7cf21e441853aeeba85f96f6941596452f297eb1292e512c430d455466a",
+      "pages": 166,
+      "paragraphs": 560,
+      "toc": 44,
+      "kinds": {
+        "body": 557,
+        "head": 2,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 166,
+      "declared_section_count": 44
+    },
+    {
+      "id": "al_mawahib_al_ladunniyyah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mawahib_al_ladunniyyah.json",
+      "sha256_wire": "471e45878f19a5a47cb6662430b42389ff07157f32bbcd8ddff43e50164149c5",
+      "pages": 1976,
+      "paragraphs": 13153,
+      "toc": 359,
+      "kinds": {
+        "body": 12658,
+        "head": 495
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1976,
+      "declared_section_count": 359
+    },
+    {
+      "id": "tarikh_al_tabari",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_al_tabari.json",
+      "sha256_wire": "327a014dfe41b6c0322e5c11d8f0aebc5319d0a91820d8513109400731847847",
+      "pages": 6431,
+      "paragraphs": 39067,
+      "toc": 1696,
+      "kinds": {
+        "head": 853,
+        "body": 38214
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 6431,
+      "declared_section_count": 1696
+    },
+    {
+      "id": "al_kamil_fil_tarikh",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_kamil_fil_tarikh.json",
+      "sha256_wire": "c63a97ac509e99860f1da7194c92c06eefdf2318043e1ae54958531516d58014",
+      "pages": 6163,
+      "paragraphs": 37804,
+      "toc": 914,
+      "kinds": {
+        "head": 1460,
+        "body": 36332,
+        "aya": 12
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 6163,
+      "declared_section_count": 914
+    },
+    {
+      "id": "tarikh_ibn_khaldun",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tarikh_ibn_khaldun.json",
+      "sha256_wire": "555dd42c3536a64ca3479699cebbffb62157d1d1490479439bbda3ecf35b935d",
+      "pages": 5510,
+      "paragraphs": 38623,
+      "toc": 2497,
+      "kinds": {
+        "head": 2627,
+        "body": 35996
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 5510,
+      "declared_section_count": 2497
+    },
+    {
+      "id": "al_ibar_dhahabi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ibar_dhahabi.json",
+      "sha256_wire": "5266dadc45b4abcaec986463b23f583b4801c35ee060c390f57dd5f75d0c32d9",
+      "pages": 1559,
+      "paragraphs": 15485,
+      "toc": 742,
+      "kinds": {
+        "body": 14719,
+        "head": 766
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1559,
+      "declared_section_count": 742
+    },
+    {
+      "id": "wafayat_al_ayan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/wafayat_al_ayan.json",
+      "sha256_wire": "671650e0122603a03fff7ae9b4ff3617168b928a087e11776a7b2cfb199f3db3",
+      "pages": 3164,
+      "paragraphs": 21133,
+      "toc": 967,
+      "kinds": {
+        "head": 907,
+        "body": 20226
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 3164,
+      "declared_section_count": 967
+    },
+    {
+      "id": "ghidha_al_albab",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/ghidha_al_albab.json",
+      "sha256_wire": "fac223dbe81ca93c6aee1a3dbcf3c5012fde33d9c840417ad0476543d4621540",
+      "pages": 1066,
+      "paragraphs": 9587,
+      "toc": 535,
+      "kinds": {
+        "body": 9520,
+        "head": 46,
+        "aya": 21
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1066,
+      "declared_section_count": 535
+    },
+    {
+      "id": "adab_al_ishrah_ghazzi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/adab_al_ishrah_ghazzi.json",
+      "sha256_wire": "5c4f59e07a4821e57d3c3833c3e4bf0bc8e15889602abd16e4bc826b19dde2f6",
+      "pages": 70,
+      "paragraphs": 351,
+      "toc": 66,
+      "kinds": {
+        "head": 111,
+        "body": 240
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 70,
+      "declared_section_count": 66
+    },
+    {
+      "id": "al_mustatraf",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_mustatraf.json",
+      "sha256_wire": "d43d65082553050d939641af49fda2de047710bcff066847a2b1aba09d50e575",
+      "pages": 515,
+      "paragraphs": 12240,
+      "toc": 231,
+      "kinds": {
+        "head": 447,
+        "body": 11793
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 515,
+      "declared_section_count": 231
+    },
+    {
+      "id": "uyun_al_akhbar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/uyun_al_akhbar.json",
+      "sha256_wire": "96c1f1255dc683e08c7ca1d9d5e908082934e745dec9816d69d8dbd75cd84ee6",
+      "pages": 1290,
+      "paragraphs": 11288,
+      "toc": 273,
+      "kinds": {
+        "head": 273,
+        "body": 11015
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1290,
+      "declared_section_count": 273
+    },
+    {
+      "id": "iqtida_al_ilm_al_amal",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/iqtida_al_ilm_al_amal.json",
+      "sha256_wire": "ac74e60d3a891e3e15fdabdc61fb9d0ebb863eb42faf573ded0e901877afd442",
+      "pages": 216,
+      "paragraphs": 577,
+      "toc": 12,
+      "kinds": {
+        "body": 577
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 216,
+      "declared_section_count": 12
+    },
+    {
+      "id": "sharh_qatr_al_nada",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_qatr_al_nada.json",
+      "sha256_wire": "fd289fed4cc43a20abe772e714561c83d451e1c0303ec119d4f7dff39cf5f094",
+      "pages": 309,
+      "paragraphs": 476,
+      "toc": 86,
+      "kinds": {
+        "body": 472,
+        "head": 4
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 309,
+      "declared_section_count": 86
+    },
+    {
+      "id": "jawahir_al_balaghah",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/jawahir_al_balaghah.json",
+      "sha256_wire": "beb57a8ae706d16dc7ed5415efd1687a6507efd8858b7aa56fb6b7ef0113a1f4",
+      "pages": 311,
+      "paragraphs": 3908,
+      "toc": 81,
+      "kinds": {
+        "body": 3852,
+        "head": 56
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 311,
+      "declared_section_count": 81
+    },
+    {
+      "id": "sharh_ibn_aqil",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_ibn_aqil.json",
+      "sha256_wire": "66b42bd05d43f25eb1ccd483253595a8441b8bf7d181ab4a18710d79cb0e2fc9",
+      "pages": 1285,
+      "paragraphs": 4440,
+      "toc": 80,
+      "kinds": {
+        "body": 4361,
+        "head": 69,
+        "aya": 10
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1285,
+      "declared_section_count": 80
+    },
+    {
+      "id": "sharh_shudhur_al_dhahab",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/sharh_shudhur_al_dhahab.json",
+      "sha256_wire": "0eadb643cdc8ce29bcfd9fa762c088ba4ea21321d9b5d22a9ff6ea756f58f4e7",
+      "pages": 572,
+      "paragraphs": 1713,
+      "toc": 6,
+      "kinds": {
+        "body": 1678,
+        "aya": 35
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 572,
+      "declared_section_count": 6
+    },
+    {
+      "id": "tadrib_al_rawi",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tadrib_al_rawi.json",
+      "sha256_wire": "33358e2f408aba0d37c0f658b1f7c962654e08a60dd00c6b78d9d8db2a8236d8",
+      "pages": 925,
+      "paragraphs": 6675,
+      "toc": 262,
+      "kinds": {
+        "head": 258,
+        "body": 6417
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 925,
+      "declared_section_count": 262
+    },
+    {
+      "id": "al_ashbah_wal_nazair_suyuti",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/al_ashbah_wal_nazair_suyuti.json",
+      "sha256_wire": "d02b655492a83647a908426a495a89000f6d85b37d1afae5073a03ec372d8230",
+      "pages": 540,
+      "paragraphs": 5906,
+      "toc": 345,
+      "kinds": {
+        "head": 459,
+        "body": 5446,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 540,
+      "declared_section_count": 345
+    },
+    {
+      "id": "manahil_al_irfan",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/manahil_al_irfan.json",
+      "sha256_wire": "a6f5f52437355897e73390244b930fcb8a726a010c599358ccf8d365447b030a",
+      "pages": 1045,
+      "paragraphs": 4963,
+      "toc": 221,
+      "kinds": {
+        "head": 163,
+        "body": 4661,
+        "aya": 139
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [],
+      "declared_page_count": 1045,
+      "declared_section_count": 221
+    },
+    {
+      "id": "nur_al_zalam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/nur_al_zalam.json",
+      "sha256_wire": "569c5587e69ef9ad9f0ce1dde46df5deac4d4682949c03cbe03986d380bf875a",
+      "pages": 159,
+      "paragraphs": 589,
+      "toc": 1,
+      "kinds": {
+        "body": 589
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [
+        "shamelaUrl"
+      ],
+      "declared_page_count": 159,
+      "declared_section_count": 1
+    },
+    {
+      "id": "tahqiq_al_maqam",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tahqiq_al_maqam.json",
+      "sha256_wire": "768f66ed5e2ccfc6196d968dc9ae7ac8789f6935e7631e60aeeea1e1dc1fdc88",
+      "pages": 202,
+      "paragraphs": 1889,
+      "toc": 27,
+      "kinds": {
+        "head": 6,
+        "body": 1883
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [
+        "shamelaUrl"
+      ],
+      "declared_page_count": 202,
+      "declared_section_count": 27
+    },
+    {
+      "id": "tuhfat_al_murid",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/tuhfat_al_murid.json",
+      "sha256_wire": "c143c505ac05aaf713050a8a243672d77df6ec563597e616354f1d086579c839",
+      "pages": 338,
+      "paragraphs": 2051,
+      "toc": 198,
+      "kinds": {
+        "body": 1987,
+        "head": 63,
+        "aya": 1
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [
+        "shamelaUrl"
+      ],
+      "declared_page_count": 338,
+      "declared_section_count": 198
+    },
+    {
+      "id": "minah_al_rawd_al_azhar",
+      "url": "https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/books/text/minah_al_rawd_al_azhar.json",
+      "sha256_wire": "6d1c013963ffae919039b0b62bd5acf10103b90714f5163e9722f15c837ebc9e",
+      "pages": 499,
+      "paragraphs": 2095,
+      "toc": 6,
+      "kinds": {
+        "body": 2072,
+        "aya": 15,
+        "head": 8
+      },
+      "empty_page_indices": [],
+      "invalid_types": [],
+      "toc_out_of_range": [],
+      "toc_index_inversions": [],
+      "missing_provenance": [
+        "shamelaUrl"
+      ],
+      "declared_page_count": 499,
+      "declared_section_count": 6
+    }
+  ],
+  "summary": {
+    "books": 289,
+    "pages": 297611,
+    "paragraphs": 1765706,
+    "invalid_type_books": [],
+    "empty_books": [],
+    "missing_provenance_books": [
+      "nur_al_zalam",
+      "tahqiq_al_maqam",
+      "tuhfat_al_murid",
+      "minah_al_rawd_al_azhar"
+    ],
+    "toc_range_candidate_books": [
+      "umdat_al_ahkam",
+      "al_jami_fi_amthal_al_quran",
+      "al_furusiyyah_al_muhammadiyyah",
+      "al_kalam_ala_masalat_al_sama",
+      "raf_al_yadayn_fil_salah",
+      "amar_al_ayan",
+      "fadail_bayt_al_maqdis",
+      "nawasikh_al_quran",
+      "fatawa_al_nawawi",
+      "altbyan_fy_adab_hmlh_alqran",
+      "jz_fy_bya_amhat_alawlad",
+      "nzhh_alnzr_fy_twdyh_nkhbh_alfkr_t_atr",
+      "tarikh_al_khulafa_suyuti",
+      "al_risalah_lil_shafii",
+      "al_muwafaqat"
+    ],
+    "toc_order_candidate_books": []
+  },
+  "quran": {
+    "sha256": "3b27c8ab9c1a15a9db12e89c844680cf40aedb659168b6f3a3ae97b52a361679",
+    "verses": 6236,
+    "surahs": 114,
+    "count_mismatches": {},
+    "quick_check": [
+      [
+        "ok"
+      ]
+    ]
+  },
+  "courses": [
+    {
+      "path": "rafeeq_app/assets/data/tajweed/ghayat_al_murid.json.gz",
+      "sha256": "bc8e21037ae9bbc0012e865e205b184b11a8ef491ee8dcb160071350b8bb044b",
+      "lessons": 32,
+      "quran_spans": 1391,
+      "exact_substring_mismatches": [],
+      "duplicate_lesson_titles": {}
+    },
+    {
+      "path": "rafeeq_app/assets/data/tajweed/taysir_ahkam_al_tajwid_1.json.gz",
+      "sha256": "7dd6ede6f7f3b7de932e23ddb2aa2110bf7c18024b3a3c1e7fe606e33bfd9bb9",
+      "lessons": 11,
+      "quran_spans": 187,
+      "exact_substring_mismatches": [],
+      "duplicate_lesson_titles": {}
+    }
+  ],
+  "limits": "Structural census and exact reference/substrings only; TOC candidates require production parser verification. Religious text unchanged; no printed-page certification."
+}

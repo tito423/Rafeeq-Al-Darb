@@ -2521,9 +2521,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-10-10 13:22 — IN PROGRESS — resume here**
+**2026-10-10 13:26 — IN PROGRESS — resume here**
 
-audit: prove A-41 diagram hit mismatch and A-42 caravan gate stall
+audit: validate all 289 books and 1578 Quran course references
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
