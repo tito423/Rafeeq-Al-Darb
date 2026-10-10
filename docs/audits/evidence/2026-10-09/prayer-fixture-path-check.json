@@ -1,0 +1,6 @@
+{
+  "ok": false,
+  "error": "[Errno 2] No such file or directory: 'E:\\\\My Projects\\\\Rafiq-Al-Darb\\\\rafeeq_app\\\\lib\\\\features\\\\adhan\\\\data\\\\prayer_calculation_methods.dart'",
+  "trace": "Traceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\n  File \"E:\\My Projects\\Rafiq-Al-Darb\\scripts\\build_prayer_method_fixtures.py\", line 83, in offered_ids\n    src = io.open(CATALOGUE, encoding=\"utf-8\").read()\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'E:\\\\My Projects\\\\Rafiq-Al-Darb\\\\rafeeq_app\\\\lib\\\\features\\\\adhan\\\\data\\\\prayer_calculation_methods.dart'\n",
+  "scenario": "Imported actual fixture builder and called offered_ids ONLY; main never executed; no app fixture writes; obsolete path after architecture move"
+}

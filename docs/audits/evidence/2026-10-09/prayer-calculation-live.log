@@ -1,0 +1,80 @@
+00:00 +0: loading E:/My Projects/Rafiq-Al-Darb/docs/audits/evidence/2026-10-09/prayer_calculation_live_audit_test.dart
+00:00 +0: every method in the picker has AlAdhan's published parameters
+00:00 +1: no id in the picker is a duplicate
+00:00 +2: the app lands on the published times, city by city
+compared 2400 times; worst disagreement 4m at University of Islamic Sciences, Karachi / london / 25-10-2026 / asr
+00:00 +2 -1: the app lands on the published times, city by city [E]
+  Expected: empty
+    Actual: [
+              'University of Islamic Sciences, Karachi (1) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'University of Islamic Sciences, Karachi (1) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Islamic Society of North America (ISNA) (2) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Islamic Society of North America (ISNA) (2) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Muslim World League (3) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Muslim World League (3) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Umm Al-Qura University, Makkah (4) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Umm Al-Qura University, Makkah (4) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Egyptian General Authority of Survey (5) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Egyptian General Authority of Survey (5) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Gulf Region (8) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Gulf Region (8) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Kuwait (9) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Kuwait (9) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Qatar (10) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Qatar (10) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Majlis Ugama Islam Singapura, Singapore (11) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Majlis Ugama Islam Singapura, Singapore (11) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Union des Organisations Islamiques de France (12) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Union des Organisations Islamiques de France (12) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              'Diyanet İşleri Başkanlığı, Turkey (13) london 10-10-2026 STANDARD asr: ours 14:44 vs AlAdhan 14:47 (3m)',
+              'Diyanet İşleri Başkanlığı, Turkey (13) london 25-10-2026 STANDARD asr: ours 14:19 vs AlAdhan 14:23 (4m)',
+              'Spiritual Administration of Muslims of Russia (14) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)',
+              'Spiritual Administration of Muslims of Russia (14) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)',
+              ...
+            ]
+  University of Islamic Sciences, Karachi (1) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  University of Islamic Sciences, Karachi (1) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Islamic Society of North America (ISNA) (2) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Islamic Society of North America (ISNA) (2) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Muslim World League (3) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Muslim World League (3) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Umm Al-Qura University, Makkah (4) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Umm Al-Qura University, Makkah (4) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Egyptian General Authority of Survey (5) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Egyptian General Authority of Survey (5) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Gulf Region (8) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Gulf Region (8) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Kuwait (9) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Kuwait (9) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Qatar (10) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Qatar (10) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Majlis Ugama Islam Singapura, Singapore (11) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Majlis Ugama Islam Singapura, Singapore (11) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Union des Organisations Islamiques de France (12) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Union des Organisations Islamiques de France (12) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Diyanet İşleri Başkanlığı, Turkey (13) london 10-10-2026 STANDARD asr: ours 14:44 vs AlAdhan 14:47 (3m)
+  Diyanet İşleri Başkanlığı, Turkey (13) london 25-10-2026 STANDARD asr: ours 14:19 vs AlAdhan 14:23 (4m)
+  Spiritual Administration of Muslims of Russia (14) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Spiritual Administration of Muslims of Russia (14) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  UAE General Authority of Islamic Affairs and Endowments (16) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  UAE General Authority of Islamic Affairs and Endowments (16) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Jabatan Kemajuan Islam Malaysia (JAKIM) (17) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Jabatan Kemajuan Islam Malaysia (JAKIM) (17) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Tunisia (18) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Tunisia (18) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Algeria (19) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Algeria (19) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Kementerian Agama Republik Indonesia (20) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Kementerian Agama Republik Indonesia (20) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Morocco (21) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Morocco (21) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Comunidade Islâmica de Lisboa (22) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Comunidade Islâmica de Lisboa (22) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  Ministry of Awqaf, Islamic Affairs and Holy Places, Jordan (23) london 10-10-2026 STANDARD asr: ours 14:40 vs AlAdhan 14:43 (3m)
+  Ministry of Awqaf, Islamic Affairs and Holy Places, Jordan (23) london 25-10-2026 STANDARD asr: ours 14:15 vs AlAdhan 14:19 (4m)
+  
+  package:matcher                                                                   expect
+  package:flutter_test/src/widget_tester.dart 473:18                                expect
+  ..\docs\audits\evidence\2026-10-09\prayer_calculation_live_audit_test.dart 152:5  main.<fn>
+  
+00:00 +2 -1: Some tests failed.

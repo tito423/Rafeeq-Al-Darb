@@ -1,0 +1,12 @@
+{
+  "planned": 400,
+  "completed": 400,
+  "errors": [],
+  "elapsed_seconds": 51.29,
+  "method_count": 20,
+  "dates": [
+    "10-10-2026",
+    "25-10-2026"
+  ],
+  "scope": "Actual AlAdhan primary API requested now; app comparison separate; UTC numeric reference not local-zone/adhan audibility proof"
+}
