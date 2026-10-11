@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A35 SIX ACTUAL REGRESSIONS BASELINE 00:33 Dubai:** A34 saved93156ace/docsd161fd4b PUSHED/master0/0;23fixed25remaining/NORMALboth. Read citedstoryplayer full and currentvideoSDK2.11.1: delayedplay creates timer after reply, earlydisposealone would leak timer; pendingseek also touchescontroller afterreply. Added6actualstory/SDK/realtranslation regressions for lateplay/replacement/initclose/fallbackseek/control/mirrorfail; baseline running unmodifiedproduct. NEXT meaningfulRED then owncontroller early and settlependingplay/seek beforedispose, mountedidentityguards/fullchecks/nativeboth/NORMALrestore/singleA35commit. No A35product changes or validation claim yet.
+
 **A34 SAVED93156ace 00:31 Dubai:** A34 fullysaved93156ace/full1168/analyzerCLEAN/native22both/NORMALsignedrestored/prefs preserved;23fixed25remaining. Pushfix+docs now. NEXT A35 actualstoryplayer lateplay lifetime baseline thenownedcontroller/mountedgeneration/wakelockcleanup checks. No A35 edits yet. Original8untracked authorized intact/rollback3.87/no publish/deploy/keys/religious changes.
 
 **A34 VALIDATED SAVING 00:31 Dubai:** Full1168/original4skips/analyzeCLEAN/native22both/screenshots/NORMAL36s/sign415007823B/headlessguard/restore-rboth/Home+prefs541+shelf20013/currentlogs0FATAL0ANR/offlineinitabsent. Saving one A34fix then exactSHA docs/push. NEXT A35 citedstoryplayer read/no product/test edits yet; reproduce lateplay RED. Original8owneruntracked untouched/rollback3.87/no release/deploy/keys/data changes.
