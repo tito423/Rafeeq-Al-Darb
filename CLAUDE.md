@@ -447,6 +447,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 63. Cache pending audio handoffs only; clear completed barriers so they cannot retain an old widget test's FakeAsync zone.
 64. Native widget tests check foundation globals after each test; an Android platform override cannot wait until tearDownAll to be cleared.
 65. Recorder disposal waits behind pending permission/start calls; invalidate an owned attempt and serialize cleanup before its replacement.
+66. Video play creates its timer after the native reply; settle pending playback before final disposal.
 
 ## 4. Where things live
 

@@ -51,6 +51,7 @@ class KidsStoryPlayerScreen extends ConsumerStatefulWidget {
 
 class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   VideoPlayerController? _c;
+  Future<void>? _pendingPlayback;
   List<String> _sources = const [];
   int _src = 0;
   bool _failed = false;
@@ -79,6 +80,7 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
 
   Future<void> _start() async {
     final local = await storyOfflinePath(story);
+    if (!mounted) return;
     _sources = [
       if (local != null) 'file://$local',
       ...ContentMirrors.of(story.videoUrl),
@@ -93,29 +95,60 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
     final c = s.startsWith('file://')
         ? VideoPlayerController.file(File(s.substring(7)))
         : VideoPlayerController.networkUrl(Uri.parse(s));
+    _c = c;
     try {
       await c.initialize();
+      if (!_owns(c)) return;
+      final playback = _beginPlayback(c, at);
+      _pendingPlayback = playback;
+      await playback;
+      if (!_owns(c)) return;
+      _pendingPlayback = null;
     } catch (e) {
       debugPrint('story ${story.id}: source $s failed: $e');
-      await c.dispose();
+      if (!_owns(c)) return;
+      await _releaseController();
       return _next(at);
     }
-    if (!mounted) {
-      await c.dispose();
-      return;
-    }
     c.addListener(_tick);
-    if (at > Duration.zero) await c.seekTo(at);
-    await c.play();
     unawaited(WakelockPlus.enable());
     setState(() {
-      _c = c;
       _opening = false;
     });
     _scheduleHide();
   }
 
+  bool _owns(VideoPlayerController c) => mounted && identical(_c, c);
+
+  Future<void> _beginPlayback(VideoPlayerController c, Duration at) async {
+    if (at > Duration.zero) await c.seekTo(at);
+    if (!_owns(c)) return;
+    await c.play();
+  }
+
+  Future<void> _releaseController() async {
+    final c = _c;
+    final playback = _pendingPlayback;
+    _c = null;
+    _pendingPlayback = null;
+    if (c == null) return;
+    c.removeListener(_tick);
+    // The SDK starts its position timer after play's platform reply. Dispose
+    // after pending play/seek settles so a late reply cannot recreate it or
+    // update an already disposed controller. Initialization can be cancelled
+    // immediately; it has not issued play/seek yet.
+    if (playback != null) {
+      try {
+        await playback;
+      } catch (_) {
+        // _open reports the source error; cleanup still owns this controller.
+      }
+    }
+    await c.dispose();
+  }
+
   Future<void> _next(Duration at) async {
+    if (!mounted) return;
     _src++;
     if (_src >= _sources.length) {
       if (mounted) {
@@ -140,9 +173,7 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
     final v = c.value;
     if (v.hasError) {
       final at = v.position;
-      c.removeListener(_tick);
-      _c = null;
-      unawaited(c.dispose());
+      unawaited(_releaseController());
       unawaited(_next(at));
       return;
     }
@@ -226,8 +257,7 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   @override
   void dispose() {
     _hide?.cancel();
-    _c?.removeListener(_tick);
-    _c?.dispose();
+    unawaited(_releaseController());
     _focus.dispose();
     unawaited(WakelockPlus.disable());
     if (_full) unawaited(_restoreSystemUi());

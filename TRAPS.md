@@ -722,3 +722,14 @@ Do not rediscover these.
     cleanup before a replacement, and defer provider cleanup with an owner and
     live-scope check. Every attempt owns its own WAV directory; an idle old
     panel must not stop a newer live worker or reset its Bluetooth route.
+
+66. **Video disposal must account for pending play/seek replies.** A-35's
+    real story screen leaked its controller and enabled wakelock after closing
+    during play. In video_player2.11.1, _applyPlayPause creates its periodic
+    position timer after awaiting the native play reply; disposing first is
+    insufficient because that reply can recreate the timer. Own the controller
+    before initialization, invalidate its screen ownership immediately, guard
+    every await, and settle pending playback commands before final disposal.
+    Initialization itself can be disposed immediately. Wakelock1.5.2 caches
+    wakelockPlusPlatformInstance separately from the platform-interface instance:
+    tests must restore both, and cleanup must run inside the widget test's zone.
