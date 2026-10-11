@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 NATIVE15 BOTH PASS / NORMAL RESTORING 01:31 Dubai:** All15unique nativecasesPASS/no frameworkexceptions/API24 actual1m33/API36actual2m07 plussetupteardown17results; actualproductionthemeEnglishsplash/theme screenshotsviewedboth. StockMaterialtwoRUoverflow notaccepted/actualAppThemepassesall7languages; RawChipouterpointeraction unchangedassertions. Full1189PASS4originalskips2m53/analyzeCLEAN19s. NEXTNORMALmainbuild/sign/entryguard/rboth/Homeonvisiblemirror/read-only541+shelf20013/logs thenA36singlefixcommit/report/push; A38citedreadonlyunstarted. NoA36saveyet.
+
 **A36 REAL THEME NATIVE RUNNING 01:29 Dubai:** Fixture39.2s/signed415622223B/install-rboth/currentPIDs16821(API36)/16771(API24),all15runningactualAppTheme. Visiblemirrorleftopen;ownerblankreportwascompletedfixtureemptyUI, HOMEactuallauncher screenshotverified. CapturesforAPI24startedbeforelaunchlogclear foundoldmarker/blackPNG NOTaccepted; rerunagainstnewprocesslogbeforeENmarker. NoA36saveuntilallPASS+actualUI+NORMALrestore. Full1189/analyzerCLEAN19s.
 
 **A36 REAL THEME FULL1189 CLEAN 01:26 Dubai:** Full1189PASS/original4skips2m53/realthemefocused15PASS14s/finalanalyzeCLEAN19.0s afterONLYimportorder. Next nativeactualAppTheme fixturebuild/sign/install-rboth/all15requirePASS+screenshots; visiblemirror41904keptopen/owneraskedavoidclicksduringtests. Productunchanged/exactA36 WIP notsaved; old2RUstockthemefailures notrealthemevalidation. MUSTNORMALrestore-rboth/prefs andsingleFixA36commit/push thenA38.
