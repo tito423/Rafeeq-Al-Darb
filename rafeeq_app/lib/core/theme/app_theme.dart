@@ -78,6 +78,12 @@ class AppTheme {
     final onPrimary = contrastRatio(Colors.white, primary) >= 4.5
         ? Colors.white
         : const Color(0xFF06131A);
+    // Reserve contrast for Material's pressed, focused and hovered state layer.
+    final actionForeground = readableOn(
+      brightness == Brightness.light ? primary : primarySoft,
+      surface.withAlpha(255),
+      min: 5.5,
+    );
     final scheme = ColorScheme(
       brightness: brightness,
       primary: primary,
@@ -173,8 +179,8 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: primarySoft,
-          side: BorderSide(color: primarySoft),
+          foregroundColor: actionForeground,
+          side: BorderSide(color: actionForeground),
           textStyle: AppTypography.uiSemibold(15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radiusSm + 4),
@@ -184,7 +190,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: primarySoft,
+          foregroundColor: actionForeground,
           textStyle: AppTypography.uiSemibold(14),
         ),
       ),
@@ -261,7 +267,7 @@ class AppTheme {
         ),
       ),
       tabBarTheme: TabBarThemeData(
-        labelColor: primarySoft,
+        labelColor: actionForeground,
         unselectedLabelColor: onSurfaceVar,
         indicatorSize: TabBarIndicatorSize.tab,
         labelStyle: AppTypography.uiBold(14),

@@ -67,7 +67,12 @@ class _ToolbarActionState extends State<ToolbarAction>
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final color = widget.active ? AppColors.gold : scheme.onSurface;
+    final activeGround = Color.alphaBlend(
+      AppColors.gold.withValues(alpha: 0.14), scheme.surface.withAlpha(255),
+    );
+    final color = widget.active
+        ? readableOn(AppColors.gold, activeGround)
+        : scheme.onSurface;
     // Focusable, and OK on a remote presses it (TV): the mushaf's whole
     // toolbar is made of these, and a bare GestureDetector takes no focus.
     void press() {
@@ -155,7 +160,7 @@ class _ToolbarActionState extends State<ToolbarAction>
                   style: TextStyle(
                     fontSize: 10,
                     color: widget.active
-                        ? AppColors.gold
+                        ? color
                         : scheme.onSurfaceVariant,
                     fontWeight: widget.active
                         ? FontWeight.w700

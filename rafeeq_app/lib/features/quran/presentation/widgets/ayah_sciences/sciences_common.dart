@@ -112,14 +112,14 @@ class SourceBlock extends StatelessWidget {
                 child: Text(
                   title,
                   style: theme.textTheme.titleSmall
-                      ?.copyWith(color: gold, fontWeight: FontWeight.w700),
+                      ?.copyWith(color: goldText(context), fontWeight: FontWeight.w700),
                 ),
               ),
               if (subtitle != null)
                 Text(
                   subtitle!,
                   style: theme.textTheme.labelSmall
-                      ?.copyWith(color: theme.colorScheme.outline),
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
             ],
           ),
