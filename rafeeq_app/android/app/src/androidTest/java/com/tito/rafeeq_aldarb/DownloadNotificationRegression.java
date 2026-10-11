@@ -23,6 +23,10 @@ public final class DownloadNotificationRegression extends Instrumentation {
 
     @Override
     public void onStart() {
+        if ("back".equals(suite)) {
+            BackNavigationRegression.run(this);
+            return;
+        }
         if ("preview".equals(suite)) {
             AdhanPreviewRegression.run(this);
             return;

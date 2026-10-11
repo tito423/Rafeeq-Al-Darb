@@ -18,8 +18,33 @@ import com.tito.rafeeq_aldarb.adhan.AdhanChannels
 import com.tito.rafeeq_aldarb.adhan.AdhanPlayer
 import com.tito.rafeeq_aldarb.adhan.AdhanService
 import com.tito.rafeeq_aldarb.adhan.AdhanNotifications
+import java.util.WeakHashMap
 
 class MainActivity: AudioServiceActivity() {
+
+    private companion object {
+        // AudioServiceActivity supplies a retained engine without a cached
+        // engine ID, so FlutterActivity cannot restore its Back callback.
+        // Keep Flutter's latest decision with that engine, not with a host
+        // that Android can destroy while recitation continues in background.
+        val frameworkBackStates = WeakHashMap<FlutterEngine, Boolean>()
+    }
+
+    private var backEngine: FlutterEngine? = null
+
+    override fun setFrameworkHandlesBack(frameworkHandlesBack: Boolean) {
+        super.setFrameworkHandlesBack(frameworkHandlesBack)
+        backEngine?.let { frameworkBackStates[it] = frameworkHandlesBack }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        backEngine?.let { engine ->
+            // False still delegates Back on Home to Android. A new engine
+            // has no remembered decision and follows Flutter's defaults.
+            frameworkBackStates[engine]?.let { setFrameworkHandlesBack(it) }
+        }
+    }
 
     /**
      * Routing a tap on a GROUPED download notification, which the downloader
@@ -137,6 +162,9 @@ class MainActivity: AudioServiceActivity() {
      */
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        // The base onCreate can call setFrameworkHandlesBack before its
+        // delegate exists; only read an engine after it has attached here.
+        backEngine = flutterEngine
         super.configureFlutterEngine(flutterEngine)
 
         // See `pendingDownloadTap` for why this exists rather than the
