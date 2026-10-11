@@ -23,6 +23,10 @@ public final class DownloadNotificationRegression extends Instrumentation {
 
     @Override
     public void onStart() {
+        if ("preview".equals(suite)) {
+            AdhanPreviewRegression.run(this);
+            return;
+        }
         if ("adhan".equals(suite)) {
             AdhanRecomputeRegression.run(this);
             return;

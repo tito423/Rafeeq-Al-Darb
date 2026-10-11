@@ -31,6 +31,8 @@ object AdhanPlayer {
     private const val TAG = "AdhanPlayer"
 
     private var player: MediaPlayer? = null
+    var previewOwner: String? = null
+        private set
     private var focusRequest: AudioFocusRequest? = null
     private var audioManager: AudioManager? = null
 
@@ -64,13 +66,24 @@ object AdhanPlayer {
         }
 
     /**
-     * Starts [spec]'s sound. Any sound already playing is stopped first, so
-     * two adhans can never overlap.
-     *
-     * Returns false when the spec carries no playable sound or the source
-     * could not be opened — the caller then still shows the alert, it just
-     * has nothing to play.
+     * Replaces a preview with [spec], while preserving non-preview playback.
      */
+    @Synchronized
+    fun startPreview(context: Context, spec: AdhanSpec, owner: String): Boolean {
+        if (AdhanService.current != null || (isPlaying && previewOwner == null)) return false
+        val started = start(context, spec)
+        if (started) previewOwner = owner
+        return started
+    }
+
+    @Synchronized
+    fun stopPreview(owner: String): Boolean {
+        if (previewOwner != owner || AdhanService.current != null) return false
+        stop()
+        return true
+    }
+
+    /** Starts an alarm's sound, releasing any previous player first. */
     @Synchronized
     fun start(context: Context, spec: AdhanSpec, onCompletion: (() -> Unit)? = null): Boolean {
         stop()
@@ -158,6 +171,7 @@ object AdhanPlayer {
 
     @Synchronized
     fun stop() {
+        previewOwner = null
         onCompletion = null
         isMuted = false
         val mp = player ?: run {

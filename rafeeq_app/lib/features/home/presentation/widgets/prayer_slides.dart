@@ -267,13 +267,16 @@ class PrayerSlideDetails extends ConsumerStatefulWidget {
 
 class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
   bool _previewing = false;
+  bool _previewStarting = false;
+  int _previewGeneration = 0;
+  final _preview = AdhanPreviewSession();
   Timer? _previewWatch;
 
   @override
   void dispose() {
     _previewWatch?.cancel();
-    // Leaving the card must never leave an adhan sounding behind it.
-    if (_previewing) AdhanNative.stop();
+    ++_previewGeneration;
+    unawaited(_preview.dispose());
     super.dispose();
   }
 
@@ -283,13 +286,19 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
   /// player a real firing uses — not a second `just_audio` instance, which
   /// cannot work here (see `adhan_settings_screen.dart`'s note).
   Future<void> _togglePreview(AdhanOption option) async {
-    if (_previewing) {
+    if (_previewing || _previewStarting) {
+      ++_previewGeneration;
       _previewWatch?.cancel();
-      await AdhanNative.stop();
-      if (mounted) setState(() => _previewing = false);
+      setState(() {
+        _previewing = false;
+        _previewStarting = false;
+      });
+      await _preview.stop();
       return;
     }
-    final started = await AdhanNative.preview(
+    final generation = ++_previewGeneration;
+    setState(() => _previewStarting = true);
+    final started = await _preview.play(
       AdhanNative.specFor(
         prayerKey: widget.prayerKey,
         prayerLabel: prayerSlideLabelKeys[widget.prayerKey]!.tr(),
@@ -298,7 +307,8 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
         option: option,
       ),
     );
-    if (!mounted) return;
+    if (!mounted || generation != _previewGeneration) return;
+    setState(() => _previewStarting = false);
     if (!started) {
       ScaffoldMessenger.of(
         context,
@@ -311,11 +321,13 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
       t,
     ) async {
       final state = await AdhanNative.state();
-      if (!mounted) {
+      if (!mounted || generation != _previewGeneration) {
         t.cancel();
         return;
       }
-      if (!state.playing) {
+      if (!state.playing ||
+          state.firing ||
+          state.previewOwner != _preview.owner) {
         t.cancel();
         setState(() => _previewing = false);
       }
@@ -400,10 +412,19 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
           ),
         ),
         // Every prayer's card leads to the prayer-times settings (owner, 2026-09-27).
-        _DetailRow(icon: Icons.settings_rounded, label: 'prayer.adjustments'.tr(),
-            trailing: Icon(Icons.chevron_right_rounded, color: hero.onSurfaceFaint),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const PrayerAdjustmentsScreen()))),
+        _DetailRow(
+          icon: Icons.settings_rounded,
+          label: 'prayer.adjustments'.tr(),
+          trailing: Icon(
+            Icons.chevron_right_rounded,
+            color: hero.onSurfaceFaint,
+          ),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => const PrayerAdjustmentsScreen(),
+            ),
+          ),
+        ),
 
         if (!_hasAdhan)
           // Honest: the sunrise is a timing, not a prayer — it has no adhan
@@ -457,7 +478,7 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
                     tooltip: 'prayer.test'.tr(),
                     onPressed: () => _togglePreview(option),
                     icon: Icon(
-                      _previewing
+                      (_previewing || _previewStarting)
                           ? Icons.stop_circle_outlined
                           : Icons.play_circle_outline,
                       color: color,
@@ -468,7 +489,9 @@ class _PrayerSlideDetailsState extends ConsumerState<PrayerSlideDetails> {
             prayerKey: widget.prayerKey,
             color: color,
             stopRowPreview: () async {
-              if (_previewing && option != null) await _togglePreview(option);
+              if ((_previewing || _previewStarting) && option != null) {
+                await _togglePreview(option);
+              }
             },
           ),
         ],

@@ -50,8 +50,14 @@ object AdhanChannels {
                     if (spec == null) {
                         result.error("bad_args", "a sound spec is required", null)
                     } else {
-                        result.success(AdhanPlayer.start(appContext, spec))
+                        val owner = call.argument<String>("previewOwner") ?: "legacy/${System.nanoTime()}"
+                        result.success(AdhanPlayer.startPreview(appContext, spec, owner))
                     }
+                }
+                "stopPreview" -> {
+                    val owner = call.argument<String>("previewOwner")
+                    if (owner == null) result.error("bad_args", "a preview owner is required", null)
+                    else result.success(AdhanPlayer.stopPreview(owner))
                 }
                 // Stops both surfaces at once: the preview player *and* a real
                 // firing (whose service also owns the notification and the
@@ -75,6 +81,7 @@ object AdhanChannels {
                         "positionMs" to AdhanPlayer.positionMs,
                         "durationMs" to AdhanPlayer.durationMs,
                         "firing" to (AdhanService.current != null),
+                        "previewOwner" to AdhanPlayer.previewOwner,
                     ),
                 )
                 // Closes the alert Activity itself (the alert screen is its own

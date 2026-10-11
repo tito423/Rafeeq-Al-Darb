@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/adhan_mode.dart';
 import '../models/adhan_option.dart';
@@ -100,6 +101,7 @@ class AdhanPlaybackState {
   /// True while [AdhanService] is holding a real firing (as opposed to the
   /// settings-screen preview, which runs the player without the service).
   final bool firing;
+  final String? previewOwner;
 
   const AdhanPlaybackState({
     required this.playing,
@@ -107,6 +109,7 @@ class AdhanPlaybackState {
     required this.position,
     required this.duration,
     required this.firing,
+    this.previewOwner,
   });
 
   static const idle = AdhanPlaybackState(
@@ -125,6 +128,7 @@ class AdhanPlaybackState {
     position: Duration(milliseconds: (m['positionMs'] as num?)?.toInt() ?? 0),
     duration: Duration(milliseconds: (m['durationMs'] as num?)?.toInt() ?? 0),
     firing: m['firing'] as bool? ?? false,
+    previewOwner: m['previewOwner'] as String?,
   );
 }
 
@@ -151,6 +155,7 @@ class AdhanNative {
 
   static const _player = MethodChannel('com.tito.rafeeq_aldarb/adhan_player');
   static const _alarm = MethodChannel('com.tito.rafeeq_aldarb/adhan_alarm');
+  static String? _latestPreviewOwner;
 
   /// Builds the native spec for one prayer from the user's chosen sound.
   /// Vibrate/silent modes deliberately resolve to [AdhanSoundType.none] —
@@ -202,22 +207,49 @@ class AdhanNative {
   /// foreground service — the settings-screen preview. Returns false when
   /// the sound could not be opened (a deleted custom file, say), so the
   /// caller can tell the user instead of showing a mute screen.
-  static Future<bool> preview(AdhanSpec spec) async {
+  static Future<bool> preview(AdhanSpec spec) =>
+      AdhanPreviewSession().play(spec);
+
+  static Future<bool> _previewOwned(AdhanSpec spec, String owner) async {
+    _latestPreviewOwner = owner;
+    var started = false;
     try {
-      final started =
-          await _player.invokeMethod<bool>('preview', spec.toMap()) ?? false;
-      if (started) _PreviewGuard.instance.arm();
-      return started;
+      started =
+          await _player.invokeMethod<bool>('preview', {
+            ...spec.toMap(),
+            'previewOwner': owner,
+          }) ??
+          false;
     } on PlatformException {
-      return false;
+      started = false;
     } on MissingPluginException {
-      return false;
+      started = false;
+    }
+    if (_latestPreviewOwner == owner) {
+      if (started) {
+        _PreviewGuard.instance.arm(owner);
+      } else {
+        _latestPreviewOwner = null;
+        _PreviewGuard.instance.disarm();
+      }
+    }
+    return started;
+  }
+
+  static Future<void> _stopPreview(String owner) async {
+    if (_latestPreviewOwner == owner) _latestPreviewOwner = null;
+    _PreviewGuard.instance.disarm(owner);
+    try {
+      await _player.invokeMethod<bool>('stopPreview', {'previewOwner': owner});
+    } catch (_) {
+      // Disposal is best-effort, just like the existing global Stop action.
     }
   }
 
   /// Stops everything: the preview player *and* a real firing (whose service
   /// also drops its notification and wake lock). Safe when nothing is running.
   static Future<void> stop() async {
+    _latestPreviewOwner = null;
     _PreviewGuard.instance.disarm();
     try {
       await _player.invokeMethod<void>('stop');
@@ -347,7 +379,7 @@ class AdhanNative {
   }
 }
 
-/// Keeps a **preview** from outliving the app being in front of the reader.
+/// One preview owner, including the interval before native Start replies.
 ///
 /// A real firing is an alarm: [AdhanService] owns it, it posts an ongoing
 /// notification with Stop and Mute, and it is *supposed* to sound while the
@@ -368,23 +400,63 @@ class AdhanNative {
 /// adhan settings rows and the full-screen preview all did, and two of the
 /// three had no lifecycle handling at all.
 ///
-/// It asks the native player what is actually sounding before stopping
-/// anything: [AdhanPlaybackState.firing] is false only for a preview, so a
-/// real adhan can never be silenced by this, however stale the arming is.
+/// Native verifies the owner and real-firing state atomically when stopping;
+/// an old card or background callback cannot stop newer or real playback.
+class AdhanPreviewSession {
+  String? _owner;
+  int _generation = 0;
+  bool _disposed = false;
+
+  String? get owner => _owner;
+
+  Future<bool> play(AdhanSpec spec) async {
+    if (_disposed) return false;
+    final generation = ++_generation;
+    final owner = const Uuid().v4();
+    _owner = owner;
+    final started = await AdhanNative._previewOwned(spec, owner);
+    if (_disposed || generation != _generation) {
+      // The request may have started after the first cancellation reached
+      // native. Ownership makes this late cleanup safe for newer playback.
+      await AdhanNative._stopPreview(owner);
+      return false;
+    }
+    if (!started) _owner = null;
+    return started;
+  }
+
+  Future<void> stop() async {
+    ++_generation;
+    final owner = _owner;
+    _owner = null;
+    if (owner != null) await AdhanNative._stopPreview(owner);
+  }
+
+  Future<void> dispose() async {
+    _disposed = true;
+    await stop();
+  }
+}
+
+/// Stops the current owned preview when the app leaves the foreground.
 class _PreviewGuard with WidgetsBindingObserver {
   _PreviewGuard._();
 
   static final _PreviewGuard instance = _PreviewGuard._();
 
   bool _armed = false;
+  String? _owner;
 
-  void arm() {
+  void arm(String owner) {
+    _owner = owner;
     if (_armed) return;
     _armed = true;
     WidgetsBinding.instance.addObserver(this);
   }
 
-  void disarm() {
+  void disarm([String? owner]) {
+    if (owner != null && _owner != owner) return;
+    _owner = null;
     if (!_armed) return;
     _armed = false;
     WidgetsBinding.instance.removeObserver(this);
@@ -397,14 +469,8 @@ class _PreviewGuard with WidgetsBindingObserver {
   }
 
   Future<void> _stopIfPreview() async {
-    final now = await AdhanNative.state();
-    // A real firing keeps going: it has a notification, and the reader
-    // leaving the app is exactly when an adhan is meant to be heard.
-    if (now.firing) return;
-    if (!now.playing) {
-      disarm();
-      return;
-    }
-    await AdhanNative.stop();
+    final owner = _owner;
+    // Native checks ownership and real firing atomically when Stop executes.
+    if (owner != null) await AdhanNative._stopPreview(owner);
   }
 }
