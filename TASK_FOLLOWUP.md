@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 CHIP POINTER NATIVE RUNNING 01:19 Dubai:** Signedfixture38.7s/install-rboth/API24+36 all15tests running; actualtheme capturespending. Host15PASS12s/analyzerCLEAN25.2s/full1189priorPASS. Productunchangedafterformat; noA36fixcommit. ExactNEXT waitnative15each+viewactualUI/NORMALsignguardrestore-rboth/read-only541+shelf20013/report/singleFixA36save/push; thenA38. No overlapbuild/testsource edits.
+
 **A36 ACTUAL CHIP HOST GREEN 01:17 Dubai:** Actual ChoiceChip pointer action15PASS12s/analyzerCLEAN25.2s. Native diagnostic label missing from hit path despite visible chips; no assertion changed, productiononlyformatter/full1189prior valid. Next signed fixture rebuild/all15 native both plus screenshots; NORMALmustrestorethenreport/saveA36. No validatedcommit/nativePASSyet.
 
 **A36 HIT PATH CAUSE OBSERVED 01:15 Dubai:** Native diagnostic actual dark point hits outer InkWell/RenderPointerListener/semantics but not label RenderParagraph; visible screenshot confirmed. Correct harness action to tap actual ChoiceChip.hitTestable, preserving provider/prefs/selected/creator/back assertions. No production change. Diagnostic driver still completing; NEXT finish it then host15/analyze, rebuild/rerun all15 native both, NORMALrestore, saveonlyafterPASS. OldRED not accepted.
