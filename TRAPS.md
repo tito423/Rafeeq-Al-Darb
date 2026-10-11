@@ -680,3 +680,18 @@ Do not rediscover these.
     native) fails the handshake, so library/story/recitation downloads cannot
     be exercised on this machine; `-http-proxy` does not help (Dart ignores
     the system proxy). Test those on the owner's phone and say so.
+
+62. **A retained audio engine is not a cached-engine ID.** 2026-10-11:
+    recitation survived launcher task recreation, but Android Back exited
+    instead of popping the still-open Flutter player. AudioServiceActivity
+    supplies its shared engine without FlutterActivity's cached-engine ID;
+    FlutterActivity therefore did not restore its framework Back decision.
+    Fix `800cc891` remembers the latest true AND false decision per engine
+    in a weak map and replays it after host attachment. Capture the engine
+    in configureFlutterEngine: the virtual Back setter can run before the
+    base activity initializes its delegate. Do not force true (Home must
+    still exit). Drive real Dart Navigator push/pop and observe the recreated
+    host onStarted; a manual decision can conflict with a valid Home update.
+    Baseline failed the true decision; API36 passed true/false/true, API24
+    passed retained-engine compatibility. Normal streamed Baqara continued
+    across launcher/recreated host and Back returned to the reciter list.
