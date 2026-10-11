@@ -445,6 +445,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 61. Avast breaks Gradle's dynamic-version lookup (build offline via a temporary init script) and every download inside the emulator.
 62. AudioServiceActivity retains an engine without a cached-engine ID; a recreated host loses Flutter's Back decision unless it is restored explicitly.
 63. Cache pending audio handoffs only; clear completed barriers so they cannot retain an old widget test's FakeAsync zone.
+64. Native widget tests check foundation globals after each test; an Android platform override cannot wait until tearDownAll to be cleared.
 
 ## 4. Where things live
 

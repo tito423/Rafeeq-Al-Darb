@@ -704,3 +704,11 @@ Do not rediscover these.
     The same production ownership fix passed independent widget tests and
     Android24/36 without retaining completed test lifetimes. This was a
     harness/lifetime issue, not evidence of a phone engine failure.
+
+64. **Widget invariants run before tearDownAll.** A-31's service helper
+    needed an Android platform override on the Windows host, but leaving it
+    set between native widget tests made all nine fail foundation's global
+    invariant despite their service assertions. On real Android use its
+    actual platform; a host-only override belongs to the host test lifetime.
+    The identical native assertions passed after correcting setup, with a
+    real minute on API24 and API36. Never count the failed run as validation.
