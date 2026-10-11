@@ -41,6 +41,8 @@ class MoreGroup extends ConsumerStatefulWidget {
 class _MoreGroupState extends ConsumerState<MoreGroup>
     with AccordionMember<MoreGroup> {
   bool _open = false;
+  bool _keepCoveredChildren = false;
+  Animation<double>? _coverAnimation;
 
   @override
   bool get accordionIsOpen => _open;
@@ -57,10 +59,36 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
   void _closeIfCovered() {
     Future<void>.delayed(const Duration(milliseconds: 450), () {
       if (!mounted || !_open) return;
-      if (ModalRoute.of(context)?.isCurrent ?? true) return;
-      setState(() => _open = false);
+      final route = ModalRoute.of(context);
+      if (route?.isCurrent ?? true) return;
+      // A pushed settings section still uses its parent's ref and children
+      // notifier. Fold the group visually, retaining those owners only until
+      // the covering route finishes returning.
+      _coverAnimation = route!.secondaryAnimation;
+      _coverAnimation?.addStatusListener(_coverChanged);
+      setState(() {
+        _keepCoveredChildren = true;
+        _open = false;
+      });
       accordionClosed();
     });
+  }
+
+  void _coverChanged(AnimationStatus status) {
+    if (status != AnimationStatus.dismissed) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_keepCoveredChildren) return;
+      if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
+      _coverAnimation?.removeStatusListener(_coverChanged);
+      _coverAnimation = null;
+      setState(() => _keepCoveredChildren = false);
+    });
+  }
+
+  @override
+  void dispose() {
+    _coverAnimation?.removeStatusListener(_coverChanged);
+    super.dispose();
   }
 
   void _toggle() {
@@ -117,20 +145,27 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
           duration: const Duration(milliseconds: 240),
           curve: Curves.easeOutCubic,
           alignment: Alignment.topCenter,
-          child: open
-              ? Padding(
-                  // Inset on BOTH sides, so an opened group reads as a
-                  // narrower column stepped in under its own card rather
-                  // than as more cards of the same width.
-                  padding: const EdgeInsetsDirectional.only(
-                      start: 26, end: 12, bottom: 8),
-                  child: Listener(
-                    onPointerUp: (_) => _closeIfCovered(),
-                    child: MoreGroupAccent(
-                      accent: widget.accent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: widget.children,
+          child: open || _keepCoveredChildren
+              ? Visibility(
+                  visible: open,
+                  maintainState: true,
+                  child: Padding(
+                    // Inset on BOTH sides, so an opened group reads as a
+                    // narrower column stepped in under its own card rather
+                    // than as more cards of the same width.
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 26,
+                      end: 12,
+                      bottom: 8,
+                    ),
+                    child: Listener(
+                      onPointerUp: (_) => _closeIfCovered(),
+                      child: MoreGroupAccent(
+                        accent: widget.accent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: widget.children,
+                        ),
                       ),
                     ),
                   ),

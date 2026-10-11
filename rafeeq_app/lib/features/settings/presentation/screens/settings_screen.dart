@@ -531,6 +531,7 @@ class CollapsibleSection extends StatefulWidget {
 class _CollapsibleSectionState extends State<CollapsibleSection>
     with SingleTickerProviderStateMixin, AccordionMember<CollapsibleSection> {
   late bool _open = widget.initiallyOpen;
+  bool _pageOpen = false;
   bool _focusChecked = false;
 
   @override
@@ -562,7 +563,11 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
   @override
   void didUpdateWidget(CollapsibleSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _children.value = widget.children;
+    // The pushed page is a different route, not a descendant being built
+    // here. Notify it after this frame, using the latest mounted owner.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _children.value = widget.children;
+    });
   }
 
   @override
@@ -577,7 +582,7 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
   @override
   void accordionCollapse() => setState(() => _open = false);
 
-  void _toggle() {
+  Future<void> _toggle() async {
     // Inside a «المزيد» group the section is a screen of its own: «أي شيء
     // فيه نص كثير (مثل تذكير بالتسابيح بأحاديثه) يفتح شاشة كاملة لا يتمدد
     // داخل القائمة» (owner, 2026-09-25). Opening it in place pushed every
@@ -585,26 +590,31 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
     // opened - that was the jumping.
     final accent = MoreGroupAccent.of(context);
     if (accent != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => Scaffold(
-            appBar: AppBar(title: Text(widget.title)),
-            body: MoreGroupAccent(
-              accent: accent,
-              child: ValueListenableBuilder<List<Widget>>(
-                valueListenable: _children,
-                builder: (context, children, _) => ListView(
-                  padding: readableInsets(
-                    context,
-                    const EdgeInsets.fromLTRB(16, 12, 16, 28),
-                  ),
-                  children: children,
+      if (_pageOpen) return;
+      setState(() => _pageOpen = true);
+      final page = MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          appBar: AppBar(title: Text(widget.title)),
+          body: MoreGroupAccent(
+            accent: accent,
+            child: ValueListenableBuilder<List<Widget>>(
+              valueListenable: _children,
+              builder: (context, children, _) => ListView(
+                padding: readableInsets(
+                  context,
+                  const EdgeInsets.fromLTRB(16, 12, 16, 28),
                 ),
+                children: children,
               ),
             ),
           ),
         ),
       );
+      await Navigator.of(context).push(page);
+      // Keep globally keyed tutorial controls on one route until its exit
+      // transition and overlay removal are complete.
+      await page.completed;
+      if (mounted) setState(() => _pageOpen = false);
       return;
     }
     setState(() => _open = !_open);
@@ -646,10 +656,12 @@ class _CollapsibleSectionState extends State<CollapsibleSection>
         ),
         AnimatedCrossFade(
           firstChild: const SizedBox(width: double.infinity, height: 0),
-          secondChild: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: widget.children,
-          ),
+          secondChild: _pageOpen
+              ? const SizedBox.shrink()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: widget.children,
+                ),
           crossFadeState: _open
               ? CrossFadeState.showSecond
               : CrossFadeState.showFirst,

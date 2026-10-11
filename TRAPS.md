@@ -733,3 +733,18 @@ Do not rediscover these.
     Initialization itself can be disposed immediately. Wakelock1.5.2 caches
     wakelockPlusPlatformInstance separately from the platform-interface instance:
     tests must restore both, and cleanup must run inside the widget test's zone.
+
+67. **A folded group can still own a pushed settings page.** MoreGroup's
+    450ms auto-fold disposed SettingsBody's ref and CollapsibleSection's
+    notifier while its page still used them. Retain the creator offstage only
+    while covered, keeping the group logically closed, and release it when
+    the covering route has finished reversing. Notifying the separate route
+    from didUpdateWidget during its creator's build is also invalid: publish
+    fresh children after the frame. Render globally keyed tutorial controls
+    only on the pushed page while it is open, until page.completed; retaining
+    both trees otherwise duplicates the theme tutorial key. Actual SettingsBody
+    tests cover both splash and theme writes in all seven languages, including
+    ordinary folding, reactive page updates and returning to the folded group.
+    Native tests must use the actual AppTheme and bundled UI fonts: stock
+    Material produced unrelated Russian layout overflows. Tap the ChoiceChip
+    itself: RawChip can hit its InkWell without hitting its label RenderParagraph.
