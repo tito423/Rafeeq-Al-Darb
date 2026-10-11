@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 REAL THEME FULL1189 CLEAN 01:26 Dubai:** Full1189PASS/original4skips2m53/realthemefocused15PASS14s/finalanalyzeCLEAN19.0s afterONLYimportorder. Next nativeactualAppTheme fixturebuild/sign/install-rboth/all15requirePASS+screenshots; visiblemirror41904keptopen/owneraskedavoidclicksduringtests. Productunchanged/exactA36 WIP notsaved; old2RUstockthemefailures notrealthemevalidation. MUSTNORMALrestore-rboth/prefs andsingleFixA36commit/push thenA38.
+
 **OWNER EMULATOR VISIBLE 01:25 Dubai:** Owner at laptop requested visible emulator. Downloaded officialportable scrcpy5.0.1/outsidegit verifiedSHA256 fromGitHubrelease API; mirrorPID41904/titleRafeeq_API36/windowhandle24380738/respondingTrue/video544x1200. Sameoriginal5554 remainsheadless/no reboot/wipe; visiblemirrorleftopenforowner. Fullteststillrunning; analyzer1importorderinginfo pendingfixaftertests(no sourceeditsduringrun). NativeactualAppTheme notbuilt yet. NEXT finishfull/fiximport/analyze/nativeboth/NORMALrestore/A36save; scopeunchanged.
 
 **A36 REAL THEME HOST15 PASS / FULL RUNNING 01:23 Dubai:** ProductionAppTheme light/dark+bundledCairo andreactiveConsumer addedtoharness,15PASS14s. Assertions/provider/prefs/back retained; twoRU RenderFlex errors understockMaterial notaccepted. Fullsuite/analyzer running/no nativebuild overlap. NEXT require1189PASS/analyzerCLEAN, signedfixture/all15both API24+36 withrealtheme; anyoverflow mustdiagnose/fixorrevert. NORMALmainmustrestore-rboth/prefs beforecommit. NoA36savedyet.
