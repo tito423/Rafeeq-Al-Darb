@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../data/book_catalog.dart';
@@ -44,8 +43,6 @@ class BookSelection extends ChangeNotifier {
 bool canFetchBook(LibraryBook b, Map<String, String> paths) =>
     b.textEdition != null &&
     !paths.containsKey(b.id) &&
-    DownloadManager.instance.taskById(b.id)?.status !=
-        DownloadStatus.downloading &&
     !LibraryApiService.instance.bookDownloads.value.containsKey(b.id);
 
 /// The row above a shelf: «تحميل كل …» + «تحديد», or, while selecting,
@@ -73,10 +70,16 @@ class BookBulkBar extends StatelessWidget {
     final lang = context.locale.languageCode;
     String n(int v) => localizeDigits('$v', lang);
     return ListenableBuilder(
-      listenable: selection,
+      listenable: Listenable.merge([
+        selection,
+        LibraryApiService.instance.bookDownloads,
+      ]),
       builder: (context, _) {
         if (!selection.active) {
-          final missing = [for (final b in books) if (canFetchBook(b, paths)) b];
+          final missing = [
+            for (final b in books)
+              if (canFetchBook(b, paths)) b,
+          ];
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Wrap(
@@ -100,9 +103,18 @@ class BookBulkBar extends StatelessWidget {
             ),
           );
         }
-        final picked = [for (final b in books) if (selection.ids.contains(b.id)) b];
-        final toFetch = [for (final b in picked) if (canFetchBook(b, paths)) b];
-        final toDelete = [for (final b in picked) if (paths.containsKey(b.id)) b];
+        final picked = [
+          for (final b in books)
+            if (selection.ids.contains(b.id)) b,
+        ];
+        final toFetch = [
+          for (final b in picked)
+            if (canFetchBook(b, paths)) b,
+        ];
+        final toDelete = [
+          for (final b in picked)
+            if (paths.containsKey(b.id)) b,
+        ];
         final all = picked.length == books.length && books.isNotEmpty;
         return Container(
           margin: const EdgeInsets.only(bottom: 10),
@@ -150,7 +162,9 @@ class BookBulkBar extends StatelessWidget {
                             selection.end();
                           },
                     icon: const Icon(Icons.download_rounded),
-                    label: Text('library.download_n'.tr(args: [n(toFetch.length)])),
+                    label: Text(
+                      'library.download_n'.tr(args: [n(toFetch.length)]),
+                    ),
                   ),
                   FilledButton.tonalIcon(
                     // Red on the theme's green tonal fill, then red on this
@@ -164,7 +178,9 @@ class BookBulkBar extends StatelessWidget {
                         ? null
                         : () => _delete(context, toDelete, n),
                     icon: const Icon(Icons.delete_outline_rounded),
-                    label: Text('library.delete_n'.tr(args: [n(toDelete.length)])),
+                    label: Text(
+                      'library.delete_n'.tr(args: [n(toDelete.length)]),
+                    ),
                   ),
                 ],
               ),
@@ -175,8 +191,11 @@ class BookBulkBar extends StatelessWidget {
     );
   }
 
-  Future<void> _delete(BuildContext context, List<LibraryBook> books,
-      String Function(int) n) async {
+  Future<void> _delete(
+    BuildContext context,
+    List<LibraryBook> books,
+    String Function(int) n,
+  ) async {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -218,22 +237,22 @@ class SelectableBook extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-        listenable: selection,
-        builder: (context, child) => !selection.active
-            ? child!
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Checkbox(
-                      value: selection.ids.contains(book.id),
-                      onChanged: (_) => selection.toggle(book.id),
-                    ),
-                  ),
-                  Expanded(child: child!),
-                ],
+    listenable: selection,
+    builder: (context, child) => !selection.active
+        ? child!
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Checkbox(
+                  value: selection.ids.contains(book.id),
+                  onChanged: (_) => selection.toggle(book.id),
+                ),
               ),
-        child: child,
-      );
+              Expanded(child: child!),
+            ],
+          ),
+    child: child,
+  );
 }

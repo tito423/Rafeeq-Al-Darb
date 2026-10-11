@@ -18,7 +18,18 @@ import 'builtin_books.dart';
 
 class LibraryApiService {
   static final LibraryApiService instance = LibraryApiService._();
-  LibraryApiService._();
+  LibraryApiService._() : _dio = Dio(), _documents = null;
+
+  @visibleForTesting
+  LibraryApiService.forTesting(
+    this._dio, {
+    Database? database,
+    String? documents,
+  }) : _db = database,
+       _documents = documents;
+
+  final Dio _dio;
+  final String? _documents;
 
   Database? _db;
 
@@ -43,7 +54,9 @@ class LibraryApiService {
           await db.execute('DROP TABLE IF EXISTS book_search');
           final cols = await db.rawQuery('PRAGMA table_info(book_pages)');
           if (!cols.any((c) => c['name'] == 'body_norm')) {
-            await db.execute('ALTER TABLE book_pages ADD COLUMN body_norm TEXT');
+            await db.execute(
+              'ALTER TABLE book_pages ADD COLUMN body_norm TEXT',
+            );
           }
           await _backfillSearchText(db);
         }
@@ -130,7 +143,9 @@ class LibraryApiService {
   /// Where a downloaded book's own JSON lives. The reader opens this file
   /// directly -- it carries the `toc`, which the SQLite copy does not.
   Future<String> bookFilePath(String bookId) async {
-    final dir = await getApplicationDocumentsDirectory();
+    final dir = _documents == null
+        ? await getApplicationDocumentsDirectory()
+        : Directory(_documents);
     return join(dir.path, 'books', 'text', '$bookId.json');
   }
 
@@ -158,7 +173,11 @@ class LibraryApiService {
   /// is not the same as stale, and guessing would re-download the library.
   Future<bool> isBookDownloaded(String bookId) async {
     final db = await database;
-    final res = await db.query('book_meta', where: 'id = ?', whereArgs: [bookId]);
+    final res = await db.query(
+      'book_meta',
+      where: 'id = ?',
+      whereArgs: [bookId],
+    );
     if (res.isEmpty) return false;
     final file = File(await bookFilePath(bookId));
     if (!await file.exists()) return false;
@@ -170,45 +189,92 @@ class LibraryApiService {
   /// R2 first, then every mirror of the same bytes ([ContentMirrors]).
   /// A response is taken only if its length is the catalogue's — a host that
   /// answers 200 with an error page (trap #5) is a failure, not a book.
-  Future<void> downloadBook(String bookId, String url) async {
-    final expected = bookById(bookId)?.textEdition?.sizeBytes ?? 0;
-    final dio = Dio();
-    void setProgress(double? v) {
-      final next = Map<String, double?>.from(bookDownloads.value);
-      if (v == null && !next.containsKey(bookId)) return;
-      next[bookId] = v;
-      bookDownloads.value = next;
-    }
+  Future<void> downloadBook(String bookId, String url) {
+    final existing = _downloads[bookId];
+    if (existing != null) return existing.done.future;
+    final download = _BookDownload(bookId, url);
+    _downloads[bookId] = download;
+    _setProgress(download, null);
+    _downloadQueue = _downloadQueue.then((_) => _downloadBook(download));
+    return download.done.future;
+  }
 
-    setProgress(0);
+  final _downloads = <String, _BookDownload>{};
+  Future<void> _downloadQueue = Future.value();
+
+  bool canCancelBookDownload(String id) => _downloads[id]?.committing == false;
+
+  /// Cancellation belongs to the same operation as progress and the queue.
+  /// Once installation commits, it finishes atomically from the UI's point
+  /// of view; a cancel button is disabled during that short phase.
+  bool cancelBookDownload(String id) {
+    final download = _downloads[id];
+    if (download == null || download.committing) return false;
+    download.cancel.cancel();
+    _removeDownload(download);
+    if (!download.done.isCompleted) download.done.complete();
+    return true;
+  }
+
+  void _setProgress(_BookDownload download, double? progress) {
+    if (!identical(_downloads[download.id], download)) return;
+    bookDownloads.value = {...bookDownloads.value, download.id: progress};
+  }
+
+  void _removeDownload(_BookDownload download) {
+    if (!identical(_downloads[download.id], download)) return;
+    _downloads.remove(download.id);
+    bookDownloads.value = {...bookDownloads.value}..remove(download.id);
+  }
+
+  Future<void> _downloadBook(_BookDownload download) async {
     try {
+      download.checkCancelled();
+      final expected = bookById(download.id)?.textEdition?.sizeBytes ?? 0;
+      _setProgress(download, 0);
       final bytes = await ContentMirrors.fetchFirst<List<int>>(
-        url,
-        (u) async => (await dio.get<List<int>>(
-              u,
-              options: Options(responseType: ResponseType.bytes),
-              onReceiveProgress: (got, total) {
-                final t = total > 0 ? total : expected;
-                if (t > 0) setProgress((got / t).clamp(0.0, 1.0));
-              },
-            ))
-                .data ??
-            const [],
+        download.url,
+        (u) async {
+          // fetchFirst retries failures. A cancellation must never start
+          // another mirror request or revive an operation already removed.
+          download.checkCancelled();
+          return (await _dio.get<List<int>>(
+                u,
+                cancelToken: download.cancel,
+                options: Options(responseType: ResponseType.bytes),
+                onReceiveProgress: (got, total) {
+                  final t = total > 0 ? total : expected;
+                  if (t > 0) {
+                    _setProgress(download, (got / t).clamp(0.0, 1.0));
+                  }
+                },
+              )).data ??
+              const [];
+        },
         accept: (b) => b.isNotEmpty && (expected == 0 || b.length == expected),
       );
-      await installBookBytes(bookId, bytes);
+      download.checkCancelled();
+      await _installBookBytes(download.id, bytes, download: download);
+      if (!download.done.isCompleted) download.done.complete();
+    } catch (error, stack) {
+      if (!download.done.isCompleted) {
+        if (download.cancel.isCancelled) {
+          download.done.complete();
+        } else {
+          download.done.completeError(error, stack);
+        }
+      }
     } finally {
-      final next = Map<String, double?>.from(bookDownloads.value)
-        ..remove(bookId);
-      bookDownloads.value = next;
+      _removeDownload(download);
     }
   }
 
   /// Book id -> 0..1 while it downloads, for «جارٍ التنزيل الآن» on the
   /// Downloads hub - «اي حاجة يتم تنزيلها لازم تظهر تفاصيل تحميلها في
   /// التنزيلات» (owner, 2026-09-26). Books went through Dio with no trace.
-  final ValueNotifier<Map<String, double?>> bookDownloads =
-      ValueNotifier(const {});
+  final ValueNotifier<Map<String, double?>> bookDownloads = ValueNotifier(
+    const {},
+  );
 
   /// «حط … المتون built-in في التطبيق لأن تحميلهم بيفشل لما التطبيق بيروح
   /// في الخلفية» (2026-09-19). Every book in the hadith category («كتب
@@ -227,7 +293,9 @@ class LibraryApiService {
       try {
         final d = await rootBundle.load('assets/data/builtin_books/$id.json');
         await installBookBytes(
-            id, d.buffer.asUint8List(d.offsetInBytes, d.lengthInBytes));
+          id,
+          d.buffer.asUint8List(d.offsetInBytes, d.lengthInBytes),
+        );
         n++;
       } catch (e) {
         debugPrint('installBuiltinBooks: $id failed: $e');
@@ -238,7 +306,8 @@ class LibraryApiService {
 
   /// Decodes a hosted book and builds its index rows (pure; isolate-safe).
   static ({Map meta, List<Map<String, Object?>> rows}) _parseBook(
-      List<int> bytes) {
+    List<int> bytes,
+  ) {
     // Most hosted books are gzip bytes served without a Content-Encoding
     // header, so nothing upstream unpacks them -- sniff the magic instead.
     final isGzip = bytes.length >= 2 && bytes[0] == 0x1f && bytes[1] == 0x8b;
@@ -260,15 +329,29 @@ class LibraryApiService {
   }
 
   /// Writes a book's hosted bytes to disk and indexes it.
-  Future<void> installBookBytes(String bookId, List<int> bytes) async {
+  Future<void> installBookBytes(String bookId, List<int> bytes) =>
+      _installBookBytes(bookId, bytes);
+
+  Future<void> _installBookBytes(
+    String bookId,
+    List<int> bytes, {
+    _BookDownload? download,
+  }) async {
     // Unpacking, parsing and normalising a book is the expensive part (the
     // built-in set is 7 MB of gzip), so it runs off the UI isolate.
     final parsed = await Isolate.run(() => _parseBook(bytes));
+    download?.checkCancelled();
     final meta = parsed.meta;
 
     // The reader reads this file; the DB rows below only feed the index.
     final file = File(await bookFilePath(bookId));
+    download?.checkCancelled();
     await file.parent.create(recursive: true);
+    download?.checkCancelled();
+    if (download != null) {
+      download.committing = true;
+      _setProgress(download, 1);
+    }
     await file.writeAsBytes(bytes);
 
     final db = await database;
@@ -413,9 +496,7 @@ class LibraryApiService {
         var all = true;
         for (var i = 0; i < terms.length; i++) {
           final where = _boundaryIndexOf(body, normTerms[i]);
-          final loose = where < 0
-              ? _boundaryIndexOf(body, looseTerms[i])
-              : -1;
+          final loose = where < 0 ? _boundaryIndexOf(body, looseTerms[i]) : -1;
           final found = where >= 0 ? where : loose;
           if (found < 0) {
             all = false;
@@ -428,20 +509,23 @@ class LibraryApiService {
           }
         }
         if (!all) continue;
-        if (exactMarks && !hasExactMarks(r['content'] as String?, raw, phrase)) {
+        if (exactMarks &&
+            !hasExactMarks(r['content'] as String?, raw, phrase)) {
           continue;
         }
 
         final meta = titles[bookId] ?? const ['', ''];
         perBookHits[bookId] = (perBookHits[bookId] ?? 0) + 1;
-        hits.add(BookSearchHit(
-          bookId: bookId,
-          bookTitle: meta[0],
-          bookAuthor: meta[1],
-          pageIndex: r['page_index'] as int,
-          printedPage: (r['printed_page'] as int?) ?? 0,
-          snippet: _snippet(body, at, matchLen),
-        ));
+        hits.add(
+          BookSearchHit(
+            bookId: bookId,
+            bookTitle: meta[0],
+            bookAuthor: meta[1],
+            pageIndex: r['page_index'] as int,
+            printedPage: (r['printed_page'] as int?) ?? 0,
+            snippet: _snippet(body, at, matchLen),
+          ),
+        );
         if (hits.length >= limit) break;
       }
       if (rows.length < pageSize) break;
@@ -497,6 +581,20 @@ class LibraryApiService {
     final lead = from > 0 ? '...' : '';
     final trail = to < body.length ? '...' : '';
     return '$lead$before{$hit}$after$trail';
+  }
+}
+
+class _BookDownload {
+  final String id;
+  final String url;
+  final cancel = CancelToken();
+  final done = Completer<void>();
+  bool committing = false;
+  _BookDownload(this.id, this.url);
+
+  void checkCancelled() {
+    final error = cancel.cancelError;
+    if (error != null) throw error;
   }
 }
 

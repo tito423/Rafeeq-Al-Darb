@@ -63,7 +63,10 @@ class _BooksTabState extends State<BooksTab> {
 
   Future<void> _loadRegistry() async {
     final paths = <String, String>{};
-    for (final book in [...libraryBookCatalog, ...ShamelaLibrary.instance.books]) {
+    for (final book in [
+      ...libraryBookCatalog,
+      ...ShamelaLibrary.instance.books,
+    ]) {
       if (await LibraryApiService.instance.isBookDownloaded(book.id)) {
         paths[book.id] = await LibraryApiService.instance.bookFilePath(book.id);
       }
@@ -102,17 +105,20 @@ class _BooksTabState extends State<BooksTab> {
   /// separate faults: the flood, and a programmer's exception used as a user
   /// message.
   ///
-  /// Chaining onto `_queue` keeps the concurrency at one whatever calls it
-  /// and however many times; the raw text goes to `debugPrint` where it
+  /// LibraryApiService owns the shared queue and registers pending books
+  /// immediately, including requests from other tabs. Raw text goes to
+  /// `debugPrint` where it
   /// belongs, and the reader gets one counted sentence after the queue
   /// drains rather than a SnackBar per book.
-  Future<void> _queue = Future<void>.value();
   int _pending = 0;
   int _failed = 0;
 
   void _download(LibraryBook book) {
+    if (LibraryApiService.instance.bookDownloads.value.containsKey(book.id)) {
+      return;
+    }
     _pending++;
-    _queue = _queue.then((_) => _downloadOne(book));
+    unawaited(_downloadOne(book));
   }
 
   Future<void> _downloadOne(LibraryBook book) async {

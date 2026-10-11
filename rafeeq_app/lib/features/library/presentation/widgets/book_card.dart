@@ -2,11 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/i18n/proper_name.dart';
-import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
 import '../../data/book_catalog.dart';
+import '../../data/library_api_service.dart';
 import 'hidden_books_sheet.dart';
 
 /// One downloadable book, as a card.
@@ -20,6 +20,7 @@ class BookCard extends StatelessWidget {
   final Map<String, String> paths;
   final VoidCallback onDownload;
   final VoidCallback onOpen;
+  final LibraryApiService? downloads;
 
   const BookCard({
     super.key,
@@ -27,18 +28,28 @@ class BookCard extends StatelessWidget {
     required this.paths,
     required this.onDownload,
     required this.onOpen,
+    this.downloads,
   });
 
   @override
   Widget build(BuildContext context) {
+    final api = downloads ?? LibraryApiService.instance;
+    return ValueListenableBuilder<Map<String, double?>>(
+      valueListenable: api.bookDownloads,
+      builder: (context, progress, _) => _buildCard(context, api, progress),
+    );
+  }
+
+  Widget _buildCard(
+    BuildContext context,
+    LibraryApiService api,
+    Map<String, double?> progress,
+  ) {
     final scheme = Theme.of(context).colorScheme;
 
     final dlId = book.id;
-    final task = DownloadManager.instance.taskById(dlId);
-    final busy = task != null &&
-        (task.status == DownloadStatus.downloading ||
-            task.status == DownloadStatus.queued);
-    final failed = task?.status == DownloadStatus.failed;
+    final busy = progress.containsKey(dlId);
+    final fraction = progress[dlId];
     final downloaded = paths.containsKey(dlId);
     // Real measured size of the hosted file; empty when unknown, so the
     // card says nothing rather than repeating the old fixed '1.0 MB'.
@@ -55,52 +66,60 @@ class BookCard extends StatelessWidget {
                 Icon(book.category.icon, size: 16, color: goldText(context)),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text(properName(book.titleAr, book.titleEn),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 16)),
+                  child: Text(
+                    properName(book.titleAr, book.titleEn),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            Builder(builder: (_) {
-              final author = properName(book.authorAr, book.authorEn);
-              final death = book.deathLabel();
-              return Text(
-                localizeDigits(
+            Builder(
+              builder: (_) {
+                final author = properName(book.authorAr, book.authorEn);
+                final death = book.deathLabel();
+                return Text(
+                  localizeDigits(
                     death.isEmpty ? author : '$author · $death',
-                    context.locale.languageCode),
-                style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
-              );
-            }),
+                    context.locale.languageCode,
+                  ),
+                  style: TextStyle(
+                    color: scheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 8),
-            Text(book.description(),
-                style: const TextStyle(fontSize: 13)),
+            Text(book.description(), style: const TextStyle(fontSize: 13)),
             const SizedBox(height: 10),
 
             if (busy) ...[
-              LinearProgressIndicator(
-                value: task.total == null ? null : task.progress,
-                color: AppColors.gold,
-              ),
+              LinearProgressIndicator(value: fraction, color: AppColors.gold),
               const SizedBox(height: 6),
               Row(
                 children: [
                   Text(
-                    task.total != null
+                    fraction != null
                         ? localizeDigits(
-                            percentOf(task.progress),
-                            context.locale.languageCode)
+                            percentOf(fraction),
+                            context.locale.languageCode,
+                          )
                         : '…',
                     style: TextStyle(
-                        color: scheme.onSurfaceVariant, fontSize: 12),
+                      color: scheme.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
                   ),
                   const Spacer(),
-                  // P3‑24: the button used to just disappear while
-                  // downloading, with no way to back out — same
-                  // pause/cancel pattern `downloads_screen.dart`'s mushaf
-                  // and recitation tiles already use.
+                  // Use the owner of the Dio request, not DownloadManager.
                   TextButton.icon(
-                    onPressed: () => DownloadManager.instance.cancel(dlId),
+                    onPressed: api.canCancelBookDownload(dlId)
+                        ? () => api.cancelBookDownload(dlId)
+                        : null,
                     icon: const Icon(Icons.stop_circle_outlined, size: 18),
                     label: Text('common.cancel'.tr()),
                   ),
@@ -109,11 +128,14 @@ class BookCard extends StatelessWidget {
             ] else
               Row(
                 children: [
-                  
-                    if (sizeLabel.isNotEmpty)
-                      Text('${'library.size'.tr()}: $sizeLabel',
-                        style: TextStyle(
-                            color: scheme.onSurfaceVariant, fontSize: 12)),
+                  if (sizeLabel.isNotEmpty)
+                    Text(
+                      '${'library.size'.tr()}: $sizeLabel',
+                      style: TextStyle(
+                        color: scheme.onSurfaceVariant,
+                        fontSize: 12,
+                      ),
+                    ),
                   const Spacer(),
                   // «امسح أي كتاب من التصنيف نفسه قبل تحميله»: only a book
                   // that is not on the phone — one that is has «حذف» in
@@ -141,11 +163,6 @@ class BookCard extends StatelessWidget {
                     ),
                 ],
               ),
-            if (failed) ...[
-              const SizedBox(height: 6),
-              Text(task?.error ?? 'errors.generic'.tr(),
-                  style: TextStyle(color: scheme.error, fontSize: 12)),
-            ],
           ],
         ),
       ),
