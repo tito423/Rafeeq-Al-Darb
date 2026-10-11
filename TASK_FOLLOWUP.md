@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 ACTUAL CHIP HOST GREEN 01:17 Dubai:** Actual ChoiceChip pointer action15PASS12s/analyzerCLEAN25.2s. Native diagnostic label missing from hit path despite visible chips; no assertion changed, productiononlyformatter/full1189prior valid. Next signed fixture rebuild/all15 native both plus screenshots; NORMALmustrestorethenreport/saveA36. No validatedcommit/nativePASSyet.
+
 **A36 HIT PATH CAUSE OBSERVED 01:15 Dubai:** Native diagnostic actual dark point hits outer InkWell/RenderPointerListener/semantics but not label RenderParagraph; visible screenshot confirmed. Correct harness action to tap actual ChoiceChip.hitTestable, preserving provider/prefs/selected/creator/back assertions. No production change. Diagnostic driver still completing; NEXT finish it then host15/analyze, rebuild/rerun all15 native both, NORMALrestore, saveonlyafterPASS. OldRED not accepted.
 
 **A36 NATIVE STILL RED / DIAGNOSING HIT PATH 01:13 Dubai:** Both final native drivers exit1/seven theme cases fail; English theme screenshots on API24+36 viewed and controls clearly visible, so viewport explanation was not established. Added diagnostic render hit path only; assertions unchanged. HOST1189/analyzer prior valid/product unchanged; next inspect native physical view hit path and correct root cause, all15 native required before save. Emulators fixture; NORMAL must restore before stop. Fresh quota76percent5h/43percentweekly USED/reset unused.
