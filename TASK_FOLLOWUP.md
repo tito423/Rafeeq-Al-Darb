@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 REAL THEME NATIVE RUNNING 01:29 Dubai:** Fixture39.2s/signed415622223B/install-rboth/currentPIDs16821(API36)/16771(API24),all15runningactualAppTheme. Visiblemirrorleftopen;ownerblankreportwascompletedfixtureemptyUI, HOMEactuallauncher screenshotverified. CapturesforAPI24startedbeforelaunchlogclear foundoldmarker/blackPNG NOTaccepted; rerunagainstnewprocesslogbeforeENmarker. NoA36saveuntilallPASS+actualUI+NORMALrestore. Full1189/analyzerCLEAN19s.
+
 **A36 REAL THEME FULL1189 CLEAN 01:26 Dubai:** Full1189PASS/original4skips2m53/realthemefocused15PASS14s/finalanalyzeCLEAN19.0s afterONLYimportorder. Next nativeactualAppTheme fixturebuild/sign/install-rboth/all15requirePASS+screenshots; visiblemirror41904keptopen/owneraskedavoidclicksduringtests. Productunchanged/exactA36 WIP notsaved; old2RUstockthemefailures notrealthemevalidation. MUSTNORMALrestore-rboth/prefs andsingleFixA36commit/push thenA38.
 
 **OWNER EMULATOR VISIBLE 01:25 Dubai:** Owner at laptop requested visible emulator. Downloaded officialportable scrcpy5.0.1/outsidegit verifiedSHA256 fromGitHubrelease API; mirrorPID41904/titleRafeeq_API36/windowhandle24380738/respondingTrue/video544x1200. Sameoriginal5554 remainsheadless/no reboot/wipe; visiblemirrorleftopenforowner. Fullteststillrunning; analyzer1importorderinginfo pendingfixaftertests(no sourceeditsduringrun). NativeactualAppTheme notbuilt yet. NEXT finishfull/fiximport/analyze/nativeboth/NORMALrestore/A36save; scopeunchanged.
