@@ -1,7 +1,6 @@
 /// The scrubber that drags through all 604 pages at once.
 library;
 
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -47,10 +46,8 @@ class FastPageScrollBar extends StatefulWidget {
 }
 
 class FastPageScrollBarState extends State<FastPageScrollBar> {
-  /// 0 = page 1 (physical left), 1 = page [totalPages] (physical right).
-  /// Non-null only while a drag is actively in progress, so the thumb
-  /// reflects the real `currentPage` (from the parent, once it's actually
-  /// jumped) the rest of the time rather than a stale local guess.
+  /// Temporary screen-space position while a pointer is scrubbing. Releasing
+  /// or cancelling it returns the thumb to the parent's actual current page.
   double? _dragFraction;
 
   /// `fraction` is always plain screen-space left(0)-to-right(1) — the RTL
@@ -74,6 +71,11 @@ class FastPageScrollBarState extends State<FastPageScrollBar> {
     widget.onChanged(_pageOf(fraction, isRtl));
   }
 
+  void _finishScrub() {
+    if (!mounted || _dragFraction == null) return;
+    setState(() => _dragFraction = null);
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -90,9 +92,12 @@ class FastPageScrollBarState extends State<FastPageScrollBar> {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTapDown: (d) => _handleDragAt(d.localPosition.dx, width, isRtl),
+          onTapUp: (_) => _finishScrub(),
+          onTapCancel: _finishScrub,
           onHorizontalDragUpdate: (d) =>
               _handleDragAt(d.localPosition.dx, width, isRtl),
-          onHorizontalDragEnd: (_) => setState(() => _dragFraction = null),
+          onHorizontalDragEnd: (_) => _finishScrub(),
+          onHorizontalDragCancel: _finishScrub,
           child: SizedBox(
             height: 32,
             child: Stack(
@@ -139,7 +144,6 @@ class FastPageScrollBarState extends State<FastPageScrollBar> {
 // P3‑34's `_ToolbarAction` moved to `core/widgets/toolbar_action.dart`
 // (P3‑29) so `book_text_reader_screen.dart` can reuse the exact same
 // widget instead of a second copy — see `ToolbarAction` there.
-
 
 /// The Qur'an toolbar's two shapes.
 ///
