@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A35 NATIVE6 BOTH PASS NORMAL BUILD 00:48 Dubai:** Actual6unique casesPASSAPI24real25s/API36real42s/runner8inclsetupteardowneach; screenshots actualstorycontrolsviewedboth. Full1174/original4skips2m50/analyzerCLEAN40s. Controlledvideo/wakeplatformno decodedmedia/hearingproof. NORMALmainbuild now/sourcefrozen; signedA34normal backup415007823B preserved. NEXT sign/headlessguard/A35+A34markersabsent/restore-rboth/Home/prefs541+shelf20013/crashlogs/offlineinitabsent; report24fixed24remaining/HANDOVER/TRAP66/singleFixA35/push. No fixcommit yet/nextA36source readonly.
+
 **A35 SIGNED6 NATIVE RUNNING 00:47 Dubai:** Signedfixture52.5s/A35markerverified/A34absent/install-rAPI24+36; actual6storySDK lifetimecases runningboth, controlUIcaptures active. Full1174/original4skips2m50/analyzerCLEAN40s; controlledvideo/wakeplatform only, realcaptions/SDK/widget/providers; not decodedmedia/hearingproof. NEXT require6uniquePASS/nativebindingresultscaptures thenNORMALmain/sign/headlessguard/restore-rboth/prefs541+shelf20013/report24fixed24remain/singleFixA35/push. No fixcommit/nativePASS yet/no source edits duringnative.
 
 **A35 FULL1174 CLEAN NATIVE BUILD 00:45 Dubai:** Full1174/original4skips2m50/analyzerCLEAN40s/focused6PASS2s/baseline4RED2controls. Offlinepubget only promotedlocked2interfaces todev/no versionchanges. Nativefixturebuild now/sourcefrozen; realstorySDK/assets controlledplatform/no decodedmedia claim. NormalA34signed415007823B backup exists. NEXT sign/targetmarker/install-rAPI24+36/run6/screenshots thenNORMALmain/sign/headlessguard/restore-rboth/owner541+shelf20013/report24fixed24remain/singleFixA35commit/push. No nativePASS orfixcommit yet.
