@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 HIT PATH CAUSE OBSERVED 01:15 Dubai:** Native diagnostic actual dark point hits outer InkWell/RenderPointerListener/semantics but not label RenderParagraph; visible screenshot confirmed. Correct harness action to tap actual ChoiceChip.hitTestable, preserving provider/prefs/selected/creator/back assertions. No production change. Diagnostic driver still completing; NEXT finish it then host15/analyze, rebuild/rerun all15 native both, NORMALrestore, saveonlyafterPASS. OldRED not accepted.
+
 **A36 NATIVE STILL RED / DIAGNOSING HIT PATH 01:13 Dubai:** Both final native drivers exit1/seven theme cases fail; English theme screenshots on API24+36 viewed and controls clearly visible, so viewport explanation was not established. Added diagnostic render hit path only; assertions unchanged. HOST1189/analyzer prior valid/product unchanged; next inspect native physical view hit path and correct root cause, all15 native required before save. Emulators fixture; NORMAL must restore before stop. Fresh quota76percent5h/43percentweekly USED/reset unused.
 
 **A36 FINAL15 SIGNED NATIVE RUNNING 01:09 Dubai:** Finalfixture37.7s/sign/themeMarkerverified/install-rboth/all15actualcases rerunningAPI24+36, separatethemeUIcapturesactive. Finalhost15PASS10s/finalanalyzerCLEAN20s/productunchanged/full1189PASS2m51. Firstnative7themevisibilityfail notaccepted/logsretained; addedensureVisible beforehitTestabletap only/no weakenedassertions. NEXT require15uniquePASS+theme screenshotsorinspectactualcauseifRED; thenNORMALmain/sign/headlessguard/restore-rboth/prefs/report/singleA36commit. Currentemulatorsfixture/normalA35backup protected.
