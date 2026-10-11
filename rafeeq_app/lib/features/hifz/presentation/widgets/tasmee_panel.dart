@@ -29,8 +29,11 @@ import '../../../assistant/data/rafeeq_ear.dart';
 import '../../data/hifz_store.dart';
 import '../../data/tasmee_engine.dart';
 import '../../data/tasmee_mic.dart';
+import '../../data/tasmee_recording_lease.dart';
 
-enum _Phase { idle, recording, thinking, done }
+part 'tasmee_panel_cleanup.dart';
+
+enum _Phase { idle, starting, recording, thinking, done }
 
 /// True while the tasmee' microphone is open. «استمع» on the same screen
 /// reads it: pressing it mid-recording played the reciter INTO the
@@ -79,6 +82,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   /// told about. That recording is thrown away, as on an ayah change.
   Timer? _adhanWatch;
   String? _wavPath;
+  Directory? _recordingDirectory;
 
   /// Words already heard while the reader is still reciting.
   List<bool> _live = const [];
@@ -99,6 +103,14 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   /// plain answer to «is it hearing me at all?», on any microphone.
   double _level = 0;
   StreamSubscription<Amplitude>? _amp;
+  TasmeeRecordingLease? _lease;
+  bool _nativeStarted = false;
+  bool _routeTouched = false;
+  bool _liveStarted = false;
+  bool _reportedRecording = false;
+
+  bool _current(TasmeeRecordingLease lease) =>
+      mounted && identical(_lease, lease) && lease.current;
 
   @override
   void initState() {
@@ -119,8 +131,14 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     super.didUpdateWidget(old);
     // A new ayah mid-recording: that recording is of the OLD ayah, and
     // finishing it would mark the new one by it. Thrown away.
-    if (old.ayahText != widget.ayahText && _phase == _Phase.recording) {
+    if ((old.ayahText != widget.ayahText ||
+            old.surahId != widget.surahId ||
+            old.ayahNumber != widget.ayahNumber) &&
+        _lease != null) {
       unawaited(_cancelRecording());
+      _result = null;
+      _heard = null;
+      _live = const [];
       return;
     }
     // A new ayah: the previous result is not about it.
@@ -135,19 +153,11 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
 
   @override
   void dispose() {
-    if (_phase == _Phase.recording) {
-      // Not ref.read here (disposed); the provider is reset on the next
-      // frame so the screen that stays does not keep «استمع» disabled.
-      final n = _recordingFlag;
-      Future.microtask(() => n.state = false);
-    }
-    _cap?.cancel();
-    _adhanWatch?.cancel();
-    _endLive();
-    _amp?.cancel();
-    _recorder.dispose();
-    // Never leave the phone on the call route behind a closed screen.
-    unawaited(restoreAudioRoute());
+    final lease = _lease;
+    _lease = null;
+    lease?.invalidate();
+    _cancelTimers();
+    unawaited(_queueCleanup(lease, disposeRecorder: true));
     _engine.downloadProgress.removeListener(_onEngine);
     _engine.installed.removeListener(_onEngine);
     // The download is NOT cancelled here: it belongs to the engine.
@@ -172,86 +182,141 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   }
 
   Future<void> _startRecording() async {
-    // The reciter must be silent while the reader recites: the microphone
-    // would hear him, and taking the audio focus left «استمع» waiting.
-    // Everything, not only a queued ayah: a continuous recitation (with
-    // its listeners), the Qur'an player and the book reader were left
-    // sounding into the microphone (`AudioExclusive`).
-    await AudioExclusive.silenceAll();
-    // «رفيق» off the microphone FIRST, and kept off (the flag) until this
-    // recording ends. With its headset option on it holds the call route, and
-    // when it noticed this recording a second later it closed itself and
-    // RESTORED the route - pulling the headset out from under the tasmee'
-    // mid-ayah: «نطقت الاية كاملة من ميكروفون السماعه ومش لقطت الا ايه
-    // وحدة» (owner, v3.73.0, 43:6 - one word of six heard, 2026-09-30).
-    _setRecording(true);
-    await RafeeqEar.instance.stop();
-    if (!await _recorder.hasPermission()) {
-      _setRecording(false);
-      if (mounted) setState(() => _error = 'tasmee.needs_mic'.tr());
+    if (!mounted ||
+        _phase == _Phase.starting ||
+        _phase == _Phase.recording ||
+        _phase == _Phase.thinking) {
       return;
     }
-    // whisper.cpp reads a 16 kHz mono WAV from disk, so record straight into
-    // one instead of holding the samples in memory.
-    final dir = await getTemporaryDirectory();
-    final path = p.join(dir.path, 'tasmee.wav');
-    // A headset if one is connected and chosen, the phone's microphone
-    // otherwise — named either way, so `record` never guesses. See
-    // tasmee_mic.dart for why the headset needs more than `record` does.
-    final mics = await TasmeeMics.find(_recorder);
-    if (mounted) setState(() => _mics = mics);
-    final viaBluetooth = mics.hasBluetooth && _useBluetooth;
-    if (viaBluetooth) await routeTasmeeToBluetooth();
-    await _recorder.start(
-      RecordConfig(
-        encoder: AudioEncoder.wav,
-        sampleRate: 16000,
-        numChannels: 1,
-        device: viaBluetooth ? mics.bluetooth : mics.phone,
-        // record 6 exposes what 5.x hid. A headset records the way Android
-        // documents for a Bluetooth call microphone: SCO managed by the
-        // plugin, the voice-communication source, the phone in communication
-        // mode. The phone's own microphone asks for none of that, so a
-        // paired headset cannot pull the route away from it.
-        androidConfig: viaBluetooth
-            ? const AndroidRecordConfig(
-                audioSource: AndroidAudioSource.voiceCommunication,
-                audioManagerMode: AudioManagerMode.modeInCommunication,
-              )
-            : const AndroidRecordConfig(manageBluetooth: false),
-      ),
-      path: path,
+    final lease = TasmeeRecordingLease(
+      _recordingFlag,
+      () => unawaited(_cancelRecording()),
     );
-    _wavPath = path;
-    // -50 dBFS and below reads as nothing heard, 0 dBFS as full.
-    await _amp?.cancel();
-    _amp = _recorder
-        .onAmplitudeChanged(const Duration(milliseconds: 150))
-        .listen((a) {
-          if (mounted) {
-            setState(() => _level = ((a.current + 50) / 50).clamp(0.0, 1.0));
-          }
-        });
-    // A forgotten «stop» should not record for ever.
-    _cap?.cancel();
-    _cap = Timer(const Duration(seconds: tasmeeMaxSeconds), _stopRecording);
-    _adhanWatch?.cancel();
-    _adhanWatch = Timer.periodic(const Duration(seconds: 1), (_) async {
-      if ((await AdhanNative.state()).playing) await _cancelRecording();
-    });
-    _startLive(path);
-    _setRecording(true);
-    widget.onRecording?.call(true);
+    _lease = lease;
     setState(() {
-      _phase = _Phase.recording;
+      _phase = _Phase.starting;
       _error = null;
       _result = null;
+      _heard = null;
+    });
+    await TasmeeRecordingLease.run(() async {
+      try {
+        if (!_current(lease)) return;
+        // The reciter must be silent while the reader recites: the microphone
+        // would hear him, and taking the audio focus left «استمع» waiting.
+        // Everything, not only a queued ayah: a continuous recitation (with
+        // its listeners), the Qur'an player and the book reader were left
+        // sounding into the microphone (`AudioExclusive`).
+        await AudioExclusive.silenceAll();
+        if (!_current(lease)) return;
+        // «رفيق» off the microphone FIRST, and kept off (the flag) until this
+        // recording ends. With its headset option on it holds the call route, and
+        // when it noticed this recording a second later it closed itself and
+        // RESTORED the route - pulling the headset out from under the tasmee'
+        // mid-ayah: «نطقت الاية كاملة من ميكروفون السماعه ومش لقطت الا ايه
+        // وحدة» (owner, v3.73.0, 43:6 - one word of six heard, 2026-09-30).
+        await RafeeqEar.instance.stop();
+        if (!_current(lease)) return;
+        final permission = await _recorder.hasPermission();
+        if (!_current(lease)) return;
+        if (!permission) {
+          setState(() => _error = 'tasmee.needs_mic'.tr());
+          return;
+        }
+        // whisper.cpp reads a 16 kHz mono WAV from disk, so record straight into
+        // one instead of holding the samples in memory.
+        final dir = await getTemporaryDirectory();
+        if (!_current(lease)) return;
+        final recordingDir = await dir.createTemp('tasmee_');
+        _recordingDirectory = recordingDir;
+        if (!_current(lease)) return;
+        final path = p.join(recordingDir.path, 'recording.wav');
+        // A headset if one is connected and chosen, the phone's microphone
+        // otherwise — named either way, so `record` never guesses. See
+        // tasmee_mic.dart for why the headset needs more than `record` does.
+        final mics = await TasmeeMics.find(_recorder);
+        if (!_current(lease)) return;
+        setState(() => _mics = mics);
+        final viaBluetooth = mics.hasBluetooth && _useBluetooth;
+        if (viaBluetooth) {
+          _routeTouched = true;
+          await routeTasmeeToBluetooth();
+          if (!_current(lease)) return;
+        }
+        _nativeStarted = true;
+        await _recorder.start(
+          RecordConfig(
+            encoder: AudioEncoder.wav,
+            sampleRate: 16000,
+            numChannels: 1,
+            device: viaBluetooth ? mics.bluetooth : mics.phone,
+            // record 6 exposes what 5.x hid. A headset records the way Android
+            // documents for a Bluetooth call microphone: SCO managed by the
+            // plugin, the voice-communication source, the phone in communication
+            // mode. The phone's own microphone asks for none of that, so a
+            // paired headset cannot pull the route away from it.
+            androidConfig: viaBluetooth
+                ? const AndroidRecordConfig(
+                    audioSource: AndroidAudioSource.voiceCommunication,
+                    audioManagerMode: AudioManagerMode.modeInCommunication,
+                  )
+                : const AndroidRecordConfig(manageBluetooth: false),
+          ),
+          path: path,
+        );
+        if (!_current(lease)) return;
+        _wavPath = path;
+        // -50 dBFS and below reads as nothing heard, 0 dBFS as full.
+        await _amp?.cancel();
+        if (!_current(lease)) return;
+        _amp = _recorder
+            .onAmplitudeChanged(const Duration(milliseconds: 150))
+            .listen((a) {
+              if (mounted) {
+                setState(
+                  () => _level = ((a.current + 50) / 50).clamp(0.0, 1.0),
+                );
+              }
+            });
+        // A forgotten «stop» should not record for ever.
+        _cap?.cancel();
+        _cap = Timer(const Duration(seconds: tasmeeMaxSeconds), _stopRecording);
+        _adhanWatch?.cancel();
+        _adhanWatch = Timer.periodic(const Duration(seconds: 1), (_) async {
+          final playing = (await AdhanNative.state()).playing;
+          if (_current(lease) && playing) await _cancelRecording();
+        });
+        _liveStarted = true;
+        _startLive(path, lease);
+        _reportedRecording = true;
+        widget.onRecording?.call(true);
+        if (!_current(lease)) return;
+        setState(() {
+          _phase = _Phase.recording;
+          _error = null;
+          _result = null;
+        });
+      } catch (e) {
+        if (_current(lease)) setState(() => _error = userErrorText(e));
+      } finally {
+        if (!_current(lease) || _phase != _Phase.recording) {
+          try {
+            await _cleanupRecording();
+          } finally {
+            if (identical(_lease, lease)) {
+              _lease = null;
+              if (mounted) setState(() => _phase = _Phase.idle);
+            }
+            lease.finish();
+          }
+        }
+      }
     });
   }
 
   /// Starts following the recitation. Everything that must be undone is
   /// set up synchronously, so a «stop» a moment later always finds it.
-  void _startLive(String recPath) {
+  void _startLive(String recPath, TasmeeRecordingLease lease) {
     _liveWords = tasmeeDisplayWords(widget.ayahText);
     _live = List<bool>.filled(tasmeeWords(widget.ayahText).length, false);
     if (_liveWords.length != _live.length) _live = const [];
@@ -259,13 +324,21 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     _liveTick?.cancel();
     _feed?.cancel();
     unawaited(_engine.startLive());
-    unawaited(_feedTestClip().then((f) {
-      if (f != null && _phase == _Phase.recording) path = f;
-    }));
+    unawaited(
+      _feedTestClip(recPath, lease).then((f) {
+        if (f != null && _current(lease) && _phase == _Phase.recording) {
+          path = f;
+        }
+      }),
+    );
     _liveTick = Timer.periodic(const Duration(milliseconds: 1200), (_) async {
-      if (_phase != _Phase.recording || _live.isEmpty) return;
+      if (!_current(lease) || _phase != _Phase.recording || _live.isEmpty) {
+        return;
+      }
       final heard = await _engine.liveTail(path);
-      if (heard == null || !mounted || _phase != _Phase.recording) return;
+      if (heard == null || !_current(lease) || _phase != _Phase.recording) {
+        return;
+      }
       final r = TasmeeEngine.compare(
         ayahText: widget.ayahText,
         heard: heard,
@@ -283,18 +356,25 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
   /// recited - header first, then a quarter second of samples at a time -
   /// so the live path reads a file that GROWS, as the recorder's does.
   Timer? _feed;
-  Future<String?> _feedTestClip() async {
+  Future<String?> _feedTestClip(
+    String recPath,
+    TasmeeRecordingLease lease,
+  ) async {
     try {
       final d = await getExternalStorageDirectory();
+      if (!_current(lease)) return null;
       final t = d == null ? null : File(p.join(d.path, 'tasmee_test.wav'));
       if (t == null || !t.existsSync()) return null;
       final bytes = await t.readAsBytes();
-      final out = File(p.join((await getTemporaryDirectory()).path,
-          'tasmee_live_feed.wav'));
+      if (!_current(lease)) return null;
+      final out = File('$recPath.feed.wav');
       await out.writeAsBytes(bytes.sublist(0, 44));
+      if (!_current(lease)) return null;
       var at = 44;
       _feed = Timer.periodic(const Duration(milliseconds: 250), (tm) {
-        if (at >= bytes.length || _phase != _Phase.recording) {
+        if (at >= bytes.length ||
+            !_current(lease) ||
+            _phase != _Phase.recording) {
           tm.cancel();
           return;
         }
@@ -308,57 +388,65 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
     }
   }
 
-  /// [keepWorker]: after «stop» the final decode reuses the live worker,
-  /// which then lets itself go; on a cancel it is let go here.
-  void _endLive({bool keepWorker = false}) {
+  /// Stop callbacks immediately; shared native resources close in the queue.
+  void _cancelTimers() {
+    _cap?.cancel();
+    _adhanWatch?.cancel();
     _liveTick?.cancel();
     _feed?.cancel();
-    if (!keepWorker) unawaited(_engine.stopLive());
+  }
+
+  void _showCleanupError(Object error) {
+    if (mounted && _lease == null) {
+      setState(() => _error = userErrorText(error));
+    }
   }
 
   /// Mic closed, recording discarded, nothing marked.
   Future<void> _cancelRecording() async {
-    if (_phase != _Phase.recording) return;
-    _cap?.cancel();
-    _adhanWatch?.cancel();
-    _endLive();
-    await _recorder.stop();
-    await _amp?.cancel();
-    _amp = null;
-    _level = 0;
-    await restoreAudioRoute();
-    _setRecording(false);
-    widget.onRecording?.call(false);
+    final lease = _lease;
+    if (lease == null) return;
+    _lease = null;
+    lease.invalidate();
+    _cancelTimers();
+    if (_reportedRecording) {
+      _reportedRecording = false;
+      if (mounted) widget.onRecording?.call(false);
+    }
     if (mounted) setState(() => _phase = _Phase.idle);
+    await _queueCleanup(lease);
   }
 
   /// Held from initState: `ref` is not usable once dispose has begun.
-  late final StateController<bool> _recordingFlag =
-      ref.read(tasmeeRecordingProvider.notifier);
-
-  void _setRecording(bool on) {
-    if (!mounted) return;
-    _recordingFlag.state = on;
-  }
+  late final StateController<bool> _recordingFlag = ref.read(
+    tasmeeRecordingProvider.notifier,
+  );
 
   Future<void> _stopRecording() async {
-    if (_phase != _Phase.recording) return;
-    _setRecording(false);
+    final lease = _lease;
+    if (_phase != _Phase.recording || lease == null || !_current(lease)) return;
     setState(() => _phase = _Phase.thinking);
-    _cap?.cancel();
-    _adhanWatch?.cancel();
-    _endLive(keepWorker: true);
-    await _recorder.stop();
-    await _amp?.cancel();
-    _amp = null;
-    _level = 0;
-    await restoreAudioRoute();
-    final path = await _testClip() ?? _wavPath;
+    _cancelTimers();
     try {
+      await TasmeeRecordingLease.run(() async {
+        if (!_current(lease)) return;
+        await _recorder.stop();
+        await _amp?.cancel();
+        _amp = null;
+        _level = 0;
+        await restoreAudioRoute();
+        _nativeStarted = false;
+        _routeTouched = false;
+        lease.releaseFlag();
+      });
+      if (!_current(lease)) return;
+      final path = await _testClip() ?? _wavPath;
+      if (!_current(lease)) return;
       if (path == null || !File(path).existsSync()) {
         throw StateError('nothing was recorded');
       }
       final heard = await TasmeeEngine.instance.transcribeFile(path);
+      if (!_current(lease)) return;
       final result = TasmeeEngine.compare(
         ayahText: widget.ayahText,
         heard: heard,
@@ -375,7 +463,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
             widget.ayahNumber,
             (result.ratio * 100).round(),
           );
-      if (mounted) {
+      if (_current(lease)) {
         setState(() {
           _heard = heard.trim();
           _result = result;
@@ -384,6 +472,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
         widget.onScored?.call(result.ratio);
       }
     } catch (e) {
+      if (!_current(lease)) return;
       widget.onRecording?.call(false);
       if (mounted) {
         setState(() {
@@ -391,26 +480,12 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
           _phase = _Phase.idle;
         });
       }
-    }
-  }
-
-  /// A 16 kHz mono WAV pushed to the app's external files folder as
-  /// `tasmee_test.wav` is scored instead of the recording, once, then
-  /// deleted - how a real reciter's audio is checked end to end on the
-  /// emulator, whose microphone hears nothing (as `rafeeq_test.wav` is for
-  /// Rafeeq). Null when there is no such file.
-  Future<String?> _testClip() async {
-    try {
-      final dir = await getExternalStorageDirectory();
-      if (dir == null) return null;
-      final f = File(p.join(dir.path, 'tasmee_test.wav'));
-      if (!f.existsSync()) return null;
-      final copy = p.join((await getTemporaryDirectory()).path, 'tasmee_fed.wav');
-      await f.copy(copy);
-      await f.delete();
-      return copy;
-    } catch (_) {
-      return null;
+    } finally {
+      if (identical(_lease, lease)) {
+        _lease = null;
+        _reportedRecording = false;
+        await _queueCleanup(lease);
+      }
     }
   }
 
@@ -495,7 +570,7 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
           ] else ...[
             // Which microphone — offered only when a headset is there.
             if ((_mics?.hasBluetooth ?? false) &&
-                _phase != _Phase.recording) ...[
+                _phase != _Phase.recording && _phase != _Phase.starting) ...[
               Wrap(
                 spacing: 8,
                 children: [
@@ -542,6 +617,11 @@ class _TasmeePanelState extends ConsumerState<TasmeePanel> {
               const SizedBox(height: 8),
             ],
             switch (_phase) {
+              _Phase.starting => TextButton.icon(
+                onPressed: _cancelRecording,
+                icon: const Icon(Icons.stop_rounded),
+                label: Text('common.cancel'.tr()),
+              ),
               _Phase.recording => FilledButton.icon(
                 style: FilledButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: _stopRecording,

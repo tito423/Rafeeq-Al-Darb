@@ -712,3 +712,13 @@ Do not rediscover these.
     actual platform; a host-only override belongs to the host test lifetime.
     The identical native assertions passed after correcting setup, with a
     real minute on API24 and API36. Never count the failed run as validation.
+
+65. **Disposing a recorder does not cancel an awaited start.** A-33's actual
+    panel and record SDK reached native start and setState after closing a panel
+    while its permission reply was pending. record6.2.1 serializes SDK calls
+    through a global semaphore: dispose waits behind that permission request.
+    Claim an attempt before its first await, invalidate it on cancellation,
+    and check ownership after every awaited reply. Queue native mic/routing
+    cleanup before a replacement, and defer provider cleanup with an owner and
+    live-scope check. Every attempt owns its own WAV directory; an idle old
+    panel must not stop a newer live worker or reset its Bluetooth route.
