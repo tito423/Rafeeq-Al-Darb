@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 ACTUAL SETTINGS15 BASELINE 00:52 Dubai:** A35saved8bc7c2e2/docsa18448b5PUSHED/master0/0;24fixed24remaining/NORMALboth/prefs preserved. Reread citedMoreGroup/CollapsibleSection/actualSettingsBody+composition. Added15actualSettingsBody tests:7languages*splash+theme after900ms plusordinarycollapsecontrol; actualprefsnotifiers/nativewrapper, no replacementConsumer fixture. Baseline RUNNING/unmodifiedA36product. NEXT requiremeaningfulRED then preservecreator onlywhilecovered behind collapsedgroup, releaseonreturn/no extraBack/ordinarycollapseunchanged; fullanalyze/test/nativeboth/NORMALrestore/singleA36commit. No A36fix yet.
+
 **A35 SAVED8bc7c2e2 00:51 Dubai:** A35 saved8bc7c2e2/full1174/analyzeCLEAN/native6both/NORMALsignedrestore/prefs retained;24fixed24remaining. Pushfix+docs now. ExactNEXT A36 actualMoreGroup+CollapsibleSection+SettingsBody/provider regressionafter450ms; allcitedcode+oldauditread/no A36changes. Preservegroupcollapse/back behavior; retaincreator onlywhilecovered orindependentpageowner. Original8untracked intact/rollback3.87/no release/deploy/keys/content changes.
 
 **A35 VALIDATED SAVING 00:50 Dubai:** Full1174/original4skips2m50/analyzeCLEAN40s/focused6baseline4RED2controls/native6API24real25s/API36real42s/screenshots viewed. NORMAL38.1s/sign415011919B/headlessguard/restore-rboth/actualHome/onboarding/prefs541+shelf20013 retained/crashbuffers0/currentFATAL0ANR0/offlineinitabsent. Saving oneA35fix now/24fixed24remaining. NEXT A36 readcitedMoreGroup58/61/120 andCollapsibleSection570/595/SettingsBody198 actualroute/provider baseline beforechange. No A36product/test edits yet/rollback3.87/no publish/deploy/keys/religiousdata.
