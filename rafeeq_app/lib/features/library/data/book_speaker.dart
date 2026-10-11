@@ -33,10 +33,45 @@ import 'tts/open_voice.dart';
 /// harakat are the entire point.
 class BookSpeaker {
   BookSpeaker({FlutterTts? tts, Stream<AudioInterruptionEvent>? interruptions})
-      : _tts = tts ?? FlutterTts(),
-        _interruptions = interruptions;
+    : _tts = tts ?? FlutterTts(),
+      _interruptions = interruptions;
 
   final FlutterTts _tts;
+  bool _disposed = false;
+  static BookSpeaker? _owner;
+  static Future<void>? _handoff;
+  static Future<void>? _nativeStops;
+
+  bool _current(int gen) => !_disposed && gen == _gen;
+
+  /// Serialise claims, not utterances: stop must interrupt a speaking chunk.
+  Future<bool> _claim(int gen) async {
+    final previous = _handoff;
+    final finished = Completer<void>();
+    _handoff = finished.future;
+    try {
+      if (previous != null) await previous;
+      if (!_current(gen)) return false;
+      await AudioExclusive.silenceAll();
+      if (!_current(gen)) return false;
+      await _nativeStops;
+      if (!_current(gen)) return false;
+      _owner = this;
+      AudioExclusive.speakerStarted(stop);
+      return true;
+    } finally {
+      finished.complete();
+      if (identical(_handoff, finished.future)) _handoff = null;
+    }
+  }
+
+  void _finish(int gen, int index, int total) {
+    if (!_current(gen)) return;
+    if (identical(_owner, this)) _owner = null;
+    AudioExclusive.speakerStopped(stop);
+    _speaking = false;
+    _emit(BookSpeakerState(speaking: false, chunk: index, total: total));
+  }
 
   /// Audio-focus interruptions for the phone voice. flutter_tts 4.2.5 asks
   /// for focus with an EMPTY change listener, so nothing paused it: the
@@ -49,12 +84,16 @@ class BookSpeaker {
   /// reading loop waits on it, then reads the interrupted chunk again.
   Completer<void>? _held;
 
-  Future<StreamSubscription<AudioInterruptionEvent>?> _watchFocus() async {
+  Future<StreamSubscription<AudioInterruptionEvent>?> _watchFocus(
+    int gen,
+  ) async {
     var events = _interruptions;
     if (events == null) {
       try {
         final session = await AudioSession.instance;
+        if (!_current(gen)) return null;
         await session.setActive(true);
+        if (!_current(gen)) return null;
         events = session.interruptionEventStream;
       } catch (e) {
         debugPrint('BookSpeaker: no audio session: $e');
@@ -62,7 +101,7 @@ class BookSpeaker {
       }
     }
     return events.listen((e) {
-      if (!_speaking) return;
+      if (!_current(gen) || !_speaking || !identical(_owner, this)) return;
       if (!e.begin) {
         final h = _held;
         _held = null;
@@ -100,10 +139,6 @@ class BookSpeaker {
   void _emit(BookSpeakerState s) {
     if (!_stateController.isClosed) _stateController.add(s);
   }
-
-  int _index = 0;
-  List<String> _chunks = const [];
-  bool _cancelled = false;
 
   /// Splits a page into utterances the engine will accept and the ear will
   /// follow. Public so a test can check the splitting without a device.
@@ -171,8 +206,9 @@ class BookSpeaker {
   /// `-local` and `-network` variants of the same voices; taking the local
   /// one means the reader keeps working with the radio off, and costs the
   /// user nothing in data.
-  Future<String?> _preferLocalArabicVoice() async {
+  Future<String?> _preferLocalArabicVoice(int gen) async {
     final raw = await _tts.getVoices;
+    if (!_current(gen)) return null;
     if (raw is! List) return null;
     final arabic = raw
         .whereType<Map>()
@@ -195,15 +231,22 @@ class BookSpeaker {
   /// `[ar]`. `isLanguageAvailable` waits for the binding; the list is kept as
   /// a second opinion for engines that do not implement it.
   Future<bool> get available async {
-    if (await _useOpenVoice()) return true;
+    if (_disposed) return false;
+    final gen = _gen;
+    final open = await _useOpenVoice();
+    if (!_current(gen)) return false;
+    if (open) return true;
     try {
       final direct = await _tts.isLanguageAvailable('ar');
+      if (!_current(gen)) return false;
       if (direct == true) return true;
     } catch (e) {
       debugPrint('BookSpeaker: isLanguageAvailable threw: $e');
     }
     try {
+      if (!_current(gen)) return false;
       final langs = await _tts.getLanguages;
+      if (!_current(gen)) return false;
       if (langs is! List) return false;
       return langs.any((l) => '$l'.toLowerCase().startsWith('ar'));
     } catch (e) {
@@ -213,64 +256,73 @@ class BookSpeaker {
   }
 
   Future<void> speak(String pageText, {double rate = 0.45}) async {
-    await stop();
+    if (_disposed) return;
+    final stopping = stop();
+    final gen = ++_gen;
+    await stopping;
+    if (!_current(gen)) return;
     // Not over a recitation, and a recitation started later stops this
     // (`AudioExclusive`): the two used to play at once.
-    await AudioExclusive.silenceAll();
-    AudioExclusive.speakerStarted(stop);
-    if (await _useOpenVoice()) {
-      final done = await _speakOpen(pageText);
+    if (!await _claim(gen)) return;
+    final open = await _useOpenVoice();
+    if (!_current(gen)) return;
+    if (open) {
+      final done = await _speakOpen(pageText, gen);
+      if (!_current(gen)) return;
       if (done) return;
       // The open voice failed on this device (a model that would not load,
       // an input it refused). Read the page in the phone's voice rather
       // than leave the listener in silence; the failure is in the log.
     }
-    _chunks = chunk(pageText);
-    if (_chunks.isEmpty) return;
+    final chunks = chunk(pageText);
+    if (chunks.isEmpty) {
+      _finish(gen, 0, 0);
+      return;
+    }
 
-    _cancelled = false;
-    _index = 0;
     _speaking = true;
 
     try {
       await _tts.setLanguage('ar');
-      await _preferLocalArabicVoice();
+      if (!_current(gen)) return;
+      await _preferLocalArabicVoice(gen);
+      if (!_current(gen)) return;
       await _tts.setSpeechRate(rate);
+      if (!_current(gen)) return;
       // Wait for each utterance so the chunks queue in order rather than
       // racing; without it the engine drops or overlaps them.
       await _tts.awaitSpeakCompletion(true);
+      if (!_current(gen)) return;
     } catch (e) {
       debugPrint('BookSpeaker: engine setup failed: $e');
-      _speaking = false;
-      _emit(const BookSpeakerState(speaking: false, chunk: 0, total: 0));
+      _finish(gen, 0, 0);
       return;
     }
 
-    final focus = await _watchFocus();
-    for (; _index < _chunks.length; _index++) {
-      if (_cancelled) break;
+    final focus = await _watchFocus(gen);
+    var index = 0;
+    for (; index < chunks.length; index++) {
+      if (!_current(gen)) break;
       _emit(
-        BookSpeakerState(speaking: true, chunk: _index, total: _chunks.length),
+        BookSpeakerState(speaking: true, chunk: index, total: chunks.length),
       );
       try {
-        await _tts.speak(_chunks[_index]);
+        await _tts.speak(chunks[index]);
       } catch (e) {
-        debugPrint('BookSpeaker: chunk $_index failed: $e');
+        debugPrint('BookSpeaker: chunk $index failed: $e');
         break;
       }
+      if (!_current(gen)) break;
       final held = _held;
       if (held != null) {
         await held.future;
-        if (_cancelled) break;
-        _index--; // the interrupted chunk again, from its start
+        if (!_current(gen)) break;
+        index--; // the interrupted chunk again, from its start
       }
     }
     await focus?.cancel();
 
-    _speaking = false;
-    _emit(
-      BookSpeakerState(speaking: false, chunk: _index, total: _chunks.length),
-    );
+    _finish(gen, index, chunks.length);
   }
 
   /// The owner's choice in Settings, and only when the pack is really there.
@@ -291,46 +343,53 @@ class BookSpeaker {
   /// Reads the page in the open voice (the one the owner chose for its
   /// tafkhim of the divine name). Returns false if it could not start, so
   /// the caller falls back; true once it has read or been stopped.
-  Future<bool> _speakOpen(String pageText) async {
-    // A stop() followed by a new speak() resets _cancelled before the old
-    // loop has woken up; the generation tells the old loop it is stale.
-    final gen = ++_gen;
-    bool stale() => _cancelled || gen != _gen;
-    _chunks = chunk(pageText, max: _openChunk);
-    if (_chunks.isEmpty) return true;
+  Future<bool> _speakOpen(String pageText, int gen) async {
+    // The same operation token covers model loading, rendering and playback.
+    bool stale() => !_current(gen);
+    var chunks = chunk(pageText, max: _openChunk);
+    if (chunks.isEmpty) {
+      _finish(gen, 0, 0);
+      return true;
+    }
     // The first sound waits for the whole first chunk to be synthesised, so
     // that one is cut short (~90 characters, still at a word): the voice
     // starts sooner and the rest renders while it speaks.
-    if (_chunks.first.length > _firstChunk) {
-      _chunks = [..._splitLong(_chunks.first, _firstChunk), ..._chunks.skip(1)];
+    if (chunks.first.length > _firstChunk) {
+      chunks = [..._splitLong(chunks.first, _firstChunk), ...chunks.skip(1)];
     }
-    _cancelled = false;
-    _index = 0;
+    var index = 0;
     _speaking = true;
     final tmp = await getTemporaryDirectory();
+    if (stale()) return true;
+    final dir = await tmp.createTemp('book_voice_');
+    if (stale()) {
+      await dir.delete(recursive: true);
+      return true;
+    }
 
     Future<String> render(int i) async {
-      final samples = await OpenVoice.instance.synthesize(_chunks[i]);
-      final f = File(p.join(tmp.path, 'book_voice_${i % 2}.wav'));
+      final samples = await OpenVoice.instance.synthesize(chunks[i]);
+      // A stale render must not overwrite the newer run's alternating files.
+      final f = File(p.join(dir.path, '${i % 2}.wav'));
       await f.writeAsBytes(OpenVoice.wav(samples), flush: true);
       return f.path;
     }
 
     Future<String>? next = render(0);
+    Future<void> cleanup() async {
+      if (await dir.exists()) await dir.delete(recursive: true);
+    }
+
     var started = false;
     try {
-      for (; _index < _chunks.length; _index++) {
+      for (; index < chunks.length; index++) {
         final path = await next!;
         next = null;
         if (stale()) break;
         started = true;
-        next = _index + 1 < _chunks.length ? render(_index + 1) : null;
+        next = index + 1 < chunks.length ? render(index + 1) : null;
         _emit(
-          BookSpeakerState(
-            speaking: true,
-            chunk: _index,
-            total: _chunks.length,
-          ),
+          BookSpeakerState(speaking: true, chunk: index, total: chunks.length),
         );
         final ended = await _voicePlayer.invokeMethod<bool>('play', {
           'path': path,
@@ -338,42 +397,65 @@ class BookSpeaker {
         if (ended != true) break;
       }
     } catch (e) {
-      debugPrint('BookSpeaker: open voice failed at chunk $_index: $e');
+      debugPrint('BookSpeaker: open voice failed at chunk $index: $e');
       next?.ignore();
       if (!started && !stale()) {
+        if (next != null) {
+          next.whenComplete(cleanup).ignore();
+        } else {
+          await cleanup();
+        }
         _speaking = false;
         return false;
       }
     }
-    next?.ignore();
-    _speaking = false;
-    _emit(
-      BookSpeakerState(speaking: false, chunk: _index, total: _chunks.length),
-    );
+    if (next != null) {
+      next.whenComplete(cleanup).ignore();
+    } else {
+      await cleanup();
+    }
+    _finish(gen, index, chunks.length);
     return true;
   }
 
   int _gen = 0;
 
   Future<void> stop() async {
+    final owns = identical(_owner, this);
+    if (owns) _owner = null;
     AudioExclusive.speakerStopped(stop);
     _gen++;
-    _cancelled = true;
     final held = _held;
     _held = null;
     held?.complete();
     _speaking = false;
-    try {
-      await _voicePlayer.invokeMethod<void>('stop');
-    } catch (_) {}
-    try {
-      await _tts.stop();
-    } catch (_) {}
     _emit(const BookSpeakerState(speaking: false, chunk: 0, total: 0));
+    if (!owns) return;
+    // Issue both stops now; a delayed first reply must not stop a newer run.
+    Future<void> ignoreFailure(Future<dynamic> call) async {
+      try {
+        await call;
+      } catch (_) {}
+    }
+
+    final pending = Future.wait<void>([
+      ?_nativeStops,
+      ignoreFailure(_voicePlayer.invokeMethod<void>('stop')),
+      ignoreFailure(_tts.stop()),
+    ]);
+    final stopped = pending.then((_) {});
+    _nativeStops = stopped;
+    try {
+      await stopped;
+    } finally {
+      if (identical(_nativeStops, stopped)) _nativeStops = null;
+    }
   }
 
   void dispose() {
-    _cancelled = true;
+    if (_disposed) return;
+    unawaited(stop());
+    _disposed = true;
     _stateController.close();
   }
 }

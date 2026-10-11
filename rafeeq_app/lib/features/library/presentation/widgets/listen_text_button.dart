@@ -23,7 +23,9 @@ String speakablePassage(Iterable<({String text, String kind})> paras) =>
 double diacritisedShare(String text) {
   final letters = RegExp('[\u0621-\u064A]').allMatches(text).length;
   if (letters == 0) return 0;
-  return 100 * RegExp('[\u064B-\u0652\u0670]').allMatches(text).length / letters;
+  return 100 *
+      RegExp('[\u064B-\u0652\u0670]').allMatches(text).length /
+      letters;
 }
 
 /// «حط زرار أنيميتد جميل للاستماع لكل ما في الحج والعمرة وعلم التجويد، وأي
@@ -92,25 +94,30 @@ class _ListenTextButtonState extends State<ListenTextButton>
 
   Future<void> _toggle() async {
     if (_speaking) {
-      _run++;
+      final run = ++_run;
       await _speaker.stop();
-      _set(false);
+      if (run == _run) _set(false);
       return;
     }
     final text = _speakable();
     if (text.isEmpty) return;
-    if (!await offerOpenVoice(context)) return;
-    if (!await _speaker.available) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('library.text_listen_no_engine'.tr())),
-      );
-      return;
-    }
     final run = ++_run;
     _set(true);
-    await _speaker.speak(text);
-    if (run == _run) _set(false);
+    bool current() => mounted && run == _run;
+    try {
+      if (!await offerOpenVoice(context) || !current()) return;
+      final available = await _speaker.available;
+      if (!mounted || !current()) return;
+      if (!available) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('library.text_listen_no_engine'.tr())),
+        );
+        return;
+      }
+      await _speaker.speak(text);
+    } finally {
+      if (current()) _set(false);
+    }
   }
 
   void _set(bool on) {
