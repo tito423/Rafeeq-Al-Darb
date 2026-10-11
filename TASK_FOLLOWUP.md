@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A35 SIGNED6 NATIVE RUNNING 00:47 Dubai:** Signedfixture52.5s/A35markerverified/A34absent/install-rAPI24+36; actual6storySDK lifetimecases runningboth, controlUIcaptures active. Full1174/original4skips2m50/analyzerCLEAN40s; controlledvideo/wakeplatform only, realcaptions/SDK/widget/providers; not decodedmedia/hearingproof. NEXT require6uniquePASS/nativebindingresultscaptures thenNORMALmain/sign/headlessguard/restore-rboth/prefs541+shelf20013/report24fixed24remain/singleFixA35/push. No fixcommit/nativePASS yet/no source edits duringnative.
+
 **A35 FULL1174 CLEAN NATIVE BUILD 00:45 Dubai:** Full1174/original4skips2m50/analyzerCLEAN40s/focused6PASS2s/baseline4RED2controls. Offlinepubget only promotedlocked2interfaces todev/no versionchanges. Nativefixturebuild now/sourcefrozen; realstorySDK/assets controlledplatform/no decodedmedia claim. NormalA34signed415007823B backup exists. NEXT sign/targetmarker/install-rAPI24+36/run6/screenshots thenNORMALmain/sign/headlessguard/restore-rboth/owner541+shelf20013/report24fixed24remain/singleFixA35commit/push. No nativePASS orfixcommit yet.
 
 **A35 FULL1174 FINAL ANALYZE 00:44 Dubai:** Full1174PASS/original4skips2m50;6focusedGREEN2s/baseline4RED2controls. Firstanalyzer2infos solely undeclaredtestinterface dependencies; addedexactalreadylocked6.9.0/1.5.1 devdeps, offlinepubget and finalanalyzer running. Product unchanged sincefull. NEXT requireCLEAN then signedfixtureintegration_test/kids_story_lifetime_test.dart/API24+36/6cases/screenshots/NORMALsignrestoreprefs/reportsingleFixA35. No nativePASS/fixcommit yet; no keys/religiousdata/version/deploy/releasechanges.
