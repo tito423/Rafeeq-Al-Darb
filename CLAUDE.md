@@ -444,6 +444,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 60. GitHub's secondary rate limit counts release-asset uploads and blocks the whole account - stop the R7 bulk uploads before publishing a release.
 61. Avast breaks Gradle's dynamic-version lookup (build offline via a temporary init script) and every download inside the emulator.
 62. AudioServiceActivity retains an engine without a cached-engine ID; a recreated host loses Flutter's Back decision unless it is restored explicitly.
+63. Cache pending audio handoffs only; clear completed barriers so they cannot retain an old widget test's FakeAsync zone.
 
 ## 4. Where things live
 

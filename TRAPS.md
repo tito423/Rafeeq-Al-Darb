@@ -695,3 +695,12 @@ Do not rediscover these.
     Baseline failed the true decision; API36 passed true/false/true, API24
     passed retained-engine compatibility. Normal streamed Baqara continued
     across launcher/recreated host and Back returned to the reciter list.
+
+63. **Keep pending handoffs, not completed futures.** During A-30's actual
+    widget/channel tests, caching a completed claim barrier from one
+    FakeAsync test left the next test waiting in the previous test's zone.
+    Store only an in-flight claim/native stop; clear it after completion,
+    checking identity so an older completion cannot clear a newer barrier.
+    The same production ownership fix passed independent widget tests and
+    Android24/36 without retaining completed test lifetimes. This was a
+    harness/lifetime issue, not evidence of a phone engine failure.
