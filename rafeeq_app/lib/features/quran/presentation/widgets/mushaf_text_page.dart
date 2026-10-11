@@ -149,13 +149,14 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
   /// never turns the page. A tap while zoomed goes back to the page's own
   /// size instead of toggling full screen.
   final TransformationController _zoom = TransformationController();
+  late final StateController<bool> _zoomState;
   bool _zoomedIn = false;
 
   void _onZoom() {
     final zoomed = _zoom.value.getMaxScaleOnAxis() > 1.01;
     if (zoomed == _zoomedIn) return;
     setState(() => _zoomedIn = zoomed);
-    ref.read(quranPageZoomedProvider.notifier).state = zoomed;
+    _zoomState.state = zoomed;
   }
 
   void _tapPage() {
@@ -182,6 +183,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
   @override
   void initState() {
     super.initState();
+    _zoomState = ref.read(quranPageZoomedProvider.notifier);
     _zoom.addListener(_onZoom);
     _syncAutoScroll();
     // Opened ON a marked verse (Rafeeq's «افتح سورة … آية …» lands on a new
@@ -416,8 +418,10 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     // A page left behind while zoomed would freeze the `PageView` for good —
     // the same trap `MushafPageView.dispose` guards against.
     if (_zoomedIn) {
+      final zoomState = _zoomState;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(quranPageZoomedProvider.notifier).state = false;
+        // The widget ref is disposed now; its provider may also be gone.
+        if (zoomState.mounted) zoomState.state = false;
       });
     }
     _zoom.dispose();

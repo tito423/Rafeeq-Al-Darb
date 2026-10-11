@@ -57,6 +57,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   static const double _pageAspect = 345.0 / 550.0;
 
   final TransformationController _transform = TransformationController();
+  late final StateController<bool> _zoomState;
   final AyahCoordsRepository _coords = AyahCoordsRepository.instance;
 
   late Future<String> _ready;
@@ -114,7 +115,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     final zoomed = scale > 1.01;
     if (zoomed == _zoomed) return;
     setState(() => _zoomed = zoomed);
-    ref.read(quranPageZoomedProvider.notifier).state = zoomed;
+    _zoomState.state = zoomed;
   }
 
   /// Sideways the page is taller than the screen and scrolls; this follows
@@ -149,6 +150,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   @override
   void initState() {
     super.initState();
+    _zoomState = ref.read(quranPageZoomedProvider.notifier);
     WidgetsBinding.instance.addPostFrameCallback((_) => _revealHighlight());
     _transform.addListener(_onTransform);
     if (widget.edition.isRaster) {
@@ -192,8 +194,10 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     // true, and a `PageView` left frozen because a disposed page said
     // «zoomed» is a mushaf that cannot be turned.
     if (_zoomed) {
+      final zoomState = _zoomState;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(quranPageZoomedProvider.notifier).state = false;
+        // The widget ref is disposed now; its provider may also be gone.
+        if (zoomState.mounted) zoomState.state = false;
       });
     }
     _transform.dispose();
