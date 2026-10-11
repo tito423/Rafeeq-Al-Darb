@@ -100,6 +100,16 @@ class QuranAudioLibrary extends ChangeNotifier {
   // ignore: cancel_subscriptions
   StreamSubscription<TaskUpdate>? _sub;
   Timer? _notifyTimer;
+  final Map<String, Timer> _retryTimers = {};
+
+  void _cancelRetry(String key) => _retryTimers.remove(key)?.cancel();
+
+  void _cancelRetries(int moshafId) {
+    for (final key in _retryTimers.keys
+        .where((key) => key.startsWith('$moshafId/')).toList()) {
+      _cancelRetry(key);
+    }
+  }
 
   static String _key(int moshafId, int surah) => '$moshafId/$surah';
   static String taskIdFor(int moshafId, int surah) => 'qa_${moshafId}_$surah';
@@ -250,7 +260,12 @@ class QuranAudioLibrary extends ChangeNotifier {
   /// recitation is mirrored there, then GitHub Releases, then mp3quran.
   void _enqueue(LibraryEntry e, int surah, {DateTime? at, int hop = 0}) {
     final key = _key(e.moshafId, surah);
+    if (!identical(_entries[e.moshafId], e) || e.paused ||
+        !e.pending.contains(surah) || isDownloaded(e.moshafId, surah)) {
+      return;
+    }
     if (_status[key]?.isActive ?? false) return;
+    _cancelRetry(key);
     _hop[key] = hop;
     _status[key] = const SurahAudioStatus(SurahAudioState.queued);
     unawaited(FileDownloader().enqueue(
@@ -293,17 +308,20 @@ class QuranAudioLibrary extends ChangeNotifier {
     if (u is TaskStatusUpdate) {
       final status = u.status;
       if (status == TaskStatus.complete) {
+        _cancelRetry(key);
         (_onDisk[m] ??= <int>{}).add(s);
         _status.remove(key);
         final e = _entries[m];
         if (e != null && e.pending.remove(s)) unawaited(_save());
       } else if (status == TaskStatus.enqueued) {
+        _cancelRetry(key);
         // Held in the native queue, not transferring yet: «في الانتظار»,
         // not a 0% bar that never moves.
         _status[key] = SurahAudioStatus(
             SurahAudioState.queued, _status[key]?.progress ?? 0);
       } else if (status == TaskStatus.running ||
           status == TaskStatus.waitingToRetry) {
+        _cancelRetry(key);
         _status[key] = SurahAudioStatus(
             SurahAudioState.running, _status[key]?.progress ?? 0);
       } else if ((status == TaskStatus.failed ||
@@ -328,19 +346,28 @@ class QuranAudioLibrary extends ChangeNotifier {
             e != null &&
             !e.paused &&
             e.pending.contains(s) &&
+            !_retryTimers.containsKey(key) &&
             tries < 2) {
           _autoRetries[key] = tries + 1;
-          Future<void>.delayed(const Duration(minutes: 1), () {
+          late final Timer timer;
+          timer = Timer(const Duration(minutes: 1), () {
+            if (!identical(_retryTimers[key], timer)) return;
+            _retryTimers.remove(key);
             final again = _entries[m];
-            if (again == null || again.paused || isDownloaded(m, s)) return;
+            if (!identical(again, e) || again == null || again.paused ||
+                !again.pending.contains(s) || isDownloaded(m, s)) {
+              return;
+            }
             _status.remove(key);
             _enqueue(again, s);
             _notifyNow();
           });
+          _retryTimers[key] = timer;
         }
       } else {
         // canceled / paused: back to "not downloaded"; still pending if it
         // was a pause of the whole recitation, which [resume] picks up.
+        _cancelRetry(key);
         _status.remove(key);
       }
       _notifyNow();
@@ -359,6 +386,7 @@ class QuranAudioLibrary extends ChangeNotifier {
     final e = _entries[moshafId];
     if (e == null) return;
     e.paused = true;
+    _cancelRetries(moshafId);
     await _save();
     await _pauseTasks(moshafId, e.pending);
     _notifyNow();
@@ -449,6 +477,7 @@ class QuranAudioLibrary extends ChangeNotifier {
       ];
 
   Future<void> cancel(int moshafId) async {
+    _cancelRetries(moshafId);
     final e = _entries[moshafId];
     if (e == null) return;
     final stopping = Set<int>.of(e.pending);
@@ -460,6 +489,7 @@ class QuranAudioLibrary extends ChangeNotifier {
   }
 
   Future<void> cancelSurah(int moshafId, int surah) async {
+    _cancelRetry(_key(moshafId, surah));
     final e = _entries[moshafId];
     e?.pending.remove(surah);
     if (e != null) await _save();
@@ -508,8 +538,8 @@ class QuranAudioLibrary extends ChangeNotifier {
   }
 
   Future<void> deleteRecitation(int moshafId) async {
-    await _stopIfPlaying(moshafId);
     await cancel(moshafId);
+    await _stopIfPlaying(moshafId);
     final dir = Directory(p.join(_root.path, '$moshafId'));
     if (dir.existsSync()) await dir.delete(recursive: true);
     _onDisk.remove(moshafId);
@@ -530,6 +560,7 @@ class QuranAudioLibrary extends ChangeNotifier {
   }
 
   Future<void> deleteSurah(int moshafId, int surah) async {
+    await cancelSurah(moshafId, surah);
     await _stopIfPlaying(moshafId, surah);
     final f = fileFor(moshafId, surah);
     if (f.existsSync()) await f.delete();
