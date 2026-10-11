@@ -189,11 +189,21 @@ class _HomeQuoteCardState extends ConsumerState<HomeQuoteCard> {
                   ornament: OrnamentBackdrop
                       .quotes[i % OrnamentBackdrop.quotes.length],
                   onTap: () {
-                    final all = [
-                      for (final (b, q) in picks)
-                        library.at(b, q, locale: context.locale.languageCode),
-                    ].whereType<Quote>().toList();
-                    _open(all, all.indexOf(quote).clamp(0, all.length - 1));
+                    final all = <Quote>[];
+                    var selectedIndex = -1;
+                    // Repository reads create fresh objects. Keep the selected
+                    // book/quote pair's position even when an old pick is gone.
+                    for (final pick in picks) {
+                      final entry = library.at(
+                        pick.$1,
+                        pick.$2,
+                        locale: context.locale.languageCode,
+                      );
+                      if (entry == null) continue;
+                      if (pick == (b, q)) selectedIndex = all.length;
+                      all.add(entry);
+                    }
+                    if (selectedIndex >= 0) _open(all, selectedIndex);
                   },
                 ),
               );
