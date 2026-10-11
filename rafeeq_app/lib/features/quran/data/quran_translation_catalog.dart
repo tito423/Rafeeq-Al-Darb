@@ -77,13 +77,19 @@ class QuranTranslationInfo {
 
 /// Every translation language on offer, newest catalog wins.
 final quranTranslationCatalogProvider =
-    FutureProvider<List<QuranTranslationInfo>>((ref) async {
-  final raw = await rootBundle
-      .loadString('assets/data/catalogs/quran_translations.json');
+    FutureProvider<List<QuranTranslationInfo>>(
+      (ref) => loadQuranTranslationCatalog(),
+    );
+
+/// Read the same bundled catalog for both the picker and saved choices.
+Future<List<QuranTranslationInfo>> loadQuranTranslationCatalog() async {
+  final raw = await rootBundle.loadString(
+    'assets/data/catalogs/quran_translations.json',
+  );
   final doc = jsonDecode(raw) as Map<String, dynamic>;
   final list = [
     for (final e in doc['translations'] as List<dynamic>)
-      QuranTranslationInfo.fromJson(e as Map<String, dynamic>)
+      QuranTranslationInfo.fromJson(e as Map<String, dynamic>),
   ];
   // Bundled languages first (they always work), then the rest by native name.
   list.sort((a, b) {
@@ -91,4 +97,4 @@ final quranTranslationCatalogProvider =
     return a.nativeName.compareTo(b.nativeName);
   });
   return list;
-});
+}
