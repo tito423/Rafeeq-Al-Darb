@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 BASELINE14RED1CONTROL FIX WIP 00:54 Dubai:** ActualSettingsBody15case baseline14RED1ordinarycollapsePASS11s/all7languages; refdisposed after450ms proven. MoreGroup nowretains coveredchildowners offstage whilelogicallyfolded, removesstatuslistener/releaseschildren aftercoverroute reverse finishes; ordinarycollapse remainsunmounted. FocusedGREEN/analyze next, productnotvalidatedyet/no A36commit/nativebuild. A35PUSHED8bc7c2e2/24fixed24remaining/normalboth. No newstrings/schema/data/version/publishchanges.
+
 **A36 ACTUAL SETTINGS15 BASELINE 00:52 Dubai:** A35saved8bc7c2e2/docsa18448b5PUSHED/master0/0;24fixed24remaining/NORMALboth/prefs preserved. Reread citedMoreGroup/CollapsibleSection/actualSettingsBody+composition. Added15actualSettingsBody tests:7languages*splash+theme after900ms plusordinarycollapsecontrol; actualprefsnotifiers/nativewrapper, no replacementConsumer fixture. Baseline RUNNING/unmodifiedA36product. NEXT requiremeaningfulRED then preservecreator onlywhilecovered behind collapsedgroup, releaseonreturn/no extraBack/ordinarycollapseunchanged; fullanalyze/test/nativeboth/NORMALrestore/singleA36commit. No A36fix yet.
 
 **A35 SAVED8bc7c2e2 00:51 Dubai:** A35 saved8bc7c2e2/full1174/analyzeCLEAN/native6both/NORMALsignedrestore/prefs retained;24fixed24remaining. Pushfix+docs now. ExactNEXT A36 actualMoreGroup+CollapsibleSection+SettingsBody/provider regressionafter450ms; allcitedcode+oldauditread/no A36changes. Preservegroupcollapse/back behavior; retaincreator onlywhilecovered orindependentpageowner. Original8untracked intact/rollback3.87/no release/deploy/keys/content changes.
