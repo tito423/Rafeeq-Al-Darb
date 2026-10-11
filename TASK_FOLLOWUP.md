@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A35 BASELINE4RED2CONTROLS FIX WIP 00:39 Dubai:** Final6actualstory/SDK tests baseline4RED2controls2s: lateplay and fallbackseek cause setStateafterdispose/leak; closeinitnotfreed; controls/mirrorfallbackPASS. Initialharness wakecached singleton and teardownzone corrected withoutweakening, finalvalidRED accepted. Product nowownscontroller beforeinitialize/identitymountedguards/waits pendingseekplay cleanup toavoidSDKtimer recreation; focused/analyze next. A34 PUSHED93156ace/23fixed25remain. NoA35commit/nativeproof/NORMALmodified yet.
+
 **A35 SIX ACTUAL REGRESSIONS BASELINE 00:33 Dubai:** A34 saved93156ace/docsd161fd4b PUSHED/master0/0;23fixed25remaining/NORMALboth. Read citedstoryplayer full and currentvideoSDK2.11.1: delayedplay creates timer after reply, earlydisposealone would leak timer; pendingseek also touchescontroller afterreply. Added6actualstory/SDK/realtranslation regressions for lateplay/replacement/initclose/fallbackseek/control/mirrorfail; baseline running unmodifiedproduct. NEXT meaningfulRED then owncontroller early and settlependingplay/seek beforedispose, mountedidentityguards/fullchecks/nativeboth/NORMALrestore/singleA35commit. No A35product changes or validation claim yet.
 
 **A34 SAVED93156ace 00:31 Dubai:** A34 fullysaved93156ace/full1168/analyzerCLEAN/native22both/NORMALsignedrestored/prefs preserved;23fixed25remaining. Pushfix+docs now. NEXT A35 actualstoryplayer lateplay lifetime baseline thenownedcontroller/mountedgeneration/wakelockcleanup checks. No A35 edits yet. Original8untracked authorized intact/rollback3.87/no publish/deploy/keys/religious changes.
