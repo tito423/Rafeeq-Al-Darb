@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A36 REAL THEME HOST15 PASS / FULL RUNNING 01:23 Dubai:** ProductionAppTheme light/dark+bundledCairo andreactiveConsumer addedtoharness,15PASS14s. Assertions/provider/prefs/back retained; twoRU RenderFlex errors understockMaterial notaccepted. Fullsuite/analyzer running/no nativebuild overlap. NEXT require1189PASS/analyzerCLEAN, signedfixture/all15both API24+36 withrealtheme; anyoverflow mustdiagnose/fixorrevert. NORMALmainmustrestore-rboth/prefs beforecommit. NoA36savedyet.
+
 **A36 NATIVE CHIP WORKS / RUSSIAN LAYOUT RED 01:22 Dubai:** Both native15executed:13PASS/2RussianFAIL RenderFlex overflow1-1.7px from wholeSettingsBody. Chip pointer fix works/allthemeprovider assertions passed except RU earlier render exception; no weakening. Harness omitted actualAppTheme/font configuration; add production AppTheme+bundledCairo/reactive theme rather than stockMaterial defaults, recheckhost/native and diagnoseifreal app error persists. Nativefirstlabel causeconfirmed. NoA36commit, mustNORMALrestorebeforestop.
 
 **A36 CHIP POINTER NATIVE RUNNING 01:19 Dubai:** Signedfixture38.7s/install-rboth/API24+36 all15tests running; actualtheme capturespending. Host15PASS12s/analyzerCLEAN25.2s/full1189priorPASS. Productunchangedafterformat; noA36fixcommit. ExactNEXT waitnative15each+viewactualUI/NORMALsignguardrestore-rboth/read-only541+shelf20013/report/singleFixA36save/push; thenA38. No overlapbuild/testsource edits.
