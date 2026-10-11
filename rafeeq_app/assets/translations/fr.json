@@ -139,6 +139,10 @@
     "revisit_hint": "Le mushaf, les sciences coraniques, les récitations, le modèle de tasmee et la voix du lecteur au même endroit"
   },
   "common": {
+    "scroll_up": "Faire défiler vers le haut",
+    "scroll_down": "Faire défiler vers le bas",
+    "scroll_to_start": "Appuyez longuement pour aller au début",
+    "scroll_to_end": "Appuyez longuement pour aller à la fin",
     "coming_soon": "Bientôt disponible…",
     "cancel": "Annuler",
     "save": "Enregistrer",

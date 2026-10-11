@@ -139,6 +139,10 @@
     "revisit_hint": "The mushaf, Quranic sciences, recitations, the tasmee model and the reader voice in one place"
   },
   "common": {
+    "scroll_up": "Scroll up",
+    "scroll_down": "Scroll down",
+    "scroll_to_start": "Long press to go to the beginning",
+    "scroll_to_end": "Long press to go to the end",
     "coming_soon": "Coming soon…",
     "cancel": "Cancel",
     "save": "Save",

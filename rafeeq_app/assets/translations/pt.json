@@ -139,6 +139,10 @@
     "revisit_hint": "O mushaf, as ciências corânicas, as recitações, o modelo de tasmee e a voz do leitor num só lugar"
   },
   "common": {
+    "scroll_up": "Rolar para cima",
+    "scroll_down": "Rolar para baixo",
+    "scroll_to_start": "Mantenha pressionado para ir ao início",
+    "scroll_to_end": "Mantenha pressionado para ir ao fim",
     "coming_soon": "Em breve…",
     "cancel": "Cancelar",
     "save": "Guardar",

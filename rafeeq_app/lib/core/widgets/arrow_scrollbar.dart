@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
@@ -44,7 +45,11 @@ class ArrowScrollbar extends StatefulWidget {
   final ScrollController controller;
   final Widget child;
 
-  const ArrowScrollbar({super.key, required this.controller, required this.child});
+  const ArrowScrollbar({
+    super.key,
+    required this.controller,
+    required this.child,
+  });
 
   @override
   State<ArrowScrollbar> createState() => _ArrowScrollbarState();
@@ -61,6 +66,7 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
   /// and tap gestures reach the page under it instead of the rail.
   static const double _railWidth = 22;
   static const double _arrowHeight = 26;
+  static const double _touchSize = 48;
   static const double _minThumb = 44;
   static const _idleBeforeHiding = Duration(milliseconds: 1400);
 
@@ -69,6 +75,7 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
   final ValueNotifier<int> _extent = ValueNotifier(0);
   bool _bumpPending = false;
   bool _dragging = false;
+  final Set<int> _focusedArrows = {};
 
   late final AnimationController _fade = AnimationController(
     vsync: this,
@@ -85,11 +92,21 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
     if (_fade.status != AnimationStatus.forward && _fade.value != 1.0) {
       _fade.forward();
     }
-    if (!_dragging) {
+    if (!_dragging && _focusedArrows.isEmpty) {
       _hideTimer = Timer(_idleBeforeHiding, () {
-        if (mounted && !_dragging) _fade.reverse();
+        if (mounted && !_dragging && _focusedArrows.isEmpty) _fade.reverse();
       });
     }
+  }
+
+  void _focusChanged(int owner, bool focused) {
+    if (!mounted) return;
+    if (focused) {
+      _focusedArrows.add(owner);
+    } else {
+      _focusedArrows.remove(owner);
+    }
+    _wake();
   }
 
   @override
@@ -145,17 +162,25 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
   void _step(int direction) {
     final pos = _position;
     if (pos == null) return;
-    final target = (pos.pixels + direction * pos.viewportDimension * 0.8)
-        .clamp(pos.minScrollExtent, pos.maxScrollExtent);
-    pos.animateTo(target,
-        duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic);
+    final target = (pos.pixels + direction * pos.viewportDimension * 0.8).clamp(
+      pos.minScrollExtent,
+      pos.maxScrollExtent,
+    );
+    pos.animateTo(
+      target,
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   void _toEnd(int direction) {
     final pos = _position;
     if (pos == null) return;
-    pos.animateTo(direction < 0 ? pos.minScrollExtent : pos.maxScrollExtent,
-        duration: const Duration(milliseconds: 450), curve: Curves.easeOutCubic);
+    pos.animateTo(
+      direction < 0 ? pos.minScrollExtent : pos.maxScrollExtent,
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   /// Puts the thumb's centre under the finger.
@@ -165,8 +190,9 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
     final travel = trackHeight - thumb;
     if (travel <= 0) return;
     final frac = ((dy - thumb / 2) / travel).clamp(0.0, 1.0);
-    pos.jumpTo(pos.minScrollExtent +
-        frac * (pos.maxScrollExtent - pos.minScrollExtent));
+    pos.jumpTo(
+      pos.minScrollExtent + frac * (pos.maxScrollExtent - pos.minScrollExtent),
+    );
   }
 
   @override
@@ -182,7 +208,7 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
               end: 0,
               top: 0,
               bottom: 0,
-              width: _railWidth,
+              width: _touchSize,
               child: AnimatedBuilder(
                 animation: _fade,
                 builder: (context, child) => _fade.value == 0
@@ -210,12 +236,16 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
     if (extent <= 1 || viewport < 220) return const SizedBox.shrink();
     return LayoutBuilder(
       builder: (context, box) {
-        final track = box.maxHeight - 2 * _arrowHeight;
+        final track = box.maxHeight - 2 * _touchSize;
         if (track < _minThumb * 1.5) return const SizedBox.shrink();
-        final thumb =
-            (track * viewport / (extent + viewport)).clamp(_minThumb, track);
-        final frac =
-            ((pos.pixels - pos.minScrollExtent) / extent).clamp(0.0, 1.0);
+        final thumb = (track * viewport / (extent + viewport)).clamp(
+          _minThumb,
+          track,
+        );
+        final frac = ((pos.pixels - pos.minScrollExtent) / extent).clamp(
+          0.0,
+          1.0,
+        );
         final thumbTop = (track - thumb) * frac;
         final color = AppColors.gold.withValues(alpha: _dragging ? 0.95 : 0.6);
         return Column(
@@ -223,66 +253,82 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
             _Arrow(
               icon: Icons.keyboard_arrow_up_rounded,
               color: color,
+              label: 'common.scroll_up'.tr(),
+              hint: 'common.scroll_to_start'.tr(),
+              onFocusChange: (focused) => _focusChanged(-1, focused),
+              onAccessibilityFocusChange: (focused) =>
+                  _focusChanged(-2, focused),
               onTap: () => _step(-1),
               onLongPress: () => _toEnd(-1),
             ),
             SizedBox(
               height: track,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTapUp: (d) {
-                  _wake();
-                  _step(d.localPosition.dy < thumbTop ? -1 : 1);
-                },
-                onVerticalDragStart: (d) {
-                  setState(() => _dragging = true);
-                  _wake();
-                  _dragTo(d.localPosition.dy, track, thumb);
-                },
-                onVerticalDragUpdate: (d) =>
-                    _dragTo(d.localPosition.dy, track, thumb),
-                onVerticalDragEnd: (_) {
-                  setState(() => _dragging = false);
-                  _wake();
-                },
-                onVerticalDragCancel: () {
-                  setState(() => _dragging = false);
-                  _wake();
-                },
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 2,
-                        decoration: BoxDecoration(
-                          color: AppColors.gold.withValues(alpha: 0.14),
-                          borderRadius: BorderRadius.circular(1),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: thumbTop,
-                      height: thumb,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          width: _dragging ? 8 : 4,
-                          decoration: BoxDecoration(
-                            color: color,
-                            borderRadius: BorderRadius.circular(5),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: SizedBox(
+                  width: _railWidth,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTapUp: (d) {
+                      _wake();
+                      _step(d.localPosition.dy < thumbTop ? -1 : 1);
+                    },
+                    onVerticalDragStart: (d) {
+                      setState(() => _dragging = true);
+                      _wake();
+                      _dragTo(d.localPosition.dy, track, thumb);
+                    },
+                    onVerticalDragUpdate: (d) =>
+                        _dragTo(d.localPosition.dy, track, thumb),
+                    onVerticalDragEnd: (_) {
+                      setState(() => _dragging = false);
+                      _wake();
+                    },
+                    onVerticalDragCancel: () {
+                      setState(() => _dragging = false);
+                      _wake();
+                    },
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 2,
+                            decoration: BoxDecoration(
+                              color: AppColors.gold.withValues(alpha: 0.14),
+                              borderRadius: BorderRadius.circular(1),
+                            ),
                           ),
                         ),
-                      ),
+                        Positioned(
+                          top: thumbTop,
+                          height: thumb,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 150),
+                              width: _dragging ? 8 : 4,
+                              decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
             _Arrow(
               icon: Icons.keyboard_arrow_down_rounded,
               color: color,
+              label: 'common.scroll_down'.tr(),
+              hint: 'common.scroll_to_end'.tr(),
+              onFocusChange: (focused) => _focusChanged(1, focused),
+              onAccessibilityFocusChange: (focused) =>
+                  _focusChanged(2, focused),
               onTap: () => _step(1),
               onLongPress: () => _toEnd(1),
             ),
@@ -296,25 +342,50 @@ class _ArrowScrollbarState extends State<ArrowScrollbar>
 class _Arrow extends StatelessWidget {
   final IconData icon;
   final Color color;
+  final String label;
+  final String hint;
+  final ValueChanged<bool> onFocusChange;
+  final ValueChanged<bool> onAccessibilityFocusChange;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
   const _Arrow({
     required this.icon,
     required this.color,
+    required this.label,
+    required this.hint,
+    required this.onFocusChange,
+    required this.onAccessibilityFocusChange,
     required this.onTap,
     required this.onLongPress,
   });
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: SizedBox(
-          width: _ArrowScrollbarState._railWidth,
-          height: _ArrowScrollbarState._arrowHeight,
-          child: Icon(icon, size: 20, color: color),
+  Widget build(BuildContext context) => Semantics(
+    label: label,
+    hint: hint,
+    button: true,
+    onTap: onTap,
+    onLongPress: onLongPress,
+    onDidGainAccessibilityFocus: () => onAccessibilityFocusChange(true),
+    onDidLoseAccessibilityFocus: () => onAccessibilityFocusChange(false),
+    child: InkWell(
+      excludeFromSemantics: true,
+      onTap: onTap,
+      onLongPress: onLongPress,
+      onFocusChange: onFocusChange,
+      child: SizedBox(
+        width: _ArrowScrollbarState._touchSize,
+        height: _ArrowScrollbarState._touchSize,
+        child: Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: SizedBox(
+            width: _ArrowScrollbarState._railWidth,
+            height: _ArrowScrollbarState._arrowHeight,
+            child: Icon(icon, size: 20, color: color),
+          ),
         ),
-      );
+      ),
+    ),
+  );
 }
