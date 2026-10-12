@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A41 FULL1240 CLEAN / NATIVE BUILDING 06:08 Dubai:** Full1240PASS4originalskips3m08/analyzerCLEAN46.3s/focused27PASS3s/baseline13RED14PASS2s. Nativefixturebuildstarted/sourcefrozen(no testsorlibeditsuntilcomplete); native27currentPID captures+fullcase29validator ready/no seedingneeded. Nextsign/entryguard/install-rAPI24+36/27nativeeach+actualUI/NORMALmain-sign-guard-restore-r/Home/prefs/report/singleFixA41commit/push. SignedNORMALA39backup415016015B; visiblemirror41904keptopen.
+
 **A41 FOCUSED27 GREEN / FULL RUNNING 06:04 Dubai:** Focused27PASS3s after13RED14controls baseline2s. Fullsuite1240expected andanalyzer nowrunning; no buildorproductedits untilcomplete. Actual SDKtransformedhitposition callbacks/selectedstate in7languages+17markers unchangedSVG/data. Native27 helpers cloned from validated A39 currentPID/fullnativecount29/immediate capture; no fixtureinput needed. Next cleanfull/analyze thensignednative27both/NORMALrestore/report/oneFixA41commit.
 
 **A41 BASELINE13 RED / FIXED COORDINATE FRAME 06:03 Dubai:** Baseline27 completed2s:13RED14PASS controls/locales/markers; detector outside zoom confirmed. Moved GestureDetector inside actual zoom Transform so SDK hit testing inverses painted frame; points/anatomy/articulation/threshold/assets/translations unchanged. Focused27 now running; no validated A41 commit. Next GREEN/full1240/analyze/native27both/currentPID screenshots/NORMALrestore/oneFixA41/report/push.
