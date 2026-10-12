@@ -759,3 +759,20 @@ Do not rediscover these.
     capture immediately after launch: a marker remains in logcat after the
     four-second pause and teardown, so a late capture can show an empty tree
     even in the same process. The corrected run passed15 cases and was seen.
+
+69. **A truncated gzip can return partial HTML without throwing.** A-39's
+    real contents fixture produced752 sections instead of1469 after truncation;
+    an interrupted direct cache write produced744. For the single-member files
+    this app writes, validate the RFC1952 CRC32 and ISIZE trailer plus UTF8
+    before treating the cache as usable. Stage and flush a complete replacement
+    in its own directory, then rename it; preserve a valid stale cache if the
+    network or write fails. Existing archive4.2.0 supplies getCrc32, no upgrade.
+
+70. **ADB shell output and exit codes are not a binary file check.** A-39
+    saw adb shell run-as cat turn67700 gzip bytes into67977 captured bytes,
+    while exec-out returned the exact original SHA256. Use exec-out for binary
+    reads. On API24 run-as test returned243/Permission denied; interpreting
+    that as file absence skipped cleanup. Check the actual directory listing,
+    verify only owned filenames and their source SHA before deleting them,
+    and assert that no owned temporary directory remains. A38 files were
+    rechecked and cleaned after correcting its earlier unreliable API24 check.

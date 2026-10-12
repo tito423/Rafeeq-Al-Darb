@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:archive/archive.dart' show getCrc32;
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -294,23 +297,72 @@ DorarHistoryPage parseDorarHistoryPage(String html) {
 /// network - a reader's cache, not a copy of the site («جميع الحقوق محفوظة
 /// لمؤسسة الدرر السنية»; see docs/history/DORAR_ISLAMQA_NOTES.md).
 class DorarEncyclopediaService {
-  DorarEncyclopediaService._();
+  DorarEncyclopediaService._()
+      : _dio = Dio(),
+        _supportDirectory = null;
+
+  @visibleForTesting
+  DorarEncyclopediaService.forTesting({
+    required Dio dio,
+    required Directory supportDirectory,
+  })  : _dio = dio,
+        _supportDirectory = supportDirectory;
+
   static final DorarEncyclopediaService instance = DorarEncyclopediaService._();
 
-  final Dio _dio = Dio();
+  final Dio _dio;
+  final Directory? _supportDirectory;
 
   Future<File> _cache(String name) async {
-    final dir = await getApplicationSupportDirectory();
+    final dir = _supportDirectory ?? await getApplicationSupportDirectory();
     return File(p.join(dir.path, 'dorar', name));
+  }
+
+  Future<String?> _readCache(File file, {Duration? maxAge}) async {
+    try {
+      final stat = await file.stat();
+      if (stat.type != FileSystemEntityType.file ||
+          (maxAge != null &&
+              DateTime.now().difference(stat.modified) >= maxAge)) {
+        return null;
+      }
+      final bytes = await file.readAsBytes();
+      if (bytes.length < 18) return null;
+      final decoded = gzip.decode(bytes);
+      // App cache files contain one member, written by gzip.encode. The
+      // native codec can return partial data from a truncated stream, so
+      // check both trailer fields explicitly (RFC1952: CRC32 and ISIZE).
+      final trailer = ByteData.sublistView(bytes, bytes.length - 8);
+      if (trailer.getUint32(4, Endian.little) != (decoded.length & 0xffffffff) ||
+          trailer.getUint32(0, Endian.little) != getCrc32(decoded)) {
+        return null;
+      }
+      return utf8.decode(decoded);
+    } on FileSystemException {
+      return null;
+    } on FormatException {
+      return null;
+    }
+  }
+
+  Future<void> _writeCache(File file, String html) async {
+    await file.parent.create(recursive: true);
+    final staging = await file.parent.createTemp('.${p.basename(file.path)}.tmp-');
+    try {
+      final temporary = File(p.join(staging.path, 'content.gz'));
+      await temporary.writeAsBytes(gzip.encode(utf8.encode(html)), flush: true);
+      // Rename a complete file in the same directory. An interrupted write
+      // must not damage the previous cache used by the offline fallback.
+      await temporary.rename(file.path);
+    } finally {
+      await staging.delete(recursive: true);
+    }
   }
 
   Future<String> _get(String path, String cacheName, {Duration? maxAge}) async {
     final f = await _cache(cacheName);
-    if (f.existsSync() &&
-        (maxAge == null ||
-            DateTime.now().difference(f.lastModifiedSync()) < maxAge)) {
-      return utf8.decode(gzip.decode(await f.readAsBytes()));
-    }
+    final cached = await _readCache(f, maxAge: maxAge);
+    if (cached != null) return cached;
     try {
       final res = await _dio.get<String>(
         'https://dorar.net$path',
@@ -321,11 +373,11 @@ class DorarEncyclopediaService {
         ),
       );
       final html = res.data ?? '';
-      await f.parent.create(recursive: true);
-      await f.writeAsBytes(gzip.encode(utf8.encode(html)));
+      await _writeCache(f, html);
       return html;
     } catch (_) {
-      if (f.existsSync()) return utf8.decode(gzip.decode(await f.readAsBytes()));
+      final stale = await _readCache(f);
+      if (stale != null) return stale;
       rethrow;
     }
   }
