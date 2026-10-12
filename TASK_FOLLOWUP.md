@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A43 NORMAL SIGNED / RESTORED 11:07 Dubai:** NORMAL39.8s/signed415011919B/entryguard(headlesspresent/allfixturemarkersabsent)/install-rbothSuccess/launchingnormal. Native16bothPASSandUIseen/sourceDBSHAunchanged. NextwaitactualHome/onboardingandcheckprefs/currentlogs/A43prefixabsence thenONEFixA43/report30fixed18remaining/nextA45. Full1257/original4skips2m44/analyzer30.2s/focused16PASS4s; oldfontguardunchanged. No release/deploy/version/keys/contentchange.
+
 **A43 NATIVE16 BOTH PASS / NORMAL BUILDING 11:05 Dubai:** Native16distinct+18runner PASSAPI24(33s)/API36(1m06), actualoriginal4:115quote+button imagesviewedboth; no setup/testexceptions. OriginalDBcopySHA beforeafter/readOnly closed/deletedownroot. Full1257/original4skips2m44/analyzer30.2s/focused16PASS4s. NORMALmainbuildnow/sourcefrozen; nextsign/entryguard/restore-rboth/Home/prefs/logs/ownprefixabsence thenONEFixA43/report30fixed18remaining/nextA45. Existingfontguardnotmodified/wholeversefontsstylespreserved.
 
 **A43 SIGNED NATIVE16 RUNNING 11:01 Dubai:** Fixture90.8s/signed/A43markerverified/A42absent/install-rbothSuccess. Actual16modalcases bothAPI24+36 running withcurrentPID capture, ownbundledQuranDBcopySHA+readOnly/hashafter/cleanupguard. No nativeviewmetrics mutation. Full1257/analyzer30.2s/focused16PASS4s retained; next16distinct+18runner/no failures/actualquote+buttonseenboth, ownedrootabsence/NORMALmain/sign/guardrestore/Home/prefs/singleFixA43/report/push.
