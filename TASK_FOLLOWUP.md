@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A41 NATIVE27 RUNNING 06:10 Dubai:** Signed fixture build54.5s, A41 marker verified/A39 absent, install-r both Success. Actual27 native cases and currentPID captures running API24+36; no product edits. Full1240/analyzer clean. Next native counts27+29 and screenshots, NORMAL restore both and owner preferences, one Fix A41 commit/report/push.
+
 **A41 FULL1240 CLEAN / NATIVE BUILDING 06:08 Dubai:** Full1240PASS4originalskips3m08/analyzerCLEAN46.3s/focused27PASS3s/baseline13RED14PASS2s. Nativefixturebuildstarted/sourcefrozen(no testsorlibeditsuntilcomplete); native27currentPID captures+fullcase29validator ready/no seedingneeded. Nextsign/entryguard/install-rAPI24+36/27nativeeach+actualUI/NORMALmain-sign-guard-restore-r/Home/prefs/report/singleFixA41commit/push. SignedNORMALA39backup415016015B; visiblemirror41904keptopen.
 
 **A41 FOCUSED27 GREEN / FULL RUNNING 06:04 Dubai:** Focused27PASS3s after13RED14controls baseline2s. Fullsuite1240expected andanalyzer nowrunning; no buildorproductedits untilcomplete. Actual SDKtransformedhitposition callbacks/selectedstate in7languages+17markers unchangedSVG/data. Native27 helpers cloned from validated A39 currentPID/fullnativecount29/immediate capture; no fixtureinput needed. Next cleanfull/analyze thensignednative27both/NORMALrestore/report/oneFixA41commit.
