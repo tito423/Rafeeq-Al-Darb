@@ -20,14 +20,14 @@ async function freePort() {
 }
 
 /// Run the actual Wrangler dev pipeline with isolated LOCAL D1 persistence.
-export async function startLocalWorker() {
+export async function startLocalWorker({ entrypoint } = {}) {
   const temporaryRoot = await realpath(tmpdir());
   const directory = await mkdtemp(path.join(temporaryRoot, 'rafeeq-worker-'));
   const port = await freePort();
   const inspector = await freePort();
   const child = spawn(process.execPath, [
     process.env.RAFEEQ_WRANGLER_TEST_CLI ?? path.join(backend, 'node_modules/wrangler/bin/wrangler.js'),
-    'dev', '--local', '--ip', '127.0.0.1', '--port', String(port),
+    'dev', ...(entrypoint ? [entrypoint] : []), '--local', '--ip', '127.0.0.1', '--port', String(port),
     '--inspector-port', String(inspector), '--persist-to', directory,
     '--config', path.join(backend, 'wrangler.toml'), '--log-level',
     process.env.RAFEEQ_WORKER_DEV_LOG_LEVEL ?? 'error',

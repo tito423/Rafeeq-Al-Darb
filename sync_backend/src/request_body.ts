@@ -1,7 +1,7 @@
 export class PayloadTooLarge extends Error {}
 
 /** Bound bytes before decoding or parsing, including requests without a length. */
-export async function readBoundedJson(request: Request, limit: number): Promise<unknown> {
+export async function readBoundedJson(request: Pick<Request, 'headers' | 'body'>, limit: number): Promise<unknown> {
 	const declared = Number(request.headers.get('content-length') ?? '0');
 	if (declared > limit) throw new PayloadTooLarge();
 	if (!request.body) return JSON.parse('');

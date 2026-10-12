@@ -1,43 +1,25 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import { after, before, test } from 'node:test';
-import { Miniflare, convertV4MiniflareOptions } from 'miniflare';
-import { build } from 'esbuild';
-import { fileURLToPath } from 'node:url';
+import { createGoogleAuthWorker } from '../test-support/google-auth-worker.mjs';
 
 // Actual Worker source and actual local D1. Only the Google HTTP transport
 // is controlled here; this does not prove a live Google login.
 let runtime;
 let database;
+let worker;
+let token;
 const subject = 'audit-A06-local';
 const now = Date.now();
 before(async () => {
-  const bundle = await build({ entryPoints: [fileURLToPath(new URL('../src/index.ts', import.meta.url))],
-    bundle: true, write: false, format: 'esm', target: 'es2022' });
-  runtime = new Miniflare(convertV4MiniflareOptions({
-    script: bundle.outputFiles[0].text, modules: true,
-    compatibilityDate: '2024-09-09', d1Databases: ['DB'],
-    outboundService: async (request) => {
-      const url = new URL(request.url);
-      assert.equal(url.origin, 'https://oauth2.googleapis.com');
-      assert.equal(url.pathname, '/tokeninfo');
-      assert.equal(url.searchParams.get('id_token'), 'A06-controlled-transport');
-      return Response.json({ iss: 'https://accounts.google.com', sub: subject,
-        aud: '227986327850-ha6gea87kueaeg2a3582ecpu3s0nbnh1.apps.googleusercontent.com',
-        exp: String(Math.floor(Date.now() / 1000) + 3600) });
-    },
-  }));
-  database = await runtime.getD1Database('DB');
-  const schema = await readFile(new URL('../schema.sql', import.meta.url), 'utf8');
-  for (const statement of schema.split(';').filter((part) => part.trim())) {
-    await database.prepare(statement).run();
-  }
+  worker = await createGoogleAuthWorker();
+  ({ runtime, database } = worker);
+  token = await worker.sign();
 });
-after(async () => { await runtime?.dispose(); });
+after(async () => { await worker?.stop(); });
 
 async function post(updates, counters = []) {
   return runtime.dispatchFetch('http://127.0.0.1/sync', { method: 'POST',
-    headers: { Authorization: 'Bearer A06-controlled-transport', 'content-type': 'application/json' },
+    headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify({ updates, counters }),
   });
 }
