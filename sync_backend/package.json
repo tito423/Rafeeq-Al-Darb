@@ -4,11 +4,12 @@
   "description": "Cloudflare Worker for Rafeeq Al-Darb Sync",
   "main": "src/index.ts",
   "scripts": {
+    "test": "node --test --test-concurrency=1",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240909.0",
+    "@cloudflare/workers-types": "5.20261012.1",
     "typescript": "^5.5.4",
-    "wrangler": "^3.74.0"
+    "wrangler": "4.149.0"
   }
 }
