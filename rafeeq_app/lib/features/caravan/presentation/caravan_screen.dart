@@ -76,6 +76,7 @@ class _CaravanScreenState extends State<CaravanScreen>
         for (final q in bank) {
           if (ids.contains(q.id)) _gates[q.id] = q.localized(lang);
         }
+        if (_world != null && _gateId == null) _chooseGate();
       });
     });
   }
@@ -89,10 +90,9 @@ class _CaravanScreenState extends State<CaravanScreen>
 
   void _start(CaravanLeg leg) {
     _world?.dispose();
-    final pool = [...leg.gateIds.where(_gates.containsKey)]..shuffle();
     setState(() {
       _leg = leg;
-      _gateId = pool.isEmpty ? null : pool.first;
+      _chooseGate();
       _world = CaravanWorld(
         mode: _mode,
         leg: _leg,
@@ -100,11 +100,16 @@ class _CaravanScreenState extends State<CaravanScreen>
         seed: DateTime.now().millisecond,
       );
       _wrong = null;
-      final q = _gateQ;
-      if (q != null) _choices = q.shuffled(math.Random());
     });
     _last = Duration.zero;
     if (!_ticker.isActive) _ticker.start();
+  }
+
+  /// Initialize an early-started journey as soon as its bank is available.
+  void _chooseGate() {
+    final pool = [..._leg.gateIds.where(_gates.containsKey)]..shuffle();
+    _gateId = pool.isEmpty ? null : pool.first;
+    _choices = _gateQ?.shuffled(math.Random()) ?? const [];
   }
 
   void _tick(Duration now) {
