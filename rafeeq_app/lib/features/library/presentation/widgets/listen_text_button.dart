@@ -63,10 +63,7 @@ class ListenTextButton extends StatefulWidget {
 class _ListenTextButtonState extends State<ListenTextButton>
     with SingleTickerProviderStateMixin {
   final BookSpeaker _speaker = BookSpeaker();
-  late final AnimationController _pulse = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 900),
-  );
+  late final AnimationController _pulse;
   bool _speaking = false;
   int _run = 0;
 
@@ -81,6 +78,16 @@ class _ListenTextButtonState extends State<ListenTextButton>
         .replaceAll(_quran, ' ')
         .replaceAll(RegExp(r'[ \t]{2,}'), ' ')
         .trim();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Hidden buttons must own their ticker before the element deactivates.
+    _pulse = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
   }
 
   @override
