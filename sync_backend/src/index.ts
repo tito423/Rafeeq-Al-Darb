@@ -234,10 +234,12 @@ export default {
 					for (const update of body.updates.slice(0, MAX_UPDATES)) {
 						if (!SYNC_STATE_KEYS.has(update?.key)) continue;
 						if (typeof update.value !== 'string' || update.value.length > MAX_STATE_VALUE) continue;
+						// Preserve ignored-row compatibility, but never let a non-integer
+						// timestamp poison SQLite's comparison with later numeric writes.
+						if (!Number.isSafeInteger(update.updated_at) || update.updated_at < 0) continue;
 						if (update.key && update.value && update.updated_at !== undefined) {
-							// For state, we upsert, but only if the incoming updated_at is greater
-							// However, SQLite UPSERT (ON CONFLICT) is supported.
-							// D1 uses SQLite.
+							// Valid stored timestamps retain strictly-newer semantics. Repair
+							// invalid historical rows only when a valid replacement arrives.
 							statements.push(
 								env.DB.prepare(
 									`INSERT INTO user_state (sub, key, value, updated_at) 
@@ -245,7 +247,10 @@ export default {
 									 ON CONFLICT(sub, key) DO UPDATE SET 
 									 value = excluded.value, 
 									 updated_at = excluded.updated_at 
-									 WHERE excluded.updated_at > user_state.updated_at`
+									 WHERE excluded.updated_at > user_state.updated_at
+									    OR typeof(user_state.updated_at) <> 'integer'
+									    OR user_state.updated_at < 0
+									    OR user_state.updated_at > ${Number.MAX_SAFE_INTEGER}`
 								).bind(sub, update.key, update.value, update.updated_at)
 							);
 						}
