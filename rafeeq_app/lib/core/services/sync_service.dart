@@ -12,6 +12,7 @@ import 'package:uuid/uuid.dart';
 
 import '../config/app_config.dart';
 import 'sync_queue_batch.dart';
+import 'sync_state_journal.dart';
 
 final googleSignInProvider = Provider(
   (ref) => GoogleSignIn(
@@ -81,6 +82,18 @@ class SyncService {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _disposed = false;
   bool _databaseOpened = false;
+  final Map<String?, SyncStateJournal> _journals = {};
+  late SyncStateJournal _journal = _journalFor(
+    _prefs.getString(SyncStateJournal.ownerKey),
+  );
+  SyncStateJournal _journalFor(String? account) =>
+      _journals.putIfAbsent(account, () => SyncStateJournal(_prefs, account));
+  int _logoutGeneration = 0;
+  bool _signingOut = false;
+  final Map<String, int> _counterRevisions = {};
+  final Map<String, int> _counterAcknowledgements = {};
+  final Map<String, int> _counterWrites = {};
+  Future<void> _accountPreparation = Future<void>.value();
 
   SyncService(this._googleSignIn, this._prefs, this._ref, {http.Client? client})
     : _client = client;
@@ -103,15 +116,28 @@ class SyncService {
     final dbPath = p.join(await getDatabasesPath(), 'sync_queue.db');
     _localQueueDb = await openDatabase(
       dbPath,
+      // Keep version one readable by the protected 3.87 rollback APK.
       version: 1,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE queue (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             type TEXT NOT NULL,
-            payload TEXT NOT NULL
+            payload TEXT NOT NULL,
+            account_id TEXT
           )
         ''');
+      },
+      onOpen: (db) async {
+        final columns = await db.rawQuery('PRAGMA table_info(queue)');
+        if (!columns.any((row) => row['name'] == 'account_id')) {
+          await db.execute('ALTER TABLE queue ADD COLUMN account_id TEXT');
+        }
+        await db.execute(
+          'CREATE TABLE IF NOT EXISTS sync_account_queue ('
+          'id INTEGER PRIMARY KEY AUTOINCREMENT, account_id TEXT NOT NULL, '
+          'type TEXT NOT NULL, payload TEXT NOT NULL)',
+        );
       },
     );
     _databaseOpened = true;
@@ -163,10 +189,17 @@ class SyncService {
   Future<void> _pushBeforePull(GoogleSignInAccount account) async {
     try {
       if (_disposed || _ref.read(authStateProvider)?.id != account.id) return;
+      await _prepareAccount(account.id);
+      if (!_sameAccount(account.id)) return;
       await _processQueue();
       if (_disposed || _ref.read(authStateProvider)?.id != account.id) return;
       // A rejected upload stays local; pulling now could restore an older state.
-      final pending = await _localQueueDb.query('queue', limit: 1);
+      final pending = await _localQueueDb.query(
+        'queue',
+        where: 'account_id = ?',
+        whereArgs: [account.id],
+        limit: 1,
+      );
       if (pending.isNotEmpty || _disposed) return;
       if (_ref.read(authStateProvider)?.id != account.id) return;
       await _fullSync();
@@ -214,38 +247,126 @@ class SyncService {
   static const syncedCounterKeys = <String>{'tasbeeh_total', 'azkar_total'};
 
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
-    if (_disposed) return;
-    _ref.read(authStateProvider.notifier).state = null;
-    for (final key in {...syncedStateKeys, ...syncedCounterKeys}) {
-      await _prefs.remove(key);
+    _signingOut = true;
+    _logoutGeneration++;
+    try {
+      final accountId =
+          _ref.read(authStateProvider)?.id ??
+          _prefs.getString(SyncStateJournal.ownerKey);
+      _debounceTimer?.cancel();
+      await _googleSignIn.signOut();
+      if (_disposed) return;
+      _ref.read(authStateProvider.notifier).state = null;
+      await _accountPreparation;
+      await _journal.save();
+      for (final key in {...syncedStateKeys, ...syncedCounterKeys}) {
+        await _prefs.remove(key);
+      }
+      await _prefs.remove(_journal.storageKey);
+      await _prefs.remove('${SyncStateJournal.prefix}device');
+      await _prefs.remove('${SyncStateJournal.prefix}$accountId:counters');
+      await _prefs.remove(SyncStateJournal.ownerKey);
+      _journals.remove(accountId);
+      _journals.remove(null);
+      _journal = _journalFor(null);
+      if (_databaseOpened) {
+        await _localQueueDb.delete(
+          'queue',
+          where: 'account_id = ? OR account_id IS NULL',
+          whereArgs: [accountId],
+        );
+        await _localQueueDb.delete(
+          'sync_account_queue',
+          where: 'account_id = ?',
+          whereArgs: [accountId],
+        );
+      }
+      _publishRestoredState();
+    } finally {
+      _signingOut = false;
     }
-    await _localQueueDb.delete('queue');
   }
 
-  void notifySettingsChanged() {
+  Future<void> notifySettingsChanged({String? key}) async {
     if (_disposed) return;
-    if (_ref.read(authStateProvider) == null) return;
+    try {
+      for (final changed in key == null ? syncedStateKeys : {key}) {
+        if (!syncedStateKeys.contains(changed)) continue;
+        await _journal.record(changed);
+      }
+    } catch (_) {
+      // The actual preference remains local; never claim a failed journal
+      // write was synchronized or enqueue an unsupported modification time.
+      if (!_disposed) {
+        _ref.read(syncStatusProvider.notifier).state = SyncStatus.failed;
+      }
+      return;
+    }
+    if (_disposed || _ref.read(authStateProvider) == null) return;
 
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(seconds: 2), _queueStateSync);
   }
 
+  /// A mutation waits for account activation before touching its preferences.
+  /// If the account changes while waiting, retain the edit in its own journal.
+  Future<bool> writeLocalState(
+    String key,
+    Object? value,
+    Future<bool> Function() write,
+  ) async {
+    if (_disposed) return write();
+    if (_signingOut) return false;
+    final logoutGeneration = _logoutGeneration;
+    final accountId = _ref.read(authStateProvider)?.id;
+    if (!_disposed &&
+        accountId != null &&
+        _databaseOpened &&
+        (_journal.account != accountId ||
+            _prefs.getString(SyncStateJournal.ownerKey) != accountId)) {
+      await _prepareAccount(accountId);
+    }
+    if (_signingOut || logoutGeneration != _logoutGeneration) return false;
+    if (!_disposed && accountId != null && !_sameAccount(accountId)) {
+      await _journalFor(accountId).recordValue(key, jsonEncode(value));
+      return true;
+    }
+    final result = await write();
+    if (_signingOut || logoutGeneration != _logoutGeneration) return result;
+    if (result && accountId != null && !_sameAccount(accountId)) {
+      await _journalFor(accountId).recordValue(key, jsonEncode(value));
+    } else if (result) {
+      await notifySettingsChanged(key: key);
+    }
+    return result;
+  }
+
   Future<void> incrementCounter(String key, int amount) async {
     if (_disposed) return;
     if (_ref.read(authStateProvider) == null) return;
+    if (!syncedCounterKeys.contains(key)) return;
+    _counterRevisions[key] = (_counterRevisions[key] ?? 0) + 1;
+    final accountId = _ref.read(authStateProvider)!.id;
+    _counterWrites[key] = (_counterWrites[key] ?? 0) + 1;
+    try {
+      await init();
+      if (!_sameAccount(accountId)) return;
 
-    final eventId = const Uuid().v4();
-    final payload = {
-      'key': key,
-      'event_id': eventId,
-      'increment_value': amount,
-    };
+      final eventId = const Uuid().v4();
+      final payload = {
+        'key': key,
+        'event_id': eventId,
+        'increment_value': amount,
+      };
 
-    await _localQueueDb.insert('queue', {
-      'type': 'counter',
-      'payload': jsonEncode(payload),
-    });
+      await _localQueueDb.insert('queue', {
+        'type': 'counter',
+        'payload': jsonEncode(payload),
+        'account_id': accountId,
+      });
+    } finally {
+      _counterWrites[key] = (_counterWrites[key] ?? 1) - 1;
+    }
 
     unawaited(_processQueue());
   }
@@ -281,29 +402,118 @@ class SyncService {
 
   Future<void> _queueStateSync() async {
     if (_disposed) return;
-    final keys = _prefs.getKeys();
-    final List<Map<String, dynamic>> updates = [];
-    final now = DateTime.now().millisecondsSinceEpoch;
-
-    for (final key in keys) {
-      if (!syncedStateKeys.contains(key)) continue;
-
-      final value = _prefs.get(key);
-      if (value != null) {
-        updates.add({
-          'key': key,
-          'value': jsonEncode(value),
-          'updated_at': now,
-        });
-      }
-    }
-
-    await _localQueueDb.insert('queue', {
-      'type': 'state',
-      'payload': jsonEncode(updates),
-    });
-
+    final accountId = _ref.read(authStateProvider)?.id;
+    if (accountId == null) return;
+    await init();
+    if (!_sameAccount(accountId)) return;
+    await _enqueueDirtyState(accountId);
     unawaited(_processQueue());
+  }
+
+  bool _sameAccount(String id) =>
+      !_disposed && _ref.read(authStateProvider)?.id == id;
+
+  void _publishRestoredState() {
+    if (!_disposed) _ref.read(syncStateRevisionProvider.notifier).state++;
+  }
+
+  Future<void> _prepareAccount(String accountId) {
+    return _accountPreparation = _accountPreparation.catchError((Object _) {}).then((
+      _,
+    ) async {
+      if (!_sameAccount(accountId)) return;
+      final previous = _prefs.getString(SyncStateJournal.ownerKey);
+      // Version-one rows have no owner; bind them before switching preferences.
+      await _localQueueDb.update('queue', {
+        'account_id': previous ?? accountId,
+      }, where: 'account_id IS NULL');
+      // Old clients read every active row; keep foreign accounts separate.
+      await _localQueueDb.transaction((txn) async {
+        await txn.rawInsert(
+          'INSERT INTO sync_account_queue (account_id, type, payload) '
+          'SELECT account_id, type, payload FROM queue WHERE account_id <> ?',
+          [accountId],
+        );
+        await txn.delete(
+          'queue',
+          where: 'account_id <> ?',
+          whereArgs: [accountId],
+        );
+        final archived = await txn.query(
+          'sync_account_queue',
+          where: 'account_id = ?',
+          whereArgs: [accountId],
+        );
+        for (final row in archived) {
+          await txn.insert('queue', {
+            'account_id': accountId,
+            'type': row['type'],
+            'payload': row['payload'],
+          });
+        }
+        await txn.delete(
+          'sync_account_queue',
+          where: 'account_id = ?',
+          whereArgs: [accountId],
+        );
+      });
+      if (!_sameAccount(accountId)) return;
+      _journal = await _journal.switchAccount(
+        accountId,
+        syncedStateKeys,
+        syncedCounterKeys,
+        nextJournal: _journalFor(accountId),
+      );
+      if (previous == null) _journals.remove(null);
+      if (!_sameAccount(accountId)) return;
+      final pending = await _localQueueDb.query(
+        'queue',
+        where: 'type = ? AND account_id = ?',
+        whereArgs: ['state', accountId],
+      );
+      for (final row in pending) {
+        for (final item
+            in (jsonDecode(row['payload'] as String) as List)
+                .cast<Map<String, dynamic>>()) {
+          if (syncedStateKeys.contains(item['key'])) {
+            _journal.adoptQueued(Map<String, dynamic>.from(item as Map));
+          }
+        }
+      }
+      for (final key in syncedStateKeys) {
+        if (_prefs.containsKey(key) || _journal.entries.containsKey(key)) {
+          await _journal.record(key);
+        }
+      }
+      await _journal.save();
+      await _enqueueDirtyState(accountId);
+      if (previous != null && previous != accountId) _publishRestoredState();
+    });
+  }
+
+  Future<void> _enqueueDirtyState(String accountId) async {
+    if (!_sameAccount(accountId)) return;
+    final rows = await _localQueueDb.query(
+      'queue',
+      where: 'type = ? AND account_id = ?',
+      whereArgs: ['state', accountId],
+    );
+    final existing = <String>{
+      for (final row in rows)
+        for (final item in jsonDecode(row['payload'] as String) as List)
+          jsonEncode(item),
+    };
+    final updates = _journal
+        .dirty(syncedStateKeys)
+        .where((item) => !existing.contains(jsonEncode(item)))
+        .toList();
+    if (updates.isNotEmpty && _sameAccount(accountId)) {
+      await _localQueueDb.insert('queue', {
+        'type': 'state',
+        'payload': jsonEncode(updates),
+        'account_id': accountId,
+      });
+    }
   }
 
   Future<void> _processQueue() {
@@ -317,7 +527,12 @@ class SyncService {
   Future<void> _drainRequestedQueue() async {
     do {
       _queueRequested = false;
-      if (!await _deliverQueue()) return;
+      final accountId = _ref.read(authStateProvider)?.id;
+      final delivered = await _deliverQueue();
+      if (!delivered &&
+          (_disposed || _ref.read(authStateProvider)?.id == accountId)) {
+        return;
+      }
     } while (_queueRequested && !_disposed);
   }
 
@@ -327,29 +542,39 @@ class SyncService {
     if (account == null) return true;
 
     final connectivity = await Connectivity().checkConnectivity();
-    if (_disposed) return false;
+    if (!_sameAccount(account.id)) return false;
     if (connectivity.contains(ConnectivityResult.none)) return true;
+    if (_prefs.getString(SyncStateJournal.ownerKey) != account.id) {
+      await _prepareAccount(account.id);
+    }
+    if (!_sameAccount(account.id)) return false;
+    await _localQueueDb.update('queue', {
+      'account_id': account.id,
+    }, where: 'account_id IS NULL');
 
     _isSyncing = true;
     _ref.read(syncStatusProvider.notifier).state = SyncStatus.syncing;
 
     try {
       final auth = await account.authentication;
-      if (_disposed) return false;
+      if (!_sameAccount(account.id)) return false;
       final idToken = auth.idToken;
       if (idToken == null) throw Exception('No idToken');
 
       while (true) {
-        if (_disposed) return false;
+        if (!_sameAccount(account.id)) return false;
         // Bound the database read too; each row can contain multiple states.
         final queuedItems = await _localQueueDb.query(
           'queue',
           orderBy: 'id ASC',
+          where: 'account_id = ?',
+          whereArgs: [account.id],
           limit: SyncQueueBatch.maxCounters,
         );
-        if (_disposed) return false;
+        if (!_sameAccount(account.id)) return false;
         if (queuedItems.isEmpty) break;
         for (final batch in syncQueueBatches(queuedItems)) {
+          if (!_sameAccount(account.id)) return false;
           final response = await _withTimeout(
             (_client?.post ?? http.post)(
               Uri.parse(_syncApiUrl),
@@ -360,10 +585,17 @@ class SyncService {
               body: batch.body,
             ),
           );
-          if (_disposed) return false;
+          if (!_sameAccount(account.id)) return false;
           if (response.statusCode != 200) {
             _ref.read(syncStatusProvider.notifier).state = SyncStatus.error;
             return false;
+          }
+          for (final item
+              in ((jsonDecode(batch.body) as Map)['counters'] as List)
+                  .cast<Map<String, dynamic>>()) {
+            final key = item['key'] as String;
+            _counterAcknowledgements[key] =
+                (_counterAcknowledgements[key] ?? 0) + 1;
           }
           await _localQueueDb.transaction((txn) async {
             final deletes = txn.batch();
@@ -372,6 +604,10 @@ class SyncService {
             }
             await deletes.commit(noResult: true);
           });
+          if (!_sameAccount(account.id)) return false;
+          await _journal.acknowledge(
+            (jsonDecode(batch.body) as Map)['updates'] as List,
+          );
         }
       }
       _ref.read(lastSyncTimeProvider.notifier).state = DateTime.now();
@@ -393,51 +629,80 @@ class SyncService {
 
     try {
       final auth = await account.authentication;
-      if (_disposed) return;
+      if (!_sameAccount(account.id)) return;
       final idToken = auth.idToken;
       if (idToken == null) return;
 
+      final startValues = {
+        for (final key in syncedStateKeys) key: jsonEncode(_prefs.get(key)),
+      };
+      final counterRevisions = Map<String, int>.from(_counterRevisions);
+      final counterAcknowledgements = Map<String, int>.from(
+        _counterAcknowledgements,
+      );
+      final pendingCounterWrites = {
+        for (final item in _counterWrites.entries)
+          if (item.value > 0) item.key,
+      };
+      final journal = _journal;
       final response = await _withTimeout(
         (_client?.get ?? http.get)(
           Uri.parse(_syncApiUrl),
           headers: {'Authorization': 'Bearer $idToken'},
         ),
       );
-      if (_disposed) return;
+      if (!_sameAccount(account.id)) return;
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-        final rawPrefs = await SharedPreferences.getInstance();
-        if (_disposed) return;
+        final rawPrefs = _prefs;
+        var changed = false;
 
         final stateItems = (data['state'] as List).cast<Map<String, dynamic>>();
         for (final item in stateItems) {
-          if (_disposed) return;
+          if (!_sameAccount(account.id)) return;
           final key = item['key'] as String;
           // THE PULL FILTERS TOO, and it matters more than the push: the
           // server still holds every setting an older build sent it, and
           // without this line it would keep restoring them for ever.
           if (!syncedStateKeys.contains(key)) continue;
-          final value = jsonDecode(item['value'] as String);
-
-          if (value is String) {
-            await rawPrefs.setString(key, value);
-          } else if (value is int) {
-            await rawPrefs.setInt(key, value);
-          } else if (value is double) {
-            await rawPrefs.setDouble(key, value);
-          } else if (value is bool) {
-            await rawPrefs.setBool(key, value);
-          } else if (value is List) {
-            await rawPrefs.setStringList(key, List<String>.from(value));
+          if (jsonEncode(rawPrefs.get(key)) != startValues[key] ||
+              item['value'] is! String ||
+              !journal.accepts(
+                key,
+                item['value'] as String,
+                item['updated_at'],
+              )) {
+            continue;
+          }
+          try {
+            final value = jsonDecode(item['value'] as String);
+            if (!validSyncStateValue(key, value)) continue;
+            final previousEntry = journal.entries[key];
+            if (await writePreferenceValue(rawPrefs, key, value)) {
+              if (!_sameAccount(account.id)) return;
+              if (jsonEncode(rawPrefs.get(key)) != item['value'] ||
+                  !identical(journal.entries[key], previousEntry)) {
+                changed = true;
+                continue;
+              }
+              await journal.received(
+                key,
+                item['value'] as String,
+                item['updated_at'] as int,
+              );
+              changed = true;
+            }
+          } on FormatException {
+            // Ignore only the malformed row, retaining other valid states.
           }
         }
 
         // Handling downloaded counters
         final queuedCounters = await _localQueueDb.query(
           'queue',
-          where: 'type = ?',
-          whereArgs: ['counter'],
+          where: 'type = ? AND account_id = ?',
+          whereArgs: ['counter', account.id],
         );
         final Map<String, int> unsynced = {};
         for (final row in queuedCounters) {
@@ -451,12 +716,24 @@ class SyncService {
         final counterItems = (data['counters'] as List)
             .cast<Map<String, dynamic>>();
         for (final item in counterItems) {
-          if (_disposed) return;
+          if (!_sameAccount(account.id)) return;
           final key = item['key'] as String;
+          if (!syncedCounterKeys.contains(key) ||
+              item['total'] is! int ||
+              (_counterRevisions[key] ?? 0) != (counterRevisions[key] ?? 0) ||
+              (_counterAcknowledgements[key] ?? 0) !=
+                  (counterAcknowledgements[key] ?? 0) ||
+              pendingCounterWrites.contains(key) ||
+              (_counterWrites[key] ?? 0) > 0 ||
+              unsynced.containsKey(key)) {
+            continue;
+          }
           final total = item['total'] as int;
-          final finalTotal = total + (unsynced[key] ?? 0);
-          await rawPrefs.setInt(key, finalTotal);
+          if (total.abs() > SyncStateJournal.maxTimestamp) continue;
+          await rawPrefs.setInt(key, total);
+          changed = true;
         }
+        if (changed && _sameAccount(account.id)) _publishRestoredState();
       }
     } catch (e) {
       // Ignore

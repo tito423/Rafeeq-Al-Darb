@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/rafeeq_app.dart' show sharedPrefsProvider;
+import '../../../core/services/sync_state_journal.dart';
 
 /// Shared key for the Quran reader's last-open page.
 const kQuranLastPageKey = 'quran_last_page';
@@ -27,6 +28,7 @@ class QuranLastPageNotifier extends StateNotifier<int?> {
   QuranLastPageNotifier(this._prefs) : super(_prefs.getInt(kQuranLastPageKey));
 
   final SharedPreferences _prefs;
+  void reloadFromPreferences() => state = _prefs.getInt(kQuranLastPageKey);
 
   Future<void> set(int page) async {
     state = page;
@@ -36,6 +38,11 @@ class QuranLastPageNotifier extends StateNotifier<int?> {
 
 final quranLastPageProvider =
     StateNotifierProvider<QuranLastPageNotifier, int?>((ref) {
-  final prefs = ref.watch(sharedPrefsProvider);
-  return QuranLastPageNotifier(prefs);
-});
+      final prefs = ref.watch(sharedPrefsProvider);
+      final notifier = QuranLastPageNotifier(prefs);
+      ref.listen(
+        syncStateRevisionProvider,
+        (_, _) => notifier.reloadFromPreferences(),
+      );
+      return notifier;
+    });

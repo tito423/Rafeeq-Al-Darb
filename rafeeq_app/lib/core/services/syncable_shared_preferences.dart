@@ -9,9 +9,24 @@ class SyncableSharedPreferences implements SharedPreferences {
 
   SyncableSharedPreferences(this._delegate, this._ref);
 
-  void _notifySync() {
+  Future<bool> _write(
+    String key,
+    Object? value,
+    Future<bool> Function() write,
+  ) async {
+    if (!SyncService.syncedStateKeys.contains(key)) return write();
+    SyncService service;
     try {
-      _ref.read(syncServiceProvider).notifySettingsChanged();
+      service = _ref.read(syncServiceProvider);
+    } catch (_) {
+      return write();
+    }
+    return service.writeLocalState(key, value, write);
+  }
+
+  Future<void> _notifySync({String? key}) async {
+    try {
+      await _ref.read(syncServiceProvider).notifySettingsChanged(key: key);
     } catch (_) {
       // Ignored if syncServiceProvider is not yet initialized
     }
@@ -19,50 +34,38 @@ class SyncableSharedPreferences implements SharedPreferences {
 
   @override
   Future<bool> setBool(String key, bool value) async {
-    final result = await _delegate.setBool(key, value);
-    if (result) _notifySync();
-    return result;
+    return _write(key, value, () => _delegate.setBool(key, value));
   }
 
   @override
   Future<bool> setDouble(String key, double value) async {
-    final result = await _delegate.setDouble(key, value);
-    if (result) _notifySync();
-    return result;
+    return _write(key, value, () => _delegate.setDouble(key, value));
   }
 
   @override
   Future<bool> setInt(String key, int value) async {
-    final result = await _delegate.setInt(key, value);
-    if (result) _notifySync();
-    return result;
+    return _write(key, value, () => _delegate.setInt(key, value));
   }
 
   @override
   Future<bool> setString(String key, String value) async {
-    final result = await _delegate.setString(key, value);
-    if (result) _notifySync();
-    return result;
+    return _write(key, value, () => _delegate.setString(key, value));
   }
 
   @override
   Future<bool> setStringList(String key, List<String> value) async {
-    final result = await _delegate.setStringList(key, value);
-    if (result) _notifySync();
-    return result;
+    return _write(key, value, () => _delegate.setStringList(key, value));
   }
 
   @override
   Future<bool> remove(String key) async {
-    final result = await _delegate.remove(key);
-    if (result) _notifySync();
-    return result;
+    return _write(key, null, () => _delegate.remove(key));
   }
 
   @override
   Future<bool> clear() async {
     final result = await _delegate.clear();
-    if (result) _notifySync();
+    if (result) await _notifySync();
     return result;
   }
 

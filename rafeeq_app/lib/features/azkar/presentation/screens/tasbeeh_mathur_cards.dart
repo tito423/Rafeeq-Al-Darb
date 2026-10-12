@@ -34,8 +34,10 @@ class _MathurEntryCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.auto_stories_outlined,
-                color: active ? AppColors.gold : scheme.onSurfaceVariant),
+            Icon(
+              Icons.auto_stories_outlined,
+              color: active ? AppColors.gold : scheme.onSurfaceVariant,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -43,17 +45,16 @@ class _MathurEntryCard extends StatelessWidget {
                 children: [
                   Text(
                     'azkar.tasbeeh_mathur_title'.tr(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     'azkar.tasbeeh_mathur_desc'.tr(),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: scheme.onSurfaceVariant,
-                        ),
+                      color: scheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -61,8 +62,10 @@ class _MathurEntryCard extends StatelessWidget {
             // Trap #7: `chevron_left` auto-mirrors in RTL and `chevron_right`
             // does not — a disclosure chevron has to point the same way in
             // both directions.
-            Icon(Icons.chevron_right,
-                color: active ? AppColors.gold : scheme.onSurfaceVariant),
+            Icon(
+              Icons.chevron_right,
+              color: active ? AppColors.gold : scheme.onSurfaceVariant,
+            ),
           ],
         ),
       ),
@@ -90,10 +93,9 @@ class _MathurPickerSheet extends StatelessWidget {
               child: Text(
                 'azkar.tasbeeh_mathur_pick'.tr(),
                 textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
             ),
             Flexible(
@@ -109,17 +111,21 @@ class _MathurPickerSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                       decoration: BoxDecoration(
                         color: Color.alphaBlend(
                           option.color.withValues(alpha: 0.12),
-                          scheme.surfaceContainerHighest
-                              .withValues(alpha: 0.45),
+                          scheme.surfaceContainerHighest.withValues(
+                            alpha: 0.45,
+                          ),
                         ),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: option.color
-                              .withValues(alpha: isSelected ? 0.9 : 0.35),
+                          color: option.color.withValues(
+                            alpha: isSelected ? 0.9 : 0.35,
+                          ),
                           width: isSelected ? 2 : 1,
                         ),
                       ),
@@ -233,7 +239,9 @@ class _MathurCounterCard extends StatelessWidget {
               builder: (context, scale, child) =>
                   Transform.scale(scale: scale, child: child),
               child: Text(
-                t == null ? '$count' : localizeDigits(ratio(count, t), uiLanguageCode),
+                t == null
+                    ? '$count'
+                    : localizeDigits(ratio(count, t), uiLanguageCode),
                 style: TextStyle(
                   fontSize: countSize,
                   fontWeight: FontWeight.bold,
@@ -254,6 +262,58 @@ class _MathurCounterCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DhikrPill extends StatelessWidget {
+  final DhikrOption option;
+  final bool selected;
+  final VoidCallback onTap;
+  const _DhikrPill({
+    required this.option,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          // White on the gold pill measured 2.42 : 1, on the blue 2.90 : 1
+          // (emulator-5554, 2026-09-25): same hue, deep enough to read.
+          color: fillForWhiteText(option.color),
+          borderRadius: BorderRadius.circular(24),
+          border: selected
+              ? Border.all(
+                  color: Colors.white.withValues(alpha: 0.85),
+                  width: 2,
+                )
+              : null,
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: option.color.withValues(alpha: 0.6),
+                    blurRadius: 12,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
+        ),
+        child: Text(
+          option.textKey.tr(),
+          style: const TextStyle(
+            fontFamily: 'AmiriQuran',
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
         ),
       ),
     );

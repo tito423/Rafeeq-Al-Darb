@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/rafeeq_app.dart';
+import '../../../core/services/sync_state_journal.dart';
 
 /// P2‑8 #7 — a private, free-text note attached to one ayah, distinct from a
 /// bookmark (a bookmark just marks a position; a note is the user's own
@@ -15,6 +16,7 @@ class AyahNotesNotifier extends StateNotifier<Map<String, String>> {
 
   final SharedPreferences _prefs;
   static const _key = 'ayah_notes_v1';
+  void reloadFromPreferences() => state = _restore(_prefs);
 
   static Map<String, String> _restore(SharedPreferences prefs) {
     final raw = prefs.getString(_key);
@@ -48,5 +50,10 @@ class AyahNotesNotifier extends StateNotifier<Map<String, String>> {
 
 final ayahNotesProvider =
     StateNotifierProvider<AyahNotesNotifier, Map<String, String>>((ref) {
-  return AyahNotesNotifier(ref.watch(sharedPrefsProvider));
-});
+      final notifier = AyahNotesNotifier(ref.watch(sharedPrefsProvider));
+      ref.listen(
+        syncStateRevisionProvider,
+        (_, _) => notifier.reloadFromPreferences(),
+      );
+      return notifier;
+    });

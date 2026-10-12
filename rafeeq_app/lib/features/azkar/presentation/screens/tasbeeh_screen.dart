@@ -10,7 +10,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../../../core/config/prefs_provider.dart';
 import '../../../../core/services/sync_service.dart';
+import '../../../../core/services/sync_state_journal.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/byte_formatter.dart' show ratio;
 import '../../../../core/utils/digits.dart';
@@ -204,7 +206,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     );
     if (n == null || n <= 0) return;
     setState(() => _customTarget = n);
-    unawaited(SharedPreferences.getInstance().then((p) => p.setInt(_kCustomPref, n)));
+    unawaited(ref.read(sharedPrefsProvider).setInt(_kCustomPref, n));
     _selectTarget(n);
   }
 
@@ -248,8 +250,14 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       _total = 0;
     });
     if (was > 0) {
-      unawaited(SharedPreferences.getInstance().then((p) => p.setInt('tasbeeh_total', 0)));
-      unawaited(ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', -was));
+      unawaited(
+        SharedPreferences.getInstance().then(
+          (p) => p.setInt('tasbeeh_total', 0),
+        ),
+      );
+      unawaited(
+        ref.read(syncServiceProvider).incrementCounter('tasbeeh_total', -was),
+      );
     }
   }
 
@@ -259,6 +267,17 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(syncStateRevisionProvider, (_, _) {
+      final prefs = ref.read(sharedPreferencesProvider);
+      if (!mounted) return;
+      setState(() {
+        final followedCustom =
+            _customTarget != null && _target == _customTarget;
+        _customTarget = prefs.getInt(_kCustomPref);
+        if (followedCustom) _target = _customTarget ?? 33;
+        _total = prefs.getInt('tasbeeh_total') ?? 0;
+      });
+    });
     final scheme = Theme.of(context).colorScheme;
     final selected = _selected;
     final circleGround = Color.alphaBlend(
@@ -726,58 +745,6 @@ class _CelebrationOverlay extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _DhikrPill extends StatelessWidget {
-  final DhikrOption option;
-  final bool selected;
-  final VoidCallback onTap;
-  const _DhikrPill({
-    required this.option,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          // White on the gold pill measured 2.42 : 1, on the blue 2.90 : 1
-          // (emulator-5554, 2026-09-25): same hue, deep enough to read.
-          color: fillForWhiteText(option.color),
-          borderRadius: BorderRadius.circular(24),
-          border: selected
-              ? Border.all(
-                  color: Colors.white.withValues(alpha: 0.85),
-                  width: 2,
-                )
-              : null,
-          boxShadow: selected
-              ? [
-                  BoxShadow(
-                    color: option.color.withValues(alpha: 0.6),
-                    blurRadius: 12,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : null,
-        ),
-        child: Text(
-          option.textKey.tr(),
-          style: const TextStyle(
-            fontFamily: 'AmiriQuran',
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
-        ),
-      ),
     );
   }
 }

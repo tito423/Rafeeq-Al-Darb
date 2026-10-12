@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart' show TimeOfDay;
@@ -7,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../app/rafeeq_app.dart';
 import '../../../core/config/notification_ids.dart';
 import '../../../core/services/khatma_reminder_service.dart';
+import '../../../core/services/sync_state_journal.dart';
 import 'khatma_model.dart';
 
 export 'khatma_model.dart';
@@ -16,6 +18,18 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
 
   final SharedPreferences _prefs;
   static const _key = 'khatma_list_v1';
+  void reloadFromPreferences() {
+    final restored = _restore(_prefs);
+    if (jsonEncode(restored.map((k) => k.toJson()).toList()) ==
+        jsonEncode(state.map((k) => k.toJson()).toList())) {
+      return;
+    }
+    final hadReminders = state.any((k) => k.reminderTime != null);
+    state = restored;
+    if (hadReminders || state.any((k) => k.reminderTime != null)) {
+      unawaited(rearmReminders());
+    }
+  }
 
   static List<Khatma> _restore(SharedPreferences prefs) {
     final raw = prefs.getString(_key);
@@ -183,7 +197,12 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
 final khatmaStoreProvider = StateNotifierProvider<KhatmaStore, List<Khatma>>((
   ref,
 ) {
-  return KhatmaStore(ref.watch(sharedPrefsProvider));
+  final notifier = KhatmaStore(ref.watch(sharedPrefsProvider));
+  ref.listen(
+    syncStateRevisionProvider,
+    (_, _) => notifier.reloadFromPreferences(),
+  );
+  return notifier;
 });
 
 /// Active (unfinished) khatmas, nearest deadline / most overdue first — the
