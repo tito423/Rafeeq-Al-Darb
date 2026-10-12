@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 PHONE NATIVE API36 RUNNING 06:51 Dubai:** Phonefixture34.1s/signed/install-rbothSuccess; API36phone native1test9scenarios running alone with5mincapture. Interruptednative code_cache/audit_A42_FGCCNW verifiedempty andremoved explicitly afterstop. Next requirePASS3runner/all9markers+actualUI; thenAPI24same serial run; NORMALbuild-sign-guard-restore-rboth/prefs/report/oneFixA42. Full1241/analyze20s/focused9s retained; no product changes afterfinalchecks.
+
 **A42 PHONE HARNESS CLEAN / REBUILD 06:48 Dubai:** Finalfocused9scenariosPASS9s/analyzerCLEAN20s; full1241previousPASS/productunchanged. Nativephone360x800fixture rebuilding/sourcefrozen. Quota86percent5hUSED/60weeklyUSED; twoResetcreditsunused. API36failedrun left explicitlyowned code_cache/audit_A42_FGCCNW directory; inspect empty thenrmdir afterprocessstop, successfulAPI24cleanupverified. Next sign/reinstall-r/sequentialnative extendedcapture/all9checks thenNORMALboth/sign/guard/Home/prefs/report/oneFixA42. Do not start A43 productfix before A42 complete.
 
 **A42 API36 TIMEOUT REJECTED / PHONE VIEWPORT 06:47 Dubai:** API36 timedout4min during native pump/teardown conflict aftertimeout, rejected despite driverAllpassed. API24 nine scenarios PASS3m13 butcaptureexpired, no visualacceptanceyet. SDKLiveBindingdefaultfadePointers checked; not claimed fullyLive. Adjusted ONLY native test viewport360x800/dpr1 withpertestrestore, no wm/userchange; same realticker/allassertions/4min timeout. Pump450ms settles gatepanel beforecapture. Focused/analyze nowrunning, full1241previousvalid/productunchanged; nextrebuildandnative sequential extendedcapture5min, NORMALrestorebothbeforestop.
