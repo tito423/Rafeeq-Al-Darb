@@ -105,9 +105,10 @@ class AdhanActivity : FlutterActivity() {
         private var instance: AdhanActivity? = null
 
         /** True while the alert screen is up. */
-        val isShowing: Boolean get() = instance != null
+        val isShowing: Boolean get() = instance != null || AdhanLockedActivity.isShowing
 
         fun finishIfShowing() {
+            AdhanLockedActivity.finishIfShowing()
             instance?.let { activity ->
                 activity.runOnUiThread {
                     activity.finishAndRemoveTask()
@@ -116,7 +117,8 @@ class AdhanActivity : FlutterActivity() {
         }
 
         fun intentFor(context: Context, spec: AdhanSpec): Intent =
-            Intent(context, AdhanActivity::class.java).apply {
+            Intent(context, if (AdhanStorage.unlocked(context)) AdhanActivity::class.java
+                else AdhanLockedActivity::class.java).apply {
                 addFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK or
                         Intent.FLAG_ACTIVITY_CLEAR_TOP or

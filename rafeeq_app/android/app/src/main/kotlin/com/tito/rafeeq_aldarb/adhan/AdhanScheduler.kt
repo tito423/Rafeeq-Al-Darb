@@ -30,7 +30,6 @@ import java.util.Calendar
  */
 object AdhanScheduler {
     private const val TAG = "AdhanScheduler"
-    private const val PREFS = "rafeeq_adhan_alarms"
     private const val KEY_ENTRIES = "daily_entries_v1"
     private const val KEY_CALCULATION = "calculation_v1"
     private var generation = 0L
@@ -49,12 +48,21 @@ object AdhanScheduler {
         targets: Map<String, Long>?,
     ): Boolean {
         if (calculation == null || targets == null || specs.any { targets[it.prayerKey] == null }) return false
-        cancelDaily(context)
+        val previous = load(context)
+        val updated = try {
+            AdhanStorage.prepare(context, specs).map { withTime(it, targets.getValue(it.prayerKey)) }
+        } catch (failure: Exception) {
+            Log.w(TAG, "cannot prepare selected adhan sound", failure)
+            return false
+        }
+        try {
+            AdhanStorage.persist(context, updated, JSONObject(calculation))
+        } catch (failure: Exception) {
+            Log.w(TAG, "cannot persist daily adhan schedule", failure)
+            return false
+        }
         generation++
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-            .putString(KEY_CALCULATION, JSONObject(calculation).toString()).apply()
-        val updated = specs.map { withTime(it, targets.getValue(it.prayerKey)) }
-        persist(context, updated)
+        for (spec in previous) alarmManager(context)?.cancel(operationFor(context, spec))
         var exact = true
         for (spec in updated) {
             if (!armAt(context, spec, targets.getValue(spec.prayerKey))) exact = false
@@ -132,7 +140,7 @@ object AdhanScheduler {
     }
 
     private fun calculation(context: Context): Map<String, Any>? {
-        val raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_CALCULATION, null) ?: return null
+        val raw = AdhanStorage.prefs(context).getString(KEY_CALCULATION, null) ?: return null
         fun toMap(json: JSONObject): Map<String, Any> = json.keys().asSequence().associateWith { key ->
             val value = json.get(key)
             if (value is JSONObject) toMap(value) else value
@@ -209,16 +217,11 @@ object AdhanScheduler {
         context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     private fun persist(context: Context, specs: List<AdhanSpec>) {
-        val array = JSONArray()
-        for (s in specs) array.put(s.toJson())
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .edit()
-            .putString(KEY_ENTRIES, array.toString())
-            .apply()
+        AdhanStorage.persist(context, specs)
     }
 
     fun load(context: Context): List<AdhanSpec> {
-        val raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val raw = AdhanStorage.prefs(context)
             .getString(KEY_ENTRIES, null) ?: return emptyList()
         return try {
             val array = JSONArray(raw)

@@ -196,6 +196,18 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"/>
 
+        <!-- Before first unlock, no Flutter plugins or credential preferences. -->
+        <activity
+            android:name=".adhan.AdhanLockedActivity"
+            android:exported="false"
+            android:directBootAware="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.tito.rafeeq_aldarb.adhan"
+            android:excludeFromRecents="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/NormalTheme"/>
+
         <!-- Receives the exact alarm. Not exported: only AlarmManager, acting
              on our own PendingIntent, ever delivers to it. -->
         <!-- The next-prayer card: re-posted when dismissed, rolled over at the
@@ -217,6 +229,7 @@
              clock change, since AlarmManager forgets everything then. -->
         <service
             android:name=".adhan.AdhanRecomputeJob"
+            android:directBootAware="true"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
         <receiver
@@ -224,6 +237,7 @@
             android:exported="false"
             android:directBootAware="true">
             <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
@@ -238,6 +252,7 @@
              starting a foreground service from the background. -->
         <service
             android:name=".adhan.AdhanService"
+            android:directBootAware="true"
             android:exported="false"
             android:stopWithTask="false"
             android:foregroundServiceType="mediaPlayback"/>

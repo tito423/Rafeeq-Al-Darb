@@ -28,7 +28,9 @@ object AdhanCalculation {
 
     /** Backfills the minimal snapshot for installs with the old hour/minute store. */
     fun savedInputs(context: Context): Map<String, Any>? {
-        val values = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE).all
+        if (!AdhanStorage.unlocked(context)) return null
+        val credential = AdhanStorage.credential(context)
+        val values = credential.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE).all
         fun value(key: String): Any? = values["flutter.$key"]
         fun number(key: String): Double? {
             val raw = value(key)
@@ -73,10 +75,11 @@ object AdhanCalculation {
             }
             handler.postDelayed(timeout, 8_000)
             try {
+                val engineContext = AdhanStorage.engineContext(context)
                 val loader = FlutterInjector.instance().flutterLoader()
-                loader.startInitialization(context.applicationContext)
-                loader.ensureInitializationComplete(context.applicationContext, null)
-                val created = FlutterEngine(context.applicationContext, null, false)
+                loader.startInitialization(engineContext)
+                loader.ensureInitializationComplete(engineContext, null)
+                val created = FlutterEngine(engineContext, null, false)
                 engine = created
                 val channel = MethodChannel(created.dartExecutor.binaryMessenger, CHANNEL)
                 channel.setMethodCallHandler { call, result ->

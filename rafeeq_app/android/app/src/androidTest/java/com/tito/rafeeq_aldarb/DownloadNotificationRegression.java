@@ -23,6 +23,14 @@ public final class DownloadNotificationRegression extends Instrumentation {
 
     @Override
     public void onStart() {
+        if ("directboot-cleanup".equals(suite)) {
+            AdhanDirectBootRegression.cleanup(this);
+            return;
+        }
+        if ("directboot".equals(suite)) {
+            AdhanDirectBootRegression.run(this);
+            return;
+        }
         if ("back".equals(suite)) {
             BackNavigationRegression.run(this);
             return;

@@ -1,6 +1,7 @@
 package com.tito.rafeeq_aldarb
 
 import android.content.Context
+import com.tito.rafeeq_aldarb.adhan.AdhanStorage
 import org.json.JSONObject
 
 /**
@@ -50,6 +51,11 @@ object NativeStrings {
     const val PRAYER_CHANNEL = "prayer_channel"
     const val PRAYER_CHANNEL_DESC = "prayer_channel_desc"
 
+    private val adhanKeys = setOf(ADHAN_CHANNEL, ADHAN_CHANNEL_DESC,
+        ADHAN_CHANNEL_VIBRATE, ADHAN_CHANNEL_VIBRATE_DESC, ADHAN_CHANNEL_SILENT,
+        ADHAN_CHANNEL_SILENT_DESC, ADHAN_TITLE, ADHAN_BODY, ADHAN_BODY_MUTED,
+        ADHAN_STOP, ADHAN_MUTE)
+
     private val fallback = mapOf(
         ADHAN_CHANNEL to "الأذان",
         ADHAN_CHANNEL_DESC to "تنبيه الأذان عند دخول وقت الصلاة",
@@ -74,14 +80,28 @@ object NativeStrings {
     fun sync(context: Context, values: Map<String, String>) {
         val json = JSONObject()
         for ((k, v) in values) if (v.isNotEmpty()) json.put(k, v)
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        AdhanStorage.credential(context).getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .edit()
             .putString(KEY, json.toString())
             .apply()
+        mirrorAdhan(context, json)
     }
 
     fun get(context: Context, key: String): String {
-        val raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val storage = if (key in adhanKeys) {
+            val device = AdhanStorage.device(context)
+            if (AdhanStorage.unlocked(context) && !device.getSharedPreferences(PREFS, 0).contains(KEY)) {
+                val legacy = AdhanStorage.credential(context)
+                    .getSharedPreferences(PREFS, 0).getString(KEY, null)
+                try { if (legacy != null) mirrorAdhan(context, JSONObject(legacy)) }
+                catch (_: Exception) { /* Retain existing fallback for corrupt strings. */ }
+            }
+            device
+        } else {
+            if (!AdhanStorage.unlocked(context)) return fallback[key] ?: key
+            AdhanStorage.credential(context)
+        }
+        val raw = storage.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .getString(KEY, null)
         if (raw != null) {
             try {
@@ -92,5 +112,18 @@ object NativeStrings {
             }
         }
         return fallback[key] ?: key
+    }
+
+    /** Download/card strings stay in CE; only these eleven alarm labels are mirrored. */
+    private fun mirrorAdhan(context: Context, strings: JSONObject) {
+        val json = JSONObject()
+        for (key in adhanKeys) {
+            val value = strings.optString(key, "")
+            if (value.isNotEmpty()) json.put(key, value)
+        }
+        if (!AdhanStorage.device(context).getSharedPreferences(PREFS, 0).edit()
+                .putString(KEY, json.toString()).commit()) {
+            android.util.Log.w("NativeStrings", "cannot persist direct-boot adhan labels")
+        }
     }
 }

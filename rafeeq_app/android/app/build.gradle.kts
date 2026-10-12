@@ -96,6 +96,12 @@ android {
         }
     }
 
+    // A shell-only probe for real PIN/reboot regression tests, never release.
+    if (project.findProperty("rafeeqDirectBootTest") == "true") {
+        sourceSets.getByName("profile").java.srcDir("src/androidTest/profileBridge")
+        sourceSets.getByName("profile").manifest.srcFile("src/androidTest/profileBridge/AndroidManifest.xml")
+    }
+
     // The book reader's open voice runs on ONNX Runtime through the
     // `onnxruntime` pub package, which bundles libonnxruntime.so for ARM
     // only. On an x86_64 device (Chromebooks, the emulator) the voice failed
