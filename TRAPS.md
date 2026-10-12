@@ -748,3 +748,14 @@ Do not rediscover these.
     Native tests must use the actual AppTheme and bundled UI fonts: stock
     Material produced unrelated Russian layout overflows. Tap the ChoiceChip
     itself: RawChip can hit its InkWell without hitting its label RenderParagraph.
+
+68. **Read the actual Flutter temp path and count native cases.** A-38
+    observed Directory.systemTemp in code_cache on Android24/36, while the
+    fixture seed initially used cache. setUpAll then failed before any case,
+    but flutter drive still exited0 and printed All tests passed. Reject that
+    result: require the expected distinct cases, final runner count and no
+    setup/test failures. Seed unchanged source bytes into the observed path,
+    verify their SHA256, and delete only owned fixture files. Start screenshot
+    capture immediately after launch: a marker remains in logcat after the
+    four-second pause and teardown, so a late capture can show an empty tree
+    even in the same process. The corrected run passed15 cases and was seen.

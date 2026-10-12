@@ -22,6 +22,7 @@ class _DorarScreenState extends State<DorarScreen> {
   final List<DorarHadith> _results = [];
   String _query = '';
   int _page = 0;
+  int _searchGeneration = 0;
   bool _busy = false;
   bool _failed = false;
   bool _exhausted = false;
@@ -46,25 +47,35 @@ class _DorarScreenState extends State<DorarScreen> {
     q = q.trim();
     if (q.length < 2) return;
     setState(() {
+      // Even submitting the same text starts a distinct search. A previous
+      // response must not update this search's cards, page or loading state.
+      _searchGeneration++;
       _query = q;
       _page = 0;
       _results.clear();
       _exhausted = false;
+      _busy = false;
+      _failed = false;
     });
     await _more();
   }
 
+  bool _ownsSearch(int generation) => mounted && generation == _searchGeneration;
+
   Future<void> _more() async {
     if (_busy || _exhausted) return;
+    final generation = _searchGeneration;
+    final query = _query;
+    final page = _page + 1;
     setState(() {
       _busy = true;
       _failed = false;
     });
     try {
-      final next = await DorarService.instance.search(_query, page: _page + 1);
-      if (!mounted) return;
+      final next = await DorarService.instance.search(query, page: page);
+      if (!_ownsSearch(generation)) return;
       setState(() {
-        _page++;
+        _page = page;
         // A page that adds nothing new is the end of the results.
         final seen = {for (final h in _results) '${h.text}|${h.muhaddith}|${h.page}'};
         final fresh = [
@@ -75,9 +86,9 @@ class _DorarScreenState extends State<DorarScreen> {
         _exhausted = fresh.isEmpty;
       });
     } catch (_) {
-      if (mounted) setState(() => _failed = true);
+      if (_ownsSearch(generation)) setState(() => _failed = true);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (_ownsSearch(generation)) setState(() => _busy = false);
     }
   }
 
