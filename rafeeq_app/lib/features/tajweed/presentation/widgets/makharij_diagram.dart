@@ -96,18 +96,19 @@ class MakharijDiagram extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, box) {
           final size = Size(box.maxWidth, box.maxHeight);
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTapUp: (d) => _pickNearest(d.localPosition, size),
-            child: AnimatedBuilder(
-              animation: Listenable.merge([articulation, flow]),
-              builder: (context, _) {
-                final t = articulation.value;
-                return ClipRect(
-                  child: Transform(
-                    // A gentle push in towards whatever was picked, so the
-                    // detail is bigger without the rest leaving the frame.
-                    transform: _zoom(size, t),
+          return AnimatedBuilder(
+            animation: Listenable.merge([articulation, flow]),
+            builder: (context, _) {
+              final t = articulation.value;
+              return ClipRect(
+                child: Transform(
+                  // A gentle push in towards whatever was picked, so the
+                  // detail is bigger without the rest leaving the frame.
+                  transform: _zoom(size, t),
+                  // Hit testing must use the same coordinates as painting.
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTapUp: (d) => _pickNearest(d.localPosition, size),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -136,9 +137,9 @@ class MakharijDiagram extends StatelessWidget {
                       ],
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         },
       ),

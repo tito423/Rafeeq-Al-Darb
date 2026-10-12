@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A41 VALIDATED / SAVING 06:14 Dubai:** Baseline13RED14PASS2s/focused27PASS3s/full1240PASS4originalskips3m08/analyzerCLEAN46.3s/native27distinct+29runner API24(25s)/API36(49s), actual selected kaf UI viewed both. NORMAL37.1s/sign415011919B/entryguard/install-rboth Success, final HomeTamerArabicRGB and API24onboarding viewed; initialblue startup waited rather than claimeddone. Page541+shelf20013Wed19:25 preserved/currentFATAL0ANR0/offlineinitabsent/mirror41904open. Saving one A41commit; next A42 current loading-race regression, separate majorCaravan development after fullaudit/fixes+proposalreview. No release/deploy/keys/content/strings/versionchanges.
+
 **A41 NATIVE27 BOTH PASS / NORMAL BUILDING 06:11 Dubai:** 27 distinct cases and29runner PASS both API24(25s)/API36(49s), actual selected kaf screenshots viewed both. Full1240/analyzer clean. NORMALmain build now; next sign/guard/install-r/Home/541+shelf20013/currentprefs/logs, oneFixA41/report/push. Owner new request: after fullaudit/fixes evaluate then propose substantial Caravan gameplay development before any development; read-only review finds20legs/4rides/24s road loop. No Caravan edits; A42 local bug remains authorized, largegame redesign waits review/owner agreement.
 
 **A41 NATIVE27 RUNNING 06:10 Dubai:** Signed fixture build54.5s, A41 marker verified/A39 absent, install-r both Success. Actual27 native cases and currentPID captures running API24+36; no product edits. Full1240/analyzer clean. Next native counts27+29 and screenshots, NORMAL restore both and owner preferences, one Fix A41 commit/report/push.
