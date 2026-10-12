@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A38 BASELINE HARNESS CORRECTION 04:45 Dubai:** Initial15beforefix13RED2PASS; 11replacement failures actualnewHTTPmissing,2paginationNoElement from testfinder TextButton.icon subtype/ListViewscrollable. Correct actionfinder isTextButton andscrollactualListView; waitreal50msafterHTTPflushforlatecompletion beforeassert. Allassertionsretained/no productedit. Rerunbaseline15now; requireordinary/short/close controlsPASSbeforefix; originallogsoutsidegit retained.
+
 **A38 CORRECT BEHAVIOR BASELINE RUNNING 04:43 Dubai:** Added15shared actualDorarScreen/productionservice/parser/realHTTP regressions incl7locales,replacement/status/busy/pagination/retry/duplicates/short/close/samequery. OriginalfixtureSHAverified/sourceblocks selected unchanged, no newreligiousdata. HOSTbaselinebeforeproductfix running; newproductcodeNOTedited. Nativeentryloadsisolatedcopy oforiginal fixture incache (mustseed/cleanup viaADB), no pubspec/assetschanges. NextinspectvalidRED12/controls expected thenownedgenerationfix/fullchecks/native15both/NORMALrestore/singleFixA38commit.
 
 **QUOTA RENEWED / A38 CONTINUING 04:39 Dubai:** Fresh0percent5hUSED/47weeklyUSED/ordinaryallowed/tworesetcreditsunused; renewal automatic notReset. Masterfetch-checkout-pull clean(original8authorizeduntrackedonly), no activebuild/test. ContinueexactA38 realHTTP regression/ownedgeneration; source/parser/religiousfixtureunchanged; normalAPK415016015Bbackup/visiblemirrorleftopen. Next meaningfulREDcases thenfix/fullchecks/native/NORMALrestore/singlecommit.
