@@ -10,7 +10,7 @@ measurement rather than a claim. So:
   1. `https://api.aladhan.com/v1/methods` publishes every method's real
      parameters (Fajr/Isha angle, or an Isha interval in minutes) beside the
      organisation that set them. That is the source
-     `lib/features/adhan/data/prayer_calculation_methods.dart` is written
+     `lib/core/models/prayer_calculation_methods.dart` is written
      from, and the one credited on the Sources screen.
   2. `https://api.aladhan.com/v1/timings/...&timezonestring=UTC` then gives a
      reference answer per (method, city, date) — in UTC, so it can be compared
@@ -75,12 +75,13 @@ SCHOOLS = [(0, "STANDARD"), (1, "HANAFI")]
 
 # The ids the app actually offers, read straight out of the Dart catalogue so
 # the two can never drift apart.
-CATALOGUE = os.path.join(ROOT, "rafeeq_app", "lib", "features", "adhan",
-                         "data", "prayer_calculation_methods.dart")
+CATALOGUE = os.path.join(ROOT, "rafeeq_app", "lib", "core", "models",
+                         "prayer_calculation_methods.dart")
 
 
 def offered_ids():
-    src = io.open(CATALOGUE, encoding="utf-8").read()
+    with io.open(CATALOGUE, encoding="utf-8") as catalogue:
+        src = catalogue.read()
     return sorted(int(m) for m in re.findall(r"^\s*id:\s*(\d+),", src,
                                              re.MULTILINE))
 
