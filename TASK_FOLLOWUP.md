@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 API36 PHONE PASS / API24 RUNNING 06:54 Dubai:** API36 phone actual1test9scenarios3runnerPASS1m40, original4min timeout unchanged; repaired gate screenshot capturedcurrentPID andviewed. Native360x800/dpr1 restoredaftertest/no wm change; no assertions weakened. API24 samefixture sequentialrun now. Next PASS9+3 andactualUI/owneddirs absence; NORMALmain/sign/guardrestoreboth/Home/prefs/report/singleFixA42. Full1241/analyze20s/focused9s retained.
+
 **A42 PHONE NATIVE API36 RUNNING 06:51 Dubai:** Phonefixture34.1s/signed/install-rbothSuccess; API36phone native1test9scenarios running alone with5mincapture. Interruptednative code_cache/audit_A42_FGCCNW verifiedempty andremoved explicitly afterstop. Next requirePASS3runner/all9markers+actualUI; thenAPI24same serial run; NORMALbuild-sign-guard-restore-rboth/prefs/report/oneFixA42. Full1241/analyze20s/focused9s retained; no product changes afterfinalchecks.
 
 **A42 PHONE HARNESS CLEAN / REBUILD 06:48 Dubai:** Finalfocused9scenariosPASS9s/analyzerCLEAN20s; full1241previousPASS/productunchanged. Nativephone360x800fixture rebuilding/sourcefrozen. Quota86percent5hUSED/60weeklyUSED; twoResetcreditsunused. API36failedrun left explicitlyowned code_cache/audit_A42_FGCCNW directory; inspect empty thenrmdir afterprocessstop, successfulAPI24cleanupverified. Next sign/reinstall-r/sequentialnative extendedcapture/all9checks thenNORMALboth/sign/guard/Home/prefs/report/oneFixA42. Do not start A43 productfix before A42 complete.
