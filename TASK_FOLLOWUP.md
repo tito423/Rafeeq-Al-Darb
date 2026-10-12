@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A39 SIGNED NATIVE9 RUNNING 05:37 Dubai:** FixtureGradle55.6s/sign/kernelA39marker+cachehelpersverified/install-rboth/seedoriginal2fixtures/SHA/currentPIDimmediatecapturelauncher/native9 running. Full1213PASS4originalskips2m58/analyzerCLEAN21.2s/focused9PASS3s; noA39fixcommit. NEXTvalidate9distinct+11runner/no failure/actualtocimagesboth, seedcleanup+assertno leaked audit_A39 directories; NORMALmain/sign/guardrestore-r/Home+prefs/logs/report/saveA39. Emulatorsfixtureuntilrestore/NORMALA38backupavailable.
+
 **A39 NATIVE BUILD / SOURCE FROZEN 05:33 Dubai:** Final1213PASS4originalskips2m58/analyzerCLEAN21.2s/focused9PASS3s; nativefixturebuildnow/sourcefrozen/no testsorlibeditswhilebuild. Fresh43percent5hUSED/53weeklyUSED/two resetsunused. Nextbuildsign/install-rboth/seedunchangedtoc67700B+section28505B/SHAincode_cache/immediatecapturelauncher/9distinct+11runner/no errors both/actualrecoveredtocUI/verifyownrootcleanup+fixturecleanup/NORMALmain/sign/guardrestore/Home/prefs/report/singleA39commit. NORMALA38backup415016015Bavailable; mirrorleftopen.
 
 **A39 FULL1213 PASS / FINAL ANALYZER 05:31 Dubai:** Full1213PASS/original4skips2m58/focused9PASS3s/baseline6RED3controls1s; removedonlyredundanttestimportafterfull/semanticsassertionsunchanged. Finalanalyzer running. Nextcleanthen nativefixturebuild/sourcefreeze/sign/install-r/seed2originalSHAfixtures/code_cache/immediatecapture/all9+11results both+actualtocimage/ownedtempcleanup/NORMALrestore/commit. A39notvalidatednative/notcommitted; A38saved891cd5c2/all26fixed.
