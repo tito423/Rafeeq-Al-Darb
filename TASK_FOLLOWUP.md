@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**QUOTA RENEWED / A42 NORMAL ANR RECORDED 10:21 Dubai:** Freshfivehour0used/weekly62used/resetcredits2unused: renewal automatic/noReset. A42code validated/full1241/focused9scenarios/nativeactualgate both; NORMAL38.4s/sign415016015B/guard/install-rbothSuccess. After quota gap API36Home hadANR dialog/currentlog1ANR; capturedlastanr outsidegit/relaunching, no claimstartupresolved. API24normalonboardingseen/541+shelf20013 retained/rollback6563e3e7/mirroropen/owneddirsabsent. Next viewhealthyAPI36Home+newlogs, saveONEA42codecommit/report truthfulstartup limitation thenA43. Original8untracked plusours only; no otheractivebuild/test.
+
 **A42 BOTH ACTUAL GATES SEEN / NORMAL BUILDING 07:15 Dubai:** Finalnativeoneactualtest/ninescenarios/3runner PASSAPI24 originalview2m56/API36phone1m32; repairedquestion+4choices overactualgameimages viewedacceptedboth. SDK24 hadTeststarting afterviewportmutation, fixedtest-only profilefalse; API36trueprofile sameassertions/4minbudget. Full1241PASS4originalskips3m05/focused10s/analyzer18.6sCLEAN. NORMALmainbuilding/sourcefrozen; nextsign/guard/install-rboth/Home/prefs/logs/owneddirsabsence thenoneFixA42/report/push. A43notstarted/sourceonlyread. Initialtimeout/images rejected honestly.
 
 **A42 API24 ORIGINAL VIEW RUNNING 07:11 Dubai:** API24-specific fixture48.8s/signed/install-rSuccess, same9checks/4min test nowrunning withoutviewmetricmutation and5mincapture. API36alreadyactualgate+all9PASS1m32. Next requireAPI24PASS+actualgate, NORMALmain/sign/entryguard/restore-rboth/Home/prefs/logs/owneddirsabsence andoneFixA42/report/push. Full1241/finalfocused10s/analyzer18.6s retained/productunchanged. No otherfixrunning.
