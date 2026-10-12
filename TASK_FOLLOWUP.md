@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A39 SEED SHA GUARD / BINARY READ CORRECTED 05:38 Dubai:** Previousnative-runningcheckpoint corrected: signedfixtureinstalledboth butseedingfailedbeforelaunch/all0cases. adb shellrun-ascat alteredcompressedbinarycapture; directexec-outreadsactualfile unchanged67700B/SHA matchesoriginal onboth. Correctignoredseedbinaryreads toexec-out, seededbothoriginalfixtures67700+28505B SHAverified both; product/testassertions/sourceunchanged/no rebuild. NEXTimmediatecapturelauncher/native9both+11runner andactualtocUI thenownedcleanup/NORMALrestore/saveA39. Full1213/analyzerCLEANretained.
+
 **A39 SIGNED NATIVE9 RUNNING 05:37 Dubai:** FixtureGradle55.6s/sign/kernelA39marker+cachehelpersverified/install-rboth/seedoriginal2fixtures/SHA/currentPIDimmediatecapturelauncher/native9 running. Full1213PASS4originalskips2m58/analyzerCLEAN21.2s/focused9PASS3s; noA39fixcommit. NEXTvalidate9distinct+11runner/no failure/actualtocimagesboth, seedcleanup+assertno leaked audit_A39 directories; NORMALmain/sign/guardrestore-r/Home+prefs/logs/report/saveA39. Emulatorsfixtureuntilrestore/NORMALA38backupavailable.
 
 **A39 NATIVE BUILD / SOURCE FROZEN 05:33 Dubai:** Final1213PASS4originalskips2m58/analyzerCLEAN21.2s/focused9PASS3s; nativefixturebuildnow/sourcefrozen/no testsorlibeditswhilebuild. Fresh43percent5hUSED/53weeklyUSED/two resetsunused. Nextbuildsign/install-rboth/seedunchangedtoc67700B+section28505B/SHAincode_cache/immediatecapturelauncher/9distinct+11runner/no errors both/actualrecoveredtocUI/verifyownrootcleanup+fixturecleanup/NORMALmain/sign/guardrestore/Home/prefs/report/singleA39commit. NORMALA38backup415016015Bavailable; mirrorleftopen.
