@@ -108,7 +108,7 @@ class TajweedLevelsScreen extends ConsumerWidget {
                 subtitle: 'tajweed.level_two_sub'.tr(),
                 total: jazariyyahLessons.length,
                 done: jazariyyahLessons
-                    .where((l) => jazariyyahDone.contains(l.title))
+                    .where((l) => jazariyyahDone.contains(l.progressId))
                     .length,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(

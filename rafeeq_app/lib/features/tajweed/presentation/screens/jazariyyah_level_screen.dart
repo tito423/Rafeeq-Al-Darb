@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
@@ -11,9 +10,12 @@ import '../../data/bundled_matn.dart';
 import '../../data/jazariyyah_course.dart';
 import '../../data/jazariyyah_examples.dart';
 import '../../data/jazariyyah_lesson_text.dart';
+import '../../data/jazariyyah_progress.dart';
 import '../../data/jazariyyah_sharh.dart';
 import '../widgets/lesson_text.dart';
 import '../widgets/listen_card.dart';
+
+export '../../data/jazariyyah_progress.dart';
 
 /// المستوى الثاني — «المقدمة الجزرية» لابن الجزري (ت ٨٣٣ هـ).
 ///
@@ -25,32 +27,6 @@ import '../widgets/listen_card.dart';
 /// The lessons are `jazariyyah_course.dart`, generated from the book; the
 /// editor's apparatus is excluded there and his footnotes are dropped again at
 /// render time by `jazariyyahLessonParas`.
-class JazariyyahProgress extends StateNotifier<Set<String>> {
-  JazariyyahProgress() : super({}) {
-    _load();
-  }
-
-  static const _key = 'jazariyyah_done_v1';
-
-  Future<void> _load() async {
-    final prefs = await SharedPreferences.getInstance();
-    state = (prefs.getStringList(_key) ?? const []).toSet();
-  }
-
-  Future<void> toggle(String lesson) async {
-    final next = state.toSet();
-    next.contains(lesson) ? next.remove(lesson) : next.add(lesson);
-    state = next;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(_key, next.toList());
-  }
-}
-
-final jazariyyahProgressProvider =
-    StateNotifierProvider<JazariyyahProgress, Set<String>>(
-      (ref) => JazariyyahProgress(),
-    );
-
 /// The book, downloaded on first use and then read from disk — the same
 /// contract `tuhfaBookProvider` has, including why the error is logged rather
 /// than only turned into «يلزم تنزيل نصّ الدروس».
@@ -116,7 +92,7 @@ class JazariyyahLevelScreen extends ConsumerWidget {
                 // Only ticks that still belong to a lesson, so a renamed
                 // section can never make this read «31 من 30».
                 done: jazariyyahLessons
-                    .where((l) => done.contains(l.title))
+                    .where((l) => done.contains(l.progressId))
                     .length,
                 total: jazariyyahLessons.length,
                 theme: theme,
@@ -128,7 +104,7 @@ class JazariyyahLevelScreen extends ConsumerWidget {
             return _LessonTile(
               index: index,
               lesson: lesson,
-              done: done.contains(lesson.title),
+              done: done.contains(lesson.progressId),
               book: text,
               locale: locale,
             );
@@ -320,7 +296,7 @@ class _LessonTile extends ConsumerWidget {
               child: TextButton.icon(
                 onPressed: () => ref
                     .read(jazariyyahProgressProvider.notifier)
-                    .toggle(lesson.title),
+                    .toggle(lesson.progressId),
                 icon: Icon(
                   done ? Icons.check_circle : Icons.circle_outlined,
                   color: scheme.primary,
