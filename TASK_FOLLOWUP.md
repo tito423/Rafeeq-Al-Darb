@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A39 BASELINE CLASS MODIFIER CORRECTED 05:22 Dubai:** Secondbaselinecompile0cases: installedDart IOOverrides isbase, testsubclassmustfinal; correctedonlytestclassmodifier. No productrecoveryfix/testassertchanges. Thirdactual9casebaseline running; doNOTtreatcompilefailuresasregressionproof. RequirevalidcorruptionRED+3ordinarycontrols thenfix_getcachemiss+atomicstage; sourcecited_get rereadstilloriginallogic.
+
 **A39 BASELINE TYPE CORRECTED 05:21 Dubai:** Firstbaselinecompilefailed0cases dueactualSDK File.readAsBytes returnUint8List vsList<int> intestpartialFilewrapper; correctedonlysignature/import, noasserts/productrecoverychanged. Rerun9beforefixnow. Nextrequireactualcorruption/partialwriteRED+validcachecontrols thenimplementguardedcachemiss/atomicwrite. A38saved891cd5c2/NORMALboth/ownercurrentar-rgb untouched; A39stillWIPfactoryseam+newtests only.
 
 **A39 BASELINE9 RUNNING 05:20 Dubai:** Addedtest-onlyserviceconstructor (Dio+isolatedsupportDirectory) leaving_getcachebugunchanged; actualDioHTTPredirectstoloopback/originalsourcefixture67700B+28505B/SHA verified/parserunchanged. Ninecases: header/truncation/UTF8 corruption/missing/freshvalid/staleoffline/retry/partialwritefail/sectionrepair; realtocscreenafterrecovery. Originalfilesneveredited/testcorruptiononlyisolatedcopies/tempdirectorycleanupresolvedinsideactualsystemtemp. HOSTbeforefixrunning; no recoveryfix/full/nativeyet. NextvalidRED/controls thenreadcited_get/fixcachemiss+atomicwrites/full/native9both/currentPIDcapture/ownedcleanup/NORMALrestore/oneFixA39commit.
