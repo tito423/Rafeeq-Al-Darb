@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 FOCUSED PASS / FULL RUNNING 06:30 Dubai:** Actual1widgettest/9scenarios PASS9s; baseline8controlsPASS/latequestionRED9s. Full1241expected/analyzer running; no build orsource edits untilfinish. NativecurrentPID launcher/1test3runner/all9scenario marker validator ready. Next cleanfull/analyze thensignednativeboth/actualquestionUI/NORMALrestore/singleFixA42/report/push. Initialtwo interrupted host dirs explicitlyowned11172b53/98a85056 pendingguardedcleanup; successfulrunsremoveownroot. Majorgameproposalremainsunimplemented.
+
 **A42 VALID RED / LOCAL FIX APPLIED 06:28 Dubai:** Consolidated actualtest baseline9s:8ordinary controlsPASS(7locales+mapreplay), latebank originaljourney has0questionRED. Citedcode reread; choose gate shared start/bank-completion, clears choices whenpending, reuses currentworld withoutrestart. Focused nowrunning, no validatedA42commit. Next focusedPASS/full1241/analyze/native1actualtest9scenarios/3runnerboth+UI/NORMALrestore/report/singleFixA42. No new game mechanics/content/strings.
 
 **A42 BASELINE ISOLATION CORRECTED 06:27 Dubai:** Initial9 tests rejected: cached HistoryQuiz Future retained first FakeAsync zone, latercontrols absent and teardown awaiting cachedFuture hung; own runs terminated/no product edits. Consolidated delayed/disposal+7languages+mapreplay in one actual widgettest, retain all assertions/actual500bank. First consolidated run caught duplicate HUD/answer sameplace label; scope choice checks to actual FilledButtons (notglobaltexts). Finalcorrectbaseline running; expect8ordinarycontrolsPASS then latecompletionRED before fix. Full expected1241, native1test/9scenarios+3runner. NORMAL remains on both.
