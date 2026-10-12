@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A38 FULL1204 PASS / FINAL ANALYZER 04:51 Dubai:** Full1204PASS/original4skips3m02/focused15PASS9s/baseline12RED3controls43s. Onlyremovedunnecessaryimport/addedbracesnativeScreenshotconditional afterfull; assertions/productunchanged; finalanalyzer running. NEXTcleananalyzer thenfixturebuild/sign/install-rAPI24+36/seedoriginalcacheSHA/native15+screenshots/cleanownfiles/NORMALguardrestore/showowner/read-onlyprefs/report/oneFixA38commit. A39sourcecache309readreadonly, no editsyet.
+
 **A38 FULL RUNNING / TWO TEST LINTS 04:49 Dubai:** Focused15PASS9s; fullsuite stillrunning. Analyzer2test-onlyinfos(unnecessarydartasync import/bracesnativeScreenshotif), correctafterfullcompletion withoutassertchanges thenreanalyze. Ownedignoredseed_a38.py validatesfixtureSHA/copiestoonlyreservedcache/removesstaging; capture_a38.py tiesmarkertocurrentPID avoidoldmarker/emptyUI race. No nativebuild/sourceeditsduringfull; nextfullPASS1204/analyzeCLEAN then15nativecasesboth/NORMALrestore/report/save.
 
 **A38 HOST15 PASS / FULL CHECKS 04:48 Dubai:** Focused15PASS9s after12RED3controlsbaseline43s; actualHttpServer/Dio/parser/unmodifiedfixture15sourceblocks/SHA/all7translations. Fullsuite1204expected andanalyzer running(no build/sourceeditswhiletest). Next requireallpass/clean before signednativefixture15API24+36(seedcachecopySHA/cleanownfiles), normalrestore/showownerapp/read-only541+shelf20013, report/oneFixA38commit. ProductUIstrings/parser/religiousdatavaluesunchanged.
