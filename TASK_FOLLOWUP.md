@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A39 ACTUAL6 RED / CACHE RECOVERY WIP 05:26 Dubai:** Validbaseline9=6RED3controlsPASS1s; truncatedgzip silentlyreturned752of1469tocsections, partialdirectwrite744. Rereadcited_get; nowreadcacheIO/UTF/formatguard+singlememberCRC32/ISIZE integrity(existingarchive4.2.0getCrc32, no upgrade; RFC1952primarychecked), badcachemiss/refetch/retry +validstaleofflinefallback. Writesstagecompletegzip+flush+sametree rename withownedtempcleanup. Focused9running; full/analyze/native notyetverified/noA39commit. UIstrings/parser/religioussourceunchanged. NextallGREEN/full1213/analyze/native9both/SHAfixtures/actualtocUI/NORMALrestore/report/singlecommit.
+
 **A39 BASELINE CLASS MODIFIER CORRECTED 05:22 Dubai:** Secondbaselinecompile0cases: installedDart IOOverrides isbase, testsubclassmustfinal; correctedonlytestclassmodifier. No productrecoveryfix/testassertchanges. Thirdactual9casebaseline running; doNOTtreatcompilefailuresasregressionproof. RequirevalidcorruptionRED+3ordinarycontrols thenfix_getcachemiss+atomicstage; sourcecited_get rereadstilloriginallogic.
 
 **A39 BASELINE TYPE CORRECTED 05:21 Dubai:** Firstbaselinecompilefailed0cases dueactualSDK File.readAsBytes returnUint8List vsList<int> intestpartialFilewrapper; correctedonlysignature/import, noasserts/productrecoverychanged. Rerun9beforefixnow. Nextrequireactualcorruption/partialwriteRED+validcachecontrols thenimplementguardedcachemiss/atomicwrite. A38saved891cd5c2/NORMALboth/ownercurrentar-rgb untouched; A39stillWIPfactoryseam+newtests only.
