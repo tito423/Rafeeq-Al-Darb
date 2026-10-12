@@ -455,6 +455,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 71. Inspect native screenshots; test view metrics can leave Test starting on the physical surface, and cached quiz futures retain test zones.
 
 72. Preserve protected font literals while formatting; full quotation wrapping also needs bounded-sheet scrolling.
+73. Preserve the valid-request control after cancelling oversized local Worker bodies; SDK peers and signed APK gates both matter, and DEBUG startup hangs are separate.
 
 ## 4. Where things live
 

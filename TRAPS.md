@@ -794,3 +794,18 @@ Do not rediscover these.
     container in a bounded bottom sheet: the real font2 column was712px with
     713px of children. Test the complete original quote, original fonts and
     all seven locales in the actual modal constraints; do not truncate text.
+
+73. **A cancelled oversized body can break the next local dev request.**
+    A05 on Wrangler3.114.17 returned503 for a valid UTF8 chunked request after
+    cancelling an oversized stream. A new non-keepalive client reproduced it;
+    adding Connection: close did not fix it and was reverted. Keep the failing
+    valid-request control, not a retry or a drained unbounded body. The same
+    fourteen tests passed with isolated Wrangler4.149.0, then seventeen with
+    the actual project CLI and its required workers-types5.20261012.1 peer.
+    Do not force the old incompatible types through npm. The local proxy's
+    restart response and matching external report do not prove a production
+    failure or its root cause. Local test processes own their temporary D1
+    directory and child process tree; cleanup must verify that exact scope.
+    A07 additionally passed the unchanged signed universal release build and
+    both native installs. The original DEBUG cold-start ANR remains separate:
+    a successful backend SDK upgrade does not fix an Android startup hang.
