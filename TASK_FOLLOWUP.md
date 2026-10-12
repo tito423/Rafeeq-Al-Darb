@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A32 NATIVE51 BOTH PASS / NORMAL BUILDING 11:59 Dubai:** Native51distinct+53runner API24(39s)/API36(1m12); actualoriginalHoopoe storyroute/title imagesviewedboth/no setup-testexceptions/sourceQuranDBreadOnly SHAunchanged/owncode_cache rootsabsent. Full1337/original4skips2m50/analyzer37clean/focused51PASS4s. NORMALmainbuildnow/sourcefrozen; nextsign/guardrestore-rboth/waitsettledHome-onboarding/shelf20013/page541/currentlogs-actualscreenshot thenONEFixA32/report32fixed16remaining/NEXTA20. Video-wake transportcontrolled/no decoding-hearing claim; no contentstringschanges.
+
 **A32 SIGNED FIXTURE / NATIVE51 NEXT 11:57 Dubai:** Fixture61.2s/signed/markerA32presentA45absent/install-rbothSuccess. Full1337/analyzer37clean/focused51 retained. Nextnative51actualdistinct+53runnerboth/currentPIDcaptureactualHoopoe storytitle/no viewmetricmutation/readOnlyoriginalQuranDBSHA cleanup thenNORMALrestore/Home-onboarding/prefs/logs/ONEFixA32. Originalstorydata/aliases/7translations unchanged; video-wake controlled, no actualdecode-hearing.
 
 **A32 FULL1337 CLEAN / NATIVE BUILDING 11:54 Dubai:** Finalfull1337PASS4originalskips2m50/analyzerCLEAN37.0s/focused51PASS4s; productminimal10add2remove longestcanonicalstorymatch preservesoriginaltieorder/source-data-translations. Signednativefixturetargetbuilding/sourcefrozen. NEXTsign/markercheck/install-rboth/native51distinct+53runner/actualspecificHoopoe route title andcatalogidentity both/ownedreadOnlyQuranDBhashcleanup/no viewmetricmutation; NORMALbuild/sign/restore/Home-onboarding/prefs/currentlogs thenONEFixA32/report32fixed16remaining. Priorbaselineharnessframes/portrait/wake corrected, onlyfinal6RED45controls counts.
