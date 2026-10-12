@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A43 FOCUSED16 GREEN / FULL RUNNING 10:46 Dubai:** Final16PASS4s after14RED2controlsbaseline4s; wrap eliminateshorizontaloverflow, actualcolumn712/713font2 fixedscroll preservingfullquote/styles. Full1257expected/analyzer nowrunning; no buildorlibeditsduringtest. Actualboundedmodal7locales/font1-2/readOnlyDBSHA+sourcequote/fonts, buttoninside328dpcard/clickable/scrollaccessible,2emptycontrols. Native16+18validator/capture ready/no externalfixtureseed: copybundledDB intoowncache/rootSHA/readOnly/cleanup. Next full/analyzeclean, native16both+UI/NORMALrestore/oneA43commit/report.
+
 **A43 VERTICAL HEIGHT MEASURED / SCROLL APPLIED 10:43 Dubai:** Wrap fixedhorizontaloverflow;11PASS5RED atfont2 vertical1px. ActualRenderFlexcolumn712px/children713px measured, notbuttonguess. Wrap completeAnimatedContainer inSingleChildScrollView primaryfalse (boundedcourse sheet andexistingJazariyyahlist); preservefont/verse/fullquote/animation/button. Removedtemporarydiagnostic only/assertions unchanged. Focused16running; nextGREEN/full1257/analyze/native16withrealoriginalDBcopy/fonts/unmutatedviews/both/NORMALrestore/singleA43commit/report.
 
 **A43 VALID BASELINE / WRAP APPLIED 10:39 Dubai:** Beforefix16cases4s:14longquoted cases RED horizontalRenderFlex overflow/all7locale1+2,2emptycontrolsPASS. Re-readcitedcode; replaceunbounded phrase/Spacer row withfullwidthWrap, preserveText/styles/animations/button, allowbuttonnextline andemptybuttonatdirectionalend. Focusedrunning; inspectboundedmodalfont2 verticalheight too beforeclaimPASS. No scripture/data/translation/stringchange. Next focusedGREEN/full1257/analyze/native16both/NORMALrestore/oneFixA43/report.
