@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A39 NATIVE BUILD / SOURCE FROZEN 05:33 Dubai:** Final1213PASS4originalskips2m58/analyzerCLEAN21.2s/focused9PASS3s; nativefixturebuildnow/sourcefrozen/no testsorlibeditswhilebuild. Fresh43percent5hUSED/53weeklyUSED/two resetsunused. Nextbuildsign/install-rboth/seedunchangedtoc67700B+section28505B/SHAincode_cache/immediatecapturelauncher/9distinct+11runner/no errors both/actualrecoveredtocUI/verifyownrootcleanup+fixturecleanup/NORMALmain/sign/guardrestore/Home/prefs/report/singleA39commit. NORMALA38backup415016015Bavailable; mirrorleftopen.
+
 **A39 FULL1213 PASS / FINAL ANALYZER 05:31 Dubai:** Full1213PASS/original4skips2m58/focused9PASS3s/baseline6RED3controls1s; removedonlyredundanttestimportafterfull/semanticsassertionsunchanged. Finalanalyzer running. Nextcleanthen nativefixturebuild/sourcefreeze/sign/install-r/seed2originalSHAfixtures/code_cache/immediatecapture/all9+11results both+actualtocimage/ownedtempcleanup/NORMALrestore/commit. A39notvalidatednative/notcommitted; A38saved891cd5c2/all26fixed.
 
 **A39 FULL RUNNING / ONE TEST IMPORT INFO 05:30 Dubai:** Fullsuite stillrunning/focused9PASS3s; analyzeronlyunnecessarytyped_data import intest (servicesexportsUint8List), removeafterfullwithoutassertchange/reanalyze. PreparedignoredA39seed2originalSHAfixturesincode_cache/guardcleanup+no leaked audit_A39 dirs; immediatecapturelauncher/validator9distinct+11runner/no setupfailures. ProductcacheintegrityCRC/ISIZE+atomicpartialwritefallbackvalidatedhost; nextfull1213/analyzer/native9both+actualtocUI/NORMALrestore/commit.
