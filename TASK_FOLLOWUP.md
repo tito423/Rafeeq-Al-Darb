@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A32 SIGNED FIXTURE / NATIVE51 NEXT 11:57 Dubai:** Fixture61.2s/signed/markerA32presentA45absent/install-rbothSuccess. Full1337/analyzer37clean/focused51 retained. Nextnative51actualdistinct+53runnerboth/currentPIDcaptureactualHoopoe storytitle/no viewmetricmutation/readOnlyoriginalQuranDBSHA cleanup thenNORMALrestore/Home-onboarding/prefs/logs/ONEFixA32. Originalstorydata/aliases/7translations unchanged; video-wake controlled, no actualdecode-hearing.
+
 **A32 FULL1337 CLEAN / NATIVE BUILDING 11:54 Dubai:** Finalfull1337PASS4originalskips2m50/analyzerCLEAN37.0s/focused51PASS4s; productminimal10add2remove longestcanonicalstorymatch preservesoriginaltieorder/source-data-translations. Signednativefixturetargetbuilding/sourcefrozen. NEXTsign/markercheck/install-rboth/native51distinct+53runner/actualspecificHoopoe route title andcatalogidentity both/ownedreadOnlyQuranDBhashcleanup/no viewmetricmutation; NORMALbuild/sign/restore/Home-onboarding/prefs/currentlogs thenONEFixA32/report32fixed16remaining. Priorbaselineharnessframes/portrait/wake corrected, onlyfinal6RED45controls counts.
 
 **A32 FOCUSED51 GREEN / FULL RUNNING 11:51 Dubai:** Focused51PASS4s afteractual6RED45controlsbaseline5s. Removedonlyunrelateddartformatreflowsfromproduct (samevalidatedlongestphraseblock; minimaldiff11add3remove). Full1337expected+analyze next/sourcefreeze. Native51helper+53runner/currentPIDcapture no viewmetricmutation/readOnlyQuranDBSHA+ownedcleanup prepared. Nextfull/analyzeclean/fixturebuildsign/nativebothactualrouteUI/NORMALrestore/preferences/logs/ONEFixA32. Controlledvideo-wake initialization/no decoding-hearing claim; stories/religiousdata/7strings unchanged.
