@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A38 SIGNED NATIVE15 RUNNING 04:56 Dubai:** FixtureGradle91.4s/sign/kernelA38marker+generationverified/install-rbothSUCCESS/seedoriginalSHA12249B cacheverified. Native15casesbothAPI24+36running/currentPIDcapturesactive(no oldmarkeraccepted). Full1204/4originalskips3m02/analyzerCLEAN21.2s/focused15PASS9s. NEXT inspectactual15uniquePASS+UI screenshots orfix anyRED; cleanownedcache/staging both thenNORMALmain/sign/entryguard/install-r/Home+ownerprefs/logs/report/singleFixA38commit. Emulatorscurrentfixture; MUSTnormalrestore beforestopping; backup415016015Bprotected.
+
 **A38 NATIVE BUILD STARTING 04:52 Dubai:** FinalanalyzerCLEAN21.2s/full1204PASS4originalskips3m02/focused15PASS9s. Signedintegrationfixturebuildingnow/sourcefrozen(no Fluttertest/lib edits), NORMAL415016015Bbackupavailable/visiblemirror41904remains. Quota fresh12percent5hUSED/48weeklyUSED/two resetsunused. NEXT buildsuccess/sign/install-rboth, seedreservedoriginalcacheSHA thenlaunch/15native/currentPIDcaptures; cleanupcache/stagingfilesverified, NORMALmain/sign/guardrestore-r/showownerapp/prefs/report/saveA38. NoA38fixcommit yet.
 
 **A38 FULL1204 PASS / FINAL ANALYZER 04:51 Dubai:** Full1204PASS/original4skips3m02/focused15PASS9s/baseline12RED3controls43s. Onlyremovedunnecessaryimport/addedbracesnativeScreenshotconditional afterfull; assertions/productunchanged; finalanalyzer running. NEXTcleananalyzer thenfixturebuild/sign/install-rAPI24+36/seedoriginalcacheSHA/native15+screenshots/cleanownfiles/NORMALguardrestore/showowner/read-onlyprefs/report/oneFixA38commit. A39sourcecache309readreadonly, no editsyet.
