@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 SIGNED NATIVE RUNNING 06:38 Dubai:** Fixture53.9s/sign/A42marker verified/A41absent/install-rbothSuccess. Native actual delayed/disposal+7locales+mapreplay test running both withcurrentPID capture/9markers/3runner guard. Full1241/analyzerclean retained. Next nativePASS+UI thenownedtempchecks/NORMALmain/sign/guardrestore/prefs/report/singleFixA42. No majordevelopment.
+
 **A42 FULL CLEAN / NATIVE BUILDING 06:35 Dubai:** Full1241PASS/original4skips3m05/analyzerfinalCLEAN21.5s/focused9scenariosPASS9s; nativefixturebuildnow/sourcefrozen. Currentquota79percent5hUSED/59weeklyUSED/twoResetcreditsunused. Next sign/marker/install-rAPI24+36/runactualonewidgettest/nine scenario markers/3runner/captureactualgate; NORMALrestore/ownerdata/report/singlefix. No majorgameimplementation; A43 citedListenCardlayout/auditfixture read-only.
 
 **A42 FULL1241 PASS / FINAL ANALYZER 06:33 Dubai:** Full1241PASS4originalskips3m05/focused9scenariosPASS9s. Corrected onlytwo testlintinfos(intentional unawaited Future and braces); no assertions/productchanges. Finalanalyzer running; nextcleanthenfixturebuild/sign/install-r/native1test9scenarios3runnerboth/UI/NORMALrestore/report/oneFixA42. Earlier two interrupted hosttempdirs verifiedempty/absoluteinsideTEMP thenremoved explicitly; no ownedhosttemp remains.
