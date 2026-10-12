@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A39 HOST9 PASS / FULL CHECKS 05:28 Dubai:** Focused9PASS3s after6RED3controlsbaseline1s. Corrupt/truncated/UTF8 cache recovered full1469toc+unchangedsection; retry503/200works; injectedpartialwrite keptoldcachebytesexact+no staging leaks; realtocscreenrendered. Fullsuite1213expected/analyzer running; no build/source/testeditsduringfull. Nextclean/fullPASSthen signedfixture/native9both withoriginal2fixturesSHAincode_cache/currentPIDearlycapture/ownedrootcleanup/NORMALrestore/report/oneFixA39save. Existingarchive4.2.0CRC helper reused/notupgraded; no religiousdata/parser/UIstringschanges.
+
 **A39 ACTUAL6 RED / CACHE RECOVERY WIP 05:26 Dubai:** Validbaseline9=6RED3controlsPASS1s; truncatedgzip silentlyreturned752of1469tocsections, partialdirectwrite744. Rereadcited_get; nowreadcacheIO/UTF/formatguard+singlememberCRC32/ISIZE integrity(existingarchive4.2.0getCrc32, no upgrade; RFC1952primarychecked), badcachemiss/refetch/retry +validstaleofflinefallback. Writesstagecompletegzip+flush+sametree rename withownedtempcleanup. Focused9running; full/analyze/native notyetverified/noA39commit. UIstrings/parser/religioussourceunchanged. NextallGREEN/full1213/analyze/native9both/SHAfixtures/actualtocUI/NORMALrestore/report/singlecommit.
 
 **A39 BASELINE CLASS MODIFIER CORRECTED 05:22 Dubai:** Secondbaselinecompile0cases: installedDart IOOverrides isbase, testsubclassmustfinal; correctedonlytestclassmodifier. No productrecoveryfix/testassertchanges. Thirdactual9casebaseline running; doNOTtreatcompilefailuresasregressionproof. RequirevalidcorruptionRED+3ordinarycontrols thenfix_getcachemiss+atomicstage; sourcecited_get rereadstilloriginallogic.
