@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 API24 ORIGINAL VIEW BUILD 07:08 Dubai:** Focusedall9PASS10s/finalanalyzerCLEAN aftertest-only getter avoidsredundantarg lint; productunchanged/full1241. API24-specific fixturebuilding withA42_PHONE_VIEWPORT=false (no viewmetricmutation); defaulttrue API36behaviorunchanged/actualgateaccepted1m32. Next sign/install-rAPI24 only/runall9+3/5mincapture/actualquestion; NORMALmain/sign/guardrestoreboth/prefs/report/singleFixA42. No furtherA43stage before savingcurrentwork.
+
 **A42 API24 SCREEN REJECTED / ORIGINAL VIEW RETRY 07:06 Dubai:** API36finalPASS1m32 andactualgate439302B viewed accepted. API24finalPASS1m13 BUT39454B imageTeststarting, rejected/no visualclaim. Bothowneddirectoriesabsent. Addedtest-only A42_PHONE_VIEWPORT flag(defaulttrue identicalAPI36behavior) toallow API24nevermutateview metrics; same ninechecks/actualticker/4minbudget. Focused/analyzer running; nextAPI24fixturedefinefalse build/sign/install-r/runwith5mincapture, ACTUALgate thenNORMALrestoreboth/onefixreport. Full1241/productunchanged.
 
 **A42 API36 ACTUAL GATE SEEN / API24 FINAL 07:02 Dubai:** FinalAPI36 1test9scenarios3runnerPASS1m32; actualoriginalviewport image439302B showsrestoredquestion/4choices overrealcaravan, viewedandaccepted. PreviousTeststarting images rejected/corrected. API24finalsamefixture sequentialrunning; nextPASSandviewgate, ownedcacheprefixabsence/NORMALmain/sign/guardrestore-rboth/ownerHome/prefs/report/singleFixA42. Allassertions/fourminbudget unchanged; productunchanged/full1241/focused9s/analyzer19.7s retained.
