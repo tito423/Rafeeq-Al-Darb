@@ -2,6 +2,16 @@ name = "rafeeq-sync-backend"
 main = "src/index.ts"
 compatibility_date = "2024-09-09"
 
+# Local validation only until the owner approves Worker deployment. Check this
+# account-wide namespace is unused before deploying; keys also carry a prefix.
+[[ratelimits]]
+name = "REVIEW_RATE_LIMITER"
+namespace_id = "3870018"
+
+[ratelimits.simple]
+limit = 120
+period = 60
+
 [[d1_databases]]
 binding = "DB"
 database_name = "rafeeq_sync_db"

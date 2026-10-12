@@ -3,6 +3,7 @@ import { verifyGoogleToken } from './google_token';
 
 export interface Env {
 	DB: D1Database;
+	REVIEW_RATE_LIMITER: RateLimit;
 }
 
 const REVIEW_CORS: Record<string, string> = {
@@ -32,10 +33,10 @@ const MAX_NOTE = 4000;
 const MAX_BATCH = 200;
 const MAX_REVIEW_BODY = 2 * 1024 * 1024;
 
-function reviewJson(body: unknown, status = 200): Response {
+function reviewJson(body: unknown, status = 200, extraHeaders: Record<string, string> = {}): Response {
 	return new Response(JSON.stringify(body), {
 		status,
-		headers: { 'content-type': 'application/json; charset=utf-8', ...REVIEW_CORS },
+		headers: { 'content-type': 'application/json; charset=utf-8', ...REVIEW_CORS, ...extraHeaders },
 	});
 }
 
@@ -48,6 +49,17 @@ let reviewTableReady = false;
 async function handleReview(request: Request, url: URL, env: Env): Promise<Response> {
 	if (request.method === 'OPTIONS') {
 		return new Response(null, { status: 204, headers: REVIEW_CORS });
+	}
+
+	// Cloudflare supplies this header. Anonymous reviewer names are user input
+	// and cannot identify a rate bucket. This bounds D1 work before body parsing;
+	// the binding is an approximate per-location limit, not global accounting.
+	const source = request.headers.get('CF-Connecting-IP')?.trim() || 'unknown';
+	try {
+		const { success } = await env.REVIEW_RATE_LIMITER.limit({ key: `rafeeq:review:v1:${source}` });
+		if (!success) return reviewJson({ error: 'rate limit exceeded' }, 429, { 'Retry-After': '60' });
+	} catch {
+		return reviewJson({ error: 'rate limiter unavailable' }, 503, { 'Retry-After': '5' });
 	}
 
 	// Reject oversized input before parsing it or doing any D1 work.
