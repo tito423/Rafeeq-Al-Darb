@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A45 FULL1286 CLEAN / NATIVE BUILDING 11:24 Dubai:** Full1286PASS4originalskips2m59/analyzerCLEAN44.5s/focused29PASS5s after21RED8controlsbaseline. Buildingfixturetarget now/sourcefrozen; native29both will unziporiginalbundledhadithzip/readOnlyDB109731840B SHA539dea.../cleanupguard. Nextsign/markerverify/install-r/native29distinct+31runner/currentPIDactualhiddenTirmidhi1screenimages/both/ownrootabsence/NORMALrestore/Home/prefs/logs/singleFixA45/report31fixed17remaining.
+
 **A45 FOCUSED29 GREEN / FULL RUNNING 11:21 Dubai:** Focused29PASS5s afterbaseline21RED8controls5s. FinalproductpulseinitStateonly/no religiousdata orstrings changed. Full1286expected+analyzer running/no buildsourceduringtest. Nextcleanfull/analyze thenfixturebuild/sign/native29both/currentPIDcaptureactualhiddenhadith/readonlyDBSHA beforeafter andowncleanup/NORMALmainrestore/preferences/logs/singleFixA45.
 
 **A45 VALID21RED8CONTROLS / INITSTATE APPLIED 11:20 Dubai:** Finalactual29baseline5s:21hidden/empty/Quran-only disposalRED withdeactivatedancestor error,7visible+transitioncontrolsPASS. Rereadcitedcurrentcode thencreatepulse ininitState insteadlatefirstaccessduringdispose. Existing80percent/Quranfilter/SpeakerA30ownership/animationvalues/styles/strings/content unchanged. Focused29now; nextfull1286/analyze/native29+31both/actualhiddenhadithscreen/NORMALrestore/sourceDBSHAandowncleanup/singleFixA45.
