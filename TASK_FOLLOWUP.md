@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 API24 SCREEN REJECTED / ORIGINAL VIEW RETRY 07:06 Dubai:** API36finalPASS1m32 andactualgate439302B viewed accepted. API24finalPASS1m13 BUT39454B imageTeststarting, rejected/no visualclaim. Bothowneddirectoriesabsent. Addedtest-only A42_PHONE_VIEWPORT flag(defaulttrue identicalAPI36behavior) toallow API24nevermutateview metrics; same ninechecks/actualticker/4minbudget. Focused/analyzer running; nextAPI24fixturedefinefalse build/sign/install-r/runwith5mincapture, ACTUALgate thenNORMALrestoreboth/onefixreport. Full1241/productunchanged.
+
 **A42 API36 ACTUAL GATE SEEN / API24 FINAL 07:02 Dubai:** FinalAPI36 1test9scenarios3runnerPASS1m32; actualoriginalviewport image439302B showsrestoredquestion/4choices overrealcaravan, viewedandaccepted. PreviousTeststarting images rejected/corrected. API24finalsamefixture sequentialrunning; nextPASSandviewgate, ownedcacheprefixabsence/NORMALmain/sign/guardrestore-rboth/ownerHome/prefs/report/singleFixA42. Allassertions/fourminbudget unchanged; productunchanged/full1241/focused9s/analyzer19.7s retained.
 
 **A42 FINAL API36 VISUAL RUNNING 07:00 Dubai:** Fixture33.8s/signed/A42marker verified/install-rbothSuccess. API36 sequentialfinalrun withoriginalview restoredonlyforgatecapture. Next requireall9scenarios/3runner andactualgate PNG thenAPI24 finalsame; NORMALrestoreboth/owneddirsabsence/prefs/report/singleFixA42. Sourcefrozen/productunchanged/focused9s/analyzer19.7s/full1241retained.
