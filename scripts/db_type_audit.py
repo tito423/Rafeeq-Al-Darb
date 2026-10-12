@@ -32,7 +32,53 @@ REPORT = os.path.join(ROOT, 'db_type_audit.txt')
 
 # `r['col'] as int` and `row['col'] as int` — the non-nullable form. The
 # nullable `as int?` form is fine: it is what a NULL is supposed to meet.
-CAST = re.compile(r"\['([a-z_0-9]+)'\]\s+as\s+int\b(?!\?)")
+CAST = re.compile(r"\['([a-z_0-9]+)'\]\s+as\s+int\b(?!\s*\?)")
+
+
+def without_dart_comments(src):
+    """Mask comments, retaining quoted strings and cast-token boundaries."""
+    output = []
+    i = 0
+    while i < len(src):
+        start = i
+        if src.startswith('//', i):
+            end = src.find('\n', i)
+            i = len(src) if end < 0 else end
+            output.append(re.sub(r'[^\r\n]', ' ', src[start:i]))
+        elif src.startswith('/*', i):
+            i += 2
+            depth = 1
+            while i < len(src) and depth:
+                if src.startswith('/*', i):
+                    depth += 1
+                    i += 2
+                elif src.startswith('*/', i):
+                    depth -= 1
+                    i += 2
+                else:
+                    i += 1
+            output.append(re.sub(r'[^\r\n]', ' ', src[start:i]))
+        else:
+            raw = src[i] == 'r' and i + 1 < len(src) and src[i + 1] in "\"'"
+            quote = i + 1 if raw else i
+            if src[quote] in "\"'":
+                delimiter = src[quote]
+                if src.startswith(delimiter * 3, quote):
+                    delimiter *= 3
+                i = quote + len(delimiter)
+                while i < len(src):
+                    if not raw and src[i] == '\\':
+                        i += 2
+                    elif src.startswith(delimiter, i):
+                        i += len(delimiter)
+                        break
+                    else:
+                        i += 1
+                output.append(src[start:i])
+            else:
+                output.append(src[i])
+                i += 1
+    return ''.join(output)
 
 
 def columns_cast_as_int():
@@ -41,8 +87,9 @@ def columns_cast_as_int():
         for name in os.listdir(d):
             if not name.endswith('.dart'):
                 continue
-            src = io.open(os.path.join(d, name), encoding='utf-8').read()
-            wanted.update(CAST.findall(src))
+            with io.open(os.path.join(d, name), encoding='utf-8') as source:
+                src = source.read()
+            wanted.update(CAST.findall(without_dart_comments(src)))
     return wanted
 
 
@@ -113,8 +160,10 @@ def main():
         out.append('every column the code casts as int really is an integer, '
                    'everywhere, with no NULLs.')
 
-    io.open(REPORT, 'w', encoding='utf-8', newline='\n').write('\n'.join(out))
-    sys.stdout.write(io.open(REPORT, encoding='utf-8').read())
+    text = '\n'.join(out)
+    with io.open(REPORT, 'w', encoding='utf-8', newline='\n') as report:
+        report.write(text)
+    sys.stdout.write(text)
     return 1 if problems else 0
 
 
