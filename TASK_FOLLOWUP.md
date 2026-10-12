@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 PHONE CASES PASS / VISUAL CLAIM CORRECTED 06:57 Dubai:** Phone1test9scenarios3runnerPASS API36(1m40)/API24(1m13) withsame4min timeout. ImagesactuallyshowTeststarting notgate; prior85248172visualclaim corrected, NOTacceptedvisualproof. Addednative-only restoreoriginalview+dpr/pump450msbeforemarker, reapplyphone aftercapture; allassertions/productunchanged. Focused/analyze nowrunning; nextrebuild/rerunboth sequential, actuallyviewgate thenNORMALrestore/singleFixA42. Full1241priorvalid; no source/gamecontent changes beyondlocalgatefix.
+
 **A42 API36 PHONE PASS / API24 RUNNING 06:54 Dubai:** API36 phone actual1test9scenarios3runnerPASS1m40, original4min timeout unchanged; repaired gate screenshot capturedcurrentPID andviewed. Native360x800/dpr1 restoredaftertest/no wm change; no assertions weakened. API24 samefixture sequentialrun now. Next PASS9+3 andactualUI/owneddirs absence; NORMALmain/sign/guardrestoreboth/Home/prefs/report/singleFixA42. Full1241/analyze20s/focused9s retained.
 
 **A42 PHONE NATIVE API36 RUNNING 06:51 Dubai:** Phonefixture34.1s/signed/install-rbothSuccess; API36phone native1test9scenarios running alone with5mincapture. Interruptednative code_cache/audit_A42_FGCCNW verifiedempty andremoved explicitly afterstop. Next requirePASS3runner/all9markers+actualUI; thenAPI24same serial run; NORMALbuild-sign-guard-restore-rboth/prefs/report/oneFixA42. Full1241/analyze20s/focused9s retained; no product changes afterfinalchecks.
