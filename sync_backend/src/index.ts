@@ -1,3 +1,5 @@
+import { PayloadTooLarge, readBoundedJson } from './request_body';
+
 export interface Env {
 	DB: D1Database;
 }
@@ -58,6 +60,7 @@ const MAX_NAME = 60;
 const MAX_ID = 120;
 const MAX_NOTE = 4000;
 const MAX_BATCH = 200;
+const MAX_REVIEW_BODY = 2 * 1024 * 1024;
 
 function reviewJson(body: unknown, status = 200): Response {
 	return new Response(JSON.stringify(body), {
@@ -77,6 +80,19 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 		return new Response(null, { status: 204, headers: REVIEW_CORS });
 	}
 
+	// Reject oversized input before parsing it or doing any D1 work.
+	let body: any;
+	if (request.method === 'POST') {
+		try {
+			body = await readBoundedJson(request, MAX_REVIEW_BODY);
+		} catch (error) {
+			if (error instanceof PayloadTooLarge) {
+				return reviewJson({ error: 'body too large' }, 413);
+			}
+			return reviewJson({ error: 'bad json' }, 400);
+		}
+	}
+
 	// Once per isolate, not once per request (audit B5).
 	if (!reviewTableReady) await env.DB.prepare(
 		`CREATE TABLE IF NOT EXISTS review_notes (
@@ -94,12 +110,6 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 
 	// POST /review - one reviewer's notes, upserted by (reviewer, item).
 	if (request.method === 'POST') {
-		let body: any;
-		try {
-			body = await request.json();
-		} catch {
-			return reviewJson({ error: 'bad json' }, 400);
-		}
 		const reviewer = clean(body?.reviewer, MAX_NAME);
 		if (!reviewer) return reviewJson({ error: 'reviewer required' }, 400);
 		const notes = Array.isArray(body?.notes) ? body.notes.slice(0, MAX_BATCH) : [];
