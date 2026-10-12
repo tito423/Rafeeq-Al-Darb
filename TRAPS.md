@@ -785,3 +785,12 @@ Do not rediscover these.
     capture polling, retain every scenario and the test's4min budget. Keep
     HistoryQuiz's cached future and controls in one widget-test zone; awaiting
     the previous zone's future made later controls false-red and teardown hang.
+
+72. **Layout formatting can trip a source guard while preserving the value.**
+    A43 kept Qur'an letterSpacing zero, but dart format moved its literal onto
+    another line after an inline comment. The existing font ligature test
+    failed; move the same comment above the property and retain the protected
+    literal, never weaken the guard. A horizontal Wrap also needs a scrollable
+    container in a bounded bottom sheet: the real font2 column was712px with
+    713px of children. Test the complete original quote, original fonts and
+    all seven locales in the actual modal constraints; do not truncate text.

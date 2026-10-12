@@ -454,6 +454,8 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 70. Use exec-out for binary reads and actual directory listings for owned cleanup; API24 run-as test was denied in device checks.
 71. Inspect native screenshots; test view metrics can leave Test starting on the physical surface, and cached quiz futures retain test zones.
 
+72. Preserve protected font literals while formatting; full quotation wrapping also needs bounded-sheet scrolling.
+
 ## 4. Where things live
 
 | | |
