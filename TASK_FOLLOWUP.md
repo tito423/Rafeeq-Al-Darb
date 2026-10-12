@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 FINAL API36 VISUAL RUNNING 07:00 Dubai:** Fixture33.8s/signed/A42marker verified/install-rbothSuccess. API36 sequentialfinalrun withoriginalview restoredonlyforgatecapture. Next requireall9scenarios/3runner andactualgate PNG thenAPI24 finalsame; NORMALrestoreboth/owneddirsabsence/prefs/report/singleFixA42. Sourcefrozen/productunchanged/focused9s/analyzer19.7s/full1241retained.
+
 **A42 FINAL VISUAL HARNESS CLEAN / BUILDING 06:58 Dubai:** Focused9s9scenariosPASS/analyzer19.7sCLEAN, productunchanged/full1241retained. Finalvisualfixturebuilding/sourcefrozen; quota90percent5hUSED/61weeklyUSED. Next sign/install-r/bothsequential all9+3 andACTUALgateimages thenNORMALmain/sign/guardrestore/Home/prefs/onefixreport/push. InitialphonecapturesTeststarting rejected, notgamevisualproof. No A43productfixstarted.
 
 **A42 PHONE CASES PASS / VISUAL CLAIM CORRECTED 06:57 Dubai:** Phone1test9scenarios3runnerPASS API36(1m40)/API24(1m13) withsame4min timeout. ImagesactuallyshowTeststarting notgate; prior85248172visualclaim corrected, NOTacceptedvisualproof. Addednative-only restoreoriginalview+dpr/pump450msbeforemarker, reapplyphone aftercapture; allassertions/productunchanged. Focused/analyze nowrunning; nextrebuild/rerunboth sequential, actuallyviewgate thenNORMALrestore/singleFixA42. Full1241priorvalid; no source/gamecontent changes beyondlocalgatefix.
