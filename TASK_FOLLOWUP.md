@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A38 CORRECT BEHAVIOR BASELINE RUNNING 04:43 Dubai:** Added15shared actualDorarScreen/productionservice/parser/realHTTP regressions incl7locales,replacement/status/busy/pagination/retry/duplicates/short/close/samequery. OriginalfixtureSHAverified/sourceblocks selected unchanged, no newreligiousdata. HOSTbaselinebeforeproductfix running; newproductcodeNOTedited. Nativeentryloadsisolatedcopy oforiginal fixture incache (mustseed/cleanup viaADB), no pubspec/assetschanges. NextinspectvalidRED12/controls expected thenownedgenerationfix/fullchecks/native15both/NORMALrestore/singleFixA38commit.
+
 **QUOTA RENEWED / A38 CONTINUING 04:39 Dubai:** Fresh0percent5hUSED/47weeklyUSED/ordinaryallowed/tworesetcreditsunused; renewal automatic notReset. Masterfetch-checkout-pull clean(original8authorizeduntrackedonly), no activebuild/test. ContinueexactA38 realHTTP regression/ownedgeneration; source/parser/religiousfixtureunchanged; normalAPK415016015Bbackup/visiblemirrorleftopen. Next meaningfulREDcases thenfix/fullchecks/native/NORMALrestore/singlecommit.
 
 **HEARTBEAT QUOTA99 02:39 Dubai:** Freshquota99percent5hUSED=1percentremaining/46weeklyUSED=54remaining/ordinaryallowed/tworesetcreditsUNUSED. Noactivebuild/test; original8untrackedonly. NotenoughbudgetforA38fix/fullchecks/native/normalrestore; preserved exactDorarregressionstep above/no productedits. Fivehourreset reported04:37:26Dubai2026-10-12; nextheartbeatrecheck/continuewhenrenewed. NoResetfor5h alone; weekly0singleauthorizationunused. TaskNOTcomplete,25fixed23remaining/masterpushed/normalappvisiblemirrorleftopen.
