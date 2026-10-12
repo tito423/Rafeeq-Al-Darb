@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 BOTH ACTUAL GATES SEEN / NORMAL BUILDING 07:15 Dubai:** Finalnativeoneactualtest/ninescenarios/3runner PASSAPI24 originalview2m56/API36phone1m32; repairedquestion+4choices overactualgameimages viewedacceptedboth. SDK24 hadTeststarting afterviewportmutation, fixedtest-only profilefalse; API36trueprofile sameassertions/4minbudget. Full1241PASS4originalskips3m05/focused10s/analyzer18.6sCLEAN. NORMALmainbuilding/sourcefrozen; nextsign/guard/install-rboth/Home/prefs/logs/owneddirsabsence thenoneFixA42/report/push. A43notstarted/sourceonlyread. Initialtimeout/images rejected honestly.
+
 **A42 API24 ORIGINAL VIEW RUNNING 07:11 Dubai:** API24-specific fixture48.8s/signed/install-rSuccess, same9checks/4min test nowrunning withoutviewmetricmutation and5mincapture. API36alreadyactualgate+all9PASS1m32. Next requireAPI24PASS+actualgate, NORMALmain/sign/entryguard/restore-rboth/Home/prefs/logs/owneddirsabsence andoneFixA42/report/push. Full1241/finalfocused10s/analyzer18.6s retained/productunchanged. No otherfixrunning.
 
 **A42 API24 ORIGINAL VIEW BUILD 07:08 Dubai:** Focusedall9PASS10s/finalanalyzerCLEAN aftertest-only getter avoidsredundantarg lint; productunchanged/full1241. API24-specific fixturebuilding withA42_PHONE_VIEWPORT=false (no viewmetricmutation); defaulttrue API36behaviorunchanged/actualgateaccepted1m32. Next sign/install-rAPI24 only/runall9+3/5mincapture/actualquestion; NORMALmain/sign/guardrestoreboth/prefs/report/singleFixA42. No furtherA43stage before savingcurrentwork.
