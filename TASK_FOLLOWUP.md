@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A08 LOCALLY VALIDATED / PUSH JOB FOR GITHUB PROOF 15:56 Dubai:** Onlyworkflow25lines independentbackendjob; clean npmci4s/0advisories/lockunchanged/Node35PASS13.615/tsc clean/fullFlutter1337-original4skips2m40/analyze26.3s allcomplete. SaveONEFixA08workflow+TASK now/push, thenactualGitHubbackend-test run-ID/log/proof beforemarkcomplete/report38fixed10remaining/NEXTA17. No newcode/test/buildactive; original8untouched. NormalDEBUGHome/prefs/mirrorretained, coldANRunresolved/rollback3.87/no deploy/release/keys/Reset.
+
 **A08 CLEAN INSTALL35 AND ANALYZE PASSED / FULL NEXT 15:54 Dubai:** npmci completed/0npm advisories/exactlockunchanged, npx tsc clean/35NodePASS13.615s/no skips; analyzer26.3s clean. FullFlutter1337stillrunning (last862); no workflowcommit untilcomplete, no newfinding/build/SDK edits. OnlyworkflowWIP(25lines) andoriginal8untracked. NEXT fullresult/sourceONEFixA08/pushactualGitHubbackendjob proof; A08notcomplete yet/report37fixed11remaining. Postinstallwarningunchangedesbuild/workerd butactualruntimepassed; no globalallowScriptschange.
 
 **A08 JOB ADDED / LOCAL CHECKS RUNNING 15:53 Dubai:** RereadactualCI23 confirmedonlyFlutterjob. Addedindependentbackend-test Node24.21/setup-node7(officialcurrentREADME)/npmci/npxnoinstalltsc/npmtest/10mintimeout/readonlycontents/cacheexactlock/no deploy orsecret. FullFlutter1337+analyze andclean npmci/tsc/node35nowrunning; waitallbeforecommitjob. NewworkflowWIPonly(original8untracked), package-lockshouldremainunchanged; nextlocalresults/FixA08sourcecommit thenpushactualGitHubjobverification beforemark38fixed10remaining. A06saved60354ae9/report37fixed11remaining. No newfix/buildwhilechecksactive.

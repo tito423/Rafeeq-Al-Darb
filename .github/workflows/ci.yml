@@ -16,6 +16,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: sync_backend
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.21.0'
+          cache: npm
+          cache-dependency-path: sync_backend/package-lock.json
+
+      - run: npm ci
+
+      - run: npx --no-install tsc --noEmit
+
+      - run: npm test
+
   analyze-and-test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
