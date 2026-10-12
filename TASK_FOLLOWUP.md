@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A38 HOST15 PASS / FULL CHECKS 04:48 Dubai:** Focused15PASS9s after12RED3controlsbaseline43s; actualHttpServer/Dio/parser/unmodifiedfixture15sourceblocks/SHA/all7translations. Fullsuite1204expected andanalyzer running(no build/sourceeditswhiletest). Next requireallpass/clean before signednativefixture15API24+36(seedcachecopySHA/cleanownfiles), normalrestore/showownerapp/read-only541+shelf20013, report/oneFixA38commit. ProductUIstrings/parser/religiousdatavaluesunchanged.
+
 **A38 BASELINE12 RED / OWNED SEARCH WIP 04:47 Dubai:** Finalbeforefix15cases12RED3controlsPASS43s actualHTTP/sourcefixture7locales; helpersTextButton.icon subtype/ListViewscroll fixedbeforebaseline/notweakened. Rereadcitedscreen45/58/64/67; product nowgenerationpervalidsearch/resetbusy+failed/snapshotquery-page/guard success-error-finally withmounted+generation; samequeryrestart distinct. Focused15running; full/analyzer/native notyetverified/noA38fixcommit. NoUIstrings/backendAPI/religiousparserorcontentchange. NextfocusedGREENthenfull/analyze/native15both+isolatedoriginalfixturecleanup/NORMALrestore/singlecommit/report/push.
 
 **A38 BASELINE HARNESS CORRECTION 04:45 Dubai:** Initial15beforefix13RED2PASS; 11replacement failures actualnewHTTPmissing,2paginationNoElement from testfinder TextButton.icon subtype/ListViewscrollable. Correct actionfinder isTextButton andscrollactualListView; waitreal50msafterHTTPflushforlatecompletion beforeassert. Allassertionsretained/no productedit. Rerunbaseline15now; requireordinary/short/close controlsPASSbeforefix; originallogsoutsidegit retained.
