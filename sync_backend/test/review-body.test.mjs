@@ -1,11 +1,14 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { after, before, test } from 'node:test';
-import { startLocalWorker } from '../test-support/local-worker.mjs';
+import { startAuthenticatedLocalWorker } from '../test-support/authenticated-local-worker.mjs';
 
 const limit = 2 * 1024 * 1024;
 let worker;
-before(async () => { worker = await startLocalWorker(); });
+before(async () => { worker = await startAuthenticatedLocalWorker([
+  'audit_A05_valid', 'audit_A05_boundary', 'audit_A05_declared', 'audit_A05_unicode',
+  'audit_A05_chunked', 'audit_A05_small_utf8',
+]); });
 after(async () => { await worker?.stop(); });
 
 function sizedBody(bytes, reviewer) {
@@ -14,8 +17,10 @@ function sizedBody(bytes, reviewer) {
 }
 
 async function post(body) {
+  let reviewer = 'audit_A05_valid';
+  try { reviewer = JSON.parse(body).reviewer ?? reviewer; } catch { /* Preserve the malformed-body control. */ }
   return fetch(worker.base + '/review', {
-    method: 'POST', headers: { 'content-type': 'application/json' }, body,
+    method: 'POST', headers: { 'content-type': 'application/json', ...worker.headersFor(reviewer) }, body,
   });
 }
 
@@ -24,6 +29,7 @@ function chunked(body) {
     const request = http.request(worker.base + '/review', {
       method: 'POST', headers: {
         'content-type': 'application/json', 'transfer-encoding': 'chunked',
+        ...worker.headersFor(JSON.parse(body).reviewer),
       },
     }, (response) => {
       const data = [];
@@ -50,7 +56,7 @@ test('A05 ordinary review persists unchanged in actual local D1', async () => {
   }));
   assert.equal(response.status, 200);
   assert.equal((await response.json()).saved, 1);
-  const saved = await (await fetch(worker.base + '/review?reviewer=' + reviewer)).json();
+  const saved = await (await fetch(worker.base + '/review?reviewer=' + reviewer, { headers: worker.headersFor(reviewer) })).json();
   assert.equal(saved.notes.length, 1);
   assert.equal(saved.notes[0].note, 'A05 local boundary probe');
 });

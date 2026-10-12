@@ -1,15 +1,17 @@
 import { PayloadTooLarge, readBoundedJson } from './request_body';
 import { verifyGoogleToken } from './google_token';
+import { authenticateReviewer } from './reviewer_auth';
 
 export interface Env {
 	DB: D1Database;
 	REVIEW_RATE_LIMITER: RateLimit;
+	REVIEWERS?: string;
 }
 
 const REVIEW_CORS: Record<string, string> = {
 	'Access-Control-Allow-Origin': '*',
 	'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-	'Access-Control-Allow-Headers': 'content-type',
+	'Access-Control-Allow-Headers': 'content-type, authorization',
 	'Access-Control-Max-Age': '86400',
 };
 
@@ -51,16 +53,25 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 		return new Response(null, { status: 204, headers: REVIEW_CORS });
 	}
 
-	// Cloudflare supplies this header. Anonymous reviewer names are user input
-	// and cannot identify a rate bucket. This bounds D1 work before body parsing;
-	// the binding is an approximate per-location limit, not global accounting.
+	const authorization = await authenticateReviewer(request, env.REVIEWERS);
+	const identity = authorization.identity;
+	// Give verified reviewers their own bucket, including on a shared network.
+	// Invalid identities retain a Cloudflare-source bucket before any D1 work.
+	// The binding is approximate per location, not global accounting.
 	const source = request.headers.get('CF-Connecting-IP')?.trim() || 'unknown';
+	const rateKey = identity ? `rafeeq:review:user:${identity.sub}` : `rafeeq:review:v1:${source}`;
 	try {
-		const { success } = await env.REVIEW_RATE_LIMITER.limit({ key: `rafeeq:review:v1:${source}` });
+		const { success } = await env.REVIEW_RATE_LIMITER.limit({ key: rateKey });
 		if (!success) return reviewJson({ error: 'rate limit exceeded' }, 429, { 'Retry-After': '60' });
 	} catch {
 		return reviewJson({ error: 'rate limiter unavailable' }, 503, { 'Retry-After': '5' });
 	}
+
+	if (!identity) {
+		return reviewJson({ error: authorization.status === 401 ? 'unauthorized' : 'reviewer access required' }, authorization.status);
+	}
+	// Identity is non-null after the authorization response above.
+	if (request.method === 'GET' && url.pathname === '/review/me') return reviewJson(identity);
 
 	// Reject oversized input before parsing it or doing any D1 work.
 	let body: any;
@@ -94,6 +105,7 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 	if (request.method === 'POST') {
 		const reviewer = clean(body?.reviewer, MAX_NAME);
 		if (!reviewer) return reviewJson({ error: 'reviewer required' }, 400);
+		if (reviewer !== identity.reviewer) return reviewJson({ error: 'reviewer mismatch' }, 403);
 		const notes = Array.isArray(body?.notes) ? body.notes.slice(0, MAX_BATCH) : [];
 		if (!notes.length) return reviewJson({ saved: 0 });
 
@@ -132,18 +144,21 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 
 	// GET /review/reviewers - who has reviewed, and how much.
 	if (url.pathname === '/review/reviewers') {
-		const { results } = await env.DB.prepare(
+		const query = env.DB.prepare(
 			`SELECT reviewer, COUNT(*) AS items,
 			        SUM(CASE WHEN note <> '' THEN 1 ELSE 0 END) AS notes,
 			        SUM(done) AS done, MAX(updated_at) AS last
-			 FROM review_notes GROUP BY reviewer ORDER BY last DESC`
-		).all();
+			 FROM review_notes ${identity.role === 'admin' ? '' : 'WHERE reviewer = ?'}
+			 GROUP BY reviewer ORDER BY last DESC`
+		);
+		const { results } = await (identity.role === 'admin' ? query : query.bind(identity.reviewer)).all();
 		return reviewJson({ reviewers: results });
 	}
 
 	// GET /review?reviewer=NAME - everything that reviewer wrote.
 	const reviewer = clean(url.searchParams.get('reviewer'), MAX_NAME);
 	if (!reviewer) return reviewJson({ error: 'reviewer required' }, 400);
+	if (identity.role !== 'admin' && reviewer !== identity.reviewer) return reviewJson({ error: 'reviewer mismatch' }, 403);
 	const { results } = await env.DB.prepare(
 		`SELECT item_id, note, done, excerpt, section, updated_at
 		 FROM review_notes WHERE reviewer = ? ORDER BY updated_at DESC`
@@ -158,16 +173,8 @@ export default {
 		// ── The content-review site ─────────────────────────────────────
 		// https://tito423.github.io/rafeeq-review/ is where a scholar reads
 		// every religious text the app ships and writes his notes on it.
-		// These routes are deliberately OUTSIDE the Google check below: a
-		// reviewer types his name and starts; asking him to hold a Google
-		// account before he can correct a hadith grading is a wall in front
-		// of the one thing we want him to do.
-		//
-		// The trade is that this is an open write endpoint, so it is fenced
-		// rather than trusted: fixed short columns, a per-request size cap,
-		// and a reviewer name that is stored as given but bounded. It holds
-		// review notes and nothing else - no reader's data is reachable
-		// from here.
+		// Reviews require a verified Google identity and an explicit grant.
+		// Their rate/body bounds remain separate from ordinary reader sync.
 		if (url0.pathname.startsWith('/review')) {
 			return handleReview(request, url0, env);
 		}

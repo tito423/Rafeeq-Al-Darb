@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
-import { startLocalWorker } from '../test-support/local-worker.mjs';
+import { startAuthenticatedLocalWorker } from '../test-support/authenticated-local-worker.mjs';
 
 let worker;
 before(async () => {
-  worker = await startLocalWorker();
+  worker = await startAuthenticatedLocalWorker(['audit_A07_valid']);
   const response = await fetch(worker.base + '/review', {
-    method: 'POST', headers: { 'content-type': 'application/json' },
+    method: 'POST', headers: { 'content-type': 'application/json', ...worker.headersFor('audit_A07_valid') },
     body: JSON.stringify({ reviewer: 'audit_A07_valid',
       notes: [{ id: 'compatibility-probe', note: 'A07 local compatibility probe' }] }),
   });
@@ -24,7 +24,7 @@ test('A07 protected sync still rejects unauthenticated GET and POST', async () =
 });
 
 test('A07 actual review listing retains original count and fields', async () => {
-  const response = await fetch(worker.base + '/review/reviewers');
+  const response = await fetch(worker.base + '/review/reviewers', { headers: worker.headersFor('audit_A07_valid') });
   assert.equal(response.status, 200);
   const reviewer = (await response.json()).reviewers.find(
     (row) => row.reviewer === 'audit_A07_valid');
@@ -34,7 +34,7 @@ test('A07 actual review listing retains original count and fields', async () => 
 });
 
 test('A07 unsupported review method remains 405 with CORS', async () => {
-  const response = await fetch(worker.base + '/review', { method: 'DELETE' });
+  const response = await fetch(worker.base + '/review', { method: 'DELETE', headers: worker.headersFor('audit_A07_valid') });
   assert.equal(response.status, 405);
   assert.equal(response.headers.get('access-control-allow-origin'), '*');
 });

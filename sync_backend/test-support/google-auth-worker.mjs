@@ -8,7 +8,7 @@ import { exportJWK, generateKeyPair, SignJWT, jwtVerify } from 'jose';
 export const clientId = '227986327850-ha6gea87kueaeg2a3582ecpu3s0nbnh1.apps.googleusercontent.com';
 
 // Test-only generated signing keys. No production key or token is read.
-export async function createGoogleAuthWorker() {
+export async function createGoogleAuthWorker({ reviewers } = {}) {
   const pair = await generateKeyPair('RS256');
   const jwk = { ...await exportJWK(pair.publicKey), kid: 'A17-test-key', alg: 'RS256', use: 'sig' };
   const calls = { jwks: 0, tokeninfo: 0 };
@@ -18,6 +18,8 @@ export async function createGoogleAuthWorker() {
   const runtime = new Miniflare(convertV4MiniflareOptions({
     script: bundle.outputFiles[0].text, modules: true,
     compatibilityDate: '2024-09-09', d1Databases: ['DB'],
+    bindings: reviewers === undefined ? {} : { REVIEWERS: JSON.stringify(reviewers) },
+    ratelimits: { REVIEW_RATE_LIMITER: { namespace_id: '3870018', simple: { limit: 120, period: 60 } } },
     outboundService: async (request) => {
       const url = new URL(request.url);
       if (url.origin === 'https://www.googleapis.com' && url.pathname === '/oauth2/v3/certs') {

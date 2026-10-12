@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مراجعة محتوى رفيق الدرب</title>
+<meta name="theme-color" content="#0b1624">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#0b1624; --card:#12233a; --ink:#eae6de; --muted:#9fb0c0; --gold:#d4af37; --line:#24384e; --ok:#3fb68b; --warn:#e0a458; --bad:#e06a6a; }
+@media (prefers-color-scheme: light) { :root { --bg:#f7f3ea; --card:#fff; --ink:#1d2c26; --muted:#5b6b66; --gold:#8a6d20; --line:#e2d9c5; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:Cairo, system-ui, sans-serif; line-height:1.9; }
+header { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); padding:10px 14px 8px; }
+h1 { margin:0; font-size:1.15rem; color:var(--gold); }
+.sub { margin:0; font-size:.8rem; color:var(--muted); }
+nav { display:flex; gap:6px; overflow-x:auto; padding:8px 0 4px; scrollbar-width:none; }
+nav button { flex:none; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:18px; padding:4px 12px; font:inherit; font-size:.88rem; }
+nav button.on { background:var(--gold); color:#111; border-color:var(--gold); font-weight:700; }
+.tools { display:flex; gap:6px; margin-top:6px; align-items:center; }
+.tools input { flex:1; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:12px; padding:6px 10px; font:inherit; }
+.tools button { border:1px solid var(--gold); background:transparent; color:var(--gold); border-radius:12px; padding:0 10px; font:inherit; font-size:.85rem; }
+.who { font-size:.78rem; color:var(--muted); }
+.who b { color:var(--gold); font-weight:600; }
+.who button { border:none; background:none; color:var(--muted); font:inherit; font-size:.76rem; text-decoration:underline; padding:0; }
+.sync { font-size:.72rem; color:var(--muted); margin-inline-start:auto; white-space:nowrap; }
+.sync.saving { color:var(--warn); }
+.sync.saved { color:var(--ok); }
+.sync.failed { color:var(--bad); }
+main { padding:10px 12px 60px; max-width:820px; margin:0 auto; }
+.intro { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:10px 14px; font-size:.9rem; color:var(--muted); }
+.intro b { color:var(--ink); }
+details { background:var(--card); border:1px solid var(--line); border-radius:14px; margin:10px 0; }
+summary { cursor:pointer; padding:10px 14px; font-weight:700; list-style:none; display:flex; justify-content:space-between; gap:8px; }
+summary .n { color:var(--muted); font-weight:400; font-size:.8rem; }
+summary a, .item a { color:inherit; }
+.item { border-top:1px solid var(--line); padding:10px 14px; }
+.item.done { opacity:.55; }
+.text { font-family:Amiri, serif; font-size:1.15rem; line-height:2.1; white-space:pre-wrap; }
+.text.aya { color:var(--gold); }
+.note { font-size:.85rem; color:var(--muted); margin-top:6px; white-space:pre-wrap; border-inline-start:3px solid var(--gold); padding-inline-start:8px; }
+.meta { font-size:.75rem; color:var(--muted); }
+.rev { display:flex; gap:8px; align-items:center; margin-top:8px; }
+.rev label { font-size:.82rem; color:var(--muted); display:flex; gap:4px; align-items:center; }
+.rev textarea { flex:1; min-height:34px; border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:10px; padding:4px 8px; font:inherit; font-size:.85rem; }
+.rev textarea.has { border-color:var(--gold); }
+.stat { font-size:.8rem; color:var(--muted); margin:8px 2px; }
+.stat a, .stat b { color:var(--gold); }
+.gate { position:fixed; inset:0; z-index:20; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:20px; }
+.gate .box { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; max-width:430px; width:100%; }
+.gate h2 { margin:0 0 6px; font-size:1.05rem; color:var(--gold); }
+.gate p { margin:0 0 12px; font-size:.86rem; color:var(--muted); }
+.gate input { width:100%; border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:12px; padding:9px 12px; font:inherit; margin-bottom:6px; }
+.gate button { width:100%; border:none; background:var(--gold); color:#111; border-radius:12px; padding:10px; font:inherit; font-weight:700; }
+.gate .err { color:var(--bad); font-size:.8rem; min-height:1.3em; margin-bottom:6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>مراجعة محتوى رفيق الدرب</h1>
+  <p class="sub">كل نص ديني في التطبيق كما يراه المستخدم، مع مصدره وتخريجه</p>
+  <nav id="tabs"></nav>
+  <div class="tools">
+    <input id="q" type="search" placeholder="ابحث (بلا حاجة إلى التشكيل)…">
+    <button id="export">نسخ ملاحظاتي</button>
+  </div>
+  <div class="tools">
+    <span class="who" id="who"></span>
+    <span class="sync" id="sync"></span>
+  </div>
+</header>
+<main id="main"></main>
+<script src="auth.js"></script>
+<script>
+// Reviews require an authorized Google identity; offline notes stay local.
+const API = 'https://rafeeq-sync-backend.int-vip00.workers.dev/review';
+// Library books are read from the same bucket the app downloads them from, so
+// a reviewer reads the exact bytes a reader gets — never a second copy.
+const CONTENT = 'https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev';
+
+const TABS = [
+  ['intro', 'عن المراجعة'],
+  ['hadith', 'الكتب التسعة'],
+  ['books', 'كتب المكتبة'],
+  ['azkar', 'الأذكار'],
+  ['quotes', 'المقولات'],
+  ['texts', 'نصوص التطبيق'],
+  ['hajj', 'الحج والعمرة'],
+  ['tajweed', 'التجويد'],
+  ['sources', 'المصادر'],
+  ['who', 'المراجعون'],
+];
+const cache = {};
+let store = (() => { try { return JSON.parse(localStorage.getItem('review') || '{}'); } catch { return {}; } })();
+const save = () => { try { auth.save(store); } catch { setSync('failed', auth.text('failed')); } };
+const norm = s => (s || '')
+  .replace(/[ً-ْٰـ]/g, '')
+  .replace(/[أإآٱ]/g, 'ا')
+  .replace(/ى/g, 'ي')
+  .replace(/ة/g, 'ه');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ── Who is reviewing ──────────────────────────────────────────────────────
+let me = null;
+try { me = localStorage.getItem('reviewer') || null; } catch {}
+
+const auth = RafeeqReviewAuth.create({
+  api: API,
+  clientId: '227986327850-ha6gea87kueaeg2a3582ecpu3s0nbnh1.apps.googleusercontent.com',
+  storage: localStorage,
+  onRequired: () => askName(false),
+  onChange: (identity, notes) => {
+    me = identity.reviewer;
+    store = notes;
+    pending.clear();
+    clearTimeout(flushTimer);
+    document.querySelector('.gate')?.remove();
+    setSync('', '');
+    paintWho();
+    pushAll();
+    if (identity.role !== 'admin' && tab === 'who' && a1 && a1 !== identity.reviewer) {
+      location.hash = 'who';
+      readHash();
+    }
+    render();
+  },
+});
+store = auth.notes;
+if (auth.profile) me = auth.profile.reviewer;
+let googleLoading = null;
+let googleInitialized = false;
+function loadGoogle() {
+  if (window.google?.accounts?.id) return Promise.resolve(window.google.accounts.id);
+  if (!googleLoading) googleLoading = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.onload = () => resolve(window.google.accounts.id);
+    script.onerror = () => { googleLoading = null; reject(new Error('offline')); };
+    document.head.appendChild(script);
+  });
+  return googleLoading;
+}
+function exportLegacy() {
+  const url = URL.createObjectURL(new Blob([auth.legacyExport()], { type: 'application/json;charset=utf-8' }));
+  const link = document.createElement('a'); link.href = url; link.download = 'rafeeq-review-legacy.json'; link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function askName(force) {
+  if (document.querySelector('.gate')) return;
+  const gate = document.createElement('div'); gate.className = 'gate';
+  gate.style.overflowY = 'auto';
+  const labels = auth.messages[auth.locale];
+  gate.innerHTML = '<div class="box" dir="' + (['ar', 'ur'].includes(auth.locale) ? 'rtl' : 'ltr') + '">'
+    + '<h2>' + esc(labels.welcome) + '</h2><p>' + esc(labels.explanation) + '</p>'
+    + '<label>' + esc(labels.language) + ' <select id="auth-language">'
+    + Object.entries(auth.languages).map(([key, name]) => '<option value="' + key + '"' + (key === auth.locale ? ' selected' : '') + '>' + name + '</option>').join('')
+    + '</select></label><div id="google-signin" style="margin:12px 0;min-height:44px"></div>'
+    + '<div class="err" id="auth-error" role="status"></div>'
+    + '<button id="auth-close">' + esc(labels.close) + '</button>'
+    + (auth.hasDifferentLegacy() ? '<p>' + esc(labels.legacy) + '</p><button id="legacy-export">' + esc(labels.exportLegacy) + '</button>' : '')
+    + '</div>';
+  document.body.appendChild(gate);
+  gate.querySelector('#auth-close').onclick = () => gate.remove();
+  gate.querySelector('#auth-language').onchange = (event) => {
+    auth.setLocale(event.target.value); gate.remove(); paintWho(); askName(force);
+  };
+  gate.querySelector('#legacy-export')?.addEventListener('click', exportLegacy);
+  const error = gate.querySelector('#auth-error');
+  loadGoogle().then((google) => {
+    if (!gate.isConnected) return;
+    if (!googleInitialized) {
+      google.initialize({ client_id: auth.clientId, auto_select: false, callback: async (reply) => {
+        const activeError = document.querySelector('.gate')?.querySelector('#auth-error');
+        if (!activeError) return;
+        activeError.textContent = auth.text('loading');
+        try { await auth.authorize(reply.credential); }
+        catch (failure) { activeError.textContent = auth.text(failure.kind === 'denied' ? 'denied' : 'failed'); }
+      } });
+      googleInitialized = true;
+    }
+    google.renderButton(gate.querySelector('#google-signin'), { type: 'standard', theme: 'outline', size: 'large', width: '260', locale: auth.locale });
+  }).catch(() => { error.textContent = auth.text('offline'); });
+}
+function paintWho() {
+  document.getElementById('who').innerHTML = (me ? esc(auth.text('reviewer')) + ': <b>' + esc(me) + '</b> · ' : '')
+    + '<button id="rename">' + esc(auth.text(auth.signedIn ? 'account' : 'signIn')) + '</button>'
+    + (auth.hasDifferentLegacy() ? ' · <button id="legacy-export-header">' + esc(auth.text('exportLegacy')) + '</button>' : '');
+  document.getElementById('rename').onclick = () => { auth.signOut(); askName(true); };
+  document.getElementById('legacy-export-header')?.addEventListener('click', exportLegacy);
+}
+
+// ── Sending notes up ──────────────────────────────────────────────────────
+// Every tick and every note is queued and sent; there is no save button. What
+// is written stays in localStorage as well, so a reviewer who loses the
+// network keeps his work and it goes up on the next attempt.
+const pending = new Map();
+let flushTimer = null, sending = false;
+
+function setSync(cls, text) {
+  const el = document.getElementById('sync');
+  el.className = 'sync ' + cls;
+  el.textContent = text;
+}
+
+function queue(id, extra) {
+  if (!me) { askName(false); return; }
+  const r = store[id] || {};
+  pending.set(id, Object.assign({ id: id, note: r.c || '', done: !!r.ok }, extra || {}));
+  setSync('saving', auth.text('saving'));
+  clearTimeout(flushTimer);
+  flushTimer = setTimeout(flush, 900);
+}
+
+async function flush() {
+  if (sending || !pending.size || !me) return;
+  if (!auth.signedIn) { setSync('failed', auth.text('signIn')); return; }
+  sending = true;
+  const batch = Array.from(pending.values()).slice(0, 200);
+  const owner = auth.profile.sub;
+  let retryMs = 500;
+  try {
+    await auth.request(API, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ reviewer: me, notes: batch }),
+    });
+    // Neither a newer edit nor a newly selected account belongs to this batch.
+    if (auth.profile?.sub === owner) {
+      batch.forEach(n => { if (pending.get(n.id) === n) pending.delete(n.id); });
+      setSync('saved', auth.text('saved'));
+    }
+  } catch (failure) {
+    if (auth.profile?.sub === owner) {
+      const required = failure.status === 401 || failure.status === 403;
+      setSync('failed', auth.text(required ? 'signIn' : 'retry'));
+      retryMs = required ? null : Math.max(8000, failure.retryMs || 0);
+    }
+  } finally {
+    sending = false;
+    if (pending.size && retryMs !== null) { clearTimeout(flushTimer); flushTimer = setTimeout(flush, retryMs); }
+  }
+}
+
+// Anything already written on this device goes up once a name is set, so a
+// note made before signing a name is not stranded on the phone.
+function pushAll() {
+  for (const id of Object.keys(store)) {
+    const r = store[id];
+    if (r && typeof r === 'object') pending.set(id, { id: id, note: r.c || '', done: !!r.ok });
+  }
+  if (pending.size) { setSync('saving', auth.text('saving')); flush(); }
+}
+
+async function load(name) {
+  if (!cache[name]) cache[name] = await (await fetch('data/' + name + '.json')).json();
+  return cache[name];
+}
+
+// A library book is gzip on the bucket with NO Content-Encoding header — the
+// app sniffs the same two magic bytes — so the browser has to ungzip it.
+async function loadBook(url) {
+  if (cache[url]) return cache[url];
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const buf = new Uint8Array(await res.arrayBuffer());
+  let text;
+  if (buf[0] === 0x1f && buf[1] === 0x8b) {
+    const stream = new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'));
+    text = await new Response(stream).text();
+  } else {
+    text = new TextDecoder().decode(buf);
+  }
+  cache[url] = JSON.parse(text);
+  return cache[url];
+}
+
+// The hash carries the position inside a tab:
+//   #hadith/bukhari/12   #books/riyad_as_salihin/0   #who/NAME
+let tab = 'intro', a1 = null, a2 = null;
+function readHash() {
+  const parts = location.hash.slice(1).split('/');
+  tab = parts[0] || 'intro';
+  a1 = parts.length > 1 && parts[1] !== '' ? decodeURIComponent(parts[1]) : null;
+  a2 = parts.length > 2 && parts[2] !== '' ? decodeURIComponent(parts[2]) : null;
+}
+readHash();
+
+// A hosted book page is { p: <printed page number>, paras: [{t, k}] } - the
+// shape `BookText.fromFile` reads in the app. Read from the real file rather
+// than assumed: riyad_as_salihin's first page is p 27 with its paragraphs
+// tagged head/body. Each PARAGRAPH is its own reviewable item, exactly as the
+// Hajj and tajweed tabs do, so a note lands on the sentence it is about.
+function pageNo(p, fallback) {
+  if (p && p.p !== undefined) return p.p;
+  if (p && p.page !== undefined) return p.page;
+  return fallback;
+}
+function paras(p) {
+  if (typeof p === 'string') return [{ t: p, k: 'body' }];
+  if (p && Array.isArray(p.paras)) return p.paras;
+  if (p && (p.text || p.t)) return [{ t: p.text || p.t, k: 'body' }];
+  return [];
+}
+
+// Every tab becomes [{title, items:[{id, text, note, kind, meta}]}].
+async function groups(t) {
+  if (t === 'azkar') return (await load('azkar')).map(s => ({ title: s.title,
+    items: s.items.map(i => ({ id: 'azkar.' + i.id, text: i.text, note: i.note })) }));
+  if (t === 'quotes') return (await load('quotes')).books.map(b => ({ title: b.titleAr + ' — ' + b.authorAr,
+    items: b.quotes.map((q, n) => ({ id: 'quote.' + b.id + '.' + n, text: q.t.ar, note: b.sourceLabel, meta: 'ص ' + q.p })) }));
+  if (t === 'texts') return (await load('texts')).map(g => ({ title: g.title,
+    items: g.items.map(i => ({ id: 'text.' + i.id, text: i.text, meta: i.id })) }));
+  if (t === 'sources') return [{ title: 'مصادر المحتوى كما يذكرها التطبيق', items: (await load('sources')).map(i => ({ id: 'src.' + i.id, text: i.text })) }];
+  if (t === 'hajj') { const d = await load('hajj'); return Object.entries(d).flatMap(([track, steps]) =>
+    steps.map(s => ({ title: (track === 'hajj' ? 'الحج' : 'العمرة') + ' — ' + s.key + ' (ص ' + s.pages + ')',
+      items: s.paras.map((p, n) => ({ id: 'hajj.' + track + '.' + s.key + '.' + n, text: p.text, kind: p.kind })) }))); }
+  if (t === 'tajweed') { const d = await load('tajweed'); const names = { tuhfa: 'تحفة الأطفال', jazariyyah: 'المقدمة الجزرية', tamhid: 'التمهيد' };
+    return Object.entries(d).flatMap(([book, ls]) => ls.map((l, k) => ({ title: names[book] + ' — ' + l.title,
+      items: l.paras.map((p, n) => ({ id: 'tajweed.' + book + '.' + k + '.' + n, text: p.text, kind: p.kind })) }))); }
+  if (t === 'hadith') {
+    if (!a1 || !a2) return [];
+    const idx = await load('hadith/index');
+    const b = idx.find(x => x.key === a1); if (!b) return [];
+    const c = b.chapters.find(x => x.no === a2);
+    const items = await load('hadith/' + a1 + '/' + a2);
+    return [{ title: b.name + ' — ' + (c ? c.name : a2), items: items.map(h => ({
+      id: 'hadith.' + a1 + '.' + h.n,
+      text: h.t,
+      // A grading must name whose it is; the app's own rule. Where the source
+      // names no grader the site says so, rather than showing a bare word or
+      // an empty space that reads as an omission.
+      note: h.g ? (h.g + ' — ' + h.r) : 'لا حكم مسمّى في المصدر',
+      meta: 'رقم ' + h.n,
+    })) }];
+  }
+  if (t === 'books') {
+    if (!a1 || a2 === null) return [];
+    const list = await load('books');
+    const b = list.find(x => x.id === a1); if (!b) return [];
+    const doc = await loadBook(b.url);
+    const pages = doc.pages || doc;
+    const from = parseInt(a2, 10) || 0;
+    return pages.slice(from, from + 20).map((pg, k) => {
+      const no = pageNo(pg, from + k + 1);
+      return {
+        title: b.title + ' — صفحة ' + no,
+        items: paras(pg)
+          .filter(x => (x.t || '').trim())
+          .map((x, n) => ({
+            id: 'book.' + b.id + '.' + no + '.' + n,
+            text: x.t,
+            kind: x.k,
+            meta: x.k && x.k !== 'body' ? x.k : '',
+            note: n === 0 ? b.edition : '',
+          })),
+      };
+    });
+  }
+  return [];
+}
+
+// ── Pickers: nothing long is fetched before it is asked for ───────────────
+async function hadithPicker() {
+  const idx = await load('hadith/index');
+  if (!a1) return '<p class="stat">الكتب التسعة — اختر كتابًا</p>' + idx.map(b =>
+    '<details open><summary><a href="#hadith/' + b.key + '">' + esc(b.name) + '</a>'
+    + '<span class="n">' + b.count + '</span></summary>'
+    + '<div class="item"><div class="meta">' + esc(b.author) + ' · ' + b.chapters.length + ' بابًا</div></div></details>').join('');
+  const b = idx.find(x => x.key === a1);
+  if (!b) return '<p class="stat">لا يوجد</p>';
+  return '<p class="stat"><a href="#hadith">→ الكتب التسعة</a> · ' + esc(b.name) + ' — اختر بابًا</p>'
+    + b.chapters.map(c => '<details><summary><a href="#hadith/' + b.key + '/' + encodeURIComponent(c.no) + '">'
+      + esc(c.no + '. ' + c.name) + '</a><span class="n">' + c.count + '</span></summary></details>').join('');
+}
+
+const CATS = { hadith:'الحديث', tazkiyah:'الرقائق والتزكية', adab:'الآداب', tafsir:'التفسير',
+  aqidah:'العقيدة', fiqh:'الفقه', tarikh:'التاريخ', seerah:'السيرة', talibIlm:'طالب العلم' };
+
+async function booksPicker() {
+  const list = await load('books');
+  if (!a1) {
+    const by = {};
+    list.forEach(b => { (by[b.category] = by[b.category] || []).push(b); });
+    return '<p class="stat">كتب المكتبة — ' + list.length + ' كتابًا. النص يُقرأ من الملف نفسه الذي ينزّله التطبيق.</p>'
+      + Object.keys(by).map(c => '<details><summary>' + esc(CATS[c] || c) + '<span class="n">' + by[c].length + '</span></summary>'
+        + by[c].map(b => '<div class="item"><div><a href="#books/' + encodeURIComponent(b.id) + '/0">' + esc(b.title) + '</a></div>'
+          + '<div class="meta">' + esc(b.author) + (b.death ? ' (ت ' + esc(b.death) + 'هـ)' : '') + '</div></div>').join('')
+        + '</details>').join('');
+  }
+  const b = list.find(x => x.id === a1);
+  if (!b) return '<p class="stat">لا يوجد</p>';
+  let doc;
+  try { doc = await loadBook(b.url); }
+  catch (e) { return '<p class="stat"><a href="#books">→ كتب المكتبة</a> · تعذّر تحميل «' + esc(b.title) + '»: ' + esc(e.message || e) + '</p>'; }
+  const pages = doc.pages || doc;
+  let html = '<p class="stat"><a href="#books">→ كتب المكتبة</a> · ' + esc(b.title) + ' — ' + pages.length + ' صفحة، اختر نطاقًا</p>';
+  for (let i = 0; i < pages.length; i += 20) {
+    html += '<details><summary><a href="#books/' + encodeURIComponent(b.id) + '/' + i + '">صفحات '
+      + (i + 1) + '–' + Math.min(i + 20, pages.length) + '</a></summary></details>';
+  }
+  return html;
+}
+
+// ── The reviewers ─────────────────────────────────────────────────────────
+async function whoPage() {
+  if (a1) {
+    let d;
+    try { d = await (await auth.request(API + '?reviewer=' + encodeURIComponent(a1))).json(); }
+    catch (e) { return '<p class="stat">تعذّر الاتصال بالخادم.</p>'; }
+    const rows = d.notes || [];
+    return '<p class="stat"><a href="#who">→ المراجعون</a> · ملاحظات <b>' + esc(a1) + '</b> — ' + rows.length + '</p>'
+      + (rows.length ? rows.map(r => '<details open><summary>' + esc(r.section || r.item_id)
+        + '<span class="n">' + (r.done ? 'تمت' : '') + '</span></summary><div class="item">'
+        + (r.excerpt ? '<div class="text">' + esc(r.excerpt) + '</div>' : '')
+        + (r.note ? '<div class="note">' + esc(r.note) + '</div>' : '')
+        + '<div class="meta">' + esc(r.item_id) + '</div></div></details>').join('')
+        : '<p class="stat">لا ملاحظات بعد.</p>');
+  }
+  let d;
+  try { d = await (await auth.request(API + '/reviewers')).json(); }
+  catch (e) { return '<p class="stat">تعذّر الاتصال بالخادم.</p>'; }
+  const rs = d.reviewers || [];
+  if (!rs.length) return '<p class="stat">لم يبدأ أحد المراجعة بعد.</p>';
+  return '<p class="stat">من راجع، وما كتبه</p>' + rs.map(r =>
+    '<details open><summary><a href="#who/' + encodeURIComponent(r.reviewer) + '">' + esc(r.reviewer) + '</a>'
+    + '<span class="n">' + r.notes + ' ملاحظة · ' + r.done + ' تمت</span></summary>'
+    + '<div class="item"><div class="meta">آخر نشاط: ' + new Date(r.last).toLocaleString('ar-EG') + '</div></div></details>').join('');
+}
+
+function intro() {
+  return '<div class="intro">'
+    + '<p><b>الغرض:</b> مراجعة كل نص ديني يعرضه تطبيق «رفيق الدرب»: الكتب التسعة بأحكامها ومحققيها، وكتب المكتبة كاملة، والأذكار وتخريجها، والمقولات ومصادرها، ونصوص الواجهة، ومقاطع «الإيضاح» في المناسك، ودروس التجويد.</p>'
+    + '<p><b>النصوص منقولة آليًا</b> مما يحمله التطبيق نفسه، دون إعادة كتابة: قواعد البيانات المضمَّنة، وكتب المكتبة تُقرأ من الملف نفسه الذي ينزّله التطبيق على جهاز القارئ.</p>'
+    + '<p><b>طريقة المراجعة:</b> علّم «تمت» على ما راجعته، واكتب ملاحظتك تحت أي نص. <b>تُرفع تلقائيًا باسمك</b> فور كتابتها — لا يوجد زر حفظ — وتبقى نسخة على جهازك، فإن انقطع الاتصال أُعيد الإرسال.</p>'
+    + '<p><b>الكتب التسعة:</b> ٦٧٬١٥٣ حديثًا، منها ٤٥٬٢١٩ بحكم يذكر محققه بالاسم، و٢١٬٩٣٤ بلا حكم مسمّى — والصحيحان منها بلا تحكيم عن عمد، وهذا مذكور تحت كل حديث منهما. <b>كتب المكتبة:</b> ٢١٣ كتابًا بطبعاتها.</p>'
+    + '<p>اختر الكتاب ثم الباب أو نطاق الصفحات؛ لا يُحمَّل إلا ما تفتحه.</p></div>';
+}
+
+let renderGeneration = 0;
+async function render() {
+  const generation = ++renderGeneration;
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
+  const main = document.getElementById('main');
+  if (tab === 'intro') { main.innerHTML = intro(); return; }
+  main.innerHTML = '<p class="stat">…جارٍ التحميل</p>';
+  try {
+    const show = async (result) => {
+      const html = await result;
+      if (generation === renderGeneration) main.innerHTML = html;
+    };
+    if (tab === 'who') { await show(whoPage()); return; }
+    if (tab === 'hadith' && !a2) { await show(hadithPicker()); return; }
+    if (tab === 'books' && a2 === null) { await show(booksPicker()); return; }
+    const q = norm(document.getElementById('q').value.trim());
+    const gs = await groups(tab);
+    if (generation !== renderGeneration) return;
+    let shown = 0, done = 0, total = 0;
+    const html = gs.map(g => {
+      const items = g.items.filter(i => !q || norm(i.text + ' ' + (i.note || '')).includes(q));
+      total += g.items.length;
+      done += g.items.filter(i => store[i.id] && store[i.id].ok).length;
+      if (!items.length) return '';
+      shown += items.length;
+      return '<details' + (q || gs.length <= 20 ? ' open' : '') + '><summary>' + esc(g.title)
+        + '<span class="n">' + items.length + '</span></summary>'
+        + items.map(i => {
+          const r = store[i.id] || {};
+          return '<div class="item' + (r.ok ? ' done' : '') + '" data-id="' + esc(i.id)
+            + '" data-sec="' + esc(g.title) + '" data-ex="' + esc(i.text.slice(0, 160)) + '">'
+            + '<div class="text' + (i.kind === 'aya' ? ' aya' : '') + '">' + esc(i.text) + '</div>'
+            + (i.note ? '<div class="note">' + esc(i.note) + '</div>' : '')
+            + (i.meta ? '<div class="meta">' + esc(i.meta) + '</div>' : '')
+            + '<div class="rev"><label><input type="checkbox"' + (r.ok ? ' checked' : '') + '> تمت</label>'
+            + '<textarea placeholder="ملاحظة…" class="' + (r.c ? 'has' : '') + '">' + esc(r.c || '') + '</textarea>'
+            + '</div></div>';
+        }).join('') + '</details>';
+    }).join('');
+    main.innerHTML = '<p class="stat">راجعت ' + done + ' من ' + total + (q ? ' · النتائج: ' + shown : '') + '</p>' + html;
+  } catch (e) {
+    if (generation !== renderGeneration) return;
+    main.innerHTML = '<p class="stat">تعذّر التحميل: ' + esc(e.message || e) + '</p>';
+  }
+}
+
+function saveReviewEdit(e) {
+  if (e.type === 'input' && e.target.type === 'checkbox') return;
+  const it = e.target.closest('.item'); if (!it) return;
+  const id = it.dataset.id; store[id] = store[id] || {};
+  if (e.target.type === 'checkbox') { store[id].ok = e.target.checked; it.classList.toggle('done', e.target.checked); }
+  else { store[id].c = e.target.value.trim(); e.target.classList.toggle('has', !!store[id].c); }
+  save();
+  queue(id, { excerpt: it.dataset.ex || '', section: it.dataset.sec || '' });
+}
+document.getElementById('main').addEventListener('change', saveReviewEdit);
+document.getElementById('main').addEventListener('input', saveReviewEdit);
+document.getElementById('export').onclick = async () => {
+  const lines = [];
+  for (const id of Object.keys(store)) {
+    const r = store[id];
+    if (!r || !r.c) continue;
+    lines.push('[' + id + ']\n← ' + r.c + '\n');
+  }
+  const text = lines.length
+    ? 'ملاحظات ' + (me || 'مراجعة رفيق الدرب') + '\n\n' + lines.join('\n')
+    : 'لا توجد ملاحظات بعد.';
+  try { await navigator.clipboard.writeText(text); alert('نُسخت ' + lines.length + ' ملاحظة.'); }
+  catch (e) { prompt('انسخ النص:', text); }
+};
+let qtimer;
+document.getElementById('q').addEventListener('input', () => { clearTimeout(qtimer); qtimer = setTimeout(render, 250); });
+document.getElementById('tabs').innerHTML = TABS.map(t => '<button data-t="' + t[0] + '">' + t[1] + '</button>').join('');
+document.getElementById('tabs').onclick = e => { const t = e.target.dataset.t; if (!t) return; location.hash = t; };
+window.addEventListener('hashchange', () => { readHash(); render(); });
+paintWho();
+render();
+pushAll();
+if (!auth.signedIn) askName(false);
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
