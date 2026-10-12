@@ -10,6 +10,10 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A45 NORMAL ANR OBSERVED / RESTORE RECHECK 11:35 Dubai:** NormalAPI36startup finalimage showsANRdialog overHome, despite earlierlogsFATAL0ANR0 beforelaterdialog. Freshlog/dropboxpreservedoutsidegit; doNOTclaimcurrentlaunchhealthy. API24onboardingseen. Initialshelfcheckduringstartup failed, laterbothshell/exec-out confirmedid20013 unchangedWed19:25/page541; codeMyShelvesrearmlifecyclebeingread (notclaimdata lost). A45native29both/full1286/analyze44.5 stillvalidated; no A45commit yet. NEXT traceactuallatestANR beforeforce-stop/relaunchnormal/checkhealthyHome/prefs/logs thensaveA45; startupANR separateexistingunresolved issue.
+
+**A45 NORMAL SIGNED / RESTORED 11:32 Dubai:** NORMAL39.4s/signed/entryheadlesspresent fixturemarkersabsent/restore-rbothSuccess/launched. NextwaitactualHome-onboarding thencheckcurrentFATAL-ANR/prefs541+shelf20013/ownA45absence/offlineinit thenONEFixA45/report31fixed17remaining/NEXTA32. Full1286/analyzer44.5s/native29both/UIseen/readOnlysourceSHAunchanged.
+
 **A45 NATIVE29 BOTH PASS / NORMAL BUILDING 11:30 Dubai:** Native29distinct+31runner API24(37s)/API36(1m05), actualoriginalTirmidhi1hiddenbuttonscreens viewedboth/no setup-test failures. Original109731840B readonlyDBcopy SHA539dea... beforeafter verified andowncode_cache rootremovedboth. Full1286/original4skips2m59/analyzer44.5clean/focused29PASS5s. NORMALmainbuildnow/sourcefrozen; nextsign/fixtureabsence/restore-rboth/actualHome-onboarding/prefs/currentlogs thenONEFixA45/report31fixed17remaining/nextA32. No religioustext/grade/translation change/no voice started.
 
 **A45 SIGNED FIXTURE / NATIVE29 NEXT 11:27 Dubai:** Fixture56.0s/signed/markerA45presentA43absent/install-rbothSuccess. Full1286/analyzer44.5clean/focused29retained. Nextactual29nativeboth withcurrentPIDcapture/originalhadithDBzipSHAreadonlyownedrootcleanup thenNORMALbuild/sign/restore/Home/prefs/logs/ONEFixA45. No source/testeditswhilebuild; no release/deploy/contentchanges.
