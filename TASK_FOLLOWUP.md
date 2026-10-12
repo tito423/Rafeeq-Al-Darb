@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 API24 PASS / CAPTURE DEADLINE CORRECTION 06:43 Dubai:** API24 actual1test9scenarios3runnerPASS3m13; capture helper60s expired before actual24second simulation reachedgate undernative frame cost. This is NOT acceptedvisualproof; extended ignoredcapturepoll to5min, product/assertions unchanged. API36 stillrunning; nextinspectdeadline/result, rerun native sequentiallywithimmediateextendedcaptures toseeactualrepairedgate. Do not weaken/skip tests. MustNORMALrestoreboth beforestopping; full1241/analyzerCLEAN retained.
+
 **A42 SIGNED NATIVE RUNNING 06:38 Dubai:** Fixture53.9s/sign/A42marker verified/A41absent/install-rbothSuccess. Native actual delayed/disposal+7locales+mapreplay test running both withcurrentPID capture/9markers/3runner guard. Full1241/analyzerclean retained. Next nativePASS+UI thenownedtempchecks/NORMALmain/sign/guardrestore/prefs/report/singleFixA42. No majordevelopment.
 
 **A42 FULL CLEAN / NATIVE BUILDING 06:35 Dubai:** Full1241PASS/original4skips3m05/analyzerfinalCLEAN21.5s/focused9scenariosPASS9s; nativefixturebuildnow/sourcefrozen. Currentquota79percent5hUSED/59weeklyUSED/twoResetcreditsunused. Next sign/marker/install-rAPI24+36/runactualonewidgettest/nine scenario markers/3runner/captureactualgate; NORMALrestore/ownerdata/report/singlefix. No majorgameimplementation; A43 citedListenCardlayout/auditfixture read-only.
