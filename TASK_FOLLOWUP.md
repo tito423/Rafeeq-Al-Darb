@@ -10,6 +10,10 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A45 NATIVE29 BOTH PASS / NORMAL BUILDING 11:30 Dubai:** Native29distinct+31runner API24(37s)/API36(1m05), actualoriginalTirmidhi1hiddenbuttonscreens viewedboth/no setup-test failures. Original109731840B readonlyDBcopy SHA539dea... beforeafter verified andowncode_cache rootremovedboth. Full1286/original4skips2m59/analyzer44.5clean/focused29PASS5s. NORMALmainbuildnow/sourcefrozen; nextsign/fixtureabsence/restore-rboth/actualHome-onboarding/prefs/currentlogs thenONEFixA45/report31fixed17remaining/nextA32. No religioustext/grade/translation change/no voice started.
+
+**A45 SIGNED FIXTURE / NATIVE29 NEXT 11:27 Dubai:** Fixture56.0s/signed/markerA45presentA43absent/install-rbothSuccess. Full1286/analyzer44.5clean/focused29retained. Nextactual29nativeboth withcurrentPIDcapture/originalhadithDBzipSHAreadonlyownedrootcleanup thenNORMALbuild/sign/restore/Home/prefs/logs/ONEFixA45. No source/testeditswhilebuild; no release/deploy/contentchanges.
+
 **A45 FULL1286 CLEAN / NATIVE BUILDING 11:24 Dubai:** Full1286PASS4originalskips2m59/analyzerCLEAN44.5s/focused29PASS5s after21RED8controlsbaseline. Buildingfixturetarget now/sourcefrozen; native29both will unziporiginalbundledhadithzip/readOnlyDB109731840B SHA539dea.../cleanupguard. Nextsign/markerverify/install-r/native29distinct+31runner/currentPIDactualhiddenTirmidhi1screenimages/both/ownrootabsence/NORMALrestore/Home/prefs/logs/singleFixA45/report31fixed17remaining.
 
 **A45 FOCUSED29 GREEN / FULL RUNNING 11:21 Dubai:** Focused29PASS5s afterbaseline21RED8controls5s. FinalproductpulseinitStateonly/no religiousdata orstrings changed. Full1286expected+analyzer running/no buildsourceduringtest. Nextcleanfull/analyze thenfixturebuild/sign/native29both/currentPIDcaptureactualhiddenhadith/readonlyDBSHA beforeafter andowncleanup/NORMALmainrestore/preferences/logs/singleFixA45.
