@@ -103,121 +103,134 @@ class ListenCardState extends ConsumerState<ListenCard>
     final scheme = Theme.of(context).colorScheme;
     final ayah = _ayah;
     _syncBeat();
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 350),
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
-      decoration: BoxDecoration(
-        color: Color.alphaBlend(
-          AppColors.gold.withValues(alpha: _playing ? 0.18 : 0.10),
-          scheme.surfaceContainerHighest,
-        ),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppColors.gold.withValues(alpha: _playing ? 0.8 : 0.35),
-          width: _playing ? 1.6 : 1,
-        ),
-        boxShadow: _playing
-            ? [
-                BoxShadow(
-                  color: AppColors.gold.withValues(alpha: 0.25),
-                  blurRadius: 16,
-                ),
-              ]
-            : const [],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              _EqualizerBars(beat: _beat, active: _playing),
-              const SizedBox(width: 7),
-              Expanded(
-                child: Text(
-                  widget.example.listenKey.tr(),
-                  style: const TextStyle(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
+    // Keep the complete quotation accessible inside a bounded course sheet.
+    return SingleChildScrollView(
+      primary: false,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 350),
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+        decoration: BoxDecoration(
+          color: Color.alphaBlend(
+            AppColors.gold.withValues(alpha: _playing ? 0.18 : 0.10),
+            scheme.surfaceContainerHighest,
           ),
-          const SizedBox(height: 8),
-          if (ayah != null)
-            ArabicText(
-              ayah.textUthmani,
-              style: const TextStyle(
-                fontFamily: 'KFGQPCHafs',
-                letterSpacing: 0, // any spacing turns the font's ligatures off
-                fontSize: 18,
-                height: 2.0,
-              ),
-            ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              // The words the rule happens in, glowing in time while heard.
-              // A course's example ayah has none to single out: the ayah
-              // above is the example.
-              if (widget.example.phrase.isNotEmpty)
-                AnimatedBuilder(
-                  animation: _beat,
-                  builder: (context, child) => Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.gold.withValues(
-                        alpha: _playing ? 0.08 + 0.14 * _beat.value : 0,
-                      ),
-                      boxShadow: _playing
-                          ? [
-                              BoxShadow(
-                                color: AppColors.gold.withValues(
-                                  alpha: 0.35 * _beat.value,
-                                ),
-                                blurRadius: 12,
-                              ),
-                            ]
-                          : const [],
-                    ),
-                    child: Transform.scale(
-                      scale: _playing ? 1 + 0.06 * _beat.value : 1,
-                      child: child,
-                    ),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: AppColors.gold.withValues(alpha: _playing ? 0.8 : 0.35),
+            width: _playing ? 1.6 : 1,
+          ),
+          boxShadow: _playing
+              ? [
+                  BoxShadow(
+                    color: AppColors.gold.withValues(alpha: 0.25),
+                    blurRadius: 16,
                   ),
+                ]
+              : const [],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                _EqualizerBars(beat: _beat, active: _playing),
+                const SizedBox(width: 7),
+                Expanded(
                   child: Text(
-                    '﴿${widget.example.phrase}﴾',
-                    style: TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: 15,
-                      color: goldText(context),
+                    widget.example.listenKey.tr(),
+                    style: const TextStyle(
+                      fontSize: 12.5,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
-              const Spacer(),
-              FilledButton.icon(
-                onPressed: ayah == null ? null : _toggle,
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.gold,
-                  foregroundColor: Colors.black,
-                  visualDensity: VisualDensity.compact,
-                ),
-                icon: Icon(
-                  _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
-                  size: 18,
-                ),
-                label: Text(
-                  _playing ? 'tajweed.stop'.tr() : 'tajweed.listen'.tr(),
+              ],
+            ),
+            const SizedBox(height: 8),
+            if (ayah != null)
+              ArabicText(
+                ayah.textUthmani,
+                style: const TextStyle(
+                  fontFamily: 'KFGQPCHafs',
+                  // Any spacing turns the font's ligatures off.
+                  letterSpacing: 0,
+                  fontSize: 18,
+                  height: 2.0,
                 ),
               ),
-            ],
-          ),
-        ],
+            const SizedBox(height: 6),
+            SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: widget.example.phrase.isEmpty
+                    ? WrapAlignment.end
+                    : WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  // The words the rule happens in, glowing in time while heard.
+                  // A course's example ayah has none to single out: the ayah
+                  // above is the example.
+                  if (widget.example.phrase.isNotEmpty)
+                    AnimatedBuilder(
+                      animation: _beat,
+                      builder: (context, child) => Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.gold.withValues(
+                            alpha: _playing ? 0.08 + 0.14 * _beat.value : 0,
+                          ),
+                          boxShadow: _playing
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.gold.withValues(
+                                      alpha: 0.35 * _beat.value,
+                                    ),
+                                    blurRadius: 12,
+                                  ),
+                                ]
+                              : const [],
+                        ),
+                        child: Transform.scale(
+                          scale: _playing ? 1 + 0.06 * _beat.value : 1,
+                          child: child,
+                        ),
+                      ),
+                      child: Text(
+                        '﴿${widget.example.phrase}﴾',
+                        style: TextStyle(
+                          fontFamily: 'AmiriQuran',
+                          fontSize: 15,
+                          color: goldText(context),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  FilledButton.icon(
+                    onPressed: ayah == null ? null : _toggle,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.gold,
+                      foregroundColor: Colors.black,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    icon: Icon(
+                      _playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
+                      size: 18,
+                    ),
+                    label: Text(
+                      _playing ? 'tajweed.stop'.tr() : 'tajweed.listen'.tr(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
