@@ -452,6 +452,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 68. Read the actual Flutter temp path, reject native setup failures despite driver exit0, and capture before teardown.
 69. Validate gzip integrity explicitly and replace cache files atomically; truncated data can silently parse as incomplete content.
 70. Use exec-out for binary reads and actual directory listings for owned cleanup; API24 run-as test was denied in device checks.
+71. Inspect native screenshots; test view metrics can leave Test starting on the physical surface, and cached quiz futures retain test zones.
 
 ## 4. Where things live
 

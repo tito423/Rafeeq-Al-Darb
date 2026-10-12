@@ -776,3 +776,12 @@ Do not rediscover these.
     verify only owned filenames and their source SHA before deleting them,
     and assert that no owned temporary directory remains. A38 files were
     rechecked and cleaned after correcting its earlier unreliable API24 check.
+
+71. **A native test pass does not prove its screenshot shows the widget.**
+    A42's resized test view passed every assertion but ADB showed Test starting.
+    API36 required restoring real view metrics and pumping before capture;
+    API24 required never mutating those metrics. Both final gates were seen.
+    The road's real ticker exceeded the capture helper's60s limit: lengthen
+    capture polling, retain every scenario and the test's4min budget. Keep
+    HistoryQuiz's cached future and controls in one widget-test zone; awaiting
+    the previous zone's future made later controls false-red and teardown hang.
