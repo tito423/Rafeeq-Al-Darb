@@ -10,6 +10,8 @@ account, the other one, or another agent — reads this and continues from
 
 ## Next step (exact)
 
+**A42 API36 TIMEOUT REJECTED / PHONE VIEWPORT 06:47 Dubai:** API36 timedout4min during native pump/teardown conflict aftertimeout, rejected despite driverAllpassed. API24 nine scenarios PASS3m13 butcaptureexpired, no visualacceptanceyet. SDKLiveBindingdefaultfadePointers checked; not claimed fullyLive. Adjusted ONLY native test viewport360x800/dpr1 withpertestrestore, no wm/userchange; same realticker/allassertions/4min timeout. Pump450ms settles gatepanel beforecapture. Focused/analyze nowrunning, full1241previousvalid/productunchanged; nextrebuildandnative sequential extendedcapture5min, NORMALrestorebothbeforestop.
+
 **A42 API24 PASS / CAPTURE DEADLINE CORRECTION 06:43 Dubai:** API24 actual1test9scenarios3runnerPASS3m13; capture helper60s expired before actual24second simulation reachedgate undernative frame cost. This is NOT acceptedvisualproof; extended ignoredcapturepoll to5min, product/assertions unchanged. API36 stillrunning; nextinspectdeadline/result, rerun native sequentiallywithimmediateextendedcaptures toseeactualrepairedgate. Do not weaken/skip tests. MustNORMALrestoreboth beforestopping; full1241/analyzerCLEAN retained.
 
 **A42 SIGNED NATIVE RUNNING 06:38 Dubai:** Fixture53.9s/sign/A42marker verified/A41absent/install-rbothSuccess. Native actual delayed/disposal+7locales+mapreplay test running both withcurrentPID capture/9markers/3runner guard. Full1241/analyzerclean retained. Next nativePASS+UI thenownedtempchecks/NORMALmain/sign/guardrestore/prefs/report/singleFixA42. No majordevelopment.
