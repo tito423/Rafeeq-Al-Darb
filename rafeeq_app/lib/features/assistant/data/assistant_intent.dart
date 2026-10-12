@@ -565,9 +565,17 @@ class AssistantParser {
     // سورة نوح, and «قصص الأنبياء» is the shelf, not سورة الأنبياء. Every
     // story phrase carries «قصه / قصص / حكايه / حدوته» (or "story"), which no
     // surah request does.
-    for (final s in storyScreensFirst) {
-      if (_hasPhrase(clean, _screens[s] ?? const [])) return OpenScreenIntent(s);
+    AssistantScreen? story;
+    var storyPhraseLength = 0;
+    for (final screen in storyScreensFirst) {
+      for (final phrase in _screens[screen] ?? const <String>[]) {
+        if (phrase.length > storyPhraseLength && _hasPhrase(clean, [phrase])) {
+          story = screen;
+          storyPhraseLength = phrase.length;
+        }
+      }
     }
+    if (story != null) return OpenScreenIntent(story);
     final ayahRef = _ayahRef(words,
         playing: playing, memorizing: memorizing, sunan: openingSunan);
     if (ayahRef != null) return ayahRef;
