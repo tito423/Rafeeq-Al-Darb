@@ -16,34 +16,37 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 ## Next step (exact)
 
-1. Review deployment is complete and verified. Worker version
-   fb98ec8c-2c2f-4961-9db7-66d588d7030d and Pages main/cff08c1 are live.
-   No Google account or reviewer list is required. Each browser claims a
-   name and holds its write key; the name does not prove real-world identity.
-   A second device or cleared browser needs another name under this model.
-   Live API and browser name/note/list flow passed. Only the two owned QA
-   registrations and technical note were removed; final counts are zero.
-   Final backend tests 82/82, TypeScript and Flutter analyze are clean;
-   full Flutter tests passed. Raw proof is outside git in .local-audit.
-   The stored frontend now matches the deployed page; all religious content
-   is unchanged. Browser screenshot capture was unavailable, so the proof
-   is the actual browser accessibility state plus matching server rows.
-   Do not repeat publication or ask for reviewer accounts. Continue with
-   the owner-dependent checks below; emulators stay off as requested.
-2. **A-01 done 2026-10-13 ~21:50.** The owner created `rafeeq-uploads-2026-10`
-   (Object Read & Write, bucket rafeeq-content), put it in `scripts/.env`,
-   and deleted the leaked `rafeeq-aldarb-data` (Admin Read & Write, all
-   buckets, issued 2026-08-24 - the only token that existed when the key
-   leaked in commits of 2026-08-26..28). Kept: the user token "Edit
-   Cloudflare Workers" (2026-09-13). New key checked after the deletion:
-   list 200, probe put/delete 200/204. Not tested: that the old key is
-   refused (its value was never read here).
-3. **Remote branches cleaned 2026-10-13** on the owner's order: 14 deleted,
-   only `main` and `master` remain. `release-v1.2.0` and v3.51.0 are in
-   `E:\My Projects\Rafeeq-Backups
-elease-v1.2.0-and-v3.51.0.bundle`.
-4. Phone-only checks: adhan on the lock screen after a PIN reboot, real
-   microphone for tasmee, Google sync between two devices.
+1. Owner phone checks: install the current 3.88.1 over the existing app,
+   test adhan before the first PIN after reboot, real microphone/tasmee,
+   recitation Home -> launcher icon -> Back, and Google sync on two devices.
+2. Per-ABI APKs: ARM64/ARMv7 phone checks are still pending. Existing split
+   experiments predate the final 3.88.1 adhan retry; refresh/sign/validate
+   the current-version splits before giving them to the owner. Keep the
+   universal APK primary and build_github_release.bat unchanged until all
+   the original ABI gates pass. Emulators stay off at the owner's request.
+3. The adhan retry native suite is still unverified on API24. Do not claim
+   that check passed or silently substitute the API36 result.
+
+Completed: review Worker fb98ec8c-2c2f-4961-9db7-66d588d7030d and Pages
+cff08c1 are live and verified. No Google/list is needed for reviews; a name
+is bound to its browser key and does not verify real-world identity. The
+two owned QA registrations and technical note were removed. Screenshot
+capture was unavailable; actual browser state and server rows were checked.
+
+A-01 is now verified: after the owner rotated/revoked the credential,
+Codex's read-only ListObjectsV2 MaxKeys=1 using the public historical pair
+from 3747f715 returned 401 Unauthorized with TLS verification. No values
+were printed, the new scripts/.env key was not read, no objects were
+written, and git history was not modified. Raw proof is outside git.
+
+Remote cleanup was completed by the owner/other session: main and master
+remain; release-v1.2.0 and v3.51.0 are in the verified backup bundle
+E:/My Projects/Rafeeq-Backups/release-v1.2.0-and-v3.51.0.bundle.
+Keep v3.87.0 and the three content mirror releases.
+
+The owner also requested a caravan game assessment and ideas after the
+audit, before any game implementation. Do not begin game edits from this
+heartbeat or mistake that future proposal for an approved redesign.
 
 ## Half-done / unverified
 
@@ -56,6 +59,12 @@ elease-v1.2.0-and-v3.51.0.bundle`.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-13 21:58 — A01 old credential rejection verified after the
+  owner's rotation: one read-only request, 401 Unauthorized, TLS checked,
+  no secret output/new-key read/writes/history edits. Audit now records all
+  48 local findings resolved, with phone/ABI and API24 retry gates still
+  explicit. Restore release 3.87 freshly checked; asset digest unchanged.
 
 - 2026-10-13 21:48 — Worker and review page activation finished. Final
   validation: 08:38 +1440 ~4: All tests passed!; analyzer clean; backend 82 passed,
