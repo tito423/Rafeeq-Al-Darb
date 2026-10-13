@@ -44,6 +44,18 @@ remain; release-v1.2.0 and v3.51.0 are in the verified backup bundle
 E:/My Projects/Rafeeq-Backups/release-v1.2.0-and-v3.51.0.bundle.
 Keep v3.87.0 and the three content mirror releases.
 
+Other repos (Claude, 2026-10-13 22:10, owner's explicit order): deleted
+`tito423/rafeeq-api` (old content host, 1.6 GB, unused since the R2 move;
+mirror backup E:/My Projects/Rafeeq-Backups/rafeeq-api.git) and the
+untouched fork `tito423/Quran-PNG`; deleted branch
+claude/intelligent-franklin-lu4lnd from rafeeq-control (mirror backup
+E:/My Projects/Rafeeq-Backups/rafeeq-control.git). Remaining repos:
+Rafeeq-Al-Darb, rafeeq-review, rafeeq-recitations, rafeeq-control,
+tito-kids-tube-webos (separate project, untouched).
+
+The stored review page equals live Pages commit 71ea463 again (c3ad0ff6
+had set it back to cff08c1, dropping the "name taken" message that is live).
+
 The owner also requested a caravan game assessment and ideas after the
 audit, before any game implementation. Do not begin game edits from this
 heartbeat or mistake that future proposal for an approved redesign.
