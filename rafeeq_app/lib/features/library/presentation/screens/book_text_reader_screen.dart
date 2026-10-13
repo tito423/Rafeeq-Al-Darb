@@ -9,9 +9,7 @@ import '../../../../core/i18n/proper_name.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/utils/digits.dart';
-import '../../../../core/utils/external_link.dart';
 import '../../../../core/utils/screen_class.dart';
-import '../../../../core/widgets/arabic_text.dart';
 import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/widgets/toolbar_action.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
@@ -19,6 +17,7 @@ import '../../data/book_catalog.dart';
 import '../../data/book_text.dart';
 import '../widgets/book_listen_action.dart';
 import '../widgets/book_page_rail.dart';
+import '../widgets/book_provenance_sheet.dart';
 import '../widgets/book_provenance_strip.dart';
 
 /// P3‑29 visual redesign: a small closed set of reading-ink choices offered
@@ -388,47 +387,8 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
     if (hit != null) _goToPageIndex(hit);
   }
 
-  void _openProvenance() {
-    final te = widget.book.textEdition;
-    if (te == null) return;
-    showFittedSheet<void>(
-      context: context,
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('library.text_source'.tr(),
-                style: Theme.of(ctx).textTheme.titleMedium),
-            const SizedBox(height: 10),
-            ArabicText(readerDigits(te.sourceLabel),
-                style: const TextStyle(height: 1.7)),
-            const SizedBox(height: 8),
-            if (_doc?.meta.printReliable ?? false)
-              Text('library.text_print_matches'.tr(),
-                  style: TextStyle(
-                      color: Theme.of(ctx).colorScheme.onSurfaceVariant,
-                      fontSize: 12.5)),
-            const SizedBox(height: 14),
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: TextButton.icon(
-                onPressed: () {
-                  final url = _doc?.meta.shamelaUrl ?? '';
-                  if (url.isNotEmpty) {
-                    openExternalLink(url);
-                  }
-                },
-                icon: const Icon(Icons.open_in_new, size: 18),
-                label: Text('library.text_open_shamela'.tr()),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  void _openProvenance() =>
+      showBookProvenance(context, widget.book, _doc?.meta);
 
   /// Keeps the listen button's State - which owns the voice reading aloud -
   /// alive when turning the phone moves it between the row and the column.
@@ -733,6 +693,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
         // text came from is its own concern, not a corner of the reader.
         BookProvenanceStrip(
           book: widget.book,
+          meta: doc.meta,
           paper: paper,
           ink: ink,
           hairline: hairline,

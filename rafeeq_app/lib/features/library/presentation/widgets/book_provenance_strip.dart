@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/arabic_text.dart';
 import '../../data/book_catalog.dart';
+import '../../data/book_text.dart';
+import 'book_provenance_sheet.dart';
 
 /// The line under every opened book that says where its text came from.
 ///
@@ -26,6 +28,7 @@ import '../../data/book_catalog.dart';
 ///   honest badge is waiting if a machine-read source is ever added.
 class BookProvenanceStrip extends StatelessWidget {
   final LibraryBook book;
+  final BookTextMeta? meta;
   final Color paper;
   final Color ink;
   final Color hairline;
@@ -34,6 +37,7 @@ class BookProvenanceStrip extends StatelessWidget {
   const BookProvenanceStrip({
     super.key,
     required this.book,
+    this.meta,
     required this.paper,
     required this.ink,
     required this.hairline,
@@ -67,7 +71,7 @@ class BookProvenanceStrip extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ArabicText(
-                    readerDigits(edition?.sourceLabel ?? ''),
+                    readerDigits(bookProvenanceLabel(book, meta)),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

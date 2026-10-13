@@ -43,9 +43,7 @@ class BookText {
   /// The same, from bytes already in hand - a text bundled as an asset.
   static BookText fromBytes(List<int> bytes) {
     final isGzip = bytes.length >= 2 && bytes[0] == 0x1f && bytes[1] == 0x8b;
-    final raw = isGzip
-        ? utf8.decode(gzip.decode(bytes))
-        : utf8.decode(bytes);
+    final raw = isGzip ? utf8.decode(gzip.decode(bytes)) : utf8.decode(bytes);
     return BookText.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
 
@@ -114,9 +112,9 @@ class BookText {
 
   /// First and last numbers on the printed scale, for the ends of the reader's
   /// rail. Skips a leading unnumbered leaf so the rail never starts at zero.
-  int get firstPrintedPage =>
-      pages.firstWhere((p) => p.printedPage > 0, orElse: () => pages.first)
-          .printedPage;
+  int get firstPrintedPage => pages
+      .firstWhere((p) => p.printedPage > 0, orElse: () => pages.first)
+      .printedPage;
   int get lastPrintedPage => pages.last.printedPage;
 
   /// Where a table-of-contents entry really starts.
@@ -137,8 +135,12 @@ class BookText {
   /// number. Where it cannot be (no scale, or the number is not in the book)
   /// the stated index is kept and clamped into range, which is still better
   /// than throwing.
-  static int _resolveSectionIndex(List<BookPage> pages, int stated, int page,
-      bool printedUsable) {
+  static int _resolveSectionIndex(
+    List<BookPage> pages,
+    int stated,
+    int page,
+    bool printedUsable,
+  ) {
     if (pages.isEmpty) return 0;
     final clamped = stated.clamp(0, pages.length - 1);
     if (!printedUsable || page <= 0) return clamped;
@@ -152,12 +154,15 @@ class BookText {
   factory BookText.fromJson(Map<String, dynamic> j) {
     final m = (j['meta'] as Map).cast<String, dynamic>();
     final pages = [
-      for (final p in (j['pages'] as List? ?? const []).cast<Map<String, dynamic>>())
+      for (final p
+          in (j['pages'] as List? ?? const []).cast<Map<String, dynamic>>())
         BookPage(
           printedPage: (p['p'] ?? 0) as int,
           editorOnly: p['e'] == 1,
           paras: [
-            for (final a in (p['paras'] as List? ?? const []).cast<Map<String, dynamic>>())
+            for (final a
+                in (p['paras'] as List? ?? const [])
+                    .cast<Map<String, dynamic>>())
               if (!_isNoise((a['t'] ?? '') as String))
                 BookPara(
                   text: (a['t'] ?? '') as String,
@@ -169,16 +174,22 @@ class BookText {
     ];
     // Both flags have to hold: the edition has to claim its numbering matches
     // the print, AND the numbers in the file have to behave like a scale.
-    final printedUsable = ((m['printMatches'] ?? false) as bool) &&
+    final printedUsable =
+        ((m['printMatches'] ?? false) as bool) &&
         ((m['printReliable'] ?? false) as bool) &&
         _printedNumbersUsable(pages);
     final toc = [
-      for (final t in (j['toc'] as List? ?? const []).cast<Map<String, dynamic>>())
+      for (final t
+          in (j['toc'] as List? ?? const []).cast<Map<String, dynamic>>())
         BookSection(
           title: (t['title'] ?? '') as String,
           page: (t['page'] ?? 0) as int,
-          pageIndex: _resolveSectionIndex(pages, (t['pageIndex'] ?? 0) as int,
-              (t['page'] ?? 0) as int, printedUsable),
+          pageIndex: _resolveSectionIndex(
+            pages,
+            (t['pageIndex'] ?? 0) as int,
+            (t['page'] ?? 0) as int,
+            printedUsable,
+          ),
           level: (t['level'] ?? 1) as int,
         ),
     ];
@@ -187,6 +198,9 @@ class BookText {
         titleAr: (m['titleAr'] ?? '') as String,
         authorAr: (m['authorAr'] ?? '') as String,
         sourceLabel: (m['sourceLabel'] ?? '') as String,
+        editionCard: m['editionCard'] is String
+            ? m['editionCard'] as String
+            : '',
         shamelaUrl: (m['shamelaUrl'] ?? '') as String,
         printMatches: (m['printMatches'] ?? false) as bool,
         printReliable: printedUsable,
@@ -222,6 +236,9 @@ class BookTextMeta {
 
   /// Full edition + editor line, always shown in the reader.
   final String sourceLabel;
+
+  /// The source's verbatim bibliographic card; absent in older downloads.
+  final String editionCard;
   final String shamelaUrl;
 
   /// Shamela flag `[ترقيم الكتاب موافق للمطبوع]`.
@@ -238,6 +255,7 @@ class BookTextMeta {
   /// when this is true; otherwise it navigates by sequence position + the
   /// فهرس, which is always right.
   final bool printReliable;
+
   /// Counted from the parsed document, not read off the file's meta block.
   final int pageCount;
   final int sectionCount;
@@ -246,6 +264,7 @@ class BookTextMeta {
     required this.titleAr,
     required this.authorAr,
     required this.sourceLabel,
+    this.editionCard = '',
     required this.shamelaUrl,
     required this.printMatches,
     required this.printReliable,
