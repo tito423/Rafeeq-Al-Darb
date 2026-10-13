@@ -43,13 +43,9 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
    Cloudflare Workers" (2026-09-13). New key checked after the deletion:
    list 200, probe put/delete 200/204. Not tested: that the old key is
    refused (its value was never read here).
-3. **Remote branches** not deleted (classifier blocked): ccr-2f2431dd-qhco4b,
-   ccr-5abc3286-e7dj17, claude/intelligent-franklin-lu4lnd,
-   claude/tajweed-simplify-49x14b, claude/zen-sagan-fvcgye,
-   kids-stories-pipeline, known-good/v3.48.0 .. v3.53.0, master-353kkv,
-   release-v1.2.0. All except release-v1.2.0 are fully contained in master;
-   release-v1.2.0 and v3.51.0 are bundled in
-   `E:\My Projects\Rafeeq-Backups\release-v1.2.0-and-v3.51.0.bundle`.
+3. **Remote branches cleaned 2026-10-13** on the owner's order: 14 deleted,
+   only `main` and `master` remain. `release-v1.2.0` and v3.51.0 are in
+   `E:\My Projects\Rafeeq-Backupselease-v1.2.0-and-v3.51.0.bundle`.
 4. Phone-only checks: adhan on the lock screen after a PIN reboot, real
    microphone for tasmee, Google sync between two devices.
 
