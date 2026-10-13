@@ -581,7 +581,8 @@
     "talib_stage_1": "1 · The manners of the student",
     "talib_stage_2": "2 · First texts, with their commentaries",
     "talib_stage_3": "3 · Going further",
-    "talib_stage_4": "4 · Aims and the great foundations"
+    "talib_stage_4": "4 · Aims and the great foundations",
+    "takhrij_darussalam": "Hafiz Abu Tahir Zubair Ali Za'i — Darussalam, first Arabic–English edition, 2007 (ISBN {})"
   },
   "azkar": {
     "reminder_opens": "When the reminder is opened",
@@ -1287,7 +1288,11 @@
     "src_kids_tts": "The narrator's voice in the kids' stories (an AI-generated voice)",
     "src_kids_more": "Some story details come from the tafsirs of Ibn Kathir and al-Tabari (Hud), and from Ibn Abbas's hadith in Sahih al-Bukhari as Ibn Kathir quotes it (the Kaaba and Zamzam), as their text appears in the app's library",
     "src_adhkar_ih": "Complete morning and evening adhkar by Mishary Rashid Alafasy, played from IslamHouse",
-    "src_adhkar_ia": "Complete morning and evening adhkar by Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim and Faisal Labban, as uploaded to the Internet Archive"
+    "src_adhkar_ia": "Complete morning and evening adhkar by Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim and Faisal Labban, as uploaded to the Internet Archive",
+    "src_darussalam_grading": "Darussalam grading attribution on Sunnah.com: Hafiz Abu Tahir Zubair Ali Za'i",
+    "src_darussalam_tirmidhi": "Jami' At-Tirmidhi — Darussalam, November 2007; ISBN 9789960996738",
+    "src_darussalam_nasai": "Sunan An-Nasa'i — Darussalam, December 2007; ISBN 9789960587608",
+    "src_darussalam_ibnmajah": "Sunan Ibn Majah — Darussalam, June 2007; ISBN 9789960988139"
   },
   "ruqyah": {
     "title": "Ruqyah",

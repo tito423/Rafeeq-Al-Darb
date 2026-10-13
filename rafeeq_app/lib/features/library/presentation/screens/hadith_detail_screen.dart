@@ -238,8 +238,12 @@ class _TakhrijChip extends StatelessWidget {
       icon = Icons.verified_outlined;
     } else if (item.grade != null && item.grade!.isNotEmpty) {
       final grade = localizedHadithGrade(item.grade!, lang);
+      final isbn = darussalamGradingIsbn(item.grader, book.key);
+      final attribution = isbn == null
+          ? localizedHadithGrader(item.grader ?? '', lang)
+          : 'library.takhrij_darussalam'.tr(args: [isbn]);
       text = item.grader != null
-          ? '$grade — ${localizedHadithGrader(item.grader!, lang)}'
+          ? '$grade — $attribution'
           : grade;
       tone = AppColors.gold;
       icon = Icons.fact_check_outlined;

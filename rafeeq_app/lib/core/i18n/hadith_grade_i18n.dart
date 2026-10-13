@@ -107,3 +107,16 @@ String localizedHadithGrader(String grader, String languageCode) {
   if (languageCode != 'ar') return grader;
   return _kGraderNamesArabic[grader] ?? grader;
 }
+
+/// Sunnah.com/about identifies its Darussalam grader as Hafiz Zubair Ali Za'i.
+/// The publisher's title/copyright pages and catalogue identify these first
+/// Arabic-English editions (2007). Checked 2026-10-13; raw DB labels stay intact.
+/// Do not attribute an unknown collection or another scholar to this edition.
+String? darussalamGradingIsbn(String? grader, String bookKey) {
+  if (grader != 'Darussalam') return null;
+  return const {
+    'tirmidhi': '9789960996738',
+    'nasai': '9789960587608',
+    'ibnmajah': '9789960988139',
+  }[bookKey];
+}

@@ -581,7 +581,8 @@
     "talib_stage_1": "1 · As maneiras do estudante",
     "talib_stage_2": "2 · Primeiros textos, com seus comentários",
     "talib_stage_3": "3 · Aprofundar",
-    "talib_stage_4": "4 · Objetivos e grandes fundamentos"
+    "talib_stage_4": "4 · Objetivos e grandes fundamentos",
+    "takhrij_darussalam": "Hafiz Abu Tahir Zubair Ali Za'i — Darussalam, primeira edição árabe–inglesa, 2007 (ISBN {})"
   },
   "azkar": {
     "reminder_opens": "Ao abrir o lembrete",
@@ -1287,7 +1288,11 @@
     "src_kids_tts": "A voz do narrador das histórias infantis (uma voz gerada por IA)",
     "src_kids_more": "Alguns detalhes vêm dos tafsir de Ibn Kathir e al-Tabari (Hud) e do hadith de Ibn Abbas no Sahih al-Bukhari citado por Ibn Kathir (a Caaba e Zamzam), como aparecem na biblioteca do app",
     "src_adhkar_ih": "Adhkar completos da manhã e da tarde por Mishary Rashid Alafasy, reproduzidos a partir do IslamHouse",
-    "src_adhkar_ia": "Adhkar completos da manhã e da tarde por Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim e Faisal Labban, tal como publicados no Internet Archive"
+    "src_adhkar_ia": "Adhkar completos da manhã e da tarde por Fares Abbad, Samir al-Bashiri, Rami Muhammad, Abdulaziz bin Ibrahim e Faisal Labban, tal como publicados no Internet Archive",
+    "src_darussalam_grading": "Atribuição das classificações Darussalam no Sunnah.com: Hafiz Abu Tahir Zubair Ali Za'i",
+    "src_darussalam_tirmidhi": "Jami' At-Tirmidhi — Darussalam, novembro de 2007; ISBN 9789960996738",
+    "src_darussalam_nasai": "Sunan An-Nasa'i — Darussalam, dezembro de 2007; ISBN 9789960587608",
+    "src_darussalam_ibnmajah": "Sunan Ibn Majah — Darussalam, junho de 2007; ISBN 9789960988139"
   },
   "ruqyah": {
     "title": "Ruqyah",

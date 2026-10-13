@@ -144,6 +144,26 @@ final sourceGroups = <(String, List<SourceEntry>)>[
     [
       const SourceEntry('sunnah.com', 'https://sunnah.com', 'about.src_sunnah'),
       const SourceEntry(
+        'Sunnah.com / Darussalam',
+        'https://sunnah.com/about',
+        'about.src_darussalam_grading',
+      ),
+      const SourceEntry(
+        'Darussalam / 9789960996738',
+        'https://dar-us-salam.com/english/hadith-sunnah/h16-jami-at-tirmidhi-6-vol-set.html',
+        'about.src_darussalam_tirmidhi',
+      ),
+      const SourceEntry(
+        'Darussalam / 9789960587608',
+        'https://dar-us-salam.com/english/hadith-sunnah/h18-sunan-an-nasa-i-6-vol-set.html',
+        'about.src_darussalam_nasai',
+      ),
+      const SourceEntry(
+        'Darussalam / 9789960988139',
+        'https://dar-us-salam.com/english/hadith-sunnah/h15-sunan-ibn-majah-5-vol-set.html',
+        'about.src_darussalam_ibnmajah',
+      ),
+      const SourceEntry(
         'المكتبة الشاملة',
         'https://shamela.ws',
         'about.src_shamela',
