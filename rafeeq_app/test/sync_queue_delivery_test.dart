@@ -98,9 +98,17 @@ void main() {
             }
             return http.Response('{"success":true}', 200);
           });
-          final serviceProvider = Provider<SyncService>(
-            (ref) => SyncService(GoogleSignIn(), prefs, ref, client: client),
-          );
+          final serviceProvider = Provider<SyncService>((ref) {
+            final service = SyncService(
+              GoogleSignIn(),
+              prefs,
+              ref,
+              client: client,
+            );
+            // Match the production provider's lifetime for pending restoration.
+            ref.onDispose(service.dispose);
+            return service;
+          });
           final container = ProviderContainer();
           final service = container.read(serviceProvider);
           Database? queue;

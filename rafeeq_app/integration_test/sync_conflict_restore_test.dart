@@ -3,10 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import '../test/support/sync_conflict_cases.dart';
 import '../test/support/sync_conflict_restore.dart';
+import '../test/support/sync_empty_queue_status.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
+  syncEmptyQueueStatusTests();
   syncConflictRestoreCases();
   testWidgets('A04 real Home reading card reflects accepted sync state', (
     tester,

@@ -553,9 +553,20 @@ class SyncService {
     }, where: 'account_id IS NULL');
 
     _isSyncing = true;
-    _ref.read(syncStatusProvider.notifier).state = SyncStatus.syncing;
 
     try {
+      // A coalesced request may reach an already-drained queue. Keep its
+      // completed state while authentication runs; only real work is syncing.
+      final pending = await _localQueueDb.query(
+        'queue',
+        where: 'account_id = ?',
+        whereArgs: [account.id],
+        limit: 1,
+      );
+      if (!_sameAccount(account.id)) return false;
+      if (pending.isNotEmpty) {
+        _ref.read(syncStatusProvider.notifier).state = SyncStatus.syncing;
+      }
       final auth = await account.authentication;
       if (!_sameAccount(account.id)) return false;
       final idToken = auth.idToken;
@@ -573,6 +584,8 @@ class SyncService {
         );
         if (!_sameAccount(account.id)) return false;
         if (queuedItems.isEmpty) break;
+        // Writes can arrive while authentication is pending.
+        _ref.read(syncStatusProvider.notifier).state = SyncStatus.syncing;
         for (final batch in syncQueueBatches(queuedItems)) {
           if (!_sameAccount(account.id)) return false;
           final response = await _withTimeout(
