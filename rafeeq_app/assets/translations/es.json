@@ -1203,8 +1203,8 @@
   },
   "about": {
     "src_fastconformer_ar": "El modelo «oído más fino en árabe» de Rafeeq: FastConformer árabe de NVIDIA bajo CC BY 4.0, exportado a ONNX (OpenVoiceOS) y cuantizado a int8 para sherpa-onnx (krut42); descarga opcional que funciona en el dispositivo sin internet.",
-    "src_adhkar_ayat": "Las aleyas de los adhkar de la mañana y la tarde (Ayat al-Kursi, las Mu‘awwidhat, la basmala) recitadas por Mishary Alafasy",
-    "src_adhkar_tts": "El resto de los adhkar de la mañana y la tarde con una voz generada por IA, cada dhikr leído una vez",
+    "src_adhkar_ayat": "El Corán en cada dhikr, y las suras As-Sajda y Al-Mulk en los adhkar antes de dormir, recitados por Mishary Alafasy",
+    "src_adhkar_tts": "El resto del texto de cada dhikr con una voz generada por IA, cada dhikr leído una vez",
     "blurb": "Rafeeq Al-Darb es una aplicación islámica completa, construida sobre fuentes fiables y de libre acceso para desarrolladores. Cada mushaf, cada traducción y cada adhan se verificó en su fuente antes de añadirse, y todas las fuentes están indicadas. Las cifras de esta página se cuentan del propio contenido de la aplicación, no se escriben a mano.",
     "developed_by": "Desarrollado por",
     "capabilities": "Qué ofrece la app",
@@ -1269,7 +1269,6 @@
     "src_silero": "Dónde empieza y termina el habla, para Rafeeq",
     "src_sherpa": "Ejecuta los modelos de voz en el dispositivo",
     "src_hisn": "Adhkar de Hisn al-Muslim de Sa'id ibn 'Ali ibn Wahf al-Qahtani — texto transcrito del libro impreso y contrastado con una segunda copia, con la referencia de cada dhikr (licencia MIT); los pasajes coránicos se escriben a partir del texto del mushaf",
-    "src_hisn_audio": "Las grabaciones de los adhkar, del sitio del propio libro Hisn al-Muslim, reproducidas directamente desde él; una grabación se asigna a un dhikr solo si dice las mismas palabras. El sitio no nombra al recitador.",
     "f_assistant_desc": "Di «يا رفيق» y pide en árabe clásico o coloquial: abre pantallas y ajustes y reproduce recitaciones, sin conexión una vez descargado su paquete de voz.",
     "f_assistant": "Rafeeq — asistente de voz",
     "f_hifz": "Memorizar y recitar",

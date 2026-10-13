@@ -87,7 +87,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
   /// The dhikr whose recording was last started here.
   int? _listeningTo;
 
-  /// Plays the current dhikr's hisnmuslim.com recording on the app's one
+  /// Plays the current dhikr's recording (azkar_audio.dart) on the app's one
   /// player (so the notification can stop it too), or stops it.
   Future<void> _listen(AzkarItem item, String url) async {
     final audio = AyahAudioService.instance;
@@ -101,7 +101,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
       id: 'dhikr:${item.id}',
       url: url,
       title: widget.section.localizedTitle(),
-      artist: 'hisnmuslim.com',
+      artist: 'azkar.title'.tr(),
     );
     if (!ok && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -182,14 +182,6 @@ final sourceGroups = <(String, List<SourceEntry>)>[
         'https://github.com/asellam/HisnElMuslim',
         'about.src_hisn',
       ),
-      // The adhkar recordings (2026-09-29): the book's own site, one mp3 per
-      // dhikr, streamed from it and paired word for word
-      // (scripts/hisnmuslim_audio_map.py). The site names no reciter.
-      const SourceEntry(
-        'حصن المسلم — hisnmuslim.com',
-        'https://www.hisnmuslim.com',
-        'about.src_hisn_audio',
-      ),
       // Complete morning / evening adhkar by real voices (2026-10-08), each
       // file transcribed and checked for its time before it was listed
       // (adhkar_recitations.dart, scripts/verify_adhkar_recordings.py).
@@ -203,9 +195,9 @@ final sourceGroups = <(String, List<SourceEntry>)>[
         'https://archive.org/details/azkar_alsabah_w_almsaa',
         'about.src_adhkar_ia',
       ),
-      // The morning / evening adhkar to listen to (2026-10-03, replacing the
-      // 2026-09-30 IslamHouse / Internet Archive recordings): Hisn al-Muslim's
-      // text voiced in the app - adhkar_recitations.dart.
+      // Hisn al-Muslim's text voiced in the app: the morning / evening
+      // tracks (adhkar_recitations.dart, 2026-10-03) and, since 3.90.0, every
+      // one of the 302 adhkar (azkar_audio.dart), replacing hisnmuslim.com.
       const SourceEntry(
         'everyayah.com — مشاري العفاسي',
         'https://everyayah.com/data/Alafasy_128kbps/',

@@ -1203,8 +1203,8 @@
   },
   "about": {
     "src_fastconformer_ar": "Le modèle « écoute plus précise en arabe » de Rafeeq : FastConformer arabe de NVIDIA sous CC BY 4.0, exporté en ONNX (OpenVoiceOS) et quantifié en int8 pour sherpa-onnx (krut42) ; téléchargement facultatif qui fonctionne sur l’appareil sans internet.",
-    "src_adhkar_ayat": "Les versets des adhkar du matin et du soir (Ayat al-Kursi, les Mu‘awwidhat, la basmala) récités par Mishary Alafasy",
-    "src_adhkar_tts": "Le reste des adhkar du matin et du soir avec une voix générée par IA, chaque dhikr lu une fois",
+    "src_adhkar_ayat": "Le Coran dans chaque dhikr, et les sourates As-Sajda et Al-Mulk dans les adhkar du coucher, récités par Mishary Alafasy",
+    "src_adhkar_tts": "Le reste du texte de chaque dhikr avec une voix générée par IA, chaque dhikr lu une fois",
     "blurb": "Rafeeq Al-Darb est une application islamique complète, bâtie sur des sources fiables et librement accessibles aux développeurs. Chaque mushaf, chaque traduction et chaque adhan a été vérifié à la source avant d’être ajouté, et toutes les sources sont indiquées. Les chiffres de cette page sont comptés à partir du contenu même de l’application, et non saisis à la main.",
     "developed_by": "Développé par",
     "capabilities": "Ce que propose l'application",
@@ -1269,7 +1269,6 @@
     "src_silero": "Début et fin de la parole, pour Rafeeq",
     "src_sherpa": "Exécute les modèles vocaux sur l’appareil",
     "src_hisn": "Adhkâr de Hisn al-Muslim de Sa'îd ibn 'Alî ibn Wahf al-Qahtânî — texte saisi d'après le livre imprimé et comparé à une seconde copie, avec la référence de chaque dhikr (licence MIT) ; les passages coraniques sont écrits d'après le texte du mushaf",
-    "src_hisn_audio": "Les enregistrements des adhkâr, du site du livre Hisn al-Muslim lui-même, lus directement depuis celui-ci ; un enregistrement n’est associé à un dhikr que s’il en dit les mêmes mots. Le site ne nomme pas le récitateur.",
     "f_assistant_desc": "Dites « يا رفيق » et demandez en arabe classique ou dialectal : il ouvre les écrans et les réglages et lance des récitations, hors connexion une fois son pack vocal téléchargé.",
     "f_assistant": "Rafeeq — assistant vocal",
     "f_hifz": "Mémoriser et réciter",

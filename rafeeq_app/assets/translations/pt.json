@@ -1203,8 +1203,8 @@
   },
   "about": {
     "src_fastconformer_ar": "O modelo «audição mais precisa em árabe» do Rafeeq: FastConformer árabe da NVIDIA sob CC BY 4.0, exportado para ONNX (OpenVoiceOS) e quantizado em int8 para sherpa-onnx (krut42); download opcional que roda no aparelho sem internet.",
-    "src_adhkar_ayat": "Os versículos dos adhkar da manhã e da tarde (Ayat al-Kursi, as Mu‘awwidhat, a basmala) recitados por Mishary Alafasy",
-    "src_adhkar_tts": "O restante dos adhkar da manhã e da tarde com uma voz gerada por IA, cada dhikr lido uma vez",
+    "src_adhkar_ayat": "O Alcorão em cada dhikr, e as suratas As-Sajda e Al-Mulk nos adhkar antes de dormir, recitados por Mishary Alafasy",
+    "src_adhkar_tts": "O restante do texto de cada dhikr com uma voz gerada por IA, cada dhikr lido uma vez",
     "blurb": "Rafeeq Al-Darb é uma aplicação islâmica completa, construída sobre fontes fiáveis e livremente disponíveis aos programadores. Cada mushaf, cada tradução e cada adhan foi verificado na fonte antes de ser adicionado, e todas as fontes estão indicadas. Os números desta página são contados do próprio conteúdo da aplicação, não escritos à mão.",
     "developed_by": "Desenvolvido por",
     "capabilities": "O que a aplicação oferece",
@@ -1269,7 +1269,6 @@
     "src_silero": "Onde a fala começa e acaba, para o Rafeeq",
     "src_sherpa": "Executa os modelos de voz no aparelho",
     "src_hisn": "Adhkar de Hisn al-Muslim, de Sa'id ibn 'Ali ibn Wahf al-Qahtani — texto transcrito do livro impresso e conferido com uma segunda cópia, com a referência de cada dhikr (licença MIT); as passagens do Alcorão foram escritas a partir do texto do mushaf",
-    "src_hisn_audio": "As gravações dos adhkar, do site do próprio livro Hisn al-Muslim, tocadas diretamente de lá; uma gravação só é ligada a um dhikr quando diz as mesmas palavras. O site não informa o recitador.",
     "f_assistant_desc": "Diga «يا رفيق» e peça em árabe clássico ou coloquial: ele abre telas e configurações e toca recitações, sem internet depois de baixar o pacote de voz.",
     "f_assistant": "Rafeeq — assistente de voz",
     "f_hifz": "Memorizar e recitar",
