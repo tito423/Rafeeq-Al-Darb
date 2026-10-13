@@ -72,6 +72,15 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-13 22:25 — Codex fully stopped (app ChatGPT.exe of the Codex
+  package and all codex/node children killed; ~/.codex/automations empty).
+  Found finished jobs still scheduled: recitation mirror done 17:25 (35 ayah
+  + 284 surah sets verified), azkar voices done (302/302; item 138 stopped on
+  purpose - its Qur'an piece «تَنْزِيل ...» has no ayah match) yet
+  RafeeqAzkarVoice re-ran daily for nothing. Disabled RafeeqMirrorWatchdog,
+  RafeeqR7Page, RafeeqAzkarVoice, RafeeqLibraryPhase3, LaunchEmuTask; killed
+  the dashboard; Startup rafeeq-r7-dashboard.vbs renamed .disabled.
+
 - 2026-10-13 21:58 — A01 old credential rejection verified after the
   owner's rotation: one read-only request, 401 Unauthorized, TLS checked,
   no secret output/new-key read/writes/history edits. Audit now records all

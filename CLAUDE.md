@@ -295,11 +295,15 @@ access to `rafeeq-control` from the cloud session, say so in the first reply
 and ask the owner to add the repository to the cloud environment.
 
 **Without a prompt, the job is:** read `TASK_FOLLOWUP.md` and continue from
-its **Next step**. Standing background work on the laptop: the R7 recitation
-copy (`scripts/out/watchdog.log`, `scripts/out/gmr_*.txt`) runs by itself
-under the scheduled task `RafeeqMirrorWatchdog` - check it, report progress
-in numbers, and stop it before any release (TRAPS.md #60). The runner starts
-with Windows from the Startup folder (`rafeeq-runner.vbs`).
+its **Next step**. No standing background work remains: the R7 recitation
+copy finished 2026-10-13 17:25 (`scripts/out/gmr_ayah.txt`: all 35 ayah sets
+and 284 surah sets verified) and the azkar voices finished (302/302 run,
+item 138 deliberately stopped), so on 2026-10-13 the tasks
+`RafeeqMirrorWatchdog`, `RafeeqR7Page`, `RafeeqAzkarVoice`,
+`RafeeqLibraryPhase3` and `LaunchEmuTask` were disabled and the R7 dashboard
+was removed from Startup. A finished job's scheduled task is disabled the
+same day it finishes. The runner starts with Windows from the Startup folder
+(`rafeeq-runner.vbs`).
 
 ### 2.0c `TASK_FOLLOWUP.md` — the live step log (mandatory)
 
