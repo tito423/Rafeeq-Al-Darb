@@ -21,7 +21,7 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
    `npx wrangler deploy` and pushing the Pages repo, so the owner has to run
    them or allow them. In this order:
    - `cd "E:\My Projects\Rafiq-Al-Darb\sync_backend"` then `npx wrangler deploy`
-   - `cd "E:\My Projectsafeeq-review"` then `git push origin main`
+   - `cd "E:\My Projects\rafeeq-review"` then `git push origin main`
      (3 local commits: Codex's Google client, its revert, the name-key page).
    Then check live: open https://tito423.github.io/rafeeq-review/, write a
    name, write a note, confirm it in `GET /review/reviewers`.
@@ -36,7 +36,7 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
    kids-stories-pipeline, known-good/v3.48.0 .. v3.53.0, master-353kkv,
    release-v1.2.0. All except release-v1.2.0 are fully contained in master;
    release-v1.2.0 and v3.51.0 are bundled in
-   `E:\My Projects\Rafeeq-Backupselease-v1.2.0-and-v3.51.0.bundle`.
+   `E:\My Projects\Rafeeq-Backups\release-v1.2.0-and-v3.51.0.bundle`.
 4. Phone-only checks: adhan on the lock screen after a PIN reboot, real
    microphone for tasmee, Google sync between two devices.
 
