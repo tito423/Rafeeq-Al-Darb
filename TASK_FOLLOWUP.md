@@ -16,7 +16,8 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 ## Next step (exact)
 
-1. Owner phone checks: install the current 3.88.1 over the existing app,
+1. Owner phone checks: install 3.90.0 over the existing app, press Listen
+   on a few adhkar (and the sleep dhikr «الم تنزيل … وتبارك»: ~15.5 min),
    test adhan before the first PIN after reboot, real microphone/tasmee,
    recitation Home -> launcher icon -> Back, and Google sync on two devices.
 2. Per-ABI APKs: ARM64/ARMv7 phone checks are still pending. Existing split
@@ -71,6 +72,16 @@ heartbeat or mistake that future proposal for an approved redesign.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-13 23:00 — Published v3.90.0 (tag 94c100ae, APK 313,766,102 B,
+  SHA256 2f13dc71...96f7, GitHub digest equal, range 206) and deleted v3.88.1
+  on the owner's order; releases now: v3.90.0, v3.87.0 (restore point), the
+  3 content mirrors. 3.90.0 voices all 302 adhkar (R2
+  azkar/rafeeq_voice/items/v1/, every file read back publicly, sha1 equal);
+  dhikr 138 = As-Sajdah + Al-Mulk complete (Alafasy). Installed over 3.88.1
+  on API 36; Listen button shown; in-emulator playback blocked by Avast TLS
+  (trap 61), so playback of the new voices is NOT seen on a device - first
+  phone check for the owner. Emulator stopped afterwards.
 
 - 2026-10-13 22:25 — Codex fully stopped (app ChatGPT.exe of the Codex
   package and all codex/node children killed; ~/.codex/automations empty).
