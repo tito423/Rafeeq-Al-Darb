@@ -74,9 +74,13 @@ summary a, .item a { color:inherit; }
   </div>
 </header>
 <main id="main"></main>
-<script src="auth.js"></script>
+<script src="review-key.js"></script>
 <script>
-// Reviews require an authorized Google identity; offline notes stay local.
+// Notes go to the app's own Cloudflare Worker, with no account and no
+// list: a reviewer writes his name and starts. The first time a name is
+// used this browser gets a key for it, so nobody else can write under it. Asking a scholar to hold a
+// Google account before he can correct a hadith grading is a wall in front of
+// the one thing we want him to do.
 const API = 'https://rafeeq-sync-backend.int-vip00.workers.dev/review';
 // Library books are read from the same bucket the app downloads them from, so
 // a reviewer reads the exact bytes a reader gets — never a second copy.
@@ -95,8 +99,8 @@ const TABS = [
   ['who', 'المراجعون'],
 ];
 const cache = {};
-let store = (() => { try { return JSON.parse(localStorage.getItem('review') || '{}'); } catch { return {}; } })();
-const save = () => { try { auth.save(store); } catch { setSync('failed', auth.text('failed')); } };
+const store = (() => { try { return JSON.parse(localStorage.getItem('review') || '{}'); } catch { return {}; } })();
+const save = () => { try { localStorage.setItem('review', JSON.stringify(store)); } catch {} };
 const norm = s => (s || '')
   .replace(/[ً-ْٰـ]/g, '')
   .replace(/[أإآٱ]/g, 'ا')
@@ -105,93 +109,56 @@ const norm = s => (s || '')
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 // ── Who is reviewing ──────────────────────────────────────────────────────
-let me = null;
-try { me = localStorage.getItem('reviewer') || null; } catch {}
+const key = RafeeqReviewKey.create({ api: API, storage: localStorage, fetch: (u, o) => fetch(u, o) });
+// A name saved before keys existed is claimed silently on first load.
+let me = key.hasKey ? key.name : null;
+const legacyName = key.hasKey ? null : key.name;
 
-const auth = RafeeqReviewAuth.create({
-  api: API,
-  clientId: '227986327850-ha6gea87kueaeg2a3582ecpu3s0nbnh1.apps.googleusercontent.com',
-  storage: localStorage,
-  onRequired: () => askName(false),
-  onChange: (identity, notes) => {
-    me = identity.reviewer;
-    store = notes;
-    pending.clear();
-    clearTimeout(flushTimer);
-    document.querySelector('.gate')?.remove();
-    setSync('', '');
+function askName(force) {
+  const gate = document.createElement('div');
+  gate.className = 'gate';
+  gate.innerHTML = '<div class="box">'
+    + '<h2>' + (force ? 'تغيير اسم المراجع' : 'أهلًا بك') + '</h2>'
+    + '<p>اكتب اسمك كما تحب أن تُنسب إليه ملاحظاتك. يُحفظ على جهازك ويُرسل مع كل ملاحظة، حتى تُعرف ملاحظاتك باسمك وتُقرأ وحدها.</p>'
+    + '<input id="nm" type="text" placeholder="مثال: الشيخ عبد الله المصري" value="' + esc(me || legacyName || '') + '" autocomplete="name">'
+    + '<div class="err" id="nmerr"></div>'
+    + '<button id="nmok">ابدأ المراجعة</button></div>';
+  document.body.appendChild(gate);
+  const input = gate.querySelector('#nm');
+  const err = gate.querySelector('#nmerr');
+  input.focus();
+  const btn = gate.querySelector('#nmok');
+  const ok = async () => {
+    if (btn.disabled) return;
+    const v = input.value.trim().replace(/\s+/g, ' ').slice(0, 60);
+    if (v.length < 3) { err.textContent = 'اكتب اسمًا لا يقل عن ثلاثة أحرف.'; return; }
+    if (v === me) { gate.remove(); return; }
+    btn.disabled = true;
+    err.textContent = '';
+    const r = await key.register(v);
+    btn.disabled = false;
+    if (!r.ok) {
+      err.textContent = r.error === 'taken'
+        ? 'هذا الاسم مسجَّل لمراجع آخر أو على جهاز آخر. اكتب اسمًا مختلفًا، مثل إضافة اسم البلد.'
+        : 'تعذّر الاتصال بالموقع. تأكد من الإنترنت ثم أعد المحاولة.';
+      return;
+    }
+    me = r.reviewer;
+    gate.remove();
     paintWho();
     pushAll();
-    if (identity.role !== 'admin' && tab === 'who' && a1 && a1 !== identity.reviewer) {
-      location.hash = 'who';
-      readHash();
-    }
     render();
-  },
-});
-store = auth.notes;
-if (auth.profile) me = auth.profile.reviewer;
-let googleLoading = null;
-let googleInitialized = false;
-function loadGoogle() {
-  if (window.google?.accounts?.id) return Promise.resolve(window.google.accounts.id);
-  if (!googleLoading) googleLoading = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.onload = () => resolve(window.google.accounts.id);
-    script.onerror = () => { googleLoading = null; reject(new Error('offline')); };
-    document.head.appendChild(script);
-  });
-  return googleLoading;
-}
-function exportLegacy() {
-  const url = URL.createObjectURL(new Blob([auth.legacyExport()], { type: 'application/json;charset=utf-8' }));
-  const link = document.createElement('a'); link.href = url; link.download = 'rafeeq-review-legacy.json'; link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-function askName(force) {
-  if (document.querySelector('.gate')) return;
-  const gate = document.createElement('div'); gate.className = 'gate';
-  gate.style.overflowY = 'auto';
-  const labels = auth.messages[auth.locale];
-  gate.innerHTML = '<div class="box" dir="' + (['ar', 'ur'].includes(auth.locale) ? 'rtl' : 'ltr') + '">'
-    + '<h2>' + esc(labels.welcome) + '</h2><p>' + esc(labels.explanation) + '</p>'
-    + '<label>' + esc(labels.language) + ' <select id="auth-language">'
-    + Object.entries(auth.languages).map(([key, name]) => '<option value="' + key + '"' + (key === auth.locale ? ' selected' : '') + '>' + name + '</option>').join('')
-    + '</select></label><div id="google-signin" style="margin:12px 0;min-height:44px"></div>'
-    + '<div class="err" id="auth-error" role="status"></div>'
-    + '<button id="auth-close">' + esc(labels.close) + '</button>'
-    + (auth.hasDifferentLegacy() ? '<p>' + esc(labels.legacy) + '</p><button id="legacy-export">' + esc(labels.exportLegacy) + '</button>' : '')
-    + '</div>';
-  document.body.appendChild(gate);
-  gate.querySelector('#auth-close').onclick = () => gate.remove();
-  gate.querySelector('#auth-language').onchange = (event) => {
-    auth.setLocale(event.target.value); gate.remove(); paintWho(); askName(force);
   };
-  gate.querySelector('#legacy-export')?.addEventListener('click', exportLegacy);
-  const error = gate.querySelector('#auth-error');
-  loadGoogle().then((google) => {
-    if (!gate.isConnected) return;
-    if (!googleInitialized) {
-      google.initialize({ client_id: auth.clientId, auto_select: false, callback: async (reply) => {
-        const activeError = document.querySelector('.gate')?.querySelector('#auth-error');
-        if (!activeError) return;
-        activeError.textContent = auth.text('loading');
-        try { await auth.authorize(reply.credential); }
-        catch (failure) { activeError.textContent = auth.text(failure.kind === 'denied' ? 'denied' : 'failed'); }
-      } });
-      googleInitialized = true;
-    }
-    google.renderButton(gate.querySelector('#google-signin'), { type: 'standard', theme: 'outline', size: 'large', width: '260', locale: auth.locale });
-  }).catch(() => { error.textContent = auth.text('offline'); });
+  btn.onclick = ok;
+  input.onkeydown = e => { if (e.key === 'Enter') ok(); };
 }
+
 function paintWho() {
-  document.getElementById('who').innerHTML = (me ? esc(auth.text('reviewer')) + ': <b>' + esc(me) + '</b> · ' : '')
-    + '<button id="rename">' + esc(auth.text(auth.signedIn ? 'account' : 'signIn')) + '</button>'
-    + (auth.hasDifferentLegacy() ? ' · <button id="legacy-export-header">' + esc(auth.text('exportLegacy')) + '</button>' : '');
-  document.getElementById('rename').onclick = () => { auth.signOut(); askName(true); };
-  document.getElementById('legacy-export-header')?.addEventListener('click', exportLegacy);
+  document.getElementById('who').innerHTML = me
+    ? 'المراجع: <b>' + esc(me) + '</b> · <button id="rename">تغيير الاسم</button>'
+    : '';
+  const b = document.getElementById('rename');
+  if (b) b.onclick = () => askName(true);
 }
 
 // ── Sending notes up ──────────────────────────────────────────────────────
@@ -211,37 +178,34 @@ function queue(id, extra) {
   if (!me) { askName(false); return; }
   const r = store[id] || {};
   pending.set(id, Object.assign({ id: id, note: r.c || '', done: !!r.ok }, extra || {}));
-  setSync('saving', auth.text('saving'));
+  setSync('saving', 'جارٍ الحفظ…');
   clearTimeout(flushTimer);
   flushTimer = setTimeout(flush, 900);
 }
 
 async function flush() {
   if (sending || !pending.size || !me) return;
-  if (!auth.signedIn) { setSync('failed', auth.text('signIn')); return; }
   sending = true;
   const batch = Array.from(pending.values()).slice(0, 200);
-  const owner = auth.profile.sub;
-  let retryMs = 500;
   try {
-    await auth.request(API, {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ reviewer: me, notes: batch }),
-    });
-    // Neither a newer edit nor a newly selected account belongs to this batch.
-    if (auth.profile?.sub === owner) {
-      batch.forEach(n => { if (pending.get(n.id) === n) pending.delete(n.id); });
-      setSync('saved', auth.text('saved'));
+    const res = await key.post(batch);
+    if (res.status === 401) {
+      // The key is no longer valid: ask for the name again; notes stay queued.
+      me = null;
+      sending = false;
+      paintWho();
+      askName(false);
+      return;
     }
-  } catch (failure) {
-    if (auth.profile?.sub === owner) {
-      const required = failure.status === 401 || failure.status === 403;
-      setSync('failed', auth.text(required ? 'signIn' : 'retry'));
-      retryMs = required ? null : Math.max(8000, failure.retryMs || 0);
-    }
+    if (!res.ok) throw new Error(res.status);
+    batch.forEach(n => pending.delete(n.id));
+    setSync('saved', 'حُفظت على الموقع');
+  } catch (e) {
+    setSync('failed', 'تعذّر الحفظ — سيُعاد الإرسال');
+    setTimeout(flush, 8000);
   } finally {
     sending = false;
-    if (pending.size && retryMs !== null) { clearTimeout(flushTimer); flushTimer = setTimeout(flush, retryMs); }
+    if (pending.size) setTimeout(flush, 500);
   }
 }
 
@@ -250,9 +214,9 @@ async function flush() {
 function pushAll() {
   for (const id of Object.keys(store)) {
     const r = store[id];
-    if (r && typeof r === 'object') pending.set(id, { id: id, note: r.c || '', done: !!r.ok });
+    if (r && (r.c || r.ok)) pending.set(id, { id: id, note: r.c || '', done: !!r.ok });
   }
-  if (pending.size) { setSync('saving', auth.text('saving')); flush(); }
+  if (pending.size) { setSync('saving', 'جارٍ رفع ملاحظاتك…'); flush(); }
 }
 
 async function load(name) {
@@ -409,7 +373,7 @@ async function booksPicker() {
 async function whoPage() {
   if (a1) {
     let d;
-    try { d = await (await auth.request(API + '?reviewer=' + encodeURIComponent(a1))).json(); }
+    try { d = await (await fetch(API + '?reviewer=' + encodeURIComponent(a1))).json(); }
     catch (e) { return '<p class="stat">تعذّر الاتصال بالخادم.</p>'; }
     const rows = d.notes || [];
     return '<p class="stat"><a href="#who">→ المراجعون</a> · ملاحظات <b>' + esc(a1) + '</b> — ' + rows.length + '</p>'
@@ -421,7 +385,7 @@ async function whoPage() {
         : '<p class="stat">لا ملاحظات بعد.</p>');
   }
   let d;
-  try { d = await (await auth.request(API + '/reviewers')).json(); }
+  try { d = await (await fetch(API + '/reviewers')).json(); }
   catch (e) { return '<p class="stat">تعذّر الاتصال بالخادم.</p>'; }
   const rs = d.reviewers || [];
   if (!rs.length) return '<p class="stat">لم يبدأ أحد المراجعة بعد.</p>';
@@ -440,24 +404,17 @@ function intro() {
     + '<p>اختر الكتاب ثم الباب أو نطاق الصفحات؛ لا يُحمَّل إلا ما تفتحه.</p></div>';
 }
 
-let renderGeneration = 0;
 async function render() {
-  const generation = ++renderGeneration;
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
   const main = document.getElementById('main');
   if (tab === 'intro') { main.innerHTML = intro(); return; }
   main.innerHTML = '<p class="stat">…جارٍ التحميل</p>';
   try {
-    const show = async (result) => {
-      const html = await result;
-      if (generation === renderGeneration) main.innerHTML = html;
-    };
-    if (tab === 'who') { await show(whoPage()); return; }
-    if (tab === 'hadith' && !a2) { await show(hadithPicker()); return; }
-    if (tab === 'books' && a2 === null) { await show(booksPicker()); return; }
+    if (tab === 'who') { main.innerHTML = await whoPage(); return; }
+    if (tab === 'hadith' && !a2) { main.innerHTML = await hadithPicker(); return; }
+    if (tab === 'books' && a2 === null) { main.innerHTML = await booksPicker(); return; }
     const q = norm(document.getElementById('q').value.trim());
     const gs = await groups(tab);
-    if (generation !== renderGeneration) return;
     let shown = 0, done = 0, total = 0;
     const html = gs.map(g => {
       const items = g.items.filter(i => !q || norm(i.text + ' ' + (i.note || '')).includes(q));
@@ -481,22 +438,18 @@ async function render() {
     }).join('');
     main.innerHTML = '<p class="stat">راجعت ' + done + ' من ' + total + (q ? ' · النتائج: ' + shown : '') + '</p>' + html;
   } catch (e) {
-    if (generation !== renderGeneration) return;
     main.innerHTML = '<p class="stat">تعذّر التحميل: ' + esc(e.message || e) + '</p>';
   }
 }
 
-function saveReviewEdit(e) {
-  if (e.type === 'input' && e.target.type === 'checkbox') return;
+document.getElementById('main').addEventListener('change', e => {
   const it = e.target.closest('.item'); if (!it) return;
   const id = it.dataset.id; store[id] = store[id] || {};
   if (e.target.type === 'checkbox') { store[id].ok = e.target.checked; it.classList.toggle('done', e.target.checked); }
   else { store[id].c = e.target.value.trim(); e.target.classList.toggle('has', !!store[id].c); }
   save();
   queue(id, { excerpt: it.dataset.ex || '', section: it.dataset.sec || '' });
-}
-document.getElementById('main').addEventListener('change', saveReviewEdit);
-document.getElementById('main').addEventListener('input', saveReviewEdit);
+});
 document.getElementById('export').onclick = async () => {
   const lines = [];
   for (const id of Object.keys(store)) {
@@ -517,8 +470,15 @@ document.getElementById('tabs').onclick = e => { const t = e.target.dataset.t; i
 window.addEventListener('hashchange', () => { readHash(); render(); });
 paintWho();
 render();
-pushAll();
-if (!auth.signedIn) askName(false);
+if (me) pushAll();
+else if (legacyName) {
+  // Claim the name this browser already used; if someone took it first,
+  // the gate opens with it filled in and says so.
+  key.register(legacyName).then(r => {
+    if (r.ok) { me = r.reviewer; paintWho(); pushAll(); render(); }
+    else askName(false);
+  });
+} else askName(false);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>

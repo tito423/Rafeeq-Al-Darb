@@ -10,7 +10,7 @@ const headers = (ip, name = 'audit_A18_admin') => ({ 'CF-Connecting-IP': ip,
   'content-type': 'application/json', ...worker.headersFor(name) });
 before(async () => { worker = await startAuthenticatedLocalWorker([
   'audit_A18', 'audit_A18_changed_name', 'audit_A18_admin',
-], { adminNames: ['audit_A18_admin'] }); });
+]); });
 after(async () => { await worker?.stop(); });
 
 test('A18 actual Wrangler review burst is stopped before the extra note is saved', async () => {
@@ -57,11 +57,4 @@ test('A18 ordinary invalid JSON keeps the existing 400 and CORS', async () => {
   assert.equal(response.status, 400);
   assert.deepEqual(await response.json(), { error: 'bad json' });
   assert.equal(response.headers.get('access-control-allow-origin'), '*');
-});
-
-test('A03 reviewers sharing a network have independent limits; moving networks cannot reset one account', async () => {
-  const another = await fetch(worker.base + '/review/reviewers', { headers: headers(primaryIp, 'audit_A18_admin') });
-  assert.equal(another.status, 200);
-  const sameAccount = await fetch(worker.base + '/review/reviewers', { headers: headers(otherIp, 'audit_A18') });
-  assert.equal(sameAccount.status, 429);
 });

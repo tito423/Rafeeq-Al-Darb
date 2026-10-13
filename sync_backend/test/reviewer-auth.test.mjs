@@ -2,144 +2,109 @@ import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
 import { createGoogleAuthWorker } from '../test-support/google-auth-worker.mjs';
 
+// Owner, 2026-10-13: no reviewer list and no account. A reviewer opens the
+// link, writes a name and starts. A-03 stays fixed by the name's key.
 let worker;
-let reviewerToken;
-let adminToken;
-const roles = [
-  { sub: 'reviewer-one', name: 'A03-reviewer-one', role: 'reviewer' },
-  { sub: 'reviewer-two', name: 'A03-reviewer-two', role: 'reviewer' },
-  { sub: 'review-admin', name: 'A03-admin', role: 'admin' },
-];
-before(async () => {
-  worker = await createGoogleAuthWorker({ reviewers: roles });
-  reviewerToken = await worker.sign({ sub: 'reviewer-one' });
-  adminToken = await worker.sign({ sub: 'review-admin' });
-});
+before(async () => { worker = await createGoogleAuthWorker(); });
 after(async () => { await worker?.stop(); });
 
-async function request(path, token, body) {
+async function request(path, { key, body, method } = {}) {
   return worker.runtime.dispatchFetch('http://127.0.0.1' + path, {
-    method: body === undefined ? 'GET' : 'POST',
-    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), 'content-type': 'application/json' },
+    method: method ?? (body === undefined ? 'GET' : 'POST'),
+    headers: { ...(key ? { Authorization: `Bearer ${key}` } : {}), 'content-type': 'application/json' },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
-const note = (reviewer, id) => ({ reviewer, notes: [{ id, note: 'Local authenticated review test' }] });
+const register = (reviewer) => request('/review/register', { body: { reviewer } });
+const notes = (id, reviewer) => ({ ...(reviewer ? { reviewer } : {}), notes: [{ id, note: 'Local review test' }] });
+const rows = async (id) => (await worker.database.prepare(
+  'SELECT reviewer FROM review_notes WHERE item_id = ?').bind(id).all()).results;
 
-test('A03 every review read/write route requires authentication before D1', async () => {
-  for (const [path, body] of [['/review?reviewer=A03-reviewer-one', undefined],
-    ['/review/reviewers', undefined], ['/review', note('A03-reviewer-one', 'anonymous')]]) {
-    const response = await request(path, undefined, body);
-    assert.equal(response.status, 401);
-    assert.equal(response.headers.get('access-control-allow-origin'), '*');
-  }
-  const tables = await worker.database.prepare("SELECT name FROM sqlite_master WHERE name = 'review_notes'").all();
-  assert.deepEqual(tables.results, []);
-});
-
-test('A03 valid Google subject without a reviewer grant is denied', async () => {
-  assert.equal((await request('/review/reviewers', await worker.sign({ sub: 'ungranted-subject' }))).status, 403);
-});
-
-test('A03 authorized identity supplies stable configured name and role', async () => {
-  const response = await request('/review/me', reviewerToken);
+let first;
+test('A03 the first device to write a name gets a random key for it', async () => {
+  const response = await register('  الشيخ   أحمد  ');
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { sub: 'reviewer-one', reviewer: 'A03-reviewer-one', role: 'reviewer' });
+  const body = await response.json();
+  assert.equal(body.reviewer, 'الشيخ أحمد');
+  assert.match(body.token, /^[A-Za-z0-9_-]{43}$/);
+  first = body.token;
 });
 
-test('A03 reviewer can write own name but cannot impersonate another', async () => {
-  const valid = await request('/review', reviewerToken, note('A03-reviewer-one', 'own'));
-  assert.equal(valid.status, 200);
-  assert.equal((await valid.json()).saved, 1);
-  assert.equal((await request('/review', reviewerToken, note('A03-reviewer-two', 'impersonated'))).status, 403);
-  const bad = await worker.database.prepare('SELECT item_id FROM review_notes WHERE item_id = ?').bind('impersonated').all();
-  assert.deepEqual(bad.results, []);
+test('A03 the same name, however spaced, cannot be claimed again', async () => {
+  for (const name of ['الشيخ أحمد', ' الشيخ  أحمد ']) {
+    const response = await register(name);
+    assert.equal(response.status, 409);
+    assert.deepEqual(await response.json(), { error: 'name taken' });
+  }
 });
 
-test('A03 reviewer reads only own notes while admin can read authorized overview', async () => {
-  assert.equal((await request('/review?reviewer=A03-reviewer-one', reviewerToken)).status, 200);
-  assert.equal((await request('/review?reviewer=A03-reviewer-two', reviewerToken)).status, 403);
-  const personal = await request('/review/reviewers', reviewerToken);
-  assert.equal(personal.status, 200);
-  assert.deepEqual((await personal.json()).reviewers.map((row) => row.reviewer), ['A03-reviewer-one']);
-  assert.equal((await request('/review?reviewer=A03-reviewer-one', adminToken)).status, 200);
-  assert.equal((await request('/review/reviewers', adminToken)).status, 200);
+test('A03 a name needs three characters', async () => {
+  assert.equal((await register('اب')).status, 400);
+  assert.equal((await request('/review/register', { body: {} })).status, 400);
 });
 
-test('A03 missing grant configuration denies reviews but leaves ordinary sync authorized', async () => {
-  const unconfigured = await createGoogleAuthWorker();
-  try {
-    const token = await unconfigured.sign();
-    const headers = { Authorization: `Bearer ${token}` };
-    assert.equal((await unconfigured.runtime.dispatchFetch('http://127.0.0.1/review/reviewers', { headers })).status, 403);
-    assert.equal((await unconfigured.runtime.dispatchFetch('http://127.0.0.1/sync', { headers })).status, 200);
-  } finally { await unconfigured.stop(); }
+test('A03 only the key hash is stored', async () => {
+  const stored = await worker.database.prepare('SELECT token_hash FROM review_reviewers').all();
+  assert.equal(stored.results.length, 1);
+  assert.notEqual(stored.results[0].token_hash, first);
+  assert.match(stored.results[0].token_hash, /^[0-9a-f]{64}$/);
 });
 
-test('A03 authenticated CORS preflight allows Authorization without consuming identity', async () => {
-  const response = await worker.runtime.dispatchFetch('http://127.0.0.1/review', { method: 'OPTIONS' });
+test('A03 writing needs a valid key and nothing is saved without one', async () => {
+  assert.equal((await request('/review', { body: notes('no-key', 'الشيخ أحمد') })).status, 401);
+  assert.equal((await request('/review', { key: 'x'.repeat(43), body: notes('bad-key', 'الشيخ أحمد') })).status, 401);
+  assert.equal((await request('/review', { key: 'short', body: notes('malformed-key') })).status, 401);
+  for (const id of ['no-key', 'bad-key', 'malformed-key']) assert.deepEqual(await rows(id), []);
+});
+
+test('A03 a key writes only under its own name', async () => {
+  const own = await request('/review', { key: first, body: notes('own', 'الشيخ أحمد') });
+  assert.equal(own.status, 200);
+  assert.equal((await own.json()).saved, 1);
+  assert.deepEqual(await rows('own'), [{ reviewer: 'الشيخ أحمد' }]);
+  const other = await register('مراجع آخر');
+  assert.equal(other.status, 200);
+  const impersonated = await request('/review', { key: first, body: notes('impersonated', 'مراجع آخر') });
+  assert.equal(impersonated.status, 403);
+  assert.deepEqual(await rows('impersonated'), []);
+  // Without a name in the body the key's own name is used.
+  assert.equal((await request('/review', { key: first, body: notes('nameless') })).status, 200);
+  assert.deepEqual(await rows('nameless'), [{ reviewer: 'الشيخ أحمد' }]);
+});
+
+test('A03 /review/me names the key, and refuses without one', async () => {
+  const me = await request('/review/me', { key: first });
+  assert.equal(me.status, 200);
+  assert.deepEqual(await me.json(), { reviewer: 'الشيخ أحمد' });
+  assert.equal((await request('/review/me')).status, 401);
+});
+
+test('A03 reading stays open, as the site always was', async () => {
+  const list = await request('/review/reviewers');
+  assert.equal(list.status, 200);
+  assert.ok((await list.json()).reviewers.some((row) => row.reviewer === 'الشيخ أحمد'));
+  const mine = await request('/review?reviewer=' + encodeURIComponent('الشيخ أحمد'));
+  assert.equal(mine.status, 200);
+  assert.equal((await mine.json()).notes.length, 2);
+});
+
+test('A03 ordinary sync still requires a verified Google token', async () => {
+  assert.equal((await request('/sync')).status, 401);
+  const token = await worker.sign();
+  const response = await worker.runtime.dispatchFetch('http://127.0.0.1/sync', {
+    headers: { Authorization: `Bearer ${token}` } });
+  assert.equal(response.status, 200);
+  // A review key is not a sync credential.
+  assert.equal((await request('/sync', { key: first })).status, 401);
+});
+
+test('A03 preflight allows the Authorization header', async () => {
+  const response = await request('/review', { method: 'OPTIONS' });
   assert.equal(response.status, 204);
   assert.match(response.headers.get('access-control-allow-headers'), /authorization/i);
 });
 
-test('A03 ordinary sync authentication is unchanged', async () => {
-  assert.equal((await request('/sync', reviewerToken)).status, 200);
-  assert.equal((await request('/sync')).status, 401);
-});
-
-test('A03 existing review preflight origin and methods remain accepted', async () => {
-  const response = await worker.runtime.dispatchFetch('http://127.0.0.1/review', { method: 'OPTIONS' });
-  assert.equal(response.status, 204);
-  assert.equal(response.headers.get('access-control-allow-origin'), '*');
-  assert.equal(response.headers.get('access-control-allow-methods'), 'GET, POST, OPTIONS');
-});
-
-test('A03 admin overview permission does not permit writing another reviewer name', async () => {
-  assert.equal((await request('/review', adminToken, note('A03-reviewer-one', 'admin-impersonation'))).status, 403);
-});
-
-for (const [label, configuration] of [
-  ['non-array', 'invalid'], ['empty', []],
-  ['unknown role', [{ sub: 'grant-subject', name: 'A03-grant', role: 'owner' }]],
-  ['no identifier', [{ name: 'A03-grant', role: 'reviewer' }]],
-  ['duplicate name', [{ sub: 'grant-subject', name: 'A03-grant', role: 'reviewer' },
-    { sub: 'another-subject', name: 'A03-grant', role: 'admin' }]],
-]) {
-  test(`A03 ${label} grant configuration fails closed`, async () => {
-    const fixture = await createGoogleAuthWorker({ reviewers: configuration });
-    try {
-      const token = await fixture.sign({ sub: 'grant-subject' });
-      const response = await fixture.runtime.dispatchFetch('http://127.0.0.1/review/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      assert.equal(response.status, 403);
-    } finally { await fixture.stop(); }
-  });
-}
-
-test('A03 email grant requires a verified Google-authoritative email, or an explicit subject pin', async () => {
-  const fixture = await createGoogleAuthWorker({ reviewers: [
-    { email: 'a03.test@gmail.com', name: 'A03-email', role: 'reviewer' },
-    { email: 'a03@example.test', name: 'A03-external', role: 'reviewer' },
-    { sub: 'pinned-subject', email: 'a03@example.test', name: 'A03-pinned', role: 'reviewer' },
-  ] });
-  try {
-    const cases = [
-      [{ email: 'a03.test@gmail.com', email_verified: true }, 200, 'A03-email'],
-      [{ email: 'a03.test@gmail.com', email_verified: false }, 403],
-      [{ email: 'a03.test@gmail.com', email_verified: 'true' }, 403],
-      [{ email: 'other.test@gmail.com', email_verified: true }, 403],
-      [{ email: 'a03@example.test', email_verified: true }, 403],
-      [{ email: 'a03@example.test', email_verified: true, hd: 'example.test' }, 200, 'A03-external'],
-      [{ sub: 'pinned-subject', email: 'a03@example.test', email_verified: true }, 200, 'A03-pinned'],
-      [{ sub: 'pinned-subject', email: 'different@example.test', email_verified: true }, 403],
-    ];
-    for (const [claims, status, name] of cases) {
-      const response = await fixture.runtime.dispatchFetch('http://127.0.0.1/review/me', {
-        headers: { Authorization: `Bearer ${await fixture.sign(claims)}` },
-      });
-      assert.equal(response.status, status);
-      if (status === 200) assert.equal((await response.json()).reviewer, name);
-    }
-  } finally { await fixture.stop(); }
+test('A03 unknown POST path under /review is not a write', async () => {
+  assert.equal((await request('/review/other', { key: first, body: notes('stray') })).status, 404);
+  assert.deepEqual(await rows('stray'), []);
 });

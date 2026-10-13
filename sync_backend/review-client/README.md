@@ -1,48 +1,27 @@
-# Paired reviewer authentication client (A-03)
+# Review site client (`tito423/rafeeq-review`)
 
-These two browser files are the durable source of the locally tested changes
-for `tito423/rafeeq-review`: replace its `index.html` and add `auth.js` together
-with the protected Worker. Pushing that repository's main branch publishes
-Pages; publication and Worker deployment require the owner's approval.
+The source of the two files the review site needs from this change:
+`index.html` (the live site's page, patched) and `review-key.js`. Copy both
+into `tito423/rafeeq-review` and push its `main` branch to publish Pages.
 
-## Activation prerequisites
+## How reviewers get in (owner, 2026-10-13)
 
-1. Obtain the owner's actual Google accounts and their existing reviewer names.
-   Configure private `REVIEWERS` JSON containing `name`, `role` (`reviewer` or
-   `admin`), and `sub` and/or `email`. Keep real identities and tokens out of git.
-   Names must remain exact so existing D1 and device notes retain ownership.
-   Missing, invalid, duplicate or ambiguous grants deny access. Prefer a stable
-   Google subject; email-only grants require Google's verified authoritative
-   Gmail/Workspace email. Administrators can read all reviews but write only
-   under their own configured name.
-2. Verify the existing OAuth client's authorized JavaScript origin includes
-   `https://tito423.github.io`; test real Google sign-in and each role. The real
-   SDK rendered locally, but Google rejected the localhost preview origin.
-   No real sign-in or public-origin configuration has been verified yet.
-3. Verify rate-limit namespace `3870018` is unique in the actual account with
-   read-only inspection before any approved deployment.
-4. Coordinate approved Worker and Pages activation. The previous anonymous
-   client cannot write to the protected API. Reload the network-first site;
-   retain local notes and their export before switching accounts.
+No account and no reviewer list. The owner sends the link; a reviewer
+writes his name and starts writing notes.
 
-The client keeps credentials only in memory, sends Bearer authorization only
-to review routes, scopes notes by verified Google subject, and leaves the
-original `review`/`reviewer` device keys intact as an exportable backup. An
-exact matching canonical name can import that backup once. Reauthentication
-and rate-limit retries preserve pending edits and deletes.
+A-03 was that anyone could post under any name. Now the first browser to use
+a name calls `POST /review/register` and receives a random key (32 bytes,
+base64url). The Worker stores only its SHA-256. Writing notes needs that key
+in `Authorization: Bearer`, and the notes are saved under the key's name.
+Another person typing the same name is told it is taken and asked for a
+different one. Reading notes stays open, as the site always was.
 
-The existing site introduction and religious content were preserved, including
-the older published snapshot's book-count text. These files do not regenerate
-or validate that content. Any separately approved content refresh must use the
-actual app catalogue; do not run the content generator as an auth migration.
+- A browser that already used a name before keys existed claims it silently
+  on first load; if someone claimed it first, the name box opens with it.
+- A reviewer on a second device, or after clearing the browser, cannot reuse
+  his name there (it is taken by his first device); he picks a variant.
+- A `401` (key unknown) clears the key and reopens the name box; queued notes
+  stay in the browser and go up after a name is set.
 
-## Local evidence
-
-- Actual Worker/D1 authorization baseline: 7 failing cases and 2 controls;
-  final backend suite: 102 passed, no skips; TypeScript clean.
-- Client tests cover all seven locales, legacy backup, account isolation,
-  pending drafts/deletes, late replies, and retry pacing. Local browser checks
-  used generated test JWTs and a controlled Google callback with the actual
-  Worker. Two accounts saved/read separate notes; the legacy export matched
-  its original bytes. These checks do not prove live Google authentication.
-- Full Flutter suite: 1337 passed, 4 existing skips; analyze clean.
+Tests: `test/reviewer-auth.test.mjs` (Worker, Miniflare + local D1) and
+`test/review-key.test.mjs` (this client module).

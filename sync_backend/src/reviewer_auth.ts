@@ -1,55 +1,51 @@
-import { decodeJwt } from 'jose';
-import { verifyGoogleToken } from './google_token';
+// Reviewers have no account and no list (owner, 2026-10-13): the owner sends
+// the link, a reviewer writes his name and starts. A-03 was that anyone could
+// then post under ANY name. So the first device to register a name gets a
+// random key for it, kept in that browser; writes under the name need the key.
+// Only the key's SHA-256 is stored, so the table cannot be replayed.
 
-export interface ReviewerIdentity {
-  sub: string;
-  reviewer: string;
-  role: 'reviewer' | 'admin';
+const TOKEN_BYTES = 32;
+
+function hex(bytes: ArrayBuffer): string {
+  return Array.from(new Uint8Array(bytes), (b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-/** Trusted deployment configuration, never names or roles supplied by a request. */
-function reviewerGrant(configuration: string | undefined, token: string, sub: string): ReviewerIdentity | null {
-  try {
-    if (!configuration || configuration.length > 32_768) return null;
-    const grants: unknown = JSON.parse(configuration);
-    if (!Array.isArray(grants) || !grants.length || grants.length > 100) return null;
-    // Decode only AFTER verification of this same token. A sub grant is
-    // stable; email grants additionally require Google's authoritative email.
-    const payload = decodeJwt(token);
-    if (payload.sub !== sub) return null;
-    const email = typeof payload.email === 'string' ? payload.email.toLowerCase() : '';
-    const authoritative = payload.email_verified === true &&
-      (email.endsWith('@gmail.com') || email.endsWith('@googlemail.com') ||
-        (typeof payload.hd === 'string' && payload.hd.length > 0));
-    const names = new Set<string>();
-    let found: ReviewerIdentity | null = null;
-    for (const grant of grants) {
-      if (!grant || typeof grant !== 'object') return null;
-      const row = grant as Record<string, unknown>;
-      if (typeof row.name !== 'string' || !row.name.length || row.name.length > 60 ||
-          row.name.trim() !== row.name || names.has(row.name) ||
-          (row.role !== 'reviewer' && row.role !== 'admin')) return null;
-      names.add(row.name);
-      const hasSub = typeof row.sub === 'string' && row.sub.length > 0 && row.sub.length <= 255;
-      const hasEmail = typeof row.email === 'string' && row.email.length > 0 && row.email.length <= 254;
-      if (!hasSub && !hasEmail) return null;
-      if ((row.sub !== undefined && !hasSub) || (row.email !== undefined && !hasEmail)) return null;
-      if (hasSub && row.sub !== sub) continue;
-      if (hasEmail && ((!hasSub && !authoritative) || (row.email as string).toLowerCase() !== email)) continue;
-      if (found) return null;
-      found = { sub, reviewer: row.name, role: row.role };
-    }
-    return found;
-  } catch { return null; }
+export async function hashToken(token: string): Promise<string> {
+  return hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)));
 }
 
-export async function authenticateReviewer(request: Request, configuration: string | undefined): Promise<{
-  identity: ReviewerIdentity | null; status: 401 | 403;
-}> {
-  const authorization = request.headers.get('Authorization');
-  if (!authorization?.startsWith('Bearer ')) return { identity: null, status: 401 };
-  const token = authorization.slice(7);
-  const sub = await verifyGoogleToken(token);
-  if (!sub) return { identity: null, status: 401 };
-  return { identity: reviewerGrant(configuration, token, sub), status: 403 };
+export function newToken(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(TOKEN_BYTES));
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+export function bearer(request: Request): string | null {
+  const header = request.headers.get('Authorization');
+  if (!header?.startsWith('Bearer ')) return null;
+  const token = header.slice(7).trim();
+  // A real key is 43 base64url characters; reject anything else unhashed.
+  return /^[A-Za-z0-9_-]{43}$/.test(token) ? token : null;
+}
+
+export const REVIEWER_TABLE = `CREATE TABLE IF NOT EXISTS review_reviewers (
+  name TEXT PRIMARY KEY,
+  token_hash TEXT NOT NULL UNIQUE,
+  created_at INTEGER NOT NULL
+)`;
+
+/** The name a key was issued for, or null. */
+export async function reviewerFor(db: D1Database, token: string | null): Promise<string | null> {
+  if (!token) return null;
+  const row = await db.prepare('SELECT name FROM review_reviewers WHERE token_hash = ?')
+    .bind(await hashToken(token)).first<{ name: string }>();
+  return row?.name ?? null;
+}
+
+/** Claims [name] for a new key; null when the name is already someone's. */
+export async function register(db: D1Database, name: string): Promise<string | null> {
+  const token = newToken();
+  const result = await db.prepare(
+    'INSERT INTO review_reviewers (name, token_hash, created_at) VALUES (?, ?, ?) ON CONFLICT(name) DO NOTHING'
+  ).bind(name, await hashToken(token), Date.now()).run();
+  return result.meta.changes === 1 ? token : null;
 }

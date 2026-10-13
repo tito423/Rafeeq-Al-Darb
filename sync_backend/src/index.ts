@@ -1,11 +1,10 @@
 import { PayloadTooLarge, readBoundedJson } from './request_body';
 import { verifyGoogleToken } from './google_token';
-import { authenticateReviewer } from './reviewer_auth';
+import { bearer, register, reviewerFor, REVIEWER_TABLE } from './reviewer_auth';
 
 export interface Env {
 	DB: D1Database;
 	REVIEW_RATE_LIMITER: RateLimit;
-	REVIEWERS?: string;
 }
 
 const REVIEW_CORS: Record<string, string> = {
@@ -53,25 +52,15 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 		return new Response(null, { status: 204, headers: REVIEW_CORS });
 	}
 
-	const authorization = await authenticateReviewer(request, env.REVIEWERS);
-	const identity = authorization.identity;
-	// Give verified reviewers their own bucket, including on a shared network.
-	// Invalid identities retain a Cloudflare-source bucket before any D1 work.
-	// The binding is approximate per location, not global accounting.
+	// Per-source bucket before any D1 work. Approximate per location.
 	const source = request.headers.get('CF-Connecting-IP')?.trim() || 'unknown';
-	const rateKey = identity ? `rafeeq:review:user:${identity.sub}` : `rafeeq:review:v1:${source}`;
 	try {
-		const { success } = await env.REVIEW_RATE_LIMITER.limit({ key: rateKey });
+		const { success } = await env.REVIEW_RATE_LIMITER.limit({ key: `rafeeq:review:v1:${source}` });
 		if (!success) return reviewJson({ error: 'rate limit exceeded' }, 429, { 'Retry-After': '60' });
 	} catch {
 		return reviewJson({ error: 'rate limiter unavailable' }, 503, { 'Retry-After': '5' });
 	}
-
-	if (!identity) {
-		return reviewJson({ error: authorization.status === 401 ? 'unauthorized' : 'reviewer access required' }, authorization.status);
-	}
-	// Identity is non-null after the authorization response above.
-	if (request.method === 'GET' && url.pathname === '/review/me') return reviewJson(identity);
+	if (request.method !== 'GET' && request.method !== 'POST') return reviewJson({ error: 'method' }, 405);
 
 	// Reject oversized input before parsing it or doing any D1 work.
 	let body: any;
@@ -99,13 +88,34 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 			PRIMARY KEY (reviewer, item_id)
 		)`
 	).run();
+	if (!reviewTableReady) await env.DB.prepare(REVIEWER_TABLE).run();
 	reviewTableReady = true;
+
+	// POST /review/register - claim a name. The first device to claim it
+	// gets the only key for it; the name is then nobody else's to write under.
+	if (request.method === 'POST' && url.pathname === '/review/register') {
+		const name = typeof body?.reviewer === 'string'
+			? body.reviewer.trim().replace(/\s+/g, ' ').slice(0, MAX_NAME) : '';
+		if (name.length < 3) return reviewJson({ error: 'reviewer required' }, 400);
+		const token = await register(env.DB, name);
+		if (!token) return reviewJson({ error: 'name taken' }, 409);
+		return reviewJson({ reviewer: name, token });
+	}
+
+	// GET /review/me - which name this browser's key writes under.
+	if (request.method === 'GET' && url.pathname === '/review/me') {
+		const name = await reviewerFor(env.DB, bearer(request));
+		return name ? reviewJson({ reviewer: name }) : reviewJson({ error: 'unauthorized' }, 401);
+	}
 
 	// POST /review - one reviewer's notes, upserted by (reviewer, item).
 	if (request.method === 'POST') {
-		const reviewer = clean(body?.reviewer, MAX_NAME);
-		if (!reviewer) return reviewJson({ error: 'reviewer required' }, 400);
-		if (reviewer !== identity.reviewer) return reviewJson({ error: 'reviewer mismatch' }, 403);
+		if (url.pathname !== '/review') return reviewJson({ error: 'not found' }, 404);
+		const reviewer = await reviewerFor(env.DB, bearer(request));
+		if (!reviewer) return reviewJson({ error: 'unauthorized' }, 401);
+		if (body?.reviewer !== undefined && clean(body.reviewer, MAX_NAME) !== reviewer) {
+			return reviewJson({ error: 'reviewer mismatch' }, 403);
+		}
 		const notes = Array.isArray(body?.notes) ? body.notes.slice(0, MAX_BATCH) : [];
 		if (!notes.length) return reviewJson({ saved: 0 });
 
@@ -140,25 +150,22 @@ async function handleReview(request: Request, url: URL, env: Env): Promise<Respo
 		return reviewJson({ saved: statements.length, at: now });
 	}
 
-	if (request.method !== 'GET') return reviewJson({ error: 'method' }, 405);
-
 	// GET /review/reviewers - who has reviewed, and how much.
 	if (url.pathname === '/review/reviewers') {
-		const query = env.DB.prepare(
+		// Reading stays open, as the site always was: the owner and every
+		// reviewer see who reviewed what.
+		const { results } = await env.DB.prepare(
 			`SELECT reviewer, COUNT(*) AS items,
 			        SUM(CASE WHEN note <> '' THEN 1 ELSE 0 END) AS notes,
 			        SUM(done) AS done, MAX(updated_at) AS last
-			 FROM review_notes ${identity.role === 'admin' ? '' : 'WHERE reviewer = ?'}
-			 GROUP BY reviewer ORDER BY last DESC`
-		);
-		const { results } = await (identity.role === 'admin' ? query : query.bind(identity.reviewer)).all();
+			 FROM review_notes GROUP BY reviewer ORDER BY last DESC`
+		).all();
 		return reviewJson({ reviewers: results });
 	}
 
 	// GET /review?reviewer=NAME - everything that reviewer wrote.
 	const reviewer = clean(url.searchParams.get('reviewer'), MAX_NAME);
 	if (!reviewer) return reviewJson({ error: 'reviewer required' }, 400);
-	if (identity.role !== 'admin' && reviewer !== identity.reviewer) return reviewJson({ error: 'reviewer mismatch' }, 403);
 	const { results } = await env.DB.prepare(
 		`SELECT item_id, note, done, excerpt, section, updated_at
 		 FROM review_notes WHERE reviewer = ? ORDER BY updated_at DESC`
@@ -173,8 +180,9 @@ export default {
 		// ── The content-review site ─────────────────────────────────────
 		// https://tito423.github.io/rafeeq-review/ is where a scholar reads
 		// every religious text the app ships and writes his notes on it.
-		// Reviews require a verified Google identity and an explicit grant.
-		// Their rate/body bounds remain separate from ordinary reader sync.
+		// No account and no list (owner, 2026-10-13): a reviewer claims a
+		// name once and his browser holds the key to write under it.
+		// Rate and body bounds are separate from ordinary reader sync.
 		if (url0.pathname.startsWith('/review')) {
 			return handleReview(request, url0, env);
 		}
