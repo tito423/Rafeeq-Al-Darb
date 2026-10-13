@@ -35,9 +35,12 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
    Backend final session 13833 and Flutter analyze/test session 41397 must
    finish green before saving this one owned template change and final docs.
    No additional Worker/APK deployment is needed for this artifact alignment.
-2. **A-01 (Critical) — rotate the R2 keys.** Two R2 credential values are in
-   the PUBLIC git history (commit `3747f715`). Only the owner can rotate them
-   in the Cloudflare dashboard, then update `scripts/.env` on the laptop.
+2. **A-01 done 2026-10-13 21:32.** The owner created a new R2 token
+   (Object Read & Write, bucket rafeeq-content) and put it in `scripts/.env`,
+   then deleted the old token. Checked with the new key: list 200, head 200,
+   put/delete of `_probe/key-rotation-2026-10-13.txt` 200/204. NOT checked:
+   that the old key is refused (its value was not read; the classifier
+   blocked materialising it from history).
 3. **Remote branches** not deleted (classifier blocked): ccr-2f2431dd-qhco4b,
    ccr-5abc3286-e7dj17, claude/intelligent-franklin-lu4lnd,
    claude/tajweed-simplify-49x14b, claude/zen-sagan-fvcgye,
