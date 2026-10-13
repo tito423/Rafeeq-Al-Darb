@@ -16,18 +16,20 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 ## Next step (exact)
 
-1. Deploy the name-key review rework using the owner's existing approval.
-   Preflight complete: 82 backend tests passed, TypeScript clean, dry run
-   passed, account has one Worker, namespace 3870018 is unused, D1 binding
-   matches, and the live review list has zero items. Cloudflare OAuth refresh
-   works with NODE_USE_SYSTEM_CA=1 (Windows trust store); TLS verification
-   remains enabled. The live rollback version is
-   48b3fa3a-18de-4b8d-969f-944f6cece83d.
-   Next: run wrangler deploy with that environment setting, then push
-   rafeeq-review main/cff08c1 and verify the live name and note workflow.
-   The sibling page removes a garbled, unpublished legacy-name error line
-   still present in the main repo's template; review-key.js matches exactly.
-   Do not republish the obsolete Google client or require a reviewer list.
+1. Finish live review verification and remove only the two owned QA names.
+   Worker deployed as fb98ec8c-2c2f-4961-9db7-66d588d7030d. Paired Pages
+   main/cff08c1 is live; build 38437614323 succeeded. The live API passed
+   15 checks: registration, duplicate name 409, key identity, unauthorized
+   writes 401, wrong reviewer 403, own note save/read/delete, CORS, and sync
+   refusing reviewer keys. The API test note is removed.
+   Browser UI registered the clearly labelled name
+   'فحص النشر الآلي 2026-10-13 2125'. Next: write one technical note under
+   an interface title, confirm its server row and visible reviewers list,
+   capture proof, close the test tab, then clean only its rows and the
+   API QA registration. See ignored worker-name-key-live-qa-private.json
+   for the other exact name and hash. Never remove real reviewer data.
+   Rollback remains 48b3fa3a-18de-4b8d-969f-944f6cece83d; existing D1
+   contents were empty before these tests, and existing tables were kept.
 2. **A-01 (Critical) — rotate the R2 keys.** Two R2 credential values are in
    the PUBLIC git history (commit `3747f715`). Only the owner can rotate them
    in the Cloudflare dashboard, then update `scripts/.env` on the laptop.
@@ -51,6 +53,11 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-13 21:23 — Worker and paired Pages published under existing
+  approval. API smoke checks passed; browser name registration seen.
+  Owned QA registration cleanup and final UI note proof remain. No APK,
+  R2 keys, scripture, or user sync records changed.
 
 - 2026-10-13 21:18 — Deployment preflight refreshed by Codex. Tests 82/82,
   tsc and dry run passed; actual account namespace and D1 checked read-only.
