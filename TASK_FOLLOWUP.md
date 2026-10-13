@@ -16,25 +16,20 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 ## Next step (exact)
 
-1. Finish final validation and commit the aligned review template.
-   Worker fb98ec8c-2c2f-4961-9db7-66d588d7030d and Pages/cff08c1 are live.
-   The live API passed 15 checks. Browser registration, note input, saved
-   status, and the reviewers list (one technical note, zero reviewed ticks)
-   were observed; the exact note was also read from the server. Both owned
-   QA registrations and the technical note are now removed, verified by
-   remote D1 count=0 and the public review list. Only those exact names,
-   note ID/text, hashes, and creation times were used for cleanup.
-   Browser screenshot capture failed in hidden and visible tabs; no image
-   proof is claimed. Test tabs closed and visibility restored. Emulators
-   remain off at the owner's request.
-   Main review-client/index.html now matches the deployed sibling page.
-   Correction: the earlier claim of a garbled error was caused by Python
-   console encoding; the actual difference was a valid Arabic legacy-name
-   warning absent from the already tested/published sibling page. Religious
-   text and all other page content are unchanged.
-   Backend final session 13833 and Flutter analyze/test session 41397 must
-   finish green before saving this one owned template change and final docs.
-   No additional Worker/APK deployment is needed for this artifact alignment.
+1. Review deployment is complete and verified. Worker version
+   fb98ec8c-2c2f-4961-9db7-66d588d7030d and Pages main/cff08c1 are live.
+   No Google account or reviewer list is required. Each browser claims a
+   name and holds its write key; the name does not prove real-world identity.
+   A second device or cleared browser needs another name under this model.
+   Live API and browser name/note/list flow passed. Only the two owned QA
+   registrations and technical note were removed; final counts are zero.
+   Final backend tests 82/82, TypeScript and Flutter analyze are clean;
+   full Flutter tests passed. Raw proof is outside git in .local-audit.
+   The stored frontend now matches the deployed page; all religious content
+   is unchanged. Browser screenshot capture was unavailable, so the proof
+   is the actual browser accessibility state plus matching server rows.
+   Do not repeat publication or ask for reviewer accounts. Continue with
+   the owner-dependent checks below; emulators stay off as requested.
 2. **A-01 done 2026-10-13 ~21:50.** The owner created `rafeeq-uploads-2026-10`
    (Object Read & Write, bucket rafeeq-content), put it in `scripts/.env`,
    and deleted the leaked `rafeeq-aldarb-data` (Admin Read & Write, all
@@ -45,7 +40,8 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
    refused (its value was never read here).
 3. **Remote branches cleaned 2026-10-13** on the owner's order: 14 deleted,
    only `main` and `master` remain. `release-v1.2.0` and v3.51.0 are in
-   `E:\My Projects\Rafeeq-Backupselease-v1.2.0-and-v3.51.0.bundle`.
+   `E:\My Projects\Rafeeq-Backups
+elease-v1.2.0-and-v3.51.0.bundle`.
 4. Phone-only checks: adhan on the lock screen after a PIN reboot, real
    microphone for tasmee, Google sync between two devices.
 
@@ -53,12 +49,20 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 - The adhan retry fix is verified on API 36 only (native suite + upgrade
   install), not on API 24 or a real phone.
-- The review rework is verified locally (82 backend tests; real page against
-  `wrangler dev` with local D1: name claimed, note saved, a second claim of
-  the same name refused with the message), NOT on the live Worker.
+- The review rework is now deployed and verified on the live Worker and
+  Pages. Backend 82 tests, live API controls, and actual browser name/note
+  flow passed. Screenshot capture was unavailable; no image proof claimed.
+  All owned QA notes and registrations were removed after verification.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-13 21:48 — Worker and review page activation finished. Final
+  validation: 08:38 +1440 ~4: All tests passed!; analyzer clean; backend 82 passed,
+  TypeScript clean. Account namespace/D1/rollback were checked before
+  deployment. Live unauthorized, duplicate, own-write and attribution
+  controls passed; guarded QA cleanup verified. Template aligned with the
+  actual Pages commit. No app release, R2 key, or religious text changed.
 
 - 2026-10-13 21:38 — Live review workflow verified, with all owned QA data
   removed. Final backend/TypeScript and Flutter checks run for the aligned
