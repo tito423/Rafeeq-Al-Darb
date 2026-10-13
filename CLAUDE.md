@@ -357,7 +357,8 @@ A change is done when **all** of these hold:
 - One release at a time. The owner wants the repo clean: «كل حاجة تبقى على
   نضافة». Delete the previous release **and its tag** before publishing the new
   one, unless told otherwise. **Two standing exceptions, never deleted:**
-  `v3.51.0` (the restore point, RESTORE.md) and the `content-mirror`,
+  `v3.87.0` (the restore point since 2026-10-13, RESTORE.md; the owner had
+  v3.51.0 deleted: «سيب ٣.٨٧ وامسح ٣.٥١») and the `content-mirror`,
   `content-mushaf`, `content-surah` prereleases — the GitHub copy of the R2
   content that the app falls back to (`ContentMirrors`); deleting them breaks
   every fallback download.

@@ -475,8 +475,10 @@ else if (legacyName) {
   // Claim the name this browser already used; if someone took it first,
   // the gate opens with it filled in and says so.
   key.register(legacyName).then(r => {
-    if (r.ok) { me = r.reviewer; paintWho(); pushAll(); render(); }
-    else askName(false);
+    if (r.ok) { me = r.reviewer; paintWho(); pushAll(); render(); return; }
+    askName(false);
+    if (r.error === 'taken') document.getElementById('nmerr').textContent =
+      'هذا الاسم مسجَّل لمراجع آخر أو على جهاز آخر. اكتب اسمًا مختلفًا، مثل إضافة اسم البلد.';
   });
 } else askName(false);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});

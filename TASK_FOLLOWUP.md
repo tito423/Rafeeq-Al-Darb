@@ -9,48 +9,58 @@ in compressed run-together words) is archived unchanged in
 
 ## Current task
 
-The full audit (owner brief 2026-10-09, report `docs/audits/AUDIT_2026-10-09.md`)
-was carried out by Codex from 2026-10-09 to 2026-10-13 and then stopped by the
-owner. Claude reviewed it on 2026-10-13 (see log). 47 of 48 findings are fixed
-in code; v3.88.0 is published. What is left needs the OWNER, not code.
+Codex's full audit (2026-10-09..13, report `docs/audits/AUDIT_2026-10-09.md`)
+was reviewed by Claude on 2026-10-13. v3.88.1 is published with the adhan
+re-arm fix. The review site was reworked to the owner's model: NO reviewer
+list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 ## Next step (exact)
 
-Nothing to code until the owner answers these. Ask him, do not guess:
-
-1. **A-01 (Critical) — rotate the R2 keys.** Two R2 credential values sit in
-   the PUBLIC git history (commit `3747f715`, `scripts/upload_quranflash_coords.dart`
-   lines 7-8, since deleted from the tree). Deleting the file did not remove
-   them. Only the owner can rotate them in the Cloudflare dashboard (R2 →
-   Manage API tokens → create a new token, then delete the old one), then put
-   the new pair in `scripts/.env` on the laptop. Never paste the keys in chat.
-2. **Worker + review site (A-03).** The new Worker code requires a verified
-   Google sign-in AND a grant in the `REVIEWERS` secret for every reviewer.
-   The secret is EMPTY on the live account (Codex checked read-only). Deploying
-   now would lock every reviewer out. Needed from the owner: each reviewer's
-   Google e-mail (or sub), the name to show, and role (reviewer/admin). Then:
-   set the secret, deploy the Worker, publish the paired review-client
-   (local-only commit `8dee5e0` in the sibling rafeeq-review Pages repo on the
-   laptop), and check the Google OAuth client allows the origin
-   `https://tito423.github.io`. Codex wrote that the owner authorized the
-   deployment; that approval was in Codex's chat and is not visible here —
-   confirm with the owner before deploying. Dry run log:
-   `.local-audit/phase2/worker-deploy-dryrun.log`; current live version for
-   rollback: `.local-audit/phase2/worker-predeploy-version.json`.
-3. **Phone-only checks** Codex could not do on an emulator: adhan on the lock
-   screen of a real phone with a PIN after a reboot (A-12), ARM build on a real
-   phone, real microphone for tasmee, Google sign-in sync between two devices.
+1. **Deploy the review rework (owner approved 2026-10-13: «موافق انا كمل
+   حوار المراجعه»).** Claude Code's auto-mode classifier blocked both
+   `npx wrangler deploy` and pushing the Pages repo, so the owner has to run
+   them or allow them. In this order:
+   - `cd "E:\My Projects\Rafiq-Al-Darb\sync_backend"` then `npx wrangler deploy`
+   - `cd "E:\My Projectsafeeq-review"` then `git push origin main`
+     (3 local commits: Codex's Google client, its revert, the name-key page).
+   Then check live: open https://tito423.github.io/rafeeq-review/, write a
+   name, write a note, confirm it in `GET /review/reviewers`.
+   Rollback if needed: `npx wrangler rollback 48b3fa3a-18de-4b8d-969f-944f6cece83d`
+   (the version live until now). Live had 0 reviewer notes before the change.
+2. **A-01 (Critical) — rotate the R2 keys.** Two R2 credential values are in
+   the PUBLIC git history (commit `3747f715`). Only the owner can rotate them
+   in the Cloudflare dashboard, then update `scripts/.env` on the laptop.
+3. **Remote branches** not deleted (classifier blocked): ccr-2f2431dd-qhco4b,
+   ccr-5abc3286-e7dj17, claude/intelligent-franklin-lu4lnd,
+   claude/tajweed-simplify-49x14b, claude/zen-sagan-fvcgye,
+   kids-stories-pipeline, known-good/v3.48.0 .. v3.53.0, master-353kkv,
+   release-v1.2.0. All except release-v1.2.0 are fully contained in master;
+   release-v1.2.0 and v3.51.0 are bundled in
+   `E:\My Projects\Rafeeq-Backupselease-v1.2.0-and-v3.51.0.bundle`.
+4. Phone-only checks: adhan on the lock screen after a PIN reboot, real
+   microphone for tasmee, Google sync between two devices.
 
 ## Half-done / unverified
 
-- The emulator `emulator-5554` now has a DEBUG build (uninstalled the signed
-  3.88 to run the native suites). Reinstall the signed release before any
-  release-upgrade check.
-- The adhan retry fix (log 2026-10-13 18:05) is verified on API 36 only, not
-  on the API 24 emulator (`Rafeeq_Audit_API24`, port 5556) and not on a phone.
-- Codex's `.local-audit/` (1,828 files, gitignored) holds its raw evidence.
+- The adhan retry fix is verified on API 36 only (native suite + upgrade
+  install), not on API 24 or a real phone.
+- The review rework is verified locally (82 backend tests; real page against
+  `wrangler dev` with local D1: name claimed, note saved, a second claim of
+  the same name refused with the message), NOT on the live Worker.
+- emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-13 18:55 — Published v3.88.1 (tag `3286a0a4`, APK 313,762,006 B,
+  SHA256 `209199219fa0…`, GitHub digest equal, range download 206). Upgrade
+  over the published 3.88.0 on API 36 kept the install; Arabic home and the
+  support button seen. Owner then: keep 3.87, delete 3.51, clean up. Deleted
+  releases+tags v3.88.0 and v3.51.0, and tags rollback-v3.87.0,
+  backup-2026-09-20/21/21b/21c/21d, v3.81.0..v3.86.0. Remaining: v3.87.0,
+  v3.88.1, the three content mirrors. RESTORE.md and CLAUDE.md §2.3 now name
+  v3.87.0. Review rework committed (`ac979837` + page fix); deploy blocked by
+  the classifier, see Next step 1. Mirror watchdog disabled during the
+  release and re-enabled after.
 
 - 2026-10-13 18:05 — Claude reviewed Codex's audit work. Verified live:
   v3.88.0 tag = `78811509`, asset 313,762,006 B, SHA256 `47fc2b2c…` as
