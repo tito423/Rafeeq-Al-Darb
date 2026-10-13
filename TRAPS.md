@@ -676,6 +676,15 @@ Do not rediscover these.
     `E:\DevEnv\gradle`, NOT `~/.gradle`), `gradlew --stop`, build, then DELETE
     the init script. A new dependency would need the network: do that one
     online from a session where the cache is fresh.
+    2026-10-13 (Flutter 3.47.7): offline failed too - «No cached version
+    listing for androidx.test:runner:1.2+». What worked: a truststore = the
+    Android Studio JBR's `cacerts` plus the Windows-store root «Avast Web/Mail
+    Shield Root», at `E:\DevEnv\gradle\rafeeq-truststore.jks` (password
+    `changeit`), handed to Gradle for that one build only:
+    `gradlew --stop`, then in the same PowerShell
+    `$env:JAVA_TOOL_OPTIONS='-Djavax.net.ssl.trustStore=E:\DevEnv\gradle\rafeeq-truststore.jks -Djavax.net.ssl.trustStorePassword=changeit'`,
+    `build_github_release.bat`, `gradlew --stop`. The JDK itself and Avast
+    are untouched. Rebuild the .jks if Avast regenerates its root.
     Same day, same cause: inside emulator-5554 every app download (Dart and
     native) fails the handshake, so library/story/recitation downloads cannot
     be exercised on this machine; `-http-proxy` does not help (Dart ignores
