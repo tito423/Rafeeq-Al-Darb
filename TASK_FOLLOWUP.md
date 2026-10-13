@@ -16,20 +16,25 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 ## Next step (exact)
 
-1. Finish live review verification and remove only the two owned QA names.
-   Worker deployed as fb98ec8c-2c2f-4961-9db7-66d588d7030d. Paired Pages
-   main/cff08c1 is live; build 38437614323 succeeded. The live API passed
-   15 checks: registration, duplicate name 409, key identity, unauthorized
-   writes 401, wrong reviewer 403, own note save/read/delete, CORS, and sync
-   refusing reviewer keys. The API test note is removed.
-   Browser UI registered the clearly labelled name
-   'فحص النشر الآلي 2026-10-13 2125'. Next: write one technical note under
-   an interface title, confirm its server row and visible reviewers list,
-   capture proof, close the test tab, then clean only its rows and the
-   API QA registration. See ignored worker-name-key-live-qa-private.json
-   for the other exact name and hash. Never remove real reviewer data.
-   Rollback remains 48b3fa3a-18de-4b8d-969f-944f6cece83d; existing D1
-   contents were empty before these tests, and existing tables were kept.
+1. Finish final validation and commit the aligned review template.
+   Worker fb98ec8c-2c2f-4961-9db7-66d588d7030d and Pages/cff08c1 are live.
+   The live API passed 15 checks. Browser registration, note input, saved
+   status, and the reviewers list (one technical note, zero reviewed ticks)
+   were observed; the exact note was also read from the server. Both owned
+   QA registrations and the technical note are now removed, verified by
+   remote D1 count=0 and the public review list. Only those exact names,
+   note ID/text, hashes, and creation times were used for cleanup.
+   Browser screenshot capture failed in hidden and visible tabs; no image
+   proof is claimed. Test tabs closed and visibility restored. Emulators
+   remain off at the owner's request.
+   Main review-client/index.html now matches the deployed sibling page.
+   Correction: the earlier claim of a garbled error was caused by Python
+   console encoding; the actual difference was a valid Arabic legacy-name
+   warning absent from the already tested/published sibling page. Religious
+   text and all other page content are unchanged.
+   Backend final session 13833 and Flutter analyze/test session 41397 must
+   finish green before saving this one owned template change and final docs.
+   No additional Worker/APK deployment is needed for this artifact alignment.
 2. **A-01 (Critical) — rotate the R2 keys.** Two R2 credential values are in
    the PUBLIC git history (commit `3747f715`). Only the owner can rotate them
    in the Cloudflare dashboard, then update `scripts/.env` on the laptop.
@@ -53,6 +58,10 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-13 21:38 — Live review workflow verified, with all owned QA data
+  removed. Final backend/TypeScript and Flutter checks run for the aligned
+  durable page template. Earlier console-encoding description corrected.
 
 - 2026-10-13 21:23 — Worker and paired Pages published under existing
   approval. API smoke checks passed; browser name registration seen.
