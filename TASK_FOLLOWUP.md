@@ -16,17 +16,18 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 
 ## Next step (exact)
 
-1. **Deploy the review rework (owner approved 2026-10-13: «موافق انا كمل
-   حوار المراجعه»).** Claude Code's auto-mode classifier blocked both
-   `npx wrangler deploy` and pushing the Pages repo, so the owner has to run
-   them or allow them. In this order:
-   - `cd "E:\My Projects\Rafiq-Al-Darb\sync_backend"` then `npx wrangler deploy`
-   - `cd "E:\My Projects\rafeeq-review"` then `git push origin main`
-     (3 local commits: Codex's Google client, its revert, the name-key page).
-   Then check live: open https://tito423.github.io/rafeeq-review/, write a
-   name, write a note, confirm it in `GET /review/reviewers`.
-   Rollback if needed: `npx wrangler rollback 48b3fa3a-18de-4b8d-969f-944f6cece83d`
-   (the version live until now). Live had 0 reviewer notes before the change.
+1. Deploy the name-key review rework using the owner's existing approval.
+   Preflight complete: 82 backend tests passed, TypeScript clean, dry run
+   passed, account has one Worker, namespace 3870018 is unused, D1 binding
+   matches, and the live review list has zero items. Cloudflare OAuth refresh
+   works with NODE_USE_SYSTEM_CA=1 (Windows trust store); TLS verification
+   remains enabled. The live rollback version is
+   48b3fa3a-18de-4b8d-969f-944f6cece83d.
+   Next: run wrangler deploy with that environment setting, then push
+   rafeeq-review main/cff08c1 and verify the live name and note workflow.
+   The sibling page removes a garbled, unpublished legacy-name error line
+   still present in the main repo's template; review-key.js matches exactly.
+   Do not republish the obsolete Google client or require a reviewer list.
 2. **A-01 (Critical) — rotate the R2 keys.** Two R2 credential values are in
    the PUBLIC git history (commit `3747f715`). Only the owner can rotate them
    in the Cloudflare dashboard, then update `scripts/.env` on the laptop.
@@ -50,6 +51,12 @@ list, no Google sign-in — he sends the link, a reviewer writes his name.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-13 21:18 — Deployment preflight refreshed by Codex. Tests 82/82,
+  tsc and dry run passed; actual account namespace and D1 checked read-only.
+  Existing OAuth session refreshed through Windows trusted CAs. No live
+  publication yet; no overlapping builds or tests, original untracked files
+  untouched. Owner approval remains in force.
 
 - 2026-10-13 18:55 — Published v3.88.1 (tag `3286a0a4`, APK 313,762,006 B,
   SHA256 `209199219fa0…`, GitHub digest equal, range download 206). Upgrade
