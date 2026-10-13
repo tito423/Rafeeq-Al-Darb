@@ -112,10 +112,10 @@ class LinkListManageScreen extends ConsumerWidget {
               buildDefaultDragHandles: false,
               padding: readableInsets(context, const EdgeInsets.fromLTRB(12, 4, 12, 24)),
               itemCount: ids.length,
-              onReorder: (from, to) {
+              onReorderItem: (from, to) {
                 final next = [...ids];
                 final moved = next.removeAt(from);
-                next.insert(to > from ? to - 1 : to, moved);
+                next.insert(to, moved);
                 notifier.reorder(next);
               },
               itemBuilder: (context, i) {

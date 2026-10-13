@@ -176,6 +176,19 @@ This was set after a French-speaking reader met the quiz in Arabic.
 
 ### 1.8 Libraries and toolchain: current, stable, and proven compatible
 
+**Verified project SDK (2026-10-13): Flutter 3.47.7 / Dart 3.13.5**, installed
+at `E:\DevEnv\flutter-3.47.7`; `.flutter-version` and CI pin the same version.
+Before local Flutter commands, select it in that PowerShell session:
+`. .\scripts\flutter_env.ps1` (then change into `rafeeq_app`). Windows denied
+changing the machine PATH, so its default still selects the preserved
+`C:\Users\Asus\flutter` 3.38.7. Do not use that default for this checkout.
+The old SDK stays available for the 3.87 rollback checkout. Another host can
+set `RAFEEQ_FLUTTER_SDK` to its matching SDK directory. Gradle8.14,
+AGP8.11.1 and Kotlin2.2.20 remain pinned: the unchanged signed universal and
+both native suites pass, but the new Flutter SDK warns about their future
+support and Gradle reports incompatibilities with Gradle9. Revisit that
+separate migration before upgrading those versions; do not bypass validation.
+
 > «كل مكتبات التطبيق والبيئة اللي بنطور بيها لازم تكون محدثة ومتوافقه
 > بالاصدارات المستقرة اللي مش تسبب اي مشاكل او كراشات» (2026-09-24)
 
@@ -456,6 +469,7 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 
 72. Preserve protected font literals while formatting; full quotation wrapping also needs bounded-sheet scrolling.
 73. Preserve the valid-request control after cancelling oversized local Worker bodies; SDK peers and signed APK gates both matter, and DEBUG startup hangs are separate.
+74. A Windows SDK path with spaces can break native-asset hooks; select the verified project SDK explicitly.
 
 ## 4. Where things live
 

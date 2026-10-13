@@ -809,3 +809,19 @@ Do not rediscover these.
     A07 additionally passed the unchanged signed universal release build and
     both native installs. The original DEBUG cold-start ANR remains separate:
     a successful backend SDK upgrade does not fix an Android startup hang.
+
+74. **Use a Windows SDK path without spaces for native-asset hooks.** The
+    isolated Flutter3.47.7 SDK under `E:\My Projects\...` failed before any
+    test: objective_c's kernel hook tried to execute `E:\My` as a command.
+    Selecting the identical SDK through a path without spaces ran the actual
+    regressions; its permanent location is `E:\DevEnv\flutter-3.47.7`.
+    `scripts/flutter_env.ps1` checks `.flutter-version` and selects that SDK
+    for a local PowerShell session. The machine PATH remains on the preserved
+    old SDK because Windows refused the registry write. Use the selection
+    script, not the old default. Copying a Git SDK with PowerShell can also
+    dereference tracked symlinks; restore only the known copied SDK entries
+    and verify its Git state before trusting it. A48's native setup additionally
+    lost the tail of the final WAV sent through exec-in TAR on API24: the model
+    and tokens matched, but the WAV was68608B rather than83790B. Adbpush plus
+    run-as copy preserved all three hashes. Keep the checksum gate and the
+    actual code_cache path (trap68); do not accept driver exit0 alone.
