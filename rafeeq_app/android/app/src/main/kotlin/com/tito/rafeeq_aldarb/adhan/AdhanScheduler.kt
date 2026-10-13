@@ -78,7 +78,7 @@ object AdhanScheduler {
      * as its own next occurrence and fire a second time seconds later.
      */
     fun rearmAfterFiring(context: Context, complete: (Boolean) -> Unit = {}) =
-        recompute(context, System.currentTimeMillis() + 60_000L, complete)
+        recompute(context, System.currentTimeMillis() + 60_000L, true, complete)
 
     /**
      * The "تجربة" button: fires [spec] once, [delayMs] from now, under its
@@ -109,10 +109,23 @@ object AdhanScheduler {
     }
 
     /** Re-arms everything after a reboot or an app update. */
-    fun rearmPersisted(context: Context, complete: (Boolean) -> Unit = {}) =
-        recompute(context, System.currentTimeMillis(), complete)
+    fun rearmPersisted(
+        context: Context,
+        retryOnFailure: Boolean = true,
+        complete: (Boolean) -> Unit = {},
+    ) = recompute(context, System.currentTimeMillis(), retryOnFailure, complete)
 
-    private fun recompute(context: Context, floor: Long, complete: (Boolean) -> Unit) {
+    private fun recompute(
+        context: Context,
+        floor: Long,
+        retryOnFailure: Boolean,
+        done: (Boolean) -> Unit,
+    ) {
+        // The job retries itself through jobFinished; receivers need a job.
+        val complete: (Boolean) -> Unit = { success ->
+            if (!success && retryOnFailure) AdhanRecomputeJob.scheduleRetry(context)
+            done(success)
+        }
         val specs = load(context)
         if (specs.isEmpty()) {
             complete(true)

@@ -11,7 +11,9 @@ import java.util.concurrent.TimeUnit
 /** Daily safety refresh also runs if an OEM drops an individual prayer alarm. */
 class AdhanRecomputeJob : JobService() {
     override fun onStartJob(params: JobParameters): Boolean {
-        AdhanScheduler.rearmPersisted(this) { success -> jobFinished(params, !success) }
+        AdhanScheduler.rearmPersisted(this, retryOnFailure = false) { success ->
+            jobFinished(params, !success)
+        }
         return true
     }
 
@@ -19,6 +21,24 @@ class AdhanRecomputeJob : JobService() {
 
     companion object {
         private const val JOB_ID = 20261011
+        private const val RETRY_JOB_ID = 20261013
+
+        /**
+         * A firing consumes its alarm; if the headless calculation then fails
+         * (timeout, engine start, low memory) that prayer has no alarm until
+         * the daily job, which may be ~24h away. Retry within minutes instead,
+         * with the scheduler's exponential backoff until it succeeds.
+         */
+        fun scheduleRetry(context: Context) {
+            val scheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            if (scheduler.getPendingJob(RETRY_JOB_ID) != null) return
+            scheduler.schedule(JobInfo.Builder(RETRY_JOB_ID, ComponentName(context, AdhanRecomputeJob::class.java))
+                .setMinimumLatency(TimeUnit.MINUTES.toMillis(1))
+                .setOverrideDeadline(TimeUnit.MINUTES.toMillis(15))
+                .setBackoffCriteria(TimeUnit.MINUTES.toMillis(2), JobInfo.BACKOFF_POLICY_EXPONENTIAL)
+                .setPersisted(true)
+                .build())
+        }
 
         fun ensureScheduled(context: Context) {
             val scheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
@@ -30,7 +50,9 @@ class AdhanRecomputeJob : JobService() {
         }
 
         fun cancel(context: Context) {
-            (context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).cancel(JOB_ID)
+            val scheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            scheduler.cancel(JOB_ID)
+            scheduler.cancel(RETRY_JOB_ID)
         }
     }
 }

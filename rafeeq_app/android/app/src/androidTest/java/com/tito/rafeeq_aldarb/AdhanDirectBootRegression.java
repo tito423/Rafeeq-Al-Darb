@@ -112,7 +112,7 @@ final class AdhanDirectBootRegression {
                     .directBootAware);
             CountDownLatch armed = new CountDownLatch(1);
             AtomicBoolean success = new AtomicBoolean();
-            AdhanScheduler.INSTANCE.rearmPersisted(context, value -> {
+            AdhanScheduler.INSTANCE.rearmPersisted(context, false, value -> {
                 success.set(value);
                 armed.countDown();
                 return Unit.INSTANCE;

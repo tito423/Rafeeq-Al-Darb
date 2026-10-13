@@ -43,6 +43,10 @@ public final class DownloadNotificationRegression extends Instrumentation {
             AdhanRecomputeRegression.run(this);
             return;
         }
+        if ("adhan-retry".equals(suite)) {
+            AdhanRetryRegression.run(this);
+            return;
+        }
         Bundle result = new Bundle();
         int resultCode = Activity.RESULT_CANCELED;
         Context context = getTargetContext();
