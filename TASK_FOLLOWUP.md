@@ -73,6 +73,28 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 00:45 — Book voice replaced: Supertonic-3 int8 (voice 6, male,
+  8 steps) through the app's own sherpa_onnx 1.13.8, in a worker isolate;
+  OpenVoice keeps its API. 30 matns: UTMOS 3.27 vs 2.69 for FastPitch, CER
+  5.4% vs 5.3% (worst 13.6% vs 30%); jalala heavy 1262/1209 Hz, light 1421
+  after kasra (same pattern as before, so the «يفخّم لفظ الجلالة» text stays
+  true). Pack 145,295,768 B on R2 `tts/supertonic3_ar_v1/` (8 objects incl.
+  OpenRAIL-M LICENSE.txt, all 206) and on content-mirror (8 assets, 206).
+  API-24 emulator: downloaded in-app, read Al-Adab al-Mufrad aloud, pulled
+  the rendered WAVs and FastConformer read the book's isnad back; RTF 0.31
+  there (x86). The old open_ar_v1 pack is deleted from devices (seen).
+  7 languages: the voice is disclosed as machine-generated (OpenRAIL-M);
+  Sources: one Supertonic entry replaces ASC + nipponjo. Phonetiser and its
+  test deleted. 1440 tests pass.
+  NOT DONE / UNVERIFIED: speed on a real ARM phone (if a chunk renders
+  slower than 85% of its length the voice drops to 6 steps by itself);
+  owner has not yet said how the new voice sounds to him (samples sent).
+  The `onnxruntime` pub package is now unused by lib/ but still in pubspec
+  (build.gradle pickFirsts + check_apk_native.py depend on it) - removing
+  it needs build_github_release.bat + a signed install. github_content_mirror
+  found ~300 azkar voice mp3s missing on content-mirror; I stopped that bulk
+  upload (TRAPS 60) - run it in a quiet window, not before a release.
+
 - 2026-10-19 23:00 — Two owner reports fixed and seen on emulators. (1)
   «الرجوع للآية المقروءة: إيقاف» still pulled the reader back: the page
   FOLLOW on every new verse did it, not the timer (at once when recitation

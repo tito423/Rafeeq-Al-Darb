@@ -100,18 +100,16 @@ final sourceGroups = <(String, List<SourceEntry>)>[
         'https://mp3quran.net',
         'about.src_mp3quran',
       ),
-      // The book reader's downloadable voice: the speaker and the corpus
-      // (CC BY 4.0) and the phonetiser rules (CC BY-NC 4.0) are Halabi's, the
-      // trained models nipponjo's. See CONTENT-LICENSES.md.
+      // The book reader's downloadable voice (2026-10-20, replacing
+      // nipponjo's FastPitch): Supertone's Supertonic-3, code MIT, weights
+      // BigScience OpenRAIL-M. The licence travels with the pack on R2
+      // (tts/supertonic3_ar_v1/LICENSE.txt) and is on this page's link; its
+      // use rules ask that the audio be disclosed as machine-generated, which
+      // the entry and the download offer both say. See CONTENT-LICENSES.md.
       const SourceEntry(
-        'Arabic Speech Corpus',
-        'http://en.arabicspeechcorpus.com/',
-        'about.src_asc',
-      ),
-      const SourceEntry(
-        'nipponjo/tts_arabic',
-        'https://github.com/nipponjo/tts_arabic',
-        'about.src_tts_arabic',
+        'Supertonic-3 — Supertone',
+        'https://huggingface.co/Supertone/supertonic-3',
+        'about.src_supertonic',
       ),
       // «رفيق»'s downloadable voice pack (scripts/publish_rafeeq_voice_pack.py):
       // Meta's recogniser (Apache-2.0), silero VAD (MIT), run by sherpa-onnx

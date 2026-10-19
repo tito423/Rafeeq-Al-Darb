@@ -1,56 +1,90 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
-import 'package:onnxruntime/onnxruntime.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import '../../../../core/config/app_config.dart';
 import '../../../../core/services/download_manager.dart';
-import 'arabic_phonetiser.dart';
 
-/// The open Arabic voice the owner chose (sample B) for its tafkhim of the
-/// divine name: FastPitch -> Vocos (44.1 kHz), two ONNX files from
-/// nipponjo/tts_arabic (Arabic Speech Corpus, male speaker 0), mirrored on R2
-/// under `tts/open_ar_v1/` (~261 MB). Runs entirely on the device.
+/// The downloadable Arabic voice that reads books: Supertone's Supertonic-3
+/// (31 languages, Arabic among them; code MIT, weights BigScience OpenRAIL-M)
+/// as sherpa-onnx packages it in int8, run on the device through the
+/// `sherpa_onnx` package the app already carries for speech recognition.
+/// Mirrored on R2 under `tts/supertonic3_ar_v1/` (~139 MB).
 ///
-/// The pipeline is `tts_arabic/models/tts_models.py`'s, input for input:
-///  * fp_ms.onnx: token_ids int64[1,N], pace f32[1], speaker i32[1],
-///    pitch_mul f32[1], pitch_add f32[1] -> mel f32[1,80,T];
-///  * vocos44.onnx: mel_spec f32[1,80,T], denoise f32[1] (0.005)
-///    -> wave f32[1,S] at 44,100 Hz;
-///  * then the peak is scaled to 0.9, as `tts(volume=0.9)` does.
+/// WHY IT REPLACED THE FASTPITCH VOICE. «النموذج اللي بيقرا الكلام بجد مش
+/// حلو … حتى لو حجمه كبير» (owner, 2026-10-19). Measured 2026-10-19/20 on 30
+/// diacritised hadith matns from Bukhari and Muslim (E:\DevEnv\tts_eval):
+///  * naturalness, UTMOS22-strong: 3.27 against 2.69 for FastPitch+Vocos;
+///  * words, NVIDIA's Arabic FastConformer reading it back: 5.4% CER
+///    against 5.3%, and a worst sentence of 13.6% against 30%;
+///  * the divine name (scripts/measure_jalala_tafkhim.py, F2 of the vowel
+///    after the lam): «اللَّهُ» 1262 Hz and «قَالَ اللَّهُ» 1209 Hz heavy,
+///    «بِاللَّهِ» 1421 Hz light after the kasra - the same pattern the owner
+///    chose FastPitch for (1230 / 1102 / 1437).
+/// fp32 weights measured no better than int8; Nabra-82M and four Piper
+/// voices measured worse on both counts.
+///
+/// THE HARAKAT REACH THE MODEL. It reads characters, not phonemes, and its
+/// `unicode_indexer.bin` gives every haraka its own id (fatha 324 … sukun
+/// 328), so the book's vowelled text is passed through untouched.
+///
+/// Voice 6 (`sid`), a male voice (median F0 89 Hz), the best of the five
+/// male presets on both scores. 8 flow steps: 5 scored 2.7-2.9, 12 no better
+/// than 8. A phone too slow for 8 drops to [_slowSteps] - see [synthesize].
 class OpenVoice {
   OpenVoice._();
   static final OpenVoice instance = OpenVoice._();
 
-  /// «التالت مقبول» (2026-09-19): of three vocoders heard on the same
-  /// sentence, the owner chose Vocos at 44.1 kHz over the original HiFi-GAN
-  /// (which he heard as shaky). Vocos takes the same mel and returns the wave
-  /// directly - it has its own denoise input, so there is no third model.
   static const sampleRate = 44100;
-  static const files = ['fp_ms.onnx', 'vocos44.onnx'];
-  static const _sizes = {'fp_ms.onnx': 187215347, 'vocos44.onnx': 73485606};
-  static const totalBytes = 187215347 + 73485606;
+  static const _sid = 6;
+  static const _steps = 8;
+  static const _slowSteps = 6;
 
-  /// The earlier vocoder's files, removed from devices that installed it.
-  static const _retired = ['hifigan.onnx', 'denoiser.onnx'];
-
-  OrtSession? _fp, _voc;
+  static const _pack = 'supertonic3_ar_v1';
+  static const _sizes = {
+    'duration_predictor.int8.onnx': 3700147,
+    'text_encoder.int8.onnx': 36416150,
+    'vector_estimator.int8.onnx': 78400833,
+    'vocoder.int8.onnx': 25991073,
+    'tts.json': 8253,
+    'unicode_indexer.bin': 262144,
+    'voice.bin': 517168,
+  };
+  static final files = _sizes.keys.toList(growable: false);
+  static const totalBytes =
+      3700147 + 36416150 + 78400833 + 25991073 + 8253 + 262144 + 517168;
 
   static Future<Directory> _dir() async {
     final base = await getApplicationSupportDirectory();
-    return Directory(p.join(base.path, 'tts', 'open_ar_v1'));
+    return Directory(p.join(base.path, 'tts', _pack));
+  }
+
+  /// The FastPitch pack this one replaced (fp_ms.onnx + vocos44.onnx,
+  /// 261 MB). Nothing reads it any more, so it is removed rather than left
+  /// as space the reader can neither use nor see.
+  static Future<void> _dropRetired() async {
+    final base = await getApplicationSupportDirectory();
+    final old = Directory(p.join(base.path, 'tts', 'open_ar_v1'));
+    try {
+      if (old.existsSync()) await old.delete(recursive: true);
+    } on FileSystemException {
+      // Tried again next time.
+    }
   }
 
   static String urlFor(String name) =>
-      '${AppConfig.contentBaseUrl}/tts/open_ar_v1/$name';
+      '${AppConfig.contentBaseUrl}/tts/$_pack/$name';
 
-  /// All three files present at their full size.
+  /// Every file present at its full size.
   static Future<bool> isInstalled() async {
+    await _dropRetired();
     await _adoptFinished();
     final d = await _dir();
     for (final f in files) {
@@ -110,10 +144,7 @@ class OpenVoice {
     _cancel = false;
     final d = await _dir();
     d.createSync(recursive: true);
-    for (final r in _retired) {
-      final old = File(p.join(d.path, r));
-      if (old.existsSync()) old.deleteSync();
-    }
+    await _dropRetired();
     await _adoptFinished();
     final dm = DownloadManager.instance;
     final pending = [
@@ -176,7 +207,7 @@ class OpenVoice {
   }
 
   /// The DownloadManager id (and download file name) for one file.
-  static String taskId(String f) => 'tts_open_ar_v1_$f';
+  static String taskId(String f) => 'tts_${_pack}_$f';
 
   /// The `category` these transfers are enqueued under; the Downloads hub's
   /// «الأصوات» bucket claims it.
@@ -217,7 +248,7 @@ class OpenVoice {
   /// Whether the last install ended because the reader cancelled it.
   static bool get wasCancelled => _cancel;
 
-  /// Stops a running download and removes what it wrote, so 261 MB started
+  /// Stops a running download and removes what it wrote, so a pack started
   /// by mistake can be taken back. The pending [install] completes with a
   /// [StateError] ('cancelled').
   static Future<void> cancelInstall() async {
@@ -254,78 +285,141 @@ class OpenVoice {
     installed.value = false;
   }
 
-  Future<void> _ensureLoaded() async {
-    if (_fp != null) return;
-    OrtEnv.instance.init();
-    final d = await _dir();
-    OrtSession open(String f) =>
-        OrtSession.fromFile(File(p.join(d.path, f)), OrtSessionOptions());
-    _fp = open('fp_ms.onnx');
-    _voc = open('vocos44.onnx');
+  // ── The worker ─────────────────────────────────────────────────────────
+  //
+  // sherpa's `generate` is a synchronous FFI call of a second or more, so the
+  // model lives in a worker isolate and the reader's frames never wait on
+  // it. The worker is stopped by a message, never killed: sherpa_onnx 1.13.8
+  // has no finalizer, and only `free()` gives the model's memory back.
+
+  SendPort? _toWorker;
+  Future<void>? _starting;
+  final _pending = <int, Completer<Float32List>>{};
+  int _nextId = 0;
+
+  /// Flow steps for the next chunk; lowered once if this phone is slow.
+  int _stepsNow = _steps;
+
+  Future<void> _ensureLoaded() => _starting ??= () async {
+        final dir = (await _dir()).path;
+        final inbox = ReceivePort();
+        final exited = ReceivePort();
+        final ready = Completer<SendPort>();
+        inbox.listen((m) {
+          if (m is SendPort) {
+            ready.complete(m);
+          } else if (m is (int, Float32List?, String?)) {
+            final c = _pending.remove(m.$1);
+            if (c == null) return;
+            final samples = m.$2;
+            if (samples != null) {
+              c.complete(samples);
+            } else {
+              c.completeError(StateError(m.$3 ?? 'synthesis failed'));
+            }
+          }
+        });
+        await Isolate.spawn(_workerMain, (inbox.sendPort, dir),
+            onExit: exited.sendPort);
+        unawaited(exited.first.then((_) {
+          exited.close();
+          inbox.close();
+          // A worker that died (not one that was released) fails what it
+          // still owed, so BookSpeaker falls back instead of waiting.
+          for (final c in _pending.values) {
+            if (!c.isCompleted) {
+              c.completeError(StateError('voice worker exited'));
+            }
+          }
+          _pending.clear();
+          _toWorker = null;
+          _starting = null;
+        }));
+        _toWorker = await ready.future;
+      }();
+
+  static void _workerMain((SendPort, String) a) {
+    final (out, dir) = a;
+    so.initBindings();
+    final inbox = ReceivePort();
+    final tts = so.OfflineTts(so.OfflineTtsConfig(
+      model: so.OfflineTtsModelConfig(
+        supertonic: so.OfflineTtsSupertonicModelConfig(
+          durationPredictor: p.join(dir, 'duration_predictor.int8.onnx'),
+          textEncoder: p.join(dir, 'text_encoder.int8.onnx'),
+          vectorEstimator: p.join(dir, 'vector_estimator.int8.onnx'),
+          vocoder: p.join(dir, 'vocoder.int8.onnx'),
+          ttsJson: p.join(dir, 'tts.json'),
+          unicodeIndexer: p.join(dir, 'unicode_indexer.bin'),
+          voiceStyle: p.join(dir, 'voice.bin'),
+        ),
+        numThreads: math.min(4, Platform.numberOfProcessors),
+      ),
+    ));
+    out.send(inbox.sendPort);
+    inbox.listen((m) {
+      if (m == null) {
+        tts.free();
+        inbox.close();
+        Isolate.exit();
+      }
+      final (id, text, steps) = m as (int, String, int);
+      try {
+        final audio = tts.generateWithConfig(
+          text: text,
+          config: so.OfflineTtsGenerationConfig(
+            sid: _sid,
+            numSteps: steps,
+            extra: const {'lang': 'ar'},
+          ),
+        );
+        out.send((id, audio.samples, null));
+      } catch (e) {
+        out.send((id, null, '$e'));
+      }
+    });
   }
 
-  /// Loads the three models ahead of the first «استماع», so the wait is
+  /// Starts the worker ahead of the first «استماع», so loading the model is
   /// spent while the reader is reading rather than after they tap.
   Future<void> warmUp() async {
-    if (_fp != null || !await isInstalled()) return;
+    if (_toWorker != null || !await isInstalled()) return;
     await _ensureLoaded();
   }
 
+  /// Frees the model and ends the worker, after whatever it is rendering.
   Future<void> release() async {
-    _fp?.release();
-    _voc?.release();
-    _fp = _voc = null;
+    final starting = _starting;
+    if (starting == null) return;
+    await starting;
+    _toWorker?.send(null);
+    _toWorker = null;
+    _starting = null;
   }
 
-  /// Diacritised Arabic -> mono float samples at [sampleRate].
-  Future<Float32List> synthesize(String text, {double pace = 0.9}) async {
+  /// Diacritised Arabic -> mono float samples at [sampleRate], peak 0.9.
+  ///
+  /// The reader hears chunk N while chunk N+1 renders, so rendering must
+  /// stay faster than speech. The first chunk that takes longer than 85% of
+  /// its own duration drops the rest to [_slowSteps] (6 steps: a little less
+  /// natural, about a quarter faster) rather than leave gaps.
+  Future<Float32List> synthesize(String text) async {
     await _ensureLoaded();
-    final ids = tokensToIds(arabicToTokens(text));
-    if (ids.any((i) => i < 0)) {
-      // A character the phonetiser has no symbol for (a stray mark, a Latin
-      // letter). The Python raises here too; drop them rather than crash.
-      ids.removeWhere((i) => i < 0);
+    final send = _toWorker;
+    if (send == null) throw StateError('voice worker not running');
+    final id = _nextId++;
+    final done = _pending[id] = Completer<Float32List>();
+    final watch = Stopwatch()..start();
+    send.send((id, text, _stepsNow));
+    final out = await done.future;
+    final spoken = out.length / sampleRate;
+    if (_stepsNow > _slowSteps &&
+        spoken > 1 &&
+        watch.elapsedMilliseconds / 1000 > 0.85 * spoken) {
+      _stepsNow = _slowSteps;
+      debugPrint('OpenVoice: ${watch.elapsedMilliseconds} ms for '
+          '${spoken.toStringAsFixed(1)} s - $_slowSteps steps from now on');
     }
-    final run = OrtRunOptions();
-    final inputs = {
-      'token_ids': OrtValueTensor.createTensorWithDataList(Int64List.fromList(ids), [1, ids.length]),
-      'pace': OrtValueTensor.createTensorWithDataList(Float32List.fromList([pace]), [1]),
-      'speaker': OrtValueTensor.createTensorWithDataList(Int32List.fromList([0]), [1]),
-      'pitch_mul': OrtValueTensor.createTensorWithDataList(Float32List.fromList([1]), [1]),
-      'pitch_add': OrtValueTensor.createTensorWithDataList(Float32List.fromList([0]), [1]),
-    };
-    final melOut = (await _fp!.runAsync(run, inputs))!;
-    for (final v in inputs.values) {
-      v.release();
-    }
-    final mel = melOut.first!.value as List; // [1][80][T]
-    final bands = (mel[0] as List).cast<List>();
-    final t = bands.first.length;
-    final flat = Float32List(80 * t);
-    for (var b = 0; b < 80; b++) {
-      final row = bands[b];
-      for (var k = 0; k < t; k++) {
-        flat[b * t + k] = (row[k] as num).toDouble();
-      }
-    }
-    for (final v in melOut) {
-      v?.release();
-    }
-
-    final melIn = OrtValueTensor.createTensorWithDataList(flat, [1, 80, t]);
-    final strength =
-        OrtValueTensor.createTensorWithDataList(Float32List.fromList([0.005]), [1]);
-    final waveOut =
-        (await _voc!.runAsync(run, {'mel_spec': melIn, 'denoise': strength}))!;
-    melIn.release();
-    strength.release();
-    final wave = (waveOut.first!.value as List)[0] as List; // [1][S]
-    final out = Float32List.fromList([for (final s in wave) (s as num).toDouble()]);
-    for (final v in waveOut) {
-      v?.release();
-    }
-    run.release();
-
     var peak = 0.0;
     for (final s in out) {
       peak = math.max(peak, s.abs());

@@ -334,7 +334,7 @@ class BookSpeaker {
     'com.tito.rafeeq_aldarb/voice_player',
   );
 
-  /// FastPitch is fed short chunks: its cost grows with input length and the
+  /// The voice is fed short chunks: its cost grows with input length and the
   /// first sound waits for the whole first chunk, so a sentence or two at a
   /// time keeps the start quick while the next chunk renders during playback.
   static const _openChunk = 220;

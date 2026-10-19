@@ -1033,6 +1033,27 @@ the author unnecessary. That is his decision as the publisher; it is recorded
 here, with the facts, rather than argued again. If the app ever charges for
 anything, the NC phonetiser has to be replaced.
 
+**Superseded 2026-10-20.** The owner: «النموذج اللي بيقرا الكلام بجد مش
+حلو … حتى لو حجمه كبير». The FastPitch voice was replaced by **Supertonic-3**
+(Supertone Inc.), int8 as sherpa-onnx publishes it, hosted on R2 under
+`tts/supertonic3_ar_v1/` with the GitHub `content-mirror` copy. The new
+build deletes the old `tts/open_ar_v1/` pack from devices, so neither the
+CC BY-NC phonetiser nor the unlicensed weights ship any more.
+
+* Code: **MIT** (Supertone, `LICENSE` in the sherpa-onnx package).
+* Weights: **BigScience OpenRAIL-M** (huggingface.co/Supertone/supertonic-3,
+  LICENSE). Free redistribution, no non-commercial clause. Conditions: pass
+  the licence on (it is `tts/supertonic3_ar_v1/LICENSE.txt` beside the
+  model, and the Sources entry links the model page), keep attribution, and
+  bind users to the Attachment A use rules. Of those rules, the one that
+  touches this app is disclosure: the download offer and the Sources entry
+  say the voice is machine-generated in all seven languages. Reading
+  religious books aloud is not among the restricted uses.
+* Why this voice, measured (E:\DevEnv\tts_eval, 30 diacritised Bukhari and
+  Muslim matns): UTMOS22 naturalness 3.27 vs 2.69; FastConformer CER 5.4%
+  vs 5.3% (worst sentence 13.6% vs 30%); لفظ الجلالة heavy 1262/1209 Hz and
+  light after kasra 1421 Hz, the pattern the owner chose FastPitch for.
+
 ## Interface fonts (added 2026-09-19)
 
 `rafeeq_app/assets/fonts/google_fonts/` - Cairo, Tajawal, Almarai, IBM Plex

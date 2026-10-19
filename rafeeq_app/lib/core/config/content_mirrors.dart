@@ -44,7 +44,7 @@ class ContentMirrors {
       'asr/whisper-tiny-ar-quran/',
       'asr/rafeeq_v1/',
       'asr/rafeeq_ar_v1/',
-      'tts/open_ar_v1/',
+      'tts/supertonic3_ar_v1/',
       'ruqyah/',
       'images/backgrounds/',
       'geo/',
