@@ -86,6 +86,23 @@ heartbeat or mistake that future proposal for an approved redesign.
   circle reserve is 150, and the scroll shows a thumb. Normal phones look
   unchanged. Emulator downloads unblocked (TRAPS 61 addendum). 1441 tests.
   Next: the owner wants a much better TTS voice ("النموذج اللي بيقرا").
+- 2026-10-19 23:40 — TTS evaluation (NOT committed: the shell tools died
+  mid-run, every command exited 107/66). Harness `E:\DevEnv\tts_eval\eval.py`
+  + `sweep.py`, models in that folder, wavs in `out/`. Same 5 diacritised
+  Bukhari sentences, ASR = NVIDIA Arabic FastConformer, CER on the
+  undiacritised text, RTF on this laptop (4 threads):
+  supertonic-3 int8 (sherpa 1.13.8, MIT code + OpenRAIL-M weights, 44.1
+  kHz, 10 voices; sid 5-9 MALE by measured F0 86-125 Hz, 0-4 female) CER
+  2.2% @8 steps RTF 0.32; @5 steps: sid7 1.8%, sid8 1.9% (RTF 0.20).
+  Current FastPitch+Vocos44 3.4% (RTF 0.03). Piper miro_V2 6.3%, dii 7.4%,
+  miro 27%; Nabra-82M (Kokoro, Apache, female) 7.1%. Supertonic's indexer
+  gives every haraka its own id (fatha 324 ... sukun 328), so it reads them.
+  Next (exact): finish `py -3 sweep.py steps 7` (steps 3/5/8/12), measure
+  RTF on a real ARM device or the emulator, make 3 samples (current, st
+  sid7, st sid8) on one passage for the owner, then integrate via the
+  sherpa_onnx package already in the app (OfflineTtsSupertonicModelConfig,
+  GenerationConfig.extra = {'lang': 'ar'}), host the pack on R2 + mirror,
+  credit + license on the Sources screen, label the audio as machine voice.
 
 - 2026-10-19 21:45 — Full-screen mushaf: the page shrank to ~70% width when
   the controls came up («بتصغر بحجم صغير جدا»). Made both bars smaller: the
