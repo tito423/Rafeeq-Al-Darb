@@ -12,6 +12,7 @@ import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 import '../../hifz/data/tasmee_mic.dart';
 import '../presentation/assistant_describe.dart' show assistantLanguage;
 import 'rafeeq_diag.dart';
+import 'rafeeq_memory.dart';
 import 'rafeeq_voice_pack.dart';
 
 /// «رفيق»'s ear: the microphone -> silero VAD -> omnilingual-asr, all on the
@@ -69,6 +70,11 @@ class RafeeqEar {
 
   Future<void> _ensureWorker() async {
     if (_toWorker != null) return;
+    // The last line of defence: below the measured floor, loading the model
+    // gets the whole app killed (rafeeq_memory.dart).
+    if (rafeeqTooLittleMemory(await deviceMemTotalKb())) {
+      throw StateError('too little memory for the recogniser');
+    }
     final dir = (await RafeeqVoicePack.instance.dir()).path;
     // «دقة أعلى في العربية»: in Arabic, when downloaded, it replaces the base
     // model (faster, and it hears numbers the base model loses).

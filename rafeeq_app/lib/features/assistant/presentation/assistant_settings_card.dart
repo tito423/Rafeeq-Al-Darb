@@ -8,6 +8,7 @@ import '../../../app/navigation.dart';
 import '../../../core/utils/byte_formatter.dart';
 import '../data/assistant_settings.dart';
 import '../data/rafeeq_ear.dart';
+import '../data/rafeeq_memory.dart';
 import '../data/rafeeq_voice_pack.dart';
 import 'rafeeq_diag_screen.dart';
 
@@ -71,6 +72,10 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final enabled = ref.watch(assistantEnabledProvider);
+    // Below the memory floor the recogniser would get the app killed
+    // (rafeeq_memory.dart): the switch and the download say so and stay off.
+    final memKb = ref.watch(deviceMemTotalProvider).valueOrNull;
+    final lowMemory = rafeeqTooLittleMemory(memKb);
     return ValueListenableBuilder<bool?>(
       valueListenable: _pack.installed,
       builder: (context, installed, _) => ValueListenableBuilder<double?>(
@@ -85,12 +90,19 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                 ),
                 title: Text('assistant.setting_switch'.tr()),
                 subtitle: Text(
-                  installed == true
+                  lowMemory
+                      ? 'assistant.low_memory'.tr(
+                          args: [
+                            formatBytes(rafeeqAdvertisedMinRamBytes),
+                            formatBytes((memKb ?? 0) * 1024),
+                          ],
+                        )
+                      : installed == true
                       ? 'assistant.setting_desc'.tr()
                       : 'assistant.pack_needed'.tr(),
                 ),
-                value: enabled && installed == true,
-                onChanged: installed != true
+                value: !lowMemory && enabled && installed == true,
+                onChanged: lowMemory || installed != true
                     ? null
                     : (v) async {
                         if (v) {
@@ -107,7 +119,7 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                             .set(v);
                       },
               ),
-              if (enabled && installed == true) ...[
+              if (!lowMemory && enabled && installed == true) ...[
                 const Divider(height: 1),
                 SwitchListTile(
                   secondary: Icon(
@@ -182,7 +194,7 @@ class _AssistantSettingsCardState extends ConsumerState<AssistantSettingsCard> {
                         child: Text('assistant.pack_delete'.tr()),
                       )
                     : FilledButton(
-                        onPressed: _download,
+                        onPressed: lowMemory ? null : _download,
                         child: Text('assistant.pack_download'.tr()),
                       ),
               ),

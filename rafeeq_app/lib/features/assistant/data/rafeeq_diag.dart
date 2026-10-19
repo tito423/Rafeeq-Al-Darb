@@ -13,6 +13,7 @@ enum RafeeqMicState {
   soundPlaying,
   otherRecording,
   backgroundNoService,
+  lowMemory,
 }
 
 /// What «تشخيص رفيق» shows (owner, 2026-09-30: on his Honor «رفيق» did not

@@ -73,6 +73,15 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 02:20 — «رفيق» no longer crash-loops on 1 GB phones (TRAPS
+  76). MemTotal from /proc/meminfo; below 1.6 GB (rafeeq_memory.dart, test
+  pinned to the measured 1,019,240 / 2,049,872 kB) the wake listener never
+  starts the service or the ear, RafeeqEar refuses to load, the settings
+  switch is off with «يحتاج «رفيق» إلى ذاكرة … {} … {}» (7 languages, sizes
+  via formatBytes), the 368 MB download is disabled, diagnostics says why.
+  API-24 emulator: 1 GB -> app stayed alive, no service, message shown;
+  2 GB -> Rafeeq service runs as before. 1445 tests pass.
+
 - 2026-10-20 01:15 — `onnxruntime` pub package removed (unused since the
   voice moved to sherpa). pubspec/lock, the A48 integration test's OrtEnv
   lines, build.gradle.kts (pickFirsts, copySherpaOrt, the MS AAR note) and

@@ -85,6 +85,7 @@ class _RafeeqDiagScreenState extends State<RafeeqDiagScreen>
         RafeeqMicState.listening => 'assistant.diag_mic_listening'.tr(),
         RafeeqMicState.off => 'assistant.diag_mic_off'.tr(),
         RafeeqMicState.noPack => 'assistant.diag_mic_no_pack'.tr(),
+        RafeeqMicState.lowMemory => 'assistant.diag_mic_low_memory'.tr(),
         RafeeqMicState.noPermission => 'assistant.diag_mic_no_permission'.tr(),
         RafeeqMicState.call => 'assistant.diag_mic_call'.tr(),
         RafeeqMicState.soundPlaying => 'assistant.diag_mic_sound'.tr(),

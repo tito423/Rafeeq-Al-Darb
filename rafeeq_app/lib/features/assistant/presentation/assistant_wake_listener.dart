@@ -14,6 +14,7 @@ import '../data/assistant_intent.dart';
 import '../data/assistant_settings.dart';
 import '../data/rafeeq_diag.dart';
 import '../data/rafeeq_ear.dart';
+import '../data/rafeeq_memory.dart';
 import '../data/rafeeq_voice_pack.dart';
 import 'assistant_describe.dart';
 import 'assistant_sheet.dart';
@@ -86,7 +87,13 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     if (_busy || !mounted) return;
     _busy = true;
     try {
-      final on = ref.read(assistantEnabledProvider) &&
+      // A phone below the memory floor never loads the recogniser: doing so
+      // got the app killed, and the service restarted it into the same
+      // death every 30 s (TRAPS 76).
+      final lowMemory =
+          rafeeqTooLittleMemory(await ref.read(deviceMemTotalProvider.future));
+      final on = !lowMemory &&
+          ref.read(assistantEnabledProvider) &&
           RafeeqVoicePack.instance.installed.value == true &&
           ref.read(assistantShellUpProvider);
       // «إيقاف» pressed in the notification.
@@ -98,7 +105,9 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       }
       final diag = RafeeqDiag.instance.mic;
       if (!on) {
-        diag.value = RafeeqVoicePack.instance.installed.value != true
+        diag.value = lowMemory
+            ? RafeeqMicState.lowMemory
+            : RafeeqVoicePack.instance.installed.value != true
             ? RafeeqMicState.noPack
             : RafeeqMicState.off;
         if (_ear.listening.value) await _ear.stop();
