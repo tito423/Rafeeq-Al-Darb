@@ -73,6 +73,13 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 02:25 — RELEASED v3.91.0 on the owner's order («الاتنين»):
+  https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.91.0 , tag
+  18a8b306 = master, APK 313,520,342 B, sha256 9d37d77d...fdb679 equal to
+  GitHub's digest, range 206, versionCode 106. v3.90.0 and its tag deleted;
+  v3.87.0 + content mirrors kept. Next: owner's ear on the new voice and its
+  speed on his phone; the ~300 azkar mp3s missing on content-mirror.
+
 - 2026-10-20 02:20 — «رفيق» no longer crash-loops on 1 GB phones (TRAPS
   76). MemTotal from /proc/meminfo; below 1.6 GB (rafeeq_memory.dart, test
   pinned to the measured 1,019,240 / 2,049,872 kB) the wake listener never
