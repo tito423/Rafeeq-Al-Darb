@@ -73,6 +73,16 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-19 21:45 — Full-screen mushaf: the page shrank to ~70% width when
+  the controls came up («بتصغر بحجم صغير جدا»). Made both bars smaller: the
+  floating panel's header is tighter and its action strip is held to 44 px
+  (buttons at 80%), the tab bar is 52 px instead of 68 while it lies over
+  the page, and the badge gap went from 10 to 4. On emulator-5554 (Medium
+  Phone API 36.1) the page is now ~79% wide. Auto-hide checked: still 5 s,
+  and now any touch on the panel restarts the count (before, it could hide
+  under the finger). analyze clean, 1441 tests pass. Not released; not yet
+  seen on the owner's phone. Emulator shut down again after the check.
+
 - 2026-10-13 23:00 — Published v3.90.0 (tag 94c100ae, APK 313,766,102 B,
   SHA256 2f13dc71...96f7, GitHub digest equal, range 206) and deleted v3.88.1
   on the owner's order; releases now: v3.90.0, v3.87.0 (restore point), the

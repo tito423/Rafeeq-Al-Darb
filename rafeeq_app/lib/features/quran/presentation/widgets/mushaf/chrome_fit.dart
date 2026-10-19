@@ -38,8 +38,8 @@ class ChromeFit extends StatelessWidget {
     required this.child,
   });
 
-  /// The badge (40) and the gap under it (10), with a little air above it.
-  static const _badgeBand = 56.0;
+  /// The badge (40) and the gap under it (4), with a little air above it.
+  static const _badgeBand = 48.0;
 
   @override
   Widget build(BuildContext context) {

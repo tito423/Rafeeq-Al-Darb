@@ -506,6 +506,12 @@ class _AppShellState extends ConsumerState<AppShell>
                         ),
                       ),
                       child: NavigationBar(
+                        // Over a full-screen page the bar is short: every
+                        // pixel it takes is one the page has to shrink by
+                        // (`ChromeFit`) - «صغر حجم الشريط اللي تحت»
+                        // (owner, 2026-10-19). 52 still holds the 32 dp
+                        // indicator, the gap and an 11 px label.
+                        height: navOverPage ? 52 : null,
                         selectedIndex: _index,
                         onDestinationSelected: _goTo,
                         labelBehavior:

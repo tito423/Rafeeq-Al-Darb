@@ -8,7 +8,10 @@ import '../../../data/quran_fullscreen_provider.dart';
 /// Hides the mushaf's floating controls by themselves: «خلي شريط الخيارات
 /// يختفي لوحده بعد خمس ثواني هو والرقم اللي تحت» (owner, 2026-09-27). Each
 /// time [visible] turns true a timer starts; when it runs out [onHide] is
-/// called. A tap on the page shows them again for another [delay].
+/// called. A tap on the page shows them again for another [delay], and so
+/// does any touch on the controls themselves: the count used to run from
+/// the moment they appeared, so they could vanish under the reader's finger
+/// halfway through a few font-size presses.
 ///
 /// It also tells the shell whether they are showing
 /// (`quranChromeShownProvider`), so the tabs come back with them, and that
@@ -67,5 +70,10 @@ class _ChromeAutoHideState extends ConsumerState<ChromeAutoHide> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) => Listener(
+    onPointerDown: (_) {
+      if (widget.visible) _arm();
+    },
+    child: widget.child,
+  );
 }

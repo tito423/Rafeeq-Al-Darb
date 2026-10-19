@@ -87,6 +87,11 @@ class MushafChrome extends StatelessWidget {
   /// printing that prints them gets none of this.
   final bool pageBadges;
 
+  /// The action strip's height. The captioned buttons are 55 tall; at 44
+  /// they draw at 80%, still a comfortable target, and the page keeps the
+  /// difference.
+  static const double _actionsHeight = 44;
+
   const MushafChrome({
     super.key,
     required this.visible,
@@ -122,7 +127,7 @@ class MushafChrome extends StatelessWidget {
             duration: Duration(milliseconds: visible ? 240 : 180),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: PageNumberBadge(page: pageNumber),
@@ -222,11 +227,14 @@ class MushafChrome extends StatelessWidget {
                                       ),
                                     ),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 2,
-                                ),
-                                child: actions,
+                              // Held to [_actionsHeight]: the strip's own
+                              // `FittedBox` then takes the captioned buttons
+                              // down to fit. The page shrinks by every pixel
+                              // of this panel (`ChromeFit`) - «صغر حجم الشريط
+                              // اللي فوق» (owner, 2026-10-19).
+                              child: SizedBox(
+                                height: _actionsHeight,
+                                child: Center(child: actions),
                               ),
                             ),
                           ],
@@ -268,7 +276,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
+      padding: const EdgeInsets.fromLTRB(14, 4, 14, 2),
       child: Row(
         // «خلي الجزء في اقصى الشمال». A `Spacer` did not do it: `Flexible`
         // defaults to flex 1, so the surah and the spacer SHARED the free
@@ -289,8 +297,8 @@ class _Header extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 style: TextStyle(
                   fontFamily: 'AmiriQuran',
-                  fontSize: 15,
-                  height: 1.9,
+                  fontSize: 14,
+                  height: 1.6,
                   color: mt.ink,
                 ),
               ),
