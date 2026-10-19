@@ -102,22 +102,19 @@ android {
         sourceSets.getByName("profile").manifest.srcFile("src/androidTest/profileBridge/AndroidManifest.xml")
     }
 
-    // The book reader's open voice runs on ONNX Runtime through the
-    // `onnxruntime` pub package, which bundles libonnxruntime.so for ARM
-    // only. On an x86_64 device (Chromebooks, the emulator) the voice failed
-    // with «libonnxruntime.so not found». Microsoft's own AAR of the SAME
-    // version (1.15.1, see dependencies) supplies x86_64; the ARM copies are
-    // the package's, the Java binding's JNI shim is never used, and 32-bit
-    // x86 is not an ABI Flutter builds for.
+    // ONE ONNX Runtime, sherpa_onnx's (1.28.2, every ABI). Until 2026-10-20
+    // the book voice ran on the `onnxruntime` pub package too (ORT 1.15.1,
+    // ARM only), two plugins shipped libonnxruntime.so, and a `pickFirsts`
+    // plus a copy of sherpa's runtime into this app's jniLibs decided which
+    // one shipped - the first 3.69.0 build picked the old one and «رفيق»
+    // would have died on every phone. The voice moved onto sherpa
+    // (Supertonic-3) and the package was removed, so there is nothing left
+    // to pick between. scripts/check_apk_native.py still checks the packaged
+    // runtime is sherpa's 1.28.2 after every release build.
     packaging {
         jniLibs {
-            // Two plugins ship libonnxruntime.so: `onnxruntime` (ORT 1.15.1,
-            // ARM only) and `sherpa_onnx` (ORT 1.28.2, «رفيق»'s recogniser).
-            // sherpa's C API needs ITS runtime; the reading voice asks the
-            // runtime for API 14, which 1.28.2 still serves. Which copy the
-            // APK carries is checked after every build (see TRAPS).
-            pickFirsts += "**/libonnxruntime.so"
-            excludes += listOf("**/libonnxruntime4j_jni.so", "lib/x86/**")
+            // 32-bit x86 is not an ABI Flutter builds for.
+            excludes += listOf("lib/x86/**")
         }
     }
 }
@@ -145,35 +142,6 @@ android {
 
 flutter {
     source = "../.."
-}
-
-// «رفيق»: sherpa_onnx 1.13.8 needs ITS ONNX Runtime (1.28.2, C API 28); the
-// `onnxruntime` pub package ships 1.15.1 for ARM, and `pickFirsts` above
-// took that one for arm64-v8a and armeabi-v7a in the first 3.69.0 build
-// (14,203,216 B in the APK against sherpa's 22,249,560) - the recogniser
-// would have failed on every phone («The requested API version [28] is not
-// available»). Copied into the app's OWN jniLibs, sherpa's copy is the one
-// packaged; the reading voice asks the runtime for API 14, which 1.28.2
-// still serves (seen reading aloud on emulator-5554). Checked after every
-// build by build_github_release.bat.
-val sherpaOrtDir = layout.buildDirectory.dir("generated/sherpaOrt/jniLibs")
-val copySherpaOrt = tasks.register<Copy>("copySherpaOrt") {
-    for (name in listOf(
-        "sherpa_onnx_android_arm64",
-        "sherpa_onnx_android_armeabi",
-        "sherpa_onnx_android_x86_64",
-    )) {
-        rootProject.findProject(":$name")?.let { plugin ->
-            from(plugin.projectDir.resolve("src/main/jniLibs")) {
-                include("**/libonnxruntime.so")
-            }
-        }
-    }
-    into(sherpaOrtDir)
-}
-android.sourceSets.getByName("main").jniLibs.srcDir(sherpaOrtDir)
-tasks.configureEach {
-    if (name.startsWith("merge") && name.endsWith("JniLibFolders")) dependsOn(copySherpaOrt)
 }
 
 // sherpa_onnx_web's JavaScript/WASM (~15 MB) comes in with the package's
@@ -207,9 +175,4 @@ dependencies {
     // the one that plugin declares (9.5.9 -> work-runtime-ktx:2.11.0) so the
     // two can never resolve to different majors behind our back.
     implementation("androidx.work:work-runtime-ktx:2.11.0")
-
-    // (The Microsoft ORT 1.15.1 AAR that supplied x86_64 is gone: sherpa_onnx
-    // 1.13.8 ships libonnxruntime.so 1.28.2 for every ABI, and ORT keeps old
-    // API versions working - the reading voice asks for API 14 - so ONE
-    // runtime, the newer, serves both. See `packaging` above.)
 }

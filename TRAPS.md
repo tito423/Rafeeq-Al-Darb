@@ -843,3 +843,30 @@ Do not rediscover these.
     and tokens matched, but the WAV was68608B rather than83790B. Adbpush plus
     run-as copy preserved all three hashes. Keep the checksum gate and the
     actual code_cache path (trap68); do not accept driver exit0 alone.
+
+75. **`build_github_release.bat` only runs as CRLF, from cmd in UTF-8, and
+    not under `flutter_env.ps1`'s `Stop`.** 2026-10-20, three failures in a
+    row before Gradle started: (1) the file was stored with LF endings and
+    its `rem` lines carry Arabic; a one-line edit shifted the byte offsets
+    and cmd began executing pieces of comments («'9-19).' is not
+    recognized»). cmd misreads LF-only batch files across its read blocks.
+    The file is CRLF now - keep it so (`git config core.autocrlf` is true,
+    so the index keeps LF and checkouts get CRLF). (2) Run it as
+    `cmd /c "chcp 65001 >nul && call "<full path>\build_github_release.bat""`;
+    `cmd /c build_github_release.bat` from PowerShell did not find it,
+    because PowerShell's `cd` does not move the process directory cmd
+    inherits. (3) `. .\scripts\flutter_env.ps1` sets
+    `$ErrorActionPreference='Stop'`; Java's harmless «Picked up
+    JAVA_TOOL_OPTIONS» on stderr (trap 61's truststore) then became a
+    terminating NativeCommandError and killed the build. Set
+    `$ErrorActionPreference='Continue'` after sourcing it and redirect the
+    build's output inside the cmd line (`> log 2>&1`).
+
+76. **«رفيق» does not fit in 1 GB of RAM.** 2026-10-20, API-24 emulator at
+    its default 1 GB: turning «رفيق» on loaded the omnilingual recogniser and
+    the low-memory killer took the launcher, the keyboard, Pico and then the
+    app; `AssistantListenService` restarts in 30 s and does it again. At 3 GB
+    (`-memory 3072`; 4096 hung this image) the app held 528 MB PSS with the
+    model loaded and stayed up. Not a regression - same runtime, same
+    model - but a real phone with 1 GB would crash-loop the same way.
+    Test anything that loads a sherpa model on an AVD with 3 GB.

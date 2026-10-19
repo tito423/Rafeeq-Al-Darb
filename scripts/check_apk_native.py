@@ -1,11 +1,13 @@
 """Fail the release build when the APK carries the wrong ONNX Runtime.
 
-Two plugins ship lib/<abi>/libonnxruntime.so: `onnxruntime` (ORT 1.15.1, the
-book reader's voice) and `sherpa_onnx` («رفيق»'s recogniser, ORT 1.28.2, C API
-28). Only sherpa's serves both; the first 3.69.0 build packaged the old one for
-ARM and «رفيق» would have died on every phone. Called by
-build_github_release.bat; compares each ABI's packaged ORT version with
-sherpa's (the packaged copy is symbol-stripped, so its bytes differ).
+sherpa_onnx's runtime (ORT 1.28.2, C API 28) is the only one the app may
+ship: «رفيق»'s recogniser, the tasmee' and, since 2026-10-20, the book voice
+(Supertonic-3) all run on it. Until then a second plugin, `onnxruntime`
+(ORT 1.15.1), shipped libonnxruntime.so as well, and the first 3.69.0 build
+packaged that old one for ARM - «رفيق» would have died on every phone. That
+plugin is gone; this stays as the guard. Called by build_github_release.bat;
+compares each ABI's packaged ORT version with sherpa's (the packaged copy is
+symbol-stripped, so its bytes differ).
 """
 import argparse
 import os

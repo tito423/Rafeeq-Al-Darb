@@ -4,7 +4,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:onnxruntime/onnxruntime.dart';
 import 'package:path/path.dart' as p;
 import 'package:rafeeq_app/adhan_recompute_entry.dart';
 import 'package:rafeeq_app/core/utils/arabic_normalize.dart';
@@ -18,12 +17,12 @@ Future<void> adhanRecomputeMain() => runAdhanRecompute();
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized().framePolicy =
       LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  test('A48 native sherpa and reading-voice runtime compatibility', () {
+  // sherpa's runtime is the only ONNX Runtime in the app since the reading
+  // voice moved onto it (Supertonic-3, 2026-10-20).
+  test('A48 native sherpa runtime compatibility', () {
     so.initBindings();
     expect(so.getVersion(), '1.13.8');
     expect(so.getOnnxruntimeVersion(), '1.28.2');
-    OrtEnv.instance.init();
-    OrtEnv.instance.release();
   });
   test('A48 actual offline Arabic command inference', () async {
     final directory = Directory('${Directory.systemTemp.path}/audit_A48_model');

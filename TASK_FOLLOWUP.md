@@ -73,6 +73,24 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 01:15 — `onnxruntime` pub package removed (unused since the
+  voice moved to sherpa). pubspec/lock, the A48 integration test's OrtEnv
+  lines, build.gradle.kts (pickFirsts, copySherpaOrt, the MS AAR note) and
+  check_apk_native.py's description. build_github_release.bat SUCCEEDED
+  (after trap 75: CRLF + chcp 65001 + ErrorActionPreference Continue):
+  check_apk_native passed for arm64/armv7/x86_64 (sherpa ORT 1.28.2), signed
+  with the lineage. APK 313,520,342 B vs v3.90.0's 313,766,102 B: no native
+  library changed (pickFirsts had already kept 1.15.1 out), the -245,760 B
+  is all libapp.so (Dart, includes this session's other changes). The signed
+  APK installed over the app with `adb install -r` on the API-24 emulator,
+  data kept (voice pack still installed); the book voice read Al-Adab
+  al-Mufrad in the RELEASE build (sid 6, 8 steps). «رفيق» on: at the AVD's
+  default 1 GB the low-memory killer crash-loops the app (TRAPS 76, not a
+  regression); at 3 GB the service runs with the recogniser loaded (528 MB
+  PSS). flutter analyze lib test integration_test clean; 1440 tests pass.
+  OPEN: «رفيق» on 1 GB phones (needs a RAM check before loading the model,
+  or a smaller model) - not started.
+
 - 2026-10-20 00:45 — Book voice replaced: Supertonic-3 int8 (voice 6, male,
   8 steps) through the app's own sherpa_onnx 1.13.8, in a worker isolate;
   OpenVoice keeps its API. 30 matns: UTMOS 3.27 vs 2.69 for FastPitch, CER

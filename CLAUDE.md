@@ -475,6 +475,8 @@ The full entries — what happened, the evidence, the fix — are in **`TRAPS.md
 72. Preserve protected font literals while formatting; full quotation wrapping also needs bounded-sheet scrolling.
 73. Preserve the valid-request control after cancelling oversized local Worker bodies; SDK peers and signed APK gates both matter, and DEBUG startup hangs are separate.
 74. A Windows SDK path with spaces can break native-asset hooks; select the verified project SDK explicitly.
+75. `build_github_release.bat` must stay CRLF, run via `cmd /c "chcp 65001 && call <full path>"`, with `$ErrorActionPreference='Continue'` after `flutter_env.ps1`.
+76. «رفيق»'s model needs more than 1 GB of RAM (528 MB PSS loaded); the LMK crash-loops it on a 1 GB device - test sherpa features on a 3 GB AVD.
 
 ## 4. Where things live
 
