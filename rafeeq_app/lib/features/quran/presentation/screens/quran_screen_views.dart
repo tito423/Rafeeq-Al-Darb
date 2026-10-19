@@ -24,8 +24,16 @@ extension _QuranViews on _QuranScreenState {
     final row = await repo.ayah(surah, ayah);
     if (!mounted || row == null) return;
     final page = row.pageNumber;
-    if (page == _current || page == _followedPage) return;
+    if (page == _followedPage) return;
+    // The reader turned off the recited page by hand. Bringing him back is
+    // `ReciteReturnTimer`'s job alone, so «الرجوع للآية المقروءة: إيقاف»
+    // means it: the next verse used to pull him back anyway, at once when
+    // the recitation had started on the page he was on (`_followedPage`
+    // was never set there) - owner, 2026-10-19: «لما بقفل … بتفضل شغالة».
+    // The timer clears `_followedPage` before calling, so it still returns.
+    final away = _followedPage != null && _current != _followedPage;
     _followedPage = page;
+    if (page == _current || away) return;
     // The continuous scroll brings the verse on screen by itself when its
     // page is already there; only a page out of sight needs the jump.
     if (_isContinuous &&

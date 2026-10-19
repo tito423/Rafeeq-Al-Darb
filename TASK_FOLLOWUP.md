@@ -73,6 +73,20 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-19 23:00 — Two owner reports fixed and seen on emulators. (1)
+  «الرجوع للآية المقروءة: إيقاف» still pulled the reader back: the page
+  FOLLOW on every new verse did it, not the timer (at once when recitation
+  started on the page in view - `_followedPage` was unset). Now a reader
+  who turned away by hand stays; only the timer returns him. API-24
+  emulator, Baqarah/Minshawi: Off -> stayed on page 4 for 40 s while the
+  recitation crossed to page 3; 5 s -> back on page 3 within 8 s. (2)
+  Tasbih «الأذكار الطويلة» gone: on the owner's phone size (1224x2700 @
+  520 dpi, font 1.3) the «أذكار مأثورة» card sat under the capped controls,
+  hidden in a scroll. It is pinned now, rounds+reset share one row, the
+  circle reserve is 150, and the scroll shows a thumb. Normal phones look
+  unchanged. Emulator downloads unblocked (TRAPS 61 addendum). 1441 tests.
+  Next: the owner wants a much better TTS voice ("النموذج اللي بيقرا").
+
 - 2026-10-19 21:45 — Full-screen mushaf: the page shrank to ~70% width when
   the controls came up («بتصغر بحجم صغير جدا»). Made both bars smaller: the
   floating panel's header is tighter and its action strip is held to 44 px

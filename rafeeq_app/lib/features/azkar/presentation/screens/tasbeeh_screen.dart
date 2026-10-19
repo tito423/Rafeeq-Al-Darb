@@ -42,6 +42,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   /// never a question of which phrase the number belongs to.
   int? _mathurIndex;
 
+  /// The portrait controls' scroll, shared with its [Scrollbar].
+  final _controlsScroll = ScrollController();
+
   int _count = 0;
   int _rounds = 0;
   int _total = 0;
@@ -88,6 +91,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   @override
   void dispose() {
     _celebrate.dispose();
+    _controlsScroll.dispose();
     super.dispose();
   }
 
@@ -404,18 +408,22 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                       ],
                     ),
                   ),
-                  // The gateway to the five long adhkar.
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 2, 14, 6),
-                    child: TutorialAnchor(
-                      id: TourAnchor.tasbeehMathur,
-                      child: _MathurEntryCard(
-                        active: _mathurIndex != null,
-                        onTap: _openMathurPicker,
-                      ),
+                ];
+                // The gateway to the five long adhkar. Kept OUT of the
+                // capped, scrolling controls in portrait: on the owner's
+                // phone (Honor, 376 dp at a large font) the cap ended above
+                // it and it sat unseen inside the scroll - «المسبحة راح منها
+                // الاذكار الطويلة» (2026-10-19). Pinned, it always shows.
+                final mathurCard = Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 2, 14, 6),
+                  child: TutorialAnchor(
+                    id: TourAnchor.tasbeehMathur,
+                    child: _MathurEntryCard(
+                      active: _mathurIndex != null,
+                      onTap: _openMathurPicker,
                     ),
                   ),
-                ];
+                );
                 // Sideways the circle GROWS to the height it has, not only
                 // shrinks: at 250 dp it left half the screen empty beside it
                 // (owner's photo, 2026-09-26: «خلي الشاشة تتملى اكتر»).
@@ -555,25 +563,24 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           ),
                         ),
                       );
+                final rounds = Text(
+                  localizeDigits(
+                    'azkar.rounds_count'.tr(args: ['$_rounds']),
+                    context.locale.languageCode,
+                  ),
+                  style: TextStyle(color: scheme.onSurfaceVariant),
+                );
+                final reset = IconButton.filledTonal(
+                  tooltip: 'azkar.reset'.tr(),
+                  onPressed: () => setState(() {
+                    _count = 0;
+                    _rounds = 0;
+                  }),
+                  icon: const Icon(Icons.refresh),
+                );
                 final footer = <Widget>[
-                  Text(
-                    localizeDigits(
-                      'azkar.rounds_count'.tr(args: ['$_rounds']),
-                      context.locale.languageCode,
-                    ),
-                    style: TextStyle(color: scheme.onSurfaceVariant),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: IconButton.filledTonal(
-                      tooltip: 'azkar.reset'.tr(),
-                      onPressed: () => setState(() {
-                        _count = 0;
-                        _rounds = 0;
-                      }),
-                      icon: const Icon(Icons.refresh),
-                    ),
-                  ),
+                  rounds,
+                  Padding(padding: const EdgeInsets.all(20), child: reset),
                 ];
                 // Landscape: the controls above took the whole height and the
                 // FittedBox shrank the counter to a dot nobody could tap
@@ -598,7 +605,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: controls,
+                                children: [...controls, mathurCard],
                               ),
                             ),
                           ),
@@ -633,22 +640,52 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 // Portrait at the largest system font (owner's phone, font
                 // scale 1.45, 2026-09-25) did the same thing: the controls
                 // grew until the counter was a dot. They are capped so the
-                // counter always keeps room for its 250 dp circle, and scroll
+                // counter always keeps room for a usable circle, and scroll
                 // inside that cap only when they would not fit. At normal
                 // sizes they fit under the cap and nothing moves.
                 final scale = MediaQuery.textScalerOf(context).scale(1);
-                final footerHeight = 88 + 24 * scale;
-                final cap = box.maxHeight - 260 - footerHeight;
+                // Rounds and reset share ONE row here (the button's 48 dp
+                // plus 8 above and below); stacked they took ~110 dp and
+                // pushed the short adhkar out of view on the owner's phone.
+                const footerHeight = 64.0;
+                // The pinned long-adhkar card: two text lines and padding.
+                final mathurHeight = 32 + 40 * scale;
+                // 150 rather than the circle's full 250: the circle scales
+                // down to fit (a 150 dp circle still reads and takes a
+                // thumb), and that room is what keeps every short dhikr in
+                // view on a 376 dp phone at a large font. At normal sizes
+                // the controls are shorter than the cap and the circle keeps
+                // its full 250.
+                final cap = box.maxHeight - 150 - footerHeight - mathurHeight;
                 return Column(
                   children: [
                     ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: cap > 0 ? cap : 0),
-                      child: SingleChildScrollView(
-                        child: Column(children: controls),
+                      // A visible thumb whenever they DO scroll: a pill half
+                      // under the long-adhkar card should read as «more
+                      // below», not as something cut off.
+                      child: Scrollbar(
+                        controller: _controlsScroll,
+                        thumbVisibility: true,
+                        child: SingleChildScrollView(
+                          controller: _controlsScroll,
+                          child: Column(children: controls),
+                        ),
                       ),
                     ),
+                    mathurCard,
                     Expanded(child: counter),
-                    ...footer,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          rounds,
+                          const SizedBox(width: 16),
+                          reset,
+                        ],
+                      ),
+                    ),
                   ],
                 );
               },

@@ -689,6 +689,15 @@ Do not rediscover these.
     native) fails the handshake, so library/story/recitation downloads cannot
     be exercised on this machine; `-http-proxy` does not help (Dart ignores
     the system proxy). Test those on the owner's phone and say so.
+    **Solved 2026-10-19 for the API-24 emulator:** its image is `default`
+    (not Play), so it roots. Launch `Rafeeq_Audit_API24` with
+    `-writable-system`, `adb root`, `adb remount`, push the Avast root (from
+    `Cert:\LocalMachine\Root`, PEM, named `7c6a2ce9.0` =
+    `openssl x509 -subject_hash_old`) to `/system/etc/security/cacerts/`,
+    chmod 644. Recitation streamed from the CDN at once (Baqarah, Minshawi).
+    The Play image (`Medium_Phone_API_36.1`) refuses `adb root` - use API 24
+    for anything that downloads. The change lives in that AVD's
+    writable-system overlay; re-push if the AVD is wiped.
 
 62. **A retained audio engine is not a cached-engine ID.** 2026-10-11:
     recitation survived launcher task recreation, but Android Back exited
