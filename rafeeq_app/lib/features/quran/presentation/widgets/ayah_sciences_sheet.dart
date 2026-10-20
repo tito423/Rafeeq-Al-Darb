@@ -259,8 +259,13 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
                 ],
               );
 
-    return SafeArea(
-      top: _expanded,
+    // A modal sheet's MediaQuery has its top padding removed, so SafeArea
+    // saw 0 and the expanded sheet drew its tab row under the status bar
+    // (seen on Rafeeq_Audit_API24, 2026-10-20). Read the view's own inset.
+    final topInset =
+        _expanded ? MediaQueryData.fromView(View.of(context)).padding.top : 0.0;
+    return Padding(
+      padding: EdgeInsets.only(top: topInset),
       child: TweenAnimationBuilder<double>(
         tween: Tween<double>(end: _expanded ? 1.0 : 0.92),
         duration: const Duration(milliseconds: 260),

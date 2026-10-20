@@ -9,6 +9,12 @@ in compressed run-together words) is archived unchanged in
 
 ## Current task
 
+2026-10-20: own i'rab continues backwards (057 al-Hadid done: 574 words,
+seen in the app's i'rab tab on Rafeeq_Audit_API24). Next: surah 056 with
+show.py, books.py, fill_056.py, check.py, export_app.py. Release 3.91.1 is
+ON HOLD (owner said «استنى»): do not publish until he asks.
+
+Older context:
 Codex's full audit (2026-10-09..13, report `docs/audits/AUDIT_2026-10-09.md`)
 was reviewed by Claude on 2026-10-13. v3.88.1 is published with the adhan
 re-arm fix. The review site was reworked to the owner's model: NO reviewer
@@ -73,6 +79,11 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 11:15 — Own i'rab: al-Hadid (057) written, 574 words,
+  check.py OK, exported (59 surahs / 8,190 words), seen word-for-word in the
+  i'rab tab on the emulator (57:4). Fixed: the full-screen card drew its
+  tab row under the status bar (a modal sheet's MediaQuery drops the top
+  inset; now read from the View). analyze clean, 1448 tests pass.
 - 2026-10-20 03:50 — Owner asks (1) bookmarks for ayah/page, (2) one place
   for all notes, (3) tafsir/translation/i'rab expandable to the full screen,
   (4) resume the i'rab work. Done 1-3, SEEN on API-24: «علامة على الآية» in
