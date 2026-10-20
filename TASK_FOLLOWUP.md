@@ -79,38 +79,38 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
-- 2026-10-20 23:10 — Device check: 42:37 i'rab tab seen full-screen on
+- 2026-10-20 19:09 — Device check: 42:37 i'rab tab seen full-screen on
   emulator (page 487). 041 Fussilat ayahs 1-8 written (WIP, counts match).
 
-- 2026-10-20 22:50 — Own i'rab 042 al-Shura: 860 words (749 agree, 99 alt,
+- 2026-10-20 19:05 — Own i'rab 042 al-Shura: 860 words (749 agree, 99 alt,
   12 fuller), per-ayah token counts match, check.py OK, exported (74
   surahs, 1,971 ayahs, 15,280 words). Not yet device-checked.
 
-- 2026-10-20 22:15 — Device check: 43:84 i'rab tab seen full-screen on
+- 2026-10-20 18:54 — Device check: 43:84 i'rab tab seen full-screen on
   Rafeeq_Audit_API24; al-Da'as's view under «في السماء» renders.
   WIP fill_042.py al-Shura 1-43 (659/860).
 
-- 2026-10-20 21:55 — Own i'rab 043 al-Zukhruf: 830 words (698 agree, 120 alt,
+- 2026-10-20 18:50 — Own i'rab 043 al-Zukhruf: 830 words (698 agree, 120 alt,
   12 fuller), per-ayah token counts match, check.py OK, exported (73
   surahs, 1,918 ayahs, 14,420 words). Not yet device-checked.
 
-- 2026-10-20 21:05 — Device check: 45:14 and 44:28 i'rab tabs seen full-screen
+- 2026-10-20 18:38 — Device check: 45:14 and 44:28 i'rab tabs seen full-screen
   on Rafeeq_Audit_API24 (x64 debug build); al-Da'as's view under «للذين»
   and «كذلك» renders.
 
-- 2026-10-20 20:45 — Own i'rab 044 al-Dukhan: 346 words (302 agree, 39 alt,
+- 2026-10-20 18:33 — Own i'rab 044 al-Dukhan: 346 words (302 agree, 39 alt,
   5 fuller), per-ayah token counts match, check.py OK, exported (72
   surahs, 1,829 ayahs, 13,590 words). 45 and 44 not yet device-checked.
 
-- 2026-10-20 20:10 — Own i'rab 045 al-Jathiya: 488 words (419 agree, 58 alt,
+- 2026-10-20 18:27 — Own i'rab 045 al-Jathiya: 488 words (419 agree, 58 alt,
   11 fuller), per-ayah token counts match, check.py OK, exported (71
   surahs, 1,770 ayahs, 13,244 words). Not yet device-checked.
 
-- 2026-10-20 19:25 — Device check: 46:32 i'rab tab seen full-screen on
+- 2026-10-20 18:20 — Device check: 46:32 i'rab tab seen full-screen on
   Rafeeq_Audit_API24 (x64 debug build 17:17 emulator time); al-Da'as's view
   under «ومن» renders. WIP fill_045.py: al-Jathiya 1-20 (240/488 tokens), 21-37 not yet.
 
-- 2026-10-20 19:05 — Own i'rab 046 al-Ahqaf: 643 words (557 agree, 74 alt,
+- 2026-10-20 18:15 — Own i'rab 046 al-Ahqaf: 643 words (557 agree, 74 alt,
   12 fuller), check.py OK, exported (70 surahs, 1,733 ayahs, 12,756 words).
   Not yet device-checked.
 
