@@ -12,7 +12,7 @@ in compressed run-together words) is archived unchanged in
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
 312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). 049 al-Hujurat 347 words and 048 al-Fath 560 words written, check.py OK, seen in the app 49:13 and 48:29. Owner:
-«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, NOT yet seen in the app. Next: device-check 47, then surah 046 with show.py, books.py, fill_046.py, check.py, export_app.py. Release 3.91.1 is
+«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. Next: surah 046 with show.py, books.py, fill_046.py, check.py, export_app.py. Release 3.91.1 is
 ON HOLD (owner said «استنى»): do not publish until he asks.
 
 Older context:
@@ -80,6 +80,10 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 21:55 — Device check: 47:35 i'rab tab seen full-screen on
+  Rafeeq_Audit_API24 (fresh debug build); Darwish's view under «أعمالكم»
+  renders. Stopped here: 5-hour quota at 90% (resets ~15:40 Dubai+? see
+  get_usage); next is 046 al-Ahqaf.
 - 2026-10-20 21:40 — Own i'rab 047 Muhammad: 539 words, check.py OK,
   exported (69 surahs, 1,698 ayahs, 12,113 words). Not yet device-checked.
 - 2026-10-20 21:15 — WIP fill_047.py: Muhammad 1-19 written (token counts
