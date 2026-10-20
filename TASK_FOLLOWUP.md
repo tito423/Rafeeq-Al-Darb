@@ -12,7 +12,7 @@ in compressed run-together words) is archived unchanged in
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
 312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). 049 al-Hujurat 347 words and 048 al-Fath 560 words written, check.py OK, seen in the app 49:13 and 48:29. Owner:
-«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. 046 al-Ahqaf 643 words written, check.py OK, seen in the app 46:32. 045 al-Jathiya 488 words written, check.py OK, exported; device check pending. Next: surah 044 (fill_044.py WIP 1-18, 111/346 tokens) with show.py, books.py, check.py, export_app.py. v3.91.1 PUBLISHED 2026-10-20 on the owner's order.
+«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. 046 al-Ahqaf 643 words written, check.py OK, seen in the app 46:32. 045 al-Jathiya 488 words written, check.py OK, exported; device check pending. 044 al-Dukhan 346 words written, check.py OK, exported; 45 and 44 device check pending. Next: surah 043 with show.py, books.py, fill_043.py, check.py, export_app.py. v3.91.1 PUBLISHED 2026-10-20 on the owner's order.
 
 Older context:
 Codex's full audit (2026-10-09..13, report `docs/audits/AUDIT_2026-10-09.md`)
@@ -78,6 +78,10 @@ heartbeat or mistake that future proposal for an approved redesign.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-20 20:45 — Own i'rab 044 al-Dukhan: 346 words (302 agree, 39 alt,
+  5 fuller), per-ayah token counts match, check.py OK, exported (72
+  surahs, 1,829 ayahs, 13,590 words). 45 and 44 not yet device-checked.
 
 - 2026-10-20 20:10 — Own i'rab 045 al-Jathiya: 488 words (419 agree, 58 alt,
   11 fuller), per-ayah token counts match, check.py OK, exported (71
