@@ -11,8 +11,8 @@ in compressed run-together words) is archived unchanged in
 
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
-312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, NOT yet seen in the app). Owner:
-«كمل كل السور اوتو» - continue backwards without asking. Next: device-check 51 and 50 in the app, then surah 049 with show.py, books.py, fill_049.py, check.py, export_app.py. Release 3.91.1 is
+312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). Owner:
+«كمل كل السور اوتو» - continue backwards without asking. Next: surah 049 with show.py, books.py, fill_049.py, check.py, export_app.py. Release 3.91.1 is
 ON HOLD (owner said «استنى»): do not publish until he asks.
 
 Older context:
@@ -80,6 +80,8 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 18:45 — Device check: 51:38 and 50:39 i'rab tabs seen on
+  Rafeeq_Audit_API24 (al-Jadwal's view named under «وفي»; Qaf's «ما» alt).
 - 2026-10-20 18:30 — Own i'rab: Qaf (050) written, 373 words, check.py OK,
   exported (66 surahs / 10,667 words). Not yet seen in the app (with 051).
 - 2026-10-20 17:50 — Own i'rab: al-Dhariyat (051) written, 360 words, check.py
