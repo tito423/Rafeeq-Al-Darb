@@ -9,9 +9,9 @@ in compressed run-together words) is archived unchanged in
 
 ## Current task
 
-2026-10-20: own i'rab continues backwards (057 al-Hadid done: 574 words,
-seen in the app's i'rab tab on Rafeeq_Audit_API24). Next: surah 056 with
-show.py, books.py, fill_056.py, check.py, export_app.py. Release 3.91.1 is
+2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
+al-Waqi'a 379 words, both seen in the app's i'rab tab on Rafeeq_Audit_API24).
+Next: surah 055 with show.py, books.py, fill_055.py, check.py, export_app.py. Release 3.91.1 is
 ON HOLD (owner said «استنى»): do not publish until he asks.
 
 Older context:
@@ -79,6 +79,10 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 13:55 — Own i'rab: al-Waqi'a (056) written, 379 words, check.py
+  OK, exported (60 surahs / 8,569 words), 56:81 seen in the app with Darwish's
+  two views named. One al-Da'as slip not followed: 56:39 «الجملة صفة
+  أصحاب» (a sentence after a definite noun); ours = al-Jadwal, al-Da'as shown.
 - 2026-10-20 11:15 — Own i'rab: al-Hadid (057) written, 574 words,
   check.py OK, exported (59 surahs / 8,190 words), seen word-for-word in the
   i'rab tab on the emulator (57:4). Fixed: the full-screen card drew its
