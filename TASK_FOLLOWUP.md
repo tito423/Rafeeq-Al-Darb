@@ -12,7 +12,7 @@ in compressed run-together words) is archived unchanged in
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
 312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). 049 al-Hujurat 347 words and 048 al-Fath 560 words written, check.py OK, seen in the app 49:13 and 48:29. Owner:
-«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. 046 al-Ahqaf 643 words written, check.py OK, seen in the app 46:32. 045 al-Jathiya 488 words written, check.py OK, seen in the app 45:14. 044 al-Dukhan 346 words written, check.py OK, seen in the app 44:28. 043 al-Zukhruf 830 words written, check.py OK, seen in the app 43:84. 042 al-Shura 860 words written, check.py OK, seen in the app 42:37. 041 Fussilat in progress: fill_041.py has ayahs 1-8 (WIP, 69 of 794). Next: surah 041 (Fussilat) from ayah 9 with show.py, books_range.py, fill_041.py, ayah_counts.py, check.py, export_app.py (helpers: books_range.py S A B prints both books for a chunk; ayah_counts.py S checks entries per ayah). v3.91.1 PUBLISHED 2026-10-20 on the owner's order.
+«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. 046 al-Ahqaf 643 words written, check.py OK, seen in the app 46:32. 045 al-Jathiya 488 words written, check.py OK, seen in the app 45:14. 044 al-Dukhan 346 words written, check.py OK, seen in the app 44:28. 043 al-Zukhruf 830 words written, check.py OK, seen in the app 43:84. 042 al-Shura 860 words written, check.py OK, seen in the app 42:37. 041 Fussilat 794 words written, check.py OK, exported; device check pending. Next: surah 040 (Ghafir) with show.py, books_range.py, fill_041.py, ayah_counts.py, check.py, export_app.py (helpers: books_range.py S A B prints both books for a chunk; ayah_counts.py S checks entries per ayah). v3.91.1 PUBLISHED 2026-10-20 on the owner's order.
 
 Older context:
 Codex's full audit (2026-10-09..13, report `docs/audits/AUDIT_2026-10-09.md`)
@@ -78,6 +78,10 @@ heartbeat or mistake that future proposal for an approved redesign.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-20 19:50 — Own i'rab 041 Fussilat: 794 words (673 agree, 110 alt,
+  11 fuller), per-ayah counts match, check.py OK, exported (75 surahs,
+  2,025 ayahs, 16,074 words). Not yet device-checked.
 
 - 2026-10-20 19:09 — Device check: 42:37 i'rab tab seen full-screen on
   emulator (page 487). 041 Fussilat ayahs 1-8 written (WIP, counts match).
