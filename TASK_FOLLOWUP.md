@@ -10,8 +10,8 @@ in compressed run-together words) is archived unchanged in
 ## Current task
 
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
-al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, all
-seen in the app's i'rab tab on Rafeeq_Audit_API24). Next: surah 052 with show.py, books.py, fill_052.py, check.py, export_app.py. Release 3.91.1 is
+al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
+312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). Next: surah 051 with show.py, books.py, fill_051.py, check.py, export_app.py. Release 3.91.1 is
 ON HOLD (owner said «استنى»): do not publish until he asks.
 
 Older context:
@@ -79,6 +79,9 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 17:05 — Own i'rab: al-Tur (052) written, 312 words, check.py
+  OK, exported (64 surahs / 9,934 words), 52:35 seen in the app. Alignment
+  review caught 52:35 «خلقوا» written as مضارع; fixed to ماض مبني للمجهول.
 - 2026-10-20 16:20 — Own i'rab: al-Najm (053) written, 360 words, check.py
   OK, exported (63 surahs / 9,622 words), 53:58 seen in the app with al-Da'as
   named. 53:20 «الأخرى»: al-Da'as «صفة العزى», both books صفة ثانية لمناة.
