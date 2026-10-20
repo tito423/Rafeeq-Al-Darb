@@ -82,8 +82,8 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 - 2026-10-20 21:55 — Device check: 47:35 i'rab tab seen full-screen on
   Rafeeq_Audit_API24 (fresh debug build); Darwish's view under «أعمالكم»
-  renders. Stopped here: 5-hour quota at 90% (resets ~15:40 Dubai+? see
-  get_usage); next is 046 al-Ahqaf.
+  renders. Stopped here: 5-hour quota at 90% (get_usage: resets 11:40 UTC =
+  15:40 Dubai); next is 046 al-Ahqaf.
 - 2026-10-20 21:40 — Own i'rab 047 Muhammad: 539 words, check.py OK,
   exported (69 surahs, 1,698 ayahs, 12,113 words). Not yet device-checked.
 - 2026-10-20 21:15 — WIP fill_047.py: Muhammad 1-19 written (token counts
