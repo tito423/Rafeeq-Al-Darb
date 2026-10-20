@@ -21,7 +21,7 @@ One file per surah, `NNN.json`: `words` in mushaf order, each
 - Never change the mushaf word; `w` must equal the token of `text_uthmani`
   (a test should enforce it).
 
-Status (2026-10-20): 001 and 051-114 written; each passes `check.py` and is exported to `rafeeq_app/assets/data/own_irab.json` (65 surahs, 1,568 ayahs, 10,294 words), which the app's i'rab tab shows. Next: 050, working backwards.
+Status (2026-10-20): 001 and 050-114 written; each passes `check.py` and is exported to `rafeeq_app/assets/data/own_irab.json` (66 surahs, 1,613 ayahs, 10,667 words), which the app's i'rab tab shows. Next: 049, working backwards.
 
 2026-10-06: 098-101 (written by a Gemini session on 10-05) re-read word by word against al-Da'as: 100 needed nothing, 99 one fix, 101 seven fixes, and 098 had NO i'rab at all (every word marked «agree» with an empty text) - written from scratch (fill_098.py). Juz 'Amma done so far: 1 + 98-114. Remaining in Juz 'Amma: 78-97 (1,826 words, measured from quran_local.db).
 
