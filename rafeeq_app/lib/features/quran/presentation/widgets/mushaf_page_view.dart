@@ -49,12 +49,25 @@ class MushafPageView extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<MushafPageView> createState() => _MushafPageViewState();
+
+  /// The vector (KFQC) page's width / height.
+  static const double vectorPageAspect = 345.0 / 550.0;
+
+  /// The width / height of [page] as this view draws it in portrait - an
+  /// `AspectRatio` centred in the box - or null where the page is shown at
+  /// its picture's own size (a scanned printing without a fitted layer).
+  /// `ChromeFit` uses it to grow the drawn page into the band between the
+  /// floating controls, not the empty margins around it.
+  static double? pageAspectFor(MushafEdition edition, int page) =>
+      edition.isRaster
+          ? edition.fitForPage(page)?.pageAspect
+          : vectorPageAspect;
 }
 
 class _MushafPageViewState extends ConsumerState<MushafPageView> {
   /// Every KFQC page shares this box, so the aspect ratio is constant even
   /// though a few pages carry a shifted viewBox origin.
-  static const double _pageAspect = 345.0 / 550.0;
+  static const double _pageAspect = MushafPageView.vectorPageAspect;
 
   final TransformationController _transform = TransformationController();
   late final StateController<bool> _zoomState;

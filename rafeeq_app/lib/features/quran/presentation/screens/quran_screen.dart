@@ -848,6 +848,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                   child: ChromeFit(
                     active: _pageFillScreen && _chromeVisible,
                     badge: !(edition?.printedHeader ?? false),
+                    pageAspect: _paperAspect(edition, isLandscape),
                     child: _buildViewer(data, edition, textLayout),
                   ),
                 ),

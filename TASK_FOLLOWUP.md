@@ -73,6 +73,14 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 02:55 — Paper mushaf now fills the band between the bars
+  (owner's phone screenshot: page at ~69% width with empty margins).
+  ChromeFit fitted the whole box, margins included; given the drawn
+  page's aspect (MushafPageView.pageAspectFor) it now scales only the
+  page into the band and centres it. Seen on the API-24 emulator: page
+  from under the top bar to above the page badge. Text mode unchanged.
+  1445 tests. Not released (v3.91.0 has the previous fit).
+
 - 2026-10-20 02:25 — RELEASED v3.91.0 on the owner's order («الاتنين»):
   https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.91.0 , tag
   18a8b306 = master, APK 313,520,342 B, sha256 9d37d77d...fdb679 equal to

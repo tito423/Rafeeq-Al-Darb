@@ -43,6 +43,13 @@ extension _QuranViews on _QuranScreenState {
     _goToPage(page);
   }
 
+  /// The paper page is centred with margin around it, so the floating
+  /// controls fit the drawn page, not the empty box (`ChromeFit`).
+  double? _paperAspect(MushafEdition? edition, bool isLandscape) =>
+      _mode == MushafMode.image && edition != null && !isLandscape
+          ? MushafPageView.pageAspectFor(edition, _current)
+          : null;
+
   /// Every page change while reciting re-arms [ReciteReturnTimer]; when it
   /// fires, a mushaf turned away from the recited ayah goes back to it.
   void _armReturnToRecitation() =>
