@@ -12,8 +12,7 @@ in compressed run-together words) is archived unchanged in
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
 312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). 049 al-Hujurat 347 words and 048 al-Fath 560 words written, check.py OK, seen in the app 49:13 and 48:29. Owner:
-«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. Next: surah 046 with show.py, books.py, fill_046.py, check.py, export_app.py. Release 3.91.1 is
-ON HOLD (owner said «استنى»): do not publish until he asks.
+«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. Next: surah 046 (fill_046.py WIP, see log) with show.py, books.py, fill_046.py, check.py, export_app.py. v3.91.1 PUBLISHED 2026-10-20 on the owner's order.
 
 Older context:
 Codex's full audit (2026-10-09..13, report `docs/audits/AUDIT_2026-10-09.md`)
@@ -79,6 +78,11 @@ heartbeat or mistake that future proposal for an approved redesign.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+
+- 2026-10-20 18:05 — RELEASED v3.91.1: https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.91.1 ,
+  tag f3159aba = master, APK 313,692,374 B, sha256 14d67fbe...d907a3 equal to
+  GitHub's digest, range 206, versionCode 107; installed over 3.91.0 on API-24
+  and launched. v3.91.0 + tag deleted. fill_046.py: 1-14 written (222/643).
 
 - 2026-10-20 22:30 — Owner: «انشرلي التطبيق الاول وكمل الاعراب». 3.91.1+107
   bumped (5ce8a3ef), analyze clean, 1448 tests pass; signed build running.
