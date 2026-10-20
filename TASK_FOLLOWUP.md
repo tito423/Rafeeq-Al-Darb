@@ -11,7 +11,8 @@ in compressed run-together words) is archived unchanged in
 
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
-312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). Next: surah 051 with show.py, books.py, fill_051.py, check.py, export_app.py. Release 3.91.1 is
+312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words (written, check.py OK, NOT yet seen in the app). Owner:
+«كمل كل السور اوتو» - continue backwards without asking. Next: surah 050 with show.py, books.py, fill_050.py, check.py, export_app.py. Release 3.91.1 is
 ON HOLD (owner said «استنى»): do not publish until he asks.
 
 Older context:
@@ -79,6 +80,9 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 17:50 — Own i'rab: al-Dhariyat (051) written, 360 words, check.py
+  OK, exported. Not yet seen in the app (device check batched with the next
+  surahs). 51:56 «ليعبدون» lam = التعليل (both books), al-Da'as «العاقبة» named.
 - 2026-10-20 17:05 — Own i'rab: al-Tur (052) written, 312 words, check.py
   OK, exported (64 surahs / 9,934 words), 52:35 seen in the app. Alignment
   review caught 52:35 «خلقوا» written as مضارع; fixed to ماض مبني للمجهول.
