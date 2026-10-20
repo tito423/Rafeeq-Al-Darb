@@ -12,7 +12,7 @@ in compressed run-together words) is archived unchanged in
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
 312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). 049 al-Hujurat 347 words and 048 al-Fath 560 words written, check.py OK, seen in the app 49:13 and 48:29. Owner:
-«كمل كل السور اوتو» - continue backwards without asking. Next: surah 047 with show.py, books.py, fill_047.py, check.py, export_app.py. Release 3.91.1 is
+«كمل كل السور اوتو» - continue backwards without asking. Next: finish scripts/own_irab/fill_047.py (WIP: ayahs 1-19 written and count-checked, 20-38 still to write, then the write() call), then check.py, export_app.py. Release 3.91.1 is
 ON HOLD (owner said «استنى»): do not publish until he asks.
 
 Older context:
@@ -80,6 +80,8 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 21:15 — WIP fill_047.py: Muhammad 1-19 written (token counts
+  match), 20-38 not yet; file has no write() call yet, 047.json not built.
 - 2026-10-20 20:55 — Device check: 49:13 and 48:29 i'rab tabs seen on
   Rafeeq_Audit_API24 (fresh debug build 11:48 emulator time); named views
   under «عند» (al-Da'as, Darwish) and «من أثر» (al-Da'as) render.
