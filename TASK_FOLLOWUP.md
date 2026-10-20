@@ -12,7 +12,7 @@ in compressed run-together words) is archived unchanged in
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
 312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). 049 al-Hujurat 347 words and 048 al-Fath 560 words written, check.py OK, seen in the app 49:13 and 48:29. Owner:
-«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. 046 al-Ahqaf 643 words written, check.py OK, seen in the app 46:32. 045 al-Jathiya 488 words written, check.py OK, seen in the app 45:14. 044 al-Dukhan 346 words written, check.py OK, seen in the app 44:28. 043 al-Zukhruf 830 words written, check.py OK, seen in the app 43:84. Next: surah 042 (fill_042.py WIP 1-12, 157/860 tokens) with show.py, books.py, check.py, export_app.py (scratchpad helpers bk2.py/perayah.py are not in git; per-ayah count check = split fill on '# N' comments). v3.91.1 PUBLISHED 2026-10-20 on the owner's order.
+«كمل كل السور اوتو» - continue backwards without asking. 047 Muhammad 539 words written, check.py OK, seen in the app 47:35. 046 al-Ahqaf 643 words written, check.py OK, seen in the app 46:32. 045 al-Jathiya 488 words written, check.py OK, seen in the app 45:14. 044 al-Dukhan 346 words written, check.py OK, seen in the app 44:28. 043 al-Zukhruf 830 words written, check.py OK, seen in the app 43:84. Next: surah 042 (fill_042.py WIP 1-20, 341/860 tokens) with show.py, books.py, check.py, export_app.py (scratchpad helpers bk2.py/perayah.py are not in git; per-ayah count check = split fill on '# N' comments). v3.91.1 PUBLISHED 2026-10-20 on the owner's order.
 
 Older context:
 Codex's full audit (2026-10-09..13, report `docs/audits/AUDIT_2026-10-09.md`)
@@ -81,7 +81,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 - 2026-10-20 22:15 — Device check: 43:84 i'rab tab seen full-screen on
   Rafeeq_Audit_API24; al-Da'as's view under «في السماء» renders.
-  WIP fill_042.py al-Shura 1-12 (157/860).
+  WIP fill_042.py al-Shura 1-20 (341/860).
 
 - 2026-10-20 21:55 — Own i'rab 043 al-Zukhruf: 830 words (698 agree, 120 alt,
   12 fuller), per-ayah token counts match, check.py OK, exported (73
