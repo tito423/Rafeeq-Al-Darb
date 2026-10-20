@@ -2,9 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/db/models.dart';
+import '../../../../core/db/quran_repository.dart';
 import '../../../../core/utils/arabic_normalize.dart';
 import '../../../../core/utils/byte_formatter.dart' show ltr;
 import '../../../../core/utils/digits.dart';
+import 'mushaf_marks_tab.dart';
 
 /// A search field for a sheet that lists a hundred and fourteen things.
 ///
@@ -69,6 +71,7 @@ void showJumpSheet(
   required int totalPages,
   required void Function(int surahId, int page) onSurahPage,
   required ValueChanged<int> onPage,
+  QuranRepository? repo,
 }) {
   showModalBottomSheet<void>(
     context: context,
@@ -82,6 +85,7 @@ void showJumpSheet(
       totalPages: totalPages,
       onSurahPage: onSurahPage,
       onPage: onPage,
+      repo: repo,
     ),
   );
 }
@@ -95,6 +99,10 @@ class _JumpSheet extends StatefulWidget {
   final void Function(int surahId, int page) onSurahPage;
   final ValueChanged<int> onPage;
 
+  /// For the bookmarks/notes tab (a note's ayah -> its page); no tab
+  /// without it.
+  final QuranRepository? repo;
+
   const _JumpSheet({
     required this.surahs,
     required this.surahStartPages,
@@ -103,6 +111,7 @@ class _JumpSheet extends StatefulWidget {
     required this.totalPages,
     required this.onSurahPage,
     required this.onPage,
+    this.repo,
   });
 
   @override
@@ -147,6 +156,7 @@ class _JumpSheetState extends State<_JumpSheet> {
       if (_indexed) Tab(text: 'quran.surah_list'.tr()),
       Tab(text: 'quran.page'.tr()),
       if (_indexed) Tab(text: 'quran.juz'.tr()),
+      if (widget.repo != null) Tab(text: 'quran.marks_tab'.tr()),
     ];
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
@@ -162,13 +172,20 @@ class _JumpSheetState extends State<_JumpSheet> {
                 child: Text('quran.jump_to'.tr(),
                     style: theme.textTheme.titleMedium),
               ),
-              TabBar(tabs: tabs),
+              TabBar(tabs: tabs, isScrollable: tabs.length > 3, tabAlignment: tabs.length > 3 ? TabAlignment.center : null),
               Expanded(
                 child: TabBarView(
                   children: [
                     if (_indexed) _surahTab(theme),
                     _pageTab(theme),
                     if (_indexed) _juzTab(theme),
+                    if (widget.repo != null)
+                      MushafMarksTab(
+                        surahs: widget.surahs,
+                        repo: widget.repo!,
+                        current: widget.current,
+                        onPage: widget.onPage,
+                      ),
                   ],
                 ),
               ),

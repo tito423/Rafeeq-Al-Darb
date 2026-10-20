@@ -127,6 +127,7 @@ class MushafToolbar extends ConsumerWidget {
               onSurahPage: (surahId, page) =>
                   onNavigateFromIndex(page, surahId: surahId),
               onPage: onNavigateFromIndex,
+              repo: data.repo,
             ),
           ),
         ),

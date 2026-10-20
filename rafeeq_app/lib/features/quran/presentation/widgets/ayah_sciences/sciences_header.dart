@@ -25,6 +25,7 @@ import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/digits.dart';
 import '../../../../downloads/data/reciters_provider.dart';
 import '../../../data/ayah_notes_store.dart';
+import '../../../data/quran_bookmarks_store.dart';
 import '../../../data/translation_lang_provider.dart';
 import '../ayah_share_card.dart';
 import '../reciter_picker_sheet.dart';
@@ -117,6 +118,15 @@ class SciencesHeader extends ConsumerWidget {
         // (a nullable tear-off is `VoidCallback?`).
         // ignore: unnecessary_lambdas
         unawaited(repeat.whenComplete(() => banner?.close()));
+      case 'bookmark':
+        final added = await ref
+            .read(quranBookmarksProvider.notifier)
+            .toggleAyah(ayah.surahId, ayah.ayahNumber, ayah.pageNumber);
+        messenger.showSnackBar(SnackBar(
+          content: Text(
+              (added ? 'quran.bookmark_added' : 'quran.bookmark_removed').tr()),
+          duration: const Duration(seconds: 2),
+        ));
       case 'note':
         await showDialog<void>(
           context: context,
@@ -151,6 +161,8 @@ class SciencesHeader extends ConsumerWidget {
     final notes = ref.watch(ayahNotesProvider);
     final note = notes[AyahNotesNotifier.keyFor(ayah.surahId, ayah.ayahNumber)];
     final hasNote = note != null && note.isNotEmpty;
+    final marked = ref.watch(quranBookmarksProvider).any(
+        (b) => b.surah == ayah.surahId && b.ayah == ayah.ayahNumber);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(14, 4, 6, 4),
@@ -283,7 +295,8 @@ class SciencesHeader extends ConsumerWidget {
           ),
           PopupMenuButton<String>(
             tooltip: '',
-            icon: Icon(Icons.more_vert, color: hasNote ? gold : null),
+            icon: Icon(Icons.more_vert,
+                color: hasNote || marked ? gold : null),
             onSelected: (v) => _handleAction(context, ref, v, note),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -299,6 +312,24 @@ class SciencesHeader extends ConsumerWidget {
                 child: ListTile(
                   leading: const Icon(Icons.repeat_rounded),
                   title: Text('quran.repeat'.tr()),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              // «خيار علامات عشان اقدر ارجع للاية» - listed with every
+              // note under «الانتقال إلى ← العلامات والملاحظات».
+              PopupMenuItem(
+                value: 'bookmark',
+                child: ListTile(
+                  leading: Icon(
+                    marked
+                        ? Icons.bookmark_remove_rounded
+                        : Icons.bookmark_add_outlined,
+                    color: marked ? gold : null,
+                  ),
+                  title: Text((marked
+                          ? 'quran.bookmark_ayah_remove'
+                          : 'quran.bookmark_ayah')
+                      .tr()),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),

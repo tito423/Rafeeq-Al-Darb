@@ -73,6 +73,17 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-10-20 03:50 — Owner asks (1) bookmarks for ayah/page, (2) one place
+  for all notes, (3) tafsir/translation/i'rab expandable to the full screen,
+  (4) resume the i'rab work. Done 1-3, SEEN on API-24: «علامة على الآية» in
+  the card menu (button turns gold), «علّم الصفحة» + both lists in a new
+  «العلامات والملاحظات» tab of «الانتقال إلى» (tap -> page), full-screen
+  button beside the card tabs (header and ayah hidden). Bookmarks are
+  device-only (quran_bookmarks_v1): syncing needs the Worker key list
+  changed and deployed - owner's call. 7 languages. 1448 tests.
+  NEXT: i'rab - own i'rab stopped at 58 (done: 1 + 58-114, 5,247 / 77,430
+  words); next surah 57 al-Hadid via show.py/books.py/fill_057.py.
+
 - 2026-10-20 02:55 — Paper mushaf now fills the band between the bars
   (owner's phone screenshot: page at ~69% width with empty margins).
   ChromeFit fitted the whole box, margins included; given the drawn

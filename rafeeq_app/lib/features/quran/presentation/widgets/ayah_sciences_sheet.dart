@@ -105,6 +105,13 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   /// التفسير بتبقى مساحة عرضه صغيرة».
   bool _expanded = false;
 
+  /// The tafsir / translation / i'rab alone, filling the screen - the
+  /// header and the ayah hidden. «لما افتح التفسير في كارت الاية اقدر اكبر
+  /// لملئ الصفحة … او ترجمة … او الاعراب» (owner, 2026-10-20): the card's
+  /// own expand kept the header, the ayah and the tab row on screen, so a
+  /// long tafsir still read through a slot.
+  bool _contentFull = false;
+
   @override
   void initState() {
     super.initState();
@@ -173,7 +180,10 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
         translationsFuture: _translations ??
             Future<Map<String, AyahTranslation>>.value(const {}),
         expanded: _expanded,
-        onToggleExpand: () => setState(() => _expanded = !_expanded),
+        onToggleExpand: () => setState(() {
+          _expanded = !_expanded;
+          if (!_expanded) _contentFull = false;
+        }),
       ),
       AyahPanel(ayah: widget.ayah),
     ];
@@ -188,17 +198,40 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
         // i'rab of any other ayah - shows the download gate.
         : Column(
                 children: [
-                  TabBar(
-                    controller: _tabs,
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.center,
-                    indicatorColor: gold,
-                    labelColor: gold,
-                    dividerColor: gold.withValues(alpha: 0.18),
-                    tabs: [
-                      Tab(text: 'quran.tafseer'.tr()),
-                      Tab(text: 'quran.translation'.tr()),
-                      Tab(text: 'quran.irab'.tr()),
+                  Row(
+                    children: [
+                      const SizedBox(width: 48),
+                      Expanded(
+                        child: TabBar(
+                          controller: _tabs,
+                          isScrollable: true,
+                          tabAlignment: TabAlignment.center,
+                          indicatorColor: gold,
+                          labelColor: gold,
+                          dividerColor: gold.withValues(alpha: 0.18),
+                          tabs: [
+                            Tab(text: 'quran.tafseer'.tr()),
+                            Tab(text: 'quran.translation'.tr()),
+                            Tab(text: 'quran.irab'.tr()),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: (_contentFull
+                                ? 'quran.card_collapse'
+                                : 'quran.content_full')
+                            .tr(),
+                        icon: Icon(
+                          _contentFull
+                              ? Icons.fullscreen_exit_rounded
+                              : Icons.fullscreen_rounded,
+                          color: gold,
+                        ),
+                        onPressed: () => setState(() {
+                          _contentFull = !_contentFull;
+                          _expanded = _contentFull;
+                        }),
+                      ),
                     ],
                   ),
                   Expanded(
@@ -244,7 +277,9 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
           child: Column(
             children: [
               if (!_expanded) const _DragHandle(),
-              if (sideways)
+              if (_contentFull)
+                Expanded(child: content)
+              else if (sideways)
                 Expanded(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
