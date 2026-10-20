@@ -82,9 +82,9 @@ heartbeat or mistake that future proposal for an approved redesign.
 - 2026-10-20 18:05 — RELEASED v3.91.1: https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.91.1 ,
   tag f3159aba = master, APK 313,692,374 B, sha256 14d67fbe...d907a3 equal to
   GitHub's digest, range 206, versionCode 107; installed over 3.91.0 on API-24
-  and launched. v3.91.0 + tag deleted. fill_046.py: 1-14 written (222/643).
+  and launched. v3.91.0 + tag deleted. fill_046.py: 1-20 written (366/643), 21-35 not yet.
 
-- 2026-10-20 22:30 — Owner: «انشرلي التطبيق الاول وكمل الاعراب». 3.91.1+107
+- 2026-10-20 17:50 — Owner: «انشرلي التطبيق الاول وكمل الاعراب». 3.91.1+107
   bumped (5ce8a3ef), analyze clean, 1448 tests pass; signed build running.
   WIP fill_046.py: al-Ahqaf 1-8 written (117 of 643 tokens aligned), 9-35 not yet.
 
