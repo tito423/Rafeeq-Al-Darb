@@ -1,6 +1,7 @@
 import json, os, re, sqlite3, html, io, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_irab_daas_table  # noqa: E402
+import tafsir_ranges  # noqa: E402
 
 BASE = r"e:\My Projects\Rafiq-Al-Darb\scripts\temp_phase1"
 APPDATA = r"e:\My Projects\Rafiq-Al-Darb\rafeeq_app\assets\data"
@@ -33,6 +34,10 @@ def clean_html(t):
 qcon = sqlite3.connect(os.path.join(APPDATA, "quran_local.db"))
 counts = {r[0]: r[1] for r in qcon.execute(
     "SELECT surah_id, COUNT(*) FROM ayahs GROUP BY surah_id")}
+ayah_texts = {}
+for _s, _a, _t in qcon.execute(
+        "SELECT surah_id, ayah_number, text_clean FROM ayahs"):
+    ayah_texts.setdefault(_s, {})[_a] = _t
 qcon.close()
 out(f"surah counts: {len(counts)}")
 
@@ -77,18 +82,14 @@ CREATE INDEX idx_tt ON tafseer_texts(source, surah, ayah_start, ayah_end);
 TAFSIR_COMPLETE = os.path.join(BASE, "tafsir_complete")
 
 def load_tafsir_complete(key, source):
-    # Sources like Muyassar genuinely group several consecutive ayahs under
-    # one shared commentary entry (a real characteristic of how the tafsir
-    # itself is written, not missing data) — the entry then only carries
-    # the *last* ayah of that group as its verse_key. Each entry's real
-    # coverage is therefore (previous entry's ayah + 1) through its own
-    # ayah, inferred from the actual sorted sequence of ayahs present.
-    # Deliberately NOT extended past the last present entry to a surah's
-    # final ayah — that exact "stretch to the end" fallback is what caused
-    # the original bug (silently showing an earlier ayah's tafsir for
-    # ~83% of the Quran once source data ran out early). If a surah's tail
-    # genuinely has no entry, it's left with no tafsir for that source
-    # rather than a fabricated/misattributed one.
+    # Sources like Muyassar group several consecutive ayahs under one shared
+    # commentary entry, keyed by the FIRST ayah of the group. Until
+    # 2026-10-21 this read the key as the LAST ayah and attached every group
+    # to the ayahs before it; the rule, its live check and the measured
+    # damage are in tafsir_ranges.py. The last entry runs to the surah's
+    # end, which ranges() allows only for a chapter that starts at ayah 1
+    # (the old "stretch to the end" bug came from chapters cut off by
+    # pagination, which the complete per_page=300 fetch no longer has).
     src_dir = os.path.join(TAFSIR_COMPLETE, key)
     if not os.path.isdir(src_dir):
         out(f"{source}: MISSING ({src_dir} not found — run fetch_tafsirs_complete.py first)")
@@ -112,15 +113,16 @@ def load_tafsir_complete(key, source):
             if not txt:
                 continue
             parsed.append((s, a, txt))
-        parsed.sort(key=lambda r: r[1])
-        prev_a = 0
-        for s, a, txt in parsed:
-            a_lo = prev_a + 1 if a > prev_a else a
+        # 2026-10-21: a key is the FIRST ayah of its group, not the last
+        # (see tafsir_ranges.py for the live check and what it broke).
+        for a_lo, a_hi, txt in tafsir_ranges.ranges(
+                [(a, txt) for _, a, txt in parsed], counts[ch],
+                ayah_texts[ch] if key in tafsir_ranges.UNCONFIRMED else None,
+                tafsir_ranges.covered_for(key, ch)):
             cur.execute(
                 "INSERT INTO tafseer_texts(source,surah,ayah_start,ayah_end,text) VALUES(?,?,?,?,?)",
-                (source, s, a_lo, a, txt))
+                (source, ch, a_lo, a_hi, txt))
             n += 1
-            prev_a = a
     out(f"{source}: {n} ayah entries (missing chapters: {missing or 'none'})")
     return n
 

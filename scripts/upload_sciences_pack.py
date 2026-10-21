@@ -32,7 +32,10 @@ BUCKET = 'rafeeq-content'
 # the published 3.63.7 still fetches sciences/quran_sciences.zip and reads
 # word_grammar, so overwriting that object would break its i'rab tab. The
 # zip keeps its basename - trap #27, the app names the .db after it.
-KEY = 'sciences/v2/quran_sciences.zip'
+# v3 (2026-10-21): same tables, tafsir passages re-attached to the right
+# ayahs (tafsir_ranges.py). Its own key again, so 3.91.2 and older keep
+# reading the v2 object they were built against.
+KEY = 'sciences/v3/quran_sciences.zip'
 PUBLIC = ('https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/' + KEY)
 SRC = os.path.join('rafeeq_app', 'assets', 'data', 'quran_sciences.db')
 ZIP = os.path.join('build', 'quran_sciences.zip')
@@ -82,8 +85,14 @@ def main() -> int:
         return 1
 
     t = time.time()
+    # 2026-10-21: the default 10-thread, 8 MB multipart upload lost its
+    # connection on part 4 here (ConnectionClosedError, Avast inspecting the
+    # stream); one 8 MB part at a time with retries goes through.
+    from boto3.s3.transfer import TransferConfig
     client.upload_file(ZIP, BUCKET, KEY,
-                       ExtraArgs={'ContentType': 'application/zip'})
+                       ExtraArgs={'ContentType': 'application/zip'},
+                       Config=TransferConfig(max_concurrency=1,
+                                             multipart_chunksize=8 << 20))
     print('uploaded in %.0fs' % (time.time() - t))
     return check(client)
 
