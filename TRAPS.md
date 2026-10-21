@@ -870,3 +870,15 @@ Do not rediscover these.
     model loaded and stayed up. Not a regression - same runtime, same
     model - but a real phone with 1 GB would crash-loop the same way.
     Test anything that loads a sherpa model on an AVD with 3 GB.
+
+77. **api.quran.com keys a grouped tafsir passage by its FIRST ayah.**
+    2026-10-21, seen on the emulator: 37:162 showed al-Muyassar's
+    commentary on 37:164-166. `build_sciences_db.py` had read each
+    `by_chapter` key as the group's LAST ayah, so every group sat on the
+    ayahs before it - Muyassar 897 ayahs wrong or empty, al-Tantawi 119,
+    al-Sa'di 56, al-Tabari 40, Ibn Kathir 31, al-Qurtubi 1. `by_ayah` on an
+    inner ayah returns the real group in `verses` for Muyassar, al-Tantawi
+    and al-Qurtubi; for Ibn Kathir, al-Tabari and al-Sa'di it returns 503,
+    and there a gap can be missing data (al-Tabari: only 37:11 for 37:11-24).
+    Rule and evidence in `scripts/tafsir_ranges.py`; never derive a range
+    from key order without checking `verses` for that source.
