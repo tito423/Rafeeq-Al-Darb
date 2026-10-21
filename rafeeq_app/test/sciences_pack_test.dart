@@ -67,11 +67,11 @@ void main() {
   });
 
   test('the size on the gate is the size on the bucket', () {
-    // 32,146,611 bytes: the v2 pack (al-Da'as i'rab), `head_object` on
-    // 2026-09-26 and range-checked over the public endpoint and the GitHub
-    // mirror. A figure typed into the sentence instead drifted 39% low for
-    // hadith.zip before anyone measured it.
-    expect(AppConfig.sciencesDbBytes, 32146611);
+    // 32,168,511 bytes: the v3 pack (tafsir ranges fixed), `head_object` on
+    // 2026-10-21 and range-checked over the public endpoint and the GitHub
+    // mirror (same size). A figure typed into the sentence instead drifted
+    // 39% low for hadith.zip before anyone measured it.
+    expect(AppConfig.sciencesDbBytes, 32168511);
     for (final loc in ['ar', 'en', 'fr', 'es', 'pt', 'ru', 'ur']) {
       final json = read('assets/translations/$loc.json');
       expect(json, contains('"sciences_pack"'), reason: '$loc lacks the title');

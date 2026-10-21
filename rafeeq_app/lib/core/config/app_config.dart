@@ -165,16 +165,18 @@ abstract final class AppConfig {
   /// `DownloadManager._unzipToDatabases` writes `basename(zip) + '.db'` and
   /// ignores the entry's own name.
   ///
-  /// v2 sits under its own key (2026-09-26): 3.63.7 and older still fetch
+  /// v2 sat under its own key (2026-09-26): 3.63.7 and older still fetch
   /// `sciences/quran_sciences.zip` and read the Corpus `word_grammar` table
   /// this pack no longer has.
   static const String sciencesDbUrl =
-      '$contentBaseUrl/sciences/v2/quran_sciences.zip';
+      '$contentBaseUrl/sciences/v3/quran_sciences.zip';
 
   /// Measured with `head_object` against the bucket on 2026-09-26 (v2), and
   /// range-checked over the public endpoint — not estimated. Re-measure
   /// whenever `scripts/upload_sciences_pack.py` runs again.
-  static const int sciencesDbBytes = 32146611;
+  /// v3 measured 2026-10-21 (head_object 32,168,511 B, public range 206,
+  /// GitHub content-mirror asset the same size).
+  static const int sciencesDbBytes = 32168511;
 
   /// Same contract as [hadithDbVersion]: stamped beside the extracted file,
   /// and `DbHelper.openDownloaded` treats any other stamp as "not
@@ -183,7 +185,10 @@ abstract final class AppConfig {
   /// fetching 32 MB again (see `_adoptBundledCopy`).
   /// v2 (2026-09-26): al-Da'as's i'rab (`irab_daas`, `irab_daas_refs`)
   /// replaces the Corpus `word_grammar`; a v1 copy is re-fetched.
-  static const String sciencesDbVersion = 'v2';
+  /// v3 (2026-10-21): tafsir passages re-attached to the right ayahs
+  /// (scripts/tafsir_ranges.py, TRAPS #77); same tables, so a v2 copy is
+  /// simply re-fetched.
+  static const String sciencesDbVersion = 'v3';
 
   static const String hadithDbUrl = '$contentBaseUrl/hadith/hadith.zip';
 
