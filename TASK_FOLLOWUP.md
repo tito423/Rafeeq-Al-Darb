@@ -79,7 +79,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
-- 2026-10-21 06:30 — Own i'rab 040 Ghafir: 1,219 words (1,028 agree, 168 alt,
+- 2026-10-21 05:17 — Own i'rab 040 Ghafir: 1,219 words (1,028 agree, 168 alt,
   23 fuller), per-ayah counts match, check.py OK, exported (76 surahs,
   2,110 ayahs, 17,293 words). Not yet device-checked.
 
