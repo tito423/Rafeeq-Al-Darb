@@ -4,6 +4,7 @@ read against al-Da'as before it is written (show.py); `check` defaults to
 «agree», an entry may be a (text, check) pair.
     from write_surah import write; write(97, [...], status)"""
 import json, os, sqlite3
+from irab_dsl import x  # short codes -> house wording (irab_dsl.py)
 H = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -20,10 +21,10 @@ def write(surah, entries, status):
     words = []
     for (a, w), e in zip(toks, entries):
         if isinstance(e, dict):  # {'text', 'check', 'alts'}: a second view, named
-            words.append({'a': a, 'w': w, 'irab': e['text'], 'check': e['check'], 'alts': e['alts']})
+            words.append({'a': a, 'w': w, 'irab': x(e['text']), 'check': e['check'], 'alts': e['alts']})
             continue
         text, check = (e, 'agree') if isinstance(e, str) else e
-        words.append({'a': a, 'w': w, 'irab': text, 'check': check})
+        words.append({'a': a, 'w': w, 'irab': x(text), 'check': check})
     json.dump({'surah': surah, 'status': status, 'words': words},
               open(os.path.join(H, f'{surah:03d}.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(f'{surah:03d}', len(words), 'words')
