@@ -60,7 +60,10 @@ def _clause(c):
 def x(spec):
     """Expand one entry. Plain Arabic with no code passes through unchanged."""
     if not re.search(r'[A-Za-z]', spec):
-        return spec
+        # literal-only entries get the same clause joining and final stop as
+        # coded ones (029 shipped 67 words without them before this)
+        t = '، '.join(c.strip() for c in spec.split(','))
+        return t if t.endswith('.') else t + '.'
     return '، '.join(_clause(c.strip()) for c in spec.split(',')) + '.'
 
 
