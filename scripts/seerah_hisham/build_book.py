@@ -12,6 +12,18 @@ WORD = re.compile(r'[ء-غف-ي]+')
 HARAKAT = re.compile(r'[ً-ْ]')
 MAXC = 220
 
+HALF = 110
+
+def halves(words):
+    """Long segments are vowelled in pieces of <= HALF chars (2x faster decode)."""
+    out, cur, n = [], [], 0
+    for w in words:
+        if n + len(w) + 1 > HALF and cur:
+            out.append(cur); cur, n = [], 0
+        cur.append(w); n += len(w) + 1
+    if cur: out.append(cur)
+    return out
+
 raw = open(SRC, encoding='utf-8').read().split('#META#Header#End#', 1)[1]
 
 # ---- 1. CATT vowels, same segmentation as diacritize.py -------------------
@@ -31,7 +43,9 @@ for line in open(CACHE, encoding='utf-8'):
 voc = []
 model_ok = model_bad = 0
 for s in segs:
-    out = cache.get(' '.join(s), '').split()
+    k = ' '.join(s)
+    if k in cache: out = cache[k].split()
+    else: out = ' '.join(cache.get(' '.join(h), ' '.join(h)) for h in halves(s)).split()
     for i, w in enumerate(s):
         o = out[i] if len(out) == len(s) else ''
         if o and HARAKAT.sub('', o) == w: voc.append(o); model_ok += 1
