@@ -406,7 +406,21 @@
     "recite_return": "Back to the recited verse",
     "recite_return_hint": "During continuous recitation, if you turn away from the highlighted verse the mushaf returns to it by itself after this long.",
     "recite_return_off": "Off",
-    "recite_return_s": "{} s"
+    "recite_return_s": "{} s",
+    "bookmarks_title": "Bookmarks",
+    "bm_this_page": "This page ({})",
+    "bm_kind_reading": "Reading",
+    "bm_kind_hifz": "Memorising",
+    "bm_kind_review": "Revision",
+    "bm_kind_tadabbur": "Reflection",
+    "bm_pick_hint": "Pick a colour to mark the page.",
+    "bm_unpick_hint": "Tap the same colour to remove the mark, or another to change it.",
+    "bm_all": "All bookmarks ({})",
+    "bm_sort_recent": "Newest",
+    "bm_sort_mushaf": "Mushaf order",
+    "bm_filter_all": "All",
+    "bm_clear_all": "Delete all bookmarks",
+    "bm_clear_confirm": "Every bookmark will be deleted. Notes are not affected."
   },
   "library": {
     "title": "Library",

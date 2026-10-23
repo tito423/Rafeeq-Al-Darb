@@ -406,7 +406,21 @@
     "recite_return": "Voltar ao versículo recitado",
     "recite_return_hint": "Durante a recitação contínua, se virar a página para longe do versículo destacado, o mus-haf volta a ele sozinho após este tempo.",
     "recite_return_off": "Desligado",
-    "recite_return_s": "{} s"
+    "recite_return_s": "{} s",
+    "bookmarks_title": "Marcadores",
+    "bm_this_page": "Esta página ({})",
+    "bm_kind_reading": "Leitura",
+    "bm_kind_hifz": "Memorização",
+    "bm_kind_review": "Revisão",
+    "bm_kind_tadabbur": "Reflexão",
+    "bm_pick_hint": "Escolha uma cor para marcar a página.",
+    "bm_unpick_hint": "Toque na mesma cor para remover a marca, ou noutra para a mudar.",
+    "bm_all": "Todos os marcadores ({})",
+    "bm_sort_recent": "Recentes",
+    "bm_sort_mushaf": "Ordem do mushaf",
+    "bm_filter_all": "Todos",
+    "bm_clear_all": "Apagar todos os marcadores",
+    "bm_clear_confirm": "Todos os marcadores serão apagados. As notas não são afetadas."
   },
   "library": {
     "title": "Biblioteca",

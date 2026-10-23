@@ -406,7 +406,21 @@
     "recite_return": "Volver a la aleya recitada",
     "recite_return_hint": "Durante la recitación continua, si pasas de página lejos de la aleya resaltada, el mus-haf vuelve a ella solo tras este tiempo.",
     "recite_return_off": "Desactivado",
-    "recite_return_s": "{} s"
+    "recite_return_s": "{} s",
+    "bookmarks_title": "Marcadores",
+    "bm_this_page": "Esta página ({})",
+    "bm_kind_reading": "Lectura",
+    "bm_kind_hifz": "Memorización",
+    "bm_kind_review": "Repaso",
+    "bm_kind_tadabbur": "Reflexión",
+    "bm_pick_hint": "Elige un color para marcar la página.",
+    "bm_unpick_hint": "Toca el mismo color para quitar la marca, u otro para cambiarla.",
+    "bm_all": "Todos los marcadores ({})",
+    "bm_sort_recent": "Recientes",
+    "bm_sort_mushaf": "Orden del mushaf",
+    "bm_filter_all": "Todos",
+    "bm_clear_all": "Borrar todos los marcadores",
+    "bm_clear_confirm": "Se borrarán todos los marcadores. Las notas no se ven afectadas."
   },
   "library": {
     "title": "Biblioteca",

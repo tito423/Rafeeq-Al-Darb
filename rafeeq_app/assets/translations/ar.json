@@ -406,7 +406,21 @@
     "recite_return": "الرجوع للآية المقروءة",
     "recite_return_hint": "أثناء التلاوة المستمرة، لو قلّبت الصفحة بعيدًا عن الآية المظللة يرجع المصحف إليها وحده بعد هذه المدة.",
     "recite_return_off": "إيقاف",
-    "recite_return_s": "{} ث"
+    "recite_return_s": "{} ث",
+    "bookmarks_title": "العلامات المرجعية",
+    "bm_this_page": "هذه الصفحة ({})",
+    "bm_kind_reading": "قراءة",
+    "bm_kind_hifz": "حفظ",
+    "bm_kind_review": "مراجعة",
+    "bm_kind_tadabbur": "تدبّر",
+    "bm_pick_hint": "اختر لونًا لتعليم الصفحة.",
+    "bm_unpick_hint": "اضغط اللون نفسه لإزالة العلامة، أو لونًا آخر لتغييرها.",
+    "bm_all": "كل العلامات ({})",
+    "bm_sort_recent": "الأحدث",
+    "bm_sort_mushaf": "ترتيب المصحف",
+    "bm_filter_all": "الكل",
+    "bm_clear_all": "مسح كل العلامات",
+    "bm_clear_confirm": "ستُحذف كل العلامات المرجعية. الملاحظات لا تتأثر."
   },
   "library": {
     "title": "المكتبة",

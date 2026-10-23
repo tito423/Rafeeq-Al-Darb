@@ -138,7 +138,11 @@ class AppTheme {
         backgroundColor: card,
         indicatorColor: primaryContainer,
         surfaceTintColor: Colors.transparent,
-        height: 68,
+        // 52 on every tab, the height the Qur'an's full-screen bar already
+        // used: «وحد حجم شريط الناف اللي تحت بنفس الحجم اللي القران»
+        // (owner, 2026-10-23). It still holds the 32 dp indicator, the gap
+        // and an 11 px label.
+        height: 52,
         elevation: 0,
         // P3‑57: the bar carries SEVEN destinations, which on a 393dp phone
         // leaves about 56dp per tile. `uiMedium`'s 1.4 line height is what

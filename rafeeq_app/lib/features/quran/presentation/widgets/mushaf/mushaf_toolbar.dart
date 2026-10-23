@@ -34,6 +34,8 @@ import '../../../../../core/widgets/toolbar_action.dart';
 import '../../../../search/presentation/screens/search_screen.dart';
 import '../../../../tutorial/data/tutorial_anchors.dart';
 import '../../../data/mushaf_data_provider.dart';
+import '../../../data/quran_bookmarks_store.dart';
+import '../mushaf_bookmarks_sheet.dart';
 import '../mushaf_nav_sheets.dart';
 import 'quran_display_sheet.dart';
 import 'toolbar_strip.dart';
@@ -147,6 +149,23 @@ class MushafToolbar extends ConsumerWidget {
             },
           ),
         ),
+        // ── العلامات المرجعية ── «حطلي فيه خيار او ايقونة العلامات المرجعية»
+        // (owner, 2026-10-23). Filled while this page carries a mark.
+        Builder(builder: (context) {
+          final marked = ref.watch(quranBookmarksProvider
+              .select((l) => l.any((b) => !b.isAyah && b.page == current)));
+          return ToolbarAction(
+            icon: marked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+            label: 'quran.bookmarks_title'.tr(),
+            active: marked,
+            onPressed: () => showBookmarksSheet(
+              context,
+              surahs: canIndexBySurah ? data.surahs : const [],
+              current: current,
+              onPage: onGoToPage,
+            ),
+          );
+        }),
         // ── استماع ── both mushafs. It was text-only because the Tajweed
         // printing highlighted 4:3 on page 77 a line low; that printing is
         // gone, and the one paper printing left (madinah_qc) highlights from

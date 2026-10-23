@@ -406,7 +406,21 @@
     "recite_return": "پڑھی جانے والی آیت پر واپسی",
     "recite_return_hint": "مسلسل تلاوت کے دوران اگر آپ نمایاں آیت سے صفحہ پلٹ دیں تو مصحف اتنی دیر بعد خود اسی پر لوٹ آئے گا۔",
     "recite_return_off": "بند",
-    "recite_return_s": "{} سیکنڈ"
+    "recite_return_s": "{} سیکنڈ",
+    "bookmarks_title": "نشانیاں",
+    "bm_this_page": "یہ صفحہ ({})",
+    "bm_kind_reading": "تلاوت",
+    "bm_kind_hifz": "حفظ",
+    "bm_kind_review": "دہرائی",
+    "bm_kind_tadabbur": "تدبر",
+    "bm_pick_hint": "صفحے پر نشان لگانے کے لیے رنگ چنیں۔",
+    "bm_unpick_hint": "نشان ہٹانے کے لیے وہی رنگ دبائیں، بدلنے کے لیے کوئی اور۔",
+    "bm_all": "تمام نشانیاں ({})",
+    "bm_sort_recent": "تازہ ترین",
+    "bm_sort_mushaf": "مصحف کی ترتیب",
+    "bm_filter_all": "سب",
+    "bm_clear_all": "تمام نشانیاں مٹائیں",
+    "bm_clear_confirm": "تمام نشانیاں مٹ جائیں گی۔ نوٹس متاثر نہیں ہوں گے۔"
   },
   "library": {
     "title": "کتب خانہ",

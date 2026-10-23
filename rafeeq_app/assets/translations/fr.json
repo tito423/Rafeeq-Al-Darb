@@ -406,7 +406,21 @@
     "recite_return": "Revenir au verset récité",
     "recite_return_hint": "Pendant la récitation continue, si vous tournez la page loin du verset surligné, le moushaf y revient seul après ce délai.",
     "recite_return_off": "Désactivé",
-    "recite_return_s": "{} s"
+    "recite_return_s": "{} s",
+    "bookmarks_title": "Signets",
+    "bm_this_page": "Cette page ({})",
+    "bm_kind_reading": "Lecture",
+    "bm_kind_hifz": "Mémorisation",
+    "bm_kind_review": "Révision",
+    "bm_kind_tadabbur": "Méditation",
+    "bm_pick_hint": "Choisissez une couleur pour marquer la page.",
+    "bm_unpick_hint": "Touchez la même couleur pour retirer le signet, ou une autre pour le changer.",
+    "bm_all": "Tous les signets ({})",
+    "bm_sort_recent": "Récents",
+    "bm_sort_mushaf": "Ordre du mushaf",
+    "bm_filter_all": "Tous",
+    "bm_clear_all": "Supprimer tous les signets",
+    "bm_clear_confirm": "Tous les signets seront supprimés. Les notes ne sont pas touchées."
   },
   "library": {
     "title": "Bibliothèque",
