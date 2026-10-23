@@ -153,16 +153,23 @@ cur_paras = []
 vol, page = 1, 1
 VOL_NAMES = {1: 'المجلد الأول', 2: 'المجلد الثاني'}
 
+IN_AYA = [False]  # a Qur'an run may carry over into the next paragraph
+
 def split_aya(p):
     """Split a paragraph at Qur'an runs -> list of (text, kind)."""
-    out = []
-    for part in re.split(f'({OPEN}[^{CLOSE}]*{CLOSE})', p):
-        if not part: continue
-        if part.startswith(OPEN):
-            out.append(('{' + part[1:-1].strip() + '}', 'aya'))
+    out, buf = [], ''
+    def emit(t, aya):
+        t = t.strip(' ،,')
+        if not WORD.search(t): return
+        out.append(('{' + t + '}', 'aya') if aya else (t, 'body'))
+    for ch in p:
+        if ch == OPEN:
+            emit(buf, False); buf = ''; IN_AYA[0] = True
+        elif ch == CLOSE:
+            emit(buf, True); buf = ''; IN_AYA[0] = False
         else:
-            s = part.strip(' ،,')
-            if WORD.search(s): out.append((s, 'body'))
+            buf += ch
+    emit(buf, IN_AYA[0])
     return out
 
 def flush_page():

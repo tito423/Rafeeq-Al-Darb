@@ -2879,7 +2879,7 @@ const List<LibraryBook> libraryBookCatalog = [
   ),
   LibraryBook(
     id: 'seerat_ibn_hisham',
-    diacritisedPct: 55,
+    diacritisedPct: 100,
     titleAr: 'السيرة النبوية لابن هشام',
     titleEn: 'The Prophetic Biography of Ibn Hisham',
     authorAr: 'ابن هشام',
@@ -2890,12 +2890,12 @@ const List<LibraryBook> libraryBookCatalog = [
     textEdition: TextEdition(
       url:
           '${AppConfig.contentBaseUrl}/books/text/seerat_ibn_hisham.json',
-      sizeBytes: 597441,
+      sizeBytes: 953377,
       editorNotesRemoved: true,
       sourceLabel:
-          'المكتبة الشاملة — السيرة النبوية لابن هشام (ت ٢١٣هـ)، قدّم لها وعلّق '
-          'عليها وضبطها طه عبد الرؤوف سعد، شركة الطباعة الفنية المتحدة — النسخة '
-          'الإلكترونية تقتصر على الجزأين الأولين',
+          'المكتبة الشاملة — السيرة النبوية لابن هشام (ت ٢١٣هـ)، تحقيق مصطفى '
+          'السقا وإبراهيم الأبياري وعبد الحفيظ الشلبي، مصطفى البابي الحلبي، '
+          'الطبعة الثانية ١٣٧٥هـ/١٩٥٥م — النص كاملًا عن OpenITI، والتشكيل آلي',
     ),
   ),
   LibraryBook(
