@@ -9,6 +9,24 @@ in compressed run-together words) is archived unchanged in
 
 ## Current task
 
+2026-10-23 (cloud, Opus): v3.93.0 PUBLISHED 07:43 UTC on the owner's order
+(v3.92.0 deleted on his order, «احذف امه»; tag v3.93.0 = master 5e3b8db;
+asset RafeeqAlDarb-v3.93.0.apk 314,237,142 B, built with Flutter 3.47.7,
+analyze clean, 1448 tests passed). Not run on the emulator: owner said he
+tests on his phone. Contents: seerat_ibn_hisham replaced by the complete
+al-Saqqa text (OpenITI, Shamela 23833), every word vowelled by CATT, quoted
+ayahs as 'aya' paras with mushaf vowels (scripts/seerah_hisham/README.md),
+R2 + content-mirror both 953,377 B; mushaf bookmarks card on the top bar
+(mushaf_bookmarks_sheet.dart); NavigationBar 52 dp on every tab.
+Next: owner's phone checks of those three. Later (owner: «بعدين مش
+الوقتي»): compare CATT with other diacritisers on vowelled books, put the
+best on the laptop, vowel the books under 80% so the voice reaches them.
+Runner trap: a native command's stderr piped inside a pushed .ps1 stops the
+script silently; send output to a file (cmd /c "x > f 2>&1"), save .ps1
+with a UTF-8 BOM, and dot-source scripts/flutter_env.ps1 before any build.
+
+The i'rab work below continues from where it was:
+
 2026-10-20: own i'rab continues backwards (057 al-Hadid 574 words, 056
 al-Waqi'a 379 words, 055 al-Rahman 351 words, 054 al-Qamar 342 words, 053 al-Najm 360 words, 052 al-Tur
 312 words, all seen in the app's i'rab tab on Rafeeq_Audit_API24). 051 al-Dhariyat 360 words and 050 Qaf 373 words (both written, check.py OK, seen in the app 51:38 and 50:39). 049 al-Hujurat 347 words and 048 al-Fath 560 words written, check.py OK, seen in the app 49:13 and 48:29. Owner:
