@@ -79,7 +79,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
-- 2026-11-01 Dubai — Own i'rab 020 Ta-Ha WIP: ayahs 1-24 written in codes; 20:21 «سيرتها الأولى»: al-Da'as and al-Jadwal print «الأولى» as majrur, ours writes it mansub (it follows «سيرتها», mansub in every view al-Samin «الدر المصون» lists; cited in our text), both shown under the word. Ayahs 1-116 written; next sheet.py 20 117 119 --full ... (use --full when an al-Da'as section looks cut)
+- 2026-11-01 Dubai — Own i'rab 020 Ta-Ha WIP: ayahs 1-24 written in codes; 20:21 «سيرتها الأولى»: al-Da'as and al-Jadwal print «الأولى» as majrur, ours writes it mansub (it follows «سيرتها», mansub in every view al-Samin «الدر المصون» lists; cited in our text), both shown under the word. Ayahs 1-124 written; next sheet.py 20 125 127 --full ... (use --full when an al-Da'as section looks cut)
 - 2026-11-01 Dubai — Own i'rab 021 al-Anbiya complete: 1169 words (1065 agree / 95 alt / 9 fuller), check.py OK, per-ayah counts match, exported (95 surahs, 3,760 ayahs, 36,039 words). 21:101 has no al-Da'as text in our copy (written from al-Jadwal + Darwish, check vs print).
 - 2026-11-01 Dubai — Own i'rab 022 al-Hajj complete: 1274 words (1162 agree / 108 alt / 4 fuller), check.py OK, per-ayah counts match, exported (94 surahs, 3,648 ayahs, 34,870 words).
 - 2026-11-01 Dubai — Own i'rab 023 al-Mu'minun complete: 1050 words (935 agree / 115 alt), check.py OK, per-ayah counts match, exported (93 surahs, 3,570 ayahs, 33,596 words). 23:27 «زوجين اثنين» follows al-Samin «الدر المصون» for Hafs (named in our text), al-Da'as shown under it.
