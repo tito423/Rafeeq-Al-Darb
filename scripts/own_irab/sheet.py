@@ -133,10 +133,12 @@ def main():
                 for chunk in re.split(r'(\[\[.*?\]\])', t):
                     if chunk.startswith('[['):
                         placed.append((cur, chunk)); continue
-                    for i, p in enumerate(re.split(r'\((\d+)\)', chunk)):
-                        if i % 2:
-                            cur = int(p)
-                        else:
+                    # «(42)» or, in some surahs, «5- » at a part's start
+                    for i, p in enumerate(re.split(r'\((\d+)\)|(?:^|(?<=\s))(\d+)-\s', chunk)):
+                        if i % 3:
+                            if p:
+                                cur = int(p)
+                        elif p:
                             placed.append((cur, p))
             else:
                 placed = cut(t, DRW_Q, toks, a, back=200)
