@@ -79,7 +79,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
-- 2026-11-01 Dubai — Own i'rab 023 al-Mu'minun WIP: ayahs 1-30 written in codes (284 of 1050); 23:27 «من كلٍّ زوجين اثنين» follows al-Samin «الدر المصون» (Hafs reading with tanween: زوجين مفعول به, اثنين نعت توكيد), named in our text, al-Da'as (the iḍāfa reading) shown under it; next sheet.py 23 31 ...
+- 2026-11-01 Dubai — Own i'rab 023 al-Mu'minun WIP: ayahs 1-41 written in codes (389 of 1050); 23:27 «من كلٍّ زوجين اثنين» follows al-Samin «الدر المصون» (Hafs reading with tanween: زوجين مفعول به, اثنين نعت توكيد), named in our text, al-Da'as (the iḍāfa reading) shown under it; next sheet.py 23 42 ...
 - 2026-11-01 Dubai — Own i'rab 024 al-Nur complete: 1316 words, check.py OK, exported (92 surahs, 32,546 words).
 - 2026-11-01 Dubai — Own i'rab 025 al-Furqan complete: 893 words, check.py OK, exported (91 surahs, 31,230 words).
 - 2026-11-01 19:30 Dubai — Book reader rebuilt (player, highlight, pause, pace, sleep, resume, notification), seen on Rafeeq_Audit_API24 in en and ar; analyze clean, 1452 tests pass. NOT released. Own i'rab waits at 25:67 (sheet.py 25 67 77).
