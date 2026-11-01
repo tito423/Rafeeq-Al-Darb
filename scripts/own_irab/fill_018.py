@@ -1,0 +1,84 @@
+"""al-Kahf (18), written 2026-11-01 word by word against al-Da'as
+(sheet.py 18); every doubt read in al-Jadwal and Darwish (sheet.py).
+Two books against al-Da'as -> ours follows them, al-Da'as named.
+One book against -> ours = al-Da'as, the other named.
+Written in short codes (irab_dsl.py, phrasebook_sheet.txt).
+Run once: fills 018.json in mushaf order."""
+from write_surah import write, tokens
+
+
+def alt(text, *alts):
+    return {'text': text, 'check': 'alt', 'alts': [{'book': b, 'text': t} for b, t in alts]}
+
+
+AMANNA = 'vpn:نا,W:نا pfa'
+SILA = 'vpw,ww,alf,jsl'
+IDHA = 'ظرف لما يستقبل من الزمان متضمن معنى الشرط غير جازم مبني على السكون في محل نصب'
+
+I = [
+ # 1
+ 'mb,jibt',
+ 'lj,wAmjl,tkhm',
+ 'اسم موصول مبني على السكون في محل جر صفة للفظ الجلالة',
+ 'vp,hs,jsl',
+ 'Xj:على',
+ 'mj:على,mud,hk_md,tf:أنزل',
+ 'mf',
+ 'wa,W:لم lm',
+ 'vj:لم,hs,jmsl',
+ alt('lj,hd_jl,tf:يجعل', ('jadwal', '(اللام) حرف جرّ و (الهاء) ضمير في محلّ جرّ متعلّق بمحذوف مفعول به ثان')),
+ 'mf',
+ # 2
+ alt('حال من «الكتاب» منصوبة وعلامة نصبها الفتحة الظاهرة', ('jadwal', '(قيّما) مفعول به لفعل محذوف تقديره جعله')),
+ 'ljt,W:ينذر vnl:أن,hs,والمفعول الأول محذوف تقديره: الكافرين,والمصدر المؤول في محل جر باللام متعلق بـ«أنزل»',
+ 'mf2',
+ 'sfn:بأسا',
+ 'Xj:من',
+ alt('اسم مبني على السكون في محل جر بـ«من»,mud,hk_md,والجار والمجرور متعلقان بمحذوف صفة ثانية لـ«بأسا»', ('daas', '«مِنْ لَدُنْهُ» متعلقان بينذر')),
+ 'wa,W:يبشر معطوف على «ينذر» منصوب وعلامة نصبه الفتحة الظاهرة,hs',
+ 'mfy',
+ 'اسم موصول مبني على الفتح في محل نصب صفة لـ«المؤمنين»',
+ 'v5,ww,jsl',
+ 'mfk',
+ alt('in,والمصدر المؤول من «أن» وما في حيزها في محل نصب مفعول به ثان لـ«يبشر»', ('jadwal', 'والمصدر المؤوّل (أنّ لهم أجرا..) في محلّ جرّ بباء محذوفة متعلّق ب (يبشّر)')),
+ 'lj,W:هم ضمير متصل مبني على السكون في محل جر باللام,tkhq:أن',
+ 'اسم «أن» مؤخر منصوب وعلامة نصبه الفتحة الظاهرة',
+ 'sfn:أجرا',
+ # 3
+ 'حال منصوبة وعلامة نصبها الياء لأنها جمع مذكر سالم',
+ 'Xj:في,hk_jb:في,tb:ماكثين',
+ 'zm,متعلق بـ«ماكثين»',
+ # 4
+ 'wa,W:ينذر معطوف على «ينذر» الأول منصوب وعلامة نصبه الفتحة الظاهرة,hs',
+ 'اسم موصول مبني على الفتح في محل نصب مفعول به',
+ 'vpw,ww,alf,jsl',
+ 'vp,jmq',
+ 'Af',
+ 'mf',
+ # 5
+ 'حرف نفي مبني على السكون',
+ 'lj,W:هم ضمير متصل مبني على السكون في محل جر باللام,tkm',
+ 'bj,hk_jbb,tb:علم',
+ 'jz',
+ 'مبتدأ مؤخر مجرور لفظا مرفوع محلا,jst',
+ 'wa,W:لا زائدة لتأكيد النفي',
+ 'lj,W:آباء mjl,mud,W:هم pmd,tma:لهم',
+ 'فعل ماض جامد لإنشاء الذم مبني على الفتح,tt,والفاعل ضمير مستتر تقديره: هي,jst',
+ 'tm',
+ 'vm,hi,jsfn:كلمة',
+ 'Xj:من',
+ 'mj:من,mud,W:هم pmd,tf:تخرج',
+ 'حرف نفي مبني على السكون',
+ 'v5,ww,jst',
+ 'ahsr',
+ 'mf',
+]
+
+if __name__ == '__main__':
+    toks = tokens(18)
+    if len(I) == len(toks):
+        write(18, I, "written 2026-11-01, every word checked against al-Da'as (sheet.py 18); doubts read in al-Jadwal and Darwish (sheet.py), the named views shown under the word")
+    else:  # WIP: report how far the entries reach, by ayah
+        done = toks[:len(I)]
+        print('WIP', len(I), 'of', len(toks), 'tokens; last', done[-1] if done else None,
+              'next', toks[len(I)] if len(I) < len(toks) else None)
