@@ -79,7 +79,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
-- 2026-11-01 Dubai — Own i'rab 020 Ta-Ha WIP: ayahs 1-8 written in codes; next sheet.py 20 9 ...
+- 2026-11-01 Dubai — Own i'rab 020 Ta-Ha WIP: ayahs 1-11 written in codes; next sheet.py 20 12 ... (use --full: the default cut drops al-Da'as text for 12-13)
 - 2026-11-01 Dubai — Own i'rab 021 al-Anbiya complete: 1169 words (1065 agree / 95 alt / 9 fuller), check.py OK, per-ayah counts match, exported (95 surahs, 3,760 ayahs, 36,039 words). 21:101 has no al-Da'as text in our copy (written from al-Jadwal + Darwish, check vs print).
 - 2026-11-01 Dubai — Own i'rab 022 al-Hajj complete: 1274 words (1162 agree / 108 alt / 4 fuller), check.py OK, per-ayah counts match, exported (94 surahs, 3,648 ayahs, 34,870 words).
 - 2026-11-01 Dubai — Own i'rab 023 al-Mu'minun complete: 1050 words (935 agree / 115 alt), check.py OK, per-ayah counts match, exported (93 surahs, 3,570 ayahs, 33,596 words). 23:27 «زوجين اثنين» follows al-Samin «الدر المصون» for Hafs (named in our text), al-Da'as shown under it.
