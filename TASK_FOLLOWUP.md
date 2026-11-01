@@ -79,6 +79,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-11-01 19:30 Dubai — Book reader rebuilt (player, highlight, pause, pace, sleep, resume, notification), seen on Rafeeq_Audit_API24 in en and ar; analyze clean, 1452 tests pass. NOT released. Own i'rab waits at 25:67 (sheet.py 25 67 77).
 - 2026-11-01 Dubai — own i'rab 025 al-Furqan ayahs 41-66 written (769/893); new sheet.py/append.py (b0528d10). Book reader investigated (read-only): engine Supertonic-3 kept, player lacks highlight/pause/speed/notification; owner to decide.
 - 2026-11-01 16:30 Dubai — Log catch-up: 2026-10-23 v3.93.0 was PUBLISHED (Ibn Hisham full al-Saqqa text vowelled 953,377 bytes on R2; mushaf bookmarks card on the top bar; one 52 dp nav bar), commits eff98a1f..5e3b8dbb. Own i'rab resumes at 025 al-Furqan ayah 41 (480 of 893 tokens, measured by fill_025.py WIP run).
 - 2026-10-22 06:00 Dubai — Own i'rab 029 al-Ankabut: 976 words, first surah fully in short codes, check.py OK, exported. Cost measured: ~110 words per 1% of the 5-hour window; weekly 81%.

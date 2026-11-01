@@ -128,11 +128,34 @@ class BookReadAloud extends ChangeNotifier {
         while (end > starts[k] && text[end - 1].trim().isEmpty) {
           end--;
         }
-        out.add(ReadChunk(i, starts[k], end, pieces[k]));
+        final spoken = speakable(pieces[k]);
+        // A lone «ــ» between a hadith and its commentary was handed to the
+        // voice as a sentence of its own (seen on emulator, 2026-11-01).
+        if (!_letter.hasMatch(spoken)) continue;
+        out.add(ReadChunk(i, starts[k], end, spoken));
       }
     }
     return out;
   }
+
+  // Arabic letters, not the tatweel U+0640: Ihkam al-Ahkam separates a
+  // hadith from its commentary with a paragraph «ــ» (two tatweels).
+  static final _letter = RegExp('[ء-ؿف-ي]');
+
+  /// Qur'an quoted INSIDE a paragraph - Shamela sets it in {…} (or ﴿…﴾),
+  /// usually followed by its reference «[محمد: ٣٦]» - is left out of what
+  /// the voice says, for the same reason a whole ayah paragraph is
+  /// ([pageSpeechText]): the Qur'an is recited, not read by a synthesiser.
+  /// Ihkam al-Ahkam page 2 had «{إِنَّمَا الْحَيَاةُ الدُّنْيَا لَعِبٌ}
+  /// [محمد: ٣٦]» read aloud mid-sentence (emulator, 2026-11-01). The
+  /// sentence is still lit on the page with the ayah in it.
+  static String speakable(String s) => s
+      .replaceAll(_quotedAyah, ' ')
+      .replaceAll(RegExp(r'\s{2,}'), ' ')
+      .trim();
+  static final _quotedAyah = RegExp(
+    r'(\{[^{}]*\}|﴿[^﴾]*﴾)\s*(\[[^\[\]]*\])?',
+  );
 
   List<ReadChunk> _chunksFor(int p) => chunksOf(
     _doc!.pages[p].paras.map((x) => (text: x.text, kind: x.kind)).toList(),

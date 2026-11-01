@@ -30,6 +30,20 @@ void main() {
     expect(cs.map((c) => c.para).toSet(), {0, 2});
   });
 
+  test("quoted Qur'an and a lone dash are never handed to the voice", () {
+    const body = 'وَكَذَلِكَ قَوْلُهُ تَعَالَى {إِنَّمَا الْحَيَاةُ الدُّنْيَا لَعِبٌ} [محمد: ٣٦] يَقْتَضِي الْحَصْرَ.';
+    final cs = BookReadAloud.chunksOf([
+      (text: body, kind: 'body'),
+      (text: '—', kind: 'body'),
+      (text: 'ــ', kind: 'body'), // two tatweels, as Ihkam al-Ahkam prints it
+      (text: '﴿قُلْ هُوَ اللَّهُ أَحَدٌ﴾ [الإخلاص: ١]', kind: 'body'),
+    ]);
+    expect(cs.length, 1, reason: 'the dash, the tatweels and the ayah-only paragraph are not sentences');
+    expect(cs.single.text, 'وَكَذَلِكَ قَوْلُهُ تَعَالَى يَقْتَضِي الْحَصْرَ.');
+    expect(body.substring(cs.single.start, cs.single.end), body,
+        reason: 'the lit span still covers the whole sentence on the page');
+  });
+
   test('with the tashkeel hidden the highlight moves onto the stripped text', () {
     final cs = BookReadAloud.chunksOf(paras, max: 40);
     final second = cs.where((c) => c.para == 0).elementAt(1);
