@@ -58,7 +58,9 @@ def place(pieces, toks, start, back=0):
                         if all(eq(i + k, words[k], k == 0) for k in range(n))), None)
             if hit is None and n > 1:
                 hit = next((i for i in range(cur, min(cur + 60, len(sk))) if eq(i, words[0], True)), None)
-            if hit is not None:
+            # a quote never jumps more than 3 ayahs ahead (a later «أولئك
+            # يجزون» once swallowed 25:63-66); it stays with the piece before
+            if hit is not None and (not out or toks[hit][0] - ayah <= 3):
                 ayah, cur = toks[hit][0], hit + 1
         out.append((ayah, text))
     return out
@@ -110,7 +112,7 @@ def main():
     miss = [a for a in range(a0, a1 + 1) if a not in covered]
     if miss:
         print('   DAAS: NO SECTION for ayahs', miss)
-    seen = set()
+    seen, jgot = set(), set()
     for src, name in (('aljadwal', 'J'), ('iraab-aldarweesh', 'D')):
         for a in range(a0, a1 + 1):
             t = get(src, s, a)
@@ -126,15 +128,25 @@ def main():
             if full:
                 placed = [(a, t)]
             elif src == 'aljadwal':  # «(42)» opens the part on ayah 42
+                # «(n)» outside a [[footnote]]; «في الآية (75)» inside one is not a marker
                 placed, cur = [], a
-                for i, p in enumerate(re.split(r'\((\d+)\)', t)):
-                    if i % 2:
-                        cur = int(p)
-                    else:
-                        placed.append((cur, p))
+                for chunk in re.split(r'(\[\[.*?\]\])', t):
+                    if chunk.startswith('[['):
+                        placed.append((cur, chunk)); continue
+                    for i, p in enumerate(re.split(r'\((\d+)\)', chunk)):
+                        if i % 2:
+                            cur = int(p)
+                        else:
+                            placed.append((cur, p))
             else:
                 placed = cut(t, DRW_Q, toks, a, back=200)
             show(f'{name} {s}:{a}', placed, a0, a1)
+            if src == 'aljadwal' and not full:
+                jgot.update(x for x, _ in placed)
+    if not full:
+        jm = [a for a in range(a0, a1 + 1) if a not in jgot]
+        if jm:  # e.g. tafsir.app's al-Jadwal group 25:63 jumps from (64) to (73)
+            print('   J: NO PART for ayahs', jm)
 
 
 if __name__ == '__main__':
