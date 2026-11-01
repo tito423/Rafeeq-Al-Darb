@@ -79,6 +79,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-11-01 Dubai — Own i'rab 022 al-Hajj WIP: ayahs 1-4 written in codes (55 of 1274); next sheet.py 22 5 ...
 - 2026-11-01 Dubai — Own i'rab 023 al-Mu'minun complete: 1050 words (935 agree / 115 alt), check.py OK, per-ayah counts match, exported (93 surahs, 3,570 ayahs, 33,596 words). 23:27 «زوجين اثنين» follows al-Samin «الدر المصون» for Hafs (named in our text), al-Da'as shown under it.
 - 2026-11-01 Dubai — Own i'rab 024 al-Nur complete: 1316 words, check.py OK, exported (92 surahs, 32,546 words).
 - 2026-11-01 Dubai — Own i'rab 025 al-Furqan complete: 893 words, check.py OK, exported (91 surahs, 31,230 words).
