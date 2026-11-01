@@ -79,6 +79,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 
 ## Log
 
+- 2026-11-01 16:30 Dubai — Log catch-up: 2026-10-23 v3.93.0 was PUBLISHED (Ibn Hisham full al-Saqqa text vowelled 953,377 bytes on R2; mushaf bookmarks card on the top bar; one 52 dp nav bar), commits eff98a1f..5e3b8dbb. Own i'rab resumes at 025 al-Furqan ayah 41 (480 of 893 tokens, measured by fill_025.py WIP run).
 - 2026-10-22 06:00 Dubai — Own i'rab 029 al-Ankabut: 976 words, first surah fully in short codes, check.py OK, exported. Cost measured: ~110 words per 1% of the 5-hour window; weekly 81%.
 - 2026-10-22 05:30 Dubai — i'rab short codes: irab_dsl.py + frozen phrasebook.json (229 clauses mined from 030-114, 81% of clauses); round-trip of 16,342 old words byte-identical (22a165b6). 029 ayahs 1-13 written in codes (cd9ae7d9). Weekly quota 80%.
 - 2026-10-21 19:20 Dubai — Device check: i'rab tab seen full-screen on emulator for 36:62, 35:35, 34:42, 33:48, 32:14, 31:21 (debug APK built offline, signed, installed -r over 3.92.0). Tried an auto-draft script for the i'rab: on 30:10-15 it drafted 7 of 49 words and one of them wrong (لهم as «خبر مرفوع»), so it was dropped; method unchanged.
