@@ -363,13 +363,14 @@ class OpenVoice {
         inbox.close();
         Isolate.exit();
       }
-      final (id, text, steps) = m as (int, String, int);
+      final (id, text, steps, speed) = m as (int, String, int, double);
       try {
         final audio = tts.generateWithConfig(
           text: text,
           config: so.OfflineTtsGenerationConfig(
             sid: _sid,
             numSteps: steps,
+            speed: speed,
             extra: const {'lang': 'ar'},
           ),
         );
@@ -403,14 +404,17 @@ class OpenVoice {
   /// stay faster than speech. The first chunk that takes longer than 85% of
   /// its own duration drops the rest to [_slowSteps] (6 steps: a little less
   /// natural, about a quarter faster) rather than leave gaps.
-  Future<Float32List> synthesize(String text) async {
+  ///
+  /// [speed] is the model's own pace control (sherpa's `speed`, larger is
+  /// faster), so a faster reading keeps its pitch instead of being sped up.
+  Future<Float32List> synthesize(String text, {double speed = 1.0}) async {
     await _ensureLoaded();
     final send = _toWorker;
     if (send == null) throw StateError('voice worker not running');
     final id = _nextId++;
     final done = _pending[id] = Completer<Float32List>();
     final watch = Stopwatch()..start();
-    send.send((id, text, _stepsNow));
+    send.send((id, text, _stepsNow, speed));
     final out = await done.future;
     final spoken = out.length / sampleRate;
     if (_stepsNow > _slowSteps &&

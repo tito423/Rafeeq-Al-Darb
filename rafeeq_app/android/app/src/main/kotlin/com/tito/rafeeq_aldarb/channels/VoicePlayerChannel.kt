@@ -40,6 +40,8 @@ fun MainActivity.registerVoicePlayerChannel(flutterEngine: FlutterEngine) {
     var focusRequest: AudioFocusRequest? = null
     var holdsFocus = false
     var pausedByFocus = false
+    // Held by the reader's own pause button: a focus gain must not undo it.
+    var pausedByUser = false
     lateinit var onFocus: AudioManager.OnAudioFocusChangeListener
 
     fun abandonFocus() {
@@ -79,7 +81,7 @@ fun MainActivity.registerVoicePlayerChannel(flutterEngine: FlutterEngine) {
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> mp?.setVolume(0.3f, 0.3f)
             AudioManager.AUDIOFOCUS_GAIN -> {
                 mp?.setVolume(1f, 1f)
-                if (pausedByFocus && mp != null && !mp.isPlaying) mp.start()
+                if (pausedByFocus && !pausedByUser && mp != null && !mp.isPlaying) mp.start()
                 pausedByFocus = false
             }
             AudioManager.AUDIOFOCUS_LOSS -> {
@@ -113,10 +115,13 @@ fun MainActivity.registerVoicePlayerChannel(flutterEngine: FlutterEngine) {
         holdsFocus = granted == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
     }
 
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, Channels.VOICE_PLAYER).setMethodCallHandler { call, result ->
+    val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, Channels.VOICE_PLAYER)
+    BookReadNotice.channel = channel
+    channel.setMethodCallHandler { call, result ->
         when (call.method) {
             "play" -> {
                 finish(false)
+                pausedByUser = false
                 val path = call.argument<String>("path")
                 if (path == null) {
                     result.error("play", "no path", null)
@@ -147,15 +152,45 @@ fun MainActivity.registerVoicePlayerChannel(flutterEngine: FlutterEngine) {
                     pending = result
                     requestFocus()
                     // Mid-adhan: this chunk waits for the focus to return.
-                    if (!pausedByFocus) mp.start()
+                    if (!pausedByFocus && !pausedByUser) mp.start()
                 } catch (e: Exception) {
                     result.error("play", e.message, null)
                 }
             }
             "stop" -> {
+                pausedByUser = false
                 finish(false)
                 main.removeCallbacks(releaseIfIdle)
                 abandonFocus()
+                result.success(null)
+            }
+            // The reader's pause holds the sentence mid-word; resume goes on
+            // from the same sample. Between chunks there is no player, and the
+            // flag makes the next chunk wait.
+            "pause" -> {
+                pausedByUser = true
+                player?.let { if (it.isPlaying) it.pause() }
+                result.success(null)
+            }
+            "resume" -> {
+                pausedByUser = false
+                if (!pausedByFocus) player?.let { if (!it.isPlaying) it.start() }
+                result.success(null)
+            }
+            "notice" -> {
+                @Suppress("UNCHECKED_CAST")
+                val labels = (call.argument<Map<String, String>>("labels") ?: emptyMap())
+                BookReadNotice.show(
+                    this,
+                    call.argument<String>("title") ?: "",
+                    call.argument<String>("text") ?: "",
+                    call.argument<Boolean>("playing") ?: true,
+                    labels,
+                )
+                result.success(null)
+            }
+            "noticeOff" -> {
+                BookReadNotice.hide(this)
                 result.success(null)
             }
             else -> result.notImplemented()

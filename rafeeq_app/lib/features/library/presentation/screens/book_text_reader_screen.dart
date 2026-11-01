@@ -14,9 +14,11 @@ import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/widgets/toolbar_action.dart';
 import '../../../dorar/presentation/dorar_check_sheet.dart';
 import '../../data/book_catalog.dart';
+import '../../data/book_read_aloud.dart';
 import '../../data/book_text.dart';
 import '../widgets/book_listen_action.dart';
 import '../widgets/book_page_rail.dart';
+import '../widgets/book_player_bar.dart';
 import '../widgets/book_provenance_sheet.dart';
 import '../widgets/book_provenance_strip.dart';
 
@@ -105,14 +107,40 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
   String get _kTashkeel => 'booktext_${widget.book.id}_tashkeel';
   String get _kInk => 'booktext_${widget.book.id}_ink';
 
+  /// The listening session (book_read_aloud.dart): lights the sentence
+  /// heard, drives the player bar, follows the voice onto the next page.
+  late final _aloud = BookReadAloud(bookId: widget.book.id)
+    ..onTurnPage = ((from, to) { if (_pageIndex == from) _goToPageIndex(to); })
+    ..describe = (p) => (
+          title: properName(widget.book.titleAr, widget.book.titleEn),
+          text: '${'library.text_page'.tr()} ${localizeDigits('${_doc?.printedPageAt(p) ?? p + 1}', uiLanguageCode)}',
+          labels: {for (final k in ['channel', 'play', 'pause', 'next', 'previous', 'stop']) k: 'library.notice_$k'.tr()},
+        );
+  final _hlKey = GlobalKey();
+  int? _hlPara;
+
+  /// Keeps the sentence being heard on screen when the paragraph changes.
+  void _onAloud() {
+    final c = _aloud.current;
+    final para = c != null && _aloud.page == _pageIndex ? c.para : null;
+    if (para == null || para == _hlPara) return;
+    _hlPara = para;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _hlKey.currentContext;
+      if (ctx != null) Scrollable.ensureVisible(ctx, alignment: 0.15, duration: const Duration(milliseconds: 300));
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _aloud.addListener(_onAloud);
     _load();
   }
 
   @override
   void dispose() {
+    _aloud.dispose();
     _scrollCtrl.dispose();
     super.dispose();
   }
@@ -424,6 +452,7 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
           book: widget.book,
           doc: doc,
           pageIndex: _pageIndex,
+          aloud: _aloud,
           onTurnPage: _goToPageIndex,
         ),
         // `Scaffold.of(context)` needs a context *below*
@@ -644,12 +673,18 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      for (final para in page.paras) ...[
-                        _Paragraph(
-                          para: para,
-                          scale: _fontScale,
-                          ink: ink,
-                          showTashkeel: _showTashkeel,
+                      for (final (i, para) in page.paras.indexed) ...[
+                        ListenableBuilder(
+                          listenable: _aloud,
+                          builder: (_, _) {
+                            final c = _aloud.current;
+                            final lit = c != null && _aloud.page == _pageIndex && c.para == i ? c : null;
+                            return _Paragraph(
+                              key: lit != null ? _hlKey : null,
+                              para: para, scale: _fontScale, ink: ink, paper: paper,
+                              showTashkeel: _showTashkeel, hl: lit,
+                            );
+                          },
                         ),
                         const SizedBox(height: 12),
                       ],
@@ -704,6 +739,10 @@ class _BookTextReaderScreenState extends State<BookTextReaderScreen> {
         // Its own widget since 2026-09-21, when the printed-page fix to
         // its two end labels would have pushed this file past the ceiling
         // `code_layout_test` holds it to. See `BookPageRail`.
+        BookPlayerBar(
+          aloud: _aloud, doc: doc, shownPage: _pageIndex, paper: paper, ink: ink,
+          onBackToReading: () => _goToPageIndex(_aloud.page),
+        ),
         BookPageRail(
           doc: doc,
           pageIndex: _pageIndex,
@@ -727,11 +766,16 @@ class _Paragraph extends StatelessWidget {
   final double scale;
   final Color ink;
   final bool showTashkeel;
+  final Color paper;
+  final ReadChunk? hl; // the sentence being read aloud, if it is in here
   const _Paragraph({
+    super.key,
     required this.para,
     required this.scale,
     required this.ink,
     required this.showTashkeel,
+    required this.paper,
+    this.hl,
   });
 
   /// P3‑29 "التشكيل" toggle. Quoted Quran ayahs (`kind == 'aya'`) are
@@ -748,8 +792,8 @@ class _Paragraph extends StatelessWidget {
       case 'head':
         return Padding(
           padding: const EdgeInsets.only(top: 4, bottom: 2),
-          child: Text(
-            _displayText,
+          child: Text.rich(
+            readAloudSpan(raw: para.text, tashkeel: showTashkeel, hl: hl, paper: paper),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.w700,
@@ -798,8 +842,8 @@ class _Paragraph extends StatelessWidget {
           style: TextStyle(fontSize: 12.5 * scale, color: ink.withValues(alpha: 0.7)),
         );
       default: // body
-        return Text(
-          _displayText,
+        return Text.rich(
+          readAloudSpan(raw: para.text, tashkeel: showTashkeel, hl: hl, paper: paper),
           textAlign: TextAlign.justify,
           style: TextStyle(fontSize: 16 * scale, height: 1.95, color: ink),
         );

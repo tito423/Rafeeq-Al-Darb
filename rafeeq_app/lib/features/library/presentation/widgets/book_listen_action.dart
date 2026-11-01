@@ -6,6 +6,7 @@ import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/fitted_sheet.dart';
 import '../../../../core/widgets/toolbar_action.dart';
 import '../../data/book_catalog.dart';
+import '../../data/book_read_aloud.dart';
 import '../../data/book_speaker.dart';
 import '../../data/book_text.dart';
 import '../../data/tts/book_voice_pref.dart';
@@ -40,6 +41,7 @@ class BookListenAction extends StatefulWidget {
     required this.book,
     required this.doc,
     required this.pageIndex,
+    required this.aloud,
     this.onTurnPage,
   });
 
@@ -47,8 +49,11 @@ class BookListenAction extends StatefulWidget {
   final BookText doc;
   final int pageIndex;
 
-  /// Turns the reader to a page; continuous listening calls it when a page
-  /// has been read so the text on screen follows the voice.
+  /// The listening session: the screen owns it, because the page it shows
+  /// lights the sentence being read and the player bar drives it.
+  final BookReadAloud aloud;
+
+  /// Turns the reader to a page (for «استكمال من حيث توقفت»).
   final ValueChanged<int>? onTurnPage;
 
   @override
@@ -56,17 +61,6 @@ class BookListenAction extends StatefulWidget {
 }
 
 class BookListenActionState extends State<BookListenAction> {
-  final BookSpeaker _speaker = BookSpeaker();
-  bool _speaking = false;
-
-  /// Bumped by every stop, so a reading loop can tell "the page ended" from
-  /// "the reader pressed stop" after `speak` returns.
-  int _run = 0;
-
-  /// The page this widget turned to itself; its own turn must not stop the
-  /// voice the way the reader's turn does.
-  int? _autoTurn;
-
   @override
   void initState() {
     super.initState();
@@ -78,92 +72,76 @@ class BookListenActionState extends State<BookListenAction> {
     }
   }
 
-  @override
-  void didUpdateWidget(BookListenAction oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Turning the page stops the voice. Letting it read on while the reader
-    // is looking at a different page is worse than silence.
-    if (oldWidget.pageIndex != widget.pageIndex &&
-        widget.pageIndex == _autoTurn) {
-      _autoTurn = null;
-      return;
-    }
-    if (oldWidget.pageIndex != widget.pageIndex && _speaking) {
-      _run++;
-      _speaker.stop();
-      if (mounted) setState(() => _speaking = false);
-    }
-  }
-
-  @override
-  void dispose() {
-    _speaker.stop();
-    _speaker.dispose();
-    super.dispose();
-  }
+  // Turning the page by hand no longer stops the voice: «قارئ الكتب سئ
+  // جدا» (2026-11-01) was partly that a glance at the next page silenced
+  // it. The player bar offers the way back to the sentence being read.
 
   Future<void> _toggle() async {
-    if (_speaking) {
-      _run++;
-      await _speaker.stop();
-      if (mounted) setState(() => _speaking = false);
+    final aloud = widget.aloud;
+    if (aloud.active) {
+      await aloud.stop();
       return;
     }
     if (!await offerOpenVoice(context)) return;
-    if (!await _speaker.available) {
+    final probe = BookSpeaker();
+    final can = await probe.available;
+    probe.dispose();
+    if (!can) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('library.text_listen_no_engine'.tr())),
       );
       return;
     }
+    final saved = await aloud.savedPoint();
     if (!mounted) return;
-    final whole = await _askScope();
-    if (whole == null || !mounted) return;
-    final run = ++_run;
-    setState(() => _speaking = true);
-    var i = widget.pageIndex;
-    final last = widget.doc.pages.length - 1;
-    while (mounted && run == _run) {
-      final page = widget.doc.pages[i];
-      final text = pageSpeechText(
-        page.paras.map((p) => (text: p.text, kind: p.kind)),
-      );
-      if (text.trim().isNotEmpty) await _speaker.speak(text);
-      // «خليه هو يقلب الصفحة بنفسه ويكمل أوتوماتيك»: a page that ended on
-      // its own, in whole-book mode, turns the reader and reads the next.
-      if (!whole || run != _run || i >= last || !mounted) break;
-      i++;
-      _autoTurn = i;
-      widget.onTurnPage?.call(i);
+    final choice = await _askScope(saved);
+    if (choice == null || !mounted) return;
+    if (choice == _Scope.resume && saved != null) {
+      widget.onTurnPage?.call(saved.$1);
+      await aloud.start(widget.doc, saved.$1, toEnd: true, chunk: saved.$2);
+    } else {
+      await aloud.start(widget.doc, widget.pageIndex,
+          toEnd: choice == _Scope.book);
     }
-    if (mounted && run == _run) setState(() => _speaking = false);
   }
 
-  /// This page only, or on to the end of the book. Null if dismissed.
-  Future<bool?> _askScope() => showFittedSheet<bool>(
+  /// Resume, on to the end of the book, or this page only. Null if
+  /// dismissed.
+  Future<_Scope?> _askScope((int, int)? saved) => showFittedSheet<_Scope>(
     context: context,
     showDragHandle: true,
     builder: (ctx) => SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (saved != null && saved.$1 < widget.doc.pages.length)
+            ListTile(
+              leading: const Icon(Icons.play_circle_outline_rounded),
+              title: Text('library.listen_resume'.tr()),
+              subtitle: Text(trn('library.listen_resume_desc',
+                  args: [_pageLabel(saved.$1)])),
+              onTap: () => Navigator.of(ctx).pop(_Scope.resume),
+            ),
           ListTile(
             leading: const Icon(Icons.menu_book_rounded),
             title: Text('library.listen_scope_book'.tr()),
             subtitle: Text('library.listen_scope_book_desc'.tr()),
-            onTap: () => Navigator.of(ctx).pop(true),
+            onTap: () => Navigator.of(ctx).pop(_Scope.book),
           ),
           ListTile(
             leading: const Icon(Icons.article_outlined),
             title: Text('library.listen_scope_page'.tr()),
-            onTap: () => Navigator.of(ctx).pop(false),
+            onTap: () => Navigator.of(ctx).pop(_Scope.page),
           ),
           const SizedBox(height: 8),
         ],
       ),
     ),
   );
+
+  String _pageLabel(int i) =>
+      localizeDigits('${widget.doc.printedPageAt(i) ?? i + 1}', uiLanguageCode);
 
   void _explain() {
     showDialog<void>(
@@ -240,10 +218,7 @@ class BookListenActionState extends State<BookListenAction> {
       ),
     );
     if (choice == null || choice == current) return;
-    if (_speaking) {
-      await _speaker.stop();
-      if (mounted) setState(() => _speaking = false);
-    }
+    if (widget.aloud.active) await widget.aloud.stop();
     if (choice == BookVoice.open && !installed && mounted) {
       await installOpenVoice(context);
       // Cancelled: nothing changes. Sent to the background: the choice
@@ -254,19 +229,25 @@ class BookListenActionState extends State<BookListenAction> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: widget.aloud,
+    builder: (context, _) => _build(context),
+  );
+
+  Widget _build(BuildContext context) {
     final on = widget.book.canBeSpoken;
+    final speaking = widget.aloud.active;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         ToolbarAction(
-          icon: _speaking
+          icon: speaking
               ? Icons.stop_circle_outlined
               : Icons.headphones_outlined,
-          label: _speaking
+          label: speaking
               ? 'library.text_listen_stop'.tr()
               : 'library.text_listen'.tr(),
-          active: _speaking,
+          active: speaking,
           onPressed: on ? _toggle : _explain,
         ),
         if (on)
@@ -279,3 +260,5 @@ class BookListenActionState extends State<BookListenAction> {
     );
   }
 }
+
+enum _Scope { resume, book, page }

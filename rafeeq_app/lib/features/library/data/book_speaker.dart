@@ -255,59 +255,93 @@ class BookSpeaker {
     }
   }
 
-  Future<void> speak(String pageText, {double rate = 0.45}) async {
-    if (_disposed) return;
+  Future<void> speak(String pageText, {double rate = _baseRate}) async {
+    await _read(pageText: pageText, speed: rate / _baseRate);
+  }
+
+  /// The phone voice's pace at speed 1, the rate the reader always used.
+  static const _baseRate = 0.45;
+
+  /// Reads [chunks] in order from [from], calling [onChunk] as each one
+  /// starts, so the reader can light the sentence being heard. Returns the
+  /// index it stopped at: `chunks.length` when it read to the end, or the
+  /// chunk that was playing when [stop] cut it short (that chunk was not
+  /// finished, so a resume starts there).
+  ///
+  /// [speed] 1 is the normal pace: the open voice passes it to the model
+  /// (its own pace control, so the pitch stays), the phone voice scales its
+  /// speech rate.
+  Future<int> speakChunks(
+    List<String> chunks, {
+    int from = 0,
+    double speed = 1.0,
+    ValueChanged<int>? onChunk,
+  }) =>
+      _read(chunks: chunks, from: from, speed: speed, onChunk: onChunk);
+
+  Future<int> _read({
+    String? pageText,
+    List<String>? chunks,
+    int from = 0,
+    double speed = 1.0,
+    ValueChanged<int>? onChunk,
+  }) async {
+    if (_disposed) return from;
     final stopping = stop();
     final gen = ++_gen;
     await stopping;
-    if (!_current(gen)) return;
+    if (!_current(gen)) return from;
     // Not over a recitation, and a recitation started later stops this
     // (`AudioExclusive`): the two used to play at once.
-    if (!await _claim(gen)) return;
+    if (!await _claim(gen)) return from;
     final open = await _useOpenVoice();
-    if (!_current(gen)) return;
+    if (!_current(gen)) return from;
     if (open) {
-      final done = await _speakOpen(pageText, gen);
-      if (!_current(gen)) return;
-      if (done) return;
+      final done = await _speakOpen(
+        chunks ?? _openChunks(pageText ?? ''),
+        gen,
+        from,
+        speed,
+        onChunk,
+      );
+      if (!_current(gen) || done != null) return done ?? from;
       // The open voice failed on this device (a model that would not load,
       // an input it refused). Read the page in the phone's voice rather
       // than leave the listener in silence; the failure is in the log.
     }
-    final chunks = chunk(pageText);
-    if (chunks.isEmpty) {
-      _finish(gen, 0, 0);
-      return;
+    final list = chunks ?? chunk(pageText ?? '');
+    if (from >= list.length) {
+      _finish(gen, from, list.length);
+      return list.length;
     }
 
     _speaking = true;
 
     try {
       await _tts.setLanguage('ar');
-      if (!_current(gen)) return;
+      if (!_current(gen)) return from;
       await _preferLocalArabicVoice(gen);
-      if (!_current(gen)) return;
-      await _tts.setSpeechRate(rate);
-      if (!_current(gen)) return;
+      if (!_current(gen)) return from;
+      await _tts.setSpeechRate((_baseRate * speed).clamp(0.1, 1.0));
+      if (!_current(gen)) return from;
       // Wait for each utterance so the chunks queue in order rather than
       // racing; without it the engine drops or overlaps them.
       await _tts.awaitSpeakCompletion(true);
-      if (!_current(gen)) return;
+      if (!_current(gen)) return from;
     } catch (e) {
       debugPrint('BookSpeaker: engine setup failed: $e');
-      _finish(gen, 0, 0);
-      return;
+      _finish(gen, from, list.length);
+      return from;
     }
 
     final focus = await _watchFocus(gen);
-    var index = 0;
-    for (; index < chunks.length; index++) {
+    var index = from;
+    for (; index < list.length; index++) {
       if (!_current(gen)) break;
-      _emit(
-        BookSpeakerState(speaking: true, chunk: index, total: chunks.length),
-      );
+      onChunk?.call(index);
+      _emit(BookSpeakerState(speaking: true, chunk: index, total: list.length));
       try {
-        await _tts.speak(chunks[index]);
+        await _tts.speak(list[index]);
       } catch (e) {
         debugPrint('BookSpeaker: chunk $index failed: $e');
         break;
@@ -322,7 +356,8 @@ class BookSpeaker {
     }
     await focus?.cancel();
 
-    _finish(gen, index, chunks.length);
+    _finish(gen, index, list.length);
+    return index;
   }
 
   /// The owner's choice in Settings, and only when the pack is really there.
@@ -337,50 +372,129 @@ class BookSpeaker {
   /// The voice is fed short chunks: its cost grows with input length and the
   /// first sound waits for the whole first chunk, so a sentence or two at a
   /// time keeps the start quick while the next chunk renders during playback.
-  static const _openChunk = 220;
+  static const openChunk = 220;
   static const _firstChunk = 90;
 
-  /// Reads the page in the open voice (the one the owner chose for its
-  /// tafkhim of the divine name). Returns false if it could not start, so
-  /// the caller falls back; true once it has read or been stopped.
-  Future<bool> _speakOpen(String pageText, int gen) async {
-    // The same operation token covers model loading, rendering and playback.
-    bool stale() => !_current(gen);
-    var chunks = chunk(pageText, max: _openChunk);
-    if (chunks.isEmpty) {
-      _finish(gen, 0, 0);
-      return true;
-    }
+  static List<String> _openChunks(String pageText) {
+    final chunks = chunk(pageText, max: openChunk);
     // The first sound waits for the whole first chunk to be synthesised, so
     // that one is cut short (~90 characters, still at a word): the voice
     // starts sooner and the rest renders while it speaks.
-    if (chunks.first.length > _firstChunk) {
-      chunks = [..._splitLong(chunks.first, _firstChunk), ...chunks.skip(1)];
+    if (chunks.isEmpty || chunks.first.length <= _firstChunk) return chunks;
+    return [..._splitLong(chunks.first, _firstChunk), ...chunks.skip(1)];
+  }
+
+  /// True while the open voice's player is held mid-sentence by [pause].
+  bool _paused = false;
+  bool get isPaused => _paused;
+
+  /// Holds the open voice where it is, mid-word, and returns true; the
+  /// reading loop simply waits for [resume]. The phone's voice cannot hold
+  /// an utterance (Android's TextToSpeech has no pause), so for it this
+  /// returns false and the caller stops and later reads the chunk again.
+  Future<bool> pause() async {
+    if (!_speaking || !_openActive) return false;
+    try {
+      await _voicePlayer.invokeMethod<void>('pause');
+      _paused = true;
+      return true;
+    } catch (e) {
+      debugPrint('BookSpeaker: pause failed: $e');
+      return false;
     }
-    var index = 0;
+  }
+
+  Future<void> resume() async {
+    if (!_paused) return;
+    _paused = false;
+    try {
+      await _voicePlayer.invokeMethod<void>('resume');
+    } catch (e) {
+      debugPrint('BookSpeaker: resume failed: $e');
+    }
+  }
+
+  /// The reading's notification and the phone's media session (lock screen,
+  /// headset button): [title] and [text] are shown, [playing] picks the
+  /// pause or the play button. A null [title] takes them away.
+  static Future<void> notice({
+    String? title,
+    String? text,
+    bool playing = true,
+    Map<String, String> labels = const {},
+  }) async {
+    try {
+      if (title == null) {
+        await _voicePlayer.invokeMethod<void>('noticeOff');
+      } else {
+        await _voicePlayer.invokeMethod<void>('notice', {
+          'title': title,
+          'text': text ?? '',
+          'playing': playing,
+          'labels': labels,
+        });
+      }
+    } catch (e) {
+      debugPrint('BookSpeaker: notice failed: $e');
+    }
+  }
+
+  /// Buttons pressed on the notification, the lock screen or a headset
+  /// arrive here as `play`, `pause`, `next`, `previous` or `stop`.
+  static set onControl(ValueChanged<String>? f) {
+    _voicePlayer.setMethodCallHandler(
+      f == null
+          ? null
+          : (call) async {
+              if (call.method == 'control') f('${call.arguments}');
+            },
+    );
+  }
+
+  bool _openActive = false;
+
+  /// Reads [chunks] from [from] in the open voice (the one the owner chose
+  /// for its tafkhim of the divine name). Returns null if it could not
+  /// start, so the caller falls back; otherwise the index it stopped at.
+  Future<int?> _speakOpen(
+    List<String> chunks,
+    int gen,
+    int from,
+    double speed,
+    ValueChanged<int>? onChunk,
+  ) async {
+    // The same operation token covers model loading, rendering and playback.
+    bool stale() => !_current(gen);
+    if (from >= chunks.length) {
+      _finish(gen, from, chunks.length);
+      return chunks.length;
+    }
+    var index = from;
     _speaking = true;
     final tmp = await getTemporaryDirectory();
-    if (stale()) return true;
+    if (stale()) return from;
     final dir = await tmp.createTemp('book_voice_');
     if (stale()) {
       await dir.delete(recursive: true);
-      return true;
+      return from;
     }
 
     Future<String> render(int i) async {
-      final samples = await OpenVoice.instance.synthesize(chunks[i]);
+      final samples =
+          await OpenVoice.instance.synthesize(chunks[i], speed: speed);
       // A stale render must not overwrite the newer run's alternating files.
       final f = File(p.join(dir.path, '${i % 2}.wav'));
       await f.writeAsBytes(OpenVoice.wav(samples), flush: true);
       return f.path;
     }
 
-    Future<String>? next = render(0);
+    Future<String>? next = render(from);
     Future<void> cleanup() async {
       if (await dir.exists()) await dir.delete(recursive: true);
     }
 
     var started = false;
+    _openActive = true;
     try {
       for (; index < chunks.length; index++) {
         final path = await next!;
@@ -388,6 +502,7 @@ class BookSpeaker {
         if (stale()) break;
         started = true;
         next = index + 1 < chunks.length ? render(index + 1) : null;
+        onChunk?.call(index);
         _emit(
           BookSpeakerState(speaking: true, chunk: index, total: chunks.length),
         );
@@ -406,16 +521,18 @@ class BookSpeaker {
           await cleanup();
         }
         _speaking = false;
-        return false;
+        _openActive = false;
+        return null;
       }
     }
+    _openActive = false;
     if (next != null) {
       next.whenComplete(cleanup).ignore();
     } else {
       await cleanup();
     }
     _finish(gen, index, chunks.length);
-    return true;
+    return index;
   }
 
   int _gen = 0;
@@ -425,6 +542,7 @@ class BookSpeaker {
     if (owns) _owner = null;
     AudioExclusive.speakerStopped(stop);
     _gen++;
+    _paused = false;
     final held = _held;
     _held = null;
     held?.complete();
