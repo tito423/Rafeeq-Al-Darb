@@ -27,8 +27,13 @@ The owner listed these to fix later and said: do nothing on them until the
 session. Each one is to be investigated on the real thing first (CLAUDE.md
 1.3/1.4), fixed, shipped in all 7 languages (1.7c), and seen on the emulator.
 
-- [ ] 1. Caravan game (قافلة الدرب): storm clouds with thunder appear in broad
+- [x] 1. Caravan game (قافلة الدرب): storm clouds with thunder appear in broad
    daylight - they do not fit the scene. Make weather match time of day.
+   DONE 89fa114b (2026-11-03): the hoopoe legs' cloud now follows the hour
+   (white by day, ochre in the sandstorm, thunderhead + lightning only after
+   night > 0.6); ru «туч» -> «облаков». Seen on emulator-5554 (debug,
+   RAFEEQ_CARAVAN_ALL_OPEN): legs 4 and 15 show white clouds in daylight, no
+   lightning. Sandstorm/night cloud not caught in a frame.
 - [ ] 2. Search: most results, when opened, show «تعذّرت قراءة هذه الصفحة داخل
    التطبيق. يمكنك قراءتها على موقع الدرر السنية مباشرة.» with an «افتح على
    الموقع» button (example: «ثانيًا: الاستعداد للحج والعمرة»). Screenshot:
@@ -105,6 +110,7 @@ heartbeat or mistake that future proposal for an approved redesign.
 - emulator-5554 has the signed 3.88.1 installed (upgraded over 3.88.0).
 
 ## Log
+89fa114b Backlog 1 done: caravan clouds follow the time of day (seen on emulator)
 83680a14 WIP own i'rab: surah 17 up to ayah 107
 cb5b1e64 WIP own i'rab: surah 17 up to ayah 102
 3b232eef WIP own i'rab: surah 17 up to ayah 97
