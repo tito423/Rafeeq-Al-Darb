@@ -448,18 +448,43 @@ class CaravanLandmarks {
     );
   }
 
-  /// A dark storm cloud with a flicker of lightning: the sky's obstacle.
+  /// The sky's obstacle. Its weather follows the leg's hour: a white
+  /// fair-weather cloud by day, dusty in the sandstorm, and a dark
+  /// thunderhead with lightning only once the night has fallen.
   void cloud(Canvas canvas, Offset c, double camel) {
-    final paint = Paint()..color = const Color(0xFF4A4F66);
-    for (final (dx, dy, r) in [
+    final dark = w.night, dust = w.storm * 0.6;
+    Color tone(Color day, Color sand, Color night) =>
+        Color.lerp(Color.lerp(day, sand, dust)!, night, dark)!;
+    final body = Paint()
+      ..color = tone(
+        const Color(0xFFF7F9FC),
+        const Color(0xFFD8B98A),
+        const Color(0xFF4A4F66),
+      );
+    // A shaded underside keeps a white cloud readable on a pale sky.
+    final under = Paint()
+      ..color = tone(
+        const Color(0xFFAEBCD0),
+        const Color(0xFFA8865A),
+        const Color(0xFF363A50),
+      );
+    const puffs = [
       (0.0, 0.0, 0.32),
       (-0.3, 0.08, 0.24),
       (0.3, 0.06, 0.26),
       (0.12, -0.16, 0.22),
-    ]) {
-      canvas.drawCircle(c.translate(dx * camel, dy * camel), r * camel, paint);
+    ];
+    for (final (dx, dy, r) in puffs) {
+      canvas.drawCircle(
+        c.translate(dx * camel, (dy + 0.06) * camel),
+        r * camel,
+        under,
+      );
     }
-    if (math.sin(w.time * 3 + c.dx) > 0.92) {
+    for (final (dx, dy, r) in puffs) {
+      canvas.drawCircle(c.translate(dx * camel, dy * camel), r * camel, body);
+    }
+    if (dark > 0.6 && math.sin(w.time * 3 + c.dx) > 0.92) {
       canvas.drawPath(
         Path()
           ..moveTo(c.dx, c.dy + camel * 0.25)

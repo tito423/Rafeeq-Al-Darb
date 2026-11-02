@@ -43,7 +43,7 @@ class Birds {
   double x;
   bool hit = false;
 
-  /// On a flown leg: a storm cloud at this height, in camel heights.
+  /// On a flown leg: a cloud at this height, in camel heights.
   final double alt;
   Birds(this.x, {this.alt = 0});
 }
