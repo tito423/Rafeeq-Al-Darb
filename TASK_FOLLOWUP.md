@@ -20,6 +20,30 @@ was reviewed by Claude on 2026-10-13. v3.88.1 is published with the adhan
 re-arm fix. The review site was reworked to the owner's model: NO reviewer
 list, no Google sign-in — he sends the link, a reviewer writes his name.
 
+## Owner backlog (2026-11-02 01:01 Dubai) - start ONLY after the 02:20 quota reset
+
+The owner listed these to fix later and said: do nothing on them until the
+5-hour quota resets (02:20 Dubai), then carry on automatically in a new
+session. Each one is to be investigated on the real thing first (CLAUDE.md
+1.3/1.4), fixed, shipped in all 7 languages (1.7c), and seen on the emulator.
+
+1. Caravan game (قافلة الدرب): storm clouds with thunder appear in broad
+   daylight - they do not fit the scene. Make weather match time of day.
+2. Search: most results, when opened, show «تعذّرت قراءة هذه الصفحة داخل
+   التطبيق. يمكنك قراءتها على موقع الدرر السنية مباشرة.» with an «افتح على
+   الموقع» button (example: «ثانيًا: الاستعداد للحج والعمرة»). Screenshot:
+   `docs/owner_reports/2026-11-02_dorar_search_cannot_read.jpg`. Find why the
+   in-app reader fails for these results and make them open in the app.
+3. Qur'an khatma: let the user edit every aspect of an existing khatma.
+4. Morning/evening adhkar audio: a "download all" option that fetches every
+   audio file at once, for each reciter.
+5. Performance: the app feels slow once it holds many downloads (40-50 GB).
+   Measure where (storage scans, DB size, list builds) before changing code.
+
+Order after the reset: these five first (fix, verify on the emulator, commit
+each), then resume the own i'rab (al-Nahl 16 is next). Do not build/release
+without the owner's word; the i'rab device check still waits for the last surah.
+
 ## Next step (exact)
 
 1. Owner phone checks: install 3.90.0 over the existing app, press Listen
