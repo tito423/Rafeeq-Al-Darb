@@ -46,6 +46,8 @@ without the owner's word; the i'rab device check still waits for the last surah.
 
 ## Next step (exact)
 
+0. AUTORUN (2026-11-02): scheduled task `own-irab-autorun` in the desktop app runs every hour at :11 and starts a FRESH session that follows scripts/own_irab/AUTORUN_PROMPT.md (lock %LOCALAPPDATA%afeeq_autorun.lock, stop at weekly 95% / 5-hour 90% / own context 45%, commit each block, no app build). A manual session should not work on the own i'rab while a run holds the lock. Runs start in the app's default permission mode; approvals given during a run are stored on the task.
+
 1. Owner phone checks: install 3.90.0 over the existing app, press Listen
    on a few adhkar (and the sleep dhikr «الم تنزيل … وتبارك»: ~15.5 min),
    test adhan before the first PIN after reboot, real microphone/tasmee,
