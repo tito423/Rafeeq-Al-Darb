@@ -27,17 +27,17 @@ The owner listed these to fix later and said: do nothing on them until the
 session. Each one is to be investigated on the real thing first (CLAUDE.md
 1.3/1.4), fixed, shipped in all 7 languages (1.7c), and seen on the emulator.
 
-1. Caravan game (قافلة الدرب): storm clouds with thunder appear in broad
+- [ ] 1. Caravan game (قافلة الدرب): storm clouds with thunder appear in broad
    daylight - they do not fit the scene. Make weather match time of day.
-2. Search: most results, when opened, show «تعذّرت قراءة هذه الصفحة داخل
+- [ ] 2. Search: most results, when opened, show «تعذّرت قراءة هذه الصفحة داخل
    التطبيق. يمكنك قراءتها على موقع الدرر السنية مباشرة.» with an «افتح على
    الموقع» button (example: «ثانيًا: الاستعداد للحج والعمرة»). Screenshot:
    `docs/owner_reports/2026-11-02_dorar_search_cannot_read.jpg`. Find why the
    in-app reader fails for these results and make them open in the app.
-3. Qur'an khatma: let the user edit every aspect of an existing khatma.
-4. Morning/evening adhkar audio: a "download all" option that fetches every
+- [ ] 3. Qur'an khatma: let the user edit every aspect of an existing khatma.
+- [ ] 4. Morning/evening adhkar audio: a "download all" option that fetches every
    audio file at once, for each reciter.
-5. Performance: the app feels slow once it holds many downloads (40-50 GB).
+- [ ] 5. Performance: the app feels slow once it holds many downloads (40-50 GB).
    Measure where (storage scans, DB size, list builds) before changing code.
 
 Order after the reset: these five first (fix, verify on the emulator, commit
@@ -46,7 +46,8 @@ without the owner's word; the i'rab device check still waits for the last surah.
 
 ## Next step (exact)
 
-0. AUTORUN (2026-11-02): scheduled task `own-irab-autorun` in the desktop app runs every hour at :11 and starts a FRESH session that follows scripts/own_irab/AUTORUN_PROMPT.md (lock %LOCALAPPDATA%afeeq_autorun.lock, stop at weekly 95% / 5-hour 90% / own context 45%, commit each block, no app build). A manual session should not work on the own i'rab while a run holds the lock. Runs start in the app's default permission mode; approvals given during a run are stored on the task.
+0. AUTORUN (2026-11-02): scheduled task `own-irab-autorun` in the desktop app runs every hour at :11 and starts a FRESH session that follows scripts/own_irab/AUTORUN_PROMPT.md (lock %LOCALAPPDATA%
+afeeq_autorun.lock, stop at weekly 95% / 5-hour 90% / own context 45%, commit each block, no app build). A manual session should not work on the own i'rab while a run holds the lock. Runs start in the app's default permission mode; approvals given during a run are stored on the task.
 
 1. Owner phone checks: install 3.90.0 over the existing app, press Listen
    on a few adhkar (and the sleep dhikr «الم تنزيل … وتبارك»: ~15.5 min),
