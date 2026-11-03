@@ -54,8 +54,12 @@ session. Each one is to be investigated on the real thing first (CLAUDE.md
    emulator-5554 (debug build): created a 30-day khatma, edited page reached
    1 -> 303 and 22 pages/day; card showed pages 303-324, half progress,
    14 upcoming. 6 unit tests (khatma_edit_test.dart).
-- [ ] 4. Morning/evening adhkar audio: a "download all" option that fetches every
+- [x] 4. Morning/evening adhkar audio: a "download all" option that fetches every
    audio file at once, for each reciter.
+   DONE (2026-11-04): «تنزيل الكل · size» on the morning/evening listening
+   screens, asks with count + size, queues every missing recording. Seen on
+   emulator-5554 API24: evening 7/7 downloaded (96.8 MB), «كل التسجيلات
+   جاهزة دون إنترنت» shown; morning 111.1 MB queued and downloading.
 - [ ] 5. Performance: the app feels slow once it holds many downloads (40-50 GB).
    Measure where (storage scans, DB size, list builds) before changing code.
 
