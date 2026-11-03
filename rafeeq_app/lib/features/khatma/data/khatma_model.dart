@@ -310,6 +310,62 @@ class Khatma {
     );
   }
 
+  /// This khatma with its plan changed in place («التعديل عليها في كل
+  /// امكاناتها», owner 2026-11-02): where it starts, how the daily wird is
+  /// measured and how big it is, the reminder, and the mushaf page reached.
+  ///
+  /// [reachedPage] is a mushaf page (the next unread one). Progress is kept
+  /// as that page, so moving the start does not move the reader. Recorded
+  /// wirds are re-based on the new start; any that now lie before it or
+  /// past the page reached are dropped (they are no longer this plan's), and
+  /// a jump forward is recorded as one undated wird, so «الأوراد السابقة»
+  /// still covers every page marked read. A target-date plan becomes a
+  /// daily plan, since the sheet edits daily amounts.
+  Khatma edited({
+    required int startPage,
+    required KhatmaMode mode,
+    required int dailyAmount,
+    required int reachedPage,
+    TimeOfDay? reminderTime,
+  }) {
+    final start = startPage.clamp(1, totalPages);
+    final plan = totalPages - start + 1;
+    final read = (reachedPage.clamp(start, totalPages + 1) - start).clamp(0, plan);
+    final shift = this.startPage - start;
+    final kept = <WirdRecord>[];
+    for (final w in wirds) {
+      final from = w.from + shift;
+      final to = w.to + shift;
+      if (from < 0 || to > read) continue;
+      kept.add(WirdRecord(
+        from: from,
+        to: to,
+        at: w.at,
+        lastReadBefore: w.lastReadBefore,
+        streakBefore: w.streakBefore,
+      ));
+    }
+    final lastTo = kept.isEmpty ? null : kept.last.to;
+    if (lastTo != null && lastTo < read) {
+      kept.add(WirdRecord(from: lastTo, to: read));
+    }
+    final done = read >= plan;
+    return Khatma(
+      id: id,
+      startDate: startDate,
+      mode: mode,
+      dailyAmount: dailyAmount,
+      startPage: start,
+      pagesRead: read,
+      portionsRead: read == 0 ? 0 : portionsRead,
+      lastReadDate: lastReadDate,
+      streak: streak,
+      completedAt: done ? (completedAt ?? DateTime.now()) : null,
+      reminderTime: reminderTime,
+      wirds: kept,
+    );
+  }
+
   Khatma copyWith({
     int? pagesRead,
     int? portionsRead,

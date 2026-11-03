@@ -1145,6 +1145,10 @@
     "empty": "No hay nada aquí"
   },
   "khatma": {
+      "edit": "Editar la jatma",
+      "save_changes": "Guardar cambios",
+      "reached_page": "Página alcanzada",
+      "remaining_days": "Días restantes",
     "plan_title": "Empieza tu jatma",
     "plan_7": "En una semana",
     "plan_30": "En un mes",

@@ -18,12 +18,20 @@ import '../data/khatma_store.dart';
 /// scrolls now, inside the safe area, and the keyboard inset is honoured.
 /// [days]: the duration the sheet opens with (a plan picked on the empty
 /// Khatma screen); everything stays editable in the sheet.
-Future<void> showCreateKhatmaSheet(BuildContext context, {int days = 30}) {
+///
+/// [editing]: the same sheet edits an existing khatma - its start, daily
+/// unit and amount, the page reached and the reminder («ضيف ختمة القران
+/// امكانية التعديل عليها في كل امكاناتها», owner 2026-11-02).
+Future<void> showCreateKhatmaSheet(
+  BuildContext context, {
+  int days = 30,
+  Khatma? editing,
+}) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (_) => _CreateKhatmaSheet(days: days),
+    builder: (_) => _CreateKhatmaSheet(days: days, editing: editing),
   );
 }
 
@@ -68,7 +76,8 @@ String _quarterLabel(int n) {
 /// doc.
 class _CreateKhatmaSheet extends ConsumerStatefulWidget {
   final int days;
-  const _CreateKhatmaSheet({required this.days});
+  final Khatma? editing;
+  const _CreateKhatmaSheet({required this.days, this.editing});
 
   @override
   ConsumerState<_CreateKhatmaSheet> createState() => _CreateKhatmaSheetState();
@@ -93,7 +102,44 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   int _dailyAmount = 21;
   bool _amountInitialized = false;
 
-  TimeOfDay? _reminder;
+  late TimeOfDay? _reminder = widget.editing?.reminderTime;
+
+  /// Edit only: the mushaf page reached (the next one to read).
+  late int _reachedPage = widget.editing?.currentPage ?? 1;
+
+  bool get _isEdit => widget.editing != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final k = widget.editing;
+    if (k == null) return;
+    _unit = switch (k.mode) {
+      KhatmaMode.dailyJuz => _AmountUnit.juz,
+      KhatmaMode.dailyQuarters => _AmountUnit.quarters,
+      _ => _AmountUnit.pages,
+    };
+    _dailyAmount = math.max(1, k.dailyAmount ?? 1);
+  }
+
+  /// Picks the start the khatma was made with: the juz or surah whose first
+  /// page it is (a juz first, as the list shows them first).
+  void _initEditStart(MushafData mushaf) {
+    final page = widget.editing!.startPage;
+    if (page <= 1) return;
+    for (final e in mushaf.juzStartPages.entries) {
+      if (e.value == page) {
+        _startJuz = e.key;
+        return;
+      }
+    }
+    for (final e in mushaf.surahStartPages.entries) {
+      if (e.value == page) {
+        _startSurah = e.key;
+        return;
+      }
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -102,9 +148,22 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
     final mushaf = ref.read(mushafDataProvider).valueOrNull;
     if (mushaf == null) return;
     _amountInitialized = true;
-    final plan = _totalPlan(mushaf, _startPage(mushaf));
+    if (_isEdit) {
+      _initEditStart(mushaf);
+      _durationDays = (_totalPlan(mushaf, _planBase(mushaf)) / _dailyAmount)
+          .ceil()
+          .clamp(1, 3650);
+      return;
+    }
+    final plan = _totalPlan(mushaf, _planBase(mushaf));
     _dailyAmount = (plan / _durationDays).ceil().clamp(1, plan);
   }
+
+  /// The page the duration counts from: the start for a new khatma, the
+  /// page reached when editing (the days LEFT).
+  int _planBase(MushafData? mushaf) => _isEdit
+      ? math.max(_reachedPage, _startPage(mushaf))
+      : _startPage(mushaf);
 
   int _startPage(MushafData? mushaf) {
     if (mushaf == null) return 1;
@@ -142,10 +201,15 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
     });
     final mushaf = ref.read(mushafDataProvider).valueOrNull;
     if (mushaf != null) {
-      final plan = _totalPlan(mushaf, _startPage(mushaf));
       setState(() {
+        final start = _startPage(mushaf);
+        if (_reachedPage < start) _reachedPage = start;
+        final plan = _totalPlan(mushaf, _planBase(mushaf));
         _amountInitialized = true;
-        _dailyAmount = (plan / _durationDays).ceil().clamp(1, plan);
+        _dailyAmount = (plan / _durationDays).ceil().clamp(
+          1,
+          _maxAmount(_unit, plan),
+        );
       });
     }
   }
@@ -172,14 +236,14 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   int _totalPlan(MushafData? mushaf, int startPage) {
     switch (_unit) {
       case _AmountUnit.pages:
-        return Khatma.totalPages - startPage + 1;
+        return math.max(1, Khatma.totalPages - startPage + 1);
       case _AmountUnit.juz:
         final startJuz = _startJuzNumber(mushaf, startPage);
-        return 30 - startJuz + 1;
+        return math.max(1, 30 - startJuz + 1);
       case _AmountUnit.quarters:
         final total = mushaf?.rubElHizbPages.length ?? 240;
         final startRub = _startQuarterNumber(mushaf, startPage);
-        return total - startRub + 1;
+        return math.max(1, total - startRub + 1);
     }
   }
 
@@ -193,7 +257,7 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   void _onDurationChanged(int v, MushafData? mushaf) {
     setState(() {
       _durationDays = v;
-      final plan = _totalPlan(mushaf, _startPage(mushaf));
+      final plan = _totalPlan(mushaf, _planBase(mushaf));
       _dailyAmount = (plan / v).ceil().clamp(1, _maxAmount(_unit, plan));
     });
   }
@@ -201,7 +265,7 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   void _onAmountChanged(int v, MushafData? mushaf) {
     setState(() {
       _dailyAmount = v;
-      final plan = _totalPlan(mushaf, _startPage(mushaf));
+      final plan = _totalPlan(mushaf, _planBase(mushaf));
       _durationDays = (plan / v).ceil().clamp(1, 3650);
     });
   }
@@ -209,7 +273,7 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   void _onUnitChanged(_AmountUnit u, MushafData? mushaf) {
     setState(() {
       _unit = u;
-      final plan = _totalPlan(mushaf, _startPage(mushaf));
+      final plan = _totalPlan(mushaf, _planBase(mushaf));
       _dailyAmount = (plan / _durationDays).ceil().clamp(
         1,
         _maxAmount(u, plan),
@@ -233,11 +297,19 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'khatma.new'.tr(),
+            (_isEdit ? 'khatma.edit' : 'khatma.new').tr(),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
           _StartStep(mushaf: mushaf, startKey: _startKey, onChanged: _setStart),
+          if (_isEdit) ...[
+            const SizedBox(height: 18),
+            _ReachedPage(
+              page: math.max(_reachedPage, _startPage(mushaf)),
+              min: _startPage(mushaf),
+              onChanged: (p) => _onReachedChanged(p, mushaf),
+            ),
+          ],
           const SizedBox(height: 18),
           const Divider(height: 1),
           const SizedBox(height: 18),
@@ -250,26 +322,88 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
             onDurationChanged: (v) => _onDurationChanged(v, mushaf),
             onAmountChanged: (v) => _onAmountChanged(v, mushaf),
             onReminderChanged: (t) => setState(() => _reminder = t),
-            onCreate: () async {
-              final startPage = _startPage(mushaf);
-              final mode = switch (_unit) {
-                _AmountUnit.pages => KhatmaMode.dailyPages,
-                _AmountUnit.juz => KhatmaMode.dailyJuz,
-                _AmountUnit.quarters => KhatmaMode.dailyQuarters,
-              };
-              await ref
-                  .read(khatmaStoreProvider.notifier)
-                  .create(
-                    mode: mode,
-                    dailyAmount: _dailyAmount,
-                    startPage: startPage,
-                    reminderTime: _reminder,
-                  );
-              if (context.mounted) Navigator.of(context).pop();
-            },
+            isEdit: _isEdit,
+            onCreate: () => _save(mushaf),
           ),
         ],
       ),
+    );
+  }
+
+  void _onReachedChanged(int page, MushafData? mushaf) {
+    setState(() {
+      _reachedPage = page;
+      final plan = _totalPlan(mushaf, _planBase(mushaf));
+      _durationDays = (plan / _dailyAmount).ceil().clamp(1, 3650);
+    });
+  }
+
+  Future<void> _save(MushafData? mushaf) async {
+    final startPage = _startPage(mushaf);
+    final mode = switch (_unit) {
+      _AmountUnit.pages => KhatmaMode.dailyPages,
+      _AmountUnit.juz => KhatmaMode.dailyJuz,
+      _AmountUnit.quarters => KhatmaMode.dailyQuarters,
+    };
+    final store = ref.read(khatmaStoreProvider.notifier);
+    if (_isEdit) {
+      await store.edit(
+        widget.editing!.id,
+        startPage: startPage,
+        mode: mode,
+        dailyAmount: _dailyAmount,
+        reachedPage: math.max(_reachedPage, startPage),
+        reminderTime: _reminder,
+      );
+    } else {
+      await store.create(
+        mode: mode,
+        dailyAmount: _dailyAmount,
+        startPage: startPage,
+        reminderTime: _reminder,
+      );
+    }
+    if (mounted) Navigator.of(context).pop();
+  }
+}
+
+/// Edit only: the page reached, by slider (604 pages are too many for +/-
+/// alone) with +/- for the last step.
+class _ReachedPage extends StatelessWidget {
+  final int page;
+  final int min;
+  final ValueChanged<int> onChanged;
+
+  const _ReachedPage({
+    required this.page,
+    required this.min,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const max = Khatma.totalPages;
+    final value = page.clamp(min, max);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _Stepper(
+          label: 'khatma.reached_page'.tr(),
+          value: value,
+          min: min,
+          max: max,
+          onChanged: onChanged,
+        ),
+        if (max > min)
+          Slider(
+            value: value.toDouble(),
+            min: min.toDouble(),
+            max: max.toDouble(),
+            divisions: max - min,
+            label: localizeDigits('$value', uiLanguageCode),
+            onChanged: (v) => onChanged(v.round()),
+          ),
+      ],
     );
   }
 }
@@ -342,8 +476,10 @@ class _DurationStep extends StatelessWidget {
   final ValueChanged<int> onAmountChanged;
   final ValueChanged<TimeOfDay?> onReminderChanged;
   final VoidCallback onCreate;
+  final bool isEdit;
 
   const _DurationStep({
+    this.isEdit = false,
     required this.unit,
     required this.durationDays,
     required this.dailyAmount,
@@ -370,7 +506,8 @@ class _DurationStep extends StatelessWidget {
         ),
         const SizedBox(height: 18),
         _Stepper(
-          label: 'khatma.duration_days'.tr(),
+          label: (isEdit ? 'khatma.remaining_days' : 'khatma.duration_days')
+              .tr(),
           value: durationDays,
           min: 1,
           max: 3650,
@@ -465,6 +602,12 @@ class _DurationStep extends StatelessWidget {
               },
               child: Text('khatma.set_reminder'.tr()),
             ),
+            if (reminder != null)
+              IconButton(
+                tooltip: 'khatma.no_reminder'.tr(),
+                onPressed: () => onReminderChanged(null),
+                icon: const Icon(Icons.notifications_off_outlined),
+              ),
           ],
         ),
         const SizedBox(height: 10),
@@ -472,7 +615,9 @@ class _DurationStep extends StatelessWidget {
           width: double.infinity,
           child: FilledButton(
             onPressed: onCreate,
-            child: Text('khatma.create'.tr()),
+            child: Text(
+              (isEdit ? 'khatma.save_changes' : 'khatma.create').tr(),
+            ),
           ),
         ),
       ],

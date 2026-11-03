@@ -179,6 +179,30 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     return rewindTo(khatmaId, count - 1, juzStartPages, rubElHizbPages);
   }
 
+  /// Saves an edited plan (see [Khatma.edited]) and re-arms the reminders:
+  /// its time may have changed, and the edit may finish or reopen it.
+  Future<Khatma?> edit(
+    String khatmaId, {
+    required int startPage,
+    required KhatmaMode mode,
+    required int dailyAmount,
+    required int reachedPage,
+    TimeOfDay? reminderTime,
+  }) async {
+    final base = _current(khatmaId);
+    if (base == null) return null;
+    final updated = base.edited(
+      startPage: startPage,
+      mode: mode,
+      dailyAmount: dailyAmount,
+      reachedPage: reachedPage,
+      reminderTime: reminderTime,
+    );
+    await _replace(updated);
+    await rearmReminders();
+    return updated;
+  }
+
   Future<void> setReminder(Khatma khatma, TimeOfDay? time) async {
     final updated = (_current(khatma.id) ?? khatma).copyWith(
       reminderTime: time,

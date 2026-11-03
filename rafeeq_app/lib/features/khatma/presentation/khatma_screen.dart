@@ -60,6 +60,7 @@ class KhatmaScreen extends ConsumerWidget {
                     },
                     onSetReminder: () => _pickReminder(context, ref, k),
                     onDelete: () => _confirmDelete(context, ref, k),
+                    onEdit: () => showCreateKhatmaSheet(context, editing: k),
                   ),
                 if (done.isNotEmpty) ...[
                   const SizedBox(height: 12),
@@ -271,6 +272,7 @@ class _KhatmaTile extends ConsumerWidget {
   final ValueChanged<int> onOpenReader;
   final VoidCallback onSetReminder;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   const _KhatmaTile({
     required this.khatma,
@@ -279,6 +281,7 @@ class _KhatmaTile extends ConsumerWidget {
     required this.onOpenReader,
     required this.onSetReminder,
     required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -335,8 +338,17 @@ class _KhatmaTile extends ConsumerWidget {
                   onSelected: (v) {
                     if (v == 'reminder') onSetReminder();
                     if (v == 'delete') onDelete();
+                    if (v == 'edit') onEdit();
                   },
                   itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: ListTile(
+                        leading: const Icon(Icons.edit_outlined),
+                        title: Text('khatma.edit'.tr()),
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ),
                     PopupMenuItem(
                       value: 'reminder',
                       child: ListTile(
