@@ -33,7 +33,7 @@ class SourceRules {
     // dorar.net encyclopaedias (dorar_encyclopedia.dart)
     'dorar.toc.start': 'id="mtree"',
     'dorar.toc.token': r'<ul\b|</ul>|<a\s+href="([^"]*)"[^>]*>(.*?)</a>',
-    'dorar.section.start': '<div class="w-100 mt-4">',
+    'dorar.section.start': '<div class="w-100 mt-4"',
     'dorar.section.end': 'id="more-titles"',
     'dorar.section.end_alt': 'public-qa-section',
     'dorar.section.card': 'id="cntnt"',

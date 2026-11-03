@@ -125,11 +125,16 @@ DorarSection? parseDorarSection(String html) {
   final startMarker = rules.s('dorar.section.start');
   final a = html.indexOf(startMarker);
   if (a < 0) return null;
+  // The body starts after the marker's tag closes. The marker may be the
+  // tag's opening only: dorar.net added `id="enc-article-body"` to the div
+  // (seen 2026-11-04), and a full-tag marker stopped matching every page.
+  final open = html.indexOf('>', a + startMarker.length - 1);
+  if (open < 0) return null;
   var b = html.indexOf(rules.s('dorar.section.end'), a);
   if (b >= 0) b = html.lastIndexOf('<h3', b); // from the tag's start
   if (b < 0) b = html.indexOf(rules.s('dorar.section.end_alt'), a);
-  if (b < 0) b = html.length;
-  var body = html.substring(a + startMarker.length, b);
+  if (b <= open) b = html.length;
+  var body = html.substring(open + 1, b);
   final qa = body.indexOf(rules.s('dorar.section.end_alt'));
   if (qa >= 0) body = body.substring(0, qa);
   // The section's own <h1> is inside the content card (`id="cntnt"`); the

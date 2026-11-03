@@ -57,6 +57,9 @@ def main():
     def dorar_section():
         h = get("https://dorar.net/aqeeda/37")
         a = h.find(r["dorar.section.start"])
+        # As the app: the body starts where the marker's tag closes.
+        if a >= 0 and h.find(">", a + len(r["dorar.section.start"]) - 1) < 0:
+            a = -1
         card = h.find(r["dorar.section.card"])
         t = rx(r["dorar.section.title"]).search(h[card:] if card >= 0 else h)
         notes = rx(r["dorar.section.footnote"]).findall(h)

@@ -51,6 +51,18 @@ void main() {
     expect(s.paras.any((p) => p.text.contains('public-qa')), isFalse);
   });
 
+  // aadab/924, fetched 2026-11-04: dorar.net now writes the body div as
+  // `<div class="w-100 mt-4" id="enc-article-body">`. The old full-tag
+  // marker missed it and every section showed «تعذّرت قراءة هذه الصفحة».
+  test('a section in the 2026-11 markup (div with an id) is read', () {
+    final s = parseDorarSection(_page('aadab924'))!;
+    expect(_bare(s.title), 'ثانيا: الاستعداد للحج والعمرة');
+    expect(_bare(s.paras.first.text), 'ومن آداب الاستعداد للحج والعمرة ما يلي:');
+    expect(s.paras.first.heading, isTrue);
+    expect(s.paras.any((p) => p.text.contains('enc-article-body')), isFalse);
+    expect(s.footnotes, isNotEmpty);
+  });
+
   test('an id that is not a section is recognised, not shown blank', () {
     expect(parseDorarSection(_page('aq30')), isNull);
   });
