@@ -47,7 +47,13 @@ session. Each one is to be investigated on the real thing first (CLAUDE.md
    3.93.0 debug + v6 rules): aqeeda «مقدّمة» opens with its text. The new
    parser code itself is tested on the real aadab/924 page, not yet run on
    a device build.
-- [ ] 3. Qur'an khatma: let the user edit every aspect of an existing khatma.
+- [x] 3. Qur'an khatma: let the user edit every aspect of an existing khatma.
+   DONE c34ba12b (2026-11-04): card menu «تعديل الختمة» opens the create
+   sheet pre-filled: start (beginning/juz/surah), unit + daily amount, days
+   remaining, page reached (slider), reminder (set/remove). Seen on
+   emulator-5554 (debug build): created a 30-day khatma, edited page reached
+   1 -> 303 and 22 pages/day; card showed pages 303-324, half progress,
+   14 upcoming. 6 unit tests (khatma_edit_test.dart).
 - [ ] 4. Morning/evening adhkar audio: a "download all" option that fetches every
    audio file at once, for each reciter.
 - [ ] 5. Performance: the app feels slow once it holds many downloads (40-50 GB).
