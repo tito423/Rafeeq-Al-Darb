@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,7 @@ import '../../../core/services/ayah_audio_service.dart';
 import '../../../core/services/download_engine.dart';
 import '../../../core/services/recitation_mirrors.dart';
 import '../../../core/services/recitation_source.dart';
+import '../../../core/utils/disk_scan.dart';
 import 'ayah_download_notice.dart';
 
 /// Progress snapshot for one reciter's per-ayah download.
@@ -181,8 +183,20 @@ class AyahRecitationLibrary extends ChangeNotifier {
         }
       } catch (_) {}
     }
+    // Each reciter is 6,236 files; listed here they froze the screen for
+    // half a second at two reciters (disk_scan.dart). Listed in the
+    // background, counted from the names.
+    final editions = _entries.keys.toList();
+    final root = _root.path;
+    _have.addAll(
+      await Isolate.run(
+        () => {
+          for (final e in editions)
+            e: _ayahsIn(fileNamesSync(p.join(root, e), true)),
+        },
+      ),
+    );
     for (final entry in _entries.values) {
-      _countDownloaded(entry.edition);
       // A surah with some of its ayahs on disk and not all was asked for and
       // never finished — whatever the pending list says. Under the old count
       // table al-Kafirun «finished» at 3 of 6 and left the list, so nothing
@@ -202,22 +216,19 @@ class AyahRecitationLibrary extends ChangeNotifier {
   /// Counts the files that are real ayahs. A name the Hafs count has no
   /// ayah for (left by the old table, which asked for an-Nas 7 and 8) is
   /// not a download and must not push the total past what exists.
-  void _countDownloaded(String edition) {
-    final dir = Directory(p.join(_root.path, edition));
+  static Set<int> _ayahsIn(List<String> fileNames) {
     final have = <int>{};
-    if (dir.existsSync()) {
-      for (final f in dir.listSync()) {
-        if (f is! File || !f.path.endsWith('.mp3')) continue;
-        final name = p.basenameWithoutExtension(f.path);
-        final surah = int.tryParse(name.length == 6 ? name.substring(0, 3) : '');
-        final ayah = int.tryParse(name.length == 6 ? name.substring(3) : '');
-        if (surah == null || ayah == null || ayah < 1 || ayah > ayahCount(surah)) {
-          continue;
-        }
-        if (f.lengthSync() > 0) have.add(_key(surah, ayah));
+    for (final file in fileNames) {
+      if (!file.endsWith('.mp3')) continue;
+      final name = p.basenameWithoutExtension(file);
+      final surah = int.tryParse(name.length == 6 ? name.substring(0, 3) : '');
+      final ayah = int.tryParse(name.length == 6 ? name.substring(3) : '');
+      if (surah == null || ayah == null || ayah < 1 || ayah > ayahCount(surah)) {
+        continue;
       }
+      have.add(_key(surah, ayah));
     }
-    _have[edition] = have;
+    return have;
   }
 
   Future<void> _save() async {
@@ -666,15 +677,12 @@ class AyahRecitationLibrary extends ChangeNotifier {
     var bytes = 0;
     var items = 0;
     for (final edition in _entries.keys) {
-      final dir = Directory(p.join(_root.path, edition));
-      if (!dir.existsSync()) continue;
-      var has = false;
-      for (final f in dir.listSync(recursive: true)) {
-        if (f is! File || !f.path.endsWith('.mp3')) continue;
-        bytes += f.lengthSync();
-        has = true;
-      }
-      if (has) items++;
+      final b = await diskBytes(
+        p.join(_root.path, edition),
+        extensions: const {'.mp3'},
+      );
+      bytes += b;
+      if (b > 0) items++;
     }
     return (bytes, items);
   }

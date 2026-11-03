@@ -16,6 +16,7 @@ import '../../../core/services/download_notifications.dart';
 import '../../../core/services/notification_router.dart';
 import '../../../core/utils/byte_formatter.dart' show ratio;
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/disk_scan.dart';
 import 'mushaf_edition.dart';
 
 /// **Nothing is bundled any more, on purpose.**
@@ -495,11 +496,11 @@ class MushafPageService {
       return {for (var p = firstPage; p <= last; p++) p};
     }
     final dir = await _pageDir(editionId);
-    if (!dir.existsSync()) return <int>{};
+    // 604 files an edition, listed off the UI isolate (disk_scan.dart).
+    final names = (await fileNamesIn([dir.path]))[dir.path] ?? const [];
     final pages = <int>{};
-    for (final entity in dir.listSync()) {
-      if (entity is! File) continue;
-      final n = int.tryParse(p.basenameWithoutExtension(entity.path));
+    for (final name in names) {
+      final n = int.tryParse(p.basenameWithoutExtension(name));
       if (n != null && n >= firstPage && n <= last) pages.add(n);
     }
     return pages;
@@ -518,12 +519,7 @@ class MushafPageService {
     final bundled = _bundledSizeBytes[editionId];
     if (bundled != null) return bundled;
     final dir = await _pageDir(editionId);
-    if (!dir.existsSync()) return 0;
-    var total = 0;
-    for (final entity in dir.listSync()) {
-      if (entity is File) total += entity.lengthSync();
-    }
-    return total;
+    return diskBytes(dir.path, recursive: false);
   }
 
   /// Deletes the page cache of any printing that is no longer in the

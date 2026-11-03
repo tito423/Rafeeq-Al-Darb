@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../core/config/content_mirrors.dart';
 import '../../../core/services/download_engine.dart';
+import '../../../core/utils/disk_scan.dart';
 import 'mp3quran_api.dart';
 import 'quran_audio_player.dart';
 
@@ -141,27 +143,30 @@ class QuranAudioLibrary extends ChangeNotifier {
         // A damaged index loses the bookkeeping, not the files.
       }
     }
-    for (final id in _entries.keys) {
-      _scan(id);
-    }
+    // One background listing for every recitation: 80 of them hold 9,120
+    // files, and listing them here froze the screen (disk_scan.dart).
+    final ids = _entries.keys.toList();
+    final root = _root.path;
+    _onDisk.addAll(
+      await Isolate.run(
+        () => {
+          for (final id in ids)
+            id: _surahsIn(fileNamesSync(p.join(root, '$id'), true)),
+        },
+      ),
+    );
     await DownloadEngine.ensureInitialized(askForNotifications: false);
     _sub ??= DownloadEngine.updates.listen(_onUpdate);
     notifyListeners();
     unawaited(repair());
   }
 
-  void _scan(int moshafId) {
-    final dir = Directory(p.join(_root.path, '$moshafId'));
-    final found = <int>{};
-    if (dir.existsSync()) {
-      for (final f in dir.listSync()) {
-        if (f is! File || !f.path.endsWith('.mp3')) continue;
-        final n = int.tryParse(p.basenameWithoutExtension(f.path));
-        if (n != null && f.lengthSync() > 0) found.add(n);
-      }
-    }
-    _onDisk[moshafId] = found;
-  }
+  /// The surahs among a recitation folder's non-empty file names.
+  static Set<int> _surahsIn(List<String> names) => {
+        for (final name in names)
+          if (name.endsWith('.mp3'))
+            ?int.tryParse(p.basenameWithoutExtension(name)),
+      };
 
   Future<void> _save() async {
     final index = File(p.join(_root.path, 'library.json'));
@@ -206,11 +211,7 @@ class QuranAudioLibrary extends ChangeNotifier {
     // Audio only. The index and the cached catalogue are bookkeeping: counted,
     // an empty library read «2 B» on the storage screen — the two bytes of
     // `[]` in library.json.
-    for (final f in _root.listSync(recursive: true)) {
-      if (f is! File) continue;
-      if (!_audioExtensions.contains(p.extension(f.path).toLowerCase())) continue;
-      bytes += f.lengthSync();
-    }
+    bytes = await diskBytes(_root.path, extensions: _audioExtensions);
     final items = _entries.keys.where((id) => downloadedCount(id) > 0).length +
         (await localFiles()).length;
     return (bytes, items);

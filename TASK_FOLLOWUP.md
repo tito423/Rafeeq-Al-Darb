@@ -60,8 +60,17 @@ session. Each one is to be investigated on the real thing first (CLAUDE.md
    screens, asks with count + size, queues every missing recording. Seen on
    emulator-5554 API24: evening 7/7 downloaded (96.8 MB), «كل التسجيلات
    جاهزة دون إنترنت» shown; morning 111.1 MB queued and downloading.
-- [ ] 5. Performance: the app feels slow once it holds many downloads (40-50 GB).
+- [x] 5. Performance: the app feels slow once it holds many downloads (40-50 GB).
    Measure where (storage scans, DB size, list builds) before changing code.
+   DONE (2026-11-04): measured on emulator-5554 API24 (debug) with 21,592
+   synthetic files (80 surah recitations x 114, 2 per-ayah reciters x 6,236):
+   start-up recitation scan blocked the UI 230 ms, opening «التنزيلات»
+   1,090 ms (all listSync/lengthSync on the UI isolate). Now every such scan
+   runs in Isolate.run (core/utils/disk_scan.dart): recitation and ayah
+   libraries, storage sizes, mushaf page counts, artifact sizes. After: a
+   repeat open of «التنزيلات» stalls 33-63 ms (80 ms is the screen's own
+   first build with no files). Test files removed from the emulator after.
+   Not measured: a real phone with real 40-50 GB, and a release build.
 
 Order after the reset: these five first (fix, verify on the emulator, commit
 each), then resume the own i'rab (al-Nahl 16 is next). Do not build/release

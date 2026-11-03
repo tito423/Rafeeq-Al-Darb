@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/content_mirrors.dart';
+import '../utils/disk_scan.dart';
 import 'download_engine.dart';
 
 /// Status of a single download task.
@@ -585,11 +586,8 @@ class DownloadManager {
       final type = FileSystemEntity.typeSync(path);
       if (type == FileSystemEntityType.file) return File(path).lengthSync();
       if (type == FileSystemEntityType.directory) {
-        var total = 0;
-        for (final e in Directory(path).listSync(recursive: true)) {
-          if (e is File) total += e.lengthSync();
-        }
-        return total;
+        // An unpacked artifact can be thousands of files (disk_scan.dart).
+        return await diskBytes(path);
       }
     } catch (_) {}
     return 0;

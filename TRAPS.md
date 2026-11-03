@@ -882,3 +882,11 @@ Do not rediscover these.
     and there a gap can be missing data (al-Tabari: only 37:11 for 37:11-24).
     Rule and evidence in `scripts/tafsir_ranges.py`; never derive a range
     from key order without checking `verses` for that source.
+
+78. **A `listSync` loop over downloads runs where the frames are drawn.**
+    The owner felt the app slow down with 40-50 GB downloaded (2026-11-02).
+    Measured 2026-11-04 on emulator-5554 with 21,592 files (80 surah
+    recitations, two per-ayah reciters): the recitation library's start-up
+    scan held the UI isolate 230 ms, opening «التنزيلات» 1,090 ms. Cost is
+    file COUNT, not bytes. Scan downloads with `core/utils/disk_scan.dart`
+    (`Isolate.run`); after the fix a repeat open stalled 33-63 ms.
