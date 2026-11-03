@@ -631,6 +631,10 @@
     "takhrij_darussalam": "Hafiz Abu Tahir Zubair Ali Za'i — Darussalam, first Arabic–English edition, 2007 (ISBN {})"
   },
   "azkar": {
+      "listen_download_all": "Download all",
+      "listen_download_all_ask": "Download {n} recordings, every reciter? Size: {size}. They are kept for listening offline.",
+      "listen_all_ready": "All recordings are ready offline",
+      "listen_downloading_all": "Downloading the recordings…",
     "reminder_opens": "When the reminder is opened",
     "reminder_opens_text": "The written adhkar",
     "reminder_opens_voice": "Listen, recited by {}",

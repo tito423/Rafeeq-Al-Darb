@@ -122,6 +122,57 @@ class _AdhkarListenScreenState extends State<AdhkarListenScreen> {
         title: '$_title — ${_name(r)}',
       );
 
+  /// Not on the phone yet and not already being fetched.
+  List<AdhkarRecitation> get _missing => [
+    for (final r in _list)
+      if (_paths[r.id] == null &&
+          !const {
+            DownloadStatus.queued,
+            DownloadStatus.downloading,
+          }.contains(DownloadManager.instance.taskById(r.downloadId)?.status))
+        r,
+  ];
+
+  /// «امكانية تحميل كل ملفات الصوت مرة واحدة لمختلف القراء» (owner,
+  /// 2026-11-02): every reciter of this time, one tap, after saying how many
+  /// files and how big. The download manager queues them; each card shows
+  /// its own progress and can still be paused or cancelled on its own.
+  Future<void> _downloadAll() async {
+    final missing = _missing;
+    if (missing.isEmpty) return;
+    final total = missing.fold<int>(0, (s, r) => s + r.bytes);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(
+          'azkar.listen_download_all_ask'.tr(
+            namedArgs: {
+              'n': localizeDigits(
+                '${missing.length}',
+                context.locale.languageCode,
+              ),
+              'size': formatBytes(total),
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('common.cancel'.tr()),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('azkar.listen_download_all'.tr()),
+          ),
+        ],
+      ),
+    );
+    if (yes != true) return;
+    for (final r in missing) {
+      await _download(r);
+    }
+  }
+
   Future<void> _delete(AdhkarRecitation r) async {
     final yes = await showDialog<bool>(
       context: context,
@@ -219,6 +270,61 @@ class _AdhkarListenScreenState extends State<AdhkarListenScreen> {
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    Builder(
+                      builder: (context) {
+                        final missing = _missing;
+                        final allReady = _list.every(
+                          (r) => _paths[r.id] != null,
+                        );
+                        if (allReady) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.offline_pin_rounded,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'azkar.listen_all_ready'.tr(),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          );
+                        }
+                        if (missing.isEmpty) {
+                          // Everything left is already queued or coming in;
+                          // a greyed-out button read as dark-on-dark here.
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'azkar.listen_downloading_all'.tr(),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          );
+                        }
+                        return FilledButton.icon(
+                          onPressed: _downloadAll,
+                          icon: const Icon(Icons.download_for_offline_rounded),
+                          label: Text(
+                            '${'azkar.listen_download_all'.tr()} · ${formatBytes(missing.fold<int>(0, (s, r) => s + r.bytes))}',
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
                     for (final r in _list)

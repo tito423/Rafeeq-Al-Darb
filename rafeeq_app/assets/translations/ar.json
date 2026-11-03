@@ -631,6 +631,10 @@
     "takhrij_darussalam": "حافظ أبو طاهر زبير علي زئي — دار السلام، الطبعة العربية–الإنجليزية الأولى، ٢٠٠٧ (ردمك {})"
   },
   "azkar": {
+      "listen_download_all": "تنزيل الكل",
+      "listen_download_all_ask": "تنزيل {n} تسجيلات لكل القرّاء؟ الحجم: {size}. تُحفظ لتسمعها دون إنترنت.",
+      "listen_all_ready": "كل التسجيلات جاهزة دون إنترنت",
+      "listen_downloading_all": "جارٍ تنزيل التسجيلات…",
     "reminder_opens": "عند فتح التذكير",
     "reminder_opens_text": "الأذكار مكتوبة",
     "reminder_opens_voice": "الاستماع بصوت {}",
