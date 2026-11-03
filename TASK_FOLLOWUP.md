@@ -34,11 +34,19 @@ session. Each one is to be investigated on the real thing first (CLAUDE.md
    night > 0.6); ru «туч» -> «облаков». Seen on emulator-5554 (debug,
    RAFEEQ_CARAVAN_ALL_OPEN): legs 4 and 15 show white clouds in daylight, no
    lightning. Sandstorm/night cloud not caught in a frame.
-- [ ] 2. Search: most results, when opened, show «تعذّرت قراءة هذه الصفحة داخل
+- [x] 2. Search: most results, when opened, show «تعذّرت قراءة هذه الصفحة داخل
    التطبيق. يمكنك قراءتها على موقع الدرر السنية مباشرة.» with an «افتح على
    الموقع» button (example: «ثانيًا: الاستعداد للحج والعمرة»). Screenshot:
    `docs/owner_reports/2026-11-02_dorar_search_cannot_read.jpg`. Find why the
    in-app reader fails for these results and make them open in the app.
+   DONE 574dbf3c (2026-11-04): dorar.net added id="enc-article-body" to the
+   section div, so the start marker matched NO section (all encyclopaedias,
+   not only search). Parser now cuts after the tag closes; source_rules v6
+   published to R2 + content-mirror (installed apps take it on next launch,
+   no APK needed). check_sources.py 7/7. Seen on emulator-5554 (installed
+   3.93.0 debug + v6 rules): aqeeda «مقدّمة» opens with its text. The new
+   parser code itself is tested on the real aadab/924 page, not yet run on
+   a device build.
 - [ ] 3. Qur'an khatma: let the user edit every aspect of an existing khatma.
 - [ ] 4. Morning/evening adhkar audio: a "download all" option that fetches every
    audio file at once, for each reciter.
