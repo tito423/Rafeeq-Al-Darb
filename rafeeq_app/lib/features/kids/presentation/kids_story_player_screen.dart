@@ -11,7 +11,10 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../../core/config/content_mirrors.dart';
 import '../../../core/db/models.dart';
 import '../../../core/db/quran_repository.dart';
+import '../../../core/db/sciences_repository.dart';
 import '../../../core/services/download_manager.dart';
+import '../../../core/services/quran_translation_store.dart';
+import '../../../core/utils/arabic_normalize.dart' show surahNamePlain;
 import '../../../core/utils/digits.dart';
 import '../data/kids_stories.dart';
 
@@ -61,7 +64,7 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
   bool _full = false;
   bool _immersive = false;
   Timer? _hide;
-  final Map<String, (Ayah, String)> _ayahs = {};
+  final Map<String, (Ayah, String, String?)> _ayahs = {};
   final _focus = FocusNode();
 
   KidsStory get story => widget.story;
@@ -290,14 +293,36 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
     return localizeDigits('$m:${s.toString().padLeft(2, '0')}', context.locale.languageCode);
   }
 
-  Future<(Ayah, String)?> _ayah(int surah, int ayah) async {
-    final key = '$surah:$ayah';
+  /// The ayah, the surah label in the reader's language, and the ayah's
+  /// translation when the UI is not Arabic.
+  ///
+  /// Owner, 2026-11-05 (two phone screenshots): the label printed the
+  /// mushaf-orthography name with its marks («سُورَةُ هُودٍ»), which this font
+  /// draws badly, and a French reader got the ayah with no translation
+  /// although the app ships them. The label is now the plain name in Arabic
+  /// and the transliterated name elsewhere; the translation comes from the
+  /// same sources the Quran reader uses (the sciences pack, then a downloaded
+  /// translation). When neither is on the phone nothing is invented.
+  Future<(Ayah, String, String?)?> _ayah(int surah, int ayah, String lang) async {
+    final key = '$lang:$surah:$ayah';
     if (_ayahs.containsKey(key)) return _ayahs[key];
     final repo = await ref.read(quranRepositoryProvider.future);
     final a = await repo.ayah(surah, ayah);
     if (a == null) return null;
     final names = await repo.surahs();
-    final r = (a, names[surah - 1].nameAr);
+    final s = names[surah - 1];
+    final label = lang == 'ar' || lang == 'ur' ? surahNamePlain(s.nameAr) : s.nameEn;
+    String? tr;
+    if (lang != 'ar') {
+      try {
+        final sci = await ref.read(sciencesRepositoryProvider.future);
+        tr = (await sci?.translationForAyah(surah, ayah, lang))?.text;
+      } catch (_) {}
+      if (tr == null && QuranTranslationStore.instance.isInstalled(lang)) {
+        tr = await QuranTranslationStore.instance.verse(lang, surah, ayah);
+      }
+    }
+    final r = (a, label, tr);
     _ayahs[key] = r;
     return r;
   }
@@ -316,12 +341,13 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
     );
     Widget child;
     if (cap.isAyah) {
-      final key = '${cap.surah}:${cap.ayah}';
+      final lang = context.locale.languageCode;
+      final key = '$lang:${cap.surah}:${cap.ayah}';
       final cached = _ayahs[key];
       child = cached != null
           ? _ayahText(cached, overlay)
-          : FutureBuilder<(Ayah, String)?>(
-              future: _ayah(cap.surah!, cap.ayah!),
+          : FutureBuilder<(Ayah, String, String?)?>(
+              future: _ayah(cap.surah!, cap.ayah!, lang),
               builder: (_, snap) => snap.data == null ? const SizedBox.shrink() : _ayahText(snap.data!, overlay),
             );
     } else {
@@ -343,7 +369,7 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
     return overlay ? box : ConstrainedBox(constraints: const BoxConstraints(minHeight: 96), child: Center(child: box));
   }
 
-  Widget _ayahText((Ayah, String) a, bool overlay) {
+  Widget _ayahText((Ayah, String, String?) a, bool overlay) {
     final lang = context.locale.languageCode;
     final col = overlay ? Colors.white : Theme.of(context).colorScheme.onSurface;
     return Column(
@@ -356,6 +382,14 @@ class _KidsStoryPlayerScreenState extends ConsumerState<KidsStoryPlayerScreen> {
                 shadows: overlay ? const [Shadow(blurRadius: 6)] : null)),
         Text('${a.$2} · ${localizeDigits('${a.$1.ayahNumber}', lang)}',
             style: TextStyle(fontSize: 13, color: col.withValues(alpha: 0.75))),
+        if (a.$3 != null) ...[
+          const SizedBox(height: 6),
+          Text(a.$3!,
+              textAlign: TextAlign.center,
+              textDirection: lang == 'ur' ? TextDirection.rtl : TextDirection.ltr,
+              style: TextStyle(fontSize: overlay ? 15 : 16, height: 1.5, color: col,
+                  shadows: overlay ? const [Shadow(blurRadius: 6)] : null)),
+        ],
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../../core/db/hadith_repository.dart';
 import '../../../../core/i18n/supported_locales.dart';
+import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/models/prayer_calculation_methods.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
@@ -189,7 +190,10 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
         icon: Icons.access_time_filled_rounded,
         title: 'about.f_prayer'.tr(),
         subtitle: 'about.f_prayer_desc'.tr(
-          args: [_n(kPrayerCalculationMethods.length)!],
+          args: [
+            _n(kPrayerCalculationMethods.length)!,
+            _n(AdhanMode.values.length)!,
+          ],
         ),
       ),
       const _HadithFeatureRow(),
@@ -234,6 +238,26 @@ class _AboutScreenState extends ConsumerState<AboutScreen>
         icon: Icons.child_care_rounded,
         title: 'about.f_kids'.tr(),
         subtitle: 'about.f_kids_desc'.tr(args: [_n(kidsStories.length)!]),
+      ),
+      _FeatureRow(
+        icon: Icons.emoji_events_rounded,
+        title: 'about.f_journey'.tr(),
+        subtitle: 'about.f_journey_desc'.tr(),
+      ),
+      _FeatureRow(
+        icon: Icons.volunteer_activism_rounded,
+        title: 'about.f_dedication'.tr(),
+        subtitle: 'about.f_dedication_desc'.tr(),
+      ),
+      _FeatureRow(
+        icon: Icons.center_focus_strong_rounded,
+        title: 'about.f_focus'.tr(),
+        subtitle: 'about.f_focus_desc'.tr(),
+      ),
+      _FeatureRow(
+        icon: Icons.notifications_active_rounded,
+        title: 'about.f_reminders'.tr(),
+        subtitle: 'about.f_reminders_desc'.tr(),
       ),
       _FeatureRow(
         icon: Icons.local_library_rounded,

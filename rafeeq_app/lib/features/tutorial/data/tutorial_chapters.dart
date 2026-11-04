@@ -20,7 +20,13 @@ import 'package:flutter/material.dart';
 
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../caravan/presentation/caravan_screen.dart';
+import '../../dedications/presentation/dedications_screen.dart';
+import '../../downloads/presentation/screens/downloads_screen.dart';
 import '../../hifz/presentation/hifz_screen.dart';
+import '../../kids/presentation/journey_screen.dart';
+import '../../kids/presentation/kids_corner_screen.dart';
+import '../../quiz/presentation/quiz_home_screen.dart';
 import '../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../tajweed/presentation/screens/tajweed_levels_screen.dart';
 import 'tutorial_anchors.dart';
@@ -60,6 +66,12 @@ class TutorialChapter {
 Widget _hifzScreen(BuildContext context) => const HifzScreen();
 Widget _reciteScreen(BuildContext context) => const QuranAudioScreen();
 Widget _tajweedScreen(BuildContext context) => const TajweedLevelsScreen();
+Widget _kidsScreen(BuildContext context) => const KidsCornerScreen();
+Widget _journeyScreen(BuildContext context) => const JourneyScreen();
+Widget _quizScreen(BuildContext context) => const QuizHomeScreen();
+Widget _caravanScreen(BuildContext context) => const CaravanScreen();
+Widget _dedicationsScreen(BuildContext context) => const DedicationsScreen();
+Widget _downloadsScreen(BuildContext context) => const DownloadsScreen();
 
 const _quranGold = AppColors.gold;
 const _prayerViolet = Color(0xFF6C5FBC);
@@ -244,20 +256,73 @@ const tutorialChapters = <TutorialChapter>[
   // No library stop (owner, 2026-09-25): a store build without the library
   // is planned, and the tour must not describe a screen it may not have.
 
-  // ── More ────────────────────────────────────────────────────────────────
+  // ── More: each stop opens the screen itself, not the card outside it ────
+  // «الكامل مش بتدخل جوه الخيارات الحقيقية ده من برة بس» (owner,
+  // 2026-11-05): these stops used to frame the More card that opens the
+  // feature. Each now draws the feature's own screen.
   TutorialChapter(
     'more_quran_audio',
     AppTab.more,
     Icons.library_music_rounded,
     AppColors.gold,
-    anchor: TourAnchor.moreQuranAudio,
+    screen: _reciteScreen,
+    whole: true,
   ),
   TutorialChapter(
     'more_tajweed',
     AppTab.more,
     Icons.record_voice_over_rounded,
     AppColors.gold,
-    anchor: TourAnchor.moreTajweed,
+    screen: _tajweedScreen,
+    whole: true,
+  ),
+  TutorialChapter(
+    'hifz',
+    AppTab.more,
+    Icons.school_rounded,
+    AppColors.gold,
+    screen: _hifzScreen,
+    whole: true,
+  ),
+  TutorialChapter(
+    'kids',
+    AppTab.more,
+    Icons.child_care_rounded,
+    Color(0xFFE8A33D),
+    screen: _kidsScreen,
+    whole: true,
+  ),
+  TutorialChapter(
+    'journey',
+    AppTab.more,
+    Icons.emoji_events_rounded,
+    AppColors.gold,
+    screen: _journeyScreen,
+    whole: true,
+  ),
+  TutorialChapter(
+    'quiz',
+    AppTab.more,
+    Icons.quiz_rounded,
+    _libraryTeal,
+    screen: _quizScreen,
+    whole: true,
+  ),
+  TutorialChapter(
+    'caravan',
+    AppTab.more,
+    Icons.landscape_rounded,
+    _tasbeehCopper,
+    screen: _caravanScreen,
+    whole: true,
+  ),
+  TutorialChapter(
+    'dedications',
+    AppTab.more,
+    Icons.volunteer_activism_rounded,
+    _azkarGreen,
+    screen: _dedicationsScreen,
+    whole: true,
   ),
   TutorialChapter(
     'focus',
@@ -271,7 +336,8 @@ const tutorialChapters = <TutorialChapter>[
     AppTab.more,
     Icons.download_for_offline_rounded,
     AppColors.info,
-    anchor: TourAnchor.moreDownloads,
+    screen: _downloadsScreen,
+    whole: true,
   ),
   TutorialChapter(
     'themes',
