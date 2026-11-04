@@ -1,13 +1,8 @@
 # TASK_FOLLOWUP — the live step log (read right after CLAUDE.md)
 
-## OWNER ORDER 2026-11-05 ~01:40 Dubai - do these FIRST when the 5-hour quota resets (02:50 Dubai), BEFORE the i'rab
-Owner (with two phone screenshots, story screen «أصحاب السبت» in Arabic and «Nouh (Noé) et l'arche» in French):
-1. Story ayah card: the surah-name line under the ayah renders wrong («سُورَةُ هُودٍ · 44», «سُورَةُ الأَعْرَافِ · ١٦٤») - fix the surah name display.
-2. The Qur'an ayat shown inside stories have NO translation in non-Arabic UIs; the app already has Qur'an translations - show the translation (reader's language) under the ayah. Text of the ayah itself unchanged.
-3. «عن التطبيق» info is out of date - re-check every line against the current app and fix (7 languages).
-4. App tour (short and full) is wrong: the full tour does not go inside the real options (only the outside), and its screenshots/images do not match the current app - rebuild to match the app as it is now.
-STATUS 2026-11-05 ~23:20 Dubai: items 1-3 DONE in code (commit bdd945ab, analyze clean, 1463 tests pass) - NOT yet seen on the emulator. Item 4: tour text fixed and full tour now opens the real screens (audio, tajweed, hifz, kids, journey, quiz, caravan, dedications, downloads); the PICTURES (assets/tour/<lang>/*.webp + frames.json) still need recapturing: build with --dart-define=RAFEEQ_TOUR_CAPTURE=true + sign_release.py (log dist/build_tourcap.log), install on Rafeeq_Audit_API24, start the tour, run `py -3 scripts/capture_tour.py`.
-Then: build (build_github_release.bat, truststore route of trap 61), check on emulator, publish (delete v3.95.0 + tag), give release + direct APK links. Then continue the i'rab (al-An'am from 114) and review earlier i'rab work («ممكن تبص على الاعراب تتاكد منه»).
+## OWNER ORDER 2026-11-05 - DONE, published v3.96.0 (2026-11-05 ~07:55 Dubai)
+Story surah name + ayah translations, About rows, tour (inside screens, 294 pictures recaptured in 7 languages) - all seen on Rafeeq_Audit_API24 in French (story Nuh at Hud 44, About, detailed tour stops 27-29). Release https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.96.0 , tag = 60d07a35 = HEAD, asset sha256 809fcdb3... matches dist/RafeeqAlDarb-v3.96.0.apk. v3.95.0 + tag deleted.
+NEXT: the i'rab - al-An'am from 114, and review earlier i'rab («ممكن تبص على الاعراب تتاكد منه»).
 
 
 Updated after EVERY step, committed and pushed. Newest log entry on top.
