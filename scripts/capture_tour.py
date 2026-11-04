@@ -43,10 +43,35 @@ def screencap():
     return Image.open(io.BytesIO(adb('exec-out', 'screencap', '-p').stdout)).convert('RGB')
 
 
+def trim_nav_bar(img):
+    """Cut a black system navigation bar the reported insets missed.
+
+    On the API 24 emulator Home reported a zero bottom inset while the black
+    ◁ ○ □ bar was still on screen (2026-11-05), so it landed in the picture.
+    """
+    W, H = img.size
+    g = img.convert('L')
+    cut = H
+    for y in range(H - 1, H // 2, -1):
+        row = [g.getpixel((x, y)) for x in range(0, W, 8)]
+        if sum(v < 16 for v in row) / len(row) < 0.85:
+            break
+        cut = y
+    # A few dark rows are just a dark screen; the bar is tens of pixels.
+    return img.crop((0, 0, W, cut)) if H - cut >= 40 else img
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     fj = OUT / 'frames.json'
-    frames = json.loads(fj.read_text(encoding='utf-8')) if fj.exists() else {}
+    # Start clean: a stop that is not photographed this run must not keep
+    # an old picture of a screen that has since changed.
+    if '--fresh' in sys.argv:
+        for old in OUT.rglob('*.webp'):
+            old.unlink()
+        frames = {}
+    else:
+        frames = json.loads(fj.read_text(encoding='utf-8')) if fj.exists() else {}
 
     def save():
         fj.write_text(json.dumps(frames, ensure_ascii=False, indent=1,
@@ -66,12 +91,13 @@ def main():
             break
         lang, key, rect, size, bars, dpr = parts[1:7]
         if rect != 'NONE':
-            time.sleep(1.5)  # let the tab's own animations settle
+            time.sleep(4.0)  # let the screen load and its animations settle (1.5 s caught the recitation player still spinning, 2026-11-05)
             img = screencap()
             dpr = float(dpr)
             top, bottom = (float(v) * dpr for v in bars.split(','))
             W, H = img.size
             crop = img.crop((0, round(top), W, round(H - bottom)))
+            crop = trim_nav_bar(crop)
             ch = crop.size[1]
             l, t, r, b = (float(v) * dpr for v in rect.split(','))
             fr = [max(0.0, l / W), max(0.0, (t - top) / ch),
