@@ -55,7 +55,12 @@ class PrayerSlideAdhanExtras extends ConsumerWidget {
         from: const Duration(seconds: 3),
       );
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+      // The slide is a dialog; a snackbar shown from it sits behind its
+      // barrier (seen on the emulator). Close it, so the message and the
+      // test adhan itself are in view.
+      final messenger = ScaffoldMessenger.of(context);
+      await Navigator.of(context).maybePop();
+      messenger.showSnackBar(
         SnackBar(
           content: Text('prayer.preview_mode_soon'.tr(args: [mode.trKey.tr()])),
         ),
