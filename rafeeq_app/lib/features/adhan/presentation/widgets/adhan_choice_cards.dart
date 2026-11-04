@@ -141,6 +141,7 @@ class AdhanCard extends StatelessWidget {
 IconData adhanModeIcon(AdhanMode m) => switch (m) {
   AdhanMode.full => Icons.fullscreen_rounded,
   AdhanMode.audio => Icons.volume_up_rounded,
+  AdhanMode.banner => Icons.notifications_active_outlined,
   AdhanMode.vibrate => Icons.vibration_rounded,
   AdhanMode.silent => Icons.notifications_off_outlined,
 };

@@ -55,6 +55,16 @@ object PrayerCard {
      */
     const val ACTION_SHOW_NEXT = "com.tito.rafeeq_aldarb.PRAYER_CARD_NEXT"
 
+    /**
+     * «منذ الأذان» — the way back from [ACTION_SHOW_NEXT].
+     *
+     * 2026-11-04 the owner: «اشعار الصلاة الثابت ساعات بيعرض عدى اد ايه على
+     * الفايته فانا عاوز اقدر اغيره من الاشعار يعرض الفايتة او الباقي على
+     * القادمة». So the choice is now a standing one, kept in `show_next_mode`
+     * until the other button is pressed, not a one-post override.
+     */
+    const val ACTION_SHOW_ELAPSED = "com.tito.rafeeq_aldarb.PRAYER_CARD_ELAPSED"
+
     private fun prefs(ctx: Context) = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /** Fallback for the window Dart sends with every schedule. */
@@ -80,6 +90,7 @@ object PrayerCard {
         body: String,
         openLabel: String,
         nextLabel: String,
+        prevLabel: String,
     ) {
         prefs(ctx).edit()
             .putBoolean("enabled", true)
@@ -91,6 +102,9 @@ object PrayerCard {
             // language. Nothing here may invent user-visible words.
             .putString("open_label", openLabel)
             .putString("next_label", nextLabel)
+            .putString("prev_label", prevLabel)
+            // `show_next_mode` is the reader's standing choice and survives
+            // every refresh; only the two buttons change it.
             .remove("skip_elapsed")
             .apply()
         post(ctx)
@@ -132,13 +146,12 @@ object PrayerCard {
         // The event that has come in within the last hour wins: that hour
         // belongs to it and the card counts UP from it. Otherwise the next
         // one, counted DOWN to.
-        // `skip_elapsed` is «الصلاة القادمة» having been pressed: for this
-        // one post the elapsed hour is ignored and the card jumps to what is
-        // next. It is consumed here so the next rollover restores the rule.
-        val skipElapsed = p.getBoolean("skip_elapsed", false)
-        if (skipElapsed) p.edit().remove("skip_elapsed").apply()
-        val elapsed = if (skipElapsed) null
-            else all.lastOrNull { it.whenMs in (now - window)..now }
+        // `show_next_mode` is «الصلاة القادمة» having been pressed: the
+        // elapsed hour is skipped and the card always counts down to what is
+        // next, until «منذ الأذان» is pressed.
+        val nextMode = p.getBoolean("show_next_mode", false)
+        val justCameIn = all.lastOrNull { it.whenMs in (now - window)..now }
+        val elapsed = if (nextMode) null else justCameIn
         val upcoming = all.firstOrNull { it.whenMs > now }
         val current = elapsed ?: upcoming
         val countDown = elapsed == null
@@ -200,6 +213,12 @@ object PrayerCard {
         // there.
         if (nextLabel.isNotEmpty() && !countDown && upcoming != null) {
             builder.addAction(0, nextLabel, broadcast(ctx, ACTION_SHOW_NEXT, 3))
+        }
+        // And back: offered while counting down by choice and a prayer has
+        // come in within the hour, so there is an elapsed time to show.
+        val prevLabel = p.getString("prev_label", "") ?: ""
+        if (prevLabel.isNotEmpty() && nextMode && justCameIn != null) {
+            builder.addAction(0, prevLabel, broadcast(ctx, ACTION_SHOW_ELAPSED, 4))
         }
 
         // Android's chronometer is driven by elapsedRealtime while `when` is
@@ -275,8 +294,11 @@ object PrayerCard {
 
         // Wake exactly when this card stops being true: when the event comes
         // in, or when its hour is up and the next one takes over.
+        // In next mode the «منذ الأذان» button must also go when its hour ends.
         val nextChange = when {
             current == null -> 0L
+            countDown && nextMode && justCameIn != null ->
+                minOf(current.whenMs, justCameIn.whenMs + window)
             countDown -> current.whenMs
             else -> current.whenMs + window
         }
@@ -298,9 +320,15 @@ object PrayerCard {
     /** A rollover is just a repost: [post] works out what is current. */
     fun rollover(ctx: Context) = post(ctx)
 
-    /** «الصلاة القادمة»: one post that ignores the elapsed hour. */
+    /** «الصلاة القادمة»: from now on, always count down to the next prayer. */
     fun showNext(ctx: Context) {
-        prefs(ctx).edit().putBoolean("skip_elapsed", true).apply()
+        prefs(ctx).edit().putBoolean("show_next_mode", true).apply()
+        post(ctx)
+    }
+
+    /** «منذ الأذان»: back to the hour after the adhan counting up. */
+    fun showElapsed(ctx: Context) {
+        prefs(ctx).edit().putBoolean("show_next_mode", false).apply()
         post(ctx)
     }
 
@@ -359,6 +387,7 @@ class PrayerCardReceiver : BroadcastReceiver() {
         when (intent.action) {
             PrayerCard.ACTION_ROLLOVER -> PrayerCard.rollover(context)
             PrayerCard.ACTION_SHOW_NEXT -> PrayerCard.showNext(context)
+            PrayerCard.ACTION_SHOW_ELAPSED -> PrayerCard.showElapsed(context)
             else -> PrayerCard.post(context)
         }
     }

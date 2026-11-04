@@ -263,6 +263,8 @@ class PrayerStatusNotification {
   Map<String, String> _buttonLabels() => {
         'openLabel': 'notif.prayer_open'.tr(),
         'nextLabel': 'notif.prayer_next'.tr(),
+        // The way back to the elapsed count-up (owner, 2026-11-04).
+        'prevLabel': 'notif.prayer_since_adhan'.tr(),
       };
 
   String _needLocationTitle(String l) => 'app.name'.tr();

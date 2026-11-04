@@ -36,6 +36,8 @@ object NativeStrings {
     const val ADHAN_CHANNEL_VIBRATE_DESC = "adhan_channel_vibrate_desc"
     const val ADHAN_CHANNEL_SILENT = "adhan_channel_silent"
     const val ADHAN_CHANNEL_SILENT_DESC = "adhan_channel_silent_desc"
+    const val ADHAN_CHANNEL_BANNER = "adhan_channel_banner"
+    const val ADHAN_CHANNEL_BANNER_DESC = "adhan_channel_banner_desc"
 
     /** Carries a single `%s`, replaced with the prayer's own name. */
     const val ADHAN_TITLE = "adhan_title"
@@ -53,7 +55,7 @@ object NativeStrings {
 
     private val adhanKeys = setOf(ADHAN_CHANNEL, ADHAN_CHANNEL_DESC,
         ADHAN_CHANNEL_VIBRATE, ADHAN_CHANNEL_VIBRATE_DESC, ADHAN_CHANNEL_SILENT,
-        ADHAN_CHANNEL_SILENT_DESC, ADHAN_TITLE, ADHAN_BODY, ADHAN_BODY_MUTED,
+        ADHAN_CHANNEL_SILENT_DESC, ADHAN_CHANNEL_BANNER, ADHAN_CHANNEL_BANNER_DESC, ADHAN_TITLE, ADHAN_BODY, ADHAN_BODY_MUTED,
         ADHAN_STOP, ADHAN_MUTE)
 
     private val fallback = mapOf(
@@ -63,6 +65,8 @@ object NativeStrings {
         ADHAN_CHANNEL_VIBRATE_DESC to "تنبيه بالاهتزاز فقط عند دخول وقت الصلاة",
         ADHAN_CHANNEL_SILENT to "الأذان — صامت",
         ADHAN_CHANNEL_SILENT_DESC to "تنبيه صامت عند دخول وقت الصلاة، بلا صوت أو اهتزاز",
+        ADHAN_CHANNEL_BANNER to "الأذان — إشعار منبثق فقط",
+        ADHAN_CHANNEL_BANNER_DESC to "إشعار ينزل من أعلى الشاشة عند دخول وقت الصلاة، بلا صوت أذان ولا اهتزاز",
         ADHAN_TITLE to "أذان صلاة %s",
         ADHAN_BODY to "الله أكبر، حان وقت الصلاة",
         ADHAN_BODY_MUTED to "مكتوم — الله أكبر، حان وقت الصلاة",

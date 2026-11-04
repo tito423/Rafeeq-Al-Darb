@@ -27,6 +27,13 @@ object AdhanNotifications {
     const val CHANNEL_VIBRATE = "rafeeq_adhan_vibrate_v2"
     const val CHANNEL_SILENT = "rafeeq_adhan_silent_v2"
 
+    /**
+     * «اشعار بس اللي بينزل من فوق الشاشة» (2026-11-04). IMPORTANCE_HIGH is what
+     * makes Android drop the card in from the top (heads-up); the silent
+     * channel is DEFAULT and only lands in the shade. No sound, no vibration.
+     */
+    const val CHANNEL_BANNER = "rafeeq_adhan_banner_v1"
+
     /** Every Adhan alert posts under this single id — one adhan at a time. */
     const val NOTIFICATION_ID = BuildConfig.NOTIFICATION_ADHAN
 
@@ -69,7 +76,19 @@ object AdhanNotifications {
             enableVibration(false)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
+        val banner = NotificationChannel(
+            CHANNEL_BANNER,
+            NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL_BANNER),
+            NotificationManager.IMPORTANCE_HIGH,
+        ).apply {
+            description =
+                NativeStrings.get(context, NativeStrings.ADHAN_CHANNEL_BANNER_DESC)
+            setSound(null, null)
+            enableVibration(false)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        }
         nm.createNotificationChannel(alert)
+        nm.createNotificationChannel(banner)
         nm.createNotificationChannel(vibrate)
         nm.createNotificationChannel(silent)
     }
@@ -77,6 +96,7 @@ object AdhanNotifications {
     fun channelFor(spec: AdhanSpec): String = when (spec.mode) {
         AdhanSpec.MODE_VIBRATE -> CHANNEL_VIBRATE
         AdhanSpec.MODE_SILENT -> CHANNEL_SILENT
+        AdhanSpec.MODE_BANNER -> CHANNEL_BANNER
         else -> CHANNEL_ALERT
     }
 

@@ -8,6 +8,11 @@ enum AdhanMode {
   /// Full adhan audio, ordinary notification — no full-screen takeover.
   audio,
 
+  /// No adhan audio, no vibration — a notification that drops in from the
+  /// top of the screen (heads-up). Owner, 2026-11-04: «زودلي في خيارات عرض
+  /// الاذان اشعار بس اللي بينزل من فوق الشاشة».
+  banner,
+
   /// No sound, device vibrates.
   vibrate,
 

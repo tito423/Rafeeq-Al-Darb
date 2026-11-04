@@ -93,6 +93,8 @@ data class AdhanSpec(
         const val MODE_AUDIO = "audio"
         const val MODE_VIBRATE = "vibrate"
         const val MODE_SILENT = "silent"
+        /** Heads-up notification only: no adhan audio, no vibration. */
+        const val MODE_BANNER = "banner"
 
         const val SOUND_RAW = "raw"
         const val SOUND_URI = "uri"

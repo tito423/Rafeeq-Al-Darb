@@ -49,6 +49,7 @@ fun MainActivity.registerPrayerCardChannel(flutterEngine: FlutterEngine) {
                         // Nothing native invents user-visible words.
                         call.argument<String>("openLabel") ?: "",
                         call.argument<String>("nextLabel") ?: "",
+                        call.argument<String>("prevLabel") ?: "",
                     )
                     result.success(null)
                 }

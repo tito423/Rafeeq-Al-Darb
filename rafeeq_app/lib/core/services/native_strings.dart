@@ -36,6 +36,9 @@ class NativeStrings {
         'adhan_channel_silent':
             '${'prayer.adhan'.tr()} — ${'prayer.mode_silent'.tr()}',
         'adhan_channel_silent_desc': 'notif.adhan_channel_silent_desc'.tr(),
+        'adhan_channel_banner':
+            '${'prayer.adhan'.tr()} — ${'prayer.mode_banner'.tr()}',
+        'adhan_channel_banner_desc': 'notif.adhan_channel_banner_desc'.tr(),
         'adhan_title': 'prayer.azan_of'.tr(args: const ['%s']),
         'adhan_body': 'notif.adhan_body'.tr(),
         'adhan_body_muted': 'notif.adhan_body_muted'.tr(),
