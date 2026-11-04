@@ -878,6 +878,7 @@
     "pick_file": "Escolher ficheiro MP3",
     "test": "Testar",
     "preview_azan": "Pré-visualizar Adhan",
+    "preview_mode_soon": "Um adhan de teste chegará em alguns segundos no modo «{}»",
     "preview_azan_desc": "Abra o ecrã do Adhan agora para testar o áudio, a cena e o texto sincronizado sem esperar pela hora da oração",
     "alarm_for": "Alarme de oração",
     "mute": "Silenciar",

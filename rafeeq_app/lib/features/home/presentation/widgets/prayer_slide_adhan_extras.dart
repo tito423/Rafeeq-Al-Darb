@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/models/adhan_mode.dart';
 import '../../../../core/services/adhan_native.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../adhan/data/adhan_catalog_provider.dart';
@@ -39,6 +40,28 @@ class PrayerSlideAdhanExtras extends ConsumerWidget {
     await stopRowPreview();
     await AdhanNative.stop();
     if (!context.mounted) return;
+    // THE PREVIEW SHOWS THE MODE THIS PRAYER IS SET TO. Owner, 2026-11-04:
+    // «لما بختار طريقة عرض الاذان مش بتتنفذ ولو ضغطت المعاينة بيعرض بس الاذان
+    // بشكل كامل». The row always opened the full-screen player, so a prayer
+    // set to sound, banner, vibrate or silent previewed as something it
+    // would never do. Those modes now fire a real test adhan through the same
+    // alarm → receiver path a prayer takes, a few seconds from now.
+    final mode = settings.modeFor(prayerKey);
+    if (mode != AdhanMode.full) {
+      await fireAdhanTest(
+        prayerKey: prayerKey,
+        settings: settings,
+        catalog: catalog,
+        from: const Duration(seconds: 3),
+      );
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('prayer.preview_mode_soon'.tr(args: [mode.trKey.tr()])),
+        ),
+      );
+      return;
+    }
     final spec = previewSpec(
       settings: settings,
       catalog: catalog,

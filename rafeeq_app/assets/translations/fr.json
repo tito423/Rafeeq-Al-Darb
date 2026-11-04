@@ -878,6 +878,7 @@
     "pick_file": "Choisir un fichier MP3",
     "test": "Tester",
     "preview_azan": "Aperçu de l'Adhan",
+    "preview_mode_soon": "Un adhan d'essai arrivera dans quelques secondes en mode «{}»",
     "preview_azan_desc": "Ouvrez l'écran de l'Adhan maintenant pour tester l'audio, la scène et le texte synchronisé sans attendre l'heure de la prière",
     "alarm_for": "Alarme de prière",
     "mute": "Muet",

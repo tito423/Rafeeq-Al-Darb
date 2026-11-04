@@ -60,7 +60,7 @@ object PrayerCard {
      *
      * 2026-11-04 the owner: «اشعار الصلاة الثابت ساعات بيعرض عدى اد ايه على
      * الفايته فانا عاوز اقدر اغيره من الاشعار يعرض الفايتة او الباقي على
-     * القادمة». So the choice is now a standing one, kept in `show_next_mode`
+     * القادمة». So the choice is now a standing one, kept in `card_mode`
      * until the other button is pressed, not a one-post override.
      */
     const val ACTION_SHOW_ELAPSED = "com.tito.rafeeq_aldarb.PRAYER_CARD_ELAPSED"
@@ -103,8 +103,8 @@ object PrayerCard {
             .putString("open_label", openLabel)
             .putString("next_label", nextLabel)
             .putString("prev_label", prevLabel)
-            // `show_next_mode` is the reader's standing choice and survives
-            // every refresh; only the two buttons change it.
+            // `card_mode` is the reader's standing choice and survives
+            // every refresh; only the card's toggle button changes it.
             .remove("skip_elapsed")
             .apply()
         post(ctx)
@@ -143,16 +143,24 @@ object PrayerCard {
         val now = System.currentTimeMillis()
         val window = p.getLong("elapsed_ms", ELAPSED_WINDOW_MS)
         val all = events(ctx)
-        // The event that has come in within the last hour wins: that hour
-        // belongs to it and the card counts UP from it. Otherwise the next
-        // one, counted DOWN to.
-        // `show_next_mode` is «الصلاة القادمة» having been pressed: the
-        // elapsed hour is skipped and the card always counts down to what is
-        // next, until «منذ الأذان» is pressed.
-        val nextMode = p.getBoolean("show_next_mode", false)
-        val justCameIn = all.lastOrNull { it.whenMs in (now - window)..now }
-        val elapsed = if (nextMode) null else justCameIn
+        // THREE WAYS TO READ THE CARD, one standing choice (`card_mode`):
+        //  - "auto" (never chosen): the hour after an adhan counts UP from it,
+        //    otherwise the card counts DOWN to the next event;
+        //  - "next" («الصلاة القادمة»): always count down to the next event;
+        //  - "elapsed" («منذ الأذان»): always count up from the last one,
+        //    however long ago it came in.
+        // 2026-11-04 the owner, after the first version: «مفيش طريقة لقيتها
+        // تغير طريقة عرض العداد». That version offered the button only inside
+        // the hour after an adhan, so for most of the day there was none.
+        val mode = cardMode(p)
+        val lastPast = all.lastOrNull { it.whenMs <= now }
+        val justCameIn = lastPast?.takeIf { it.whenMs >= now - window }
         val upcoming = all.firstOrNull { it.whenMs > now }
+        val elapsed = when (mode) {
+            MODE_NEXT -> null
+            MODE_ELAPSED -> lastPast
+            else -> justCameIn
+        }
         val current = elapsed ?: upcoming
         val countDown = elapsed == null
 
@@ -207,17 +215,15 @@ object PrayerCard {
                 )
             }
         }
-        // Only offered while the card is actually sitting on a prayer that
-        // has already come in — otherwise it is already showing what is next
-        // and the button would do nothing, which is worse than not being
-        // there.
-        if (nextLabel.isNotEmpty() && !countDown && upcoming != null) {
-            builder.addAction(0, nextLabel, broadcast(ctx, ACTION_SHOW_NEXT, 3))
-        }
-        // And back: offered while counting down by choice and a prayer has
-        // come in within the hour, so there is an elapsed time to show.
+        // ONE TOGGLE, ALWAYS THERE: it names the other way of reading the
+        // card. Counting up → «الصلاة القادمة»; counting down → «منذ الأذان»
+        // (only when there is a past event to count from).
         val prevLabel = p.getString("prev_label", "") ?: ""
-        if (prevLabel.isNotEmpty() && nextMode && justCameIn != null) {
+        if (!countDown) {
+            if (nextLabel.isNotEmpty() && upcoming != null) {
+                builder.addAction(0, nextLabel, broadcast(ctx, ACTION_SHOW_NEXT, 3))
+            }
+        } else if (prevLabel.isNotEmpty() && lastPast != null) {
             builder.addAction(0, prevLabel, broadcast(ctx, ACTION_SHOW_ELAPSED, 4))
         }
 
@@ -292,15 +298,14 @@ object PrayerCard {
             // No notification permission: nothing to show, nothing to crash over.
         }
 
-        // Wake exactly when this card stops being true: when the event comes
-        // in, or when its hour is up and the next one takes over.
-        // In next mode the «منذ الأذان» button must also go when its hour ends.
+        // Wake exactly when this card stops being true. In auto mode that is
+        // the event coming in, or its hour running out; in the two chosen
+        // modes, the next event coming in (the count restarts from it).
         val nextChange = when {
-            current == null -> 0L
-            countDown && nextMode && justCameIn != null ->
-                minOf(current.whenMs, justCameIn.whenMs + window)
+            current == null -> upcoming?.whenMs ?: 0L
             countDown -> current.whenMs
-            else -> current.whenMs + window
+            mode == MODE_ELAPSED -> upcoming?.whenMs ?: 0L
+            else -> minOf(current.whenMs + window, upcoming?.whenMs ?: Long.MAX_VALUE)
         }
         scheduleRollover(ctx, nextChange)
     }
@@ -320,15 +325,24 @@ object PrayerCard {
     /** A rollover is just a repost: [post] works out what is current. */
     fun rollover(ctx: Context) = post(ctx)
 
+    private const val MODE_AUTO = "auto"
+    private const val MODE_NEXT = "next"
+    private const val MODE_ELAPSED = "elapsed"
+
+    /** The standing choice; the first version's `show_next_mode` maps to "next". */
+    private fun cardMode(p: android.content.SharedPreferences): String =
+        p.getString("card_mode", null)
+            ?: if (p.getBoolean("show_next_mode", false)) MODE_NEXT else MODE_AUTO
+
     /** «الصلاة القادمة»: from now on, always count down to the next prayer. */
     fun showNext(ctx: Context) {
-        prefs(ctx).edit().putBoolean("show_next_mode", true).apply()
+        prefs(ctx).edit().putString("card_mode", MODE_NEXT).remove("show_next_mode").apply()
         post(ctx)
     }
 
-    /** «منذ الأذان»: back to the hour after the adhan counting up. */
+    /** «منذ الأذان»: from now on, always count up from the last prayer. */
     fun showElapsed(ctx: Context) {
-        prefs(ctx).edit().putBoolean("show_next_mode", false).apply()
+        prefs(ctx).edit().putString("card_mode", MODE_ELAPSED).remove("show_next_mode").apply()
         post(ctx)
     }
 

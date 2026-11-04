@@ -878,6 +878,7 @@
     "pick_file": "Pick MP3 file",
     "test": "Test",
     "preview_azan": "Preview Adhan",
+    "preview_mode_soon": "A test adhan will arrive in a few seconds in «{}» mode",
     "preview_azan_desc": "Open the Adhan screen now to try the audio, the scene and the synced text without waiting for prayer time",
     "alarm_for": "Prayer alarm",
     "mute": "Mute",

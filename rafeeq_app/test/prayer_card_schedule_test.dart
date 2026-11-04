@@ -62,8 +62,21 @@ void main() {
     final events = at(now);
     final dates = events.map((e) =>
         DateTime.fromMillisecondsSinceEpoch(e['when'] as int).day).toSet();
-    expect(events, hasLength(6));
-    expect(dates, {29});
+    // Today's Isha (the last that came in, counted up from in «منذ الأذان»
+    // mode) and the six of the next calendar date.
+    expect(events, hasLength(7));
+    expect(dates, {28, 29});
+  });
+
+  test('the last prayer that came in stays, however long ago', () {
+    // 10:00 - sunrise was four hours ago; «منذ الأذان» counts up from it.
+    final labels =
+        at(DateTime(2026, 9, 16, 10)).map((e) => e['label'] as String).toList();
+    expect(labels.first, contains('الشروق'));
+    // 01:00 - the last one in was yesterday's Isha.
+    final night =
+        at(DateTime(2026, 9, 16, 1)).map((e) => e['label'] as String).toList();
+    expect(night.first, contains('العشاء'));
   });
 
   test('sunrise is an event — it is what the reader is watching at 06:06', () {

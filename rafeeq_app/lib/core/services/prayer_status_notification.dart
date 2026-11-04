@@ -171,7 +171,9 @@ class PrayerStatusNotification {
     String localeCode,
   ) {
     final entries = <(String, DateTime)>[];
-    for (final day in [now, addCalendarDays(now, 1)]) {
+    // Yesterday too: at 01:00 the prayer that came in last is yesterday's
+    // Isha, and «منذ الأذان» counts up from it.
+    for (final day in [addCalendarDays(now, -1), now, addCalendarDays(now, 1)]) {
       for (final e in [
         ('fajr', times.fajr),
         ('sunrise', times.sunrise),
@@ -187,9 +189,13 @@ class PrayerStatusNotification {
     entries.sort((a, b) => a.$2.compareTo(b.$2));
 
     // Each event's line carries the Hijri date of its own day.
+    // Everything from the LAST event that has come in onward. The card
+    // counts up from that one in «منذ الأذان» mode however long ago it was
+    // (owner, 2026-11-04), so it must be in the list; anything older is not
+    // needed by any mode.
+    final lastPast = entries.lastIndexWhere((e) => !e.$2.isAfter(now));
     final out = <Map<String, Object>>[];
-    for (final e in entries) {
-      if (!e.$2.isAfter(now.subtract(elapsedWindow))) continue;
+    for (final e in entries.skip(lastPast < 0 ? 0 : lastPast)) {
       out.add({
         'label': _eventLine(e.$1, e.$2, localeCode),
         'body': _withCity(
