@@ -109,8 +109,10 @@ void main() {
 
   test('the two lines are the ones he asked for, in that order', () {
     final sunrise = at(DateTime(2026, 9, 16, 6, 6)).first;
-    // Line one: the Hijri date and the city, the way «صلاتك» writes it.
-    expect(sunrise['body'], '٥ ربيع الآخر ١٤٤٨ هـ | دبي');
+    // Line one: the weekday and the Hijri date; under it, smaller, the
+    // Gregorian date and the city (owner, 2026-11-04).
+    expect(sunrise['body'], 'الأربعاء · ٥ ربيع الآخر ١٤٤٨ هـ');
+    expect(sunrise['sub'], '١٦ سبتمبر ٢٠٢٦ | دبي');
     // Line two: «الشروق، ٦:٠٢ ص» — 12-hour, and the digits Arabic. The clock
     // carries a left-to-right isolate (trap #16), which is invisible but real,
     // so the text is compared with those stripped.
@@ -135,10 +137,10 @@ void main() {
       hijriDate: '05-04-1448',
       gregorianDate: '16-09-2026',
     );
-    final body = PrayerStatusNotification.instance
+    final sub = PrayerStatusNotification.instance
         .schedule(noCity, DateTime(2026, 9, 16, 6, 6), 'ar')
-        .first['body'] as String;
-    expect(body, '٥ ربيع الآخر ١٤٤٨ هـ');
+        .first['sub'] as String;
+    expect(sub, '١٦ سبتمبر ٢٠٢٦');
   });
 
   test('an unreadable time is dropped, never invented', () {

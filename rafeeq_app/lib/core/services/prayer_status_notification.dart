@@ -198,10 +198,11 @@ class PrayerStatusNotification {
     for (final e in entries.skip(lastPast < 0 ? 0 : lastPast)) {
       out.add({
         'label': _eventLine(e.$1, e.$2, localeCode),
-        'body': _withCity(
-          _hijriLine(e.$2, localeCode),
-          times.cityName,
-        ),
+        // Three lines over the event (owner, 2026-11-04: «ضيفلي اسم اليوم
+        // والتاريخ الميلادي بشكل حلو في الاشعار»): the weekday with the
+        // Hijri date, then the Gregorian date with the city, smaller.
+        'body': '${_weekday(e.$2, localeCode)} · ${_hijriLine(e.$2, localeCode)}',
+        'sub': _withCity(_gregorianLine(e.$2, localeCode), times.cityName),
         'when': e.$2.millisecondsSinceEpoch,
       });
     }
@@ -281,6 +282,14 @@ class PrayerStatusNotification {
   /// (Umm al-Qura — authoritative, offline via cache); when it's empty/bad we
   /// fall back to the `hijri` package computed from [day].
   int _hijriOffset = 0;
+
+  /// «الأربعاء» — the event day's own name, in the app's language.
+  String _weekday(DateTime day, String localeCode) =>
+      DateFormat.EEEE(localeCode).format(day);
+
+  /// «٤ نوفمبر ٢٠٢٦» — the same form the Home header uses.
+  String _gregorianLine(DateTime day, String localeCode) =>
+      localizeDigits(DateFormat.yMMMMd(localeCode).format(day), localeCode);
 
   String _hijriLine(DateTime day, String localeCode) {
     final (y, m, d) = OfficialHijri.dateOf(day, offsetDays: _hijriOffset);

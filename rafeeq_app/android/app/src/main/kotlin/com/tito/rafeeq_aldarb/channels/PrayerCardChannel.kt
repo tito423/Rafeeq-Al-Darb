@@ -36,6 +36,7 @@ fun MainActivity.registerPrayerCardChannel(flutterEngine: FlutterEngine) {
                             JSONObject()
                                 .put("label", e["label"] as? String ?: "")
                                 .put("body", e["body"] as? String ?: "")
+                                .put("sub", e["sub"] as? String ?: "")
                                 .put("when", (e["when"] as? Number)?.toLong() ?: 0L)
                         )
                     }

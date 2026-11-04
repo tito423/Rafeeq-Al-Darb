@@ -118,7 +118,7 @@ object PrayerCard {
     }
 
     /** One event of the schedule: the two lines and the moment it happens. */
-    private data class Event(val label: String, val body: String, val whenMs: Long)
+    private data class Event(val label: String, val body: String, val sub: String, val whenMs: Long)
 
     private fun events(ctx: Context): List<Event> {
         val raw = prefs(ctx).getString("events", null) ?: return emptyList()
@@ -126,7 +126,7 @@ object PrayerCard {
             val arr = JSONArray(raw)
             (0 until arr.length()).map { i ->
                 val o = arr.getJSONObject(i)
-                Event(o.optString("label"), o.optString("body"), o.optLong("when"))
+                Event(o.optString("label"), o.optString("body"), o.optString("sub"), o.optLong("when"))
             }.sortedBy { it.whenMs }
         } catch (_: Exception) {
             emptyList()
@@ -166,6 +166,7 @@ object PrayerCard {
 
         val title: String
         val text: String
+        val sub = current?.sub ?: ""
         if (current != null) {
             title = current.body
             text = current.label
@@ -247,6 +248,7 @@ object PrayerCard {
                 // Before N there is no custom body: the header is the only
                 // countdown there is, so it stays.
                 builder.setWhen(whenMs).setShowWhen(true).setUsesChronometer(true)
+                if (sub.isNotEmpty()) builder.setSubText(sub)
             }
 
             // THE COUNTDOWN, WHERE IT CAN BE READ.
@@ -272,6 +274,11 @@ object PrayerCard {
                     else R.layout.prayer_card
                 val body = RemoteViews(ctx.packageName, layout)
                 body.setTextViewText(R.id.prayer_card_title, title)
+                body.setTextViewText(R.id.prayer_card_sub, sub)
+                body.setViewVisibility(
+                    R.id.prayer_card_sub,
+                    if (sub.isEmpty()) android.view.View.GONE else android.view.View.VISIBLE,
+                )
                 body.setTextViewText(R.id.prayer_card_text, text)
                 body.setChronometer(
                     R.id.prayer_card_countdown,
