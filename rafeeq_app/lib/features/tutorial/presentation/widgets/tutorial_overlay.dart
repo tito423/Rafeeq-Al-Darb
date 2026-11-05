@@ -145,6 +145,9 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
     if (!identical(screen, _screen)) setState(() => _screen = screen);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
+      // Capture build: open the stop's own sheet or screen first.
+      await _syncOpened(_chapters[i]);
+      if (!mounted || _index != i) return;
       // A part further down a scrolling screen is brought into view first,
       // then measured where it has come to rest.
       final anchor = _chapters[i].anchor;
@@ -177,7 +180,16 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
         return;
       }
       _lastIndex = i;
-      if (_capture) _logStop(_chapters[i]);
+      if (_capture) {
+        _logStop(_chapters[i]);
+        // An opened sheet covers the spot the capture script taps, so these
+        // stops move on by themselves once the script has photographed them.
+        if (_chapters[i].openWith != null) {
+          Future<void>.delayed(const Duration(seconds: 7), () {
+            if (mounted && _index == i) _next();
+          });
+        }
+      }
       setState(() {
         _from = _spot;
         _spot = next;
@@ -187,6 +199,33 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       _move.reset();
       unawaited(_move.forward());
     });
+  }
+
+  /// What the capture build pressed open for the current stop, and the
+  /// navigator to close it with.
+  String? _openedWith;
+  NavigatorState? _openedNav;
+
+  /// Capture build: closes what the previous stop opened when this one does
+  /// not share it, then presses this stop's [TutorialChapter.openWith].
+  Future<void> _syncOpened(TutorialChapter c) async {
+    if (!_capture) return;
+    if (_openedWith != null && _openedWith != c.openWith) await _closeOpened();
+    final w = c.openWith;
+    if (w == null || _openedWith == w) return;
+    final nav = anchorNavigator(w);
+    if (!activateAnchor(w)) return;
+    _openedWith = w;
+    _openedNav = nav;
+    await Future<void>.delayed(const Duration(milliseconds: 1400));
+  }
+
+  Future<void> _closeOpened() async {
+    final nav = _openedNav;
+    _openedWith = null;
+    _openedNav = null;
+    if (nav != null && nav.mounted) await nav.maybePop();
+    await Future<void>.delayed(const Duration(milliseconds: 700));
   }
 
   /// Measures the target until it has stopped moving.
@@ -266,7 +305,8 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       '${media.size.height.toStringAsFixed(1)}|'
       '${media.padding.top.toStringAsFixed(1)},'
       '${media.padding.bottom.toStringAsFixed(1)}|'
-      '${media.devicePixelRatio}',
+      '${media.devicePixelRatio}'
+      '${c.openWith != null ? '|auto' : ''}',
     );
   }
 
@@ -280,6 +320,8 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
       _finish();
       return;
     }
+    await _closeOpened();
+    if (!mounted) return;
     await context.setLocale(Locale(codes[at + 1]));
     await Future<void>.delayed(const Duration(seconds: 2));
     if (!mounted) return;

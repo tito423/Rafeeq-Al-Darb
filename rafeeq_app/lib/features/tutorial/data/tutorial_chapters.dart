@@ -52,6 +52,11 @@ class TutorialChapter {
   /// the screen as it opens, framed all round, nothing dimmed.
   final bool whole;
 
+  /// The control to press first (an anchor id), so the stop is photographed
+  /// with its real sheet or screen open rather than the button outside it.
+  /// «قلنا يدخل جواها ايقونة ايقونة طالما بيشرحها» (owner, 2026-11-05).
+  final String? openWith;
+
   const TutorialChapter(
     this.key,
     this.tab,
@@ -60,6 +65,7 @@ class TutorialChapter {
     this.anchor,
     this.screen,
     this.whole = false,
+    this.openWith,
   });
 }
 
@@ -148,12 +154,15 @@ const tutorialChapters = <TutorialChapter>[
   ),
 
   // ── Qur'an ──────────────────────────────────────────────────────────────
+  // The five display options live in the «العرض» sheet: each stop opens the
+  // sheet and frames its own option inside it.
   TutorialChapter(
     'quran_layout',
     AppTab.quran,
     Icons.view_agenda_rounded,
     _quranGold,
     anchor: TourAnchor.quranLayout,
+    openWith: TourAnchor.quranDisplay,
   ),
   TutorialChapter(
     'quran_font',
@@ -161,6 +170,31 @@ const tutorialChapters = <TutorialChapter>[
     Icons.text_increase_rounded,
     _quranGold,
     anchor: TourAnchor.quranFont,
+    openWith: TourAnchor.quranDisplay,
+  ),
+  TutorialChapter(
+    'quran_theme',
+    AppTab.quran,
+    Icons.palette_outlined,
+    _quranGold,
+    anchor: TourAnchor.quranTheme,
+    openWith: TourAnchor.quranDisplay,
+  ),
+  TutorialChapter(
+    'quran_full_screen',
+    AppTab.quran,
+    Icons.fullscreen_rounded,
+    _quranGold,
+    anchor: TourAnchor.quranFullScreen,
+    openWith: TourAnchor.quranDisplay,
+  ),
+  TutorialChapter(
+    'quran_editions',
+    AppTab.quran,
+    Icons.auto_stories_rounded,
+    _quranGold,
+    anchor: TourAnchor.quranEditions,
+    openWith: TourAnchor.quranDisplay,
   ),
   TutorialChapter(
     'recite',
@@ -170,39 +204,20 @@ const tutorialChapters = <TutorialChapter>[
     anchor: TourAnchor.quranRecite,
   ),
   TutorialChapter(
-    'quran_theme',
-    AppTab.quran,
-    Icons.palette_outlined,
-    _quranGold,
-    anchor: TourAnchor.quranTheme,
-  ),
-  TutorialChapter(
-    'quran_full_screen',
-    AppTab.quran,
-    Icons.fullscreen_rounded,
-    _quranGold,
-    anchor: TourAnchor.quranFullScreen,
-  ),
-  TutorialChapter(
     'quran_search',
     AppTab.quran,
     Icons.travel_explore_rounded,
     _quranGold,
-    anchor: TourAnchor.quranSearch,
+    whole: true,
+    openWith: TourAnchor.quranSearch,
   ),
   TutorialChapter(
     'quran_jump',
     AppTab.quran,
     Icons.numbers_rounded,
     _quranGold,
-    anchor: TourAnchor.quranJump,
-  ),
-  TutorialChapter(
-    'quran_editions',
-    AppTab.quran,
-    Icons.auto_stories_rounded,
-    _quranGold,
-    anchor: TourAnchor.quranEditions,
+    whole: true,
+    openWith: TourAnchor.quranJump,
   ),
 
   // ── Prayer ──────────────────────────────────────────────────────────────

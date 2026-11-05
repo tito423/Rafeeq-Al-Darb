@@ -198,18 +198,11 @@ class MushafToolbar extends ConsumerWidget {
           onPressed: _textOnly ? onEnterImageView : onLeaveImageView,
         ),
         // ── عرض ── everything that is a setting rather than an action.
-        // The four tour anchors whose buttons moved in here are nested on it,
-        // so every step of the Qur'an chapter still has something to point at.
+        // Its options carry their own tour anchors inside the sheet; the
+        // tour opens the sheet through this one (owner, 2026-11-05: «يدخل
+        // جواها ايقونة ايقونة»).
         TutorialAnchor(
-          id: TourAnchor.quranLayout,
-          child: TutorialAnchor(
-            id: TourAnchor.quranFont,
-            child: TutorialAnchor(
-              id: TourAnchor.quranTheme,
-              child: TutorialAnchor(
-                id: TourAnchor.quranFullScreen,
-                child: TutorialAnchor(
-                  id: TourAnchor.quranEditions,
+                  id: TourAnchor.quranDisplay,
                   child: ToolbarAction(
                     icon: Icons.tune_rounded,
                     label: 'quran.display_title'.tr(),
@@ -231,10 +224,6 @@ class MushafToolbar extends ConsumerWidget {
                       onLeaveImageView: onLeaveImageView,
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
         ),
       ],
     );

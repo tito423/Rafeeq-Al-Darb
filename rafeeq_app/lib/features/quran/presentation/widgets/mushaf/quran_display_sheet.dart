@@ -30,6 +30,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/digits.dart';
+import '../../../../tutorial/data/tutorial_anchors.dart';
 import '../../../data/page_turn_provider.dart';
 import '../../../data/recite_return_provider.dart';
 import '../../../data/text_layout_provider.dart';
@@ -175,23 +176,47 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
               ),
             ),
             if (_textOnly) ...[
-              _Group(label: 'quran.display_layout'.tr()),
-              _LayoutChoice(
-                value: ref.watch(quranTextLayoutProvider),
-                onSelect: (v) =>
-                    ref.read(quranTextLayoutProvider.notifier).set(v),
+              TutorialAnchor(
+                id: TourAnchor.quranLayout,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _Group(label: 'quran.display_layout'.tr()),
+                    _LayoutChoice(
+                      value: ref.watch(quranTextLayoutProvider),
+                      onSelect: (v) =>
+                          ref.read(quranTextLayoutProvider.notifier).set(v),
+                    ),
+                  ],
+                ),
               ),
-              _Group(label: 'quran.display_font'.tr()),
-              _FontRow(
-                scale: _scale,
-                onSmaller: () => _bumpFont(-0.1),
-                onLarger: () => _bumpFont(0.1),
+              TutorialAnchor(
+                id: TourAnchor.quranFont,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _Group(label: 'quran.display_font'.tr()),
+                    _FontRow(
+                      scale: _scale,
+                      onSmaller: () => _bumpFont(-0.1),
+                      onLarger: () => _bumpFont(0.1),
+                    ),
+                  ],
+                ),
               ),
-              _Group(label: 'quran.display_page'.tr()),
-              _Tile(
-                icon: Icons.palette_outlined,
-                title: 'mushaf_theme.title'.tr(),
-                onTap: () => MushafThemePicker.show(context),
+              TutorialAnchor(
+                id: TourAnchor.quranTheme,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _Group(label: 'quran.display_page'.tr()),
+                    _Tile(
+                      icon: Icons.palette_outlined,
+                      title: 'mushaf_theme.title'.tr(),
+                      onTap: () => MushafThemePicker.show(context),
+                    ),
+                  ],
+                ),
               ),
             ],
             // The paper mushaf's own night and warm paper. The text mushaf
@@ -210,7 +235,9 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                   .set(on ? PageTurnStyle.book : PageTurnStyle.slide),
             ),
             _Group(label: 'quran.display_reading'.tr()),
-            _SwitchTile(
+            TutorialAnchor(
+              id: TourAnchor.quranFullScreen,
+              child: _SwitchTile(
               icon: _fill
                   ? Icons.fullscreen_exit_rounded
                   : Icons.fullscreen_rounded,
@@ -220,6 +247,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                 setState(() => _fill = !_fill);
                 widget.onTogglePageFill();
               },
+            ),
             ),
             if (_textOnly)
               _SwitchTile(
@@ -245,7 +273,9 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
             // What is left under this heading is the only choice there is:
             // paper or text.
             _Group(label: 'quran.display_edition'.tr()),
-            _Tile(
+            TutorialAnchor(
+              id: TourAnchor.quranEditions,
+              child: _Tile(
               icon: _textOnly ? Icons.image_rounded : Icons.notes_rounded,
               title: _textOnly
                   ? 'quran.mushaf_mode'.tr()
@@ -258,6 +288,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                   widget.onLeaveImageView();
                 }
               },
+            ),
             ),
             const SizedBox(height: 4),
             Text(

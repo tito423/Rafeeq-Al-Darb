@@ -90,6 +90,9 @@ def main():
         if parts[1] == 'DONE':
             break
         lang, key, rect, size, bars, dpr = parts[1:7]
+        # A stop that opened a sheet moves on by itself (the sheet covers
+        # the spot this script taps).
+        auto = len(parts) > 7 and parts[7] == 'auto'
         if rect != 'NONE':
             time.sleep(4.0)  # let the screen load and its animations settle (1.5 s caught the recitation player still spinning, 2026-11-05)
             img = screencap()
@@ -115,7 +118,8 @@ def main():
                 shots += 1
                 save()  # after every picture: a stopped run keeps what it took
                 print(f'  {lang}/{key}: saved ({shots})', flush=True)
-        adb('shell', 'input', 'tap', '540', '1200')
+        if not auto:
+            adb('shell', 'input', 'tap', '540', '1200')
     log.kill()
     save()
     total = sum(p.stat().st_size for p in OUT.rglob('*.webp'))

@@ -11,8 +11,8 @@
 /// spotlight rather than pointing at nothing.
 library;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 /// The ids the tour knows how to point at. String constants rather than bare
 /// literals so a typo is a compile error on both sides.
@@ -40,6 +40,7 @@ abstract final class TourAnchor {
   static const quranSearch = 'quran_search';
   static const quranJump = 'quran_jump';
   static const quranEditions = 'quran_editions';
+  static const quranDisplay = 'quran_display';
   static const qiblaCompass = 'qibla_compass';
   static const adhanSettings = 'adhan_settings';
   static const prayerAdjustments = 'prayer_adjustments';
@@ -72,6 +73,39 @@ class TutorialAnchor extends StatelessWidget {
     final key = _anchors.putIfAbsent(id, GlobalKey.new);
     return KeyedSubtree(key: key, child: child);
   }
+}
+
+/// Presses the control [id] wraps, as a tap would (the capture build opens
+/// the real sheet or screen a stop is about). Finds the first tappable
+/// widget under the anchor. Returns whether anything was pressed.
+bool activateAnchor(String id) {
+  final context = _anchors[id]?.currentContext;
+  if (context == null || !context.mounted) return false;
+  VoidCallback? tap;
+  void visit(Element e) {
+    if (tap != null) return;
+    final w = e.widget;
+    if (w is GestureDetector && w.onTap != null) {
+      tap = w.onTap;
+    } else if (w is InkWell && w.onTap != null) {
+      tap = w.onTap;
+    } else if (w is IconButton && w.onPressed != null) {
+      tap = w.onPressed;
+    } else if (w is ButtonStyleButton && w.onPressed != null) {
+      tap = w.onPressed;
+    }
+    if (tap == null) e.visitChildren(visit);
+  }
+  (context as Element).visitChildren(visit);
+  tap?.call();
+  return tap != null;
+}
+
+/// The navigator [id] lives in, so what pressing it pushed can be closed.
+NavigatorState? anchorNavigator(String id) {
+  final context = _anchors[id]?.currentContext;
+  if (context == null || !context.mounted) return null;
+  return Navigator.maybeOf(context);
 }
 
 /// Scrolls [id] into view when it sits inside a scrolling list, so a stop
