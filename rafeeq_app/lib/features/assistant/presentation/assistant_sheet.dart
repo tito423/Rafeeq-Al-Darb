@@ -582,6 +582,11 @@ class _AssistantSheetState extends ConsumerState<_AssistantSheet> {
 
   Future<void> _onHeard(String text) async {
     if (_done || !mounted) return;
+    // Behind another app the wake listener takes what is said (it cannot
+    // be seen here, and re-arming the close timer kept it open for ever).
+    if (WidgetsBinding.instance.lifecycleState != AppLifecycleState.resumed) {
+      return;
+    }
     // «يا رفيق شغل الكهف» said again into the open sheet counts too.
     final said = afterWakeWord(text) ?? text;
     setState(() {

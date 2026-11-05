@@ -62,7 +62,12 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
     // One phrase at a time: «… سورة البقرة آية» and the number said in the
     // next breath arrive milliseconds apart, and the number must see what the
     // first phrase armed (emulator, 2026-09-30).
-    _heard = _ear.heard.listen((t) => _queue = _queue.then((_) => _onHeard(t)));
+    // A failed phrase must not end the chain: `then` on a failed future
+    // skips every later callback, so one exception (a refused platform
+    // call, say) left the microphone on and every later call unanswered.
+    _heard = _ear.heard.listen((t) => _queue = _queue
+        .then((_) => _onHeard(t))
+        .catchError((Object e) => debugPrint('rafeeq phrase failed: $e')));
     _tick = Timer.periodic(const Duration(seconds: 1), (_) => _check());
   }
 
@@ -200,7 +205,11 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
       _fedAt = null;
     }
     RafeeqDiag.instance.sentence(text);
-    if (assistantSheetOpen.value || !mounted) return; // the sheet takes it
+    if (!mounted) return;
+    // The open sheet takes it - but only on screen: a sheet left open behind
+    // another app would swallow every call, unseen (its 10 s close timer is
+    // re-armed by every sentence it hears, so talk nearby kept it open).
+    if (assistantSheetOpen.value && _foreground) return;
     final container = ProviderScope.containerOf(context, listen: false);
     final followUp = _ayahFollow.take(afterWakeWord(text) ?? text);
     if (followUp != null) return _act(container, followUp);
@@ -233,8 +242,25 @@ class _AssistantWakeListenerState extends ConsumerState<AssistantWakeListener>
         return;
       }
     }
-    if (!_foreground) await _channel.invokeMethod('toFront');
-    await showAssistantSheet(heard: rest.isEmpty ? null : text);
+    if (!_foreground) {
+      await _channel.invokeMethod('toFront');
+      // Android 10+ drops a background activity start without an error when
+      // «Display over other apps» is not granted, so wait for the app to
+      // actually come up. If it does not, no sheet is opened behind other
+      // apps: the next sentence is taken as the command instead.
+      for (var i = 0; i < 15 && !_foreground; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (!_foreground) {
+        if (rest.isEmpty) {
+          _awaitUntil = DateTime.now().add(const Duration(seconds: 10));
+        }
+        return;
+      }
+    }
+    // Not awaited: the sheet stays up until it closes, and the phrase queue
+    // must not wait on it.
+    unawaited(showAssistantSheet(heard: rest.isEmpty ? null : text));
   }
 
   Future<void> _act(ProviderContainer container, AssistantIntent intent,
