@@ -1,5 +1,10 @@
 # TASK_FOLLOWUP — the live step log (read right after CLAUDE.md)
 
+## v3.97.0 PUBLISHED 2026-11-05 ~09:10 Dubai (owner: «وقف اعراب ، صلح اللي قلتلك عليه وانشر بسرعه»)
+Done and seen on Rafeeq_Audit_API24: (1) full tour Qur'an stops open «العرض» and frame each option inside it, search/jump open their screens (294 pictures recaptured, 7 languages); (2) Shamela/Dorar: every site detail in SourceRules, failed reads offer «افتح على الموقع»; the site's book list broke today (shamela.ws/ajax/books/ now 0 books without ?term=) - catalogue now falls back to R2 + GitHub copies (8,598 books), check_sources.py 8/8. Seen: Shamela list 8,598, card 9632, import + read; Dorar Tafseer encyclopedia.
+OPEN (unverified cause): once on 3.97 the Qur'an tab's bars (top toolbar + bottom nav) stopped taking taps after stray taps when a tour was skipped on that tab; a restart cleared it and the same sequence then worked on 3.97 and 3.96. Watch for it.
+NEXT: i'rab stopped by the owner at 5:50 (resume only when he says).
+
 ## OWNER 2026-11-05 ~05:00 Dubai: «وقف اعراب ، صلح اللي قلتلك عليه وانشر بسرعه» - i'rab STOPPED at 5:50 (resume only when he says). Status ~05:40: Shamela/Dorar part DONE in code (commit 0bbc92a5; SourceRules already existed, v6 live on R2; the leftover literals moved in, failed reads offer «افتح على الموقع»; check_sources.py 7/7). NEXT: flutter test, then the tour Qur'an stops (note below), bump 3.97.0, build, recapture tour --fresh, emulator check (Dorar search, Shamela card, tour Qur'an stops), publish (delete v3.96.0+tag), links. Paused at 5-hour 95% until the 07:50 Dubai reset.
 ## OWNER ORDER 2026-11-05 ~04:45 Dubai - Shamela + Dorar must be DYNAMIC (do FIRST after the 5-hour reset, before more i'rab; no release until the owner asks)
 Owner: «يكون موضوع المكتبة الشاملة والدرر السنية ديناميكي عشان الموقع لو غير اي حاجة التطبيق مش يقف».
