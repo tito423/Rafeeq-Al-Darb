@@ -1,5 +1,8 @@
 # TASK_FOLLOWUP — the live step log (read right after CLAUDE.md)
 
+## OWNER NOTE 2026-11-05 ~04:35 Dubai - RECORDED, NOT PUBLISHED (do before the next release, owner said «سجل دي ومش تنشر»)
+Full tour, Qur'an stops: quran_layout, quran_font, recite, quran_theme, quran_full_screen, quran_search, quran_jump, quran_editions all show ONE identical picture (md5 3361c6b6... in every assets/tour/<lang>/) - the reader toolbar from outside, only the frame moves. Owner: «قلنا يدخل جواها ايقونة ايقونة طالما بيشرحها» - each stop must show its own option OPENED (font-size control, theme sheet, editions sheet, search screen, jump sheet, recite player bar, layout as switched, full screen), not the toolbar. Fix in lib/features/tutorial (stop needs an action that opens the sheet/screen in the capture build, e.g. a `screen:` builder or an open-callback per anchor), recapture with scripts/capture_tour.py --fresh, look at every picture, then wait for the owner to ask for a release.
+
 ## OWNER ORDER 2026-11-05 - DONE, published v3.96.0 (2026-11-05 ~03:52 Dubai)
 Story surah name + ayah translations, About rows, tour (inside screens, 294 pictures recaptured in 7 languages) - all seen on Rafeeq_Audit_API24 in French (story Nuh at Hud 44, About, detailed tour stops 27-29). Release https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v3.96.0 , tag = 60d07a35 = HEAD, asset sha256 809fcdb3... matches dist/RafeeqAlDarb-v3.96.0.apk. v3.95.0 + tag deleted.
 NEXT: the i'rab - al-An'am from 114, and review earlier i'rab («ممكن تبص على الاعراب تتاكد منه»).
