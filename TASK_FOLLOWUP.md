@@ -1,5 +1,6 @@
 # TASK_FOLLOWUP — the live step log (read right after CLAUDE.md)
 
+## OWNER 2026-11-05 ~05:00 Dubai: «وقف اعراب ، صلح اللي قلتلك عليه وانشر بسرعه» - i'rab STOPPED at 5:50 (resume only when he says). Status ~05:40: Shamela/Dorar part DONE in code (commit 0bbc92a5; SourceRules already existed, v6 live on R2; the leftover literals moved in, failed reads offer «افتح على الموقع»; check_sources.py 7/7). NEXT: flutter test, then the tour Qur'an stops (note below), bump 3.97.0, build, recapture tour --fresh, emulator check (Dorar search, Shamela card, tour Qur'an stops), publish (delete v3.96.0+tag), links. Paused at 5-hour 95% until the 07:50 Dubai reset.
 ## OWNER ORDER 2026-11-05 ~04:45 Dubai - Shamela + Dorar must be DYNAMIC (do FIRST after the 5-hour reset, before more i'rab; no release until the owner asks)
 Owner: «يكون موضوع المكتبة الشاملة والدرر السنية ديناميكي عشان الموقع لو غير اي حاجة التطبيق مش يقف».
 Today every site detail is hard-coded in Dart (measured 2026-11-05): shamela_catalog.dart `_url = https://shamela.ws/ajax/books/` + link regex; shamela_book_builder.dart `_host` + book-card regexes; shamela_nass.dart the page markers (`hamesh`, `btn_tag`, `anchor`, `c3`, `c4`, `<p>`); dorar_service.dart `dorar_api.json?skey=` + `info-subtitle` marker; dorar_encyclopedia.dart `mtree-node`, `w-100 mt-4`, `title-1/2`, `tip`, section-href pattern.
