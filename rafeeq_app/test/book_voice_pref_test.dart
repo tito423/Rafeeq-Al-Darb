@@ -3,10 +3,10 @@ import 'package:rafeeq_app/features/library/data/tts/book_voice_pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  test('the enhanced voice is the default; the phone voice is a kept choice',
+  test('the phone voice is the default; the enhanced voice is a kept choice',
       () async {
     SharedPreferences.setMockInitialValues({});
-    expect(await BookVoicePref.load(), BookVoice.open);
+    expect(await BookVoicePref.load(), BookVoice.device);
     await BookVoicePref.save(BookVoice.device);
     expect(await BookVoicePref.load(), BookVoice.device);
     await BookVoicePref.save(BookVoice.open);

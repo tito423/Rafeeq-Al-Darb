@@ -199,6 +199,29 @@ class BookSpeaker {
     return out;
   }
 
+  /// Google's speech engine, when the phone has it, even if another engine
+  /// is the phone's default. Some makers (Honor, Huawei, Samsung) set their
+  /// own engine as default, and its Arabic voice - when it has one - is not
+  /// the male Google voice [pickArabicVoice] was measured on (owner,
+  /// 2026-11-05: «جوجل اللي على الموبايل»). Asked once per speaker:
+  /// `setEngine` rebinds the engine every time it is called.
+  Future<void> _preferGoogleEngine() async {
+    if (_engineChecked) return;
+    _engineChecked = true;
+    try {
+      if (await _tts.getDefaultEngine == googleTtsEngine) return;
+      final engines = await _tts.getEngines;
+      if (engines is List && engines.contains(googleTtsEngine)) {
+        await _tts.setEngine(googleTtsEngine);
+      }
+    } catch (e) {
+      debugPrint('BookSpeaker: engine choice failed: $e');
+    }
+  }
+
+  bool _engineChecked = false;
+  static const googleTtsEngine = 'com.google.android.tts';
+
   /// Picks an Arabic voice, preferring one that lives ON THE DEVICE.
   ///
   /// This app is offline-first and the reader is most wanted where there is
@@ -236,6 +259,8 @@ class BookSpeaker {
     final open = await _useOpenVoice();
     if (!_current(gen)) return false;
     if (open) return true;
+    await _preferGoogleEngine();
+    if (!_current(gen)) return false;
     try {
       final direct = await _tts.isLanguageAvailable('ar');
       if (!_current(gen)) return false;
@@ -318,6 +343,8 @@ class BookSpeaker {
     _speaking = true;
 
     try {
+      await _preferGoogleEngine();
+      if (!_current(gen)) return from;
       await _tts.setLanguage('ar');
       if (!_current(gen)) return from;
       await _preferLocalArabicVoice(gen);
