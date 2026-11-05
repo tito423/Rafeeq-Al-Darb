@@ -116,6 +116,22 @@ def main():
     check("Shamela book card", "shamela.card*", shamela_card)
     check("Shamela page content", "shamela.page.path", shamela_page)
 
+    def shamela_catalogue():
+        # The app takes the first source with more than 1,000 books. The site
+        # itself stopped listing them on 2026-11-05 (placeholder only), so its
+        # count is reported, and the check passes while a copy still serves.
+        counts = {}
+        for key in ("shamela.catalog.url", "shamela.catalog.mirror", "shamela.catalog.mirror_gh"):
+            try:
+                body = get(r[key], ajax=True)
+                counts[key.split(".")[-1]] = len(json.loads(body)["results"]["items"]) - 1
+            except Exception as e:  # noqa: BLE001
+                counts[key.split(".")[-1]] = f"{type(e).__name__}"
+        ok = any(isinstance(v, int) and v > 1000 for v in counts.values())
+        return ok, ", ".join(f"{k}={v}" for k, v in counts.items())
+
+    check("Shamela catalogue (first source over 1,000 books)", "shamela.catalog.*", shamela_catalogue)
+
     for ok, name, keys, detail in results:
         print(f"{'OK  ' if ok else 'FAIL'} {name} [{keys}] - {detail}")
     failed = [x for x in results if not x[0]]
