@@ -32,7 +32,13 @@ class ShamelaCatalog {
   ShamelaCatalog._();
   static final ShamelaCatalog instance = ShamelaCatalog._();
 
-  static String get _url => SourceRules.instance.s('shamela.catalog.url');
+  /// Where the whole catalogue is read from, in order: the site, then our
+  /// copies. Each is a rule, so a moved list is fixed without a release.
+  static List<String> get _urls => [
+        SourceRules.instance.s('shamela.catalog.url'),
+        SourceRules.instance.s('shamela.catalog.mirror'),
+        SourceRules.instance.s('shamela.catalog.mirror_gh'),
+      ];
   static const _maxAge = Duration(days: 7);
 
   List<(ShamelaBookRef, String)>? _books; // (book, normalized title)
@@ -68,31 +74,37 @@ class ShamelaCatalog {
         file.existsSync() &&
         DateTime.now().difference(file.lastModifiedSync()) < _maxAge;
     if (!fresh || refresh || _books == null && !file.existsSync()) {
-      try {
-        final res = await Dio().get<List<int>>(
-          _url,
-          options: Options(
-            responseType: ResponseType.bytes,
-            headers: {
-              'X-Requested-With': 'XMLHttpRequest',
-              'User-Agent': 'RafeeqAlDarb (Android; personal library)',
-            },
-            receiveTimeout: const Duration(seconds: 60),
-          ),
-        );
-        final bytes = res.data ?? const <int>[];
-        // Only a real catalogue replaces the cache: an error page from a
-        // busy server (trap #5) must not wipe a good copy.
-        final parsed = await Isolate.run(() => _parse(bytes));
-        if (parsed.length > 1000) {
-          await file.parent.create(recursive: true);
-          await file.writeAsBytes(gzip.encode(bytes));
-          _books = parsed;
-          await _remember(parsed);
-          return;
+      for (final url in _urls) {
+        try {
+          final res = await Dio().get<List<int>>(
+            url,
+            options: Options(
+              responseType: ResponseType.bytes,
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'User-Agent': 'RafeeqAlDarb (Android; personal library)',
+              },
+              receiveTimeout: const Duration(seconds: 60),
+            ),
+          );
+          final bytes = res.data ?? const <int>[];
+          // Only a real catalogue replaces the cache: an error page from a
+          // busy server (trap #5), or the site's new 20-title answer, must
+          // not wipe a good copy - the next source is tried instead.
+          final parsed = await Isolate.run(() => _parse(bytes));
+          if (parsed.length > 1000) {
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(gzip.encode(bytes));
+            _books = parsed;
+            await _remember(parsed);
+            return;
+          }
+        } catch (_) {
+          // next source
         }
-      } catch (_) {
-        if (!file.existsSync()) rethrow;
+      }
+      if (!file.existsSync()) {
+        throw StateError('no Shamela catalogue source answered');
       }
     }
     if (_books != null && !refresh) return;

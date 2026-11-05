@@ -74,6 +74,13 @@ class SourceRules {
     'shamela.page.path': '/ajax/pageContent/{book}/{page}',
     'shamela.host': 'https://shamela.ws',
     'shamela.catalog.url': 'https://shamela.ws/ajax/books/',
+    // Our copies of the whole catalogue (8,598 books, the site's own JSON of
+    // 2026-09-26). Since 2026-11-05 the site's list answers only a typed
+    // term, at most 20 titles, so a short answer falls through to these.
+    'shamela.catalog.mirror':
+        'https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev/config/shamela_books.json',
+    'shamela.catalog.mirror_gh':
+        'https://github.com/tito423/Rafeeq-Al-Darb/releases/download/content-mirror/config__shamela_books.json',
     // shamela.ws page text (shamela_nass.dart), the classes Shamela marks
     // footnotes, buttons, anchors and ayah/heading spans with
     'shamela.nass.p': r'<p\b[^>]*>(.*?)</p>',
