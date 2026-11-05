@@ -19,4 +19,5 @@ object Channels {
     const val PRAYER_CARD = "com.tito.rafeeq_aldarb/prayer_card"
     const val VOICE_PLAYER = "com.tito.rafeeq_aldarb/voice_player"
     const val ASSISTANT = "com.tito.rafeeq_aldarb/assistant"
+    const val TTS_ENGINE = "com.tito.rafeeq_aldarb/tts_engine"
 }

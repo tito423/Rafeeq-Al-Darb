@@ -206,5 +206,36 @@ class MainActivity: AudioServiceActivity() {
         registerVoicePlayerChannel(flutterEngine)
 
         registerAssistantChannel(flutterEngine)
+
+        // The book reader's Google speech engine (owner, 2026-11-05): is it
+        // on the phone, and if not, its Play Store page to install it.
+        // Seeing another app's TTS service needs the TTS_SERVICE <queries>
+        // entry in the manifest (Android 11+ package visibility).
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, Channels.TTS_ENGINE)
+            .setMethodCallHandler { call, result ->
+                val pkg = "com.google.android.tts"
+                when (call.method) {
+                    "googleInstalled" -> {
+                        val svc = android.content.Intent("android.intent.action.TTS_SERVICE").setPackage(pkg)
+                        result.success(packageManager.queryIntentServices(svc, 0).isNotEmpty())
+                    }
+                    "openInstall" -> {
+                        val market = android.content.Intent(
+                            android.content.Intent.ACTION_VIEW,
+                            android.net.Uri.parse("market://details?id=$pkg"),
+                        ).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        val web = android.content.Intent(
+                            android.content.Intent.ACTION_VIEW,
+                            android.net.Uri.parse("https://play.google.com/store/apps/details?id=$pkg"),
+                        ).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        result.success(
+                            try { startActivity(market); true } catch (_: Exception) {
+                                try { startActivity(web); true } catch (_: Exception) { false }
+                            },
+                        )
+                    }
+                    else -> result.notImplemented()
+                }
+            }
     }
 }

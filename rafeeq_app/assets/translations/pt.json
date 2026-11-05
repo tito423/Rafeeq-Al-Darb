@@ -640,7 +640,9 @@
     "talib_stage_2": "2 · Primeiros textos, com seus comentários",
     "talib_stage_3": "3 · Aprofundar",
     "talib_stage_4": "4 · Objetivos e grandes fundamentos",
-    "takhrij_darussalam": "Hafiz Abu Tahir Zubair Ali Za'i — Darussalam, primeira edição árabe–inglesa, 2007 (ISBN {})"
+    "takhrij_darussalam": "Hafiz Abu Tahir Zubair Ali Za'i — Darussalam, primeira edição árabe–inglesa, 2007 (ISBN {})",
+    "voice_google_missing": "O mecanismo de voz do Google não está instalado no seu telefone, então o mecanismo padrão lê. Instale-o para ler com a voz do Google.",
+    "voice_google_install": "Instalar a voz do Google"
   },
   "azkar": {
     "listen_download_all": "Baixar tudo",

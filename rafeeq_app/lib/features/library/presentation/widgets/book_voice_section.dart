@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../data/tts/book_voice_pref.dart';
 import '../../data/tts/open_voice.dart';
@@ -19,19 +20,34 @@ class BookVoiceSection extends StatefulWidget {
   State<BookVoiceSection> createState() => _BookVoiceSectionState();
 }
 
-class _BookVoiceSectionState extends State<BookVoiceSection> {
+class _BookVoiceSectionState extends State<BookVoiceSection>
+    with WidgetsBindingObserver {
   BookVoice? _voice;
   bool _installed = false;
+
+  /// Google's speech engine on the phone (null until asked). The phone
+  /// voice is read in it when it is there (`BookSpeaker`); when it is not,
+  /// the section offers its Play Store page (owner, 2026-11-05).
+  bool? _google;
+  static const _engine = MethodChannel('com.tito.rafeeq_aldarb/tts_engine');
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _refresh();
     openVoiceChanges.addListener(_onVoice);
   }
 
+  /// Back from the Play Store: ask again.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refresh();
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     openVoiceChanges.removeListener(_onVoice);
     super.dispose();
   }
@@ -44,10 +60,17 @@ class _BookVoiceSectionState extends State<BookVoiceSection> {
   Future<void> _refresh() async {
     final v = await BookVoicePref.load();
     final i = await OpenVoice.isInstalled();
+    bool? g;
+    try {
+      g = await _engine.invokeMethod<bool>('googleInstalled');
+    } catch (_) {
+      g = null; // not Android, or no answer: offer nothing
+    }
     if (!mounted) return;
     setState(() {
       _voice = v;
       _installed = i;
+      _google = g;
     });
   }
 
@@ -96,6 +119,19 @@ class _BookVoiceSectionState extends State<BookVoiceSection> {
               'library.open_voice_use_device'.tr(),
               'library.voice_device_desc'.tr(),
             ),
+            if (voice == BookVoice.device && _google == false) ...[
+              const SizedBox(height: 4),
+              Text('library.voice_google_missing'.tr(), style: faint),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton.icon(
+                  icon: const Icon(Icons.download_rounded),
+                  label: Text('library.voice_google_install'.tr()),
+                  onPressed: () =>
+                      _engine.invokeMethod<bool>('openInstall'),
+                ),
+              ),
+            ],
             if (voice == BookVoice.open && !_installed) ...[
               const SizedBox(height: 4),
               Text('library.voice_open_fallback_note'.tr(), style: faint),

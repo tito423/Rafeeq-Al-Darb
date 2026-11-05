@@ -345,5 +345,11 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- The book reader binds Google's speech engine by name
+             (BookSpeaker._preferGoogleEngine): Android 11+ hides another
+             app's TTS service, and so the engine list, without this. -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE"/>
+        </intent>
     </queries>
 </manifest>
