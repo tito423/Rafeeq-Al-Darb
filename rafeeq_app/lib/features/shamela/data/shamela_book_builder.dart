@@ -41,7 +41,7 @@ class ShamelaBookBuilder {
   final Dio _dio;
   bool _cancelled = false;
 
-  static const _host = 'https://shamela.ws';
+  static String get _host => SourceRules.instance.s('shamela.host');
   static const _ua =
       'Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 (KHTML, like Gecko) '
       'Chrome/126.0 Mobile Safari/537.36 RafeeqAlDarb';

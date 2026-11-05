@@ -55,7 +55,11 @@ class SourceRules {
     'dorar.history.event': r'<i class="fa fa-history[^"]*"[^>]*></i>(.*?)</div>.*?العام الهجري\s*:\s*<span[^>]*>(.*?)</span>.*?العام الميلادي\s*:\s*<span[^>]*>(.*?)</span>.*?تفاصيل الحدث:\s*</h6>(.*?)<a href="https://dorar\.net/history/event/(\d+)"',
     'dorar.history.page': r'[?&]page=(\d+)',
     // dorar.net hadith grading API (dorar_service.dart)
+    'dorar.host': 'https://dorar.net',
     'dorar.api.url': 'https://dorar.net/dorar_api.json',
+    // the same search on the site, offered when the app cannot read it
+    'dorar.search.site': 'https://dorar.net/hadith/search?q={q}',
+    'dorar.api.label.next': '<span class="info-subtitle">',
     'dorar.api.block':
         r'<div class="hadith"[^>]*>(.*?)</div>\s*<div class="hadith-info">(.*?)</div>',
     'dorar.api.label.rawi': 'الراوي',
@@ -68,6 +72,17 @@ class SourceRules {
     'shamela.card.title': r'الكتاب\s*:\s*(.+)',
     'shamela.card.author': r'المؤلف\s*:\s*(.+)',
     'shamela.page.path': '/ajax/pageContent/{book}/{page}',
+    'shamela.host': 'https://shamela.ws',
+    'shamela.catalog.url': 'https://shamela.ws/ajax/books/',
+    // shamela.ws page text (shamela_nass.dart), the classes Shamela marks
+    // footnotes, buttons, anchors and ayah/heading spans with
+    'shamela.nass.p': r'<p\b[^>]*>(.*?)</p>',
+    'shamela.nass.hamesh':
+        r'<(?<tag>div|p)\b[^>]*class="[^"]*\bhamesh\b[^"]*"[^>]*>.*?</\k<tag>>',
+    'shamela.nass.btn_tag': r'<a[^>]*class="[^"]*btn_tag[^"]*"[^>]*>.*?</a>',
+    'shamela.nass.anchor': r'<span[^>]*class="[^"]*anchor[^"]*"[^>]*>.*?</span>',
+    'shamela.nass.c3': r'<span[^>]*class="[^"]*\bc3\b[^"]*"[^>]*>(.*?)</span>',
+    'shamela.nass.c4': r'<span[^>]*class="[^"]*\bc4\b[^"]*"[^>]*>(.*?)</span>',
   };
 
   final Map<String, String> _live = Map.of(defaults);
@@ -169,6 +184,12 @@ class SourceRules {
         'shamela.card',
         'shamela.card.title',
         'shamela.card.author',
+        'shamela.nass.p',
+        'shamela.nass.hamesh',
+        'shamela.nass.btn_tag',
+        'shamela.nass.anchor',
+        'shamela.nass.c3',
+        'shamela.nass.c4',
       }.contains(key);
 
   /// Back to [defaults] (tests).

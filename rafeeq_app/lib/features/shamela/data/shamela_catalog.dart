@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/services/source_rules.dart';
 import '../../../core/utils/arabic_normalize.dart';
 
 /// One book in al-Maktaba al-Shamela's own catalogue.
@@ -31,7 +32,7 @@ class ShamelaCatalog {
   ShamelaCatalog._();
   static final ShamelaCatalog instance = ShamelaCatalog._();
 
-  static const _url = 'https://shamela.ws/ajax/books/';
+  static String get _url => SourceRules.instance.s('shamela.catalog.url');
   static const _maxAge = Duration(days: 7);
 
   List<(ShamelaBookRef, String)>? _books; // (book, normalized title)

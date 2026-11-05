@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/services/source_rules.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/external_link.dart';
 import '../data/dorar_service.dart';
 
 /// «تخريج الأحاديث - الدرر السنية»: type any part of a hadith, get every
@@ -125,7 +127,17 @@ class _DorarScreenState extends State<DorarScreen> {
               if (_failed)
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Text('dorar.failed'.tr(), textAlign: TextAlign.center),
+                  child: Column(children: [
+                    Text('dorar.failed'.tr(), textAlign: TextAlign.center),
+                    const SizedBox(height: 12),
+                    FilledButton.icon(
+                      onPressed: () => openExternalLink(SourceRules.instance
+                          .s('dorar.search.site')
+                          .replaceAll('{q}', Uri.encodeQueryComponent(_query))),
+                      icon: const Icon(Icons.open_in_new),
+                      label: Text('dorar.read_on_site'.tr()),
+                    ),
+                  ]),
                 ),
               if (!_busy && !_failed && _query.isNotEmpty && _results.isEmpty)
                 Padding(

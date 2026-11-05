@@ -52,8 +52,17 @@ class DorarService {
       ),
     );
     final j = jsonDecode(res.data ?? '{}') as Map<String, dynamic>;
-    final result = (j['ahadith'] as Map<String, dynamic>?)?['result'];
-    return parseDorar('${result ?? ''}');
+    final html = '${(j['ahadith'] as Map<String, dynamic>?)?['result'] ?? ''}';
+    final list = parseDorar(html);
+    // Results came back but none could be read: the site changed its
+    // markup. Reported as a failure (the screen then offers the search on
+    // dorar.net) rather than as «no results».
+    if (list.isEmpty &&
+        html.length > 300 &&
+        !SourceRules.instance.re('dorar.api.block').hasMatch(html)) {
+      throw const FormatException('dorar.net result markup changed');
+    }
+    return list;
   }
 }
 
@@ -74,7 +83,7 @@ String _field(String info, String label) {
   final i = info.indexOf('$label:</span>');
   if (i < 0) return '';
   var rest = info.substring(i + label.length + ':</span>'.length);
-  final next = rest.indexOf('<span class="info-subtitle">');
+  final next = rest.indexOf(SourceRules.instance.s('dorar.api.label.next'));
   if (next >= 0) rest = rest.substring(0, next);
   return _plain(rest);
 }

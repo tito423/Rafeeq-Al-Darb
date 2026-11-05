@@ -9,31 +9,19 @@
 /// as the Python, paragraph for paragraph.
 library;
 
-final _p = RegExp(r'<p\b[^>]*>(.*?)</p>', dotAll: true);
+import '../../../core/services/source_rules.dart';
 
-/// Shamela uses both `<div class="hamesh">` and `<p class="hamesh">`;
-/// matching only the div left whole modern footnotes in al-Idah's body and
-/// attributed them to al-Nawawi (the pipeline's note).
-final _hamesh = RegExp(
-  r'<(?<tag>div|p)\b[^>]*class="[^"]*\bhamesh\b[^"]*"[^>]*>.*?</\k<tag>>',
-  dotAll: true,
-);
-final _btnTag = RegExp(
-  r'<a[^>]*class="[^"]*btn_tag[^"]*"[^>]*>.*?</a>',
-  dotAll: true,
-);
-final _anchor = RegExp(
-  r'<span[^>]*class="[^"]*anchor[^"]*"[^>]*>.*?</span>',
-  dotAll: true,
-);
-final _c3 = RegExp(
-  r'<span[^>]*class="[^"]*\bc3\b[^"]*"[^>]*>(.*?)</span>',
-  dotAll: true,
-);
-final _c4 = RegExp(
-  r'<span[^>]*class="[^"]*\bc4\b[^"]*"[^>]*>(.*?)</span>',
-  dotAll: true,
-);
+// The page markers come from [SourceRules] (`shamela.nass.*`), so a class
+// renamed on shamela.ws is fixed by publishing the rules file, not an APK.
+// Shamela uses both `<div class="hamesh">` and `<p class="hamesh">`;
+// matching only the div left whole modern footnotes in al-Idah's body and
+// attributed them to al-Nawawi (the pipeline's note).
+RegExp get _p => SourceRules.instance.re('shamela.nass.p');
+RegExp get _hamesh => SourceRules.instance.re('shamela.nass.hamesh');
+RegExp get _btnTag => SourceRules.instance.re('shamela.nass.btn_tag');
+RegExp get _anchor => SourceRules.instance.re('shamela.nass.anchor');
+RegExp get _c3 => SourceRules.instance.re('shamela.nass.c3');
+RegExp get _c4 => SourceRules.instance.re('shamela.nass.c4');
 final _tag = RegExp(r'<[^>]+>');
 // Space, tab and NO-BREAK SPACE (U+00A0) - the Python pattern's third
 // character, checked byte by byte.

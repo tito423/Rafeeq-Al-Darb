@@ -370,7 +370,7 @@ class DorarEncyclopediaService {
     if (cached != null) return cached;
     try {
       final res = await _dio.get<String>(
-        'https://dorar.net$path',
+        '${SourceRules.instance.s('dorar.host')}$path',
         options: Options(
           responseType: ResponseType.plain,
           headers: {'User-Agent': 'RafeeqAlDarb (Android; personal library)'},
@@ -420,5 +420,7 @@ class DorarEncyclopediaService {
           maxAge: const Duration(days: 7)));
 
   String url(String slug, [int? id]) =>
-      id == null ? 'https://dorar.net/$slug' : 'https://dorar.net/$slug/$id';
+      id == null
+          ? '${SourceRules.instance.s('dorar.host')}/$slug'
+          : '${SourceRules.instance.s('dorar.host')}/$slug/$id';
 }

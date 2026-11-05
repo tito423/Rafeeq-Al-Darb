@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/services/source_rules.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/external_link.dart';
 import '../../library/data/book_catalog.dart';
 import '../../library/data/library_api_service.dart';
 import '../../library/presentation/screens/book_text_reader_screen.dart';
@@ -428,9 +430,23 @@ class _BookCardSheetState extends State<_BookCardSheet> {
           future: _card,
           builder: (context, snap) {
             if (snap.hasError) {
+              // A failed read (offline, or shamela.ws changed its page) never
+              // leaves the reader stuck: the same book opens on the site.
               return Padding(
                 padding: const EdgeInsets.all(24),
-                child: Text('shamela.catalog_failed'.tr()),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text('shamela.catalog_failed'.tr(),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 14),
+                  FilledButton.icon(
+                    onPressed: () => openExternalLink(
+                      '${SourceRules.instance.s('shamela.host')}'
+                      '/book/${widget.ref.id}',
+                    ),
+                    icon: const Icon(Icons.open_in_new),
+                    label: Text('dorar.read_on_site'.tr()),
+                  ),
+                ]),
               );
             }
             if (!snap.hasData) {
