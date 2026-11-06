@@ -1,14 +1,14 @@
-name: rafeeq_app
-description: "Rafeeq Al-Darb â€” Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
+﻿name: rafeeq_app
+description: "Rafeeq Al-Darb أ¢â‚¬â€‌ Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
 publish_to: 'none'
 
-version: 3.99.0+116
+version: 4.0.0+117
 
 environment:
   sdk: ^3.10.7
 
 dependencies:
-  # «رفيق» AND «التسميع»: offline speech, Apache-2.0. The tasmee' moved from
+  # آ«ط±ظپظٹظ‚آ» AND آ«ط§ظ„طھط³ظ…ظٹط¹آ»: offline speech, Apache-2.0. The tasmee' moved from
   # whisper.cpp (whisper_flutter_new, removed) to sherpa's FastConformer on
   # 2026-09-30: 97.5 % of words against 89.3 %, measured
   # (scripts/asr_candidates_2026-09-30.txt). 1.13.8 checked on pub.dev
@@ -17,7 +17,7 @@ dependencies:
   # SHA-256 of downloaded packs (rafeeq_voice_pack.dart, dorar_check.dart).
   # Already in the tree through just_audio; imported directly.
   crypto: ^3.0.0
-  # The microphone for «التسميع» — raw PCM straight into the recogniser.
+  # The microphone for آ«ط§ظ„طھط³ظ…ظٹط¹آ» â€” raw PCM straight into the recogniser.
   record: ^6.2.1
   flutter:
     sdk: flutter
@@ -45,7 +45,7 @@ dependencies:
 
   # Audio playback (with background support)
   just_audio: ^0.10.6
-  # Read directly by «تشخيص التلاوة» (output devices, media volume); it is
+  # Read directly by آ«طھط´ط®ظٹطµ ط§ظ„طھظ„ط§ظˆط©آ» (output devices, media volume); it is
   # just_audio's own dependency, so this adds nothing new to the build.
   audio_session: ^0.2.4
   just_audio_background: ^0.0.1-beta.17
@@ -58,8 +58,8 @@ dependencies:
   # Location (prayer times & qibla)
   geolocator: ^13.0.2
   flutter_compass: ^0.8.1
-  # Real reverse-geocoding for the Home prayer card's location line (P3â€‘22)
-  # â€” geolocator only returns lat/lon, this turns that into a real city
+  # Real reverse-geocoding for the Home prayer card's location line (P3أ¢â‚¬â€ک22)
+  # أ¢â‚¬â€‌ geolocator only returns lat/lon, this turns that into a real city
   # name via the platform's own Geocoder, no third-party API/key needed.
   geocoding: ^3.0.0
 
@@ -78,7 +78,7 @@ dependencies:
   # already in the tree through flutter_svg, pinned to the same version.
   vector_graphics: ^1.2.3
 
-  # Background video for the video-mode Adhan (P2â€‘7) â€” clip downloaded on
+  # Background video for the video-mode Adhan (P2أ¢â‚¬â€ک7) أ¢â‚¬â€‌ clip downloaded on
   # demand, played muted + looped behind the karaoke text.
   video_player: ^2.9.2
 
@@ -92,13 +92,13 @@ dependencies:
   # The About card reads the installed version from the build itself.
   package_info_plus: ^9.0.1
 
-  # Share an ayah card as an image (P2â€‘8)
+  # Share an ayah card as an image (P2أ¢â‚¬â€ک8)
   share_plus: ^12.0.2
 
-  # P3â€‘56: native splash held until init completes. The OS-drawn splash stays
+  # P3أ¢â‚¬â€ک56: native splash held until init completes. The OS-drawn splash stays
   # on screen through the Flutter engine warmup and main()'s bootstrap
   # (FlutterNativeSplash.preserve) and is lifted only when the app is actually
-  # ready (FlutterNativeSplash.remove) â€” killing the iconâ†’flashâ†’iconâ†’video
+  # ready (FlutterNativeSplash.remove) أ¢â‚¬â€‌ killing the iconأ¢â€ â€™flashأ¢â€ â€™iconأ¢â€ â€™video
   # glitch the old hand-built splash produced.
   flutter_native_splash: ^2.4.4
   background_downloader: ^9.5.9
@@ -147,7 +147,7 @@ flutter:
     - assets/data/mawaqit_today.json
     # GeoNames cities1000, 171,075 places (CC BY 4.0) for manual prayer
     # location with no network - 5.08 MB gzip, unpacked once on the device.
-    # «دول خمسة ميجا بس» (owner, 2026-09-25). scripts/build_cities.py.
+    # آ«ط¯ظˆظ„ ط®ظ…ط³ط© ظ…ظٹط¬ط§ ط¨ط³آ» (owner, 2026-09-25). scripts/build_cities.py.
     - assets/data/cities.tsv.gz
     # quran_sciences.db is NOT bundled since 3.45.0. It was 131.68 MB -
     # more than half of everything the APK carried - for seven tafsirs,
@@ -155,7 +155,7 @@ flutter:
     # ayah card reads. It is hosted as a 31.70 MB pack
     # (AppConfig.sciencesDbUrl) and downloaded on demand.
     # The adhkar, 124 rows and 48 KB, lifted out of quran_sciences.db by
-    # scripts/split_azkar_db.py so the الأذكار tab does not wait on a
+    # scripts/split_azkar_db.py so the ط§ظ„ط£ط°ظƒط§ط± tab does not wait on a
     # 131.68 MB download once that database leaves the APK.
     - assets/data/azkar.db
     - assets/data/quotes.json
@@ -166,7 +166,7 @@ flutter:
     # The kids stories' narration lines in en/fr/es/pt/ru/ur, one per caption,
     # built and checked by scripts/kids_stories/build_captions_tr.py.
     - assets/data/kids_captions_tr.json
-    # «في مثل هذا اليوم» — 366 days x 12 events, built by
+    # آ«ظپظٹ ظ…ط«ظ„ ظ‡ط°ط§ ط§ظ„ظٹظˆظ…آ» â€” 366 days x 12 events, built by
     # scripts/fetch_on_this_day.py from Wikimedia's onthisday feed (CC BY-SA)
     # and stored gzipped, so the card works with no network at all.
     - assets/data/on_this_day_ar.json
@@ -193,7 +193,7 @@ flutter:
     # The Hadeeth Encyclopaedia, all seven language packs, bundled (3.17.0).
     - assets/data/hadeethenc/
     - assets/audio/adhan/
-    # P3â€‘49: the owner's AI-generated splash video (Gemini watermark removed)
+    # P3أ¢â‚¬â€ک49: the owner's AI-generated splash video (Gemini watermark removed)
     # + its badge-fallback art, put back at his request.
     - assets/branding/
     - assets/diagrams/
@@ -201,12 +201,12 @@ flutter:
     # 350 MB - almost the whole APK - and the owner asked for them out; they
     # now download and cache as they are read, like every other edition.
     - assets/icons/
-    # assets/icon/ is intentionally NOT bundled â€” the PNGs there are consumed
+    # assets/icon/ is intentionally NOT bundled أ¢â‚¬â€‌ the PNGs there are consumed
     # by flutter_launcher_icons at build time only, never at runtime. Bundling
     # them would just bloat the install.
-    # P3â€‘43 #12: the `google_fonts` package fetches a font over the network
+    # P3أ¢â‚¬â€ک43 #12: the `google_fonts` package fetches a font over the network
     # on first use unless a matching file already sits in the asset bundle
-    # (see AppTypography's own doc comment) â€” bundling Cairo's real static
+    # (see AppTypography's own doc comment) أ¢â‚¬â€‌ bundling Cairo's real static
     # weight instances here means the app's own UI chrome text never
     # depends on a network round-trip, honoring the offline-first rule the
     # same way AmiriQuran already does for the Quran text itself.
@@ -232,9 +232,9 @@ flutter:
     # source since 2026-09-25). Bundled unmodified, as its licence requires
     # (assets/fonts/KFGQPC-HAFS-LICENSE.txt: free to use, copy, distribute;
     # no sale, no modification).
-    # Fallback for the honorific signs (U+FD40-FD4F, «﵁» etc.) that the
+    # Fallback for the honorific signs (U+FD40-FD4F, آ«ïµپآ» etc.) that the
     # interface faces (Cairo, Alexandria ...) do not carry; without it a
-    # quiz answer in a Latin locale showed «ʿUmar ibn al-Khattab □».
+    # quiz answer in a Latin locale showed آ«ت؟Umar ibn al-Khattab â–،آ».
     - family: RafeeqHonorifics
       fonts:
         - asset: assets/fonts/google_fonts/NotoNaskhArabic-Regular.ttf
@@ -267,13 +267,13 @@ flutter_launcher_icons:
 # Regenerate the native drawables after any change here with:
 #   dart run flutter_native_splash:create
 flutter_native_splash:
-  # NO ICON HERE ANY MORE, ON PURPOSE. «اول ما التطبيق يفتح يجيب ايقونة
-  # التطبيق الدائرية وبعدها الاسبلاش اسكرين» — the OS drew the icon, then the
+  # NO ICON HERE ANY MORE, ON PURPOSE. آ«ط§ظˆظ„ ظ…ط§ ط§ظ„طھط·ط¨ظٹظ‚ ظٹظپطھط­ ظٹط¬ظٹط¨ ط§ظٹظ‚ظˆظ†ط©
+  # ط§ظ„طھط·ط¨ظٹظ‚ ط§ظ„ط¯ط§ط¦ط±ظٹط© ظˆط¨ط¹ط¯ظ‡ط§ ط§ظ„ط§ط³ط¨ظ„ط§ط´ ط§ط³ظƒط±ظٹظ†آ» â€” the OS drew the icon, then the
   # app drew its own beat, and the boot read as two separate openings.
   #
   # Android 12 and up ALWAYS draw a splash icon; the only way to be rid of it
   # is to hand the platform a fully transparent one, which is what
-  # `splash_blank.png` is. What is left is a flat colour — and the colour is
+  # `splash_blank.png` is. What is left is a flat colour â€” and the colour is
   # the intro clip's own opening frame (its median pixel, #2B516B), so the
   # window the OS paints and the first frame of the video are the same
   # colour and the hand-off has nothing to see.

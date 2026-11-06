@@ -1235,7 +1235,9 @@
     "rewind_confirm": "Go back to portion {}? Portions you read after it will be marked unread.",
     "rewound": "Back to portion {}",
     "wird_done": "Portion {} completed",
-    "no_wirds": "No portions yet"
+    "no_wirds": "No portions yet",
+    "continue_wird": "Continue reading",
+    "start_wird": "Start the wird"
   },
   "selected_surahs": {
     "title": "Selected surahs"

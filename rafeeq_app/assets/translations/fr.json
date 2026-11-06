@@ -1235,7 +1235,9 @@
     "rewind_confirm": "Revenir à la portion {} ? Les portions lues après seront marquées non lues.",
     "rewound": "Retour à la portion {}",
     "wird_done": "Portion {} terminée",
-    "no_wirds": "Aucune portion pour l'instant"
+    "no_wirds": "Aucune portion pour l'instant",
+    "continue_wird": "Continuer la lecture",
+    "start_wird": "Commencer le wird"
   },
   "selected_surahs": {
     "title": "Sourates choisies"

@@ -11,6 +11,7 @@ import '../../../core/widgets/calm_card_ground.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../data/ayah_opening.dart';
+import '../../quran/data/quran_last_read.dart';
 import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
 import 'khatma_screen.dart';
@@ -36,9 +37,19 @@ class KhatmaCard extends ConsumerWidget {
         // الرئيسية حطله خلفية … هادية»); nothing is drawn under the text.
         color: AppColors.primarySoft,
         child: InkWell(
-          onTap: () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute<void>(builder: (_) => const KhatmaScreen())),
+          // Owner, 2026-11-06: a tap anywhere on an active khatma's card
+          // opens the mushaf where the wird is read, not the khatma screen.
+          onTap: () {
+            final mushafReady = ref.read(mushafDataProvider).valueOrNull != null;
+            if (active.isNotEmpty && mushafReady) {
+              ref.read(quranJumpRequestProvider.notifier).state =
+                  khatmaResumePage(active.first, ref.read(quranLastPageProvider));
+              HomeNavigate.of(context)?.call(1);
+              return;
+            }
+            Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const KhatmaScreen()));
+          },
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: active.isEmpty
@@ -107,6 +118,7 @@ class _ActiveKhatmaRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mushaf = ref.watch(mushafDataProvider).valueOrNull;
+    final lastPage = ref.watch(quranLastPageProvider);
     final subtleStyle = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
     );
@@ -187,10 +199,12 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                     ? null
                     : () {
                         ref.read(quranJumpRequestProvider.notifier).state =
-                            khatma.currentPage;
+                            khatmaResumePage(khatma, lastPage);
                         _switchToQuranTab(context);
                       },
-                child: Text('khatma.open_reader'.tr()),
+                child: Text(khatmaResumePage(khatma, lastPage) > khatma.currentPage
+                    ? 'khatma.continue_wird'.tr()
+                    : 'khatma.start_wird'.tr()),
               ),
             ),
             const SizedBox(width: 10),
@@ -590,3 +604,12 @@ class HomeNavigate extends InheritedWidget {
   bool updateShouldNotify(HomeNavigate oldWidget) =>
       onNavigate != oldWidget.onNavigate;
 }
+
+
+/// The page the wird opens on: where the reader stopped when that is past
+/// the wird's first page (owner, 2026-11-06: «يرجع في المكان اللي انا واقف
+/// عنده تحديدا مش يجيبني من الاول»), else the wird's first page.
+int khatmaResumePage(Khatma khatma, int? lastPage) =>
+    lastPage != null && lastPage > khatma.currentPage && lastPage <= 604
+        ? lastPage
+        : khatma.currentPage;

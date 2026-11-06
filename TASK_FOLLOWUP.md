@@ -1,3 +1,5 @@
+OWNER 2026-11-06 (weekly quota 99%, «من غير فحص»): khatma asks. DONE (shipped via scripts/ship_now.ps1, not analyzed/tested/seen): card tap opens the mushaf at the wird; button «تابع القراءة» when the last-read page is past the wird start, else «ابدأ الورد»; the wird opens at the last-read page (khatmaResumePage in khatma_card.dart). NOT DONE YET: (1) tapping the rub' marker «۞» shows which quarter (1st/2nd/3rd quarter of hizb, hizb, juz) and fades by tap or gesture without clashing with other gestures; (2) several khatma reminders (e.g. a quarter at dhuhr, asr, maghrib) - khatma_reminder_service.dart. Run flutter analyze/test on the shipped change first.
+
 # TASK_FOLLOWUP — the live step log (read right after CLAUDE.md)
 
 ## v3.97.0 PUBLISHED 2026-11-05 ~09:10 Dubai (owner: «وقف اعراب ، صلح اللي قلتلك عليه وانشر بسرعه»)

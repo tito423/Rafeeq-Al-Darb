@@ -1235,7 +1235,9 @@
     "rewind_confirm": "¿Volver a la porción {}? Las porciones leídas después se marcarán como no leídas.",
     "rewound": "De vuelta a la porción {}",
     "wird_done": "Porción {} completada",
-    "no_wirds": "Aún no hay porciones"
+    "no_wirds": "Aún no hay porciones",
+    "continue_wird": "Seguir leyendo",
+    "start_wird": "Empezar el wird"
   },
   "selected_surahs": {
     "title": "Suras seleccionadas"
