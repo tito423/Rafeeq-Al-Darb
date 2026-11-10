@@ -96,6 +96,10 @@ def show(label, placed, a0, a1):
 def main():
     s, a0, a1 = map(int, sys.argv[1:4])
     full = '--full' in sys.argv
+    # --work: the chunk writer's sheet - al-Da'as uncut (the cut drops text
+    # when a section spans several ayahs), al-Jadwal cut, no Darwish;
+    # --only-d: Darwish alone, read when al-Jadwal and al-Da'as part.
+    work, only_d = '--work' in sys.argv, '--only-d' in sys.argv
     toks = ayah_tokens(s)
     d = sqlite3.connect(os.path.join(DATA, 'quran_sciences.db'))
     for a in range(a0, a1 + 1):
@@ -107,13 +111,16 @@ def main():
     covered = set()
     for fa, ta, text in rows:
         covered.update(range(fa, ta + 1))
-        placed = [(a0, text)] if full else cut(text, DAAS_Q, toks, fa)
-        show(f'DAAS {fa}-{ta}', placed, a0, a1)
+        placed = [(a0, text)] if full or work else cut(text, DAAS_Q, toks, fa)
+        if not only_d:
+            show(f'DAAS {fa}-{ta}', placed, a0, a1)
     miss = [a for a in range(a0, a1 + 1) if a not in covered]
-    if miss:
+    if miss and not only_d:
         print('   DAAS: NO SECTION for ayahs', miss)
     seen, jgot = set(), set()
     for src, name in (('aljadwal', 'J'), ('iraab-aldarweesh', 'D')):
+        if (work and name == 'D') or (only_d and name == 'J'):
+            continue
         for a in range(a0, a1 + 1):
             t = get(src, s, a)
             if src == 'aljadwal':
@@ -145,7 +152,7 @@ def main():
             show(f'{name} {s}:{a}', placed, a0, a1)
             if src == 'aljadwal' and not full:
                 jgot.update(x for x, _ in placed)
-    if not full:
+    if not full and not only_d:
         jm = [a for a in range(a0, a1 + 1) if a not in jgot]
         if jm:  # e.g. tafsir.app's al-Jadwal group 25:63 jumps from (64) to (73)
             print('   J: NO PART for ayahs', jm)
