@@ -17,6 +17,7 @@ import 'mushaf/ayah_marker.dart';
 import 'mushaf/ayah_wash_painter.dart';
 import 'mushaf/continuous_mushaf_view.dart';
 import 'mushaf/rub_bubble.dart';
+import 'mushaf/rub_margin_mark.dart';
 import 'mushaf_frame_painter.dart';
 
 part 'mushaf_ayah_row.dart';
@@ -453,6 +454,15 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     final baseFont = (isLandscape ? 20.0 : 24.0) * widget.fontScale;
     final fill = widget.pageFillScreen;
     final playingIndex = _playingIndex;
+    // A page that carries «۞» keeps a left gutter for the margin plate.
+    final hasRub =
+        rubIndex != null &&
+        widget.layout != QuranTextLayout.cards &&
+        widget.ayahs.any(
+          (a) =>
+              bodyOf(a).startsWith(rubElHizbMark) &&
+              rubIndex.markAt(a.surahId, a.ayahNumber) != null,
+        );
 
     final textStyle = TextStyle(
       fontFamily: 'KFGQPCHafs',
@@ -497,6 +507,13 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
       _ayahKeys = List.generate(widget.ayahs.length, (_) => GlobalKey());
     }
 
+    final sidePadding = bare
+        ? (isLandscape ? 18.0 : 8.0)
+        : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0));
+    final leftPadding = hasRub && sidePadding < rubGutterWidth
+        ? rubGutterWidth
+        : sidePadding;
+
     final Widget content = GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: _tapPage,
@@ -504,11 +521,12 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
         // Bottom 72: room for the floating page pill, which hid the
         // last line of a long page (p.20 on the owner's phone).
         padding: EdgeInsets.symmetric(
-          horizontal: bare
-              ? (isLandscape ? 18.0 : 8.0)
-              : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0)),
+          horizontal: sidePadding,
           vertical: bare ? 6.0 : 12.0,
-        ).copyWith(bottom: bare || widget.embedded ? 6.0 : 72.0),
+        ).copyWith(
+          bottom: bare || widget.embedded ? 6.0 : 72.0,
+          left: leftPadding,
+        ),
         child: Column(
           mainAxisSize:
               widget.embedded ? MainAxisSize.min : MainAxisSize.max,
@@ -588,6 +606,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
                     rubAt: rubIndex == null
                         ? null
                         : (a) => rubIndex.markAt(a.surahId, a.ayahNumber),
+                    rubGutter: hasRub ? leftPadding : 0,
                     bare: bare,
                   );
                 },

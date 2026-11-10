@@ -455,7 +455,12 @@
     "share_style": "Рамка",
     "share_style_night": "Ночь",
     "share_style_emerald": "Изумруд",
-    "share_style_parchment": "Пергамент"
+    "share_style_parchment": "Пергамент",
+    "rub_m_quarter": "¼",
+    "rub_m_half": "½",
+    "rub_m_three_quarters": "¾",
+    "rub_m_hizb": "Хизб",
+    "rub_m_juz": "Джуз"
   },
   "library": {
     "title": "Библиотека",

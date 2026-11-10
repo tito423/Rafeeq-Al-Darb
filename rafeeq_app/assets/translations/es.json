@@ -455,7 +455,12 @@
     "share_style": "Marco",
     "share_style_night": "Noche",
     "share_style_emerald": "Esmeralda",
-    "share_style_parchment": "Pergamino"
+    "share_style_parchment": "Pergamino",
+    "rub_m_quarter": "¼",
+    "rub_m_half": "½",
+    "rub_m_three_quarters": "¾",
+    "rub_m_hizb": "Hizb",
+    "rub_m_juz": "Juz"
   },
   "library": {
     "title": "Biblioteca",

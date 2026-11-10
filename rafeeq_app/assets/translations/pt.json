@@ -455,7 +455,12 @@
     "share_style": "Moldura",
     "share_style_night": "Noite",
     "share_style_emerald": "Esmeralda",
-    "share_style_parchment": "Pergaminho"
+    "share_style_parchment": "Pergaminho",
+    "rub_m_quarter": "¼",
+    "rub_m_half": "½",
+    "rub_m_three_quarters": "¾",
+    "rub_m_hizb": "Hizb",
+    "rub_m_juz": "Juz"
   },
   "library": {
     "title": "Biblioteca",

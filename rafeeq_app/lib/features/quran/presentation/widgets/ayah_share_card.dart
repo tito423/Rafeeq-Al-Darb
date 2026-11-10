@@ -93,11 +93,16 @@ class ShareContent {
 
   /// «2:255», already in the reader's numerals.
   final String reference;
+
+  /// «31_22»: Latin digits for the picture's file name (the reference may be
+  /// in Arabic-Indic digits, which a file name filter would drop).
+  final String fileTag;
   final ShareBody? body;
   const ShareContent({
     required this.ayahText,
     required this.surahName,
     required this.reference,
+    this.fileTag = 'ayah',
     this.body,
   });
 }
@@ -687,7 +692,7 @@ Future<bool> shareAyahAsImages(
   try {
     final pngs = await renderShareCards(context, content: content, style: style);
     final dir = await getTemporaryDirectory();
-    final safeRef = content.reference.replaceAll(RegExp('[^0-9A-Za-z]+'), '_');
+    final safeRef = content.fileTag.replaceAll(RegExp('[^0-9A-Za-z]+'), '_');
     final files = <XFile>[];
     for (var i = 0; i < pngs.length; i++) {
       final file = File(p.join(dir.path, 'ayah_${safeRef}_${i + 1}.png'));

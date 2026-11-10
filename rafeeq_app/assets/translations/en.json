@@ -455,7 +455,12 @@
     "share_style": "Frame",
     "share_style_night": "Night",
     "share_style_emerald": "Emerald",
-    "share_style_parchment": "Parchment"
+    "share_style_parchment": "Parchment",
+    "rub_m_quarter": "¼",
+    "rub_m_half": "½",
+    "rub_m_three_quarters": "¾",
+    "rub_m_hizb": "Hizb",
+    "rub_m_juz": "Juz"
   },
   "library": {
     "title": "Library",

@@ -455,7 +455,12 @@
     "share_style": "آرائش",
     "share_style_night": "شب",
     "share_style_emerald": "زمرّدی",
-    "share_style_parchment": "رَقّ"
+    "share_style_parchment": "رَقّ",
+    "rub_m_quarter": "ربع",
+    "rub_m_half": "نصف",
+    "rub_m_three_quarters": "تین ربع",
+    "rub_m_hizb": "حزب",
+    "rub_m_juz": "پارہ"
   },
   "library": {
     "title": "کتب خانہ",

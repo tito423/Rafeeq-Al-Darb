@@ -165,6 +165,7 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
         '${ayah.surahId}:${ayah.ayahNumber}',
         uiLanguageCode,
       ),
+      fileTag: '${ayah.surahId}_${ayah.ayahNumber}',
       body: body,
     );
   }

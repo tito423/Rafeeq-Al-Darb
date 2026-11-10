@@ -38,6 +38,9 @@ class _FlowingAyahs extends StatefulWidget {
   /// that mark shows which quarter it is instead of being the page's tap.
   final RubInfo? Function(Ayah ayah)? rubAt;
 
+  /// The page's left gutter, where the quarter plate is drawn; 0 = none.
+  final double rubGutter;
+
   /// The stripped reading layout — see `QuranTextLayout.reading`.
   final bool bare;
 
@@ -52,6 +55,7 @@ class _FlowingAyahs extends StatefulWidget {
     required this.onAyahLongPress,
     this.onBackgroundTap,
     this.rubAt,
+    this.rubGutter = 0,
     this.bare = false,
   });
 
@@ -190,6 +194,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
     final spans = <InlineSpan>[];
     final ranges = <(int, int, int)>[];
     final markers = <FlowingMarker>[];
+    final rubMarks = <(int, RubInfo)>[];
     final side = AyahMarker.sizeFor(bare: widget.bare);
     var offset = 0;
 
@@ -219,6 +224,10 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
         ),
       );
       ranges.add((offset, offset + text.length, i));
+      if (widget.rubGutter > 0 && bodyOf(ayah).startsWith(rubElHizbMark)) {
+        final info = widget.rubAt?.call(ayah);
+        if (info != null) rubMarks.add((offset, info));
+      }
       offset += text.length;
 
       // Room only - the marker is painted by `FlowingMarkersPainter` at this
@@ -264,11 +273,22 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
           bare: widget.bare,
           baseStyle: DefaultTextStyle.of(context).style,
         ),
-        child: Text.rich(
-          TextSpan(children: spans),
-          key: _textKey,
-          textAlign: TextAlign.justify,
-          textDirection: TextDirection.rtl,
+        child: CustomPaint(
+          foregroundPainter: rubMarks.isEmpty
+              ? null
+              : RubMarginPainter(
+                  textKey: _textKey,
+                  marks: rubMarks,
+                  gutter: widget.rubGutter,
+                  mt: widget.mt,
+                  baseStyle: DefaultTextStyle.of(context).style,
+                ),
+          child: Text.rich(
+            TextSpan(children: spans),
+            key: _textKey,
+            textAlign: TextAlign.justify,
+            textDirection: TextDirection.rtl,
+          ),
         ),
       ),
     );

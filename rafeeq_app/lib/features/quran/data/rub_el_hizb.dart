@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,6 +41,29 @@ class RubInfo {
     ][part],
     args: ['$hizb'],
   );
+
+  /// What the printed Madinah mushaf sets in the margin beside the mark,
+  /// line by line (read off the 1428 AH printing, pages 5, 7, 9 and 22):
+  /// «ربع / الحزب / ١», «نصف / الحزب / ١», «ثلاثة أرباع / الحزب / ١», and
+  /// where a juz opens «الجزء ٢ / الحزب ٣».
+  List<String> get marginLines {
+    final h = localizeDigits('$hizb', uiLanguageCode);
+    final hizbWord = 'quran.rub_m_hizb'.tr();
+    if (opensJuz) {
+      final j = localizeDigits('$juz', uiLanguageCode);
+      return ['${'quran.rub_m_juz'.tr()} $j', '$hizbWord $h'];
+    }
+    return [
+      if (part > 0)
+        const [
+          'quran.rub_m_quarter',
+          'quran.rub_m_half',
+          'quran.rub_m_three_quarters',
+        ][part - 1].tr(),
+      hizbWord,
+      h,
+    ];
+  }
 
   /// «الجزء ٢ · الربع ١٠ من ٢٤٠».
   String get subtitle =>
