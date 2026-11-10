@@ -27,7 +27,7 @@ void main() {
       mode: KhatmaMode.dailyJuz,
       dailyAmount: 1,
       reachedPage: 31,
-      reminderTime: const TimeOfDay(hour: 21, minute: 30),
+      reminderTimes: const [TimeOfDay(hour: 21, minute: 30)],
     );
     expect(k.mode, KhatmaMode.dailyJuz);
     expect(k.dailyAmount, 1);
@@ -99,7 +99,7 @@ void main() {
 
   test('the reminder can be removed', () {
     final k = base()
-        .copyWith(reminderTime: const TimeOfDay(hour: 5, minute: 0))
+        .copyWith(reminderTimes: const [TimeOfDay(hour: 5, minute: 0)])
         .edited(
           startPage: 1,
           mode: KhatmaMode.dailyPages,
@@ -107,5 +107,40 @@ void main() {
           reachedPage: 31,
         );
     expect(k.reminderTime, isNull);
+  });
+
+  // Owner, 2026-11-06: several reminders a day (dhuhr, asr, maghrib).
+  test('several reminders are kept sorted, without repeats, through JSON', () {
+    final k = base().copyWith(
+      reminderTimes: const [
+        TimeOfDay(hour: 18, minute: 5),
+        TimeOfDay(hour: 12, minute: 30),
+        TimeOfDay(hour: 15, minute: 45),
+        TimeOfDay(hour: 12, minute: 30),
+      ],
+    );
+    const sorted = [
+      TimeOfDay(hour: 12, minute: 30),
+      TimeOfDay(hour: 15, minute: 45),
+      TimeOfDay(hour: 18, minute: 5),
+    ];
+    expect(k.reminderTimes, sorted);
+    final back = Khatma.fromJson(k.toJson());
+    expect(back.reminderTimes, sorted);
+    // The first one is still written the old way for an older copy.
+    expect(k.toJson()['reminderHour'], 12);
+    expect(k.toJson()['reminderMinute'], 30);
+  });
+
+  test('a khatma saved before several reminders existed keeps its one', () {
+    final json = base().toJson()
+      ..remove('reminders')
+      ..['reminderHour'] = 20
+      ..['reminderMinute'] = 15;
+    expect(Khatma.fromJson(json).reminderTimes, const [
+      TimeOfDay(hour: 20, minute: 15),
+    ]);
+    final none = base().toJson()..remove('reminders');
+    expect(Khatma.fromJson(none).reminderTimes, isEmpty);
   });
 }

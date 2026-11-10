@@ -432,7 +432,30 @@
     "bm_sort_mushaf": "По порядку мусхафа",
     "bm_filter_all": "Все",
     "bm_clear_all": "Удалить все закладки",
-    "bm_clear_confirm": "Все закладки будут удалены. Заметки не затрагиваются."
+    "bm_clear_confirm": "Все закладки будут удалены. Заметки не затрагиваются.",
+    "rub_hizb_start": "Хизб {}",
+    "rub_quarter": "Четверть хизба {}",
+    "rub_half": "Половина хизба {}",
+    "rub_three_quarters": "Три четверти хизба {}",
+    "rub_juz": "Джуз {}",
+    "rub_juz_start": "Начало джуза {}",
+    "rub_of_all": "Четверть {} из 240",
+    "share_title": "Поделиться аятом",
+    "share_ayah_only": "Только аят",
+    "share_with_translation": "Аят с переводом",
+    "share_with_tafseer": "Аят с тафсиром",
+    "share_with_irab": "Аят с и‘рабом (грамматическим разбором)",
+    "share_as_image": "Отправить картинкой",
+    "share_as_text": "Отправить текстом",
+    "share_needs_pack": "Сначала загрузите пакет наук об аяте",
+    "share_no_translation": "Выбранный перевод не загружен",
+    "share_no_irab": "Отдельного и‘раба для этого аята пока нет",
+    "share_too_long": "Текст длинный ({} изображений). Отправьте его текстом.",
+    "share_images_count": "Изображений: {}",
+    "share_style": "Рамка",
+    "share_style_night": "Ночь",
+    "share_style_emerald": "Изумруд",
+    "share_style_parchment": "Пергамент"
   },
   "library": {
     "title": "Библиотека",
@@ -1237,7 +1260,12 @@
     "wird_done": "Порция {} завершена",
     "no_wirds": "Порций пока нет",
     "continue_wird": "Продолжить чтение",
-    "start_wird": "Начать вирд"
+    "start_wird": "Начать вирд",
+    "manage": "Управление",
+    "reminders": "Ежедневные напоминания",
+    "reminders_hint": "Нажмите на время, чтобы изменить его, и добавляйте сколько угодно напоминаний.",
+    "reminder_add": "Добавить напоминание",
+    "reminder_remove": "Удалить напоминание"
   },
   "selected_surahs": {
     "title": "Избранные суры"

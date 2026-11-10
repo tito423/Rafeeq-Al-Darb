@@ -432,7 +432,30 @@
     "bm_sort_mushaf": "ترتيب المصحف",
     "bm_filter_all": "الكل",
     "bm_clear_all": "مسح كل العلامات",
-    "bm_clear_confirm": "ستُحذف كل العلامات المرجعية. الملاحظات لا تتأثر."
+    "bm_clear_confirm": "ستُحذف كل العلامات المرجعية. الملاحظات لا تتأثر.",
+    "rub_hizb_start": "الحزب {}",
+    "rub_quarter": "ربع الحزب {}",
+    "rub_half": "نصف الحزب {}",
+    "rub_three_quarters": "ثلاثة أرباع الحزب {}",
+    "rub_juz": "الجزء {}",
+    "rub_juz_start": "بداية الجزء {}",
+    "rub_of_all": "الربع {} من 240",
+    "share_title": "مشاركة الآية",
+    "share_ayah_only": "الآية فقط",
+    "share_with_translation": "الآية مع ترجمتها",
+    "share_with_tafseer": "الآية مع تفسيرها",
+    "share_with_irab": "الآية مع إعرابها",
+    "share_as_image": "مشاركة صورة",
+    "share_as_text": "مشاركة نص",
+    "share_needs_pack": "يحتاج تنزيل حزمة علوم الآية أولًا",
+    "share_no_translation": "الترجمة المختارة غير منزّلة",
+    "share_no_irab": "لا يوجد إعراب مستقل لهذه الآية بعد",
+    "share_too_long": "النص طويل ({} صورة). شاركه نصًّا.",
+    "share_images_count": "عدد الصور: {}",
+    "share_style": "الزخرفة",
+    "share_style_night": "ليلي",
+    "share_style_emerald": "زمرّدي",
+    "share_style_parchment": "رَقّ"
   },
   "library": {
     "title": "المكتبة",
@@ -1237,7 +1260,12 @@
     "wird_done": "أتممت الورد {}",
     "no_wirds": "لا توجد أوراد بعد",
     "continue_wird": "تابع القراءة",
-    "start_wird": "ابدأ الورد"
+    "start_wird": "ابدأ الورد",
+    "manage": "إدارة الختمة",
+    "reminders": "التذكيرات اليومية",
+    "reminders_hint": "اضغط الوقت لتغييره، وأضف من الأوقات ما تشاء.",
+    "reminder_add": "إضافة تذكير",
+    "reminder_remove": "حذف التذكير"
   },
   "selected_surahs": {
     "title": "سور مختارة"

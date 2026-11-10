@@ -432,7 +432,30 @@
     "bm_sort_mushaf": "مصحف کی ترتیب",
     "bm_filter_all": "سب",
     "bm_clear_all": "تمام نشانیاں مٹائیں",
-    "bm_clear_confirm": "تمام نشانیاں مٹ جائیں گی۔ نوٹس متاثر نہیں ہوں گے۔"
+    "bm_clear_confirm": "تمام نشانیاں مٹ جائیں گی۔ نوٹس متاثر نہیں ہوں گے۔",
+    "rub_hizb_start": "حزب {}",
+    "rub_quarter": "حزب {} کا ربع",
+    "rub_half": "حزب {} کا نصف",
+    "rub_three_quarters": "حزب {} کے تین ربع",
+    "rub_juz": "پارہ {}",
+    "rub_juz_start": "پارہ {} کا آغاز",
+    "rub_of_all": "ربع {} از 240",
+    "share_title": "آیت شیئر کریں",
+    "share_ayah_only": "صرف آیت",
+    "share_with_translation": "آیت مع ترجمہ",
+    "share_with_tafseer": "آیت مع تفسیر",
+    "share_with_irab": "آیت مع اعراب",
+    "share_as_image": "تصویر کے طور پر",
+    "share_as_text": "متن کے طور پر",
+    "share_needs_pack": "پہلے علومِ آیت کا پیک ڈاؤن لوڈ کریں",
+    "share_no_translation": "منتخب ترجمہ ڈاؤن لوڈ نہیں ہے",
+    "share_no_irab": "اس آیت کا الگ اعراب ابھی موجود نہیں",
+    "share_too_long": "متن طویل ہے ({} تصاویر)۔ اسے متن کے طور پر شیئر کریں۔",
+    "share_images_count": "تصاویر: {}",
+    "share_style": "آرائش",
+    "share_style_night": "شب",
+    "share_style_emerald": "زمرّدی",
+    "share_style_parchment": "رَقّ"
   },
   "library": {
     "title": "کتب خانہ",
@@ -1237,7 +1260,12 @@
     "wird_done": "حصہ {} مکمل",
     "no_wirds": "ابھی کوئی حصہ نہیں",
     "continue_wird": "پڑھنا جاری رکھیں",
-    "start_wird": "ورد شروع کریں"
+    "start_wird": "ورد شروع کریں",
+    "manage": "انتظام",
+    "reminders": "روزانہ یاد دہانیاں",
+    "reminders_hint": "وقت بدلنے کے لیے اس پر ٹیپ کریں، اور جتنے اوقات چاہیں شامل کریں۔",
+    "reminder_add": "یاد دہانی شامل کریں",
+    "reminder_remove": "یاد دہانی ہٹائیں"
   },
   "selected_surahs": {
     "title": "منتخب سورتیں"

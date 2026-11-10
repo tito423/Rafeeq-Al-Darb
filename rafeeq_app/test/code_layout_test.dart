@@ -45,7 +45,6 @@ void main() {
     // respecting it. The ceiling moves, on the record, and the extraction
     // is still owed.
     'lib/features/quran/presentation/screens/quran_screen.dart': 1057,
-    'lib/features/quran/presentation/widgets/mushaf_text_page.dart': 991,
     // 949 -> 950: one import line, for the app-wide Arabic-numeral fix
     // (khatma_screen took the same line, and left this list on 2026-09-22
     // when its create sheet moved to its own file). The sleep-timer menu read

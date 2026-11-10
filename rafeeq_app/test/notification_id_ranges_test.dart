@@ -259,7 +259,7 @@ void main() {
             startDate: DateTime(2026, 10, 10),
             mode: KhatmaMode.dailyPages,
             dailyAmount: 2,
-            reminderTime: const TimeOfDay(hour: 10, minute: 0),
+            reminderTimes: const [TimeOfDay(hour: 10, minute: 0)],
           ),
       ];
       SharedPreferences.setMockInitialValues({

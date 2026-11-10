@@ -26,8 +26,7 @@ import '../../../../../core/utils/digits.dart';
 import '../../../../downloads/data/reciters_provider.dart';
 import '../../../data/ayah_notes_store.dart';
 import '../../../data/quran_bookmarks_store.dart';
-import '../../../data/translation_lang_provider.dart';
-import '../ayah_share_card.dart';
+import '../ayah_share_sheet.dart';
 import '../reciter_picker_sheet.dart';
 import 'sciences_dialogs.dart';
 
@@ -136,21 +135,11 @@ class SciencesHeader extends ConsumerWidget {
           ),
         );
       case 'share':
-        final translations = await translationsFuture;
-        final lang = ref.read(selectedTranslationLangProvider);
-        final translation = translations[lang]?.text;
-        if (!context.mounted) return;
-        final ok = await shareAyahAsImage(
+        await showAyahShareSheet(
           context,
-          ayahText: ayah.textUthmani,
-          reference: _reference,
-          translation: translation,
+          ayah: ayah,
+          surahNameAr: surahNameAr,
         );
-        if (!ok && context.mounted) {
-          messenger.showSnackBar(
-            SnackBar(content: Text('quran.share_failed'.tr())),
-          );
-        }
     }
   }
 

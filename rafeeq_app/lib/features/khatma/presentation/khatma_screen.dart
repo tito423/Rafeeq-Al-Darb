@@ -7,11 +7,17 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
+import '../../quran/data/quran_last_read.dart';
 import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
 import 'create_khatma_sheet.dart';
 import 'khatma_card.dart'
-    show completeKhatmaWird, KhatmaPortionRangeBlock, KhatmaProgressSection;
+    show
+        completeKhatmaWird,
+        khatmaResumePage,
+        KhatmaPortionRangeBlock,
+        KhatmaProgressSection;
+import 'khatma_reminders_editor.dart';
 
 /// The full khatma manager (P2‑11) — every active khatma with its own
 /// progress/read-today/reminder controls, a "+" to start a new one, and a
@@ -58,7 +64,7 @@ class KhatmaScreen extends ConsumerWidget {
                           AppTab.quran;
                       Navigator.of(context).pop();
                     },
-                    onSetReminder: () => _pickReminder(context, ref, k),
+                    onSetReminder: () => showKhatmaRemindersSheet(context, k),
                     onDelete: () => _confirmDelete(context, ref, k),
                     onEdit: () => showCreateKhatmaSheet(context, editing: k),
                   ),
@@ -102,19 +108,6 @@ class KhatmaScreen extends ConsumerWidget {
       ),
     );
     if (ok == true) await ref.read(khatmaStoreProvider.notifier).delete(k);
-  }
-
-  Future<void> _pickReminder(
-    BuildContext context,
-    WidgetRef ref,
-    Khatma k,
-  ) async {
-    final time = await showTimePicker(
-      context: context,
-      initialTime: k.reminderTime ?? const TimeOfDay(hour: 20, minute: 0),
-    );
-    if (time == null) return;
-    await ref.read(khatmaStoreProvider.notifier).setReminder(k, time);
   }
 
   Future<void> _openCreateSheet(BuildContext context, WidgetRef ref) async {
@@ -353,13 +346,12 @@ class _KhatmaTile extends ConsumerWidget {
                       value: 'reminder',
                       child: ListTile(
                         leading: const Icon(Icons.notifications_outlined),
-                        title: Text(
-                          khatma.reminderTime == null
-                              ? 'khatma.set_reminder'.tr()
-                              : 'khatma.reminder_at'.tr(
-                                  args: [_fmtTime(khatma.reminderTime!)],
-                                ),
-                        ),
+                        title: Text('khatma.reminders'.tr()),
+                        subtitle: khatma.reminderTimes.isEmpty
+                            ? null
+                            : Text(
+                                khatma.reminderTimes.map(_fmtTime).join(' · '),
+                              ),
                         contentPadding: EdgeInsets.zero,
                       ),
                     ),
@@ -423,7 +415,12 @@ class _KhatmaTile extends ConsumerWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => onOpenReader(khatma.currentPage),
+                    onPressed: () => onOpenReader(
+                      khatmaResumePage(
+                        khatma,
+                        ref.read(quranLastPageProvider),
+                      ),
+                    ),
                     child: Text('khatma.open_reader'.tr()),
                   ),
                 ),

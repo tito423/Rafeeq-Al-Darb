@@ -91,7 +91,15 @@ class Khatma {
 
   final int streak;
   final DateTime? completedAt;
-  final TimeOfDay? reminderTime;
+
+  /// Every daily reminder of this khatma, earliest first (owner,
+  /// 2026-11-06: a quarter at dhuhr, one at asr, one at maghrib). Empty =
+  /// no reminder.
+  final List<TimeOfDay> reminderTimes;
+
+  /// The first reminder, for the places that show one line.
+  TimeOfDay? get reminderTime =>
+      reminderTimes.isEmpty ? null : reminderTimes.first;
 
   /// Every wird finished since records began, oldest first.
   final List<WirdRecord> wirds;
@@ -108,9 +116,18 @@ class Khatma {
     this.lastReadDate,
     this.streak = 0,
     this.completedAt,
-    this.reminderTime,
+    this.reminderTimes = const [],
     this.wirds = const [],
   });
+
+  /// [times] without repeats, earliest first.
+  static List<TimeOfDay> sortedTimes(Iterable<TimeOfDay> times) {
+    final byMinute = <int, TimeOfDay>{
+      for (final t in times) t.hour * 60 + t.minute: t,
+    };
+    final keys = byMinute.keys.toList()..sort();
+    return [for (final k in keys) byMinute[k]!];
+  }
 
   static const totalPages = 604;
 
@@ -302,7 +319,7 @@ class Khatma {
       portionsRead: index,
       lastReadDate: hasRecord ? target.lastReadBefore : lastReadDate,
       streak: hasRecord ? (target.streakBefore ?? streak) : streak,
-      reminderTime: reminderTime,
+      reminderTimes: reminderTimes,
       wirds: [
         for (final w in wirds)
           if (w.to <= target.from) w,
@@ -326,7 +343,7 @@ class Khatma {
     required KhatmaMode mode,
     required int dailyAmount,
     required int reachedPage,
-    TimeOfDay? reminderTime,
+    List<TimeOfDay> reminderTimes = const [],
   }) {
     final start = startPage.clamp(1, totalPages);
     final plan = totalPages - start + 1;
@@ -361,7 +378,7 @@ class Khatma {
       lastReadDate: lastReadDate,
       streak: streak,
       completedAt: done ? (completedAt ?? DateTime.now()) : null,
-      reminderTime: reminderTime,
+      reminderTimes: sortedTimes(reminderTimes),
       wirds: kept,
     );
   }
@@ -373,7 +390,7 @@ class Khatma {
     int? streak,
     DateTime? completedAt,
     List<WirdRecord>? wirds,
-    Object? reminderTime = _sentinel,
+    List<TimeOfDay>? reminderTimes,
   }) => Khatma(
     id: id,
     startDate: startDate,
@@ -387,9 +404,9 @@ class Khatma {
     streak: streak ?? this.streak,
     completedAt: completedAt ?? this.completedAt,
     wirds: wirds ?? this.wirds,
-    reminderTime: identical(reminderTime, _sentinel)
-        ? this.reminderTime
-        : reminderTime as TimeOfDay?,
+    reminderTimes: reminderTimes == null
+        ? this.reminderTimes
+        : sortedTimes(reminderTimes),
   );
 
   Map<String, dynamic> toJson() => {
@@ -404,8 +421,13 @@ class Khatma {
     'lastReadDate': lastReadDate?.toIso8601String(),
     'streak': streak,
     'completedAt': completedAt?.toIso8601String(),
+    // The first reminder is also written the old way, so a copy of the app
+    // from before several reminders existed still reads one.
     'reminderHour': reminderTime?.hour,
     'reminderMinute': reminderTime?.minute,
+    'reminders': [
+      for (final t in reminderTimes) [t.hour, t.minute],
+    ],
     'wirds': [for (final w in wirds) w.toJson()],
   };
 
@@ -430,17 +452,22 @@ class Khatma {
     completedAt: j['completedAt'] != null
         ? DateTime.parse(j['completedAt'] as String)
         : null,
-    reminderTime: j['reminderHour'] != null
-        ? TimeOfDay(
-            hour: j['reminderHour'] as int,
-            minute: j['reminderMinute'] as int,
+    reminderTimes: sortedTimes([
+      if (j['reminders'] is List)
+        for (final r in j['reminders'] as List<dynamic>)
+          TimeOfDay(
+            hour: (r as List<dynamic>)[0] as int,
+            minute: r[1] as int,
           )
-        : null,
+      else if (j['reminderHour'] != null)
+        TimeOfDay(
+          hour: j['reminderHour'] as int,
+          minute: j['reminderMinute'] as int,
+        ),
+    ]),
     wirds: [
       for (final w in (j['wirds'] as List<dynamic>? ?? const []))
         WirdRecord.fromJson(w as Map<String, dynamic>),
     ],
   );
 }
-
-const _sentinel = Object();

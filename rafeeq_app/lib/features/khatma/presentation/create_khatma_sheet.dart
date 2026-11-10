@@ -4,10 +4,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../data/khatma_store.dart';
+import 'khatma_reminders_editor.dart';
 
 /// Opens «ختمة جديدة».
 ///
@@ -102,7 +102,7 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
   int _dailyAmount = 21;
   bool _amountInitialized = false;
 
-  late TimeOfDay? _reminder = widget.editing?.reminderTime;
+  late List<TimeOfDay> _reminders = widget.editing?.reminderTimes ?? const [];
 
   /// Edit only: the mushaf page reached (the next one to read).
   late int _reachedPage = widget.editing?.currentPage ?? 1;
@@ -317,11 +317,11 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
             unit: _unit,
             durationDays: _durationDays,
             dailyAmount: _dailyAmount,
-            reminder: _reminder,
+            reminders: _reminders,
             onUnitChanged: (u) => _onUnitChanged(u, mushaf),
             onDurationChanged: (v) => _onDurationChanged(v, mushaf),
             onAmountChanged: (v) => _onAmountChanged(v, mushaf),
-            onReminderChanged: (t) => setState(() => _reminder = t),
+            onRemindersChanged: (t) => setState(() => _reminders = t),
             isEdit: _isEdit,
             onCreate: () => _save(mushaf),
           ),
@@ -353,14 +353,14 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
         mode: mode,
         dailyAmount: _dailyAmount,
         reachedPage: math.max(_reachedPage, startPage),
-        reminderTime: _reminder,
+        reminderTimes: _reminders,
       );
     } else {
       await store.create(
         mode: mode,
         dailyAmount: _dailyAmount,
         startPage: startPage,
-        reminderTime: _reminder,
+        reminderTimes: _reminders,
       );
     }
     if (mounted) Navigator.of(context).pop();
@@ -470,11 +470,11 @@ class _DurationStep extends StatelessWidget {
   final _AmountUnit unit;
   final int durationDays;
   final int dailyAmount;
-  final TimeOfDay? reminder;
+  final List<TimeOfDay> reminders;
   final ValueChanged<_AmountUnit> onUnitChanged;
   final ValueChanged<int> onDurationChanged;
   final ValueChanged<int> onAmountChanged;
-  final ValueChanged<TimeOfDay?> onReminderChanged;
+  final ValueChanged<List<TimeOfDay>> onRemindersChanged;
   final VoidCallback onCreate;
   final bool isEdit;
 
@@ -483,17 +483,16 @@ class _DurationStep extends StatelessWidget {
     required this.unit,
     required this.durationDays,
     required this.dailyAmount,
-    required this.reminder,
+    required this.reminders,
     required this.onUnitChanged,
     required this.onDurationChanged,
     required this.onAmountChanged,
-    required this.onReminderChanged,
+    required this.onRemindersChanged,
     required this.onCreate,
   });
 
   @override
   Widget build(BuildContext context) {
-    const gold = AppColors.gold;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -575,41 +574,7 @@ class _DurationStep extends StatelessWidget {
             onChanged: onAmountChanged,
           ),
         const SizedBox(height: 14),
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                reminder == null
-                    ? 'khatma.no_reminder'.tr()
-                    : 'khatma.reminder_at'.tr(
-                        args: [
-                          localizeDigits(
-                            '${reminder!.hour.toString().padLeft(2, '0')}:${reminder!.minute.toString().padLeft(2, '0')}',
-                            context.locale.languageCode,
-                          ),
-                        ],
-                      ),
-                style: const TextStyle(color: gold),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                final t = await showTimePicker(
-                  context: context,
-                  initialTime: reminder ?? const TimeOfDay(hour: 20, minute: 0),
-                );
-                if (t != null) onReminderChanged(t);
-              },
-              child: Text('khatma.set_reminder'.tr()),
-            ),
-            if (reminder != null)
-              IconButton(
-                tooltip: 'khatma.no_reminder'.tr(),
-                onPressed: () => onReminderChanged(null),
-                icon: const Icon(Icons.notifications_off_outlined),
-              ),
-          ],
-        ),
+        KhatmaRemindersEditor(times: reminders, onChanged: onRemindersChanged),
         const SizedBox(height: 10),
         SizedBox(
           width: double.infinity,

@@ -432,7 +432,30 @@
     "bm_sort_mushaf": "Orden del mushaf",
     "bm_filter_all": "Todos",
     "bm_clear_all": "Borrar todos los marcadores",
-    "bm_clear_confirm": "Se borrarán todos los marcadores. Las notas no se ven afectadas."
+    "bm_clear_confirm": "Se borrarán todos los marcadores. Las notas no se ven afectadas.",
+    "rub_hizb_start": "Hizb {}",
+    "rub_quarter": "Un cuarto del hizb {}",
+    "rub_half": "Mitad del hizb {}",
+    "rub_three_quarters": "Tres cuartos del hizb {}",
+    "rub_juz": "Juz {}",
+    "rub_juz_start": "Inicio del juz {}",
+    "rub_of_all": "Cuarto {} de 240",
+    "share_title": "Compartir la aleya",
+    "share_ayah_only": "Solo la aleya",
+    "share_with_translation": "La aleya con su traducción",
+    "share_with_tafseer": "La aleya con su tafsir",
+    "share_with_irab": "La aleya con su i‘rab (análisis gramatical)",
+    "share_as_image": "Compartir como imagen",
+    "share_as_text": "Compartir como texto",
+    "share_needs_pack": "Descarga primero el paquete de ciencias de la aleya",
+    "share_no_translation": "La traducción elegida no está descargada",
+    "share_no_irab": "Aún no hay i‘rab separado para esta aleya",
+    "share_too_long": "El texto es largo ({} imágenes). Compártelo como texto.",
+    "share_images_count": "Imágenes: {}",
+    "share_style": "Marco",
+    "share_style_night": "Noche",
+    "share_style_emerald": "Esmeralda",
+    "share_style_parchment": "Pergamino"
   },
   "library": {
     "title": "Biblioteca",
@@ -1237,7 +1260,12 @@
     "wird_done": "Porción {} completada",
     "no_wirds": "Aún no hay porciones",
     "continue_wird": "Seguir leyendo",
-    "start_wird": "Empezar el wird"
+    "start_wird": "Empezar el wird",
+    "manage": "Gestionar",
+    "reminders": "Recordatorios diarios",
+    "reminders_hint": "Toca una hora para cambiarla y añade tantas horas como quieras.",
+    "reminder_add": "Añadir recordatorio",
+    "reminder_remove": "Quitar recordatorio"
   },
   "selected_surahs": {
     "title": "Suras seleccionadas"

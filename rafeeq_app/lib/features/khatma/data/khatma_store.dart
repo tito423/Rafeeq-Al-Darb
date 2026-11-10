@@ -24,9 +24,9 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
         jsonEncode(state.map((k) => k.toJson()).toList())) {
       return;
     }
-    final hadReminders = state.any((k) => k.reminderTime != null);
+    final hadReminders = state.any((k) => k.reminderTimes.isNotEmpty);
     state = restored;
-    if (hadReminders || state.any((k) => k.reminderTime != null)) {
+    if (hadReminders || state.any((k) => k.reminderTimes.isNotEmpty)) {
       unawaited(rearmReminders());
     }
   }
@@ -54,11 +54,23 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
   /// No hash collisions and no persisted allocation table. Replacing the
   /// complete set also removes obsolete IDs after a plan is deleted.
   Future<void> rearmReminders() {
-    final ids = NotificationIds.khatmaIds(state.map((k) => k.id));
+    // One alarm per reminder time. Keys are «khatma id#position», so the
+    // IDs stay collision-free however many times a khatma carries.
+    final keys = [
+      for (final k in state)
+        if (!k.isCompleted)
+          for (var i = 0; i < k.reminderTimes.length; i++) '${k.id}#$i',
+    ];
+    final ids = NotificationIds.khatmaIds(keys);
     return KhatmaReminderService.instance.replaceAll([
       for (final k in state)
-        if (!k.isCompleted && k.reminderTime != null)
-          (ids[k.id]!, k.reminderTime!.hour, k.reminderTime!.minute),
+        if (!k.isCompleted)
+          for (var i = 0; i < k.reminderTimes.length; i++)
+            (
+              ids['${k.id}#$i']!,
+              k.reminderTimes[i].hour,
+              k.reminderTimes[i].minute,
+            ),
     ]);
   }
 
@@ -82,7 +94,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     DateTime? targetDate,
     int? dailyAmount,
     int startPage = 1,
-    TimeOfDay? reminderTime,
+    List<TimeOfDay> reminderTimes = const [],
   }) async {
     final khatma = Khatma(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
@@ -91,11 +103,11 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
       targetDate: targetDate,
       dailyAmount: dailyAmount,
       startPage: startPage,
-      reminderTime: reminderTime,
+      reminderTimes: Khatma.sortedTimes(reminderTimes),
     );
     state = [...state, khatma];
     await _persist();
-    if (state.any((k) => k.reminderTime != null)) await rearmReminders();
+    if (state.any((k) => k.reminderTimes.isNotEmpty)) await rearmReminders();
     return khatma;
   }
 
@@ -160,7 +172,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     await _replace(updated);
     // completeWird() cancels the reminder on completion; undo that too if
     // the wird being undone was the one that completed this khatma.
-    if (base.isCompleted && updated.reminderTime != null) {
+    if (base.isCompleted && updated.reminderTimes.isNotEmpty) {
       await rearmReminders();
     }
     return updated;
@@ -187,7 +199,7 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
     required KhatmaMode mode,
     required int dailyAmount,
     required int reachedPage,
-    TimeOfDay? reminderTime,
+    List<TimeOfDay> reminderTimes = const [],
   }) async {
     final base = _current(khatmaId);
     if (base == null) return null;
@@ -196,16 +208,16 @@ class KhatmaStore extends StateNotifier<List<Khatma>> {
       mode: mode,
       dailyAmount: dailyAmount,
       reachedPage: reachedPage,
-      reminderTime: reminderTime,
+      reminderTimes: reminderTimes,
     );
     await _replace(updated);
     await rearmReminders();
     return updated;
   }
 
-  Future<void> setReminder(Khatma khatma, TimeOfDay? time) async {
+  Future<void> setReminders(Khatma khatma, List<TimeOfDay> times) async {
     final updated = (_current(khatma.id) ?? khatma).copyWith(
-      reminderTime: time,
+      reminderTimes: times,
     );
     await _replace(updated);
     await rearmReminders();

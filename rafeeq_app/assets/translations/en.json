@@ -432,7 +432,30 @@
     "bm_sort_mushaf": "Mushaf order",
     "bm_filter_all": "All",
     "bm_clear_all": "Delete all bookmarks",
-    "bm_clear_confirm": "Every bookmark will be deleted. Notes are not affected."
+    "bm_clear_confirm": "Every bookmark will be deleted. Notes are not affected.",
+    "rub_hizb_start": "Hizb {}",
+    "rub_quarter": "A quarter of hizb {}",
+    "rub_half": "Half of hizb {}",
+    "rub_three_quarters": "Three quarters of hizb {}",
+    "rub_juz": "Juz {}",
+    "rub_juz_start": "Start of juz {}",
+    "rub_of_all": "Quarter {} of 240",
+    "share_title": "Share the ayah",
+    "share_ayah_only": "The ayah alone",
+    "share_with_translation": "The ayah with its translation",
+    "share_with_tafseer": "The ayah with its tafsir",
+    "share_with_irab": "The ayah with its i‘rab (grammar)",
+    "share_as_image": "Share as image",
+    "share_as_text": "Share as text",
+    "share_needs_pack": "Download the ayah sciences pack first",
+    "share_no_translation": "The chosen translation is not downloaded",
+    "share_no_irab": "No separate i‘rab for this ayah yet",
+    "share_too_long": "The text is long ({} images). Share it as text.",
+    "share_images_count": "Images: {}",
+    "share_style": "Frame",
+    "share_style_night": "Night",
+    "share_style_emerald": "Emerald",
+    "share_style_parchment": "Parchment"
   },
   "library": {
     "title": "Library",
@@ -1237,7 +1260,12 @@
     "wird_done": "Portion {} completed",
     "no_wirds": "No portions yet",
     "continue_wird": "Continue reading",
-    "start_wird": "Start the wird"
+    "start_wird": "Start the wird",
+    "manage": "Manage",
+    "reminders": "Daily reminders",
+    "reminders_hint": "Tap a time to change it, and add as many times as you like.",
+    "reminder_add": "Add reminder",
+    "reminder_remove": "Remove reminder"
   },
   "selected_surahs": {
     "title": "Selected surahs"

@@ -432,7 +432,30 @@
     "bm_sort_mushaf": "Ordem do mushaf",
     "bm_filter_all": "Todos",
     "bm_clear_all": "Apagar todos os marcadores",
-    "bm_clear_confirm": "Todos os marcadores serão apagados. As notas não são afetadas."
+    "bm_clear_confirm": "Todos os marcadores serão apagados. As notas não são afetadas.",
+    "rub_hizb_start": "Hizb {}",
+    "rub_quarter": "Um quarto do hizb {}",
+    "rub_half": "Metade do hizb {}",
+    "rub_three_quarters": "Três quartos do hizb {}",
+    "rub_juz": "Juz {}",
+    "rub_juz_start": "Início do juz {}",
+    "rub_of_all": "Quarto {} de 240",
+    "share_title": "Partilhar o versículo",
+    "share_ayah_only": "Só o versículo",
+    "share_with_translation": "O versículo com a tradução",
+    "share_with_tafseer": "O versículo com o tafsir",
+    "share_with_irab": "O versículo com o i‘rab (análise gramatical)",
+    "share_as_image": "Partilhar como imagem",
+    "share_as_text": "Partilhar como texto",
+    "share_needs_pack": "Transfira primeiro o pacote de ciências do versículo",
+    "share_no_translation": "A tradução escolhida não foi transferida",
+    "share_no_irab": "Ainda não há i‘rab separado para este versículo",
+    "share_too_long": "O texto é longo ({} imagens). Partilhe-o como texto.",
+    "share_images_count": "Imagens: {}",
+    "share_style": "Moldura",
+    "share_style_night": "Noite",
+    "share_style_emerald": "Esmeralda",
+    "share_style_parchment": "Pergaminho"
   },
   "library": {
     "title": "Biblioteca",
@@ -1237,7 +1260,12 @@
     "wird_done": "Porção {} concluída",
     "no_wirds": "Ainda não há porções",
     "continue_wird": "Continuar a leitura",
-    "start_wird": "Começar o wird"
+    "start_wird": "Começar o wird",
+    "manage": "Gerir",
+    "reminders": "Lembretes diários",
+    "reminders_hint": "Toque numa hora para a alterar e adicione quantas horas quiser.",
+    "reminder_add": "Adicionar lembrete",
+    "reminder_remove": "Remover lembrete"
   },
   "selected_surahs": {
     "title": "Suratas selecionadas"

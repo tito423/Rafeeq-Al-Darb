@@ -15,6 +15,8 @@ import '../../data/mushaf_edition.dart';
 import '../../data/mushaf_page_service.dart';
 import '../../data/mushaf_paper_provider.dart';
 import '../../data/quran_zoom_provider.dart';
+import '../../data/rub_el_hizb.dart';
+import 'mushaf/rub_bubble.dart';
 
 /// One mushaf page: the authentic KFQC page as vector art, with the real ayah
 /// polygons layered on top for tap and highlight.
@@ -164,6 +166,8 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   void initState() {
     super.initState();
     _zoomState = ref.read(quranPageZoomedProvider.notifier);
+    // Start loading the quarter index; a tap on «۞» reads it.
+    ref.read(rubElHizbIndexProvider);
     WidgetsBinding.instance.addPostFrameCallback((_) => _revealHighlight());
     _transform.addListener(_onTransform);
     if (widget.edition.isRaster) {
@@ -411,7 +415,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
           aspect: _pageAspect,
           build: (w, h) => GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: _tap,
+            onTapUp: (d) => _tapAt(d, w, h),
             onLongPressStart: (d) => _handleLongPress(d.localPosition, w, h),
             child: Stack(
               fit: StackFit.expand,
@@ -535,7 +539,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
             aspect: fit.pageAspect,
             build: (w, h) => GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: _tap,
+              onTapUp: (d) => _tapAt(d, w, h),
               onLongPressStart: (d) => _handleLongPress(d.localPosition, w, h),
               child: Stack(
                 fit: StackFit.expand,
@@ -590,6 +594,50 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         );
       },
     );
+  }
+
+  /// A tap on a page that has ayah regions: on a printed «۞» it says which
+  /// quarter opens there, anywhere else it is the page's own tap.
+  void _tapAt(TapUpDetails d, double width, double height) {
+    final rub = _rubMarkAt(d.localPosition, width, height);
+    if (rub != null) {
+      showRubBubble(context, rub, d.globalPosition);
+      return;
+    }
+    _tap();
+  }
+
+  /// The mark sits at the very start of its ayah: the right-hand end of the
+  /// ayah's first printed line, about one line-height wide.
+  RubInfo? _rubMarkAt(Offset local, double width, double height) {
+    if (width <= 0 || height <= 0) return null;
+    final index = ref.read(rubElHizbIndexProvider).valueOrNull;
+    if (index == null) return null;
+    final nx = local.dx / width;
+    final ny = local.dy / height;
+    final fit = widget.edition.fitForPage(widget.page);
+    final p = fit == null ? Offset(nx, ny) : fit.invert(nx, ny);
+    for (final region in _coords.regionsForPage(
+      widget.edition.polygonsAsset,
+      widget.page,
+    )) {
+      final info = index.markAt(region.surah, region.ayah);
+      if (info == null) continue;
+      Rect? first;
+      for (final r in region.highlightRects) {
+        if (first == null || r.top < first.top) first = r;
+      }
+      if (first == null) continue;
+      final markWidth = first.height * height / width * 1.25;
+      final zone = Rect.fromLTRB(
+        first.right - markWidth,
+        first.top - first.height * 0.25,
+        first.right + markWidth * 0.2,
+        first.bottom + first.height * 0.25,
+      );
+      if (zone.contains(p)) return info;
+    }
+    return null;
   }
 
   void _handleLongPress(Offset local, double width, double height) {

@@ -10,8 +10,8 @@ import '../../../core/widgets/arabic_text.dart';
 import '../../../core/widgets/calm_card_ground.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
-import '../data/ayah_opening.dart';
 import '../../quran/data/quran_last_read.dart';
+import '../data/ayah_opening.dart';
 import '../data/khatma_range.dart';
 import '../data/khatma_store.dart';
 import 'khatma_screen.dart';
@@ -19,8 +19,11 @@ import 'khatma_wirds_sheet.dart';
 
 /// Home, top card (P2‑11) — shows the nearest active khatma's progress ring
 /// + today's portion + "اقرأ اليوم", or an honest "ابدأ ختمة" invitation
-/// when none exists yet. Tapping the card (not the button) opens the full
-/// manager (`KhatmaScreen`) — create/edit/history live there.
+/// when none exists yet. With an active khatma a tap on the card opens the
+/// mushaf at the wird; «إدارة الختمة» in the card's header opens the full
+/// manager (`KhatmaScreen`) — edit, reminders, a new khatma, delete and
+/// history live there. (4.0.0 moved the card's tap to the mushaf and left
+/// the manager with no way in; the owner could not find it, 2026-11-10.)
 class KhatmaCard extends ConsumerWidget {
   const KhatmaCard({super.key});
 
@@ -132,6 +135,8 @@ class _ActiveKhatmaRow extends ConsumerWidget {
               child: Text(
                 'khatma.title'.tr(),
                 style: theme.textTheme.titleMedium,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             if (khatma.streak > 1)
@@ -146,6 +151,26 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                   ),
                 ],
               ),
+            const SizedBox(width: 4),
+            Flexible(
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const KhatmaScreen(),
+                  ),
+                ),
+                icon: const Icon(Icons.tune_rounded, size: 18),
+                label: Text(
+                  'khatma.manage'.tr(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 10),

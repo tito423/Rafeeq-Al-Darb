@@ -53,7 +53,7 @@ final _splitsProvider = FutureProvider<Map<String, List<int>>>((ref) async {
 });
 
 /// "surah:ayah" -> [word, i'rab, [[book, text], ...]] for every word.
-final _ownIrabProvider = FutureProvider<Map<String, List<OwnIrabWord>>>((
+final ownIrabProvider = FutureProvider<Map<String, List<OwnIrabWord>>>((
   ref,
 ) async {
   final raw = await rootBundle.loadString('assets/data/own_irab.json');
@@ -101,7 +101,7 @@ class IrabTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final names = ref.watch(_surahNamesProvider).value ?? const <int, String>{};
     final splits = ref.watch(_splitsProvider);
-    final own = ref.watch(_ownIrabProvider);
+    final own = ref.watch(ownIrabProvider);
     if (splits.isLoading || own.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }

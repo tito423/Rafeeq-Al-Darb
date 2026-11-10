@@ -432,7 +432,30 @@
     "bm_sort_mushaf": "Ordre du mushaf",
     "bm_filter_all": "Tous",
     "bm_clear_all": "Supprimer tous les signets",
-    "bm_clear_confirm": "Tous les signets seront supprimés. Les notes ne sont pas touchées."
+    "bm_clear_confirm": "Tous les signets seront supprimés. Les notes ne sont pas touchées.",
+    "rub_hizb_start": "Hizb {}",
+    "rub_quarter": "Quart du hizb {}",
+    "rub_half": "Moitié du hizb {}",
+    "rub_three_quarters": "Trois quarts du hizb {}",
+    "rub_juz": "Juz {}",
+    "rub_juz_start": "Début du juz {}",
+    "rub_of_all": "Quart {} sur 240",
+    "share_title": "Partager le verset",
+    "share_ayah_only": "Le verset seul",
+    "share_with_translation": "Le verset avec sa traduction",
+    "share_with_tafseer": "Le verset avec son tafsir",
+    "share_with_irab": "Le verset avec son i‘rab (analyse grammaticale)",
+    "share_as_image": "Partager en image",
+    "share_as_text": "Partager en texte",
+    "share_needs_pack": "Téléchargez d’abord le pack des sciences du verset",
+    "share_no_translation": "La traduction choisie n’est pas téléchargée",
+    "share_no_irab": "Pas encore d’i‘rab séparé pour ce verset",
+    "share_too_long": "Le texte est long ({} images). Partagez-le en texte.",
+    "share_images_count": "Images : {}",
+    "share_style": "Cadre",
+    "share_style_night": "Nuit",
+    "share_style_emerald": "Émeraude",
+    "share_style_parchment": "Parchemin"
   },
   "library": {
     "title": "Bibliothèque",
@@ -1237,7 +1260,12 @@
     "wird_done": "Portion {} terminée",
     "no_wirds": "Aucune portion pour l'instant",
     "continue_wird": "Continuer la lecture",
-    "start_wird": "Commencer le wird"
+    "start_wird": "Commencer le wird",
+    "manage": "Gérer",
+    "reminders": "Rappels quotidiens",
+    "reminders_hint": "Touchez une heure pour la modifier et ajoutez autant d’heures que vous voulez.",
+    "reminder_add": "Ajouter un rappel",
+    "reminder_remove": "Supprimer le rappel"
   },
   "selected_surahs": {
     "title": "Sourates choisies"
