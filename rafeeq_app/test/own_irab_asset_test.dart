@@ -28,4 +28,41 @@ void main() {
     }
     expect(words, greaterThanOrEqualTo(993));
   });
+
+  // The grammar labels a reader of the other six languages sees under each
+  // word (scripts/own_irab/irab_tags.py): every role and case the asset
+  // uses must be named in all seven files, or it would show as a raw key.
+  test('every i\'rab grammar label is translated in all seven languages', () {
+    final own = jsonDecode(File('assets/data/own_irab.json').readAsStringSync())
+        as Map<String, dynamic>;
+    final roles = <String>{}, cases = <String>{'positional'};
+    var tagged = 0, total = 0;
+    for (final v in own.values) {
+      for (final w in (v as List).cast<List<dynamic>>()) {
+        total++;
+        expect(w.length, 4, reason: '${w[0]}: no tag list');
+        final tags = (w[3] as List).cast<String>();
+        if (tags.isNotEmpty) tagged++;
+        for (final t in tags) {
+          final p = t.split(':');
+          roles.add(p[0]);
+          if (p.length > 1) cases.add(p[1].replaceAll('~', ''));
+        }
+      }
+    }
+    // Measured 2026-11-12: 75,958 of 77,430 words carry a label.
+    expect(tagged / total, greaterThan(0.95));
+    for (final lang in ['ar', 'en', 'fr', 'es', 'pt', 'ru', 'ur']) {
+      final d = jsonDecode(File('assets/translations/$lang.json')
+          .readAsStringSync()) as Map<String, dynamic>;
+      final tag = d['irab_tag'] as Map<String, dynamic>;
+      final cas = d['irab_case'] as Map<String, dynamic>;
+      for (final r in roles) {
+        expect((tag[r] as String?)?.trim(), isNotEmpty, reason: '$lang $r');
+      }
+      for (final c in cases) {
+        expect((cas[c] as String?)?.trim(), isNotEmpty, reason: '$lang $c');
+      }
+    }
+  });
 }

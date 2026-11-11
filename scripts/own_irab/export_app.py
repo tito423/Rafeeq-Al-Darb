@@ -1,6 +1,7 @@
 """Exports the hand-checked surahs (NNN.json here) to the app asset
 rafeeq_app/assets/data/own_irab.json: {"surah:ayah": [[word, irab,
-[[book, text], ...]], ...]}.
+[[book, text], ...], [tag, ...]], ...]}; tags are
+read from the Arabic text by irab_tags.py.
 
 Only these files go to the app - never gen/ (gen_masaq.py output): the gate
 (gate.py, 2026-10-06) found errors carried from MASAQ's own data in words it
@@ -10,6 +11,8 @@ A `nosrc` word (no book found) is left out.
     py -3 scripts/own_irab/export_app.py
 """
 import glob, json, os, subprocess, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from irab_tags import tags  # grammar labels for the other six languages
 
 H = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(H, '..', '..', 'rafeeq_app', 'assets', 'data', 'own_irab.json')
@@ -25,7 +28,7 @@ for f in sorted(glob.glob(os.path.join(H, '[0-9][0-9][0-9].json'))):
         alts = [[x['book'], x['text']] for x in w.get('alts', [])]
         # The tab sets «…» in gold as Qur'an words; a book's title is not one.
         irab = w['irab'].replace('«الجدول»', 'الجدول')
-        out.setdefault(f"{d['surah']}:{w['a']}", []).append([w['w'], irab, alts])
+        out.setdefault(f"{d['surah']}:{w['a']}", []).append([w['w'], irab, alts, tags(w['irab'])])
         n += 1
 json.dump(out, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 print(f'{n} words, {len(out)} ayahs, {len({k.split(":")[0] for k in out})} surahs -> {os.path.getsize(OUT):,} B')

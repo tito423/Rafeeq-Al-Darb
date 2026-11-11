@@ -24,19 +24,28 @@
 /// word by word against al-Da'as by hand (assets/data/own_irab.json, from
 /// scripts/own_irab/export_app.py). A second view the book gives is shown
 /// under the word, named. Machine-generated text never reaches this asset.
+///
+/// Above the words, a note says plainly what this i'rab is (prepared by the
+/// app against named books, not a critical edition) with a way to report an
+/// error. For a reader in the other six languages each word also carries
+/// short grammar labels (owner, 2026-11-12, §1.7c), READ from the Arabic
+/// text by scripts/own_irab/irab_tags.py - the Arabic stays the reference.
 library;
 
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/config/app_config.dart';
 import '../../../../../core/db/models.dart';
 import '../../../../../core/db/quran_repository.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/arabic_normalize.dart';
 import '../../../../../core/utils/digits.dart';
+import '../../../../../core/utils/external_link.dart';
 import 'sciences_common.dart';
 
 final _surahNamesProvider = FutureProvider<Map<int, String>>((ref) async {
@@ -52,7 +61,8 @@ final _splitsProvider = FutureProvider<Map<String, List<int>>>((ref) async {
   );
 });
 
-/// "surah:ayah" -> [word, i'rab, [[book, text], ...]] for every word.
+/// "surah:ayah" -> [word, i'rab, [[book, text], ...], [tag, ...]] for
+/// every word.
 final ownIrabProvider = FutureProvider<Map<String, List<OwnIrabWord>>>((
   ref,
 ) async {
@@ -67,6 +77,9 @@ final ownIrabProvider = FutureProvider<Map<String, List<OwnIrabWord>>>((
             for (final a in (w[2] as List).cast<List<dynamic>>())
               (a[0] as String, a[1] as String),
           ],
+          tags: w.length > 3
+              ? (w[3] as List).cast<String>()
+              : const <String>[],
         ),
     ]),
   );
@@ -76,10 +89,15 @@ class OwnIrabWord {
   final String word;
   final String irab;
   final List<(String, String)> alts;
+
+  /// `role` or `role:case` (`~` after the case: by position), e.g.
+  /// `obj:acc`, `subj:nom~`; translated under `irab_tag.*` / `irab_case.*`.
+  final List<String> tags;
   const OwnIrabWord({
     required this.word,
     required this.irab,
     required this.alts,
+    this.tags = const <String>[],
   });
 }
 
@@ -109,9 +127,11 @@ class IrabTab extends ConsumerWidget {
     if (words != null && words.isNotEmpty) {
       return ListView.separated(
         padding: const EdgeInsets.fromLTRB(14, 10, 14, 24),
-        itemCount: words.length,
-        separatorBuilder: (_, _) => const Divider(height: 18),
-        itemBuilder: (context, i) => _OwnWord(words[i]),
+        itemCount: words.length + 1,
+        separatorBuilder: (_, i) =>
+            i == 0 ? const SizedBox(height: 12) : const Divider(height: 18),
+        itemBuilder: (context, i) =>
+            i == 0 ? _OwnIrabNote(ayah: ayah) : _OwnWord(words[i - 1]),
       );
     }
     final book = future;
@@ -267,6 +287,76 @@ class _ReferenceBlock extends StatelessWidget {
   }
 }
 
+/// What this i'rab is, in the reader's language, and a way to report an
+/// error. The report opens a GitHub issue on the app's public repository
+/// carrying only the ayah number and an empty form - nothing about the reader.
+class _OwnIrabNote extends StatelessWidget {
+  final Ayah ayah;
+  const _OwnIrabNote({required this.ayah});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final small = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+      height: 1.6,
+    );
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(trn('quran.irab_own_note'), style: small),
+          if (uiLanguageCode != 'ar') ...[
+            const SizedBox(height: 4),
+            Text(trn('quran.irab_tags_hint'), style: small),
+          ],
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Tooltip(
+              message: trn('quran.irab_report_hint'),
+              child: TextButton.icon(
+                onPressed: () => openExternalLink(
+                  irabReportUrl(ayah.surahId, ayah.ayahNumber),
+                ),
+                icon: const Icon(Icons.flag_outlined, size: 18),
+                label: Text(trn('quran.irab_report')),
+                style: TextButton.styleFrom(foregroundColor: AppColors.gold),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The prefilled GitHub issue for an i'rab error in [surah]:[ayah].
+String irabReportUrl(int surah, int ayah) => Uri.parse(AppConfig.irabReportUrl)
+    .replace(
+      queryParameters: {
+        'title': 'quran.irab_report_title'.tr(args: ['$surah', '$ayah']),
+        'body': 'quran.irab_report_body'.tr(),
+      },
+    )
+    .toString();
+
+/// `subj:nom~` -> «Subject (fāʿil) · nominative (by position)».
+String irabTagLabel(String tag) {
+  final parts = tag.split(':');
+  final role = trn('irab_tag.${parts[0]}');
+  if (parts.length < 2) return role;
+  final positional = parts[1].endsWith('~');
+  final c = trn('irab_case.${parts[1].replaceAll('~', '')}');
+  return positional
+      ? '$role · $c (${trn('irab_case.positional')})'
+      : '$role · $c';
+}
+
 /// One word of our own i'rab: the mushaf word in gold, its i'rab, and any
 /// second view a book gives, named.
 class _OwnWord extends StatelessWidget {
@@ -291,6 +381,35 @@ class _OwnWord extends StatelessWidget {
             height: 1.8,
           ),
         ),
+        // The full Arabic text is for every reader; the short labels only
+        // for a reader of the other six languages.
+        if (uiLanguageCode != 'ar' && w.tags.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                for (final t in w.tags)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: AppColors.gold.withValues(alpha: 0.45),
+                      ),
+                    ),
+                    child: Text(
+                      irabTagLabel(t),
+                      style: theme.textTheme.labelSmall,
+                    ),
+                  ),
+              ],
+            ),
+          ),
         _BookText(w.irab),
         for (final (book, text) in w.alts)
           Container(

@@ -49,6 +49,14 @@ final sourceGroups = <(String, List<SourceEntry>)>[
         'https://tafsir.app',
         'about.src_irab_check',
       ),
+      // The arbiter of the own i'rab's disputed words (scripts/own_irab/
+      // SAMIN_REVIEW.md, 2026-11-12), read through tafsir.app's
+      // src=aldur-almasoon.
+      const SourceEntry(
+        'الدر المصون — السمين الحلبي (tafsir.app)',
+        'https://tafsir.app/aldur-almasoon/1/1',
+        'about.src_irab_samin',
+      ),
       const SourceEntry('quran.com', 'https://quran.com', 'about.src_qurancom'),
       const SourceEntry(
         'api.alquran.cloud',

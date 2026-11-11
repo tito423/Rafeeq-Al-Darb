@@ -145,6 +145,12 @@ abstract final class AppConfig {
     'RAFEEQ_SUPPORT_URL',
   );
 
+  /// Where «أبلغ عن خطأ في الإعراب» goes: a new issue on the app's own public
+  /// repository (Issues enabled, checked 2026-11-12). The app adds only the
+  /// ayah number and an empty form; GitHub asks the reader to sign in.
+  static const String irabReportUrl =
+      'https://github.com/tito423/Rafeeq-Al-Darb/issues/new';
+
   /// The privacy policy, hosted on the same bucket as the content.
   ///
   /// Google Play asks for a URL it can open on its own, and this is also the
