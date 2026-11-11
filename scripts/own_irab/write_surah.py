@@ -25,16 +25,44 @@ def vowel(w, text):
     return text
 
 
+KANA = ('كان', 'يكون', 'تكون', 'كانت', 'يكن', 'تكن', 'ليس', 'أصبح', 'صار', 'ظل')
+# Certain errors found by audit_vowels.py (2026-11-11): the case sign named
+# contradicted the vowel written in the mushaf. (surah, ayah, token): (old, new)
+FIXES = {
+    (24, 26, 'وَٱلۡخَبِيثُونَ'): ('وعلامة رفعه الضمة الظاهرة', 'وعلامة رفعه الواو لأنه جمع مذكر سالم'),
+    (24, 26, 'وَٱلطَّيِّبُونَ'): ('وعلامة رفعه الضمة الظاهرة', 'وعلامة رفعه الواو لأنه جمع مذكر سالم'),
+    (67, 16, 'ٱلۡأَرۡضَ'): ('فاعل مرفوع وعلامة رفعه الضمة الظاهرة', 'مفعول به منصوب وعلامة نصبه الفتحة الظاهرة'),
+}
+
+
+def certain(surah, a, w, text):
+    # Ism kana and its sisters is marfu', always.
+    for k in KANA:
+        text = text.replace(f'اسم «{k}» منصوب وعلامة نصبه الفتحة الظاهرة', f'اسم «{k}» مرفوع وعلامة رفعه الضمة الظاهرة')
+    # A mansub sign must be the fatha.
+    text = text.replace('منصوب بـ«أن» وعلامة نصبه الضمة الظاهرة', 'منصوب بـ«أن» وعلامة نصبه الفتحة الظاهرة')
+    # A final alif carries no visible kasra.
+    if ''.join(c for c in w if 'ء' <= c <= 'ي' or c == 'ٱ').endswith('دنيا'):
+        text = text.replace('وعلامة جره الكسرة الظاهرة', 'وعلامة جره الكسرة المقدرة على الألف للتعذر')
+    # A sound masculine plural in -ūna is raised by the waw.
+    if w.rstrip('ۖۗۘۙۚۛۜ').endswith('ونَ') and 'لأنه جمع مذكر سالم' not in text and not text.startswith('فعل'):
+        text = text.replace('مرفوع وعلامة رفعه الضمة الظاهرة', 'مرفوع وعلامة رفعه الواو لأنه جمع مذكر سالم')
+    old, new = FIXES.get((surah, a, w), (None, None))
+    if old and old in text:
+        text = text.replace(old, new)
+    return text
+
+
 def write(surah, entries, status):
     toks = tokens(surah)
     assert len(toks) == len(entries), (surah, len(toks), len(entries))
     words = []
     for (a, w), e in zip(toks, entries):
         if isinstance(e, dict):  # {'text', 'check', 'alts'}: a second view, named
-            words.append({'a': a, 'w': w, 'irab': vowel(w, x(e['text'])), 'check': e['check'], 'alts': e['alts']})
+            words.append({'a': a, 'w': w, 'irab': certain(surah, a, w, vowel(w, x(e['text']))), 'check': e['check'], 'alts': e['alts']})
             continue
         text, check = (e, 'agree') if isinstance(e, str) else e
-        words.append({'a': a, 'w': w, 'irab': vowel(w, x(text)), 'check': check})
+        words.append({'a': a, 'w': w, 'irab': certain(surah, a, w, vowel(w, x(text))), 'check': check})
     json.dump({'surah': surah, 'status': status, 'words': words},
               open(os.path.join(H, f'{surah:03d}.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(f'{surah:03d}', len(words), 'words')
