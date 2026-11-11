@@ -15,10 +15,26 @@ SRC = {'aljadwal': 'الجدول (صافي)', 'iraab-aldarweesh': 'درويش'}
 def get(src, s, a):
     os.makedirs(CACHE, exist_ok=True)
     f = os.path.join(CACHE, f'{src}_{s}_{a}.json')
-    if not os.path.exists(f):
+    if os.path.exists(f):
+        try:
+            return json.load(open(f, encoding='utf-8')).get('data', '')
+        except ValueError:
+            pass  # a write cut off mid-way (a stopped prefetch): fetch again
+    if True:
         req = urllib.request.Request(f'https://tafsir.app/get.php?src={src}&s={s}&a={a}',
                                      headers={'User-Agent': 'Mozilla/5.0 (rafeeq-al-darb i\'rab check)'})
-        open(f, 'wb').write(urllib.request.urlopen(req, timeout=30).read())
+        import time
+        for k in range(6):  # tafsir.app resets connections under load (2026-11-12)
+            try:
+                body = urllib.request.urlopen(req, timeout=30).read()
+                break
+            except OSError:
+                if k == 5:
+                    raise
+                time.sleep(10 * (k + 1))
+        json.loads(body)  # never cache a body that is not JSON
+        open(f + '.part', 'wb').write(body)
+        os.replace(f + '.part', f)
     return json.load(open(f, encoding='utf-8')).get('data', '')
 
 

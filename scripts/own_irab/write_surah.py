@@ -3,7 +3,7 @@ mushaf token (the same tokens check.py compares against). Every entry is
 read against al-Da'as before it is written (show.py); `check` defaults to
 «agree», an entry may be a (text, check) pair.
     from write_surah import write; write(97, [...], status)"""
-import json, os, sqlite3
+import json, os, re, sqlite3
 from irab_dsl import x  # short codes -> house wording (irab_dsl.py)
 H = os.path.dirname(os.path.abspath(__file__))
 
@@ -34,6 +34,13 @@ FIXES = {
     (67, 16, 'ٱلۡأَرۡضَ'): ('فاعل مرفوع وعلامة رفعه الضمة الظاهرة', 'مفعول به منصوب وعلامة نصبه الفتحة الظاهرة'),
 }
 
+# «ولقد» parsed as an oath waw (al-Da'as's shorthand) where no sworn-by noun
+# follows: al-Jadwal names the waw and an implied oath for the lam (SAMIN
+# review 2026-11-12; the same form 53:13-54:51 already use). (surah, ayah): waw kind
+LAQAD = {(39, 65): 'استئناف', (44, 17): 'استئناف', (45, 16): 'استئناف', (46, 26): 'عطف',
+         (46, 27): 'عطف', (67, 18): 'استئناف', (81, 23): 'عطف'}
+LAQAD_OLD = re.compile(r'^الواو حرف قسم وجر، (?:والمقسم به محذوف، )?واللام واقعة في جواب القسم')
+
 
 def certain(surah, a, w, text):
     # Ism kana and its sisters is marfu', always.
@@ -47,6 +54,8 @@ def certain(surah, a, w, text):
     # A sound masculine plural in -ūna is raised by the waw.
     if w.rstrip('ۖۗۘۙۚۛۜ').endswith('ونَ') and 'لأنه جمع مذكر سالم' not in text and not text.startswith('فعل'):
         text = text.replace('مرفوع وعلامة رفعه الضمة الظاهرة', 'مرفوع وعلامة رفعه الواو لأنه جمع مذكر سالم')
+    if (surah, a) in LAQAD and 'لَقَد' in w:
+        text = LAQAD_OLD.sub(f'الواو حرف {LAQAD[(surah, a)]}، واللام واقعة في جواب قسم مقدر', text)
     old, new = FIXES.get((surah, a, w), (None, None))
     if old and old in text:
         text = text.replace(old, new)

@@ -1,7 +1,7 @@
 # Classifier prompt for one batch (SAMIN_REVIEW.md step 3)
 
 You are an expert in Qur'anic i'rab. Read the batch file named in your task
-(`scripts/own_irab/batches/bNNN.txt`). Each `###` packet is ONE word, shown in
+(`scripts/own_irab/pk/bNNN.txt`). Each `###` packet is ONE word, shown in
 [brackets] inside its ayah, with:
 - `OURS`: our i'rab of that word.
 - `ALT <book>`: another named book's different view (may be absent).
@@ -24,7 +24,7 @@ Rules: judge only from the packet text and sound grammar; never invent a source.
 A difference only in the mahall of a clause, or in what a jar-majrur attaches to,
 is NOT `OURS_WRONG`. Do not rewrite anything.
 
-Write your answer with the Write tool to `scripts/own_irab/batches/out_bNNN.tsv`,
+Write your answer with the Write tool to `scripts/own_irab/pk/out_bNNN.tsv`,
 one line per packet, tab-separated, no header:
 `id<TAB>verdict<TAB>evidence`
 where evidence is at most 20 words quoted from the packet (book: «quote»), or `-`.

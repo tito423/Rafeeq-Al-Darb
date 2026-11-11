@@ -78,3 +78,23 @@ inside `agree` words. Order of spending therefore:
    random OURS verdicts first batch; >1 wrong -> Sonnet does the classifying for fuller + flags only.
 5. Sonnet: decide only on ALT/OTHER/UNCLEAR. Opus (this session) does not read packets; it only runs
    scripts and reviews the final change table.
+
+## Result (2026-11-12, finished)
+Measured from the out_*.tsv files in pk/ and pkr/ (committed).
+- Step 0 free audits: audit_rules 14 flags, all false positives; audit_repeats 46 role conflicts -> reviewed below.
+- fuller + repeat (581): 142 confirmed free (al-Jadwal/Darwish name the same role after the word);
+  439 by Sonnet: 260 OURS_OK, 161 NO_SOURCE, 16 UNCLEAR, 2 OURS_WRONG -> both read by hand, both recorded khilaf. 0 changes.
+- role alts, priority (ours parted from al-Da'as, or both other books part from ours): 1,158 words;
+  225 confirmed free; 933 classified (r000-r007 Sonnet, r008-r031 Haiku). Sonnet judged every
+  OURS_WRONG/UNCLEAR (208) + 50 random Haiku OURS_OK (audit): 4 CHANGE proposals, 0 from the audit
+  (Haiku's OK verdicts held on all 50).
+  - 4:119 «فَلَيُبَتِّكُنَّ» REJECTED: the mushaf has the lam with fatha; lam al-amr is never maftuha, so
+    al-Da'as/al-Jadwal (lam al-amr) contradict the mushaf vowel and ours (jawab qasam) stays.
+  - 18:63 «فَإِنِّي», 20:85 «فَإِنَّا» REJECTED: ours is al-Da'as verbatim; the other views are shown.
+  - 39:65 «وَلَقَدۡ» ACCEPTED, and the same slip found by grep in 6 more: 44:17, 45:16, 46:26, 46:27,
+    67:18, 81:23. al-Da'as calls the waw «حرف قسم وجر» with no muqsam bih; al-Jadwal: «(الواو)
+    استئنافية/عاطفة (اللام) لام القسم لقسم مقدر». Ours now follows al-Jadwal (the form 53:13-54:51
+    already used); al-Da'as is shown under the word, quoted. Rule in write_surah.LAQAD.
+- Not reviewed: the 2,339 role alts where only ONE other book differs from ours = al-Da'as (lowest risk),
+  and the attach/clause-only alts (both views shown).
+- Quota: weekly 53% -> see TASK_FOLLOWUP for the closing reading.
