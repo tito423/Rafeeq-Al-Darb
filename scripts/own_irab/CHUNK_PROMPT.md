@@ -29,7 +29,7 @@ py -3 sheet.py S A B --work > <scratch>/sheet_A_B.txt      (al-Da'as uncut + al-
 py -3 sheet.py S A B --only-d > <scratch>/d_A_B.txt        (Darwish, only when needed)
 ```
 
-Take 4-8 ayahs at a time. The first lines list each ayah's mushaf words
+Take 4-8 ayahs at a time. Read Darwish (`--only-d`) only for the ayahs where al-Jadwal parts from al-Da'as, never for the whole range. The first lines list each ayah's mushaf words
 `[1]word [2]word ...`: one entry per listed word, in that order, no more and
 no fewer. `DAAS` = al-Da'as, `J` = al-Jadwal (Mahmud Safi), `D` = Darwish.
 A DAAS section may span several ayahs and is printed whole.
@@ -108,6 +108,20 @@ its role (حال against معطوفة, خبر against صفة ...). It is not for
   (`hk_jb:X`, `hk_md`, `hk_jbb`).
 - Add `ayd` («والعائد محذوف») on the صلة verb when the returning pronoun is
   dropped; do not add «مقدم / مؤخر» to an attached object pronoun.
+- Every مضاف gets `mud` («وهو مضاف») after its sign, also a sound plural
+  whose ن dropped (`hn,mud`).
+- «مِنَ» / «عَنِ» / «قُلِ» before a wasl: add `hf` (فتح) / `hk` (كسر);
+  «لَكُمُ / عَلَيۡكُمُ» before a wasl: `hmd` after `mim`.
+- «على / إلى / عن / في / من» alone: `Xj:على` for على and إلى, `j` for the
+  ones ending in sukun, as the samples do.
+- أن المصدرية: on the verb, after its own clauses, «والمصدر المؤول من «أن»
+  والفعل في محل نصب مفعول به لـ«X»» (or جر / رفع ...). Never write
+  «صلة الموصول الحرفي».
+- A جملة الشرط whose اسم الشرط is مبتدأ: the clause «وجملة الشرط وجوابه في
+  محل رفع خبر المبتدأ «من»» goes on the LAST clause-bearing word of the
+  answer, not on the condition verb.
+- A dropped ياء المتكلم (وَٱخۡشَوۡنِ): «والنون للوقاية، وياء المتكلم
+  المحذوفة ضمير متصل في محل نصب مفعول به».
 - A conjoined noun: `wa,man:X` / `wa,maj:X` / `wa,mar:X` when the sign is
   the plain vowel; other signs literal («معطوف على «X» مجرور وعلامة جره
   الياء ...»).
