@@ -2,7 +2,7 @@
 description: "Rafeeq Al-Darb أ¢â‚¬â€‌ Quran, Adhkar, Prayer Times, Hadith Library (offline-first, zero mock data)"
 publish_to: 'none'
 
-version: 4.0.0+117
+version: 4.1.0+118
 
 environment:
   sdk: ^3.10.7
