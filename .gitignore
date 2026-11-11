@@ -146,3 +146,5 @@ scripts/own_irab/books_cache/
 
 # Generated Kotlin daemon sessions and crash logs.
 rafeeq_app/android/.kotlin/
+scripts/own_irab/batches/
+scripts/own_irab/samin_packets.jsonl

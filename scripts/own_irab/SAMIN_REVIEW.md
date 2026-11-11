@@ -59,3 +59,22 @@ Each list is read by Sonnet only for the flagged words.
 Never change a mushaf word. A change needs al-Samin (or Makki) to state it in so many words; where
 al-Samin lists several views, ours stays as it is if ours is one of them. Report what changed,
 with the reference, to the owner.
+
+## Budget plan (2026-11-11, owner: «١٠ في المية ماكسيميم من الكوتة»)
+Start: weekly all-models 53% (get_usage 2026-11-11 23:45 Dubai). Hard stop at 63%; read get_usage
+after every model batch and stop the model steps at 62%.
+
+Triage measured with Python before spending anything (5,876 alt texts on 5,566 words):
+`role` 3,859 · `attach` (ta'alluq only) 1,020 · `clause` (mahall of a sentence only) 892 · `zaid` 105.
+Every `alt` word already has a named book behind OURS by construction (README: ours follows al-Da'as
+unless both al-Jadwal and Darwish part from it), and the other view is shown named under it. So an
+`alt` is a recorded khilaf, not an unbacked claim. The unbacked words are the 535 `fuller`, and slips
+inside `agree` words. Order of spending therefore:
+1. Free: `audit_rules.py` (neighbour/role-case invariants) and `audit_repeats.py` over all words.
+2. Free: al-Samin prefetch (tafsir.app, polite rate) for the ayahs of: fuller words, step-1 flags,
+   `role` alts. `attach`/`clause` alts are skipped (both views stay shown; al-Samin rarely rules on them).
+3. Free: cut al-Samin per word; silent -> no model.
+4. Haiku: classify packets (fuller + flagged + role alts al-Samin speaks on). Sonnet audits 50
+   random OURS verdicts first batch; >1 wrong -> Sonnet does the classifying for fuller + flags only.
+5. Sonnet: decide only on ALT/OTHER/UNCLEAR. Opus (this session) does not read packets; it only runs
+   scripts and reviews the final change table.
