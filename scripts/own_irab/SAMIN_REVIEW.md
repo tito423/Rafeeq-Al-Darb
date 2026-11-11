@@ -19,6 +19,22 @@ Sending every disputed ayah with its al-Samin text to Sonnet (~13M tokens) would
 not acceptable. So the order is: Python first (free), then the cheapest model that can do the step,
 and Sonnet only where a change might be made.
 
+## Step 0 - free checks over ALL 77,430 words (added on review, before any model)
+The al-Samin steps only touch the disputed 8%. The «agree» 92% can still hold a writer's slip
+(the 2026-11-11 «is:كان» misuse sat in agree words). Python catches that class at no cost:
+- **Grammar invariants between neighbours** (`audit_rules.py`): the word after a jarr particle is
+  named مجرور (or the particle زائد); a verb after لم/لمّا/لا الناهية/لام الأمر is مجزوم, after
+  لن/كي/أن/لام التعليل/حتى/فاء السببية منصوب; the noun after إنّ وأخواتها named اسم «إنّ» is منصوب,
+  after كان وأخواتها named اسم «كان» is مرفوع; مضاف إليه is مجرور; a sound plural's sign is
+  الواو/الياء; a word named مبني carries no «وعلامة».
+- **Same text, same i'rab** (`audit_repeats.py`): an identical run of 3+ tokens that recurs (e.g.
+  «إِنَّ ٱللَّهَ عَلَىٰ كُلِّ شَيۡءٖ قَدِيرٞ») must carry the same i'rab, except the first word's link
+  to what precedes it. Every divergence is listed; the majority form is the candidate.
+- **Second opinion as a flagger only:** the Leeds Quranic Arabic Corpus case/POS tags. It is not
+  a source (its errors are why al-Da'as was chosen), but where it AND al-Da'as differ from ours,
+  the word goes to step 4.
+Each list is read by Sonnet only for the flagged words.
+
 ## Steps (in this order; checkpoint after each)
 1. **Python, no model.** `samin_prefetch.py`: fetch `aldur-almasoon` (and `makki`) for the 3,274
    ayahs into `books_cache/` (skip cached). Then `samin_cut.py`: for each disputed word, cut the
@@ -30,6 +46,9 @@ and Sonnet only where a change might be made.
 3. **Haiku, classify only.** For each packet (token, ours, alt, al-Samin cut) answer one of:
    `SAMIN=OURS` / `SAMIN=ALT` / `SAMIN=OTHER` / `UNCLEAR`, plus a short quote. No edits.
    Packets in batches of ~40 per subagent; the output is a TSV in the scratch folder.
+   **Haiku is checked before it is trusted:** Sonnet rereads 50 random `SAMIN=OURS` verdicts. A
+   wrong «OURS» hides an error (Sonnet never sees it again), so if more than 1 of the 50 is wrong,
+   drop Haiku and run step 3 on Sonnet for the priority groups (a)-(c).
 4. **Sonnet, decide.** Only `SAMIN=ALT`, `SAMIN=OTHER` and `UNCLEAR` go to Sonnet, which rereads
    the al-Samin cut and the three books and writes the corrected entry, citing al-Samin (book name +
    the quote). Never a change from Haiku's word alone.
