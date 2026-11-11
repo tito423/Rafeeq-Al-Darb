@@ -148,3 +148,5 @@ scripts/own_irab/books_cache/
 rafeeq_app/android/.kotlin/
 scripts/own_irab/batches/
 scripts/own_irab/samin_packets.jsonl
+scripts/own_irab/pk/b*.txt
+scripts/own_irab/pkr/b*.txt

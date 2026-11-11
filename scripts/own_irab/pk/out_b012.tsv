@@ -1,0 +1,30 @@
+71:23:170	NO_SOURCE	-
+74:5:8	OURS_OK	JADWAL: «(ثيابك، الرجز) مفعولان ل (طهر، اهجر)»
+74:5:9	UNCLEAR	JADWAL: «فهي إذا عاطفة عطفت الفعل بعدها على مقدر» vs OURS fa in conditional answer
+74:20:60	OURS_OK	JADWAL: «وجملة: «قدر ... » في محل رفع معطوفة على جملة فكر»
+74:21:62	OURS_OK	JADWAL: «نظر ... » لا محل لها معطوفة على جملة قدر الثانية
+74:22:64	OURS_OK	JADWAL: «عبس ... » لا محل لها معطوفة على جملة نظر
+74:22:65	OURS_OK	JADWAL: «بسر ... » لا محل لها معطوفة على جملة عبس
+74:23:67	OURS_OK	JADWAL: «أدبر ... » لا محل لها معطوفة على جملة عبس
+74:23:68	OURS_OK	JADWAL: «استكبر ... » لا محل لها معطوفة على جملة عبس
+75:8:32	OURS_OK	DARWISH: «وخسف القمر عطف على برق البصر وهو فعل ماض وفاعل»
+75:21:85	OURS_OK	DARWISH: «وتذرون الآخرة عطف على الجملة السابقة»
+75:24:94	OURS_WRONG	JADWAL: «وجوه يومئذ باسرة مثل الآية الأولى»; first: «البدء بالنكرة لأنها وصفت» نعت (ناضرة)
+75:35:133	UNCLEAR	ALT jadwal: «أولى خبر لمبتدأ محذوف»; no reason given against OURS
+75:35:134	UNCLEAR	JADWAL: «أولى خبر لمبتدأ محذوف»; difference is in what the jar-majrur attaches to
+78:13:37	OURS_OK	DARWISH: «ووهاجا صفة»
+78:38:143	OURS_OK	SAMIN: «يجوز أن يكون بدلا من واو يتكلمون، وهو الأرجح»
+79:2:3	UNCLEAR	SAMIN: «ونشطا وسبحا وسبقا كلها مصادر»; ALT: مفعول مطلق
+79:3:5	UNCLEAR	ALT jadwal: «مفعول مطلق نائب عن المصدر»; no reason against حال
+79:4:7	UNCLEAR	ALT jadwal: «مفعول مطلق نائب عن المصدر»; no reason against حال
+79:19:62	OURS_OK	JADWAL: «أهديك مضارع منصوب معطوف على تزكى»
+79:19:63	NO_SOURCE	-
+79:19:64	OURS_OK	DARWISH: «وإلى ربك متعلقان بأهديك»
+79:19:65	OURS_OK	DARWISH: «فتخشى عطف على أهديك»
+79:40:142	OURS_OK	JADWAL: «أما من خاف مثل أما من طغى»; طغى: «لا محل لها صلة الموصول»
+79:40:143	NO_SOURCE	-
+79:40:144	NO_SOURCE	-
+79:40:145	NO_SOURCE	JADWAL: «من خاف ... معطوفة على جملة من طغى»; nothing explicit on نهى
+79:40:146	NO_SOURCE	-
+79:40:147	NO_SOURCE	JADWAL: «(عن الهوى) متعلق ب (نهى)»
+79:40:148	OURS_OK	JADWAL: «(عن الهوى) متعلق ب (نهى)»

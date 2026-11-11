@@ -16,8 +16,13 @@ sys.path.insert(0, H)
 from sheet import skel
 from books import get
 
-CAP = 1400
-WIN = 260
+CAP = 700
+WIN = 180
+HARAKAT = re.compile('[ً-ٰٟۖ-ࣰۭ-ࣳ]')
+
+
+def bare(t):
+    return HARAKAT.sub('', t)
 
 
 def keys(tok):
@@ -52,6 +57,38 @@ def windows(text, ks, n=2):
     return ' … '.join(' '.join(x.split()) for x in out)
 
 
+SIGS = ['نائب فاعل', 'فاعل', 'مبتدأ', 'خبر', 'مفعول به', 'مفعول مطلق', 'مفعول فيه', 'ظرف', 'مفعول لأجله',
+        'مفعول معه', 'حال', 'تمييز', 'مضاف إليه', 'بدل', 'نعت', 'صفة', 'توكيد', 'مستثنى', 'منادى', 'ضمير فصل',
+        'اسم إن', 'اسم كان', 'خبر كان', 'اسم مجرور', 'فعل ماض', 'فعل مضارع', 'فعل أمر']
+
+
+def norm_role(t):
+    t = bare(t).replace('«', '').replace('»', '').replace('ّ', '')
+    t = re.sub('[أإآ]', 'ا', t)
+    return t
+
+
+def first_role(t):
+    t = norm_role(re.split(r'[،.(]', t)[0])
+    best = None
+    for r in SIGS:
+        i = t.find(norm_role(r))
+        if i >= 0 and (best is None or i < best[0]):
+            best = (i, r)
+    return best[1] if best else None
+
+
+def book_confirms(text, tok, role):
+    """al-Jadwal / Darwish write «(word) role ...»: True when the role they
+    name for this word right after its parenthesis is ours."""
+    ks = keys(tok)
+    for m in re.finditer(r'\(([^()]{1,25})\)\s*([^()]{0,70})', text or ''):
+        inner = m.group(1).split()
+        if len(inner) == 1 and skel(inner[0]) in ks and first_role(m.group(2)) == role:
+            return m.group(0)[:90]
+    return None
+
+
 def samin(s, a, tok):
     t = get('aldur-almasoon', s, a) or ''
     ks = keys(tok)
@@ -68,52 +105,65 @@ def samin(s, a, tok):
     if not t:
         return ''
     # al-Samin often names the word by its class («والموصول ...»), not its letters
-    return '(no direct quote; page start) ' + t[:1500] + ('…' if len(t) > 1500 else '')
+    return '(no direct quote; page start) ' + t[:500] + ('…' if len(t) > 500 else '')
 
 
 def main():
     groups = set(sys.argv[1:]) or {'fuller', 'repeat', 'role'}
     tg = [t for t in json.load(open(os.path.join(H, 'samin_targets.json'), encoding='utf-8')) if t['group'] in groups]
     files = {}
-    packets, silent = [], 0
+    OUT = 'pkr' if groups == {'role'} else 'pk'
+    packets, silent, auto = [], 0, []
     for t in tg:
         s, a = t['s'], t['a']
         if s not in files:
             files[s] = json.load(open(os.path.join(H, f'{s:03d}.json'), encoding='utf-8'))['words']
         w = files[s][t['i']]
-        ayah = ' '.join(('[' + x['w'] + ']') if j == t['i'] else x['w']
-                        for j, x in enumerate(files[s]) if x['a'] == a)
-        sm = samin(s, a, w['w'])
+        idx = [j for j, x in enumerate(files[s]) if x['a'] == a]
+        lo = max(idx[0], t['i'] - 6); hi = min(idx[-1], t['i'] + 6)
+        ayah = ('… ' if lo > idx[0] else '') + ' '.join(
+            ('[' + files[s][j]['w'] + ']') if j == t['i'] else bare(files[s][j]['w'])
+            for j in range(lo, hi + 1)) + (' …' if hi < idx[-1] else '')
         if t['group'] == 'role':
             # priority: ours parted from al-Da'as, or both other books part from ours
             from samin_targets import kind
             bs = {x['book'] for x in w['alts'] if kind(x['text']) == 'role'}
             if not ('daas' in bs or {'jadwal', 'darwish'} <= bs):
                 continue
+        ks = keys(w['w'])
+        role = first_role(w['irab'])
+        if t['group'] != 'repeat' and role:
+            ev = book_confirms(get('aljadwal', s, a), w['w'], role) or book_confirms(get('iraab-aldarweesh', s, a), w['w'], role)
+            if ev:
+                auto.append(f"{s}:{a}:{t['i']}	OURS_OK	auto: «{' '.join(bare(ev).split())}»")
+                continue
+        sm = samin(s, a, w['w'])
         if not sm:
             silent += 1
             if t['group'] == 'role':
                 continue  # khilaf already shown, al-Samin adds nothing
-        ks = keys(w['w'])
         p = {'id': f"{s}:{a}:{t['i']}", 'group': t['group'], 'word': w['w'], 'ayah': ayah,
              'ours': w['irab'], 'alts': [f"{x['book']}: {x['text']}" for x in w.get('alts', [])],
-             'samin': sm or 'silent',
-             'jadwal': windows(get('aljadwal', s, a) or '', ks, 1),
-             'darwish': windows(get('iraab-aldarweesh', s, a) or '', ks, 1)}
+             'samin': bare(sm) if sm else 'silent',
+             'jadwal': bare(windows(get('aljadwal', s, a) or '', ks, 1)),
+             'darwish': bare(windows(get('iraab-aldarweesh', s, a) or '', ks, 1))}
         packets.append(p)
+    os.makedirs(os.path.join(H, OUT), exist_ok=True)
+    open(os.path.join(H, OUT, 'auto_ok.tsv'), 'w', encoding='utf-8').write(''.join(x + chr(10) for x in auto))
+    print(len(auto), 'auto-confirmed by al-Jadwal/Darwish')
     with open(os.path.join(H, 'samin_packets.jsonl'), 'w', encoding='utf-8') as f:
         for p in packets:
             f.write(json.dumps(p, ensure_ascii=False) + '\n')
-    os.makedirs(os.path.join(H, 'batches'), exist_ok=True)
-    B = 60
+    os.makedirs(os.path.join(H, OUT), exist_ok=True)
+    B = 30
     for n in range(0, len(packets), B):
-        with open(os.path.join(H, 'batches', f'b{n // B:03d}.txt'), 'w', encoding='utf-8') as f:
+        with open(os.path.join(H, OUT, f'b{n // B:03d}.txt'), 'w', encoding='utf-8') as f:
             for p in packets[n:n + B]:
                 f.write(f"### {p['id']} ({p['group']})\nAYAH: {p['ayah']}\nOURS: {p['ours']}\n")
                 for x in p['alts']:
                     f.write(f'ALT {x}\n')
                 f.write(f"SAMIN: {p['samin']}\nJADWAL: {p['jadwal'] or '-'}\nDARWISH: {p['darwish'] or '-'}\n\n")
-    size = sum(os.path.getsize(os.path.join(H, 'batches', x)) for x in os.listdir(os.path.join(H, 'batches')))
+    size = sum(os.path.getsize(os.path.join(H, OUT, x)) for x in os.listdir(os.path.join(H, OUT)))
     print(len(packets), 'packets;', silent, 'silent in al-Samin;', (len(packets) + B - 1) // B, 'batches;', size, 'bytes')
 
 
