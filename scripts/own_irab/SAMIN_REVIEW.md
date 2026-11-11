@@ -98,3 +98,12 @@ Measured from the out_*.tsv files in pk/ and pkr/ (committed).
 - Not reviewed: the 2,339 role alts where only ONE other book differs from ours = al-Da'as (lowest risk),
   and the attach/clause-only alts (both views shown).
 - Quota: weekly 53% -> see TASK_FOLLOWUP for the closing reading.
+
+## Second review: a wider jury (2026-11-12, review2.py)
+Books (tafsir.app, slugs and speed checked live): al-Nahhas «إعراب القرآن», Makki «مشكل إعراب القرآن»,
+al-Kharrat «المجتبى», Abu Hayyan «البحر المحيط», plus al-Samin. No classical book parses every word,
+so only words still in doubt are asked.
+- Group A (every OURS_WRONG/UNCLEAR/NO_SOURCE of the first review, minus the 7 fixed): 425 words;
+  239 none of the four books mentions (dropped); 186 judged by Sonnet: 186 KEEP, 0 CHANGE.
+- Group B (the 2,339 low-risk role alts): fetch done/running; classification waits for the 5-hour
+  quota window (97% at 01:35 Dubai, reset 04:40 Dubai). Weekly 65% (cap for this stage 67%).
