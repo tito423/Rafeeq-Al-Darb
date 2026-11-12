@@ -43,7 +43,8 @@ Opus reads every proposed change before it is applied.
 6. DONE 2026-11-12: last items closed (group B part 7, groupb7_fixes.json,
    14 edits; GROUPB7_REJECTED.md): 36:51, «حتى إذا» family, «إنك أنت»
    family, 14:29, 3:143, 64:13. check OK, audit 3 old flags, exported.
-   NOT built yet. The i'rab review has no open item left except the
+   Built + installed on API-24, SEEN: 36:51 «ونفخ» نائب الفاعل الجار
+   والمجرور «في الصور» with al-Jadwal and al-Da'as lines. The i'rab review has no open item left except the
    human grammarian sample (SPECIALIST_SAMPLE.csv) and the owner's release.
 
 Cost of 2-4 ≈ 5 weekly points. Stop at 85% of the 5-hour window; at ~150k
@@ -78,7 +79,7 @@ context checkpoint and tell the owner (he may order a new session).
 
 ## Log (newest first)
 
-- 2026-11-12 ~19:50 group B part 7: last i'rab items closed (14 edits), not built.
+- 2026-11-12 ~20:10 group B part 7 built and seen (36:51); i'rab review closed, not released.
 
 - 2026-11-12 ~19:25 part 6 seen on API-24 (39:24 waw hal + alts).
 - 2026-11-12 ~19:10 signed build installed on API-24, 36:13 seen OK; not released.
