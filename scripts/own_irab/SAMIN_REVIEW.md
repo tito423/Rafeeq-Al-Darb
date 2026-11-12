@@ -107,3 +107,20 @@ so only words still in doubt are asked.
   239 none of the four books mentions (dropped); 186 judged by Sonnet: 186 KEEP, 0 CHANGE.
 - Group B (the 2,339 low-risk role alts): fetch done/running; classification waits for the 5-hour
   quota window (97% at 01:35 Dubai, reset 04:40 Dubai). Weekly 65% (cap for this stage 67%).
+
+## Group B result (2026-11-12, partial - stopped at the owner's 5-point cap)
+`review2.py fetch B` found 0 to fetch; `cut B` gave 1,899 packets in 64 batches (436 words no book mentions were dropped).
+- Classified (Haiku): b000-b015 = 480 words: 293 OURS_OK, 133 UNCLEAR, 29 OURS_WRONG, 25 NO_SOURCE (b012 was rerun: first output had 28 of 30 lines).
+- Judged (Sonnet, j0-j6): the 162 UNCLEAR/OURS_WRONG + 30 random OURS_OK (audit) = 192 packets: 176 KEEP, 16 CHANGE, 0 CHANGE from the audit sample.
+- I read all 16 against the packets and the mushaf vowels and accepted all 16 (each: a named book states it in the packet, no book in the packet supports ours; no Qur'an word touched). Rule table: `write_surah.GROUPB`; JSON patched by `apply_groupb.py`, ours' old text kept under the word as a `daas` alt.
+  - 2:57 «ولكن» حالية -> عاطفة (al-Jadwal عاطفة; al-Mujtaba «معطوفة على جملة ما ظلمونا»).
+  - 2:125 «السجود» معطوف بحذف العاطف -> نعت للركع (al-Nahhas «السجود نعت»; al-Samin «لم يعطف إحدى الصفتين على الأخرى»; al-Jadwal نعت).
+  - 2:170 «آباءنا» مفعول ثان -> أول (al-Samin «أولهما آباءنا والثاني عليه»; al-Jadwal أول).
+  - 3:54 «والله» حالية -> استئنافية (al-Mujtaba «مستأنفة لا محل لها»; al-Jadwal). 3:197 «وبئس» حالية -> استئنافية (al-Mujtaba «وجملة وبئس المهاد مستأنفة»). 4:13 «وذلك» حالية -> استئنافية (al-Jadwal only; no book for ours).
+  - 3:100 «بعد» ظرف مكان -> زمان (al-Jadwal; attachment left as ours). 3:119 «الغيظ» تمييز -> متعلق بـ«عضوا» (al-Samin «من الغيظ متعلق بعضوا»; al-Jadwal).
+  - 3:140 «فقد» عطف -> رابطة لجواب الشرط (al-Jadwal; al-Samin treats «فقد مس القوم قرح» as the condition's answer). 3:173 «فاخشوهم» فاء فصيحة -> عاطفة, clause in محل رفع (al-Mujtaba «معطوف على جملة قد جمعوا في محل رفع»; al-Jadwal).
+  - 4:4 «هنيئا» and «مريئا» حال من الواو -> حال من الهاء (al-Nahhas «حال من الهاء»; al-Makki; al-Samin's four views, read in full in books_cache, have no waw view).
+  - 4:92 «يصدقوا» حال -> استثناء منقطع (al-Samin «لأن المستقبل لا يكون حالا ... فكونه منقطعا هو الصواب»; al-Nahhas, al-Mujtaba, al-Jadwal).
+  - 7:58 «بإذن» صفة لمفعول محذوف -> حال من نباته (al-Mujtaba, al-Jadwal; «يخرج نباته» has no omitted object). 7:178 and 7:186 «من» مبتدأ -> مفعول به مقدم (al-Mujtaba and al-Jadwal; «يهد الله / يضلل الله» has its fa'il and no returning pronoun). A scan of all 'من شرط مبتدأ' words showed these two are the only ones with that shape.
+- Not done: b016-b063 (48 batches, ~1,419 packets) are not classified. Same slip families noticed but NOT changed (no source in a packet): 14:29 «وبئس القرار» حالية, 3:143 «فقد» عطف, other «والله» حالية words.
+- Quota: weekly 69% -> 73% (16 Haiku batches ~2 points, 7 Sonnet judges ~2 points). Remaining estimate for b016-b063: ~6 points classify + ~6 judge.

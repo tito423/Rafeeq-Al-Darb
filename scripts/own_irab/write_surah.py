@@ -34,6 +34,34 @@ FIXES = {
     (67, 16, 'ٱلۡأَرۡضَ'): ('فاعل مرفوع وعلامة رفعه الضمة الظاهرة', 'مفعول به منصوب وعلامة نصبه الفتحة الظاهرة'),
 }
 
+# Group B of the second review (SAMIN_REVIEW.md, 2026-11-12): al-Da'as's reading
+# of these words is contradicted by a named book in the packet and supported
+# by none. (surah, ayah, token): [(old, new), ...] substring replacements; the
+# old text is kept under the word as al-Da'as's alt by apply_groupb.py.
+def bare(w):
+    return ''.join(c for c in w if 'ء' <= c <= 'ي' or c == 'ٱ').replace('آ', 'ا')
+
+
+GROUPB = {
+    (2, 57, 'ولكن'): [('الواو حالية', 'الواو عاطفة')],
+    (2, 125, 'ٱلسجود'): [('معطوف على «الطائفين» بحذف حرف العطف', 'نعت لـ«الركع»')],
+    (2, 170, 'ءاباءنا'): [('مفعول به ثان', 'مفعول به أول')],
+    (4, 92, 'يصدقوا'): [('في محل نصب حال', 'في محل نصب على الاستثناء المنقطع')],
+    (7, 58, 'بإذن'): [('صفة لمفعول به محذوف', 'حال من «نباته»')],
+    (7, 178, 'من'): [('في محل رفع مبتدأ', 'في محل نصب مفعول به مقدم')],
+    (7, 186, 'من'): [('في محل رفع مبتدأ', 'في محل نصب مفعول به مقدم')],
+    (3, 54, 'وٱلله'): [('الواو حالية', 'الواو استئنافية')],
+    (3, 100, 'بعد'): [('ظرف مكان', 'ظرف زمان')],
+    (3, 119, 'ٱلغيظ'): [('متعلقان بمحذوف تمييز', 'متعلقان بـ«عضوا»')],
+    (3, 140, 'فقد'): [('الفاء حرف عطف', 'الفاء رابطة لجواب الشرط')],
+    (3, 173, 'فٱخشوهم'): [('الفاء الفصيحة', 'الفاء عاطفة'),
+                           ('والجملة جواب شرط غير جازم لا محل لها من الإعراب', 'والجملة معطوفة على جملة «قد جمعوا» في محل رفع')],
+    (3, 197, 'وبئس'): [('الواو حالية', 'الواو استئنافية')],
+    (4, 4, 'هنيـا'): [('حال من الواو', 'حال من الهاء')],
+    (4, 4, 'مريـا'): [('حال من الواو', 'حال من الهاء')],
+    (4, 13, 'وذلك'): [('الواو حالية', 'الواو استئنافية')],
+}
+
 # «ولقد» parsed as an oath waw (al-Da'as's shorthand) where no sworn-by noun
 # follows: al-Jadwal names the waw and an implied oath for the lam (SAMIN
 # review 2026-11-12; the same form 53:13-54:51 already use). (surah, ayah): waw kind
@@ -56,6 +84,8 @@ def certain(surah, a, w, text):
         text = text.replace('مرفوع وعلامة رفعه الضمة الظاهرة', 'مرفوع وعلامة رفعه الواو لأنه جمع مذكر سالم')
     if (surah, a) in LAQAD and 'لَقَد' in w:
         text = LAQAD_OLD.sub(f'الواو حرف {LAQAD[(surah, a)]}، واللام واقعة في جواب قسم مقدر', text)
+    for old, new in GROUPB.get((surah, a, bare(w)), []):
+        text = text.replace(old, new)
     old, new = FIXES.get((surah, a, w), (None, None))
     if old and old in text:
         text = text.replace(old, new)
