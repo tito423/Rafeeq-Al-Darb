@@ -157,3 +157,5 @@ so only words still in doubt are asked.
 - Applied 92, rejected 2: 27:37 «فلنأتينهم» (only al-Jadwal says رابطة; al-Samin speaks of an implied condition, not of the fa) and 37:145 «فنبذناه» (the proposal broke al-Da'as's coherent «عاطفة على محذوف»).
 - Every applied item has two named books against al-Da'as (the ALT book + al-Mujtaba in most; al-Samin/al-Nahhas/Makki in some) or corrects our slip (26:184 «والجبلة» was «معطوف على الذي»; al-Da'as says «معطوف على المفعول به»). Tails fixed with the particle (a clause called مستأنفة/معطوفة to match). Table: `groupb3_fixes.json`, loaded by write_surah.GROUPB; al-Da'as's verbatim phrase kept under each word.
 - check.py 114 OK, audit_vowels 3 known false positives, export_app 77,430 words.
+
+- Device check found one incoherence: 36:13 «أصحاب» changed to «بدل من مثلا» while «مثلا» kept al-Da'as's «مفعول به ثان» (the badal view needs «اضرب» with one object). Reverted to al-Da'as (91 part-3 fixes stand); al-Jadwal's badal view stays shown. LESSON: a role change can depend on its neighbours; before the next group, check each role change against the i'rab of the words next to it (not done yet for the 91 - follow-up).
