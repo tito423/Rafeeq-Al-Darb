@@ -4,19 +4,18 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — Windows edition GPU load (standing owner order)
+## Current task — Windows GPU load: hidden case DONE; visible case open
 
-`E:\My Projects\Rafiq-Al-Darb-Windows`, branch `windows-desktop`: 100% GPU 3D
-with no window open (measured 2026-11-11). Find what keeps rendering (an
-animation, ticker or video left running while hidden/minimised), fix it,
-measure GPU before/after with numbers, commit there.
+Hidden/minimised GPU fixed in `Rafiq-Al-Darb-Windows/app` (windows-desktop,
+TickerMode + runner visibility message): 91.1% -> 2.7% hidden, 0% minimised
+(measured 2026-11-12, 5 s means, Get-Counter). Window VISIBLE still ~95% GPU
+3D on the first screen: find which animation (analog clock ticker,
+rgb_backdrop, focus ring, splash video) and cap it.
 
 ## Next step (exact)
 
-1. Read the Windows repo's own CLAUDE.md/README; launch the app, minimise it,
-   read GPU % (`Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage"`).
-2. Find the renderer that never stops (Explore agent on Haiku for the search);
-   fix; re-measure; checkpoint in that repo.
+Profile the visible-window 95% (disable suspects one at a time in a build),
+then rebuild `dist` zip only if the owner asks for a Windows release.
 
 ## Standing owner orders (still open)
 
