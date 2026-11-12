@@ -145,3 +145,9 @@ so only words still in doubt are asked.
 - Policy applied (the house rule of README plus the 18:63/20:85 precedent): ours (= al-Da'as) changes only when at least TWO named books part from it, or ours is our writer's slip and not al-Da'as's text, or it contradicts the mushaf/grammar on its face. One book against al-Da'as is a recorded khilaf, shown under the word.
 - Reverted (one book only): 4:13 «وذلك» (al-Jadwal only), 9:51 «وعلى» (al-Jadwal only), 17:59 «بالآيات» (al-Jadwal only).
 - Kept (38 words): two or more books, or a slip of ours: 3:100 «بعد» (al-Da'as says «ظرف» only; «مكان» was ours), 4:4 «هنيئا/مريئا» (al-Da'as «حالان»; «من الواو» was ours), 7:58 (al-Da'as reads «يُخرج» with an object; the mushaf has «يَخۡرُجُ نَبَاتُهُۥ», fa'il). The «حتى إذا» group in al-Kahf is kept as one construction (al-Jadwal at each place; al-Mujtaba at 18:90, 18:96, 24:39; al-Samin «الأظهر» at 21:96).
+
+## Group B part 3 (2026-11-12, Opus coordinating, cap 5 points: weekly 78% -> 82%)
+- Classified (Haiku) b032-b047 = 480 words: 263 OURS_OK, 176 UNCLEAR, 15 OURS_WRONG, 26 NO_SOURCE. Total classified: b000-b047 = 1,440 of 1,899.
+- Judged (Sonnet, j14-j21, with the two-book rule in the prompt): 191 flags + 30 audit = 221 packets; 214 answered (j19 skipped 7: 37:170:810, 38:21:167, 38:24:232, 38:24:243, 38:27:298, 38:31:333, 38:41:404 - rerun j19 for those).
+- 91 CHANGE proposals, 123 KEEP; 1 CHANGE came from the audit sample. NONE APPLIED: 91 is far above the earlier rate (25 of 208), and a first look shows many where the "second book" is the ALT line itself plus al-Mujtaba saying the same, which may be right, but each must be read against al-Da'as's own text (daas_quote.py) before anything changes. List: `pk2B/PENDING_CHANGES_b032_b047.tsv`. Not read yet because this task's 5-point cap was reached.
+- Left: b048-b063 not classified; the 91 pending proposals; the 7 unanswered j19 packets.
