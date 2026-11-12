@@ -138,3 +138,10 @@ so only words still in doubt are asked.
   - 25:49 «ونسقيه» الهاء مفعول أول -> ثان and «أنعاما» ثان -> أول (al-Mujtaba «أنعاما مفعول أول لنسقيه»; al-Jadwal).
 - check.py 114 OK; audit_vowels 3 known false positives; export_app 77,430 words. Not built, not seen on a device.
 - Quota: weekly 73% -> 77% (16 Haiku batches ~2 points, 7 Sonnet judges ~2). Left: b032-b063 (32 batches, ~950 packets, ~8 more points with judges).
+
+## Opus review of the Sonnet-run group B work (2026-11-12)
+- Every changed word was re-read against al-Da'as's own text (`daas_cut.py` / `daas_quote.py`, quran_sciences.db `irab_daas`).
+- Fault found and fixed: the `daas` alt under each changed word held OUR wording labelled as al-Da'as. All 38 now hold al-Da'as's verbatim phrase (cut from his «quote» to the next «/full stop); `apply_groupb.py` writes the book's text from now on.
+- Policy applied (the house rule of README plus the 18:63/20:85 precedent): ours (= al-Da'as) changes only when at least TWO named books part from it, or ours is our writer's slip and not al-Da'as's text, or it contradicts the mushaf/grammar on its face. One book against al-Da'as is a recorded khilaf, shown under the word.
+- Reverted (one book only): 4:13 «وذلك» (al-Jadwal only), 9:51 «وعلى» (al-Jadwal only), 17:59 «بالآيات» (al-Jadwal only).
+- Kept (38 words): two or more books, or a slip of ours: 3:100 «بعد» (al-Da'as says «ظرف» only; «مكان» was ours), 4:4 «هنيئا/مريئا» (al-Da'as «حالان»; «من الواو» was ours), 7:58 (al-Da'as reads «يُخرج» with an object; the mushaf has «يَخۡرُجُ نَبَاتُهُۥ», fa'il). The «حتى إذا» group in al-Kahf is kept as one construction (al-Jadwal at each place; al-Mujtaba at 18:90, 18:96, 24:39; al-Samin «الأظهر» at 21:96).
