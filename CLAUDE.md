@@ -241,6 +241,22 @@ So:
 Never answer "how much quota is left" from memory or from an earlier reading in
 the same session. It is a live number; read it live.
 
+### 2.0a Estimate, split, right model, cap — every task
+
+> «قدر كل مهمه دايما تاخد قد ايه وقسم واوكل المهام ... تدي المهمة المناسبة
+> للوكيل المناسب» — «دايما تبقى قاعدة عندك في كل شغلنا» (2026-11-12)
+
+Before any task, write a short table: piece / who does it / why / estimated
+weekly points, from measured rates (2026-11-12: 8 Haiku batches of 30 i'rab
+packets ≈ 1 point; 7 Sonnet judge files ≈ 2 points; 1 weekly point ≈ 7% of
+the 5-hour window). Python first for anything mechanical (it is free). Haiku
+for bulk classification with a strict prompt, Sonnet for judging against
+stated rules, Opus for every decision that changes religious content, for
+reviewing subagent output, and for design - delegate only where the model
+will do the piece well. Each task gets a cap (5 weekly points unless the
+owner says otherwise); read the usage after each wave and stop at the cap
+with the exact next step written down.
+
 ### 2.0b How sessions start — CLOUD, from the phone. Do NOT report Remote Control
 
 > «ما تقعدش تقول كل مره انا مش لاقي السيشن شغاله واكتب كلود ار سي» (2026-09-26)
