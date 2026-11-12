@@ -2361,6 +2361,8 @@
     "later": "Later",
     "location": "Location",
     "location_why": "To work out prayer times and the qibla where you are.",
+    "location_always": "Location all the time",
+    "location_always_why": "So the adhan and the prayer card follow you to another city while the app is closed. Choose «Allow all the time».",
     "notifications": "Notifications",
     "notifications_why": "To reach you with the adhan, the adhkar and reminders.",
     "alarms": "Exact alarms",

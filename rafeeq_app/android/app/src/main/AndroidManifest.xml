@@ -85,6 +85,9 @@
     <!-- Location (Prayer Times) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- «السماح طوال الوقت»: PrayerCardJob reads the phone's last fix with the
+         app closed so the card and the adhan follow it to another city. -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
         android:label="@string/app_name"

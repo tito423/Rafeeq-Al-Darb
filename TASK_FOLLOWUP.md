@@ -71,14 +71,14 @@ DONE 2026-11-12 ~21:15 (steps 1-2, signed build dist/build_cardjob.log,
    `date`) jumped to 2026-12-17 10:00 -> job ran by itself at 10:00:05,
    schedule now 17 Dec..17 Jan (187 events), card «Thursday · 8 Rajab 1448».
    Full flutter test 1472 pass, analyze clean.
-NEXT (exact):
-3. Location in the card job: `LocationManager.getLastKnownLocation` (needs
-   ACCESS_BACKGROUND_LOCATION on Android 10+, an OS rule: one in-app
-   «Allow all the time» prompt, 7 languages); moved >10 km -> update
-   `location_cache_lat/lon_v1` + city via native Geocoder, recompute card and
-   adhan alarms.
-4. See on emulator: mock location change (geo fix), card + adhan follow.
-Then build, then release 4.3.0 (owner asked: fix, bump, publish).
+DONE 2026-11-12 ~23:00 (step 3): «الموقع طوال الوقت» row on the first-run
+   permissions page (+ asked once at startup for older installs), 7 languages;
+   ACCESS_BACKGROUND_LOCATION; `LocationFollow` in the card job (last fix, one
+   network fix if >6 h old; >10 km moves card inputs + adhan calculation_v1,
+   re-arms adhan; manual place never moved). SEEN API-24: GPS Dubai->Cairo,
+   app closed, forced job: «moved 2427187 m», card + adhan at 30.04/31.24.
+   Not seen: the Android 10+ «Allow all the time» screen (no stable API-36).
+   Owner ordered release 4.3.0 (2026-11-12 ~22:30).
 
 ## Standing owner orders (still open)
 

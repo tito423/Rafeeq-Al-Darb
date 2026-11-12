@@ -117,6 +117,11 @@ class _PermissionsIntroScreenState extends ConsumerState<PermissionsIntroScreen>
     const rows = <(IconData, String, AppPermission)>[
       (Icons.location_on_outlined, 'location', AppPermission.location),
       (
+        Icons.my_location_outlined,
+        'location_always',
+        AppPermission.locationAlways,
+      ),
+      (
         Icons.notifications_active_outlined,
         'notifications',
         AppPermission.notifications,

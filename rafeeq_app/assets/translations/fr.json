@@ -2361,6 +2361,8 @@
     "later": "Plus tard",
     "location": "Position",
     "location_why": "Pour calculer les horaires de prière et la qibla chez vous.",
+    "location_always": "Position en permanence",
+    "location_always_why": "Pour que l'adhan et la carte de prière vous suivent dans une autre ville, application fermée. Choisissez « Toujours autoriser ».",
     "notifications": "Notifications",
     "notifications_why": "Pour vous avertir de l’adhan, des adhkar et des rappels.",
     "alarms": "Alarmes exactes",

@@ -2361,6 +2361,8 @@
     "later": "Más tarde",
     "location": "Ubicación",
     "location_why": "Para calcular los horarios de oración y la alquibla donde está.",
+    "location_always": "Ubicación todo el tiempo",
+    "location_always_why": "Para que el adhan y la tarjeta de oración te sigan a otra ciudad con la app cerrada. Elige «Permitir todo el tiempo».",
     "notifications": "Notificaciones",
     "notifications_why": "Para avisarle del adhan, los adhkar y los recordatorios.",
     "alarms": "Alarmas exactas",

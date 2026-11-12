@@ -129,14 +129,27 @@ object PrayerCard {
      */
     fun refreshInBackground(ctx: Context, done: (Boolean) -> Unit) {
         val p = prefs(ctx)
-        val raw = p.getString("refresh_args", null)
-        if (!p.getBoolean("enabled", false) || raw == null) return done(true)
+        val stored = p.getString("refresh_args", null)
+        if (!p.getBoolean("enabled", false) || stored == null) return done(true)
+        // Off the main thread: the Geocoder in [LocationFollow] may block.
+        Thread { rebuild(ctx, stored, done) }.start()
+    }
+
+    private fun rebuild(ctx: Context, stored: String, done: (Boolean) -> Unit) {
         val args = try {
-            val o = JSONObject(raw)
+            // The phone may be in another city by now (LocationFollow).
+            val o = LocationFollow.follow(ctx, JSONObject(stored))
             o.keys().asSequence().associateWith { o.get(it) }
+                .also {
+                    val moved = o.toString()
+                    if (moved != stored) {
+                        prefs(ctx).edit().putString("refresh_args", moved).commit()
+                    }
+                }
         } catch (_: Exception) {
             return done(true)
         }
+        val raw = prefs(ctx).getString("refresh_args", null)
         AdhanCalculation.run(ctx, "cardSchedule", args, timeoutMs = 20_000) { value ->
             val list = value as? List<*>
             if (list.isNullOrEmpty()) {

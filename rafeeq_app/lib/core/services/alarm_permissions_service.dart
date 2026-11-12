@@ -1,5 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'adhan_native.dart';
 import 'adhan_uri_bridge.dart';
@@ -29,6 +30,12 @@ import 'notification_router.dart';
 /// The five the first-run page lists, in the order it lists them.
 enum AppPermission {
   location,
+  /// «الموقع طوال الوقت». The prayer card and the adhan follow the phone to
+  /// another city with the app closed (owner, 2026-11-12: «لازم التطبيق
+  /// يشتغل اوتو لاخر العمر … ديناميكية»). From Android 10 a background job
+  /// may read the location only with ACCESS_BACKGROUND_LOCATION, granted as
+  /// «السماح طوال الوقت»; below 10 the plain location grant already covers it.
+  locationAlways,
   notifications,
   exactAlarms,
   audio,
@@ -92,11 +99,27 @@ class AlarmPermissionsService {
     } catch (_) {
       // Best-effort: prayer times fall back to the cached fix without it.
     }
+    await _askLocationAlwaysOnce();
     await requestStartupPermissions();
     // «أول ما ينزل التطبيق اطلب الإذن ده» — the phone's audio, for the
     // Qur'an player's device files, asked right after the others.
     try {
       await [Permission.audio, Permission.storage].request();
+    } catch (_) {}
+  }
+
+  /// Readers who installed before 4.3.0 never saw the «طوال الوقت» row on
+  /// the first-run page, so it is asked once at startup, only when the plain
+  /// location grant is there already (Android asks the two in that order).
+  Future<void> _askLocationAlwaysOnce() async {
+    const key = 'location_always_asked_v1';
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool(key) ?? false) return;
+      if (!await Permission.location.isGranted) return;
+      if (await Permission.locationAlways.isGranted) return;
+      await prefs.setBool(key, true);
+      await Permission.locationAlways.request();
     } catch (_) {}
   }
 
@@ -130,6 +153,8 @@ class AlarmPermissionsService {
                 LocationPermission.denied &&
             await Geolocator.checkPermission() !=
                 LocationPermission.deniedForever,
+        AppPermission.locationAlways =>
+          await Permission.locationAlways.isGranted,
         AppPermission.notifications => await Permission.notification.isGranted,
         AppPermission.exactAlarms =>
           await Permission.scheduleExactAlarm.isGranted,
@@ -152,6 +177,14 @@ class AlarmPermissionsService {
       switch (which) {
         case AppPermission.location:
           await Geolocator.requestPermission();
+        case AppPermission.locationAlways:
+          // Android grants «طوال الوقت» only on top of the plain grant.
+          if (!await Permission.location.isGranted) {
+            await Geolocator.requestPermission();
+          }
+          if (await Permission.location.isGranted) {
+            await Permission.locationAlways.request();
+          }
         case AppPermission.notifications:
           // One ask - see [requestStartupPermissions].
           await Permission.notification.request();
