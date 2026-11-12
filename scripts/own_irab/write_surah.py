@@ -112,6 +112,13 @@ for _f in json.load(open(os.path.join(H, 'groupb6_fixes.json'), encoding='utf-8'
     _k = (_f['s'], _f['a'], bare(_f['w']))
     GROUPB5.setdefault(_k, []).append((_f['old'], _f['new']))
     GROUPB.setdefault(_k, []).append((_f['old'], _f['new']))
+# Group B part 7 (the last open items, Opus 2026-11-12): 36:51 «في الصور»,
+# the «حتى إذا» family and the «إنك أنت» family, each by the two-book rule on
+# the same ayah's al-Jadwal and al-Mujtaba text (GROUPB7_REJECTED.md).
+for _f in json.load(open(os.path.join(H, 'groupb7_fixes.json'), encoding='utf-8')):
+    _k = (_f['s'], _f['a'], bare(_f['w']))
+    GROUPB5.setdefault(_k, []).append((_f['old'], _f['new']))
+    GROUPB.setdefault(_k, []).append((_f['old'], _f['new']))
 
 # «ولقد» parsed as an oath waw (al-Da'as's shorthand) where no sworn-by noun
 # follows: al-Jadwal names the waw and an implied oath for the lam (SAMIN
