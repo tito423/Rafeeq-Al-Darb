@@ -124,3 +124,17 @@ so only words still in doubt are asked.
   - 7:58 «بإذن» صفة لمفعول محذوف -> حال من نباته (al-Mujtaba, al-Jadwal; «يخرج نباته» has no omitted object). 7:178 and 7:186 «من» مبتدأ -> مفعول به مقدم (al-Mujtaba and al-Jadwal; «يهد الله / يضلل الله» has its fa'il and no returning pronoun). A scan of all 'من شرط مبتدأ' words showed these two are the only ones with that shape.
 - Not done: b016-b063 (48 batches, ~1,419 packets) are not classified. Same slip families noticed but NOT changed (no source in a packet): 14:29 «وبئس القرار» حالية, 3:143 «فقد» عطف, other «والله» حالية words.
 - Quota: weekly 69% -> 73% (16 Haiku batches ~2 points, 7 Sonnet judges ~2 points). Remaining estimate for b016-b063: ~6 points classify + ~6 judge.
+
+## Group B result, part 2 (2026-11-12, on the owner's "كمل")
+- Classified (Haiku) b016-b031 = 480 words: 279 OURS_OK, 120 UNCLEAR, 58 OURS_WRONG, 23 NO_SOURCE. With part 1: b000-b031 = 960 words (half of group B).
+- Judged (Sonnet, j7-j13): 178 flags + 30 audit = 208: 183 KEEP, 25 CHANGE, 0 CHANGE from the audit sample.
+- All 25 read by hand against the packets; all accepted (a named book states it, none in the packet supports ours; no Qur'an word touched). Rules in `write_surah.GROUPB` (second table), applied by `apply_groupb.py`, which now touches only words marked `alt` (the second «بالآيات» of 17:59, marked `agree`, was NOT changed). Al-Da'as' old text stays as a quoted alt.
+  - Waw: 9:51 «وعلى» زائدة -> عاطفة (al-Jadwal). Fa: 9:96 «فإن» فصيحة -> استئنافية (al-Mujtaba «جملة فإن ترضوا مستأنفة»; al-Jadwal), 11:45 «فقال» زائدة -> عاطفة, معطوفة على «نادى» (al-Samin «عطف على نادى»; al-Jadwal).
+  - Mafʿul mutlaq: 9:80 «سبعين» (al-Samin «منصوب على المصدر»; al-Mujtaba), 9:126 «مرة» (al-Mujtaba; al-Jadwal), 20:110 «علما» مفعول به -> نائب مفعول مطلق (al-Mujtaba; al-Jadwal says tamyiz, so this one is a choice between two named books, both against ours).
+  - 10:32 «فماذا»: حرف نفي + ذا زائدة -> «ماذا» اسم استفهام بمعنى النفي (al-Samin; al-Jadwal; al-Mujtaba «ما اسم استفهام»). 11:19 «هم» فصل -> توكيد لفظي (al-Samin and al-Mujtaba «هم الثانية توكيد لفظي»).
+  - 12:4 «ساجدين» مفعول ثان -> حال (al-Jadwal; al-Mujtaba «ساجدين حال»). 12:9 «أرضا» ظرف -> منصوب بنزع الخافض (al-Nahhas «لا على الظرف»; al-Mujtaba; al-Jadwal). 17:59 «بالآيات» (first) باء زائدة -> أصلية, حال (al-Jadwal; the cached al-Samin page is a fragment and does not settle it). 17:72 «أعمى» اسم كان -> خبر كان (al-Jadwal). 17:100 «أنتم» توكيد -> فاعل لفعل محذوف (al-Samin, al-Mujtaba, al-Jadwal).
+  - «عسى» ناقصة -> تامة, المصدر فاعل (al-Mujtaba, al-Jadwal): 18:24, 19:48. 23:33 «الذين» نعت لقوم -> نعت للملأ (al-Mujtaba, al-Jadwal).
+  - «حتى» حرف غاية وجر -> حرف ابتداء (al-Mujtaba «حتى ابتدائية»; al-Jadwal; al-Samin «الأظهر»): 18:86, 18:90, 18:93, 18:96 x2, 21:96, 24:39. NOTE: this is the common «حتى إذا» construction; the same wording probably stands at other places that were not in any packet - NOT changed, to be checked (count not measured).
+  - 25:49 «ونسقيه» الهاء مفعول أول -> ثان and «أنعاما» ثان -> أول (al-Mujtaba «أنعاما مفعول أول لنسقيه»; al-Jadwal).
+- check.py 114 OK; audit_vowels 3 known false positives; export_app 77,430 words. Not built, not seen on a device.
+- Quota: weekly 73% -> 77% (16 Haiku batches ~2 points, 7 Sonnet judges ~2). Left: b032-b063 (32 batches, ~950 packets, ~8 more points with judges).

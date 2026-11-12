@@ -10,21 +10,25 @@ for surah in sorted({k[0] for k in GROUPB}):
         if s != surah:
             continue
         hit = [x for x in d['words'] if x['a'] == a and bare(x['w']) == w]
-        assert len(hit) == 1, (s, a, w, len(hit))
-        x = hit[0]
-        old = x['irab']
-        new = old
-        for o, n in reps:
-            if n in new:
+        assert hit, (s, a, w)
+        changed = 0
+        for x in hit:
+            if x['check'] != 'alt':
                 continue
-            assert o in new, (s, a, w, o)
-            new = new.replace(o, n)
-        if new == old:
-            print('already', s, a); continue
-        x['irab'] = new
-        x['check'] = 'alt'
-        alts = x.setdefault('alts', [])
-        if not any(al['book'] == 'daas' for al in alts):
-            alts.append({'book': 'daas', 'text': old})
-        print('fixed', s, a)
+            old = x['irab']
+            new = old
+            for o, n in reps:
+                if n in new:
+                    continue
+                if o in new:
+                    new = new.replace(o, n)
+            if new == old:
+                continue
+            x['irab'] = new
+            x['check'] = 'alt'
+            alts = x.setdefault('alts', [])
+            if not any(al['book'] == 'daas' for al in alts):
+                alts.append({'book': 'daas', 'text': old})
+            changed += 1
+        print('fixed' if changed else 'already/none', s, a, len(hit), changed)
     json.dump(d, open(f, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
