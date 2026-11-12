@@ -22,7 +22,8 @@ Opus reads every proposed change before it is applied.
    `groupb5_fixes.json` applied, check OK, audit_vowels 3 flags (old ones:
    2:245, 18:40, 20:93 - none touched), exported. Open from it: 36:51
    «في الصور» na'ib fa'il (al-Jadwal + al-Mujtaba vs ours).
-2. Classify b052-b063 with Haiku (8 at a time, REVIEW_PROMPT.md).
+2. DONE 2026-11-12: b052-b063 classified (Haiku): 339 words = 227 OURS_OK,
+   86 UNCLEAR, 9 OURS_WRONG, 17 NO_SOURCE; ids match packets.
 3. `py -3 mkjudge_b.py 48 63 22 30`, Sonnet judges (two-book rule).
 4. Opus reads the CHANGE list (`pending_digest.py`, `quote_check.py`,
    `pending_plan.py`), groupb table, apply, check, audit_vowels, export.
@@ -62,6 +63,7 @@ context checkpoint and tell the owner (he may order a new session).
 
 ## Log (newest first)
 
+- 2026-11-12 ~12:40 b052-b063 classified (Haiku, 12 batches): 227 OK / 86 UNCLEAR / 9 WRONG / 17 NO_SOURCE.
 - 2026-11-12 ~15:00 group B part 5: 24 neighbour fixes (NEIGHBOURS_FINDINGS), table B kept (al-Mujtaba = second book).
 - 2026-11-12 ~13:40 TASK_FOLLOWUP trimmed (601 lines/36k tokens -> this); full file archived unchanged.
 - 2026-11-12 ~13:30 5b3b6962 neighbour coherence: 94 read, findings file, nothing applied.
