@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
@@ -397,17 +398,28 @@ class _PrintedPlatePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final alpha = Curves.easeOut.transform(fade.value) * 0.88;
     if (alpha <= 0) return;
+    // The printed lines are justified edge to edge and their gaps are only a
+    // few pixels, so a horizontal strip always touched some word (2026-11-13,
+    // page 222). The paper's own left margin (ink-free, >= 4.37% of the page
+    // width, measured on madinah_qc pages 22 and 221-229) is the one place that
+    // is clear: the strip stands upright inside it, level with the «۞» line.
+    final t = (size.width * 0.032).clamp(7.0, 14.0);
     for (final (y, info) in marks) {
       canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, alpha));
+      canvas.save();
+      canvas.translate(size.width * 0.003 + t / 2, y);
+      canvas.rotate(-math.pi / 2);
       paintRubStrip(
         canvas,
-        left: 2,
-        scale: 0.78,
-        centreY: y + 1,
+        left: 0,
+        centreY: 0,
         lines: info.marginLines,
         mt: mt,
         baseStyle: baseStyle,
+        scale: t / 17.0,
+        centred: true,
       );
+      canvas.restore();
       canvas.restore();
     }
   }
@@ -428,6 +440,9 @@ void paintRubStrip(
   required MushafTheme mt,
   required TextStyle baseStyle,
   double scale = 1,
+
+  /// Centre the strip on [left] (not start it there): for a rotated canvas.
+  bool centred = false,
 }) {
   final tp = TextPainter(
     text: TextSpan(
@@ -447,7 +462,7 @@ void paintRubStrip(
   final h = 17.0 * scale;
   final w = tp.width + 22 * scale;
   final tip = h / 2;
-  final r = Rect.fromLTWH(left, centreY - h / 2, w, h);
+  final r = Rect.fromLTWH(centred ? left - w / 2 : left, centreY - h / 2, w, h);
   final path = Path()
     ..moveTo(r.left, r.center.dy)
     ..lineTo(r.left + tip, r.top)
@@ -468,6 +483,9 @@ void paintRubStrip(
       ..strokeJoin = StrokeJoin.round
       ..color = mt.gold,
   );
-  tp.paint(canvas, Offset(r.left + (w - tp.width) / 2, r.center.dy - tp.height / 2));
+  tp.paint(
+    canvas,
+    Offset(r.left + (w - tp.width) / 2, r.center.dy - tp.height / 2),
+  );
   tp.dispose();
 }
