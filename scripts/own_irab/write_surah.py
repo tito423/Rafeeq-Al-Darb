@@ -104,6 +104,14 @@ for _f in json.load(open(os.path.join(H, 'groupb5_fixes.json'), encoding='utf-8'
     _k = (_f['s'], _f['a'], bare(_f['w']))
     GROUPB5.setdefault(_k, []).append((_f['old'], _f['new']))
     GROUPB.setdefault(_k, []).append((_f['old'], _f['new']))
+# Group B part 6 (b048-b063: Sonnet judged j22-j27, Opus read all 78 CHANGE
+# proposals 2026-11-12 against the packets plus al-Jadwal and Darwish from
+# books_cache; 63 kept by the two-book rule, 15 rejected). Same handling as
+# part 5 because some entries are neighbour tails on 'agree' words.
+for _f in json.load(open(os.path.join(H, 'groupb6_fixes.json'), encoding='utf-8')):
+    _k = (_f['s'], _f['a'], bare(_f['w']))
+    GROUPB5.setdefault(_k, []).append((_f['old'], _f['new']))
+    GROUPB.setdefault(_k, []).append((_f['old'], _f['new']))
 
 # «ولقد» parsed as an oath waw (al-Da'as's shorthand) where no sworn-by noun
 # follows: al-Jadwal names the waw and an implied oath for the lam (SAMIN
