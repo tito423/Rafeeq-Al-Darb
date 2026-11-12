@@ -24,8 +24,11 @@ Opus reads every proposed change before it is applied.
    «في الصور» na'ib fa'il (al-Jadwal + al-Mujtaba vs ours).
 2. DONE 2026-11-12: b052-b063 classified (Haiku): 339 words = 227 OURS_OK,
    86 UNCLEAR, 9 OURS_WRONG, 17 NO_SOURCE; ids match packets.
-3. `py -3 mkjudge_b.py 48 63 22 30`, Sonnet judges (two-book rule).
-4. Opus reads the CHANGE list (`pending_digest.py`, `quote_check.py`,
+3. DONE 2026-11-12: mkjudge_b 48 63 22 30 -> j22-j27 (137 flags + 30 audit);
+   Sonnet judged all 167: 78 CHANGE (75 flags + 3 audit), 89 KEEP. Rate is
+   high (j22-j26 ~50%): Sonnet j25 itself named weak ones (58:10 rests on one
+   book + memory; 52:42, 60:5 fasl-pronoun debatable). Read each strictly.
+4. NEXT: Opus reads the 78 CHANGE in out_j22..j27 (two-book rule, quotes checked) (`pending_digest.py`, `quote_check.py`,
    `pending_plan.py`), groupb table, apply, check, audit_vowels, export.
 5. Build (signed, `build_github_release.bat`) + look on Rafeeq_Audit_API24:
    36:13 must show the al-Da'as line «أَصْحابَ» مفعول به أول and no badal.
@@ -63,7 +66,8 @@ context checkpoint and tell the owner (he may order a new session).
 
 ## Log (newest first)
 
-- 2026-11-12 ~12:40 b052-b063 classified (Haiku, 12 batches): 227 OK / 86 UNCLEAR / 9 WRONG / 17 NO_SOURCE.
+- 2026-11-12 ~16:40 j22-j27 judged (Sonnet): 78 CHANGE / 89 KEEP, nothing applied.
+- 2026-11-12 ~16:20 b052-b063 classified (Haiku, 12 batches): 227 OK / 86 UNCLEAR / 9 WRONG / 17 NO_SOURCE.
 - 2026-11-12 ~15:00 group B part 5: 24 neighbour fixes (NEIGHBOURS_FINDINGS), table B kept (al-Mujtaba = second book).
 - 2026-11-12 ~13:40 TASK_FOLLOWUP trimmed (601 lines/36k tokens -> this); full file archived unchanged.
 - 2026-11-12 ~13:30 5b3b6962 neighbour coherence: 94 read, findings file, nothing applied.
