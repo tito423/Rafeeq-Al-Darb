@@ -153,3 +153,15 @@ scripts/own_irab/pkr/b*.txt
 scripts/own_irab/pk2A/b*.txt
 scripts/own_irab/pk2B/b*.txt
 scripts/own_irab/pk2B/j*.txt
+
+# --- Local scratch (kept out of `git status`, which every session start reads) ---
+/scratch*
+/screen.png
+/window_dump.xml
+/dist/*.log
+__pycache__/
+scripts/own_irab/pkr/
+scripts/own_irab/pk2B/digest_*.txt
+scripts/own_irab/pk2B/plan_*.json
+scripts/own_irab/pk2B/plan_*.txt
+rafeeq_app/assets/data/quran.db

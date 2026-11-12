@@ -51,6 +51,13 @@ repo `tito423/Rafeeq-Al-Darb`, APK on GitHub Releases. **Reply in Arabic**
   Python first (free); Haiku for bulk classification, Sonnet for judging
   against rules, Opus for religious-content decisions, reviews, design. Cap 5
   weekly points unless told otherwise.
+- **Cheap agents** (`.claude/agents/`): `bulk-haiku` for sweeps, counts and
+  bulk classification; `judge-sonnet` for checks against written rules and
+  small specified edits. The main model only decides, reviews religious
+  content and designs. Agents answer in summaries, never file dumps.
+- **Tokens**: read files by section (offset/limit, grep), never whole big
+  files; long builds/tests run in the background, their logs read with
+  `tail`/`grep`; past ~150k context hand off to a new session.
 - **Sessions** start from the phone (cloud) or locally; never check or report
   Remote Control. A cloud session reaches the laptop through the runner repo
   `tito423/rafeeq-control` (`gh workflow run run.yml -R tito423/rafeeq-control
