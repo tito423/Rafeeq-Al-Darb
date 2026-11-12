@@ -4,7 +4,7 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — Android batch of six owner requests (2026-11-13): DONE, unreleased
+## Current task — Android batch of six owner requests (2026-11-13): DONE, RELEASED v4.4.0
 
 Seen on emulator-5554 (API 24, Arabic): (1) mushaf quarter plate = narrow
 strip in the gap under the «۞» line at the page edge, text full width, fades
@@ -15,7 +15,7 @@ emulator has no vibrator); (3) adhkar last card centred (portrait; landscape
 3x3 needs nothing); (4) heads-up adhan now SOUNDS (native MediaPlayer started,
 alarm stream) - was silent by design; (5)+(6) khatma reminder pills + 12-hour
 ص/م in pills, picker and menu subtitle. Not seen: non-Arabic languages, real
-phone, printed plate on landscape. Owner decides the release.
+phone, printed plate on landscape. Printed strip fixed (upright in left margin) and released as v4.4.0 (owner's word 2026-11-13).
 
 ## Windows GPU (windows-gpu session)
 
@@ -38,8 +38,8 @@ Windows tests: method_channel_names, notification_id_ranges.
 
 ## Standing owner orders (still open)
 
-- NO release without the owner's word. Last published: v4.3.0
-  (2026-11-12 ~23:20, tag 7630abac, versionCode 120).
+- NO release without the owner's word. Last published: v4.4.0
+  (2026-11-13, versionCode 121).
 - `scripts/own_irab/SPECIALIST_SAMPLE.csv`: 300 words for a human grammarian;
   the app may not call the i'rab «معتمد» before that result.
 - Hourly autorun `own-irab-autorun` stays DISABLED.
@@ -59,6 +59,7 @@ Windows tests: method_channel_names, notification_id_ranges.
 
 ## Log (newest first)
 
+- 2026-11-13 ~01:45 v4.4.0 released: printed rub' strip moved into the left margin; English tasbeeh/adhkar seen; emulator back to Arabic + light theme.
 - 2026-11-13 ~00:45 six-item Android batch done + seen (see Current task); analyze clean; commit pending release word.
 - 2026-11-12 ~23:30 token trim: .gitignore for scratch (git status 82 -> 0 lines), this file cut 126 -> 45 lines, cheap agents in `.claude/agents/`.
 - 2026-11-12 ~23:20 v4.3.0 released (card forever + LocationFollow + background-location permission).
