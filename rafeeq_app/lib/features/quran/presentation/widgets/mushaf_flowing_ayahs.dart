@@ -282,8 +282,13 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            // The quarter plate is drawn BEHIND the words, so it can never
-            // cover one (owner: «مش لازم يغطي كلمات»).
+            Text.rich(
+              TextSpan(children: spans),
+              key: _textKey,
+              textAlign: TextAlign.justify,
+              textDirection: TextDirection.rtl,
+            ),
+            // A strip in the gap between lines, so it covers no word.
             if (rubMarks.isNotEmpty)
               Positioned.fill(
                 child: RubPlateOverlay(
@@ -295,12 +300,6 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
                   baseStyle: DefaultTextStyle.of(context).style,
                 ),
               ),
-            Text.rich(
-              TextSpan(children: spans),
-              key: _textKey,
-              textAlign: TextAlign.justify,
-              textDirection: TextDirection.rtl,
-            ),
           ],
         ),
       ),

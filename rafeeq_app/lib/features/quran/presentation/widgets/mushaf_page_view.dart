@@ -623,7 +623,9 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         if (first == null || r.top < first.top) first = r;
       }
       if (first == null) continue;
-      final c = fit == null ? first.center : fit.apply(first.center);
+      // The gap under the «۞» line, where the strip sits.
+      final under = Offset(first.center.dx, first.bottom);
+      final c = fit == null ? under : fit.apply(under);
       marks.add((c.dy * h, info));
     }
     final theme = Theme.of(context);

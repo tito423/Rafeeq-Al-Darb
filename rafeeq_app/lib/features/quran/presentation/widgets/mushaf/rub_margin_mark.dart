@@ -178,7 +178,7 @@ class _RubPlatePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final alpha = Curves.easeOut.transform(fade.value) * 0.7;
+    final alpha = Curves.easeOut.transform(fade.value) * 0.92;
     if (alpha <= 0) return;
     final ro = textKey.currentContext?.findRenderObject();
     if (ro is! RenderParagraph || !ro.hasSize) return;
@@ -187,12 +187,11 @@ class _RubPlatePainter extends CustomPainter {
     );
     if (boxes.isEmpty) return;
     final line = boxes.first.toRect();
-    final width = (edge + 12).clamp(28.0, 32.0);
     canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, alpha));
-    paintRubPlate(
+    paintRubStrip(
       canvas,
-      centre: Offset(-edge + width / 2, line.center.dy),
-      width: width,
+      left: 3,
+      centreY: line.bottom,
       lines: info.marginLines,
       mt: mt,
       baseStyle: baseStyle,
@@ -400,10 +399,11 @@ class _PrintedPlatePainter extends CustomPainter {
     if (alpha <= 0) return;
     for (final (y, info) in marks) {
       canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, alpha));
-      paintRubPlate(
+      paintRubStrip(
         canvas,
-        centre: Offset(width / 2 + 1, y),
-        width: width,
+        left: 2,
+        scale: 0.78,
+        centreY: y + 1,
         lines: info.marginLines,
         mt: mt,
         baseStyle: baseStyle,
@@ -415,4 +415,59 @@ class _PrintedPlatePainter extends CustomPainter {
   @override
   bool shouldRepaint(_PrintedPlatePainter old) =>
       old.marks != marks || old.width != width || old.mt != mt;
+}
+
+/// The quarter plate as a one-line strip with pointed ends, [left] from the
+/// page edge and centred on [centreY]. It is laid in the gap BETWEEN two text
+/// lines, so it never covers a word (owner, 2026-11-12).
+void paintRubStrip(
+  Canvas canvas, {
+  required double left,
+  required double centreY,
+  required List<String> lines,
+  required MushafTheme mt,
+  required TextStyle baseStyle,
+  double scale = 1,
+}) {
+  final tp = TextPainter(
+    text: TextSpan(
+      text: lines.join(' · '),
+      style: baseStyle.copyWith(
+        fontFamily: 'AmiriQuran',
+        letterSpacing: 0,
+        fontSize: 11.5 * scale,
+        height: 1.0,
+        fontWeight: FontWeight.w600,
+        color: mt.ink,
+      ),
+    ),
+    textDirection: TextDirection.rtl,
+    maxLines: 1,
+  )..layout();
+  final h = 17.0 * scale;
+  final w = tp.width + 22 * scale;
+  final tip = h / 2;
+  final r = Rect.fromLTWH(left, centreY - h / 2, w, h);
+  final path = Path()
+    ..moveTo(r.left, r.center.dy)
+    ..lineTo(r.left + tip, r.top)
+    ..lineTo(r.right - tip, r.top)
+    ..lineTo(r.right, r.center.dy)
+    ..lineTo(r.right - tip, r.bottom)
+    ..lineTo(r.left + tip, r.bottom)
+    ..close();
+  canvas.drawPath(
+    path,
+    Paint()..color = Color.alphaBlend(mt.gold.withValues(alpha: 0.2), mt.paper),
+  );
+  canvas.drawPath(
+    path,
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.1
+      ..strokeJoin = StrokeJoin.round
+      ..color = mt.gold,
+  );
+  tp.paint(canvas, Offset(r.left + (w - tp.width) / 2, r.center.dy - tp.height / 2));
+  tp.dispose();
 }

@@ -4,7 +4,22 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — Windows GPU load: mostly done (commit 4 in Windows app)
+## Current task — Android batch of six owner requests (2026-11-13): DONE, unreleased
+
+Seen on emulator-5554 (API 24, Arabic): (1) mushaf quarter plate = narrow
+strip in the gap under the «۞» line at the page edge, text full width, fades
+in on first view / out after 2 s, tap «۞» shows it again - text mode AND
+printed madinah_qc (the page image has only the in-line ornament, no plate);
+(2) tasbeeh reset-counter button + vibration tap (vibrate call NOT felt:
+emulator has no vibrator); (3) adhkar last card centred (portrait; landscape
+3x3 needs nothing); (4) heads-up adhan now SOUNDS (native MediaPlayer started,
+alarm stream) - was silent by design; (5)+(6) khatma reminder pills + 12-hour
+ص/م in pills, picker and menu subtitle. Not seen: non-Arabic languages, real
+phone, printed plate on landscape. Owner decides the release.
+
+## Windows GPU (windows-gpu session)
+
+ load: mostly done (commit 4 in Windows app)
 
 `Rafiq-Al-Darb-Windows/app` (windows-desktop), measured 2026-11-12/13,
 Get-Counter 3D mean: hidden 91.1% -> 2.7-5.5%; visible 94.7% -> ~45%
@@ -44,6 +59,7 @@ Windows tests: method_channel_names, notification_id_ranges.
 
 ## Log (newest first)
 
+- 2026-11-13 ~00:45 six-item Android batch done + seen (see Current task); analyze clean; commit pending release word.
 - 2026-11-12 ~23:30 token trim: .gitignore for scratch (git status 82 -> 0 lines), this file cut 126 -> 45 lines, cheap agents in `.claude/agents/`.
 - 2026-11-12 ~23:20 v4.3.0 released (card forever + LocationFollow + background-location permission).
 - 2026-11-12 ~21:15 6a8627eb card rebuilds itself daily (PrayerCardJob), seen +35 days.
