@@ -1530,6 +1530,7 @@
     "prayer_channel": "Tarjeta de la próxima oración",
     "prayer_channel_desc": "Notificación fija con la próxima oración, la fecha hégira y una cuenta atrás",
     "prayer_enable_location": "Activa la ubicación para ver los horarios de oración",
+    "prayer_open_to_update": "Abre la aplicación para actualizar los horarios de oración",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "Descargando",
     "dl_files_running_body": "{numFinished} de {numTotal} archivos",

@@ -141,8 +141,22 @@ class PrayerStatusNotification {
       // every event of today and tomorrow lets the native side work out what
       // to show from the clock alone, so a missed alarm costs nothing: the
       // next repost is already right.
+      // A MONTH AHEAD, CALCULATED. The card used to hold yesterday to
+      // tomorrow, so two days without opening the app left it blank (owner's
+      // Honor, 2026-11-12). The times are offline arithmetic for the place
+      // last used, so the card can carry [daysAhead] real days.
+      final inputs = (await SharedPreferences.getInstance())
+          .getString(PrayerTimesService.calcInputsKey);
       await _native.invokeMethod<void>('show', {
-        'events': schedule(times, now, localeCode),
+        'events': schedule(times, now, localeCode,
+            dayTimes: inputs == null
+                ? null
+                : (d) => PrayerTimesService.timesOnDay(inputs, d),
+            daysAhead: daysAhead),
+        // What the card says once this schedule has run out (the app not
+        // opened for about two days): never a blank card (owner, 2026-11-12).
+        'title': 'app.name'.tr(),
+        'body': 'notif.prayer_open_to_update'.tr(),
         'elapsedMs': elapsedWindow.inMilliseconds,
         ..._buttonLabels(),
       });
@@ -168,12 +182,29 @@ class PrayerStatusNotification {
   List<Map<String, Object>> schedule(
     PrayerTimes times,
     DateTime now,
-    String localeCode,
-  ) {
+    String localeCode, {
+    Map<String, DateTime>? Function(DateTime day)? dayTimes,
+    int daysAhead = 1,
+  }) {
     final entries = <(String, DateTime)>[];
     // Yesterday too: at 01:00 the prayer that came in last is yesterday's
     // Isha, and «منذ الأذان» counts up from it.
-    for (final day in [addCalendarDays(now, -1), now, addCalendarDays(now, 1)]) {
+    for (var k = -1; k <= daysAhead; k++) {
+      final day = addCalendarDays(now, k);
+      final calc = dayTimes?.call(day);
+      if (calc != null) {
+        for (final key in const ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha']) {
+          final at = calc[key];
+          // Rounded down to the minute, the way the card prints it.
+          if (at != null) {
+            entries.add((key, DateTime(at.year, at.month, at.day, at.hour, at.minute)));
+          }
+        }
+        continue;
+      }
+      // No stored inputs: today's clock repeated, and only for one day
+      // either side - never a month of approximations.
+      if (k > 1) continue;
       for (final e in [
         ('fajr', times.fajr),
         ('sunrise', times.sunrise),
@@ -232,6 +263,9 @@ class PrayerStatusNotification {
   /// How long the card stays on the event that has just come in, counting up
   /// from it before it moves on to the next one.
   static const elapsedWindow = Duration(hours: 1);
+
+  /// How many calculated days the card carries beyond today.
+  static const daysAhead = 30;
 
   /// «الفجر، ٤:٤٧ ص» — the event line, in the shape the owner's reference
   /// screenshot uses. The clock is [formatTime12h], which is already wrapped

@@ -1530,6 +1530,7 @@
     "prayer_channel": "Next prayer card",
     "prayer_channel_desc": "A persistent notification showing the next prayer, the Hijri date and a countdown",
     "prayer_enable_location": "Turn on location to show prayer times",
+    "prayer_open_to_update": "Open the app to update prayer times",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "Downloading",
     "dl_files_running_body": "{numFinished} of {numTotal} files",

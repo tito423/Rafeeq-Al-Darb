@@ -1530,6 +1530,7 @@
     "prayer_channel": "اگلی نماز کا کارڈ",
     "prayer_channel_desc": "مستقل اطلاع جو اگلی نماز، ہجری تاریخ اور الٹی گنتی دکھاتی ہے",
     "prayer_enable_location": "نماز کے اوقات دیکھنے کے لیے مقام آن کریں",
+    "prayer_open_to_update": "نماز کے اوقات تازہ کرنے کے لیے ایپ کھولیں",
     "prayer_event": "{prayer}، {time}",
     "dl_files_running_title": "ڈاؤن لوڈ جاری",
     "dl_files_running_body": "{numFinished} از {numTotal} فائلیں",

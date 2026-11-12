@@ -50,6 +50,35 @@ Opus reads every proposed change before it is applied.
 Cost of 2-4 ≈ 5 weekly points. Stop at 85% of the 5-hour window; at ~150k
 context checkpoint and tell the owner (he may order a new session).
 
+## NEW TASK (owner 2026-11-12 ~20:50): prayer card must run forever, no app opening
+
+Owner: the status card was sometimes blank (Honor screenshot 19:00: only
+«فتح التطبيق» + «منذ الأذان»). Cause: the schedule held yesterday..tomorrow
+and only the open app refreshes it. Owner then: «لازم التطبيق يشتغل اوتو
+لاخر العمر … ديناميكية … ولا تحتاج ابدا ان التطبيق يتفتح» - follow the
+country he is in, no user action.
+DONE (uncommitted->committed, NOT built/seen/released, pubspec 4.3.0+120):
+- `PrayerTimesService.timesOnDay` + stored `prayer_calc_inputs_v1`; the
+  card gets 30 real calculated days (`daysAhead`), test added (10/10 pass).
+- `PrayerCard.kt`: when nothing is ahead -> fallback text
+  `notif.prayer_open_to_update` (7 languages), no stale «منذ الأذان».
+NEXT (exact), the forever part:
+1. `lib/adhan_recompute_entry.dart`: add method `cardSchedule` (args:
+   calculation, locale, city, hijri offset) that loads translations with
+   rootBundle + `Localization.load` (as the tests do; the headless engine has
+   NO plugins, so native passes prefs values) and returns
+   `PrayerStatusNotification.schedule(..., daysAhead: 30)`.
+2. Native `PrayerCard.refreshInBackground(ctx)`: headless engine like
+   `AdhanCalculation.compute`, store the events; call it from
+   `AdhanRecomputeJob` (daily) and from `PrayerCard.post` when <3 days left.
+3. Location in that job: `LocationManager.getLastKnownLocation` (needs
+   ACCESS_BACKGROUND_LOCATION on Android 10+, an OS rule: one in-app
+   «Allow all the time» prompt, 7 languages); moved >10 km -> update
+   `location_cache_lat/lon_v1` + city via native Geocoder, recompute card and
+   adhan alarms.
+4. See on emulator: mock location change + clock +35 days, card still right.
+Then build, then release 4.3.0 (owner asked: fix, bump, publish).
+
 ## Standing owner orders (still open)
 
 - NO release without the owner's word. Last published: v4.2.0 (04:42

@@ -156,7 +156,13 @@ object PrayerCard {
         val lastPast = all.lastOrNull { it.whenMs <= now }
         val justCameIn = lastPast?.takeIf { it.whenMs >= now - window }
         val upcoming = all.firstOrNull { it.whenMs > now }
-        val elapsed = when (mode) {
+        // THE SCHEDULE RAN OUT. It holds yesterday to tomorrow and only the app
+        // refreshes it, so two days without opening the app left nothing
+        // ahead: the card went blank with a lone «منذ الأذان» button (owner's
+        // Honor, 2026-11-12 19:00, «الاشعار ساعات بيبقى فاضي»). With nothing
+        // ahead, show the fallback text the app stored («افتح التطبيق لتحديث
+        // مواقيت الصلاة») in every mode instead of counting from a stale adhan.
+        val elapsed = if (upcoming == null) null else when (mode) {
             MODE_NEXT -> null
             MODE_ELAPSED -> lastPast
             else -> justCameIn
@@ -224,7 +230,7 @@ object PrayerCard {
             if (nextLabel.isNotEmpty() && upcoming != null) {
                 builder.addAction(0, nextLabel, broadcast(ctx, ACTION_SHOW_NEXT, 3))
             }
-        } else if (prevLabel.isNotEmpty() && lastPast != null) {
+        } else if (prevLabel.isNotEmpty() && lastPast != null && current != null) {
             builder.addAction(0, prevLabel, broadcast(ctx, ACTION_SHOW_ELAPSED, 4))
         }
 

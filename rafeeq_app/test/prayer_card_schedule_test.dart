@@ -11,6 +11,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:rafeeq_app/core/models/prayer_times.dart';
 import 'package:rafeeq_app/core/services/prayer_status_notification.dart';
+import 'package:rafeeq_app/core/services/prayer_times_service.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -160,6 +161,26 @@ void main() {
         .map((e) => _bare(e['label'] as String));
     expect(labels.any((l) => l.contains('الشروق')), isFalse);
     expect(labels.any((l) => l.contains('الفجر')), isTrue);
+  });
+
+  test('a month of calculated days when the place is known (owner, 2026-11-12)', () {
+    // Dubai, Umm al-Qura (method 4), Shafi, twilight angle - the stored
+    // inputs PrayerTimesService writes. The card used to stop after
+    // tomorrow and go blank; now it carries 30 real days.
+    const inputs = '{"lat":25.2048,"lon":55.2708,"method":4,"madhab":0,"hlr":2}';
+    final now = DateTime(2026, 11, 12, 19);
+    final out = PrayerStatusNotification.instance.schedule(times, now, 'ar',
+        dayTimes: (d) => PrayerTimesService.timesOnDay(inputs, d),
+        daysAhead: PrayerStatusNotification.daysAhead);
+    final last = DateTime.fromMillisecondsSinceEpoch(out.last['when'] as int);
+    expect(last.isAfter(DateTime(2026, 12, 12)), isTrue);
+    // Real days, not today's clock repeated: Fajr moves within a month.
+    final fajrs = out
+        .map((e) => DateTime.fromMillisecondsSinceEpoch(e['when'] as int))
+        .where((d) => d.hour < 6 && d.hour >= 4)
+        .map((d) => d.hour * 60 + d.minute)
+        .toSet();
+    expect(fajrs.length, greaterThan(3));
   });
 }
 

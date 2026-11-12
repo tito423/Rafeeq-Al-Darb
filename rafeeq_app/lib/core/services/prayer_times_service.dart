@@ -78,6 +78,18 @@ class PrayerTimesService {
         }),
       );
       await prefs.setString(_cacheDateKey, today);
+      // The place and settings these times came from, so the status card
+      // can work out the coming days itself (see [timesOnDay]).
+      await prefs.setString(
+        calcInputsKey,
+        jsonEncode({
+          'lat': lat,
+          'lon': lon,
+          'method': method,
+          'madhab': madhab.index,
+          'hlr': highLatitudeRule.index,
+        }),
+      );
       return pt;
     } catch (_) {
       // fall through to stale cache
@@ -90,6 +102,42 @@ class PrayerTimesService {
       if (pt != null) return pt;
     }
     return PrayerTimes.empty();
+  }
+
+  /// Where [fetchPrayerTimes] keeps the coordinates and settings it last
+  /// calculated with.
+  static const calcInputsKey = 'prayer_calc_inputs_v1';
+
+  /// Fajr, sunrise and the five prayers of [day], calculated offline from the
+  /// stored [calcInputsKey] JSON. These are the real times of that day, not
+  /// today's clock repeated, so the status card can run for weeks without
+  /// the app being opened (owner, 2026-11-12: «خليه يحدث مع نفسه … ومش
+  /// يحتاج ابدا ان التطبيق يفتح»). Null when the inputs cannot be read.
+  static Map<String, DateTime>? timesOnDay(String inputsJson, DateTime day) {
+    try {
+      final m = jsonDecode(inputsJson) as Map<String, dynamic>;
+      final params = prayerCalculationMethodById(m['method'] as int).parameters(
+        date: day,
+        madhab: adhan.Madhab.values[m['madhab'] as int],
+        highLatitudeRule: adhan.HighLatitudeRule.values[m['hlr'] as int],
+      );
+      final t = adhan.PrayerTimes(
+        adhan.Coordinates(
+            (m['lat'] as num).toDouble(), (m['lon'] as num).toDouble()),
+        adhan.DateComponents.from(day),
+        params,
+      );
+      return {
+        'fajr': t.fajr.toLocal(),
+        'sunrise': t.sunrise.toLocal(),
+        'dhuhr': t.dhuhr.toLocal(),
+        'asr': t.asr.toLocal(),
+        'maghrib': t.maghrib.toLocal(),
+        'isha': t.isha.toLocal(),
+      };
+    } catch (_) {
+      return null;
+    }
   }
 
   adhan.CalculationParameters _getParams(

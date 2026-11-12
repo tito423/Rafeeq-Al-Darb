@@ -1530,6 +1530,7 @@
     "prayer_channel": "بطاقة الصلاة القادمة",
     "prayer_channel_desc": "إشعار ثابت يعرض الصلاة القادمة والتاريخ الهجري وعدّاداً تنازلياً",
     "prayer_enable_location": "فعّل الموقع لعرض مواقيت الصلاة",
+    "prayer_open_to_update": "افتح التطبيق لتحديث مواقيت الصلاة",
     "prayer_event": "{prayer}، {time}",
     "dl_files_running_title": "جارٍ التنزيل",
     "dl_files_running_body": "{numFinished} من {numTotal} ملف",

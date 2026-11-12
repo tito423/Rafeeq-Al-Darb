@@ -1530,6 +1530,7 @@
     "prayer_channel": "Карточка следующей молитвы",
     "prayer_channel_desc": "Постоянное уведомление со следующей молитвой, датой по хиджре и обратным отсчётом",
     "prayer_enable_location": "Включите геолокацию, чтобы видеть время молитв",
+    "prayer_open_to_update": "Откройте приложение, чтобы обновить время молитв",
     "prayer_event": "{prayer}, {time}",
     "dl_files_running_title": "Загрузка",
     "dl_files_running_body": "{numFinished} из {numTotal} файлов",
