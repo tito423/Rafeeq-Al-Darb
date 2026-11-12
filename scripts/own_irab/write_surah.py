@@ -96,6 +96,14 @@ GROUPB.update({(s_, a_, bare(w_)): r_ for (s_, a_, w_), r_ in _GB2.items()})
 # Opus 2026-11-12): whole-text replacements, kept in groupb3_fixes.json.
 for _f in json.load(open(os.path.join(H, 'groupb3_fixes.json'), encoding='utf-8')):
     GROUPB.setdefault((_f['s'], _f['a'], bare(_f['w'])), []).append((_f['old'].rstrip('.'), _f['new'].rstrip('.')))
+# Group B part 5 (NEIGHBOURS_FINDINGS.md, read against al-Jadwal, Darwish and
+# al-Mujtaba by Opus 2026-11-12): neighbours whose tail contradicted a group B
+# change. Many of these words were 'agree'; apply_groupb.py touches them too.
+GROUPB5 = {}
+for _f in json.load(open(os.path.join(H, 'groupb5_fixes.json'), encoding='utf-8')):
+    _k = (_f['s'], _f['a'], bare(_f['w']))
+    GROUPB5.setdefault(_k, []).append((_f['old'], _f['new']))
+    GROUPB.setdefault(_k, []).append((_f['old'], _f['new']))
 
 # «ولقد» parsed as an oath waw (al-Da'as's shorthand) where no sworn-by noun
 # follows: al-Jadwal names the waw and an implied oath for the lam (SAMIN

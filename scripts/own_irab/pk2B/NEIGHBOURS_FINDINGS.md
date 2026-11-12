@@ -52,3 +52,19 @@ Everything else among the 94 was read and is coherent.
    accepted fixes into a groupb5 table, `apply_groupb.py`, `check.py`,
    `audit_vowels.py`, `export_app.py`.
 3. Then TASK_FOLLOWUP NEXT items (2)-(5) (b052-b063 etc.).
+
+## Done 2026-11-12 (Opus) - `groupb5_fixes.json`, 24 fixes applied
+
+- Table B: every change KEPT. al-Mujtaba (al-Kharrat) sides with al-Jadwal in
+  all of them, so it is two books on each side and the change stands:
+  3:54 «جملة والله خير مستأنفة», 12:4 «ساجدين حال», 17:72 «في هذه متعلق بأعمى»,
+  25:49 «أنعاما مفعول أول» (ونسقيه already said ثان: no fix), and the «عسى»
+  family «فعل ماض تام … المصدر فاعل». Al-Samin and al-Bahr do not rule on any
+  of these. The neighbours were made to agree (7 fixes).
+- Table A: all 14 decided from al-Jadwal / Darwish / al-Mujtaba, each quote
+  in the `why` field (15 fixes; 28:58 الوارثين became «معطوفة على جملة لم
+  تسكن» in محل نصب, per al-Jadwal and al-Mujtaba).
+- Section C: 26:29 إلها, 30:54 قوة and ضعفا -> «مفعول به أول» (al-Jadwal).
+- Not changed, found on the way: 36:51 «في الصور» — al-Jadwal and al-Mujtaba
+  make it the na'ib fa'il of «نفخ»; ours (al-Da'as, Darwish) a hidden na'ib.
+  Two books against ours: decide it in the next group B pass.

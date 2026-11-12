@@ -4,7 +4,7 @@ old, and al-Da'as's own text on the word (daas_quote.py) stays under it as the
 first run of 2026-11-12 did that) with the book's text."""
 import json, os, sys
 sys.stdout.reconfigure(encoding='utf-8')
-from write_surah import GROUPB, H, bare
+from write_surah import GROUPB, GROUPB5, H, bare
 from daas_quote import quote
 for surah in sorted({k[0] for k in GROUPB}):
     f = os.path.join(H, f'{surah:03d}.json')
@@ -16,11 +16,15 @@ for surah in sorted({k[0] for k in GROUPB}):
         assert hit, (s, a, w)
         changed = 0
         for x in hit:
+            use = reps
             if x['check'] != 'alt':
-                continue
+                # a neighbour fix (part 5) may sit on a word that agreed with al-Da'as
+                use = GROUPB5.get((s, a, w))
+                if not use:
+                    continue
             old = x['irab']
             new = old
-            for o, n in reps:
+            for o, n in use:
                 if n in new:
                     continue
                 if o in new:

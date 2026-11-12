@@ -18,14 +18,10 @@ Opus reads every proposed change before it is applied.
 
 ## Next step (exact)
 
-1. `scripts/own_irab/pk2B/NEIGHBOURS_FINDINGS.md` — the 94 GROUPB role
-   changes read against their neighbours (5b3b6962). Do its "Next step":
-   decide table B (3:54, 12:4, 17:72, 25:49 and the «عسى» tamma family
-   18:24, 19:48, 27:72, 28:9, 28:67 — al-Da'as + Darwish against the change)
-   from al-Samin / al-Bahr; read the books for table A and section C;
-   write accepted fixes into a groupb5 table; `apply_groupb.py`, `check.py`,
-   `audit_vowels.py`, `export_app.py`. Read books NARROWLY (print only the
-   sentence about the word) — a wide dump cost 43k tokens on 2026-11-12.
+1. DONE 2026-11-12: NEIGHBOURS_FINDINGS.md decided, 24 fixes in
+   `groupb5_fixes.json` applied, check OK, audit_vowels 3 flags (old ones:
+   2:245, 18:40, 20:93 - none touched), exported. Open from it: 36:51
+   «في الصور» na'ib fa'il (al-Jadwal + al-Mujtaba vs ours).
 2. Classify b052-b063 with Haiku (8 at a time, REVIEW_PROMPT.md).
 3. `py -3 mkjudge_b.py 48 63 22 30`, Sonnet judges (two-book rule).
 4. Opus reads the CHANGE list (`pending_digest.py`, `quote_check.py`,
@@ -66,6 +62,7 @@ context checkpoint and tell the owner (he may order a new session).
 
 ## Log (newest first)
 
+- 2026-11-12 ~15:00 group B part 5: 24 neighbour fixes (NEIGHBOURS_FINDINGS), table B kept (al-Mujtaba = second book).
 - 2026-11-12 ~13:40 TASK_FOLLOWUP trimmed (601 lines/36k tokens -> this); full file archived unchanged.
 - 2026-11-12 ~13:30 5b3b6962 neighbour coherence: 94 read, findings file, nothing applied.
 - 2026-11-12 00229577 revert 36:13 أصحاب badal (seen on device).
