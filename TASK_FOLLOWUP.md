@@ -36,9 +36,10 @@ Opus reads every proposed change before it is applied.
 5. DONE 2026-11-12 ~19:10: signed build of 8d30812d (truststore, trap 61;
    log dist/build_irab_groupb6.log), installed on Rafeeq_Audit_API24, SEEN:
    36:13 «أصحاب» مفعول به أول, no badal (al-Jadwal's badal shown as the other
-   book). Part 6 text confirmed inside the APK asset (52:42 «هم» fasl) but
-   NOT opened on screen yet (quota cap 8% from the owner) - NEXT: open one
-   part-6 word (e.g. 52:42 or 40:33) on the emulator.
+   book). Part 6 SEEN too: 39:24 «وقيل» الواو حالية + والجملة في محل نصب
+   حال, with al-Da'as's old line (حرف عطف) and al-Jadwal (واو الحال) under
+   it. Note: the reader's «Jump to» ignores adb taps; swipe pages instead
+   (finger left-to-right = next page).
 6. Still unchecked: the «حتى إذا» family outside the flagged ayahs; 14:29, 3:143.
 
 Cost of 2-4 ≈ 5 weekly points. Stop at 85% of the 5-hour window; at ~150k
@@ -73,6 +74,7 @@ context checkpoint and tell the owner (he may order a new session).
 
 ## Log (newest first)
 
+- 2026-11-12 ~19:25 part 6 seen on API-24 (39:24 waw hal + alts).
 - 2026-11-12 ~19:10 signed build installed on API-24, 36:13 seen OK; not released.
 - 2026-11-12 ~17:30 group B part 6: 63 of 78 judge CHANGE applied (groupb6_fixes.json), 15 rejected; not released.
 
