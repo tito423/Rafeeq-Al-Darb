@@ -10,12 +10,13 @@ _DI = re.compile('[\u064B-\u0652\u0670\u0653-\u0655\u06D6-\u06ED]')
 NEEDLE = {(11, 19, 'هم'): '«هُمْ» ضمير فصل', (12, 4, 'سجدين'): '«ساجِدِينَ»',
           (17, 59, 'بٱلأيت'): '«بِالْآياتِ»', (25, 49, 'أنعما'): '«أَنْعاماً»',
           (4, 4, 'هنيـا'): '«هَنِيئاً مَرِيئاً»', (4, 4, 'مريـا'): '«هَنِيئاً مَرِيئاً»',
-          (20, 110, 'علما'): '«عِلْماً»', (2, 170, 'ءاباءنا'): '«آباءَنا»'}
+          (20, 110, 'علما'): '«عِلْماً»', (2, 170, 'ءاباءنا'): '«آباءَنا»', (28, 58, 'وكنا'): '«وَ» الواو حالية'}
 # where al-Da'as's sentence runs on past the next quote: cut at the full stop
-EXTEND = {(3, 54, 'وٱلله'), (7, 186, 'من')}
+EXTEND = {(3, 54, 'وٱلله'), (7, 186, 'من'), (28, 58, 'وكنا')}
 
 
 def _b(t):
+    t = t.replace('ٰ', 'ا').replace('ء', '').replace('ئ', 'ي').replace('ؤ', 'و')
     return _DI.sub('', t).replace('ٱ', 'ا').replace('آ', 'ا').replace('أ', 'ا').replace('إ', 'ا').replace('ـ', '')
 
 
@@ -25,8 +26,8 @@ def quote(s, a, w):
     start = text.find(NEEDLE[(s, a, w)]) if (s, a, w) in NEEDLE else -1
     if start < 0:
         for m in re.finditer('«([^»]*)»', text):
-            q = _b(m.group(1)).replace(' ', '')
-            if _b(w) in q:
+            q = _b(m.group(1)).replace(' ', '').replace('ا', '')
+            if _b(w).replace('ا', '') in q:
                 start = m.start()
                 break
     if start < 0:
