@@ -46,7 +46,7 @@ repo `tito423/Rafeeq-Al-Darb`, APK on GitHub Releases. **Reply in Arabic**
 - **Quota**: read it at the start (`mcp__ccd_session_mgmt__get_usage`
   locally; `get_session` in the cloud) and report it in the first reply;
   re-read before every long stage. Stop at 85% of the 5-hour window. Context
-  near 150k: checkpoint, update `TASK_FOLLOWUP.md`, tell the owner.
+  near 200k (owner, 2026-11-12): checkpoint, update `TASK_FOLLOWUP.md`, tell the owner.
 - **Per task**: a short table piece / who / why / estimated weekly points.
   Python first (free); Haiku for bulk classification, Sonnet for judging
   against rules, Opus for religious-content decisions, reviews, design. Cap 5
@@ -57,7 +57,7 @@ repo `tito423/Rafeeq-Al-Darb`, APK on GitHub Releases. **Reply in Arabic**
   content and designs. Agents answer in summaries, never file dumps.
 - **Tokens**: read files by section (offset/limit, grep), never whole big
   files; long builds/tests run in the background, their logs read with
-  `tail`/`grep`; past ~150k context hand off to a new session.
+  `tail`/`grep`; past ~200k context hand off to a new session.
 - **Sessions** start from the phone (cloud) or locally; never check or report
   Remote Control. A cloud session reaches the laptop through the runner repo
   `tito423/rafeeq-control` (`gh workflow run run.yml -R tito423/rafeeq-control
