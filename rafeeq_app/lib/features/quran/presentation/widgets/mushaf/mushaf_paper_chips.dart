@@ -34,22 +34,24 @@ class MushafPaperChips extends ConsumerWidget {
   /// The chips in a small sheet of their own, for a reader with no display
   /// sheet to put them in.
   static Future<void> show(BuildContext context) => showFittedSheet<void>(
-        context: context,
-        showDragHandle: true,
-        builder: (ctx) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('quran.paper_title'.tr(),
-                    style: Theme.of(ctx).textTheme.titleSmall),
-                const SizedBox(height: 12),
-                const MushafPaperChips(),
-              ],
+    context: context,
+    showDragHandle: true,
+    builder: (ctx) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'quran.paper_title'.tr(),
+              style: Theme.of(ctx).textTheme.titleSmall,
             ),
-          ),
+            const SizedBox(height: 12),
+            const MushafPaperChips(),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }

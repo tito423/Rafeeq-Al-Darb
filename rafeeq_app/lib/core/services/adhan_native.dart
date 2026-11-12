@@ -171,8 +171,7 @@ class AdhanNative {
     bool vibrate = false,
   }) {
     final silentMode = mode == AdhanMode.vibrate ||
-        mode == AdhanMode.silent ||
-        mode == AdhanMode.banner;
+        mode == AdhanMode.silent;
     final AdhanSoundType type;
     final String? value;
     String? asset;

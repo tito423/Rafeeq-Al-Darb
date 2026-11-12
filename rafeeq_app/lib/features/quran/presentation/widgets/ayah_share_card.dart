@@ -129,8 +129,11 @@ TextStyle _ayahStyle(SharePalette c) => TextStyle(
   color: c.ink,
 );
 
-TextStyle _bodyStyle(SharePalette c) =>
-    TextStyle(fontSize: 18.5, height: 1.75, color: c.ink.withValues(alpha: 0.94));
+TextStyle _bodyStyle(SharePalette c) => TextStyle(
+  fontSize: 18.5,
+  height: 1.75,
+  color: c.ink.withValues(alpha: 0.94),
+);
 
 /// One card: the ayah (first card only) and the stretch of the body on it.
 class ShareCardPlan {
@@ -261,7 +264,12 @@ class AyahShareCard extends StatelessWidget {
         child: CustomPaint(
           painter: ShareFramePainter(c),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(_padH, _padTop, _padH, _padBottom),
+            padding: const EdgeInsets.fromLTRB(
+              _padH,
+              _padTop,
+              _padH,
+              _padBottom,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -690,7 +698,11 @@ Future<bool> shareAyahAsImages(
   required ShareStyle style,
 }) async {
   try {
-    final pngs = await renderShareCards(context, content: content, style: style);
+    final pngs = await renderShareCards(
+      context,
+      content: content,
+      style: style,
+    );
     final dir = await getTemporaryDirectory();
     final safeRef = content.fileTag.replaceAll(RegExp('[^0-9A-Za-z]+'), '_');
     final files = <XFile>[];

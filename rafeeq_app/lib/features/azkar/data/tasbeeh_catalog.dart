@@ -44,7 +44,10 @@ const tasbeehLongAdhkar = [
   DhikrOption('azkar.tasbeeh_tawhid_full', Color(0xFFC9A227)), // gold
   DhikrOption('azkar.tasbeeh_baqiyat_full', Color(0xFF2E9D6F)), // green
   DhikrOption('azkar.tasbeeh_yunus', Color(0xFF2E9FE8)), // blue
-  DhikrOption('azkar.tasbeeh_subhanallah_wabihamdih', Color(0xFF3F7A8C)), // teal
+  DhikrOption(
+    'azkar.tasbeeh_subhanallah_wabihamdih',
+    Color(0xFF3F7A8C),
+  ), // teal
   DhikrOption('azkar.tasbeeh_astaghfirullah_full', Color(0xFF6C5FBC)), // purple
 ];
 

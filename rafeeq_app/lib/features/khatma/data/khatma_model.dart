@@ -347,20 +347,25 @@ class Khatma {
   }) {
     final start = startPage.clamp(1, totalPages);
     final plan = totalPages - start + 1;
-    final read = (reachedPage.clamp(start, totalPages + 1) - start).clamp(0, plan);
+    final read = (reachedPage.clamp(start, totalPages + 1) - start).clamp(
+      0,
+      plan,
+    );
     final shift = this.startPage - start;
     final kept = <WirdRecord>[];
     for (final w in wirds) {
       final from = w.from + shift;
       final to = w.to + shift;
       if (from < 0 || to > read) continue;
-      kept.add(WirdRecord(
-        from: from,
-        to: to,
-        at: w.at,
-        lastReadBefore: w.lastReadBefore,
-        streakBefore: w.streakBefore,
-      ));
+      kept.add(
+        WirdRecord(
+          from: from,
+          to: to,
+          at: w.at,
+          lastReadBefore: w.lastReadBefore,
+          streakBefore: w.streakBefore,
+        ),
+      );
     }
     final lastTo = kept.isEmpty ? null : kept.last.to;
     if (lastTo != null && lastTo < read) {
@@ -455,10 +460,7 @@ class Khatma {
     reminderTimes: sortedTimes([
       if (j['reminders'] is List)
         for (final r in j['reminders'] as List<dynamic>)
-          TimeOfDay(
-            hour: (r as List<dynamic>)[0] as int,
-            minute: r[1] as int,
-          )
+          TimeOfDay(hour: (r as List<dynamic>)[0] as int, minute: r[1] as int)
       else if (j['reminderHour'] != null)
         TimeOfDay(
           hour: j['reminderHour'] as int,

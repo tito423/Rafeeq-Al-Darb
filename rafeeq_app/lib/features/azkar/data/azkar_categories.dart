@@ -153,7 +153,9 @@ const Map<int, List<AzkarCategory>> azkarSectionCategories = {
   20: [AzkarCategory.afterPrayer], // دعاء الجلسة بين السجدتين
   21: [AzkarCategory.afterPrayer], // دعاء سجود التلاوة
   22: [AzkarCategory.afterPrayer], // التشهد
-  23: [AzkarCategory.afterPrayer], // الصلاة على النبي صلى الله عليه وسلم بعد التشهد
+  23: [
+    AzkarCategory.afterPrayer,
+  ], // الصلاة على النبي صلى الله عليه وسلم بعد التشهد
   24: [AzkarCategory.afterPrayer], // الدعاء بعد التشهد الأخير وقبل السلام
   25: [AzkarCategory.afterPrayer], // الأذكار بعد السلام من الصلاة
   26: [AzkarCategory.afterPrayer], // دعاء صلاة الاستخارة

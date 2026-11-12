@@ -211,9 +211,9 @@ class _AdhkarListenScreenState extends State<AdhkarListenScreen> {
         foregroundColor: Colors.white,
         // The theme's own title style carries a dark colour that wins over
         // foregroundColor - seen dark-on-photo on emulator-5554.
-        titleTextStyle: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
-          color: Colors.white,
-        ),
+        titleTextStyle: Theme.of(
+          context,
+        ).appBarTheme.titleTextStyle?.copyWith(color: Colors.white),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),

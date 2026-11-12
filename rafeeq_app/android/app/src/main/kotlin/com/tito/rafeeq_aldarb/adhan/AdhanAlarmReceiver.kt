@@ -36,7 +36,10 @@ class AdhanAlarmReceiver : BroadcastReceiver() {
         }
 
         when (spec.mode) {
-            AdhanSpec.MODE_FULL, AdhanSpec.MODE_AUDIO -> AdhanService.fire(context, spec)
+            // Banner (heads-up) also sounds the adhan: before 2026-11-13 it was
+            // fully silent, so its preview was mute (owner report).
+            AdhanSpec.MODE_FULL, AdhanSpec.MODE_AUDIO, AdhanSpec.MODE_BANNER ->
+                AdhanService.fire(context, spec)
             AdhanSpec.MODE_VIBRATE -> {
                 AdhanVibration.once(context)
                 postQuietAlert(context, spec)

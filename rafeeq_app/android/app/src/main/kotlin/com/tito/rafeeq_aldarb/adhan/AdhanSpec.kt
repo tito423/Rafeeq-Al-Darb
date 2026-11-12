@@ -46,7 +46,7 @@ data class AdhanSpec(
     val vibrate: Boolean = false,
 ) {
     val isFullScreen: Boolean get() = mode == MODE_FULL
-    val hasSound: Boolean get() = (mode == MODE_FULL || mode == MODE_AUDIO) && soundType != SOUND_NONE
+    val hasSound: Boolean get() = (mode == MODE_FULL || mode == MODE_AUDIO || mode == MODE_BANNER) && soundType != SOUND_NONE
 
     /** Stable per-prayer request code, so re-scheduling replaces rather than stacks. */
     val requestCode: Int

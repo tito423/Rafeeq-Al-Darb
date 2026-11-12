@@ -54,7 +54,7 @@ class ContinuousMushafView extends StatefulWidget {
 
   /// One page's verses, as an embedded `MushafTextPage`.
   final Widget Function(BuildContext context, int page, List<Ayah> ayahs)
-      pageBuilder;
+  pageBuilder;
 
   /// The page under the reading line changed.
   final ValueChanged<int> onPageChanged;
@@ -303,34 +303,34 @@ class ContinuousMushafViewState extends State<ContinuousMushafView>
   }
 
   Widget _page(int page) => _PageSlot(
-        key: ValueKey(page),
-        page: page,
-        onBuilt: (ctx) => _built[page] = ctx,
-        onGone: (ctx) {
-          if (identical(_built[page], ctx)) _built.remove(page);
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (page != widget.firstPage)
-              _PageRule(page: page, color: widget.ruleColor),
-            FutureBuilder<List<Ayah>>(
-              future: widget.ayahsOf(page),
-              initialData: widget.ayahsIfLoaded?.call(page),
-              builder: (context, snap) {
-                final ayahs = snap.data;
-                if (ayahs == null) {
-                  return const SizedBox(
-                    height: 320,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                return widget.pageBuilder(context, page, ayahs);
-              },
-            ),
-          ],
+    key: ValueKey(page),
+    page: page,
+    onBuilt: (ctx) => _built[page] = ctx,
+    onGone: (ctx) {
+      if (identical(_built[page], ctx)) _built.remove(page);
+    },
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (page != widget.firstPage)
+          _PageRule(page: page, color: widget.ruleColor),
+        FutureBuilder<List<Ayah>>(
+          future: widget.ayahsOf(page),
+          initialData: widget.ayahsIfLoaded?.call(page),
+          builder: (context, snap) {
+            final ayahs = snap.data;
+            if (ayahs == null) {
+              return const SizedBox(
+                height: 320,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+            return widget.pageBuilder(context, page, ayahs);
+          },
         ),
-      );
+      ],
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {

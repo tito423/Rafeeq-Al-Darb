@@ -151,21 +151,28 @@ class MushafToolbar extends ConsumerWidget {
         ),
         // ── العلامات المرجعية ── «حطلي فيه خيار او ايقونة العلامات المرجعية»
         // (owner, 2026-10-23). Filled while this page carries a mark.
-        Builder(builder: (context) {
-          final marked = ref.watch(quranBookmarksProvider
-              .select((l) => l.any((b) => !b.isAyah && b.page == current)));
-          return ToolbarAction(
-            icon: marked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-            label: 'quran.bookmarks_title'.tr(),
-            active: marked,
-            onPressed: () => showBookmarksSheet(
-              context,
-              surahs: canIndexBySurah ? data.surahs : const [],
-              current: current,
-              onPage: onGoToPage,
-            ),
-          );
-        }),
+        Builder(
+          builder: (context) {
+            final marked = ref.watch(
+              quranBookmarksProvider.select(
+                (l) => l.any((b) => !b.isAyah && b.page == current),
+              ),
+            );
+            return ToolbarAction(
+              icon: marked
+                  ? Icons.bookmark_rounded
+                  : Icons.bookmark_border_rounded,
+              label: 'quran.bookmarks_title'.tr(),
+              active: marked,
+              onPressed: () => showBookmarksSheet(
+                context,
+                surahs: canIndexBySurah ? data.surahs : const [],
+                current: current,
+                onPage: onGoToPage,
+              ),
+            );
+          },
+        ),
         // ── استماع ── both mushafs. It was text-only because the Tajweed
         // printing highlighted 4:3 on page 77 a line low; that printing is
         // gone, and the one paper printing left (madinah_qc) highlights from
@@ -176,18 +183,18 @@ class MushafToolbar extends ConsumerWidget {
         // indexes.
         if (_textOnly || canIndexBySurah)
           TutorialAnchor(
-          id: TourAnchor.quranRecite,
-          child: ToolbarAction(
-            icon: reciteActive
-                ? Icons.stop_circle_rounded
-                : Icons.headphones_rounded,
-            label: reciteActive
-                ? 'quran.recite_stop'.tr()
-                : 'quran.recite_continuous'.tr(),
-            active: reciteActive,
-            onPressed: onToggleRecite,
+            id: TourAnchor.quranRecite,
+            child: ToolbarAction(
+              icon: reciteActive
+                  ? Icons.stop_circle_rounded
+                  : Icons.headphones_rounded,
+              label: reciteActive
+                  ? 'quran.recite_stop'.tr()
+                  : 'quran.recite_continuous'.tr(),
+              active: reciteActive,
+              onPressed: onToggleRecite,
+            ),
           ),
-        ),
         // ── نصي ⇄ ورقي ── «ضيف خيار التنقل من وضع النص لوضع المصحف مباشرة».
         // It lived only inside «العرض», two taps and a scroll away; it is the
         // switch readers flip most, so it sits on the strip itself. The label
@@ -202,28 +209,28 @@ class MushafToolbar extends ConsumerWidget {
         // tour opens the sheet through this one (owner, 2026-11-05: «يدخل
         // جواها ايقونة ايقونة»).
         TutorialAnchor(
-                  id: TourAnchor.quranDisplay,
-                  child: ToolbarAction(
-                    icon: Icons.tune_rounded,
-                    label: 'quran.display_title'.tr(),
-                    active: pageFillScreen || autoScroll,
-                    onPressed: () => showQuranDisplaySheet(
-                      context,
-                      textMode: textMode,
-                      isRaster: isRaster,
-                      autoScroll: autoScroll,
-                      autoScrollSpeed: autoScrollSpeed,
-                      reciteActive: reciteActive,
-                      pageFillScreen: pageFillScreen,
-                      fontScale: fontScale,
-                      onFontScale: onFontScale,
-                      onToggleAutoScroll: onToggleAutoScroll,
-                      onAutoScrollSpeedChanged: onAutoScrollSpeedChanged,
-                      onTogglePageFill: onTogglePageFill,
-                      onEnterImageView: onEnterImageView,
-                      onLeaveImageView: onLeaveImageView,
-                    ),
-                  ),
+          id: TourAnchor.quranDisplay,
+          child: ToolbarAction(
+            icon: Icons.tune_rounded,
+            label: 'quran.display_title'.tr(),
+            active: pageFillScreen || autoScroll,
+            onPressed: () => showQuranDisplaySheet(
+              context,
+              textMode: textMode,
+              isRaster: isRaster,
+              autoScroll: autoScroll,
+              autoScrollSpeed: autoScrollSpeed,
+              reciteActive: reciteActive,
+              pageFillScreen: pageFillScreen,
+              fontScale: fontScale,
+              onFontScale: onFontScale,
+              onToggleAutoScroll: onToggleAutoScroll,
+              onAutoScrollSpeedChanged: onAutoScrollSpeedChanged,
+              onTogglePageFill: onTogglePageFill,
+              onEnterImageView: onEnterImageView,
+              onLeaveImageView: onLeaveImageView,
+            ),
+          ),
         ),
       ],
     );

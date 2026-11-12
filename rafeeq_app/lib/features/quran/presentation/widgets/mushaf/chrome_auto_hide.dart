@@ -36,13 +36,14 @@ class ChromeAutoHide extends ConsumerStatefulWidget {
 
 class _ChromeAutoHideState extends ConsumerState<ChromeAutoHide> {
   Timer? _timer;
-  late final StateController<bool> _shown =
-      ref.read(quranChromeShownProvider.notifier);
+  late final StateController<bool> _shown = ref.read(
+    quranChromeShownProvider.notifier,
+  );
 
   /// After the frame: a provider may not change while widgets build.
   void _report(bool v) => WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_shown.state != v) _shown.state = v;
-      });
+    if (_shown.state != v) _shown.state = v;
+  });
 
   void _arm() {
     _report(widget.visible);

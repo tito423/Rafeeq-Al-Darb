@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/shell/tab_request_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/time_formatter.dart';
 import '../../quran/data/mushaf_data_provider.dart';
 import '../../quran/data/quran_jump_provider.dart';
 import '../../quran/data/quran_last_read.dart';
@@ -228,20 +229,22 @@ class _EmptyBody extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 if (days > 0)
-                                Text(
-                                  'khatma.plan_pages'.tr(
-                                    args: [
-                                      localizeDigits(
-                                        '${(604 / days).ceil()}',
-                                        lang,
+                                  Text(
+                                    'khatma.plan_pages'.tr(
+                                      args: [
+                                        localizeDigits(
+                                          '${(604 / days).ceil()}',
+                                          lang,
+                                        ),
+                                      ],
+                                    ),
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
                                       ),
-                                    ],
+                                      fontSize: 12,
+                                    ),
                                   ),
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                    fontSize: 12,
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -416,10 +419,7 @@ class _KhatmaTile extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => onOpenReader(
-                      khatmaResumePage(
-                        khatma,
-                        ref.read(quranLastPageProvider),
-                      ),
+                      khatmaResumePage(khatma, ref.read(quranLastPageProvider)),
                     ),
                     child: Text('khatma.open_reader'.tr()),
                   ),
@@ -442,8 +442,12 @@ class _KhatmaTile extends ConsumerWidget {
 
   /// In the reader's digits - it was Latin inside the Arabic interface
   /// (found by a search for raw padded times, 2026-09-26).
+  /// 12-hour with the locale's AM/PM marker (owner, 2026-11-12).
   String _fmtTime(TimeOfDay t) => localizeDigits(
-    '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
+    formatTime12h(
+      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
+      uiLanguageCode,
+    ),
     uiLanguageCode,
   );
 }

@@ -3,7 +3,6 @@
 /// about 393 logical pixels of height to spend in total.
 library;
 
-
 import 'package:flutter/material.dart';
 
 import '../../../../../core/widgets/toolbar_action.dart';
@@ -29,7 +28,11 @@ class ToolbarStrip extends StatelessWidget {
   final bool compact;
   final List<Widget> children;
 
-  const ToolbarStrip({super.key, required this.compact, required this.children});
+  const ToolbarStrip({
+    super.key,
+    required this.compact,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +64,7 @@ class ToolbarStrip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final child in children) _compact(child),
-        ],
+        children: [for (final child in children) _compact(child)],
       ),
     );
   }

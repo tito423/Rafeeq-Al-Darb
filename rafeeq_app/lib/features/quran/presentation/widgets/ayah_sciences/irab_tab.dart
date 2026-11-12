@@ -77,9 +77,7 @@ final ownIrabProvider = FutureProvider<Map<String, List<OwnIrabWord>>>((
             for (final a in (w[2] as List).cast<List<dynamic>>())
               (a[0] as String, a[1] as String),
           ],
-          tags: w.length > 3
-              ? (w[3] as List).cast<String>()
-              : const <String>[],
+          tags: w.length > 3 ? (w[3] as List).cast<String>() : const <String>[],
         ),
     ]),
   );
@@ -103,6 +101,7 @@ class OwnIrabWord {
 
 class IrabTab extends ConsumerWidget {
   final Ayah ayah;
+
   /// The book's section; null while the sciences pack is not downloaded.
   final Future<IrabSection?>? future;
 

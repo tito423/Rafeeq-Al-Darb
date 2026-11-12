@@ -40,7 +40,9 @@ class TafseerTab extends ConsumerWidget {
         final available = SciencesRepository.tafseerSources.keys
             .where(data.containsKey)
             .toList();
-        final active = available.contains(selected) ? selected : available.first;
+        final active = available.contains(selected)
+            ? selected
+            : available.first;
 
         return Column(
           children: [
@@ -68,7 +70,9 @@ class TafseerTab extends ConsumerWidget {
                     ],
                     onChanged: (v) {
                       if (v != null) {
-                        ref.read(selectedTafseerSourceProvider.notifier).select(v);
+                        ref
+                            .read(selectedTafseerSourceProvider.notifier)
+                            .select(v);
                       }
                     },
                   ),

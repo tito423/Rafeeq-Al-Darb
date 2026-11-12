@@ -34,7 +34,10 @@ String ayahOpening(String ayah, {int words = 12}) {
 /// True when [ayah] would be cut by [ayahOpening] — the card uses it to decide
 /// whether the «من قوله تعالى» label is a promise it is keeping.
 bool ayahIsCut(String ayah, {int words = 12}) {
-  final parts =
-      ayah.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+  final parts = ayah
+      .trim()
+      .split(RegExp(r'\s+'))
+      .where((w) => w.isNotEmpty)
+      .toList();
   return parts.length > words;
 }

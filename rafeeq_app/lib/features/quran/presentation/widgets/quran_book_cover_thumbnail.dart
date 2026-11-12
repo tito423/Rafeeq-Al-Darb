@@ -32,7 +32,11 @@ class QuranBookCoverThumbnail extends StatelessWidget {
   static const Map<String, _Leather> _palette = {
     // Madinah Hafs — royal emerald green. The only printing that ships; the
     // six others were removed on 2026-09-20 with the printings themselves.
-    'madinah_qc': _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F)),
+    'madinah_qc': _Leather(
+      Color(0xFF063D27),
+      Color(0xFF0B5D3B),
+      Color(0xFF14814F),
+    ),
   };
 
   /// Medallion text override where the first riwayah word would be
@@ -41,8 +45,11 @@ class QuranBookCoverThumbnail extends StatelessWidget {
   /// printing arrives that is also Hafs.
   static const Map<String, String> _medallionOverride = {};
 
-  static const _Leather _fallback =
-      _Leather(Color(0xFF063D27), Color(0xFF0B5D3B), Color(0xFF14814F));
+  static const _Leather _fallback = _Leather(
+    Color(0xFF063D27),
+    Color(0xFF0B5D3B),
+    Color(0xFF14814F),
+  );
 
   static const Color _gold = Color(0xFFD4AF37);
   static const Color _goldSoft = Color(0xFFE8C96A);
@@ -133,10 +140,7 @@ class QuranBookCoverThumbnail extends StatelessWidget {
                   // Gold ornamental frame + corner flourishes.
                   const Positioned.fill(
                     child: CustomPaint(
-                      painter: _FramePainter(
-                        gold: _gold,
-                        goldSoft: _goldSoft,
-                      ),
+                      painter: _FramePainter(gold: _gold, goldSoft: _goldSoft),
                     ),
                   ),
                   // Central gold medallion with the riwayah name.
@@ -258,9 +262,7 @@ class _RealCover extends StatelessWidget {
               DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: radius,
-                  border: Border.all(
-                    color: _kGold.withValues(alpha: 0.55),
-                  ),
+                  border: Border.all(color: _kGold.withValues(alpha: 0.55)),
                 ),
               ),
             ],
@@ -292,11 +294,7 @@ class _Ribbon extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color,
-              Color.lerp(color, Colors.white, 0.22)!,
-              color,
-            ],
+            colors: [color, Color.lerp(color, Colors.white, 0.22)!, color],
             stops: const [0.0, 0.5, 1.0],
           ),
           boxShadow: [

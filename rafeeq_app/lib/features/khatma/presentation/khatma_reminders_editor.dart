@@ -4,10 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/digits.dart';
+import '../../../core/utils/time_formatter.dart';
 import '../data/khatma_store.dart';
 
+/// 12-hour clock with the locale's AM/PM marker (owner, 2026-11-12).
 String _fmt(TimeOfDay t, String lang) => localizeDigits(
-  '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
+  formatTime12h(
+    '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
+    lang,
+  ),
   lang,
 );
 
@@ -27,6 +32,10 @@ class KhatmaRemindersEditor extends StatelessWidget {
   Future<void> _pick(BuildContext context, {int? replacing}) async {
     final t = await showTimePicker(
       context: context,
+      builder: (ctx, child) => MediaQuery(
+        data: MediaQuery.of(ctx).copyWith(alwaysUse24HourFormat: false),
+        child: child ?? const SizedBox.shrink(),
+      ),
       initialTime: replacing != null
           ? times[replacing]
           : const TimeOfDay(hour: 20, minute: 0),
@@ -65,21 +74,24 @@ class KhatmaRemindersEditor extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Wrap(
-          spacing: 8,
-          runSpacing: 4,
+          spacing: 10,
+          runSpacing: 10,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             for (var i = 0; i < times.length; i++)
-              InputChip(
-                avatar: const Icon(Icons.alarm_rounded, size: 18),
-                label: Text(_fmt(times[i], lang)),
-                onPressed: () => _pick(context, replacing: i),
-                onDeleted: () => onChanged([...times]..removeAt(i)),
-                deleteButtonTooltipMessage: 'khatma.reminder_remove'.tr(),
+              _TimePill(
+                label: _fmt(times[i], lang),
+                onTap: () => _pick(context, replacing: i),
+                onRemove: () => onChanged([...times]..removeAt(i)),
+                removeTooltip: 'khatma.reminder_remove'.tr(),
               ),
-            ActionChip(
-              avatar: const Icon(Icons.add_alarm_rounded, size: 18),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.add_alarm_rounded, size: 18),
               label: Text('khatma.reminder_add'.tr()),
+              style: OutlinedButton.styleFrom(
+                shape: const StadiumBorder(),
+                minimumSize: const Size(0, 44),
+              ),
               onPressed: () => _pick(context),
             ),
           ],
@@ -117,4 +129,62 @@ Future<void> showKhatmaRemindersSheet(BuildContext context, Khatma khatma) {
       ),
     ),
   );
+}
+
+/// One reminder time: a rounded gold-tinted pill, the time large, a small
+/// remove button at its end.
+class _TimePill extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  final VoidCallback onRemove;
+  final String removeTooltip;
+
+  const _TimePill({
+    required this.label,
+    required this.onTap,
+    required this.onRemove,
+    required this.removeTooltip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: AppColors.gold.withValues(alpha: 0.14),
+      shape: StadiumBorder(
+        side: BorderSide(color: AppColors.gold.withValues(alpha: 0.45)),
+      ),
+      child: InkWell(
+        customBorder: const StadiumBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(14, 4, 4, 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.alarm_rounded, size: 18, color: goldOn(scheme)),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(width: 2),
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                tooltip: removeTooltip,
+                icon: Icon(
+                  Icons.close_rounded,
+                  size: 18,
+                  color: scheme.onSurfaceVariant,
+                ),
+                onPressed: onRemove,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -238,26 +238,28 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
             TutorialAnchor(
               id: TourAnchor.quranFullScreen,
               child: _SwitchTile(
-              icon: _fill
-                  ? Icons.fullscreen_exit_rounded
-                  : Icons.fullscreen_rounded,
-              title: 'quran.page_fit_full'.tr(),
-              value: _fill,
-              onChanged: (_) {
-                setState(() => _fill = !_fill);
-                widget.onTogglePageFill();
-              },
-            ),
+                icon: _fill
+                    ? Icons.fullscreen_exit_rounded
+                    : Icons.fullscreen_rounded,
+                title: 'quran.page_fit_full'.tr(),
+                value: _fill,
+                onChanged: (_) {
+                  setState(() => _fill = !_fill);
+                  widget.onTogglePageFill();
+                },
+              ),
             ),
             if (_textOnly)
               _SwitchTile(
                 icon: Icons.swipe_vertical_rounded,
                 title: 'quran.auto_scroll'.tr(),
                 value: _auto,
-                onChanged: widget.reciteActive ? null : (_) {
-                  setState(() => _auto = !_auto);
-                  widget.onToggleAutoScroll();
-                },
+                onChanged: widget.reciteActive
+                    ? null
+                    : (_) {
+                        setState(() => _auto = !_auto);
+                        widget.onToggleAutoScroll();
+                      },
               ),
             if (_textOnly && _auto)
               AutoScrollSpeedBar(
@@ -276,19 +278,19 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
             TutorialAnchor(
               id: TourAnchor.quranEditions,
               child: _Tile(
-              icon: _textOnly ? Icons.image_rounded : Icons.notes_rounded,
-              title: _textOnly
-                  ? 'quran.mushaf_mode'.tr()
-                  : 'quran.text_mode'.tr(),
-              onTap: () {
-                Navigator.of(context).pop();
-                if (_textOnly) {
-                  widget.onEnterImageView();
-                } else {
-                  widget.onLeaveImageView();
-                }
-              },
-            ),
+                icon: _textOnly ? Icons.image_rounded : Icons.notes_rounded,
+                title: _textOnly
+                    ? 'quran.mushaf_mode'.tr()
+                    : 'quran.text_mode'.tr(),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  if (_textOnly) {
+                    widget.onEnterImageView();
+                  } else {
+                    widget.onLeaveImageView();
+                  }
+                },
+              ),
             ),
             const SizedBox(height: 4),
             Text(
@@ -445,10 +447,7 @@ class _FontRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  localizeDigits(
-                    percentOf(scale),
-                    context.locale.languageCode,
-                  ),
+                  localizeDigits(percentOf(scale), context.locale.languageCode),
                   style: TextStyle(
                     fontSize: 11,
                     color: scheme.onSurfaceVariant,
@@ -506,8 +505,10 @@ class _ReciteReturnRow extends ConsumerWidget {
               Icon(Icons.my_location_rounded, color: goldText(context)),
               const SizedBox(width: 16),
               Expanded(
-                child: Text('quran.recite_return'.tr(),
-                    style: Theme.of(context).textTheme.bodyLarge),
+                child: Text(
+                  'quran.recite_return'.tr(),
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
             ],
           ),
@@ -527,10 +528,14 @@ class _ReciteReturnRow extends ConsumerWidget {
               children: [
                 for (final s in reciteReturnChoices)
                   ChoiceChip(
-                    label: Text(s == 0
-                        ? 'quran.recite_return_off'.tr()
-                        : localizeDigits(
-                            'quran.recite_return_s'.tr(args: ['$s']), lang)),
+                    label: Text(
+                      s == 0
+                          ? 'quran.recite_return_off'.tr()
+                          : localizeDigits(
+                              'quran.recite_return_s'.tr(args: ['$s']),
+                              lang,
+                            ),
+                    ),
                     selected: value == s,
                     selectedColor: AppColors.gold.withValues(alpha: 0.22),
                     onSelected: (_) =>

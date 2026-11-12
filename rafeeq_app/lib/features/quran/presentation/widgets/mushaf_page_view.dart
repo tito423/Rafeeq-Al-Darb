@@ -5,7 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:vector_graphics/vector_graphics_compat.dart' show RenderingStrategy;
+import 'package:vector_graphics/vector_graphics_compat.dart'
+    show RenderingStrategy;
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/mirrored_network_image.dart';
@@ -14,9 +15,10 @@ import '../../data/inked_svg.dart';
 import '../../data/mushaf_edition.dart';
 import '../../data/mushaf_page_service.dart';
 import '../../data/mushaf_paper_provider.dart';
+import '../../data/mushaf_theme.dart';
 import '../../data/quran_zoom_provider.dart';
 import '../../data/rub_el_hizb.dart';
-import 'mushaf/rub_bubble.dart';
+import 'mushaf/rub_margin_mark.dart';
 
 /// One mushaf page: the authentic KFQC page as vector art, with the real ayah
 /// polygons layered on top for tap and highlight.
@@ -30,6 +32,7 @@ class MushafPageView extends ConsumerStatefulWidget {
   final MushafEdition edition;
   final int page;
   final AyahRegion? highlight;
+
   /// A long press on a verse: select it and open its card.
   final void Function(AyahRegion region) onAyahLongPress;
   final VoidCallback? onLoadFailed;
@@ -62,8 +65,8 @@ class MushafPageView extends ConsumerStatefulWidget {
   /// floating controls, not the empty margins around it.
   static double? pageAspectFor(MushafEdition edition, int page) =>
       edition.isRaster
-          ? edition.fitForPage(page)?.pageAspect
-          : vectorPageAspect;
+      ? edition.fitForPage(page)?.pageAspect
+      : vectorPageAspect;
 }
 
 class _MushafPageViewState extends ConsumerState<MushafPageView> {
@@ -200,8 +203,10 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   Future<File?> _loadRaster() async {
     await _coords.ensureLoaded(widget.edition.polygonsAsset);
     return MushafPageService.instance.cachedImageFile(
-        widget.edition.id, widget.page,
-        ext: widget.edition.imageExt);
+      widget.edition.id,
+      widget.page,
+      ext: widget.edition.imageExt,
+    );
   }
 
   @override
@@ -265,8 +270,9 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
           // before this: turned sideways on 2:40, the view sat on 2:38.
           if (h != _stageHeight) {
             _stageHeight = h;
-            WidgetsBinding.instance
-                .addPostFrameCallback((_) => _revealHighlight());
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => _revealHighlight(),
+            );
           }
           return GestureDetector(
             onDoubleTapDown: (d) => _doubleTapAt = d.localPosition,
@@ -278,9 +284,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
               maxScale: 4,
               child: SingleChildScrollView(
                 controller: _sideScroll,
-                physics: _zoomed
-                    ? const NeverScrollableScrollPhysics()
-                    : null,
+                physics: _zoomed ? const NeverScrollableScrollPhysics() : null,
                 child: SizedBox(width: w, height: h, child: build(w, h)),
               ),
             ),
@@ -353,7 +357,10 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     final page = _buildPage(context, paper);
     return ground == null
         ? page
-        : ColoredBox(color: ground, child: SizedBox.expand(child: page));
+        : ColoredBox(
+            color: ground,
+            child: SizedBox.expand(child: page),
+          );
   }
 
   Widget _buildPage(BuildContext context, MushafPaper paper) {
@@ -431,16 +438,14 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                   // emulator-5554 by zooming page 316 two-fold, the same
                   // blank-where-text-was shape the owner photographed.
                   renderingStrategy: RenderingStrategy.raster,
-                  placeholderBuilder: (_) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  placeholderBuilder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
                 if (widget.highlight != null)
                   CustomPaint(
-                    painter: _AyahHighlightPainter(
-                      region: widget.highlight!,
-                    ),
+                    painter: _AyahHighlightPainter(region: widget.highlight!),
                   ),
+                _rubPlate(w, h),
               ],
             ),
           ),
@@ -467,8 +472,9 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     // field) rebuilt and re-decoded the page behind the dialog — the flicker
     // the owner filmed.
     final dpr = MediaQuery.devicePixelRatioOf(context);
-    final memCacheWidth =
-        (MediaQuery.sizeOf(context).width * dpr).clamp(360, 1400).round();
+    final memCacheWidth = (MediaQuery.sizeOf(context).width * dpr)
+        .clamp(360, 1400)
+        .round();
 
     return FutureBuilder<File?>(
       future: _rasterReady,
@@ -491,15 +497,15 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         // cut words off a Hafs page on the owner's phone (see `inkedSvg`).
         final filter = scanFilter(paper, darkPage: widget.edition.darkPage);
         Widget painted(ImageProvider provider) => DecoratedBox(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: provider,
-                  fit: BoxFit.contain,
-                  colorFilter: filter,
-                ),
-              ),
-              child: const SizedBox.expand(),
-            );
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: provider,
+              fit: BoxFit.contain,
+              colorFilter: filter,
+            ),
+          ),
+          child: const SizedBox.expand(),
+        );
 
         Widget image = localFile != null
             ? painted(ResizeImage(FileImage(localFile), width: memCacheWidth))
@@ -517,8 +523,11 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                 ),
                 errorWidget: (_, _, _) => _Centered(
                   children: [
-                    Icon(Icons.cloud_off,
-                        size: 56, color: theme.colorScheme.outline),
+                    Icon(
+                      Icons.cloud_off,
+                      size: 56,
+                      color: theme.colorScheme.outline,
+                    ),
                     const SizedBox(height: 10),
                     Text('errors.offline'.tr(), textAlign: TextAlign.center),
                     const SizedBox(height: 10),
@@ -531,7 +540,6 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                   ],
                 ),
               );
-
 
         final fit = widget.edition.fitForPage(widget.page);
         if (fit != null) {
@@ -552,6 +560,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
                         fit: fit,
                       ),
                     ),
+                  _rubPlate(w, h),
                 ],
               ),
             ),
@@ -572,10 +581,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
           child: landscape
               ? LayoutBuilder(
                   builder: (context, constraints) => SingleChildScrollView(
-                    child: SizedBox(
-                      width: constraints.maxWidth,
-                      child: image,
-                    ),
+                    child: SizedBox(width: constraints.maxWidth, child: image),
                   ),
                 )
               : Center(child: image),
@@ -598,10 +604,43 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
 
   /// A tap on a page that has ayah regions: on a printed «۞» it says which
   /// quarter opens there, anywhere else it is the page's own tap.
+  final GlobalKey<PrintedRubPlateState> _plateKey = GlobalKey();
+
+  /// The quarter plate over the printed page: one per «۞» line on it.
+  Widget _rubPlate(double w, double h) {
+    final index = ref.watch(rubElHizbIndexProvider).valueOrNull;
+    if (index == null) return const SizedBox.shrink();
+    final fit = widget.edition.fitForPage(widget.page);
+    final marks = <(double, RubInfo)>[];
+    for (final region in _coords.regionsForPage(
+      widget.edition.polygonsAsset,
+      widget.page,
+    )) {
+      final info = index.markAt(region.surah, region.ayah);
+      if (info == null) continue;
+      Rect? first;
+      for (final r in region.highlightRects) {
+        if (first == null || r.top < first.top) first = r;
+      }
+      if (first == null) continue;
+      final c = fit == null ? first.center : fit.apply(first.center);
+      marks.add((c.dy * h, info));
+    }
+    final theme = Theme.of(context);
+    return PrintedRubPlate(
+      key: _plateKey,
+      marks: marks,
+      pageWidth: w,
+      mt: resolveMushafTheme(ref.watch(mushafThemeProvider), theme.brightness),
+      baseStyle: DefaultTextStyle.of(context).style,
+    );
+  }
+
   void _tapAt(TapUpDetails d, double width, double height) {
     final rub = _rubMarkAt(d.localPosition, width, height);
     if (rub != null) {
-      showRubBubble(context, rub, d.globalPosition);
+      // The plate shows again for 2 s (owner, 2026-11-12).
+      _plateKey.currentState?.show();
       return;
     }
     _tap();
@@ -648,7 +687,11 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     final fit = widget.edition.fitForPage(widget.page);
     final p = fit == null ? Offset(nx, ny) : fit.invert(nx, ny);
     final hit = _coords.hitTest(
-        widget.edition.polygonsAsset, widget.page, p.dx, p.dy);
+      widget.edition.polygonsAsset,
+      widget.page,
+      p.dx,
+      p.dy,
+    );
     if (hit != null) widget.onAyahLongPress(hit);
   }
 }

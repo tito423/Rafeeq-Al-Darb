@@ -2,7 +2,6 @@
 /// the ayah note editor.
 library;
 
-
 // easy_localization re-exports package:intl, whose `TextDirection` (LTR/RTL)
 // collides with the `dart:ui` enum (rtl/ltr) used throughout this file.
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -39,8 +38,9 @@ class RepeatDialogState extends State<RepeatDialog> {
   static const _maxTyped = 999;
   static const _gapOptions = [0, 1, 2, 3];
 
-  late final TextEditingController _timesField =
-      TextEditingController(text: '$_times');
+  late final TextEditingController _timesField = TextEditingController(
+    text: '$_times',
+  );
 
   @override
   void dispose() {
@@ -120,8 +120,7 @@ class RepeatDialogState extends State<RepeatDialog> {
           child: Text('common.cancel'.tr()),
         ),
         FilledButton(
-          onPressed: () =>
-              Navigator.of(context).pop((_times, _gapSeconds)),
+          onPressed: () => Navigator.of(context).pop((_times, _gapSeconds)),
           child: Text('quran.repeat_start'.tr()),
         ),
       ],
@@ -183,7 +182,9 @@ class NoteDialogState extends ConsumerState<NoteDialog> {
         ),
         FilledButton(
           onPressed: () async {
-            await ref.read(ayahNotesProvider.notifier).setNote(
+            await ref
+                .read(ayahNotesProvider.notifier)
+                .setNote(
                   widget.ayah.surahId,
                   widget.ayah.ayahNumber,
                   _controller.text,

@@ -43,15 +43,21 @@ class KhatmaCard extends ConsumerWidget {
           // Owner, 2026-11-06: a tap anywhere on an active khatma's card
           // opens the mushaf where the wird is read, not the khatma screen.
           onTap: () {
-            final mushafReady = ref.read(mushafDataProvider).valueOrNull != null;
+            final mushafReady =
+                ref.read(mushafDataProvider).valueOrNull != null;
             if (active.isNotEmpty && mushafReady) {
-              ref.read(quranJumpRequestProvider.notifier).state =
-                  khatmaResumePage(active.first, ref.read(quranLastPageProvider));
+              ref
+                  .read(quranJumpRequestProvider.notifier)
+                  .state = khatmaResumePage(
+                active.first,
+                ref.read(quranLastPageProvider),
+              );
               HomeNavigate.of(context)?.call(1);
               return;
             }
             Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const KhatmaScreen()));
+              MaterialPageRoute<void>(builder: (_) => const KhatmaScreen()),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -159,9 +165,7 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                 ),
                 onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const KhatmaScreen(),
-                  ),
+                  MaterialPageRoute<void>(builder: (_) => const KhatmaScreen()),
                 ),
                 icon: const Icon(Icons.tune_rounded, size: 18),
                 label: Text(
@@ -227,9 +231,11 @@ class _ActiveKhatmaRow extends ConsumerWidget {
                             khatmaResumePage(khatma, lastPage);
                         _switchToQuranTab(context);
                       },
-                child: Text(khatmaResumePage(khatma, lastPage) > khatma.currentPage
-                    ? 'khatma.continue_wird'.tr()
-                    : 'khatma.start_wird'.tr()),
+                child: Text(
+                  khatmaResumePage(khatma, lastPage) > khatma.currentPage
+                      ? 'khatma.continue_wird'.tr()
+                      : 'khatma.start_wird'.tr(),
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -630,11 +636,10 @@ class HomeNavigate extends InheritedWidget {
       onNavigate != oldWidget.onNavigate;
 }
 
-
 /// The page the wird opens on: where the reader stopped when that is past
 /// the wird's first page (owner, 2026-11-06: «يرجع في المكان اللي انا واقف
 /// عنده تحديدا مش يجيبني من الاول»), else the wird's first page.
 int khatmaResumePage(Khatma khatma, int? lastPage) =>
     lastPage != null && lastPage > khatma.currentPage && lastPage <= 604
-        ? lastPage
-        : khatma.currentPage;
+    ? lastPage
+    : khatma.currentPage;

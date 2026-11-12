@@ -23,7 +23,11 @@ class AyahWashPainter extends CustomPainter {
   final (int, int)? range;
   final Color color;
 
-  AyahWashPainter({required this.textKey, required this.range, required this.color});
+  AyahWashPainter({
+    required this.textKey,
+    required this.range,
+    required this.color,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -35,7 +39,10 @@ class AyahWashPainter extends CustomPainter {
       TextSelection(baseOffset: r.$1, extentOffset: r.$2),
       boxHeightStyle: BoxHeightStyle.max,
     );
-    canvas.drawPath(washPath(boxes.map((b) => b.toRect())), Paint()..color = color);
+    canvas.drawPath(
+      washPath(boxes.map((b) => b.toRect())),
+      Paint()..color = color,
+    );
   }
 
   @override
@@ -59,7 +66,8 @@ Path washPath(Iterable<Rect> boxes) {
   final lines = <Rect>[];
   for (final b in boxes) {
     final i = lines.indexWhere(
-        (l) => (l.center.dy - b.center.dy).abs() < b.height / 2);
+      (l) => (l.center.dy - b.center.dy).abs() < b.height / 2,
+    );
     if (i < 0) {
       lines.add(b);
     } else {
@@ -68,7 +76,9 @@ Path washPath(Iterable<Rect> boxes) {
   }
   final path = Path()..fillType = PathFillType.nonZero;
   for (final l in lines) {
-    path.addRRect(RRect.fromRectAndRadius(l.inflate(1.5), const Radius.circular(6)));
+    path.addRRect(
+      RRect.fromRectAndRadius(l.inflate(1.5), const Radius.circular(6)),
+    );
   }
   return path;
 }

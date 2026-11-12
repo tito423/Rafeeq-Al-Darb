@@ -2,7 +2,6 @@
 /// and the overlay that keeps them on screen while the page scrolls.
 library;
 
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -63,14 +62,14 @@ class PersistentPageOverlay extends StatelessWidget {
                 Positioned(
                   top: 0,
                   left: 0,
-                // Same convention as the surah name above (and as
-                // `mushaf_nav_sheets.dart`'s own juz list): a real
-                // mushaf's own running header is always Arabic — it's
-                // part of the page's own printed identity, not app UI
-                // chrome that follows the interface locale.
-                  child:
-                      HeaderBadge(
-                          text: '${'quran.juz'.tr()} ${arabicPageNumber(juzNumber!)}'),
+                  // Same convention as the surah name above (and as
+                  // `mushaf_nav_sheets.dart`'s own juz list): a real
+                  // mushaf's own running header is always Arabic — it's
+                  // part of the page's own printed identity, not app UI
+                  // chrome that follows the interface locale.
+                  child: HeaderBadge(
+                    text: '${'quran.juz'.tr()} ${arabicPageNumber(juzNumber!)}',
+                  ),
                 ),
               if (pageNumber != null)
                 Align(

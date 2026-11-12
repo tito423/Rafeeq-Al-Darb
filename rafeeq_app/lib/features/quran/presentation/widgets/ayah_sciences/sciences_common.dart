@@ -111,15 +111,18 @@ class SourceBlock extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(color: goldText(context), fontWeight: FontWeight.w700),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: goldText(context),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               if (subtitle != null)
                 Text(
                   subtitle!,
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
             ],
           ),
@@ -127,8 +130,9 @@ class SourceBlock extends StatelessWidget {
           Text(
             body,
             textDirection: direction,
-            textAlign:
-                direction == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+            textAlign: direction == TextDirection.rtl
+                ? TextAlign.right
+                : TextAlign.left,
             style: theme.textTheme.bodyMedium?.copyWith(height: 1.75),
           ),
         ],

@@ -13,7 +13,8 @@ import '../../../../core/utils/digits.dart';
 import '../../../downloads/data/reciters_provider.dart';
 import '../../../quran_audio/data/ayah_recitation_library.dart';
 import '../../../quran_audio/data/recitation_sizes.dart';
-import '../../../quran_audio/presentation/widgets/audio_common.dart' show surahTitle;
+import '../../../quran_audio/presentation/widgets/audio_common.dart'
+    show surahTitle;
 import '../../data/mushaf_data_provider.dart';
 
 /// «اديني في خيارات تلاوة الآية بآية إمكانية اختيار القارئ في البلاير
@@ -45,21 +46,28 @@ Future<ReciterPick?> pickReciterOrResume(BuildContext context) async {
 /// Carries on from [ReciterPick.resume] when that was the choice. False
 /// when it was a plain reciter (start from the page) or the verse is gone.
 Future<bool> resumeContinuousIfPicked(
-    ReciterPick pick, QuranRepository repo) async {
+  ReciterPick pick,
+  QuranRepository repo,
+) async {
   final r = pick.resume;
   if (r == null) return false;
   final from = await repo.ayah(r.surah, r.ayah);
   if (from == null) return false;
-  await AyahAudioService.instance
-      .startContinuous(from: from, repo: repo, edition: pick.id);
+  await AyahAudioService.instance.startContinuous(
+    from: from,
+    repo: repo,
+    edition: pick.id,
+  );
   return true;
 }
 
 /// The sheet with, when [resume] is given, a «أكمل مع …» card on top that
 /// carries on with the same reciter from the very verse the recitation last
 /// reached (owner, 2026-09-27).
-Future<ReciterPick?> showReciterPickerForStart(BuildContext context,
-    {RecitationResume? resume}) {
+Future<ReciterPick?> showReciterPickerForStart(
+  BuildContext context, {
+  RecitationResume? resume,
+}) {
   return showModalBottomSheet<ReciterPick>(
     context: context,
     isScrollControlled: true,
@@ -76,7 +84,8 @@ class _ReciterPickerSheet extends ConsumerStatefulWidget {
   final RecitationResume? resume;
 
   @override
-  ConsumerState<_ReciterPickerSheet> createState() => _ReciterPickerSheetState();
+  ConsumerState<_ReciterPickerSheet> createState() =>
+      _ReciterPickerSheetState();
 }
 
 class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
@@ -106,32 +115,35 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
     final all = ref.watch(recitersProvider).valueOrNull ?? const <Reciter>[];
     final sizes = ref.watch(recitationSizesProvider).valueOrNull;
     final q = normalizeArabic(_query.trim().toLowerCase());
-    final list = [
-      for (final r in all)
-        if (q.isEmpty ||
-            normalizeArabic(r.nameAr).contains(q) ||
-            r.nameEn.toLowerCase().contains(q))
-          r,
-    ]..sort((a, b) {
-        // The reciter last chosen heads the list («القارئ اللي أنا محدده
-        // يطلع في أول القايمة»), then those on the device.
-        if (a.identifier == selected) return -1;
-        if (b.identifier == selected) return 1;
-        final da = _onDevice(a.identifier) > 0 ? 0 : 1;
-        final db = _onDevice(b.identifier) > 0 ? 0 : 1;
-        if (da != db) return da - db;
-        // Nothing else to rank by any more: `recitersProvider` lists only
-        // reciters with a verified per-ayah source, so "has a mirror" is true
-        // of every row here.
-        return a.displayName(locale).compareTo(b.displayName(locale));
-      });
+    final list =
+        [
+          for (final r in all)
+            if (q.isEmpty ||
+                normalizeArabic(r.nameAr).contains(q) ||
+                r.nameEn.toLowerCase().contains(q))
+              r,
+        ]..sort((a, b) {
+          // The reciter last chosen heads the list («القارئ اللي أنا محدده
+          // يطلع في أول القايمة»), then those on the device.
+          if (a.identifier == selected) return -1;
+          if (b.identifier == selected) return 1;
+          final da = _onDevice(a.identifier) > 0 ? 0 : 1;
+          final db = _onDevice(b.identifier) > 0 ? 0 : 1;
+          if (da != db) return da - db;
+          // Nothing else to rank by any more: `recitersProvider` lists only
+          // reciters with a verified per-ayah source, so "has a mirror" is true
+          // of every row here.
+          return a.displayName(locale).compareTo(b.displayName(locale));
+        });
 
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.75,
       child: Column(
         children: [
-          Text('quran.recite_choose_reciter'.tr(),
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          Text(
+            'quran.recite_choose_reciter'.tr(),
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
             child: TextField(
@@ -140,7 +152,9 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
                 isDense: true,
                 hintText: 'quran.recite_search_reciter'.tr(),
                 prefixIcon: const Icon(Icons.search_rounded),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ),
@@ -154,25 +168,36 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
             padding: const EdgeInsets.fromLTRB(16, 2, 16, 8),
             child: Row(
               children: [
-                Icon(Icons.offline_pin_rounded,
-                    size: 16, color: goldOn(Theme.of(context).colorScheme)),
+                Icon(
+                  Icons.offline_pin_rounded,
+                  size: 16,
+                  color: goldOn(Theme.of(context).colorScheme),
+                ),
                 const SizedBox(width: 4),
                 Flexible(
-                  child: Text('quran.reciter_on_device'.tr(),
-                      style: TextStyle(
-                          fontSize: 11.5,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  child: Text(
+                    'quran.reciter_on_device'.tr(),
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 12),
-                Icon(Icons.cloud_outlined,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.cloud_outlined,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
                 const SizedBox(width: 4),
                 Flexible(
-                  child: Text('quran.reciter_legend_stream'.tr(),
-                      style: TextStyle(
-                          fontSize: 11.5,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  child: Text(
+                    'quran.reciter_legend_stream'.tr(),
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -207,24 +232,30 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
                         'quran.reciter_full_size'.tr(args: [formatBytes(b)]),
                       if (onDevice > 0)
                         'quran.reciter_on_device_count'.tr(
-                            args: [pluralN('quran.ayahs', onDevice)]),
+                          args: [pluralN('quran.ayahs', onDevice)],
+                        ),
                     ];
                     return parts.isEmpty ? null : Text(parts.join(' · '));
                   }(),
                   title: Text(
                     r.displayName(locale),
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w500,
                       color: isSelected
                           ? goldOn(Theme.of(context).colorScheme)
                           : null,
                     ),
                   ),
                   trailing: isSelected
-                      ? Icon(Icons.check_circle_rounded,
-                          color: goldOn(Theme.of(context).colorScheme))
+                      ? Icon(
+                          Icons.check_circle_rounded,
+                          color: goldOn(Theme.of(context).colorScheme),
+                        )
                       : null,
-                  onTap: () => Navigator.of(context).pop(ReciterPick(r.identifier)),
+                  onTap: () =>
+                      Navigator.of(context).pop(ReciterPick(r.identifier)),
                 );
               },
             ),
@@ -235,11 +266,13 @@ class _ReciterPickerSheetState extends ConsumerState<_ReciterPickerSheet> {
   }
 }
 
-
 /// «أكمل مع [القارئ] — [السورة]، الآية N»: one tap carries on.
 class _ResumeCard extends ConsumerWidget {
-  const _ResumeCard(
-      {required this.resume, required this.reciter, required this.locale});
+  const _ResumeCard({
+    required this.resume,
+    required this.reciter,
+    required this.locale,
+  });
   final RecitationResume resume;
   final Reciter? reciter;
   final String locale;
@@ -250,11 +283,11 @@ class _ResumeCard extends ConsumerWidget {
     final data = ref.watch(mushafDataProvider).valueOrNull;
     final scheme = Theme.of(context).colorScheme;
     final where = localizeDigits(
-        'quran.recite_resume_where'.tr(args: [
-          surahTitle(data, resume.surah, locale),
-          '${resume.ayah}',
-        ]),
-        locale);
+      'quran.recite_resume_where'.tr(
+        args: [surahTitle(data, resume.surah, locale), '${resume.ayah}'],
+      ),
+      locale,
+    );
     return Padding(
       padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
       child: Material(
@@ -262,34 +295,47 @@ class _ResumeCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () => Navigator.of(context)
-              .pop(ReciterPick(resume.edition, resume: resume)),
+          onTap: () => Navigator.of(
+            context,
+          ).pop(ReciterPick(resume.edition, resume: resume)),
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Row(children: [
-              CircleAvatar(
-                backgroundColor: goldOn(scheme),
-                child: const Icon(Icons.play_arrow_rounded, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'quran.recite_resume_with'
-                          .tr(args: [reciter!.displayName(locale)]),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w800, fontSize: 15),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(where,
-                        style: TextStyle(
-                            fontSize: 12.5, color: scheme.onSurfaceVariant)),
-                  ],
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: goldOn(scheme),
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ]),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'quran.recite_resume_with'.tr(
+                          args: [reciter!.displayName(locale)],
+                        ),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        where,
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -90,7 +90,10 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
   // The 4th tab (Gharib al-Quran) uses Quran.com API v4 word-by-word data
   // to show each word's Arabic meaning alongside the Uthmani script.
   late final TabController _tabs = TabController(
-      length: 3, vsync: this, initialIndex: widget.initialTab.clamp(0, 2));
+    length: 3,
+    vsync: this,
+    initialIndex: widget.initialTab.clamp(0, 2),
+  );
 
   /// Built once, the first frame on which the pack is actually open. They
   /// stay null while it is missing, which is what the gate renders.
@@ -170,14 +173,14 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
     // tafsir / translation / i'rab on the other at the sheet's full height.
     // Stacked, on emulator-5554 held sideways (2026-09-26), the header, the
     // ayah and the tab row left the i'rab about 225 dp of 540.
-    final sideways =
-        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final sideways = MediaQuery.orientationOf(context) == Orientation.landscape;
     final head = <Widget>[
       SciencesHeader(
         surahNameAr: widget.surahNameAr,
         ayah: widget.ayah,
         quranRepo: widget.quranRepo,
-        translationsFuture: _translations ??
+        translationsFuture:
+            _translations ??
             Future<Map<String, AyahTranslation>>.value(const {}),
         expanded: _expanded,
         onToggleExpand: () => setState(() {
@@ -197,73 +200,75 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
         // has something to show for those ayahs; every other tab - and the
         // i'rab of any other ayah - shows the download gate.
         : Column(
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      const SizedBox(width: 48),
-                      Expanded(
-                        child: TabBar(
-                          controller: _tabs,
-                          isScrollable: true,
-                          tabAlignment: TabAlignment.center,
-                          indicatorColor: gold,
-                          labelColor: gold,
-                          dividerColor: gold.withValues(alpha: 0.18),
-                          tabs: [
-                            Tab(text: 'quran.tafseer'.tr()),
-                            Tab(text: 'quran.translation'.tr()),
-                            Tab(text: 'quran.irab'.tr()),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        tooltip: (_contentFull
-                                ? 'quran.card_collapse'
-                                : 'quran.content_full')
-                            .tr(),
-                        icon: Icon(
-                          _contentFull
-                              ? Icons.fullscreen_exit_rounded
-                              : Icons.fullscreen_rounded,
-                          color: gold,
-                        ),
-                        onPressed: () => setState(() {
-                          _contentFull = !_contentFull;
-                          _expanded = _contentFull;
-                        }),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(width: 48),
                   Expanded(
-                    child: TabBarView(
+                    child: TabBar(
                       controller: _tabs,
-                      children: [
-                        if (ready)
-                          TafseerTab(future: _tafseer!)
-                        else
-                          _SciencesPackGate(onDownload: _startDownload),
-                        if (ready)
-                          TranslationTab(
-                              ayah: widget.ayah, future: _translations!)
-                        else
-                          _SciencesPackGate(onDownload: _startDownload),
-                        IrabTab(
-                          ayah: widget.ayah,
-                          future: _irab,
-                          whenMissing:
-                              _SciencesPackGate(onDownload: _startDownload),
-                        ),
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.center,
+                      indicatorColor: gold,
+                      labelColor: gold,
+                      dividerColor: gold.withValues(alpha: 0.18),
+                      tabs: [
+                        Tab(text: 'quran.tafseer'.tr()),
+                        Tab(text: 'quran.translation'.tr()),
+                        Tab(text: 'quran.irab'.tr()),
                       ],
                     ),
                   ),
+                  IconButton(
+                    tooltip:
+                        (_contentFull
+                                ? 'quran.card_collapse'
+                                : 'quran.content_full')
+                            .tr(),
+                    icon: Icon(
+                      _contentFull
+                          ? Icons.fullscreen_exit_rounded
+                          : Icons.fullscreen_rounded,
+                      color: gold,
+                    ),
+                    onPressed: () => setState(() {
+                      _contentFull = !_contentFull;
+                      _expanded = _contentFull;
+                    }),
+                  ),
                 ],
-              );
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabs,
+                  children: [
+                    if (ready)
+                      TafseerTab(future: _tafseer!)
+                    else
+                      _SciencesPackGate(onDownload: _startDownload),
+                    if (ready)
+                      TranslationTab(ayah: widget.ayah, future: _translations!)
+                    else
+                      _SciencesPackGate(onDownload: _startDownload),
+                    IrabTab(
+                      ayah: widget.ayah,
+                      future: _irab,
+                      whenMissing: _SciencesPackGate(
+                        onDownload: _startDownload,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
 
     // A modal sheet's MediaQuery has its top padding removed, so SafeArea
     // saw 0 and the expanded sheet drew its tab row under the status bar
     // (seen on Rafeeq_Audit_API24, 2026-10-20). Read the view's own inset.
-    final topInset =
-        _expanded ? MediaQueryData.fromView(View.of(context)).padding.top : 0.0;
+    final topInset = _expanded
+        ? MediaQueryData.fromView(View.of(context)).padding.top
+        : 0.0;
     return Padding(
       padding: EdgeInsets.only(top: topInset),
       child: TweenAnimationBuilder<double>(
@@ -276,8 +281,11 @@ class _AyahSciencesSheetState extends ConsumerState<AyahSciencesSheet>
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.vertical(
-                top: Radius.circular(_expanded ? 0 : 28)),
-            border: Border(top: BorderSide(color: gold.withValues(alpha: 0.45))),
+              top: Radius.circular(_expanded ? 0 : 28),
+            ),
+            border: Border(
+              top: BorderSide(color: gold.withValues(alpha: 0.45)),
+            ),
           ),
           child: Column(
             children: [
@@ -317,16 +325,15 @@ class _DragHandle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: 44,
-        height: 4,
-        margin: const EdgeInsets.only(top: 10, bottom: 6),
-        decoration: BoxDecoration(
-          color: AppColors.gold.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(2),
-        ),
-      );
+    width: 44,
+    height: 4,
+    margin: const EdgeInsets.only(top: 10, bottom: 6),
+    decoration: BoxDecoration(
+      color: AppColors.gold.withValues(alpha: 0.5),
+      borderRadius: BorderRadius.circular(2),
+    ),
+  );
 }
-
 
 /// Shown in place of the three tabs while علوم القرآن has not been
 /// downloaded. It tells the reader the real size before he spends it -
@@ -340,7 +347,8 @@ class _SciencesPackGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final task = DownloadManager.instance.taskById(sciencesDbDownloadId);
-    final busy = task != null &&
+    final busy =
+        task != null &&
         (task.status == DownloadStatus.downloading ||
             task.status == DownloadStatus.queued);
     final failed = task?.status == DownloadStatus.failed;
@@ -354,12 +362,16 @@ class _SciencesPackGate extends StatelessWidget {
           children: [
             Icon(Icons.auto_stories_outlined, size: 56, color: scheme.primary),
             const SizedBox(height: 14),
-            Text('quran.sciences_pack'.tr(),
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'quran.sciences_pack'.tr(),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
             Text(
-              trn('quran.sciences_pack_hint',
-                  args: [formatBytes(AppConfig.sciencesDbBytes)]),
+              trn(
+                'quran.sciences_pack_hint',
+                args: [formatBytes(AppConfig.sciencesDbBytes)],
+              ),
               textAlign: TextAlign.center,
               style: TextStyle(color: scheme.onSurfaceVariant),
             ),
@@ -370,9 +382,11 @@ class _SciencesPackGate extends StatelessWidget {
                 color: AppColors.gold,
               ),
               const SizedBox(height: 8),
-              Text(task.total != null
-                  ? percentOf(task.progress)
-                  : 'quran.sciences_pack'.tr()),
+              Text(
+                task.total != null
+                    ? percentOf(task.progress)
+                    : 'quran.sciences_pack'.tr(),
+              ),
             ] else
               FilledButton.icon(
                 onPressed: onDownload,
@@ -381,8 +395,10 @@ class _SciencesPackGate extends StatelessWidget {
               ),
             if (failed) ...[
               const SizedBox(height: 8),
-              Text(task?.error ?? 'errors.generic'.tr(),
-                  style: TextStyle(color: scheme.error)),
+              Text(
+                task?.error ?? 'errors.generic'.tr(),
+                style: TextStyle(color: scheme.error),
+              ),
             ],
           ],
         ),

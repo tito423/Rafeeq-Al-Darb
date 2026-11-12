@@ -16,7 +16,6 @@ import '../../data/text_layout_provider.dart';
 import 'mushaf/ayah_marker.dart';
 import 'mushaf/ayah_wash_painter.dart';
 import 'mushaf/continuous_mushaf_view.dart';
-import 'mushaf/rub_bubble.dart';
 import 'mushaf/rub_margin_mark.dart';
 import 'mushaf_frame_painter.dart';
 
@@ -260,8 +259,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
         // rest is below them where reading goes.
         final box = ctx.findRenderObject();
         final fits =
-            box is! RenderBox ||
-            box.size.height <= position.viewportDimension;
+            box is! RenderBox || box.size.height <= position.viewportDimension;
         // Already on screen: leave the page where it is. Moving it on every
         // start was «بيقوم مظلّلها وينزل بالشاشة لتحت على اللي بعدها».
         final pageBox = _viewportBox;
@@ -402,7 +400,9 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     if (!_scroll.hasClients) return;
     final max = _scroll.position.maxScrollExtent;
     final step = widget.autoScrollSpeed * _tickInterval.inMilliseconds / 1000;
-    if (max <= 0 && (_dwell += step) < _scroll.position.viewportDimension) return;
+    if (max <= 0 && (_dwell += step) < _scroll.position.viewportDimension) {
+      return;
+    }
     final next = (_scroll.offset + step).clamp(0.0, max);
     _scroll.jumpTo(next);
     if (next >= max && !_reachedEndFired) {
@@ -454,7 +454,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     final baseFont = (isLandscape ? 20.0 : 24.0) * widget.fontScale;
     final fill = widget.pageFillScreen;
     final playingIndex = _playingIndex;
-    // A page that carries «۞» keeps a left gutter for the margin plate.
+    // A page that carries «۞» shows the quarter plate as a fading overlay.
     final hasRub =
         rubIndex != null &&
         widget.layout != QuranTextLayout.cards &&
@@ -510,9 +510,6 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
     final sidePadding = bare
         ? (isLandscape ? 18.0 : 8.0)
         : (fill ? 10.0 : (isLandscape ? 40.0 : 18.0));
-    final leftPadding = hasRub && sidePadding < rubGutterWidth
-        ? rubGutterWidth
-        : sidePadding;
 
     final Widget content = GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -523,13 +520,9 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
         padding: EdgeInsets.symmetric(
           horizontal: sidePadding,
           vertical: bare ? 6.0 : 12.0,
-        ).copyWith(
-          bottom: bare || widget.embedded ? 6.0 : 72.0,
-          left: leftPadding,
-        ),
+        ).copyWith(bottom: bare || widget.embedded ? 6.0 : 72.0),
         child: Column(
-          mainAxisSize:
-              widget.embedded ? MainAxisSize.min : MainAxisSize.max,
+          mainAxisSize: widget.embedded ? MainAxisSize.min : MainAxisSize.max,
           // Centred only where the printed mushaf centres: its first
           // two pages. Every other page starts at the top.
           mainAxisAlignment: widget.ayahs.first.pageNumber <= 2
@@ -557,22 +550,15 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
                       text: item.basmalaText!,
                       mt: mt,
                       textStyle: textStyle,
-                      playing:
-                          widget.playingBasmalaSurah == item.surahId,
+                      playing: widget.playingBasmalaSurah == item.surahId,
                     );
                   }
                   if (widget.layout == QuranTextLayout.cards) {
                     return Column(
                       children: [
-                        for (
-                          var i = item.runFrom!;
-                          i <= item.runTo!;
-                          i++
-                        )
+                        for (var i = item.runFrom!; i <= item.runTo!; i++)
                           _AyahRow(
-                            key: _ayahKeys.length > i
-                                ? _ayahKeys[i]
-                                : null,
+                            key: _ayahKeys.length > i ? _ayahKeys[i] : null,
                             ayah: widget.ayahs[i],
                             isPlaying: i == playingIndex,
                             textStyle: textStyle,
@@ -581,8 +567,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
                                 widget.onAyahLongPress(widget.ayahs[i]),
                             onTap: _tapPage,
                             onPlayTap: widget.onPlayTap != null
-                                ? () =>
-                                      widget.onPlayTap!(widget.ayahs[i])
+                                ? () => widget.onPlayTap!(widget.ayahs[i])
                                 : null,
                           ),
                       ],
@@ -606,7 +591,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
                     rubAt: rubIndex == null
                         ? null
                         : (a) => rubIndex.markAt(a.surahId, a.ayahNumber),
-                    rubGutter: hasRub ? leftPadding : 0,
+                    rubGutter: hasRub ? sidePadding : 0,
                     bare: bare,
                   );
                 },
@@ -634,55 +619,55 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
           // اعلى منتصف الصفحة، مش يظهر الا اذا ضغطت وظهرت خيارات الصفحة»
           // (owner, 2026-09-26, his photo of al-Baqarah p.5).
           if (!widget.pageFillScreen)
-          SliverAppBar(
-            // Pinned in portrait, where 52 pixels is cheap and a running
-            // header earns them. NOT in landscape: the whole text area is
-            // about 200 logical pixels there, so pinning spends a quarter of
-            // the page repeating a surah name the corner badge is already
-            // showing — which is the two «سُورَةُ البَقَرَة» in the owner's
-            // landscape screenshot, one of them sitting on the first line.
-            pinned: !isLandscape,
-            automaticallyImplyLeading: false,
-            backgroundColor: paper,
-            surfaceTintColor: Colors.transparent,
-            toolbarHeight: isLandscape ? 40 : 52,
-            // Blank when the page opens on a surah banner: the banner is the
-            // name, right below, and printing it twice in a row was one of
-            // the three «سورة الرعد» on his page.
-            title: opensWithBanner
-                ? null
-                : Text(
-                    widget.surahNameOf(widget.ayahs.first.surahId),
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.center,
-                    strutStyle: const StrutStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: 22,
-                      height: 1.0,
-                      leading: 0,
-                      forceStrutHeight: true,
+            SliverAppBar(
+              // Pinned in portrait, where 52 pixels is cheap and a running
+              // header earns them. NOT in landscape: the whole text area is
+              // about 200 logical pixels there, so pinning spends a quarter of
+              // the page repeating a surah name the corner badge is already
+              // showing — which is the two «سُورَةُ البَقَرَة» in the owner's
+              // landscape screenshot, one of them sitting on the first line.
+              pinned: !isLandscape,
+              automaticallyImplyLeading: false,
+              backgroundColor: paper,
+              surfaceTintColor: Colors.transparent,
+              toolbarHeight: isLandscape ? 40 : 52,
+              // Blank when the page opens on a surah banner: the banner is the
+              // name, right below, and printing it twice in a row was one of
+              // the three «سورة الرعد» on his page.
+              title: opensWithBanner
+                  ? null
+                  : Text(
+                      widget.surahNameOf(widget.ayahs.first.surahId),
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      strutStyle: const StrutStyle(
+                        fontFamily: 'AmiriQuran',
+                        fontSize: 22,
+                        height: 1.0,
+                        leading: 0,
+                        forceStrutHeight: true,
+                      ),
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      style: TextStyle(
+                        fontFamily: 'AmiriQuran',
+                        fontSize: 22,
+                        height: 1.0,
+                        color: mt.gold,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    textHeightBehavior: const TextHeightBehavior(
-                      applyHeightToFirstAscent: false,
-                      applyHeightToLastDescent: false,
-                    ),
-                    style: TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: 22,
-                      height: 1.0,
-                      color: mt.gold,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-            centerTitle: true,
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1),
-              child: Container(
-                height: 1,
-                color: mt.gold.withValues(alpha: 0.3),
+              centerTitle: true,
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(1),
+                child: Container(
+                  height: 1,
+                  color: mt.gold.withValues(alpha: 0.3),
+                ),
               ),
             ),
-          ),
 
           // ── The page itself ──
           //
@@ -697,10 +682,7 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
           // screen, so the paper below a short page is the page's and a tap
           // there shows the toolbar; pages 1 and 2 (al-Fatiha, the opening of
           // al-Baqara) sit in the middle as the printed mushaf sets them.
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: content,
-          ),
+          SliverFillRemaining(hasScrollBody: false, child: content),
         ],
       ),
     );

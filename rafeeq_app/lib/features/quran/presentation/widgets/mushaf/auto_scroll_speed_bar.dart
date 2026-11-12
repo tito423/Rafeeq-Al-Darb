@@ -1,10 +1,8 @@
 /// The speed slider that appears while auto-scroll is running.
 library;
 
-
 import 'package:flutter/material.dart';
 import '../../../../../core/utils/digits.dart';
-
 
 /// Quran tab — a real mushaf browser.
 ///  • Text mode: real Uthmani ayahs laid out by their real Madani page
@@ -19,7 +17,11 @@ import '../../../../../core/utils/digits.dart';
 class AutoScrollSpeedBar extends StatelessWidget {
   final double speed;
   final ValueChanged<double> onChanged;
-  const AutoScrollSpeedBar({super.key, required this.speed, required this.onChanged});
+  const AutoScrollSpeedBar({
+    super.key,
+    required this.speed,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {

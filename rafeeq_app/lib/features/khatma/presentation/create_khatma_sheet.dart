@@ -161,9 +161,8 @@ class _CreateKhatmaSheetState extends ConsumerState<_CreateKhatmaSheet> {
 
   /// The page the duration counts from: the start for a new khatma, the
   /// page reached when editing (the days LEFT).
-  int _planBase(MushafData? mushaf) => _isEdit
-      ? math.max(_reachedPage, _startPage(mushaf))
-      : _startPage(mushaf);
+  int _planBase(MushafData? mushaf) =>
+      _isEdit ? math.max(_reachedPage, _startPage(mushaf)) : _startPage(mushaf);
 
   int _startPage(MushafData? mushaf) {
     if (mushaf == null) return 1;

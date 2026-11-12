@@ -81,8 +81,12 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     });
   }
 
+  /// Counter and rounds only; the lifetime total is «تصفير الكل».
+  void _resetCounter() => setState(() => _count = _rounds = 0);
+
   void _toggleHaptic() {
     setState(() => _hapticEnabled = !_hapticEnabled);
+    if (_hapticEnabled) Vibration.vibrate(duration: 200); // feedback: on
     SharedPreferences.getInstance().then(
       (p) => p.setBool(_kHapticPref, _hapticEnabled),
     );
@@ -318,6 +322,16 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           backgroundColor: scheme.surfaceContainerHighest,
                         ),
                         const Spacer(),
+                        IconButton(
+                          tooltip: 'azkar.reset_counter'.tr(),
+                          onPressed: _count == 0 && _rounds == 0
+                              ? null
+                              : _resetCounter,
+                          icon: Icon(
+                            Icons.restart_alt_rounded,
+                            color: scheme.primary,
+                          ),
+                        ),
                         IconButton(
                           tooltip: _hapticEnabled
                               ? 'azkar.haptic_on'.tr()
@@ -679,11 +693,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          rounds,
-                          const SizedBox(width: 16),
-                          reset,
-                        ],
+                        children: [rounds, const SizedBox(width: 16), reset],
                       ),
                     ),
                   ],

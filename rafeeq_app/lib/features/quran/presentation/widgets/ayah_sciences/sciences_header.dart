@@ -48,7 +48,10 @@ class SciencesHeader extends ConsumerWidget {
     required this.onToggleExpand,
   });
 
-  String get _reference => localizeDigits('$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}', uiLanguageCode);
+  String get _reference => localizeDigits(
+    '$surahNameAr • ${ayah.surahId}:${ayah.ayahNumber}',
+    uiLanguageCode,
+  );
 
   Future<void> _handleAction(
     BuildContext context,
@@ -121,25 +124,22 @@ class SciencesHeader extends ConsumerWidget {
         final added = await ref
             .read(quranBookmarksProvider.notifier)
             .toggleAyah(ayah.surahId, ayah.ayahNumber, ayah.pageNumber);
-        messenger.showSnackBar(SnackBar(
-          content: Text(
-              (added ? 'quran.bookmark_added' : 'quran.bookmark_removed').tr()),
-          duration: const Duration(seconds: 2),
-        ));
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              (added ? 'quran.bookmark_added' : 'quran.bookmark_removed').tr(),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
       case 'note':
         await showDialog<void>(
           context: context,
-          builder: (_) => NoteDialog(
-            ayah: ayah,
-            initialText: existingNote ?? '',
-          ),
+          builder: (_) =>
+              NoteDialog(ayah: ayah, initialText: existingNote ?? ''),
         );
       case 'share':
-        await showAyahShareSheet(
-          context,
-          ayah: ayah,
-          surahNameAr: surahNameAr,
-        );
+        await showAyahShareSheet(context, ayah: ayah, surahNameAr: surahNameAr);
     }
   }
 
@@ -150,8 +150,9 @@ class SciencesHeader extends ConsumerWidget {
     final notes = ref.watch(ayahNotesProvider);
     final note = notes[AyahNotesNotifier.keyFor(ayah.surahId, ayah.ayahNumber)];
     final hasNote = note != null && note.isNotEmpty;
-    final marked = ref.watch(quranBookmarksProvider).any(
-        (b) => b.surah == ayah.surahId && b.ayah == ayah.ayahNumber);
+    final marked = ref
+        .watch(quranBookmarksProvider)
+        .any((b) => b.surah == ayah.surahId && b.ayah == ayah.ayahNumber);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(14, 4, 6, 4),
@@ -165,7 +166,10 @@ class SciencesHeader extends ConsumerWidget {
               border: Border.all(color: gold.withValues(alpha: 0.4)),
             ),
             child: Text(
-              localizeDigits('${ayah.surahId}:${ayah.ayahNumber}', uiLanguageCode),
+              localizeDigits(
+                '${ayah.surahId}:${ayah.ayahNumber}',
+                uiLanguageCode,
+              ),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: gold,
                 fontWeight: FontWeight.w700,
@@ -180,8 +184,9 @@ class SciencesHeader extends ConsumerWidget {
               children: [
                 Text(
                   surahNameAr,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 // Arabic-Indic in Arabic, like the «١٢:٢» beside it — it
@@ -235,9 +240,7 @@ class SciencesHeader extends ConsumerWidget {
                 return IconButton(
                   tooltip: 'quran.recite_from_here'.tr(),
                   icon: Icon(
-                    here
-                        ? Icons.graphic_eq_rounded
-                        : Icons.play_circle_outline,
+                    here ? Icons.graphic_eq_rounded : Icons.play_circle_outline,
                     color: here ? gold : null,
                   ),
                   onPressed: () async {
@@ -258,34 +261,40 @@ class SciencesHeader extends ConsumerWidget {
                   // «حُط خيار تلاوة الآية في كارت الآية» — one verse, in the
                   // reader's chosen reciter, separate from the recitation.
                   return TextButton.icon(
-                    icon: Icon(playing
-                        ? Icons.stop_circle_outlined
-                        : Icons.play_circle_outline),
-                    label: Text((playing ? 'quran.stop' : 'quran.recite_ayah').tr()),
+                    icon: Icon(
+                      playing
+                          ? Icons.stop_circle_outlined
+                          : Icons.play_circle_outline,
+                    ),
+                    label: Text(
+                      (playing ? 'quran.stop' : 'quran.recite_ayah').tr(),
+                    ),
                     onPressed: playing
                         ? AyahAudioService.instance.stopQueue
                         : () => AyahAudioService.instance.play(
-                              ayah,
-                              quranRepo,
-                              title: _reference,
-                              edition: ref.read(selectedReciterProvider),
-                            ),
+                            ayah,
+                            quranRepo,
+                            title: _reference,
+                            edition: ref.read(selectedReciterProvider),
+                          ),
                   );
                 },
               );
             },
           ),
           IconButton(
-            tooltip: (expanded ? 'quran.card_collapse' : 'quran.card_expand').tr(),
-            icon: Icon(expanded
-                ? Icons.close_fullscreen_rounded
-                : Icons.open_in_full_rounded),
+            tooltip: (expanded ? 'quran.card_collapse' : 'quran.card_expand')
+                .tr(),
+            icon: Icon(
+              expanded
+                  ? Icons.close_fullscreen_rounded
+                  : Icons.open_in_full_rounded,
+            ),
             onPressed: onToggleExpand,
           ),
           PopupMenuButton<String>(
             tooltip: '',
-            icon: Icon(Icons.more_vert,
-                color: hasNote || marked ? gold : null),
+            icon: Icon(Icons.more_vert, color: hasNote || marked ? gold : null),
             onSelected: (v) => _handleAction(context, ref, v, note),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -315,10 +324,12 @@ class SciencesHeader extends ConsumerWidget {
                         : Icons.bookmark_add_outlined,
                     color: marked ? gold : null,
                   ),
-                  title: Text((marked
-                          ? 'quran.bookmark_ayah_remove'
-                          : 'quran.bookmark_ayah')
-                      .tr()),
+                  title: Text(
+                    (marked
+                            ? 'quran.bookmark_ayah_remove'
+                            : 'quran.bookmark_ayah')
+                        .tr(),
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -329,7 +340,9 @@ class SciencesHeader extends ConsumerWidget {
                     hasNote ? Icons.edit_note : Icons.note_add_outlined,
                     color: hasNote ? gold : null,
                   ),
-                  title: Text(hasNote ? 'quran.note_edit'.tr() : 'quran.note'.tr()),
+                  title: Text(
+                    hasNote ? 'quran.note_edit'.tr() : 'quran.note'.tr(),
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -394,8 +407,11 @@ class ReciterChip extends ConsumerWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.record_voice_over_outlined,
-                  size: 15, color: goldOn(Theme.of(context).colorScheme)),
+              Icon(
+                Icons.record_voice_over_outlined,
+                size: 15,
+                color: goldOn(Theme.of(context).colorScheme),
+              ),
               const SizedBox(width: 5),
               Flexible(
                 child: Text(
@@ -403,13 +419,16 @@ class ReciterChip extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: goldOn(Theme.of(context).colorScheme),
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: goldOn(Theme.of(context).colorScheme),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              Icon(Icons.expand_more_rounded,
-                  size: 16, color: AppColors.gold.withValues(alpha: 0.8)),
+              Icon(
+                Icons.expand_more_rounded,
+                size: 16,
+                color: AppColors.gold.withValues(alpha: 0.8),
+              ),
             ],
           ),
         ),

@@ -2,7 +2,6 @@
 /// playing: which ayah is sounding, and the transport controls.
 library;
 
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -49,8 +48,8 @@ class ReciteBar extends StatelessWidget {
                     : state.stalled
                     ? Icons.play_circle_outline_rounded
                     : state.buffering
-                        ? Icons.hourglass_top_rounded
-                        : Icons.graphic_eq_rounded,
+                    ? Icons.hourglass_top_rounded
+                    : Icons.graphic_eq_rounded,
                 size: 18,
                 color: AppColors.gold,
               ),
@@ -58,20 +57,25 @@ class ReciteBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   state.waiting
-                      ? 'quran.recite_waiting'.tr(args: [
-                          localizeDigits('${state.surahId ?? ''}:${state.ayahNumber ?? ''}',
-                              context.locale.languageCode),
-                        ])
+                      ? 'quran.recite_waiting'.tr(
+                          args: [
+                            localizeDigits(
+                              '${state.surahId ?? ''}:${state.ayahNumber ?? ''}',
+                              context.locale.languageCode,
+                            ),
+                          ],
+                        )
                       : state.stalled
                       ? 'quran.recite_stalled'.tr()
                       : state.buffering
                       ? 'quran.recite_loading'.tr()
                       : 'quran.recite_now'.tr(
-                          args: [
-                            '${state.surahId ?? ''}',
-                            '${state.ayahNumber ?? ''}',
-                          ],
-                        ) + (reciterName.isEmpty ? '' : '  ·  $reciterName'),
+                              args: [
+                                '${state.surahId ?? ''}',
+                                '${state.ayahNumber ?? ''}',
+                              ],
+                            ) +
+                            (reciterName.isEmpty ? '' : '  ·  $reciterName'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 12, color: scheme.onSurface),
@@ -80,8 +84,10 @@ class ReciteBar extends StatelessWidget {
               IconButton(
                 visualDensity: VisualDensity.compact,
                 tooltip: 'quran.recite_choose_reciter'.tr(),
-                icon: const Icon(Icons.record_voice_over_rounded,
-                    color: AppColors.gold),
+                icon: const Icon(
+                  Icons.record_voice_over_rounded,
+                  color: AppColors.gold,
+                ),
                 onPressed: onPickReciter,
               ),
               IconButton(
@@ -92,13 +98,16 @@ class ReciteBar extends StatelessWidget {
               ),
               IconButton(
                 visualDensity: VisualDensity.compact,
-                tooltip: (state.stalled
-                        ? 'quran.recite_resume'
-                        : 'quran.recite_pause')
-                    .tr(),
-                icon: Icon(state.stalled
-                    ? Icons.play_circle_outline_rounded
-                    : Icons.pause_circle_outline_rounded),
+                tooltip:
+                    (state.stalled
+                            ? 'quran.recite_resume'
+                            : 'quran.recite_pause')
+                        .tr(),
+                icon: Icon(
+                  state.stalled
+                      ? Icons.play_circle_outline_rounded
+                      : Icons.pause_circle_outline_rounded,
+                ),
                 onPressed: audio.continuousPauseResume,
               ),
               IconButton(

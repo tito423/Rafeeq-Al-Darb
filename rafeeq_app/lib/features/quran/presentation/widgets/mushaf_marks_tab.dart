@@ -46,9 +46,9 @@ class MushafMarksTab extends ConsumerWidget {
   }
 
   String _ayahRef(int surah, int ayah) => localizeDigits(
-        'quran.mark_ayah_ref'.tr(args: [_surahName(surah), '$ayah']),
-        uiLanguageCode,
-      );
+    'quran.mark_ayah_ref'.tr(args: [_surahName(surah), '$ayah']),
+    uiLanguageCode,
+  );
 
   String _pageRef(int page) =>
       localizeDigits('${'quran.page'.tr()} $page', uiLanguageCode);
@@ -75,17 +75,24 @@ class MushafMarksTab extends ConsumerWidget {
       });
 
     Widget heading(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
-          child: Text(text,
-              style: theme.textTheme.titleSmall?.copyWith(
-                  color: AppColors.gold, fontWeight: FontWeight.w700)),
-        );
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+      child: Text(
+        text,
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: AppColors.gold,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
     Widget empty(String text) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          child: Text(text,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-        );
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: Text(
+        text,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
 
     return ListView(
       padding: const EdgeInsets.only(bottom: 16),
@@ -93,16 +100,18 @@ class MushafMarksTab extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: OutlinedButton.icon(
-            icon: Icon(pageMarked
-                ? Icons.bookmark_remove_rounded
-                : Icons.bookmark_add_rounded),
-            label: Text((pageMarked
-                    ? 'quran.unbookmark_page'
-                    : 'quran.bookmark_page')
-                .tr(args: [localizeDigits('$current', uiLanguageCode)])),
-            onPressed: () => ref
-                .read(quranBookmarksProvider.notifier)
-                .togglePage(current),
+            icon: Icon(
+              pageMarked
+                  ? Icons.bookmark_remove_rounded
+                  : Icons.bookmark_add_rounded,
+            ),
+            label: Text(
+              (pageMarked ? 'quran.unbookmark_page' : 'quran.bookmark_page').tr(
+                args: [localizeDigits('$current', uiLanguageCode)],
+              ),
+            ),
+            onPressed: () =>
+                ref.read(quranBookmarksProvider.notifier).togglePage(current),
           ),
         ),
         heading('quran.bookmarks'.tr()),
@@ -113,7 +122,9 @@ class MushafMarksTab extends ConsumerWidget {
               b.isAyah ? Icons.bookmark_rounded : Icons.auto_stories_rounded,
               color: AppColors.gold,
             ),
-            title: Text(b.isAyah ? _ayahRef(b.surah!, b.ayah!) : _pageRef(b.page)),
+            title: Text(
+              b.isAyah ? _ayahRef(b.surah!, b.ayah!) : _pageRef(b.page),
+            ),
             subtitle: b.isAyah ? Text(_pageRef(b.page)) : null,
             trailing: IconButton(
               tooltip: 'quran.bookmark_remove'.tr(),
@@ -130,20 +141,24 @@ class MushafMarksTab extends ConsumerWidget {
         heading('quran.notes_all'.tr()),
         if (noteKeys.isEmpty) empty('quran.notes_empty'.tr()),
         for (final k in noteKeys)
-          Builder(builder: (context) {
-            final parts = k.split(':').map(int.parse).toList();
-            return ListTile(
-              leading: const Icon(Icons.edit_note_rounded,
-                  color: AppColors.gold),
-              title: Text(_ayahRef(parts[0], parts[1])),
-              subtitle: Text(
-                notes[k]!,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () => _goToAyah(context, parts[0], parts[1]),
-            );
-          }),
+          Builder(
+            builder: (context) {
+              final parts = k.split(':').map(int.parse).toList();
+              return ListTile(
+                leading: const Icon(
+                  Icons.edit_note_rounded,
+                  color: AppColors.gold,
+                ),
+                title: Text(_ayahRef(parts[0], parts[1])),
+                subtitle: Text(
+                  notes[k]!,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onTap: () => _goToAyah(context, parts[0], parts[1]),
+              );
+            },
+          ),
       ],
     );
   }

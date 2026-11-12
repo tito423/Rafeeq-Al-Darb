@@ -65,7 +65,9 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
       data: (catalog) {
         if (catalog.isEmpty) {
           return SciencesNotice(
-              icon: Icons.info_outline, message: 'errors.generic'.tr());
+            icon: Icons.info_outline,
+            message: 'errors.generic'.tr(),
+          );
         }
         final info = catalog.firstWhere(
           (e) => e.lang == selected,
@@ -82,63 +84,68 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
     );
   }
 
-  Widget _tab(BuildContext context, List<QuranTranslationInfo> catalog,
-      QuranTranslationInfo info) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
-              child: InputDecorator(
-                decoration: InputDecoration(
-                  labelText: 'quran.translation'.tr(),
-                  isDense: true,
-                  border: const OutlineInputBorder(),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: info.lang,
-                    items: [
-                      for (final e in catalog)
-                        DropdownMenuItem(
-                          value: e.lang,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(e.nativeName,
-                                    overflow: TextOverflow.ellipsis),
-                              ),
-                              // A reader on mobile data should see what an
-                              // un-downloaded language costs before tapping it.
-                              if (!e.bundled &&
-                                  !QuranTranslationStore.instance
-                                      .isInstalled(e.lang))
-                                Text(
-                                  '  ${e.sizeLabel}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(color: goldText(context)),
-                                ),
-                            ],
+  Widget _tab(
+    BuildContext context,
+    List<QuranTranslationInfo> catalog,
+    QuranTranslationInfo info,
+  ) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+          child: InputDecorator(
+            decoration: InputDecoration(
+              labelText: 'quran.translation'.tr(),
+              isDense: true,
+              border: const OutlineInputBorder(),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: info.lang,
+                items: [
+                  for (final e in catalog)
+                    DropdownMenuItem(
+                      value: e.lang,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              e.nativeName,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                    ],
-                    onChanged: (v) async {
-                      if (v == null) return;
-                      await ref
-                          .read(selectedTranslationLangProvider.notifier)
-                          .select(v);
-                      await _ensureDownloaded(
-                          catalog.firstWhere((e) => e.lang == v));
-                    },
-                  ),
-                ),
+                          // A reader on mobile data should see what an
+                          // un-downloaded language costs before tapping it.
+                          if (!e.bundled &&
+                              !QuranTranslationStore.instance.isInstalled(
+                                e.lang,
+                              ))
+                            Text(
+                              '  ${e.sizeLabel}',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: goldText(context)),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
+                onChanged: (v) async {
+                  if (v == null) return;
+                  await ref
+                      .read(selectedTranslationLangProvider.notifier)
+                      .select(v);
+                  await _ensureDownloaded(
+                    catalog.firstWhere((e) => e.lang == v),
+                  );
+                },
               ),
             ),
-            Expanded(child: _body(info)),
-          ],
-        );
+          ),
+        ),
+        Expanded(child: _body(info)),
+      ],
+    );
   }
 
   Widget _body(QuranTranslationInfo info) {
@@ -152,10 +159,12 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircularProgressIndicator(
-                    value: progress > 0 ? progress : null),
+                  value: progress > 0 ? progress : null,
+                ),
                 const SizedBox(height: 12),
-                Text('quran.downloading_translation'
-                    .tr(args: [info.nativeName])),
+                Text(
+                  'quran.downloading_translation'.tr(args: [info.nativeName]),
+                ),
               ],
             ),
           );
@@ -180,7 +189,9 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
           final t = snap.data?[info.lang];
           if (t == null) {
             return SciencesNotice(
-                icon: Icons.info_outline, message: 'errors.generic'.tr());
+              icon: Icons.info_outline,
+              message: 'errors.generic'.tr(),
+            );
           }
           return _block(info, t.text, t.translator);
         },
@@ -194,12 +205,14 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.translate,
-                  size: 48, color: Theme.of(context).colorScheme.outline),
+              Icon(
+                Icons.translate,
+                size: 48,
+                color: Theme.of(context).colorScheme.outline,
+              ),
               const SizedBox(height: 12),
               Text(
-                'quran.translation_not_downloaded'
-                    .tr(args: [info.nativeName]),
+                'quran.translation_not_downloaded'.tr(args: [info.nativeName]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
@@ -215,8 +228,11 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
     }
 
     return FutureBuilder<String?>(
-      future: QuranTranslationStore.instance
-          .verse(info.lang, widget.ayah.surahId, widget.ayah.ayahNumber),
+      future: QuranTranslationStore.instance.verse(
+        info.lang,
+        widget.ayah.surahId,
+        widget.ayah.ayahNumber,
+      ),
       builder: (context, snap) {
         if (snap.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
@@ -224,7 +240,9 @@ class TranslationTabState extends ConsumerState<TranslationTab> {
         final text = snap.data;
         if (text == null || text.isEmpty) {
           return SciencesNotice(
-              icon: Icons.info_outline, message: 'errors.generic'.tr());
+            icon: Icons.info_outline,
+            message: 'errors.generic'.tr(),
+          );
         }
         return _block(info, text, info.translator);
       },

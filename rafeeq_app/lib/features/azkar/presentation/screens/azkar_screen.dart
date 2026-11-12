@@ -93,6 +93,77 @@ const _categoryOrder = [
 class _SectionsTab extends ConsumerWidget {
   const _SectionsTab();
 
+  Widget _sectionsGrid(
+    BuildContext context,
+    BoxConstraints box,
+    double? rowHeight,
+  ) {
+    final twoCols = ScreenClass.twoColumns(context);
+    final maxExtent = twoCols ? 200.0 : 260.0;
+    final spacing = twoCols ? 14.0 : 16.0;
+    final aspect = twoCols ? 1.2 : 0.9;
+    final delegate = SliverGridDelegateWithMaxCrossAxisExtent(
+      maxCrossAxisExtent: maxExtent,
+      mainAxisSpacing: spacing,
+      crossAxisSpacing: spacing,
+      childAspectRatio: aspect,
+      mainAxisExtent: twoCols ? rowHeight : null,
+    );
+    Widget cardAt(int i) {
+      final category = _categoryOrder[i];
+      final info = azkarCategoryInfo[category]!;
+      final card = _CategoryCard(
+        category: category,
+        info: info,
+        photo: azkarCategoryBackgrounds[category],
+      );
+      // The tour explains the grid through its first card.
+      return i == 0
+          ? TutorialAnchor(id: TourAnchor.azkarCategory, child: card)
+          : card;
+    }
+
+    // The last card («أدعية مأثورة») used to sit alone in the right column
+    // under «أذكار النوم». When the others fill whole rows it gets a row of
+    // its own, centred, one cell wide (owner, 2026-11-12).
+    final avail = box.maxWidth - 32;
+    final cols = (avail / maxExtent).ceil().clamp(1, 12);
+    final last = _categoryOrder.length - 1;
+    final center = cols > 1 && last % cols == 0;
+    if (!center) {
+      return GridView.builder(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        gridDelegate: delegate,
+        itemCount: _categoryOrder.length,
+        itemBuilder: (context, i) => cardAt(i),
+      );
+    }
+    final cellW = (avail - spacing * (cols - 1)) / cols;
+    final cellH = (twoCols ? rowHeight : null) ?? cellW / aspect;
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          sliver: SliverGrid(
+            gridDelegate: delegate,
+            delegate: SliverChildBuilderDelegate(
+              (context, i) => cardAt(i),
+              childCount: last,
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, spacing, 16, 16),
+            child: Center(
+              child: SizedBox(width: cellW, height: cellH, child: cardAt(last)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // This tab is built `const`, so a language switch never rebuilt it and
@@ -112,50 +183,7 @@ class _SectionsTab extends ConsumerWidget {
             // «كارت الاستماع لأذكار الصباح والاستماع لأذكار المساء» (owner,
             // 2026-09-29): complete recordings by named reciters.
             const AdhkarListenRow(),
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                // By card width, not a fixed 2: in landscape two columns made each
-                // card taller than the screen and its title fell below the fold
-                // (emulator-5554, 2026-09-24). A phone held upright still gets 2.
-                //
-                // Sideways that still left one row of tall cards on the owner's Xiaomi
-                // (2026-09-26), three sections of nine in view. Sideways the
-                // cards are smaller and wider than tall, like a tablet's tiles: four
-                // across on that phone (788 dp / 214), two rows and more in view.
-                gridDelegate: ScreenClass.twoColumns(context)
-                    ? SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        mainAxisSpacing: 14,
-                        crossAxisSpacing: 14,
-                        childAspectRatio: 1.2,
-                        mainAxisExtent: rowHeight,
-                      )
-                    : const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 260,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 0.9,
-                      ),
-                itemCount: _categoryOrder.length,
-                itemBuilder: (context, i) {
-                  final category = _categoryOrder[i];
-                  final info = azkarCategoryInfo[category]!;
-                  final card = _CategoryCard(
-                    category: category,
-                    info: info,
-                    photo: azkarCategoryBackgrounds[category],
-                  );
-                  // The tour explains the grid through its first card.
-                  return i == 0
-                      ? TutorialAnchor(
-                          id: TourAnchor.azkarCategory,
-                          child: card,
-                        )
-                      : card;
-                },
-              ),
-            ),
+            Expanded(child: _sectionsGrid(context, box, rowHeight)),
           ],
         );
       },

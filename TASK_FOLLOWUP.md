@@ -4,18 +4,22 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — Windows GPU load: hidden case DONE; visible case open
+## Current task — Windows GPU load: mostly done (commit 4 in Windows app)
 
-Hidden/minimised GPU fixed in `Rafiq-Al-Darb-Windows/app` (windows-desktop,
-TickerMode + runner visibility message): 91.1% -> 2.7% hidden, 0% minimised
-(measured 2026-11-12, 5 s means, Get-Counter). Window VISIBLE still ~95% GPU
-3D on the first screen: find which animation (analog clock ticker,
-rgb_backdrop, focus ring, splash video) and cap it.
+`Rafiq-Al-Darb-Windows/app` (windows-desktop), measured 2026-11-12/13,
+Get-Counter 3D mean: hidden 91.1% -> 2.7-5.5%; visible 94.7% -> ~45%
+(frames 52/s -> ~19/s). Fixes: TickerMode on hidden window + hidden
+IndexedStack tabs, RGB backdrop timer 5/s, clock timer, focus-ring ticker.
+Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
+~20 ms raster per full-window frame.
 
 ## Next step (exact)
 
-Profile the visible-window 95% (disable suspects one at a time in a build),
-then rebuild `dist` zip only if the owner asks for a Windows release.
+Optional: cut the ~20 ms raster per frame (find the heavy layer: blur/shadow/
+photo; RepaintBoundary round PrayerCountdown). Android has the same hidden-tab
+ticker leak (IndexedStack + Qibla `repeat()`): port the TickerMode fix to
+`rafeeq_app/` only if the owner agrees (battery win). Pre-existing failing
+Windows tests: method_channel_names, notification_id_ranges.
 
 ## Standing owner orders (still open)
 

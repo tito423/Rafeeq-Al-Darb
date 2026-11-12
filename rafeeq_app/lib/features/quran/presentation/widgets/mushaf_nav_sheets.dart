@@ -24,18 +24,18 @@ class _SheetSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-        child: TextField(
-          textInputAction: TextInputAction.search,
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            isDense: true,
-            prefixIcon: const Icon(Icons.search_rounded, size: 20),
-            hintText: hint,
-            border: const OutlineInputBorder(),
-          ),
-        ),
-      );
+    padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+    child: TextField(
+      textInputAction: TextInputAction.search,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        isDense: true,
+        prefixIcon: const Icon(Icons.search_rounded, size: 20),
+        hintText: hint,
+        border: const OutlineInputBorder(),
+      ),
+    ),
+  );
 }
 
 /// True when [query] matches this row, by name or by number.
@@ -43,7 +43,8 @@ bool _rowMatches(String query, String name, int number) {
   final q = normalizeArabic(query.trim()).toLowerCase();
   if (q.isEmpty) return true;
   // The number, both as the reader types it and as the app draws it.
-  if ('$number'.startsWith(q) || localizeDigits('$number', 'ar').startsWith(q)) {
+  if ('$number'.startsWith(q) ||
+      localizeDigits('$number', 'ar').startsWith(q)) {
     return true;
   }
   final n = normalizeArabic(name).toLowerCase();
@@ -120,8 +121,9 @@ class _JumpSheet extends StatefulWidget {
 
 class _JumpSheetState extends State<_JumpSheet> {
   late int _page = widget.current.clamp(1, widget.totalPages);
-  late final TextEditingController _field =
-      TextEditingController(text: '$_page');
+  late final TextEditingController _field = TextEditingController(
+    text: '$_page',
+  );
   String _query = '';
 
   bool get _indexed => widget.surahs.isNotEmpty;
@@ -169,10 +171,16 @@ class _JumpSheetState extends State<_JumpSheet> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 2),
-                child: Text('quran.jump_to'.tr(),
-                    style: theme.textTheme.titleMedium),
+                child: Text(
+                  'quran.jump_to'.tr(),
+                  style: theme.textTheme.titleMedium,
+                ),
               ),
-              TabBar(tabs: tabs, isScrollable: tabs.length > 3, tabAlignment: tabs.length > 3 ? TabAlignment.center : null),
+              TabBar(
+                tabs: tabs,
+                isScrollable: tabs.length > 3,
+                tabAlignment: tabs.length > 3 ? TabAlignment.center : null,
+              ),
               Expanded(
                 child: TabBarView(
                   children: [
@@ -221,8 +229,10 @@ class _JumpSheetState extends State<_JumpSheet> {
                   backgroundColor: theme.colorScheme.primaryContainer,
                   child: Text('${s.id}', style: theme.textTheme.labelMedium),
                 ),
-                title: Text(s.nameAr,
-                    style: const TextStyle(fontFamily: 'AmiriQuran')),
+                title: Text(
+                  s.nameAr,
+                  style: const TextStyle(fontFamily: 'AmiriQuran'),
+                ),
                 trailing: Text('${'quran.page'.tr()} $start'),
                 onTap: () => _go((p) => widget.onSurahPage(s.id, p), start),
               );
@@ -236,29 +246,34 @@ class _JumpSheetState extends State<_JumpSheet> {
   Widget _pageTab(ThemeData theme) {
     final total = widget.totalPages;
     Widget step(int by) => OutlinedButton(
-          onPressed: () => _setPage(_page + by),
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size(56, 44),
-            padding: EdgeInsets.zero,
-          ),
-          child: Text(ltr(localizeDigits(
-              by > 0 ? '+$by' : '−${-by}', uiLanguageCode))),
-        );
+      onPressed: () => _setPage(_page + by),
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(56, 44),
+        padding: EdgeInsets.zero,
+      ),
+      child: Text(
+        ltr(localizeDigits(by > 0 ? '+$by' : '−${-by}', uiLanguageCode)),
+      ),
+    );
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
       children: [
         Center(
           child: Text(
             localizeDigits('$_page', uiLanguageCode),
-            style: theme.textTheme.displaySmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: theme.textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
         Center(
           // Trap #16: a Latin range is bidi-weak inside Arabic.
-          child: Text(ltr(localizeDigits('1 – $total', uiLanguageCode)),
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.outline)),
+          child: Text(
+            ltr(localizeDigits('1 – $total', uiLanguageCode)),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.outline,
+            ),
+          ),
         ),
         const SizedBox(height: 8),
         if (total > 1)
@@ -302,35 +317,44 @@ class _JumpSheetState extends State<_JumpSheet> {
   }
 
   Widget _juzTab(ThemeData theme) => GridView.count(
-        padding: const EdgeInsets.all(14),
-        crossAxisCount: 5,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        children: [
-          for (var j = 1; j <= 30; j++)
-            Material(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(14),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(14),
-                onTap: () => _go(widget.onPage, widget.juzStartPages[j] ?? 1),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('$j',
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w800)),
-                      Text(localizeDigits('${widget.juzStartPages[j] ?? 1}', uiLanguageCode),
-                          style: theme.textTheme.labelSmall
-                              ?.copyWith(color: theme.colorScheme.outline)),
-                    ],
+    padding: const EdgeInsets.all(14),
+    crossAxisCount: 5,
+    mainAxisSpacing: 10,
+    crossAxisSpacing: 10,
+    children: [
+      for (var j = 1; j <= 30; j++)
+        Material(
+          color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(14),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () => _go(widget.onPage, widget.juzStartPages[j] ?? 1),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$j',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
+                  Text(
+                    localizeDigits(
+                      '${widget.juzStartPages[j] ?? 1}',
+                      uiLanguageCode,
+                    ),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
+                  ),
+                ],
               ),
             ),
-        ],
-      );
+          ),
+        ),
+    ],
+  );
 }
 
 /// Ask for a page number.
@@ -398,10 +422,7 @@ void showGotoPageSheet(
             onPressed: () => Navigator.pop(ctx),
             child: Text('common.cancel'.tr()),
           ),
-          FilledButton(
-            onPressed: submit,
-            child: Text('common.save'.tr()),
-          ),
+          FilledButton(onPressed: submit, child: Text('common.save'.tr())),
         ],
       );
     },

@@ -49,10 +49,9 @@ Future<_ShareData> _load(WidgetRef ref, Ayah ayah) async {
   // The translation the reader chose in the ayah card.
   ShareBody? translation;
   final lang = ref.read(selectedTranslationLangProvider);
-  final catalog =
-      await ref
-          .read(quranTranslationCatalogProvider.future)
-          .catchError((_) => const <QuranTranslationInfo>[]);
+  final catalog = await ref
+      .read(quranTranslationCatalogProvider.future)
+      .catchError((_) => const <QuranTranslationInfo>[]);
   final info = catalog.where((e) => e.lang == lang).firstOrNull;
   String? text;
   if (info != null && info.bundled) {
@@ -197,7 +196,11 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
   Future<void> _sendImages(ShareContent content) async {
     setState(() => _busy = true);
     final messenger = ScaffoldMessenger.of(context);
-    final ok = await shareAyahAsImages(context, content: content, style: _style);
+    final ok = await shareAyahAsImages(
+      context,
+      content: content,
+      style: _style,
+    );
     if (!mounted) return;
     setState(() => _busy = false);
     if (!ok) {
@@ -243,8 +246,7 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
             children: [
               Text('quran.share_title'.tr(), style: theme.textTheme.titleLarge),
               const SizedBox(height: 10),
-              for (final w in _ShareWith.values)
-                _choice(context, w, d, theme),
+              for (final w in _ShareWith.values) _choice(context, w, d, theme),
               if (_with == _ShareWith.tafseer && d.tafseer.length > 1) ...[
                 const SizedBox(height: 4),
                 DropdownButtonFormField<String>(
@@ -314,8 +316,10 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
                 Text(
                   tooLong
                       ? trn('quran.share_too_long', args: ['${plans.length}'])
-                      : trn('quran.share_images_count',
-                          args: ['${plans.length}']),
+                      : trn(
+                          'quran.share_images_count',
+                          args: ['${plans.length}'],
+                        ),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: tooLong

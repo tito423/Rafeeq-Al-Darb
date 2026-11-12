@@ -20,11 +20,11 @@ import '../../data/quran_bookmarks_store.dart';
 
 /// Colour and label of each kind - the same everywhere a mark is drawn.
 Color bookmarkKindColor(BookmarkKind k) => switch (k) {
-      BookmarkKind.reading => AppColors.gold,
-      BookmarkKind.hifz => const Color(0xFF2E9E6A),
-      BookmarkKind.review => const Color(0xFF3B82C4),
-      BookmarkKind.tadabbur => const Color(0xFF8E5BB8),
-    };
+  BookmarkKind.reading => AppColors.gold,
+  BookmarkKind.hifz => const Color(0xFF2E9E6A),
+  BookmarkKind.review => const Color(0xFF3B82C4),
+  BookmarkKind.tadabbur => const Color(0xFF8E5BB8),
+};
 
 String bookmarkKindLabel(BookmarkKind k) => 'quran.bm_kind_${k.name}'.tr();
 
@@ -86,11 +86,13 @@ class _BookmarksSheetState extends ConsumerState<_BookmarksSheet> {
         content: Text('quran.bm_clear_confirm'.tr()),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(c, false),
-              child: Text('common.cancel'.tr())),
+            onPressed: () => Navigator.pop(c, false),
+            child: Text('common.cancel'.tr()),
+          ),
           FilledButton(
-              onPressed: () => Navigator.pop(c, true),
-              child: Text('quran.bm_clear_all'.tr())),
+            onPressed: () => Navigator.pop(c, true),
+            child: Text('quran.bm_clear_all'.tr()),
+          ),
         ],
       ),
     );
@@ -110,28 +112,37 @@ class _BookmarksSheetState extends ConsumerState<_BookmarksSheet> {
         if (_filter == null || b.kind == _filter) b,
     ];
     if (_mushafOrder) {
-      shown.sort((x, y) => x.page != y.page
-          ? x.page.compareTo(y.page)
-          : (x.surah ?? 0) != (y.surah ?? 0)
-              ? (x.surah ?? 0).compareTo(y.surah ?? 0)
-              : (x.ayah ?? 0).compareTo(y.ayah ?? 0));
+      shown.sort(
+        (x, y) => x.page != y.page
+            ? x.page.compareTo(y.page)
+            : (x.surah ?? 0) != (y.surah ?? 0)
+            ? (x.surah ?? 0).compareTo(y.surah ?? 0)
+            : (x.ayah ?? 0).compareTo(y.ayah ?? 0),
+      );
     }
 
     Widget section(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
-          child: Text(text,
-              style: theme.textTheme.titleSmall?.copyWith(
-                  color: AppColors.gold, fontWeight: FontWeight.w700)),
-        );
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+      child: Text(
+        text,
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: AppColors.gold,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
 
     return ListView(
       padding: const EdgeInsets.only(bottom: 24),
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text('quran.bookmarks_title'.tr(),
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w700)),
+          child: Text(
+            'quran.bookmarks_title'.tr(),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
         // ── this page ──
         section(_d('quran.bm_this_page'.tr(args: ['${widget.current}']))),
@@ -161,27 +172,39 @@ class _BookmarksSheetState extends ConsumerState<_BookmarksSheet> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
           child: Text(
-            here == null ? 'quran.bm_pick_hint'.tr() : 'quran.bm_unpick_hint'.tr(),
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            here == null
+                ? 'quran.bm_pick_hint'.tr()
+                : 'quran.bm_unpick_hint'.tr(),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
         const Divider(height: 28),
         // ── all marks ──
         Row(
           children: [
-            Expanded(child: section(_d('quran.bm_all'.tr(args: ['${all.length}'])))),
+            Expanded(
+              child: section(_d('quran.bm_all'.tr(args: ['${all.length}']))),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
               child: SegmentedButton<bool>(
                 showSelectedIcon: false,
                 style: const ButtonStyle(visualDensity: VisualDensity.compact),
                 segments: [
-                  ButtonSegment(value: false, label: Text('quran.bm_sort_recent'.tr())),
-                  ButtonSegment(value: true, label: Text('quran.bm_sort_mushaf'.tr())),
+                  ButtonSegment(
+                    value: false,
+                    label: Text('quran.bm_sort_recent'.tr()),
+                  ),
+                  ButtonSegment(
+                    value: true,
+                    label: Text('quran.bm_sort_mushaf'.tr()),
+                  ),
                 ],
                 selected: {_mushafOrder},
-                onSelectionChanged: (v) => setState(() => _mushafOrder = v.first),
+                onSelectionChanged: (v) =>
+                    setState(() => _mushafOrder = v.first),
               ),
             ),
           ],
@@ -205,11 +228,13 @@ class _BookmarksSheetState extends ConsumerState<_BookmarksSheet> {
                     padding: const EdgeInsetsDirectional.only(end: 6),
                     child: FilterChip(
                       avatar: CircleAvatar(
-                          radius: 5, backgroundColor: bookmarkKindColor(k)),
+                        radius: 5,
+                        backgroundColor: bookmarkKindColor(k),
+                      ),
                       label: Text(bookmarkKindLabel(k)),
                       selected: _filter == k,
-                      onSelected: (_) => setState(
-                          () => _filter = _filter == k ? null : k),
+                      onSelected: (_) =>
+                          setState(() => _filter = _filter == k ? null : k),
                     ),
                   ),
               ],
@@ -218,9 +243,12 @@ class _BookmarksSheetState extends ConsumerState<_BookmarksSheet> {
         if (shown.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Text('quran.bookmarks_empty'.tr(),
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            child: Text(
+              'quran.bookmarks_empty'.tr(),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
         for (final b in shown)
           ListTile(
@@ -229,10 +257,12 @@ class _BookmarksSheetState extends ConsumerState<_BookmarksSheet> {
               color: bookmarkKindColor(b.kind),
             ),
             title: Text(_title(b)),
-            subtitle: Text([
-              bookmarkKindLabel(b.kind),
-              if (b.isAyah) _d('${'quran.page'.tr()} ${b.page}'),
-            ].join(' · ')),
+            subtitle: Text(
+              [
+                bookmarkKindLabel(b.kind),
+                if (b.isAyah) _d('${'quran.page'.tr()} ${b.page}'),
+              ].join(' · '),
+            ),
             selected: !b.isAyah && b.page == widget.current,
             trailing: IconButton(
               tooltip: 'quran.bookmark_remove'.tr(),
@@ -249,7 +279,8 @@ class _BookmarksSheetState extends ConsumerState<_BookmarksSheet> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
             child: TextButton.icon(
               style: TextButton.styleFrom(
-                  foregroundColor: theme.colorScheme.error),
+                foregroundColor: theme.colorScheme.error,
+              ),
               icon: const Icon(Icons.delete_sweep_rounded),
               label: Text('quran.bm_clear_all'.tr()),
               onPressed: _confirmClear,

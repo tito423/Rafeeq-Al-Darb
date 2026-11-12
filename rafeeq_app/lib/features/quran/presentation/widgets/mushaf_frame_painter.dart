@@ -167,14 +167,21 @@ class MushafFramePainter extends CustomPainter {
     for (var i = 0; i < points * 2; i++) {
       final r = i.isEven ? radius : inner;
       final a = (math.pi / points) * i - math.pi / 2;
-      final p = Offset(centre.dx + r * math.cos(a), centre.dy + r * math.sin(a));
+      final p = Offset(
+        centre.dx + r * math.cos(a),
+        centre.dy + r * math.sin(a),
+      );
       i == 0 ? path.moveTo(p.dx, p.dy) : path.lineTo(p.dx, p.dy);
     }
     return path..close();
   }
 
-  Path _polygon(Offset centre, double radius, int sides,
-      {double rotation = 0}) {
+  Path _polygon(
+    Offset centre,
+    double radius,
+    int sides, {
+    double rotation = 0,
+  }) {
     final path = Path();
     for (var i = 0; i < sides; i++) {
       final a = (2 * math.pi / sides) * i - math.pi / 2 + rotation;
@@ -192,17 +199,21 @@ class MushafFramePainter extends CustomPainter {
     c.drawCircle(centre, r * 0.28, fill);
   }
 
-  List<Offset> _cornerPoints(Rect r) =>
-      [r.topLeft, r.topRight, r.bottomLeft, r.bottomRight];
+  List<Offset> _cornerPoints(Rect r) => [
+    r.topLeft,
+    r.topRight,
+    r.bottomLeft,
+    r.bottomRight,
+  ];
 
   /// Corner points paired with the direction that points *into* the page, so
   /// one drawing routine serves all four corners.
   List<(Offset, double, double)> _cornerSigns(Rect r) => [
-        (r.topLeft, 1, 1),
-        (r.topRight, -1, 1),
-        (r.bottomLeft, 1, -1),
-        (r.bottomRight, -1, -1),
-      ];
+    (r.topLeft, 1, 1),
+    (r.topRight, -1, 1),
+    (r.bottomLeft, 1, -1),
+    (r.bottomRight, -1, -1),
+  ];
 
   void _steps(Canvas c, Offset o, double sx, double sy, double band, Paint p) {
     final unit = band * 0.42;
@@ -322,12 +333,12 @@ class MushafFrame extends StatelessWidget {
   /// the text. Zero when there is no frame, so nothing changes for a reader
   /// who never turns one on.
   double get inset => switch (style) {
-        MushafFrameStyle.none => 0,
-        MushafFrameStyle.cornerFloret => 10,
-        MushafFrameStyle.doubleRule => 12,
-        MushafFrameStyle.mihrab => 16,
-        _ => 22,
-      };
+    MushafFrameStyle.none => 0,
+    MushafFrameStyle.cornerFloret => 10,
+    MushafFrameStyle.doubleRule => 12,
+    MushafFrameStyle.mihrab => 16,
+    _ => 22,
+  };
 
   @override
   Widget build(BuildContext context) {

@@ -104,15 +104,15 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
       artist: 'azkar.title'.tr(),
     );
     if (!ok && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('azkar.listen_failed'.tr())));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('azkar.listen_failed'.tr())));
     }
   }
 
   Color get _accent => widget.accent ?? AppColors.gold;
 
-  int _targetFor(int i) =>
-      _items == null ? 1 : _items![i].repeat;
+  int _targetFor(int i) => _items == null ? 1 : _items![i].repeat;
 
   void _tapCount() {
     final items = _items;
@@ -121,7 +121,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
     final current = _counts[_index] ?? 0;
     if (current >= target) return; // already complete — swipe to advance
     setState(() => _counts[_index] = current + 1);
-    
+
     SharedPreferences.getInstance().then((prefs) {
       final total = prefs.getInt('azkar_total') ?? 0;
       prefs.setInt('azkar_total', total + 1);
@@ -150,8 +150,7 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
     // Under it, on the owner's Xiaomi held sideways (2026-09-26), the ring,
     // its line and the dots took ~210 of the ~300 dp below the app bar and
     // left the dhikr a strip two lines high.
-    final sideways =
-        ScreenClass.wide(context);
+    final sideways = ScreenClass.wide(context);
     final pages = items == null
         ? null
         : PageView.builder(
@@ -167,14 +166,9 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
             },
             itemBuilder: (context, i) {
               if (i == items.length) {
-                return _DonePage(
-                  onBack: () => Navigator.of(context).pop(),
-                );
+                return _DonePage(onBack: () => Navigator.of(context).pop());
               }
-              return _DhikrPage(
-                item: items[i],
-                isFirst: i == 0,
-              );
+              return _DhikrPage(item: items[i], isFirst: i == 0);
             },
           );
     // Bottom controls belong to the *current* dhikr, so they live outside
@@ -191,13 +185,14 @@ class _AzkarSectionScreenState extends ConsumerState<AzkarSectionScreen> {
             // ONE listen button, the recorded dhikr; no synthetic voice on
             // the adhkar at all (owner, 2026-10-06: «شيل زر الصوت الآلي من
             // الأذكار»).
-            listen: switch (ref.watch(azkarAudioProvider).valueOrNull?[
-                items[_index].id]) {
+            listen: switch (ref
+                .watch(azkarAudioProvider)
+                .valueOrNull?[items[_index].id]) {
               final String url => _ListenButton(
-                  id: items[_index].id,
-                  accent: _accent,
-                  onTap: () => _listen(items[_index], url),
-                ),
+                id: items[_index].id,
+                accent: _accent,
+                onTap: () => _listen(items[_index], url),
+              ),
               _ => null,
             },
           )
@@ -444,11 +439,16 @@ class _BottomControls extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     child: done
-                        ? const Icon(Icons.check_rounded,
-                            color: Colors.white, size: 40)
+                        ? const Icon(
+                            Icons.check_rounded,
+                            color: Colors.white,
+                            size: 40,
+                          )
                         : Text(
                             localizeDigits(
-                                '$remaining', context.locale.languageCode),
+                              '$remaining',
+                              context.locale.languageCode,
+                            ),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 34,
@@ -465,7 +465,8 @@ class _BottomControls extends StatelessWidget {
             target > 1
                 ? localizeDigits(
                     '${'azkar.repeat'.tr()}: ${localizeDigits(ratio(count, target), uiLanguageCode)}',
-                    context.locale.languageCode)
+                    context.locale.languageCode,
+                  )
                 : 'azkar.tap_to_count_dhikr'.tr(),
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.85),
@@ -485,27 +486,31 @@ class _ListenButton extends StatelessWidget {
   final int id;
   final Color accent;
   final VoidCallback onTap;
-  const _ListenButton(
-      {required this.id, required this.accent, required this.onTap});
+  const _ListenButton({
+    required this.id,
+    required this.accent,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) => StreamBuilder<bool>(
-        stream: AyahAudioService.instance.isPlayingStream,
-        builder: (context, snap) {
-          final on = (snap.data ?? false) &&
-              AyahAudioService.instance.isTrack('dhikr:$id');
-          return FilledButton.tonalIcon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white.withValues(alpha: 0.14),
-              foregroundColor: Colors.white,
-              side: BorderSide(color: accent.withValues(alpha: 0.8)),
-            ),
-            onPressed: onTap,
-            icon: Icon(on ? Icons.stop_rounded : Icons.headphones_rounded),
-            label: Text(on ? 'azkar.listen_stop'.tr() : 'azkar.listen'.tr()),
-          );
-        },
+    stream: AyahAudioService.instance.isPlayingStream,
+    builder: (context, snap) {
+      final on =
+          (snap.data ?? false) &&
+          AyahAudioService.instance.isTrack('dhikr:$id');
+      return FilledButton.tonalIcon(
+        style: FilledButton.styleFrom(
+          backgroundColor: Colors.white.withValues(alpha: 0.14),
+          foregroundColor: Colors.white,
+          side: BorderSide(color: accent.withValues(alpha: 0.8)),
+        ),
+        onPressed: onTap,
+        icon: Icon(on ? Icons.stop_rounded : Icons.headphones_rounded),
+        label: Text(on ? 'azkar.listen_stop'.tr() : 'azkar.listen'.tr()),
       );
+    },
+  );
 }
 
 /// Page indicator: elongated-active dots when the section is short enough to
@@ -585,10 +590,9 @@ class _DonePage extends StatelessWidget {
             Text(
               'azkar.section_done'.tr(),
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Colors.white),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 24),
             FilledButton(

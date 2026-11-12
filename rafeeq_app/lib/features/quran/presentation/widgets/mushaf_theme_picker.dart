@@ -52,8 +52,10 @@ class _MushafThemePickerState extends ConsumerState<MushafThemePicker>
     // Every preview below is drawn on the *active* theme's paper in the
     // active frame colour, so what the tile shows is what the page will look
     // like — not the ornament floating on a neutral card.
-    final activeTheme =
-        resolveMushafTheme(selected, Theme.of(context).brightness);
+    final activeTheme = resolveMushafTheme(
+      selected,
+      Theme.of(context).brightness,
+    );
     final frameColor = frame.accent.color ?? activeTheme.gold;
 
     return CardScreen(
@@ -71,8 +73,10 @@ class _MushafThemePickerState extends ConsumerState<MushafThemePicker>
             indicatorColor: AppColors.gold,
             labelColor: AppColors.textHigh,
             unselectedLabelColor: AppColors.textLow,
-            labelStyle:
-                const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+            labelStyle: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
             tabs: [
               Tab(text: 'mushaf_theme.tab_theme'.tr()),
               Tab(text: 'mushaf_theme.tab_frame'.tr()),
@@ -312,9 +316,7 @@ class _FollowAppTile extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              selected
-                  ? Icons.radio_button_checked
-                  : Icons.radio_button_off,
+              selected ? Icons.radio_button_checked : Icons.radio_button_off,
               size: 20,
               color: selected ? AppColors.gold : AppColors.textLow,
             ),

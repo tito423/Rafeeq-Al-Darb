@@ -38,7 +38,7 @@ class _FlowingAyahs extends StatefulWidget {
   /// that mark shows which quarter it is instead of being the page's tap.
   final RubInfo? Function(Ayah ayah)? rubAt;
 
-  /// The page's left gutter, where the quarter plate is drawn; 0 = none.
+  /// The page's side padding when it carries a quarter plate; 0 = none.
   final double rubGutter;
 
   /// The stripped reading layout — see `QuranTextLayout.reading`.
@@ -65,6 +65,7 @@ class _FlowingAyahs extends StatefulWidget {
 
 class _FlowingAyahsState extends State<_FlowingAyahs> {
   final GlobalKey _textKey = GlobalKey();
+  final GlobalKey<RubPlateOverlayState> _plateKey = GlobalKey();
 
   /// (startOffset, endOffset, ayahIndex) for every verse in this paragraph,
   /// in the same character space the laid-out paragraph uses.
@@ -99,7 +100,8 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
     for (final r in _ranges) {
       if (r.$3 != ayahIndex) continue;
       for (final b in p.getBoxesForSelection(
-          TextSelection(baseOffset: r.$1, extentOffset: r.$2))) {
+        TextSelection(baseOffset: r.$1, extentOffset: r.$2),
+      )) {
         if (bottom == null || b.bottom > bottom) bottom = b.bottom;
       }
     }
@@ -120,7 +122,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
   /// The quarter whose «۞» is under [local], or null. The mark is the
   /// first character of its ayah; its own glyph box, a little enlarged, is
   /// the target, so the words beside it stay the page's.
-  RubInfo? _rubMarkAt(Offset local) {
+  (int, RubInfo)? _rubMarkAt(Offset local) {
     final rubAt = widget.rubAt;
     final p = _paragraph;
     if (rubAt == null || p == null) return null;
@@ -133,7 +135,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
         TextSelection(baseOffset: r.$1, extentOffset: r.$1 + 1),
       );
       for (final b in boxes) {
-        if (b.toRect().inflate(10).contains(local)) return info;
+        if (b.toRect().inflate(10).contains(local)) return (r.$1, info);
       }
     }
     return null;
@@ -153,8 +155,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
   ) {
     final style = DefaultTextStyle.of(context).style.merge(widget.textStyle);
     final scaler = MediaQuery.textScalerOf(context);
-    final key = Object.hash(
-        width, style, scaler, side, Object.hashAll(texts));
+    final key = Object.hash(width, style, scaler, side, Object.hashAll(texts));
     if (_plan?.$1 == key) return _plan!.$2;
     final plan = planParagraphKashida(
       texts: texts,
@@ -232,7 +233,11 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
 
       // Room only - the marker is painted by `FlowingMarkersPainter` at this
       // placeholder's own text position (see there for why).
-      markers.add((offset: offset, number: ayah.ayahNumber, playing: isPlaying));
+      markers.add((
+        offset: offset,
+        number: ayah.ayahNumber,
+        playing: isPlaying,
+      ));
       spans.add(
         WidgetSpan(
           alignment: PlaceholderAlignment.middle,
@@ -248,7 +253,8 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
       onTapUp: (d) {
         final rub = _rubMarkAt(d.localPosition);
         if (rub != null) {
-          showRubBubble(context, rub, d.globalPosition);
+          // The plate shows again for 2 s (owner, 2026-11-12).
+          _plateKey.currentState?.show(rub.$1);
           return;
         }
         widget.onBackgroundTap?.call();
@@ -273,22 +279,29 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
           bare: widget.bare,
           baseStyle: DefaultTextStyle.of(context).style,
         ),
-        child: CustomPaint(
-          foregroundPainter: rubMarks.isEmpty
-              ? null
-              : RubMarginPainter(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // The quarter plate is drawn BEHIND the words, so it can never
+            // cover one (owner: «مش لازم يغطي كلمات»).
+            if (rubMarks.isNotEmpty)
+              Positioned.fill(
+                child: RubPlateOverlay(
+                  key: _plateKey,
                   textKey: _textKey,
                   marks: rubMarks,
-                  gutter: widget.rubGutter,
+                  edge: widget.rubGutter,
                   mt: widget.mt,
                   baseStyle: DefaultTextStyle.of(context).style,
                 ),
-          child: Text.rich(
-            TextSpan(children: spans),
-            key: _textKey,
-            textAlign: TextAlign.justify,
-            textDirection: TextDirection.rtl,
-          ),
+              ),
+            Text.rich(
+              TextSpan(children: spans),
+              key: _textKey,
+              textAlign: TextAlign.justify,
+              textDirection: TextDirection.rtl,
+            ),
+          ],
         ),
       ),
     );
