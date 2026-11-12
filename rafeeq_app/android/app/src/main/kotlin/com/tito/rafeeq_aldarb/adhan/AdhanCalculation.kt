@@ -54,26 +54,48 @@ object AdhanCalculation {
     }
 
     fun compute(context: Context, inputs: Map<String, Any>, notBefore: Long, complete: (Map<String, Long>?) -> Unit) {
+        run(context, "calculate", mapOf(
+            "calculation" to inputs,
+            "notBefore" to notBefore,
+            "dates" to dates(notBefore),
+        )) { value ->
+            val raw = value as? Map<*, *>
+            complete(raw?.entries?.associate { (it.key as String) to (it.value as Number).toLong() })
+        }
+    }
+
+    /**
+     * Starts the headless Dart entry, asks it [method] with [args] and hands
+     * back its answer (null on any failure or after [timeoutMs]). Used for
+     * the adhan instants and for the status card's month of events.
+     */
+    fun run(
+        context: Context,
+        method: String,
+        args: Any?,
+        timeoutMs: Long = 8_000,
+        complete: (Any?) -> Unit,
+    ) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             var engine: FlutterEngine? = null
             var completed = false
             lateinit var timeout: Runnable
-            fun finish(targets: Map<String, Long>?) {
+            fun finish(value: Any?) {
                 if (completed) return
                 completed = true
                 handler.removeCallbacks(timeout)
                 // Return outside a platform message before destroying its engine.
                 handler.post {
                     engine?.destroy()
-                    complete(targets)
+                    complete(value)
                 }
             }
             timeout = Runnable {
-                Log.w("AdhanCalculation", "offline calculation timed out")
+                Log.w("AdhanCalculation", "offline $method timed out")
                 finish(null)
             }
-            handler.postDelayed(timeout, 8_000)
+            handler.postDelayed(timeout, timeoutMs)
             try {
                 val engineContext = AdhanStorage.engineContext(context)
                 val loader = FlutterInjector.instance().flutterLoader()
@@ -87,20 +109,10 @@ object AdhanCalculation {
                         result.notImplemented()
                     } else {
                         result.success(null)
-                        channel.invokeMethod("calculate", mapOf(
-                            "calculation" to inputs,
-                            "notBefore" to notBefore,
-                            "dates" to dates(notBefore),
-                        ), object : MethodChannel.Result {
-                            override fun success(value: Any?) {
-                                val raw = value as? Map<*, *> ?: return finish(null)
-                                val targets = raw.entries.associate {
-                                    (it.key as String) to (it.value as Number).toLong()
-                                }
-                                finish(targets)
-                            }
+                        channel.invokeMethod(method, args, object : MethodChannel.Result {
+                            override fun success(value: Any?) = finish(value)
                             override fun error(code: String, message: String?, details: Any?) {
-                                Log.w("AdhanCalculation", "offline calculation failed: $code")
+                                Log.w("AdhanCalculation", "offline $method failed: $code $message")
                                 finish(null)
                             }
                             override fun notImplemented() = finish(null)
@@ -111,7 +123,7 @@ object AdhanCalculation {
                     DartExecutor.DartEntrypoint(loader.findAppBundlePath(), "adhanRecomputeMain"),
                 )
             } catch (failure: Exception) {
-                Log.w("AdhanCalculation", "cannot start offline calculator", failure)
+                Log.w("AdhanCalculation", "cannot start offline $method", failure)
                 finish(null)
             }
         }

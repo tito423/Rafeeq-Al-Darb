@@ -62,6 +62,22 @@ class OfficialHijri {
     final p = await SharedPreferences.getInstance();
     final raw = p.getString(_prefsKey);
     if (raw == null) return;
+    loadRaw(raw);
+  }
+
+  /// The stored cache as its raw JSON, for the status card's background
+  /// refresh: that engine has no plugins, so it is handed the string.
+  static Future<String?> rawCache() async =>
+      (await SharedPreferences.getInstance()).getString(_prefsKey);
+
+  /// Fills the cache from [rawCache]'s string; a bad string leaves it empty.
+  static void loadRaw(String raw) {
+    try {
+      _parse(raw);
+    } catch (_) {}
+  }
+
+  static void _parse(String raw) {
     final m = jsonDecode(raw) as Map<String, dynamic>;
     _days = {
       for (final e in m.entries)

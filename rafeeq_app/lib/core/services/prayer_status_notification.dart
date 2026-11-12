@@ -147,7 +147,20 @@ class PrayerStatusNotification {
       // last used, so the card can carry [daysAhead] real days.
       final inputs = (await SharedPreferences.getInstance())
           .getString(PrayerTimesService.calcInputsKey);
+      final hijriRaw = await OfficialHijri.rawCache();
       await _native.invokeMethod<void>('show', {
+        // What the native side needs to rebuild this schedule by itself,
+        // every day, without the app (owner, 2026-11-12: «لازم التطبيق يشتغل
+        // اوتو لاخر العمر … ولا تحتاج ابدا ان التطبيق يتفتح»). See
+        // [backgroundSchedule].
+        if (inputs != null)
+          'refresh': {
+            'inputs': inputs,
+            'locale': localeCode,
+            'city': times.cityName,
+            'hijriOffset': _hijriOffset,
+            'hijri': ?hijriRaw,
+          },
         'events': schedule(times, now, localeCode,
             dayTimes: inputs == null
                 ? null
@@ -238,6 +251,39 @@ class PrayerStatusNotification {
       });
     }
     return out;
+  }
+
+  /// The schedule rebuilt in the background engine (`adhan_recompute_entry`),
+  /// from what [refresh] last handed the native side. That engine has no
+  /// plugins: the translations must already be loaded, and the Hijri cache
+  /// and correction come in as arguments. Every day comes from [inputs], so
+  /// nothing here repeats one day's clock.
+  List<Map<String, Object>> backgroundSchedule({
+    required String inputs,
+    required String localeCode,
+    required String city,
+    required int hijriOffset,
+    String? officialHijri,
+    DateTime? now,
+  }) {
+    if (officialHijri != null) OfficialHijri.loadRaw(officialHijri);
+    _hijriOffset = hijriOffset;
+    // No clock strings: with [dayTimes] every day is calculated, and a day
+    // whose calculation fails is left out ('--:--' is not readable).
+    final place = PrayerTimes(
+      fajr: '--:--',
+      sunrise: '--:--',
+      dhuhr: '--:--',
+      asr: '--:--',
+      maghrib: '--:--',
+      isha: '--:--',
+      cityName: city,
+      hijriDate: '',
+      gregorianDate: '',
+    );
+    return schedule(place, now ?? DateTime.now(), localeCode,
+        dayTimes: (d) => PrayerTimesService.timesOnDay(inputs, d),
+        daysAhead: daysAhead);
   }
 
   /// [hhmm] on [day], or null when the string cannot be read — an unreadable

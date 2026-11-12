@@ -51,6 +51,9 @@ fun MainActivity.registerPrayerCardChannel(flutterEngine: FlutterEngine) {
                         call.argument<String>("openLabel") ?: "",
                         call.argument<String>("nextLabel") ?: "",
                         call.argument<String>("prevLabel") ?: "",
+                        // What the daily background refresh rebuilds the
+                        // schedule from (PrayerCard.refreshInBackground).
+                        call.argument<Map<String, Any?>>("refresh")?.let { JSONObject(it).toString() },
                     )
                     result.success(null)
                 }

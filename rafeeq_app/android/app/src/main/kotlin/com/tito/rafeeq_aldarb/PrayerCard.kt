@@ -10,7 +10,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
+import com.tito.rafeeq_aldarb.adhan.AdhanCalculation
 import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * The next-prayer card with its live countdown, posted natively so it can
@@ -91,8 +93,14 @@ object PrayerCard {
         openLabel: String,
         nextLabel: String,
         prevLabel: String,
+        refreshJson: String? = null,
     ) {
-        prefs(ctx).edit()
+        val edit = prefs(ctx).edit()
+        if (refreshJson != null) {
+            edit.putString("refresh_args", refreshJson)
+                .putLong("refreshed_at", System.currentTimeMillis())
+        }
+        edit
             .putBoolean("enabled", true)
             .putString("events", eventsJson)
             .putLong("elapsed_ms", if (elapsedMs > 0) elapsedMs else ELAPSED_WINDOW_MS)
@@ -107,11 +115,65 @@ object PrayerCard {
             // every refresh; only the card's toggle button changes it.
             .remove("skip_elapsed")
             .apply()
+        PrayerCardJob.ensureScheduled(ctx)
         post(ctx)
     }
 
+    /**
+     * THE CARD RUNS WITHOUT THE APP. Rebuilds the month of events from the
+     * place, settings and language the app last sent, in the same headless
+     * Dart engine the adhan uses, and reposts. Called daily by
+     * [PrayerCardJob], and early when the schedule is down to its last days.
+     * Owner, 2026-11-12: «لازم التطبيق يشتغل اوتو لاخر العمر … ولا تحتاج
+     * ابدا ان التطبيق يتفتح».
+     */
+    fun refreshInBackground(ctx: Context, done: (Boolean) -> Unit) {
+        val p = prefs(ctx)
+        val raw = p.getString("refresh_args", null)
+        if (!p.getBoolean("enabled", false) || raw == null) return done(true)
+        val args = try {
+            val o = JSONObject(raw)
+            o.keys().asSequence().associateWith { o.get(it) }
+        } catch (_: Exception) {
+            return done(true)
+        }
+        AdhanCalculation.run(ctx, "cardSchedule", args, timeoutMs = 20_000) { value ->
+            val list = value as? List<*>
+            if (list.isNullOrEmpty()) {
+                done(false)
+                return@run
+            }
+            val events = JSONArray()
+            for (e in list) {
+                val m = e as? Map<*, *> ?: continue
+                events.put(
+                    JSONObject()
+                        .put("label", m["label"] as? String ?: "")
+                        .put("body", m["body"] as? String ?: "")
+                        .put("sub", m["sub"] as? String ?: "")
+                        .put("when", (m["when"] as? Number)?.toLong() ?: 0L)
+                )
+            }
+            // The app may have been opened (or the card turned off) while
+            // this ran; its own schedule is as new and wins.
+            val latest = prefs(ctx)
+            if (latest.getBoolean("enabled", false) &&
+                latest.getString("refresh_args", null) == raw
+            ) {
+                latest.edit().putString("events", events.toString())
+                    .putLong("refreshed_at", System.currentTimeMillis()).apply()
+                post(ctx)
+            }
+            done(true)
+        }
+    }
+
+    /** Below this much schedule left, [post] asks for a refresh at once. */
+    private const val LOW_WATER_MS = 3 * 24 * 60 * 60 * 1000L
+
     fun hide(ctx: Context) {
         prefs(ctx).edit().putBoolean("enabled", false).apply()
+        PrayerCardJob.cancel(ctx)
         val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.cancel(broadcast(ctx, ACTION_ROLLOVER, 2))
         (ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(ID)
@@ -156,6 +218,13 @@ object PrayerCard {
         val lastPast = all.lastOrNull { it.whenMs <= now }
         val justCameIn = lastPast?.takeIf { it.whenMs >= now - window }
         val upcoming = all.firstOrNull { it.whenMs > now }
+        // Running low (the daily job held back by the OS, or a card stored
+        // by an older build): ask for a refresh now, not when it runs out.
+        if (p.getString("refresh_args", null) != null &&
+            (all.lastOrNull()?.whenMs ?: 0L) - now < LOW_WATER_MS
+        ) {
+            PrayerCardJob.runSoon(ctx)
+        }
         // THE SCHEDULE RAN OUT. It holds yesterday to tomorrow and only the app
         // refreshes it, so two days without opening the app left nothing
         // ahead: the card went blank with a lone «منذ الأذان» button (owner's

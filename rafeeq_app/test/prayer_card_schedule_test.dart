@@ -182,6 +182,31 @@ void main() {
         .toSet();
     expect(fajrs.length, greaterThan(3));
   });
+
+  test('the background refresh builds the same month with no app open', () {
+    // What PrayerCardJob asks the headless engine for: the stored inputs,
+    // city, Hijri correction and declared calendar, nothing else.
+    const inputs = '{"lat":25.2048,"lon":55.2708,"method":4,"madhab":0,"hlr":2}';
+    final now = DateTime(2026, 12, 20, 13);
+    final out = PrayerStatusNotification.instance.backgroundSchedule(
+      inputs: inputs,
+      localeCode: 'ar',
+      city: 'دبي',
+      hijriOffset: 0,
+      now: now,
+    );
+    final last = DateTime.fromMillisecondsSinceEpoch(out.last['when'] as int);
+    expect(last.isAfter(DateTime(2027, 1, 19)), isTrue);
+    expect(out.first['sub'], contains('| دبي'));
+    // Six events a day for 30 days ahead plus the rest of today.
+    expect(out.length, greaterThan(180));
+    // A broken store gives nothing, never a guessed clock.
+    expect(
+      PrayerStatusNotification.instance.backgroundSchedule(
+          inputs: '{', localeCode: 'ar', city: '', hijriOffset: 0, now: now),
+      isEmpty,
+    );
+  });
 }
 
 /// The same string without its bidi isolate characters.
