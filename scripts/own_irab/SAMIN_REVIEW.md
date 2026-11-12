@@ -151,3 +151,9 @@ so only words still in doubt are asked.
 - Judged (Sonnet, j14-j21, with the two-book rule in the prompt): 191 flags + 30 audit = 221 packets; 214 answered (j19 skipped 7: 37:170:810, 38:21:167, 38:24:232, 38:24:243, 38:27:298, 38:31:333, 38:41:404 - rerun j19 for those).
 - 91 CHANGE proposals, 123 KEEP; 1 CHANGE came from the audit sample. NONE APPLIED: 91 is far above the earlier rate (25 of 208), and a first look shows many where the "second book" is the ALT line itself plus al-Mujtaba saying the same, which may be right, but each must be read against al-Da'as's own text (daas_quote.py) before anything changes. List: `pk2B/PENDING_CHANGES_b032_b047.tsv`. Not read yet because this task's 5-point cap was reached.
 - Left: b048-b063 not classified; the 91 pending proposals; the 7 unanswered j19 packets.
+
+## Group B part 3 decided by Opus (2026-11-12)
+- 94 proposals (91 from j14-j21 + 3 from the j19 rerun of its 7 skipped packets). Tools: `pending_digest.py` (our text, al-Da'as verbatim, ALT, the classical books' lines on the word), `quote_check.py` (96 of 102 book quotes found verbatim in the packet; the 6 others are abridged with «...»), `pending_plan.py` (particle-kind edits keep the rest of our text).
+- Applied 92, rejected 2: 27:37 «فلنأتينهم» (only al-Jadwal says رابطة; al-Samin speaks of an implied condition, not of the fa) and 37:145 «فنبذناه» (the proposal broke al-Da'as's coherent «عاطفة على محذوف»).
+- Every applied item has two named books against al-Da'as (the ALT book + al-Mujtaba in most; al-Samin/al-Nahhas/Makki in some) or corrects our slip (26:184 «والجبلة» was «معطوف على الذي»; al-Da'as says «معطوف على المفعول به»). Tails fixed with the particle (a clause called مستأنفة/معطوفة to match). Table: `groupb3_fixes.json`, loaded by write_surah.GROUPB; al-Da'as's verbatim phrase kept under each word.
+- check.py 114 OK, audit_vowels 3 known false positives, export_app 77,430 words.
