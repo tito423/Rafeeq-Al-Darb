@@ -696,3 +696,5 @@ DONE 2026-11-12 ~23:00 (step 3): «الموقع طوال الوقت» row on the
 - 2026-11-12 b8180af0 group B state at 5-hour stop, b048-b051 classified.
 - 2026-11-12 b70035d4 8 al-Da'as alts made verbatim.
 - 2026-11-12 3e112254 group B part 3: 92 fixes applied after Opus read 94.
+- 2026-11-13 ~14:10 (a)-(f) seen on API 24 incl. tablet; committed, no release.
+- 2026-11-13 ~13:40 (d)(e)(f) coded, partly seen (see Next step); checkpoint, no release.
