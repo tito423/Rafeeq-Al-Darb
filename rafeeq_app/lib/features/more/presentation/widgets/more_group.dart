@@ -7,6 +7,7 @@ import '../../../../core/widgets/accordion.dart';
 import '../../../../core/widgets/islamic_action_card.dart';
 import '../../../../core/widgets/more_group_accent.dart';
 import '../../../tutorial/data/tutorial_state.dart';
+import 'more_group_page.dart';
 
 /// One group of «المزيد» as a single card that opens onto its contents.
 ///
@@ -92,6 +93,20 @@ class _MoreGroupState extends ConsumerState<MoreGroup>
   }
 
   void _toggle() {
+    // Three a row (sideways, tablets) a group opens as its own page across
+    // the whole width - see [MoreGroupPage] (owner, 2026-11-13).
+    if (ScreenClass.twoColumns(context) && !_open) {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => MoreGroupPage(
+            title: widget.title,
+            accent: widget.accent,
+            children: widget.children,
+          ),
+        ),
+      );
+      return;
+    }
     setState(() => _open = !_open);
     if (_open) {
       // «قائمة واحدة مفتوحة فقط - فتح قائمة يغلق المفتوحة وتظهر الجديدة

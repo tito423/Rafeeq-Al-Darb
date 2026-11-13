@@ -130,36 +130,38 @@ class _SectionsTab extends ConsumerWidget {
     final cols = (avail / maxExtent).ceil().clamp(1, 12);
     final last = _categoryOrder.length - 1;
     final center = cols > 1 && last % cols == 0;
-    if (!center) {
-      return GridView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        gridDelegate: delegate,
-        itemCount: _categoryOrder.length,
-        itemBuilder: (context, i) => cardAt(i),
-      );
-    }
     final cellW = (avail - spacing * (cols - 1)) / cols;
     final cellH = (twoCols ? rowHeight : null) ?? cellW / aspect;
     return CustomScrollView(
       slivers: [
+        // «كارت الاستماع لأذكار الصباح والاستماع لأذكار المساء» (owner,
+        // 2026-09-29): complete recordings by named reciters. It scrolls
+        // away with the grid - pinned, it ate a third of a sideways phone
+        // (owner, 2026-11-13).
+        const SliverToBoxAdapter(child: AdhkarListenRow()),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          padding: EdgeInsets.fromLTRB(16, 8, 16, center ? 0 : 16),
           sliver: SliverGrid(
             gridDelegate: delegate,
             delegate: SliverChildBuilderDelegate(
               (context, i) => cardAt(i),
-              childCount: last,
+              childCount: center ? last : _categoryOrder.length,
             ),
           ),
         ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(16, spacing, 16, 16),
-            child: Center(
-              child: SizedBox(width: cellW, height: cellH, child: cardAt(last)),
+        if (center)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, spacing, 16, 16),
+              child: Center(
+                child: SizedBox(
+                  width: cellW,
+                  height: cellH,
+                  child: cardAt(last),
+                ),
+              ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -178,14 +180,7 @@ class _SectionsTab extends ConsumerWidget {
         final rowHeight = ScreenClass.shortHeight(context)
             ? ((box.maxHeight - 32 - 14) / 2).clamp(120.0, 220.0)
             : null;
-        return Column(
-          children: [
-            // «كارت الاستماع لأذكار الصباح والاستماع لأذكار المساء» (owner,
-            // 2026-09-29): complete recordings by named reciters.
-            const AdhkarListenRow(),
-            Expanded(child: _sectionsGrid(context, box, rowHeight)),
-          ],
-        );
+        return _sectionsGrid(context, box, rowHeight);
       },
     );
   }

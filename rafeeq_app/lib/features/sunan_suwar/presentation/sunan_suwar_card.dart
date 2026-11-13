@@ -104,9 +104,14 @@ class _SurahRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Owner, 2026-11-13 (phone, sideways): the names were too big and their
+    // marks ran into the virtue line under them. AmiriQuran's harakat reach
+    // far above and below the theme's tight line height, so the line is
+    // given room for them (1.9) and the size comes down a step.
     final nameStyle = Theme.of(context).textTheme.titleSmall?.copyWith(
       fontFamily: 'AmiriQuran',
-      fontSize: 24,
+      fontSize: 20,
+      height: 1.9,
     );
     final theme = Theme.of(context);
     return InkWell(
@@ -135,11 +140,13 @@ class _SurahRow extends StatelessWidget {
                 ),
                 Text(
                   name.isEmpty ? '…' : name,
-                  style: nameStyle?.copyWith(color: theme.colorScheme.onSurface),
+                  style: nameStyle?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 4),
             Text(
               '${surah.virtueNoteKey.tr()} — ${surah.sourceKey.tr()}',
               maxLines: 2,

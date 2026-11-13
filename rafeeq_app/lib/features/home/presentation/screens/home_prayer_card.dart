@@ -88,7 +88,10 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
                   26)
               .clamp(150.0, 340.0)
         : 236.0;
-    final analogSize = twoPane ? (panelHeight - 44).clamp(90.0, 240.0) : 132.0;
+    // Sideways the clock is held to 150 dp and the panel hugs what it holds
+    // (owner, 2026-11-13, phone sideways: «كبير وواكل جزء من الصفحة، صغّره على
+    // قدّه»); the column height stays only as the ceiling.
+    final analogSize = twoPane ? (panelHeight - 44).clamp(90.0, 150.0) : 132.0;
 
     // ONE photograph under the whole card - the next prayer and the slides
     // (owner, 2026-09-29: «الخلفية دي تغطي الكارت الأكبر … مش يبقى كل واحد
@@ -381,7 +384,7 @@ class _PrayerTimesTableState extends ConsumerState<_PrayerTimesTable> {
           width: double.infinity,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: panelHeight,
+              minHeight: twoPane ? 0 : panelHeight,
               maxHeight: twoPane ? panelHeight : double.infinity,
             ),
             child: Align(

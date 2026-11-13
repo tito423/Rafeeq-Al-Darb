@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/screen_class.dart';
+import '../../../../core/widgets/collapse_on_scroll.dart';
 import '../../../hadeethenc/presentation/screens/hadeethenc_tab.dart';
 import '../../../shamela/data/shamela_import_service.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
@@ -148,23 +149,23 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
           ),
         ],
       ),
-      body: Column(
-        children: [
-          if (kShamelaEnabled) const ExternalSourcesStrip(),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: const [
-                BooksTab(),
-                MyLibraryTab(),
-                HadithTab(),
-                HadeethEncTab(),
-                ChannelsTab(),
-                WebsitesTab(),
-              ],
-            ),
-          ),
-        ],
+      // The Dorar / Shamela cards slide away while a list scrolls down on a
+      // phone (owner, 2026-11-13: «واكلة الشاشة تماما»); a tablet keeps them.
+      body: CollapseOnScroll(
+        header: kShamelaEnabled
+            ? const ExternalSourcesStrip()
+            : const SizedBox.shrink(),
+        body: TabBarView(
+          controller: _tabController,
+          children: const [
+            BooksTab(),
+            MyLibraryTab(),
+            HadithTab(),
+            HadeethEncTab(),
+            ChannelsTab(),
+            WebsitesTab(),
+          ],
+        ),
       ),
     );
   }

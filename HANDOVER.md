@@ -2588,9 +2588,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-11-13 21:54 — IN PROGRESS — resume here**
+**2026-11-13 22:01 — IN PROGRESS — resume here**
 
-Record owner 11-item UI batch and screenshots for the next session
+UI batch items 7,1,8,2,3,9 (tasbeeh reset, adhkar listen row scrolls, library strips collapse on phones, landscape prayer card hugs content, surah names smaller, More groups open as a page sideways) - code only, not yet seen on emulator
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

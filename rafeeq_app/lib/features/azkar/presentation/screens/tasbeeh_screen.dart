@@ -6,7 +6,6 @@ import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
@@ -82,7 +81,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   }
 
   /// Counter and rounds only; the lifetime total is «تصفير الكل».
-  void _resetCounter() => setState(() => _count = _rounds = 0);
 
   void _toggleHaptic() {
     setState(() => _hapticEnabled = !_hapticEnabled);
@@ -322,11 +320,15 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                           backgroundColor: scheme.surfaceContainerHighest,
                         ),
                         const Spacer(),
+                        // Owner (2026-11-13): no trash can - this button
+                        // does the full reset (count, rounds and the saved
+                        // total, after a confirmation). The big button by
+                        // the rounds count still zeroes just this round.
                         IconButton(
-                          tooltip: 'azkar.reset_counter'.tr(),
-                          onPressed: _count == 0 && _rounds == 0
+                          tooltip: 'common.reset_all'.tr(),
+                          onPressed: _total == 0 && _rounds == 0 && _count == 0
                               ? null
-                              : _resetCounter,
+                              : _clearAll,
                           icon: Icon(
                             Icons.restart_alt_rounded,
                             color: scheme.primary,
@@ -344,21 +346,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                             color: _hapticEnabled
                                 ? scheme.primary
                                 : scheme.onSurfaceVariant,
-                          ),
-                        ),
-                        IconButton(
-                          tooltip: 'common.reset_all'.tr(),
-                          onPressed: _total == 0 && _rounds == 0 && _count == 0
-                              ? null
-                              : _clearAll,
-                          icon: SvgPicture.asset(
-                            'assets/icons/reset.svg',
-                            colorFilter: ColorFilter.mode(
-                              scheme.error,
-                              BlendMode.srcIn,
-                            ),
-                            width: 24,
-                            height: 24,
                           ),
                         ),
                       ],

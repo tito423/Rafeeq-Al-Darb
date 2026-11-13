@@ -16,6 +16,7 @@ import '../../../../core/services/download_manager.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/digits.dart';
 import '../../../../core/widgets/accordion.dart';
+import '../../../../core/widgets/collapse_on_scroll.dart';
 import '../../../../core/widgets/paired_list_view.dart';
 import '../../../shamela/data/shamela_library.dart';
 import '../../data/book_catalog.dart';
@@ -186,124 +187,118 @@ class _BooksTabState extends State<BooksTab> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      child: Column(
-        children: [
-          Material(
-            color: Theme.of(context).colorScheme.surface,
-            // A segmented control rather than a second underline bar, so the
-            // two levels of tabs read as two levels.
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 4, 16, 6),
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: LayoutBuilder(
-                builder: (context, box) {
-                  // One size for all four labels. Shrinking each on its own
-                  // left «Categories» and «My library» tiny beside «Audio» at
-                  // the largest system font (owner's phone, 1.45, 2026-09-25).
-                  // The longest label sets the size; FittedBox stays as the
-                  // guard against clipping.
-                  const keys = [
-                    'library.sub_categories',
-                    'library.sub_authors',
-                    'library.sub_spoken',
-                    'library.sub_mine',
-                  ];
-                  final base =
-                      (Theme.of(context).textTheme.titleSmall ??
-                              const TextStyle(fontSize: 14))
-                          .copyWith(fontWeight: FontWeight.w700);
-                  final scaler = MediaQuery.textScalerOf(context);
-                  var widest = 0.0;
-                  for (final key in keys) {
-                    final painter = TextPainter(
-                      text: TextSpan(text: key.tr(), style: base),
-                      textScaler: scaler,
-                      textDirection: Directionality.of(context),
-                      maxLines: 1,
-                    )..layout();
-                    if (painter.width > widest) widest = painter.width;
-                    painter.dispose();
-                  }
-                  final slot = box.maxWidth / keys.length - 32;
-                  final factor = widest > slot && widest > 0
-                      ? slot / widest
-                      : 1.0;
-                  final fontSize = (base.fontSize ?? 14) * factor;
-                  return TabBar(
-                    dividerColor: Colors.transparent,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    splashBorderRadius: BorderRadius.circular(12),
-                    indicator: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    // Flat gold on the white chosen tab: 2.45 : 1 (light theme).
-                    labelColor: readableOn(
-                      AppColors.gold,
-                      Theme.of(context).colorScheme.surface,
-                    ),
-                    labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                    unselectedLabelColor: Theme.of(
-                      context,
-                    ).colorScheme.onSurfaceVariant,
-                    // A four-way TabBar gives each tab a quarter of the width
-                    // and a `Tab`'s text CLIPS rather than ellipsises, so on a
-                    // phone a little narrower than the emulator «التصنيفات» lost
-                    // its alif and «مسموعة» its meem - «المؤلفين والتصنيفات
-                    // واللي جنبها في مكتبتي مقصوصة ومش كاملة». Shrinking a label
-                    // to fit its quarter keeps the word whole, which is what a
-                    // tab is for.
-                    tabs: [
-                      for (final key in keys)
-                        Tab(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              key.tr(),
-                              style: TextStyle(fontSize: fontSize),
-                            ),
+      // Slides away with the Dorar / Shamela cards above it (owner,
+      // 2026-11-13), on a phone only - see [CollapseOnScroll].
+      child: CollapseOnScroll(
+        header: Material(
+          color: Theme.of(context).colorScheme.surface,
+          // A segmented control rather than a second underline bar, so the
+          // two levels of tabs read as two levels.
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 6),
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: LayoutBuilder(
+              builder: (context, box) {
+                // One size for all four labels. Shrinking each on its own
+                // left «Categories» and «My library» tiny beside «Audio» at
+                // the largest system font (owner's phone, 1.45, 2026-09-25).
+                // The longest label sets the size; FittedBox stays as the
+                // guard against clipping.
+                const keys = [
+                  'library.sub_categories',
+                  'library.sub_authors',
+                  'library.sub_spoken',
+                  'library.sub_mine',
+                ];
+                final base =
+                    (Theme.of(context).textTheme.titleSmall ??
+                            const TextStyle(fontSize: 14))
+                        .copyWith(fontWeight: FontWeight.w700);
+                final scaler = MediaQuery.textScalerOf(context);
+                var widest = 0.0;
+                for (final key in keys) {
+                  final painter = TextPainter(
+                    text: TextSpan(text: key.tr(), style: base),
+                    textScaler: scaler,
+                    textDirection: Directionality.of(context),
+                    maxLines: 1,
+                  )..layout();
+                  if (painter.width > widest) widest = painter.width;
+                  painter.dispose();
+                }
+                final slot = box.maxWidth / keys.length - 32;
+                final factor = widest > slot && widest > 0
+                    ? slot / widest
+                    : 1.0;
+                final fontSize = (base.fontSize ?? 14) * factor;
+                return TabBar(
+                  dividerColor: Colors.transparent,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  splashBorderRadius: BorderRadius.circular(12),
+                  indicator: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  // Flat gold on the white chosen tab: 2.45 : 1 (light theme).
+                  labelColor: readableOn(
+                    AppColors.gold,
+                    Theme.of(context).colorScheme.surface,
+                  ),
+                  labelStyle: const TextStyle(fontWeight: FontWeight.w700),
+                  unselectedLabelColor: Theme.of(
+                    context,
+                  ).colorScheme.onSurfaceVariant,
+                  // A four-way TabBar gives each tab a quarter of the width
+                  // and a `Tab`'s text CLIPS rather than ellipsises, so on a
+                  // phone a little narrower than the emulator «التصنيفات» lost
+                  // its alif and «مسموعة» its meem - «المؤلفين والتصنيفات
+                  // واللي جنبها في مكتبتي مقصوصة ومش كاملة». Shrinking a label
+                  // to fit its quarter keeps the word whole, which is what a
+                  // tab is for.
+                  tabs: [
+                    for (final key in keys)
+                      Tab(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            key.tr(),
+                            style: TextStyle(fontSize: fontSize),
                           ),
                         ),
-                    ],
-                  );
-                },
-              ),
+                      ),
+                  ],
+                );
+              },
             ),
           ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                _CategoriesView(
-                  paths: _paths,
-                  onDownload: _download,
-                  onOpen: _open,
-                ),
-                _AuthorsView(
-                  paths: _paths,
-                  onDownload: _download,
-                  onOpen: _open,
-                ),
-                SpokenBooksView(
-                  paths: _paths,
-                  onDownload: _download,
-                  onOpen: _open,
-                ),
-                _MyLibraryView(paths: _paths, onOpen: _open, onDelete: _delete),
-              ],
+        ),
+        body: TabBarView(
+          children: [
+            _CategoriesView(
+              paths: _paths,
+              onDownload: _download,
+              onOpen: _open,
             ),
-          ),
-        ],
+            _AuthorsView(paths: _paths, onDownload: _download, onOpen: _open),
+            SpokenBooksView(
+              paths: _paths,
+              onDownload: _download,
+              onOpen: _open,
+            ),
+            _MyLibraryView(paths: _paths, onOpen: _open, onDelete: _delete),
+          ],
+        ),
       ),
     );
   }
