@@ -390,9 +390,11 @@ class _Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+    // The word «juz» is translated, so the line runs in the interface's
+    // direction: forced RTL turned English «Juz ٦» into «٦ Juz» (seen on
+    // emulator-5554, 2026-11-13). Arabic is RTL either way.
     child: Text(
       text,
-      textDirection: TextDirection.rtl,
       style: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w500,

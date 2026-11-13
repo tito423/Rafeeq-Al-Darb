@@ -210,10 +210,12 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
       // apart), the same rule the page itself follows.
       ayahText: bodyOf(ayah),
       surahName: surahNameForDisplay(widget.surahNameAr),
-      reference: localizeDigits(
-        '${ayah.surahId}:${ayah.ayahNumber}',
-        uiLanguageCode,
-      ),
+      // «آية ٥٥», not «٥:٥٥»: under the surah's own name the surah number
+      // adds nothing, and in Arabic-Indic digits «٥:٥٥» read as a clock
+      // («0:00») on the card (seen on emulator-5554, 2026-11-13).
+      reference:
+          '${'quran.ayah'.tr()} '
+          '${localizeDigits('${ayah.ayahNumber}', uiLanguageCode)}',
       fileTag: '${ayah.surahId}_${ayah.ayahNumber}',
       body: body,
     );

@@ -266,67 +266,6 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     setState(() => _toolbarVisible = !forward);
   }
 
-  /// Rotation belongs to the text mode.
-  ///
-  /// BOTH MODES ROTATE, since 2026-09-17.
-  ///
-  /// It used to be text-only, on the owner's own call — «خلي الاورينتيشن بس
-  /// على النص لو ده أفضل» — because a scanned page has one fixed shape and
-  /// on a phone's side it can only be drawn full-width and scrolled, never
-  /// the page the printer set. He asked for it back: «هو مينفعش المصحف
-  /// الورقي يتعمله اورينتيشن».
-  ///
-  /// The image page has been ready for this the whole time: `_stage()` in
-  /// `mushaf_page_view.dart` carries a landscape branch that lays the scan
-  /// out at the full width of the screen and scrolls it vertically, written
-  /// and then left unreachable by this lock. Nothing else had to change.
-  ///
-  /// The trade it makes, stated rather than hidden: sideways you see a band
-  /// of the page at a time and scroll, instead of the whole leaf at once.
-  /// That is the honest best a fixed-shape scan can do on a phone's side,
-  /// and it is why the lock existed.
-  void _applyOrientationLock() {
-    SystemChrome.setPreferredOrientations(const [
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-  }
-
-  /// Turning the phone sideways opens the page up, «زي ختمة».
-  ///
-  /// Called from `build` with the orientation it is building for, and does
-  /// its work in a post-frame callback because this changes state.
-  ///
-  /// The automatic full-screen is deliberately NOT persisted: it is a
-  /// consequence of how the phone is being held, not a preference, and
-  /// writing it would mean a reader who rotated once came back to portrait
-  /// permanently immersed. What he chose in portrait is remembered and put
-  /// back when he rotates back.
-  void _syncOrientationFullScreen(Orientation orientation) {
-    if (orientation == _lastOrientation) return;
-    final previous = _lastOrientation;
-    _lastOrientation = orientation;
-    // First build: leave his stored choice — unless the phone is already on
-    // its side, where the text is always full screen.
-    if (previous == null && orientation != Orientation.landscape) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (orientation == Orientation.landscape) {
-        if (_chromeVisible) _setChromeVisible(false); // start clean
-        _fillBeforePortrait = _pageFillScreen;
-        if (!_pageFillScreen) _setPageFillScreen(true, persist: false);
-      } else {
-        final back = _fillBeforePortrait;
-        _fillBeforePortrait = null;
-        if (back != null && back != _pageFillScreen) {
-          _setPageFillScreen(back, persist: false);
-        }
-      }
-    });
-  }
-
   void _togglePageFillScreen() => _setPageFillScreen(!_pageFillScreen);
 
   /// The floating controls and the phone's own bars come and go together:
