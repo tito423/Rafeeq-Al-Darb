@@ -25,9 +25,8 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-No open owner request. Unverified: real phone. Possible polish (not asked):
-reading layout badges float over scrolling text. NO release until the owner
-says so. Emulator rotation: `adb emu rotate` (user_rotation does nothing on
+No open owner request. Badges-fade polish done (unreleased, see HANDOVER
+top row). Unverified: real phone. NO release until the owner says so. Emulator rotation: `adb emu rotate` (user_rotation does nothing on
 API 24). Emulator lags: a screenshot can be stale.
 
 ## Standing owner orders (still open)
@@ -53,6 +52,7 @@ API 24). Emulator lags: a screenshot can be stale.
 
 ## Log (newest first)
 
+- 2026-11-13 ~20:50 reading-layout juz/page badges fade while text scrolls (`scroll_quiet_overlay.dart`); seen API 24 portrait+landscape; analyze clean, 1474 tests; NOT released.
 - 2026-11-13 ~17:30 RELEASED v4.5.2 (tag 58c7f888): the owner's medallions on the text mushaf.
 - 2026-11-13 ~17:00 owner's medallions on the text mushaf: cut (Python), wired, seen on API 24; not released.
 - 2026-11-13 ~15:55 checked printed mushaf landscape + fr/es/pt/ru/ur (plate, Display row) on API 24: all right; fixed + seen landscape home labels (sunrise cut, quick-access mid-word split); RELEASED v4.5.1 (tag 1e754c59).

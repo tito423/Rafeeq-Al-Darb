@@ -45,6 +45,7 @@ import '../widgets/mushaf/mushaf_toolbar.dart';
 import '../widgets/mushaf/page_overlay.dart';
 import '../widgets/mushaf/page_turn.dart';
 import '../widgets/mushaf/recite_bar.dart';
+import '../widgets/mushaf/scroll_quiet_overlay.dart';
 import '../widgets/mushaf/toolbar_bar.dart';
 import '../widgets/mushaf_page_view.dart';
 import '../widgets/mushaf_text_page.dart';
@@ -781,70 +782,74 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
                 ErrorRetry(onRetry: () => ref.invalidate(mushafDataProvider)),
             data: (data) => Stack(
               children: [
-                // P3‑44 / P3-Landscape: adjust viewer padding dynamically based on
-                // screen orientation and full-screen state.
-                Padding(
-                  padding: EdgeInsets.only(
-                    // Full screen: up to the notch and the status bar, and no
-                    // further (owner, 2026-10-02).
-                    top: _pageFillScreen
-                        ? bars.top + 6
-                        : (isLandscape ? 28 : 40),
-                    left: _pageFillScreen ? bars.left : 0,
-                    right: _pageFillScreen ? bars.right : 0,
-                    // Down to the phone's navigation bar. Landscape floats the
-                    // page badge over the page (the bar that used to carry it
-                    // is gone, see below), so there the text also stops short
-                    // of it or the last line runs underneath the number.
-                    bottom: _pageFillScreen
-                        ? (isLandscape
-                              ? (bars.bottom + 6).clamp(48.0, double.infinity)
-                              : bars.bottom + 6)
-                        : (isLandscape ? 34 : 0),
+                // P3‑44 / P3-Landscape: viewer padding follows orientation and
+                // full screen. The badges fade while the text scrolls.
+                ScrollQuietOverlay(
+                  viewer: Padding(
+                    padding: EdgeInsets.only(
+                      // Full screen: up to the notch and the status bar, and no
+                      // further (owner, 2026-10-02).
+                      top: _pageFillScreen
+                          ? bars.top + 6
+                          : (isLandscape ? 28 : 40),
+                      left: _pageFillScreen ? bars.left : 0,
+                      right: _pageFillScreen ? bars.right : 0,
+                      // Down to the phone's navigation bar. Landscape floats the
+                      // page badge over the page (the bar that used to carry it
+                      // is gone, see below), so there the text also stops short
+                      // of it or the last line runs underneath the number.
+                      bottom: _pageFillScreen
+                          ? (isLandscape
+                                ? (bars.bottom + 6).clamp(48.0, double.infinity)
+                                : bars.bottom + 6)
+                          : (isLandscape ? 34 : 0),
+                    ),
+                    child: ChromeFit(
+                      active: _pageFillScreen && _chromeVisible,
+                      badge: !(edition?.printedHeader ?? false),
+                      pageAspect: _paperAspect(edition, isLandscape),
+                      scrolls: isLandscape,
+                      child: _buildViewer(data, edition, textLayout),
+                    ),
                   ),
-                  child: ChromeFit(
-                    active: _pageFillScreen && _chromeVisible,
-                    badge: !(edition?.printedHeader ?? false),
-                    pageAspect: _paperAspect(edition, isLandscape),
-                    scrolls: isLandscape,
-                    child: _buildViewer(data, edition, textLayout),
-                  ),
+                  // NORMAL MODE ONLY: in full screen `MushafChrome` carries
+                  // surah + juz + page with the controls, and leaving these
+                  // here too would show the juz twice when the panel opened.
+                  // Only label the page with a surah/juz when this printing
+                  // actually shares the Hafs pagination those labels come from
+                  // — otherwise they would name a surah this page doesn't hold.
+                  overlay:
+                      !_pageFillScreen ||
+                          (isLandscape && !_chromeVisible) // chrome carries it
+                      ? PersistentPageOverlay(
+                          // Image mode only. The text page already carries its own
+                          // pinned header and a banner for every surah it opens, so a
+                          // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
+                          // «في وضع المصحف شيل اسم السورة واسم الجزء واعتمد على اللي
+                          // موجودين في صفحة المصحف المصوّر». A printing whose page
+                          // prints them gets neither badge; one that does not (the
+                          // vector Hafs pages) keeps both. The text page has its own
+                          // header, so it keeps only the juz.
+                          surahName:
+                              (edition?.hafsPagination ?? true) &&
+                                  _mode == MushafMode.image &&
+                                  !(edition?.printedHeader ?? false)
+                              ? _currentSurahName(data)
+                              : null,
+                          juzNumber:
+                              (edition?.hafsPagination ?? true) &&
+                                  !(_mode == MushafMode.image &&
+                                      (edition?.printedHeader ?? false))
+                              ? _currentJuzNumber(data)
+                              : null,
+                          // Landscape drops the page-number bar under the text, so
+                          // the number has to live here instead of nowhere.
+                          pageNumber: (_pageFillScreen || isLandscape)
+                              ? _current
+                              : null,
+                        )
+                      : null,
                 ),
-                // NORMAL MODE ONLY: in full screen `MushafChrome` carries
-                // surah + juz + page with the controls, and leaving these
-                // here too would show the juz twice when the panel opened.
-                // Only label the page with a surah/juz when this printing
-                // actually shares the Hafs pagination those labels come from
-                // — otherwise they would name a surah this page doesn't hold.
-                if (!_pageFillScreen ||
-                    (isLandscape && !_chromeVisible)) // chrome carries it
-                  PersistentPageOverlay(
-                    // Image mode only. The text page already carries its own
-                    // pinned header and a banner for every surah it opens, so a
-                    // third copy in the corner was «متكرر سورة الرعد ٣ مرات».
-                    // «في وضع المصحف شيل اسم السورة واسم الجزء واعتمد على اللي
-                    // موجودين في صفحة المصحف المصوّر». A printing whose page
-                    // prints them gets neither badge; one that does not (the
-                    // vector Hafs pages) keeps both. The text page has its own
-                    // header, so it keeps only the juz.
-                    surahName:
-                        (edition?.hafsPagination ?? true) &&
-                            _mode == MushafMode.image &&
-                            !(edition?.printedHeader ?? false)
-                        ? _currentSurahName(data)
-                        : null,
-                    juzNumber:
-                        (edition?.hafsPagination ?? true) &&
-                            !(_mode == MushafMode.image &&
-                                (edition?.printedHeader ?? false))
-                        ? _currentJuzNumber(data)
-                        : null,
-                    // Landscape drops the page-number bar under the text, so
-                    // the number has to live here instead of nowhere.
-                    pageNumber: (_pageFillScreen || isLandscape)
-                        ? _current
-                        : null,
-                  ),
                 // THE FLOATING CONTROLS, replacing a black-and-white «exit
                 // immersive» circle. They take no layout space, so the
                 // mushaf keeps the whole screen — «مش تاكل اي حاجة من الشاشة».
