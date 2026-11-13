@@ -41,15 +41,14 @@ class AyahMarker extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           if (bare)
-            // A filled disc rather than the open rosette: it reads as a full
-            // stop at a glance and takes less of the line, which is the
-            // difference the owner pointed at in the app he reads in.
-            DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: gold.withValues(alpha: playing ? 1.0 : 0.88),
+            CustomPaint(
+              size: Size(size, size),
+              painter: _ScallopPainter(
+                mt: mt,
+                playing: playing,
+                number: number,
+                baseStyle: DefaultTextStyle.of(context).style,
               ),
-              child: SizedBox(width: size, height: size),
             )
           else
             CustomPaint(
@@ -63,11 +62,12 @@ class AyahMarker extends StatelessWidget {
           // past its usable middle, and `height: 1.0` alone does not centre a
           // glyph - the font's ascent and descent still pad the line box and
           // Arabic-Indic digits sit low in it. See `numberScale` below.
-          Text(
-            arabicNumber(number),
-            textHeightBehavior: numberHeightBehavior,
-            style: numberStyle(mt: mt, bare: bare, number: number),
-          ),
+          if (!bare)
+            Text(
+              arabicNumber(number),
+              textHeightBehavior: numberHeightBehavior,
+              style: numberStyle(mt: mt, bare: bare, number: number),
+            ),
         ],
       ),
     );
@@ -85,9 +85,9 @@ class AyahMarker extends StatelessWidget {
     required int number,
   }) => TextStyle(
     fontSize: sizeFor(bare: bare) * numberScale(bare, number),
-    // On the disc the number sits ON the gold, so it takes the paper's
-    // colour; the rosette is an outline and the number stays gold inside.
-    color: bare ? mt.paper : mt.gold,
+    // Both ornaments are open now (the reading layout's scalloped ring has
+    // the paper in its middle), so the number is gold in each.
+    color: mt.gold,
     fontWeight: FontWeight.w700,
     height: 1.0,
     leadingDistribution: TextLeadingDistribution.even,
@@ -111,6 +111,92 @@ class AyahMarker extends StatelessWidget {
   /// A mushaf numbers its verses in Arabic-Indic digits whatever language
   /// the interface is in.
   static String arabicNumber(int n) => localizeDigits('$n', 'ar');
+}
+
+/// The reading layout's verse end (owner, 2026-11-13: «غيّر فواصل الآيات
+/// بحاجة تانية تصميمها جميل وخد بالك من محاذاة النص جواها»; it was a plain
+/// gold disc): a ring with twelve scalloped lobes round it, a hairline ring
+/// inside, the paper in the middle, and the number centred by its digits'
+/// own body, not by the line box (Arabic-Indic digits sit low in it).
+void paintScallopMarker(
+  Canvas canvas,
+  Offset c,
+  double side,
+  MushafTheme mt, {
+  required bool playing,
+  int? number,
+  TextStyle baseStyle = const TextStyle(),
+}) {
+  final gold = mt.gold.withValues(alpha: playing ? 1.0 : 0.9);
+  final lobe = Paint()..color = gold;
+  for (var i = 0; i < 12; i++) {
+    final a = i * math.pi / 6;
+    canvas.drawCircle(
+      c + Offset(math.cos(a), math.sin(a)) * side * 0.40,
+      side * 0.095,
+      lobe,
+    );
+  }
+  canvas.drawCircle(c, side * 0.40, Paint()..color = mt.paper);
+  canvas.drawCircle(
+    c,
+    side * 0.40,
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = side * 0.05
+      ..color = gold,
+  );
+  canvas.drawCircle(
+    c,
+    side * 0.31,
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = side * 0.022
+      ..color = gold.withValues(alpha: 0.55),
+  );
+  if (number == null) return;
+  final style = baseStyle.merge(
+    AyahMarker.numberStyle(mt: mt, bare: true, number: number),
+  );
+  final tp = TextPainter(
+    text: TextSpan(text: AyahMarker.arabicNumber(number), style: style),
+    textDirection: TextDirection.rtl,
+    textHeightBehavior: AyahMarker.numberHeightBehavior,
+  )..layout();
+  // The digits' body stands about 0.36 of the size above the baseline;
+  // that point goes on the centre.
+  final size = style.fontSize ?? 10;
+  final baseline = tp.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+  tp.paint(canvas, Offset(c.dx - tp.width / 2, c.dy + size * 0.36 - baseline));
+  tp.dispose();
+}
+
+class _ScallopPainter extends CustomPainter {
+  final MushafTheme mt;
+  final bool playing;
+  final int number;
+  final TextStyle baseStyle;
+  const _ScallopPainter({
+    required this.mt,
+    required this.playing,
+    required this.number,
+    required this.baseStyle,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) => paintScallopMarker(
+    canvas,
+    size.center(Offset.zero),
+    size.width,
+    mt,
+    playing: playing,
+    number: number,
+    baseStyle: baseStyle,
+  );
+
+  @override
+  bool shouldRepaint(_ScallopPainter old) =>
+      old.mt != mt || old.playing != playing || old.number != number;
 }
 
 /// An 8-point rosette (two overlapped squares).
@@ -208,11 +294,16 @@ class FlowingMarkersPainter extends CustomPainter {
       final rect = Rect.fromCenter(center: center, width: side, height: side);
       final gold = mt.gold;
       if (bare) {
-        canvas.drawCircle(
+        paintScallopMarker(
+          canvas,
           center,
-          side / 2,
-          Paint()..color = gold.withValues(alpha: m.playing ? 1.0 : 0.88),
+          side,
+          mt,
+          playing: m.playing,
+          number: m.number,
+          baseStyle: baseStyle,
         );
+        continue;
       } else {
         canvas.save();
         canvas.translate(rect.left, rect.top);

@@ -70,6 +70,7 @@ class _AyahRow extends StatelessWidget {
                         text: shapeQuranForDisplay(bodyOf(ayah)),
                         style: textStyle,
                         layout: QuranTextLayout.cards,
+                        paper: mt.paper,
                       ),
                     ),
                   ),

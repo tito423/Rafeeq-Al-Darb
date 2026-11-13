@@ -26,6 +26,10 @@ import 'rub_margin_mark.dart' show rubMedallionsProvider;
 /// The fourth medallion (the eight-point star, `hizb.png`) is the one left
 /// out. Index into [rubMedallionsProvider]: 0 hizb, 1 quarter, 2 half,
 /// 3 three_quarters.
+/// Radius of each medallion's empty navy heart over the image side, in
+/// [rubMedallionsProvider] order, as `build_rub_medallions.py` printed it.
+const medallionHearts = [0.2065, 0.2329, 0.2170, 0.2031];
+
 int rubMedallionFor(QuranTextLayout layout) => switch (layout) {
   // The page layout is the printed page's twin: the richest star.
   QuranTextLayout.page => 3,
@@ -72,10 +76,20 @@ class RubInlineMedallionPainter extends CustomPainter {
   final List<int> offsets;
   final ui.Image? image;
 
+  /// The page's paper: the medallion's navy heart is filled with it
+  /// (owner, 2026-11-13: «بلاش القلب الغامق ده»), so it reads as an
+  /// ornamented ring on the page rather than a dark hole in the line.
+  final Color paper;
+
+  /// The heart's radius over the image side ([medallionHearts]).
+  final double heart;
+
   RubInlineMedallionPainter({
     required this.textKey,
     required this.offsets,
     required this.image,
+    required this.paper,
+    required this.heart,
   });
 
   @override
@@ -94,35 +108,32 @@ class RubInlineMedallionPainter extends CustomPainter {
       // the ayah number before it and the word after it - as measured, not
       // as assumed: which side each one lands on was guessed wrong three
       // times on API 24, so the sides are read from the boxes themselves.
-      Rect? sameLine(int at) {
+      Rect? boxAt(int at) {
         if (at < 0) return null;
         final b = ro.getBoxesForSelection(
           TextSelection(baseOffset: at, extentOffset: at + 1),
         );
-        if (b.isEmpty) return null;
-        final n = b.first.toRect();
-        return (n.center.dy - r.center.dy).abs() < r.height / 2 ? n : null;
+        return b.isEmpty ? null : b.first.toRect();
       }
 
+      // The line's own band is the word after the sign's: the enlarged
+      // glyph's box is taller than its line and, at a line's start, reached
+      // up into the line above (API 24: the previous line's ayah number was
+      // taken for a neighbour and the medallion got no room at all).
+      final band = boxAt(offset + 1) ?? r;
       var left = r.left;
       var right = r.right;
-      // The line's own band comes from the word after the sign: the
-      // enlarged glyph's box sits higher than the letters' line.
-      var band = r;
-      for (final (i, n) in [
-        sameLine(offset - 1),
-        sameLine(offset + 1),
-      ].indexed) {
+      for (final n in [boxAt(offset - 1), boxAt(offset + 1)]) {
         if (n == null) continue;
-        if (i == 1) band = n;
+        if ((n.center.dy - band.center.dy).abs() >= band.height / 2) continue;
         if (n.center.dx < r.center.dx) {
-          left = n.right;
+          left = math.max(left, n.right);
         } else {
-          right = n.left;
+          right = math.min(right, n.left);
         }
       }
-      final room = math.min(right - left, r.width);
-      final d = math.min(room - 4, band.height * 0.92);
+      final d = math.min(right - left - 4, band.height * 0.92);
+      if (d <= 0) continue;
       final centre = Offset((left + right) / 2, band.center.dy);
       canvas.drawImageRect(
         img,
@@ -130,12 +141,15 @@ class RubInlineMedallionPainter extends CustomPainter {
         Rect.fromCenter(center: centre, width: d, height: d),
         Paint()..filterQuality = FilterQuality.medium,
       );
+      // A hair over the heart's edge so no navy rim shows round the paper.
+      canvas.drawCircle(centre, d * heart + 0.6, Paint()..color = paper);
     }
   }
 
   @override
   bool shouldRepaint(RubInlineMedallionPainter old) =>
       old.image != image ||
+      old.paper != paper ||
       old.textKey != textKey ||
       !_sameList(old.offsets, offsets);
 
@@ -155,12 +169,14 @@ class RubMarkedText extends ConsumerStatefulWidget {
   final TextStyle style;
   final QuranTextLayout layout;
   final TextAlign textAlign;
+  final Color paper;
 
   const RubMarkedText({
     super.key,
     required this.text,
     required this.style,
     required this.layout,
+    required this.paper,
     this.textAlign = TextAlign.right,
   });
 
@@ -186,6 +202,8 @@ class _RubMarkedTextState extends ConsumerState<RubMarkedText> {
         textKey: _key,
         offsets: const [0],
         image: images?[rubMedallionFor(widget.layout)],
+        paper: widget.paper,
+        heart: medallionHearts[rubMedallionFor(widget.layout)],
       ),
       child: text,
     );

@@ -60,6 +60,7 @@ tablet AVD. Emulator: `adb emu rotate` to rotate; screenshots via Bash.
 
 ## Log (newest first)
 
+- 2026-11-13 ~23:00 medallion heart filled with paper; reading-layout ayah separators = scalloped ring, number centred; line-start medallion fixed; seen API 24; 1476 tests; not released.
 - 2026-11-13 ~22:50 11-item batch done: tasbeeh reset, adhkar row scrolls, library strips collapse on phones, sideways prayer card hugs content, sunan names, More groups as pages, inline medallion per text layout + plate on tap; seen API 24; 1476 tests; not released.
 - 2026-11-13 ~21:50 owner sent 11-item UI batch (shots in docs/owner_shots/2026-11-13_batch); recorded; handed to a fresh session (context 180k).
 - 2026-11-13 ~20:50 reading-layout juz/page badges fade while text scrolls (`scroll_quiet_overlay.dart`); seen API 24 portrait+landscape; analyze clean, 1474 tests; NOT released.

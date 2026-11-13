@@ -283,6 +283,13 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
                           ? QuranTextLayout.reading
                           : QuranTextLayout.page,
                     )],
+                paper: widget.mt.paper,
+                heart:
+                    medallionHearts[rubMedallionFor(
+                      widget.bare
+                          ? QuranTextLayout.reading
+                          : QuranTextLayout.page,
+                    )],
               ),
               child: child,
             ),
