@@ -353,18 +353,20 @@ class _PlatePainter extends CustomPainter {
     final y0 = lineY();
     if (y0 == null) return;
     final screenW = size.width + edge * 2;
-    final w = (screenW * 0.15).clamp(48.0, 72.0);
+    final w = (screenW * 0.16).clamp(52.0, 80.0);
     final plate = _PrintedPlate(info, w, mt, baseStyle);
     var area = Offset.zero & size;
     final within = visible();
     if (within != null && within.overlaps(area)) area = area.intersect(within);
-    final half = plate.height / 2;
+    final half = plate.height / 2 + plate.rays * 2;
     final y = area.height <= plate.height
         ? area.center.dy
         : y0.clamp(area.top + half, area.bottom - half);
     // In from the page's outer edge, a little past its rest, then settles.
-    const inset = 4.0;
-    final rest = right ? size.width + edge - inset - w / 2 : -edge + inset + w / 2;
+    final inset = 4.0 + plate.rays;
+    final rest = right
+        ? size.width + edge - inset - w / 2
+        : -edge + inset + w / 2;
     final away = (1 - t) * (w + inset + 12);
     final x = right ? rest + away : rest - away;
     canvas.saveLayer(
@@ -397,7 +399,8 @@ class _PrintedPlate {
   _PrintedPlate(this.info, this.width, this.mt, TextStyle baseStyle) {
     final big = width * 0.3;
     final lines = info.marginLines;
-    final digits = RegExp(r'^[\d٠-٩۰-۹]+$');
+    // ASCII, Arabic-Indic and Eastern Arabic-Indic digits, as code points.
+    final digits = RegExp(r'^[\d\u0660-\u0669\u06F0-\u06F9]+$');
     for (var i = 0; i < lines.length; i++) {
       final small = digits.hasMatch(lines[i]) || (lines.length == 3 && i == 0);
       final size = info.opensJuz ? big * 0.72 : (small ? big * 0.56 : big);
@@ -423,11 +426,11 @@ class _PrintedPlate {
   }
 
   double _fit(TextPainter tp) {
-    final inner = width * 0.8;
+    final inner = width * 0.66;
     return tp.width > inner ? inner / tp.width : 1;
   }
 
-  double get _body => _textHeight + width * 0.12;
+  double get _body => _textHeight + width * 0.34;
   double get height => _body + _dome + (_bothEnds ? _dome : 0);
 
   /// The lobed dome over [top], from x = -w to w, its finial at top - [d].
@@ -475,25 +478,135 @@ class _PrintedPlate {
   static Path _reversed(Path foot, double w, double bottom) =>
       foot.transform(Matrix4.diagonal3Values(-1, 1, 1).storage);
 
+  /// How far the blue rays stand out of the outline.
+  double get rays => width * 0.065;
+
+  /// Lapis of the illuminated manuscripts; lighter on a dark page so it is
+  /// still seen against the night paper.
+  Color get _lapis =>
+      mt.isLight ? const Color(0xFF1F4E8C) : const Color(0xFF6E9BDD);
+
+  /// Finer than the print (owner, 2026-11-13: «أجمل من المطبوعة»), drawn
+  /// after the gilt marginal medallions of Ottoman and Timurid copies
+  /// (gold ground, lapis rule, thin blue rays round the edge, a rosette and
+  /// a finial): the same dome-over-base shape and the printed wording.
   void paint(Canvas canvas, Offset centre) {
     canvas.save();
     canvas.translate(centre.dx, centre.dy);
     final outline = _outline();
-    canvas.drawShadow(outline, const Color(0xFF000000), 3, false);
+    final w = width / 2;
+    final top = -height / 2 + _dome;
+    final bottom = top + _body;
+
+    // Rays: short lapis strokes on the outward normal all round the edge.
+    final ray = Paint()
+      ..color = _lapis.withValues(alpha: 0.6)
+      ..strokeWidth = 0.7
+      ..strokeCap = StrokeCap.round;
+    final step = (width * 0.075).clamp(3.5, 6.0);
+    for (final m in outline.computeMetrics()) {
+      for (var d = step / 2; d < m.length; d += step) {
+        final tan = m.getTangentForOffset(d);
+        if (tan == null) continue;
+        var n = Offset(-tan.vector.dy, tan.vector.dx);
+        if (outline.contains(tan.position + n * 2)) n = -n;
+        final long = (d / step).round().isEven ? rays : rays * 0.5;
+        canvas.drawLine(tan.position + n * 1.2, tan.position + n * long, ray);
+      }
+    }
+    // Finials: a lapis drop and a gold bead beyond each pointed tip.
+    void finial(double tipY, double dir) {
+      final bead = width * 0.045;
+      canvas.drawCircle(
+        Offset(0, tipY + dir * (rays + bead)),
+        bead,
+        Paint()..color = mt.gold,
+      );
+      canvas.drawCircle(
+        Offset(0, tipY + dir * (rays * 0.35)),
+        bead * 0.7,
+        Paint()..color = _lapis,
+      );
+    }
+
+    finial(top - _dome, -1);
+    if (_bothEnds) finial(bottom + _dome, 1);
+
+    canvas.drawShadow(outline, const Color(0xFF000000), 2.5, false);
+    // Gilt ground: a burnished gradient, light at the centre.
+    final goldLight = Color.lerp(mt.gold, const Color(0xFFFFF4C8), 0.55)!;
     canvas.drawPath(
       outline,
       Paint()
-        ..color = Color.alphaBlend(mt.gold.withValues(alpha: 0.18), mt.paper),
+        ..shader =
+            RadialGradient(
+              colors: [goldLight, mt.gold],
+              stops: const [0.25, 1],
+            ).createShader(
+              Rect.fromCircle(center: Offset.zero, radius: height * 0.6),
+            ),
     );
     canvas.drawPath(
       outline,
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.4
+        ..strokeWidth = 1.6
         ..strokeJoin = StrokeJoin.round
-        ..color = mt.gold,
+        ..color = _lapis,
     );
-    var y = -height / 2 + _dome + (_body - _textHeight) / 2;
+    // The panel the words sit in: the same outline drawn smaller, on paper,
+    // with a hairline gold rule and a lapis one inside it.
+    final sx = 0.78, sy = (height - width * 0.22) / height;
+    final inner = outline.transform(Matrix4.diagonal3Values(sx, sy, 1).storage);
+    canvas.drawPath(inner, Paint()..color = mt.paper);
+    canvas.drawPath(
+      inner,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8
+        ..color = Color.lerp(mt.gold, mt.ink, 0.15)!,
+    );
+    final rule = outline.transform(
+      Matrix4.diagonal3Values(sx * 0.93, sy * 0.95, 1).storage,
+    );
+    canvas.drawPath(
+      rule,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.5
+        ..color = _lapis.withValues(alpha: 0.55),
+    );
+    // A rosette of eight petals in the dome (and in the foot of a hizb).
+    void rosette(double cy) {
+      final r = (_dome * 0.2).clamp(3.0, w * 0.32);
+      final petal = Paint()..color = _lapis;
+      for (var i = 0; i < 8; i++) {
+        canvas.save();
+        canvas.translate(0, cy);
+        canvas.rotate(i * 3.14159265 / 4);
+        canvas.drawOval(
+          Rect.fromCenter(
+            center: Offset(0, -r * 0.62),
+            width: r * 0.52,
+            height: r * 0.95,
+          ),
+          petal,
+        );
+        canvas.restore();
+      }
+      canvas.drawCircle(Offset(0, cy), r * 0.42, Paint()..color = mt.gold);
+      canvas.drawCircle(
+        Offset(0, cy),
+        r * 0.18,
+        Paint()..color = const Color(0xFFB0302A),
+      );
+    }
+
+    rosette((top - _dome * 0.36) * sy);
+    if (_bothEnds) rosette((bottom + _dome * 0.36) * sy);
+    // Centred in the paper panel, which is the outline scaled by [sy]
+    // about the plate centre.
+    var y = (top + bottom) / 2 * sy - _textHeight / 2;
     for (final tp in _lines) {
       final s = _fit(tp);
       canvas.save();

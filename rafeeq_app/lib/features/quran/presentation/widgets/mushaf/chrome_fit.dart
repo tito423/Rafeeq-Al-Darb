@@ -45,6 +45,14 @@ class ChromeFit extends StatelessWidget {
   /// Width / height of the page as drawn centred in the box (the paper
   /// mushaf); null when the page fills the box (the text mushaf).
   final double? pageAspect;
+
+  /// The page scrolls vertically here (every reading mode sideways). Then
+  /// it does not shrink: shrinking a page that is already taller than the
+  /// screen only made it a small box in a band of nothing, the floor of
+  /// 0.55 drawing the text at half size (owner, 2026-11-13: «مقززة
+  /// بصريا»). Its window narrows instead - padding above and below, the
+  /// text keeps its size, and a scroll reaches every line.
+  final bool scrolls;
   final Widget child;
 
   const ChromeFit({
@@ -52,6 +60,7 @@ class ChromeFit extends StatelessWidget {
     required this.active,
     required this.badge,
     this.pageAspect,
+    this.scrolls = false,
     required this.child,
   });
 
@@ -74,7 +83,9 @@ class ChromeFit extends StatelessWidget {
           final h = box.maxHeight;
           final w = box.maxWidth;
           final top = panel + 6;
-          final bottom = under + (badge ? _badgeBand : 6);
+          // Sideways the page already stops above the badge (quran_screen's
+          // padding), so only the tab bar floating over it is new.
+          final bottom = under + (scrolls ? 0 : (badge ? _badgeBand : 6));
           final band = h - top - bottom;
           // The scale, and where the page's top lands, at full effect.
           var fit = 1.0;
@@ -100,14 +111,21 @@ class ChromeFit extends StatelessWidget {
             // screen (landscape, where the scale stops at [fit]'s floor)
             // would otherwise run on under the badge and the app's bar -
             // seen on emulator-5554 sideways, the badge on a line of text.
+            // One tree for both ways, so turning the phone never rebuilds
+            // the page below it (its scroll, an open card).
             builder: (context, t, page) => ClipRect(
-              clipper: _Above(bottom * t),
+              clipper: _Above(scrolls ? 0 : bottom * t),
               child: Transform.translate(
-                offset: Offset(0, shift * t),
+                offset: Offset(0, scrolls ? 0 : shift * t),
                 child: Transform.scale(
-                  scale: 1 - (1 - fit) * t,
+                  scale: scrolls ? 1 : 1 - (1 - fit) * t,
                   alignment: Alignment.topCenter,
-                  child: page,
+                  child: Padding(
+                    padding: scrolls
+                        ? EdgeInsets.only(top: top * t, bottom: bottom * t)
+                        : EdgeInsets.zero,
+                    child: page,
+                  ),
                 ),
               ),
             ),

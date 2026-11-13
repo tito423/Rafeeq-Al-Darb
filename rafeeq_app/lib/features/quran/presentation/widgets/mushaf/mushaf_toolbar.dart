@@ -163,6 +163,10 @@ class MushafToolbar extends ConsumerWidget {
                   ? Icons.bookmark_rounded
                   : Icons.bookmark_border_rounded,
               label: 'quran.bookmarks_title'.tr(),
+              // Inside a Builder, `ToolbarStrip` cannot see this action to
+              // make it compact; sideways it kept its caption, cut in half
+              // under the one-row panel (emulator-5554, 2026-11-13).
+              compact: compact,
               active: marked,
               onPressed: () => showBookmarksSheet(
                 context,

@@ -2583,9 +2583,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-11-13 00:24 — IN PROGRESS — resume here**
+**2026-11-13 13:13 — IN PROGRESS — resume here**
 
-Windows GPU visible case 94 to 45 pct, log
+Rub' plate as illuminated medallion, share card 8 colours x 5 frames (7 langs), landscape mushaf: one-row chrome, scrolling page padded not shrunk
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

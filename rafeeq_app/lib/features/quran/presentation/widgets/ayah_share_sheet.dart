@@ -137,6 +137,56 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
   late final Future<_ShareData> _data = _load(ref, widget.ayah);
   _ShareWith _with = _lastWith;
   ShareStyle _style = _lastStyle;
+  static ShareFrame _lastFrame = ShareFrame.stars;
+  ShareFrame _frame = _lastFrame;
+
+  Widget _swatch(ThemeData theme, ShareStyle s) {
+    final c = SharePalette.of(s);
+    final on = _style == s;
+    return Tooltip(
+      message: 'quran.share_style_${s.name}'.tr(),
+      child: Semantics(
+        selected: on,
+        button: true,
+        label: 'quran.share_style_${s.name}'.tr(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () => setState(() {
+            _style = s;
+            _lastStyle = s;
+          }),
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [c.top, c.bottom],
+              ),
+              border: Border.all(
+                color: on ? theme.colorScheme.primary : c.gold,
+                width: on ? 3.5 : 2,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: on
+                ? Icon(Icons.check_rounded, size: 20, color: c.gold)
+                : Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: c.gold,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
   String? _tafseerSource;
   bool _busy = false;
 
@@ -200,6 +250,7 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
       context,
       content: content,
       style: _style,
+      frame: _frame,
     );
     if (!mounted) return;
     setState(() => _busy = false);
@@ -271,24 +322,33 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
                 ),
               ],
               const SizedBox(height: 12),
-              Row(
+              // Eight colours as swatches (ground + ornament), named for
+              // a screen reader; five frames as chips. Both wrap, so a
+              // narrow phone never overflows.
+              Text('quran.share_style'.tr(), style: theme.textTheme.titleSmall),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 10,
+                runSpacing: 8,
                 children: [
-                  Text(
-                    'quran.share_style'.tr(),
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  const SizedBox(width: 12),
-                  for (final s in ShareStyle.values)
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 8),
-                      child: ChoiceChip(
-                        label: Text('quran.share_style_${s.name}'.tr()),
-                        selected: _style == s,
-                        onSelected: (_) => setState(() {
-                          _style = s;
-                          _lastStyle = s;
-                        }),
-                      ),
+                  for (final s in ShareStyle.values) _swatch(theme, s),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text('quran.share_frame'.tr(), style: theme.textTheme.titleSmall),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  for (final f in ShareFrame.values)
+                    ChoiceChip(
+                      label: Text('quran.share_frame_${f.name}'.tr()),
+                      selected: _frame == f,
+                      onSelected: (_) => setState(() {
+                        _frame = f;
+                        _lastFrame = f;
+                      }),
                     ),
                 ],
               ),
@@ -305,6 +365,7 @@ class _AyahShareSheetState extends ConsumerState<_AyahShareSheet> {
                         content: content,
                         plan: plans.first,
                         style: _style,
+                        frame: _frame,
                         count: plans.length,
                       ),
                     ),

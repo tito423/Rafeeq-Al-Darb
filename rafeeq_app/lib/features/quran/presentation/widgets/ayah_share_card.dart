@@ -14,6 +14,9 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/utils/byte_formatter.dart';
 import '../../../../core/utils/digits.dart';
+import 'share_frame.dart';
+
+export 'share_frame.dart';
 
 /// The ayah as a shared picture, always inside an Islamic ornamental frame
 /// (owner, 2026-11-10: «دايما حطها في شكل زخرفة اسلامية»), alone or with its
@@ -22,53 +25,6 @@ import '../../../../core/utils/digits.dart';
 /// A long text does not shrink and is not cut: it runs on over as many
 /// cards as it needs ([planShare]), each a whole picture with the same
 /// frame, and they are shared together.
-
-/// The colours of the frame.
-enum ShareStyle { night, emerald, parchment }
-
-class SharePalette {
-  final Color top;
-  final Color bottom;
-  final Color band;
-  final Color gold;
-  final Color ink;
-  final Color soft;
-  const SharePalette({
-    required this.top,
-    required this.bottom,
-    required this.band,
-    required this.gold,
-    required this.ink,
-    required this.soft,
-  });
-
-  static SharePalette of(ShareStyle s) => switch (s) {
-    ShareStyle.night => const SharePalette(
-      top: Color(0xFF0F2A44),
-      bottom: Color(0xFF06131F),
-      band: Color(0xFF14365A),
-      gold: Color(0xFFD9B44A),
-      ink: Color(0xFFF6F1E3),
-      soft: Color(0xFFC5CFD8),
-    ),
-    ShareStyle.emerald => const SharePalette(
-      top: Color(0xFF0E4636),
-      bottom: Color(0xFF052018),
-      band: Color(0xFF14594A),
-      gold: Color(0xFFE0BE5A),
-      ink: Color(0xFFF6F1E3),
-      soft: Color(0xFFC4D6CE),
-    ),
-    ShareStyle.parchment => const SharePalette(
-      top: Color(0xFFF8EFD6),
-      bottom: Color(0xFFEAD9AE),
-      band: Color(0xFFE2CB93),
-      gold: Color(0xFF8E6B1E),
-      ink: Color(0xFF2E2110),
-      soft: Color(0xFF5B4A2C),
-    ),
-  };
-}
 
 /// What goes under the ayah.
 class ShareBody {
@@ -238,6 +194,7 @@ class AyahShareCard extends StatelessWidget {
   final ShareContent content;
   final ShareCardPlan plan;
   final ShareStyle style;
+  final ShareFrame frame;
   final int index;
   final int count;
 
@@ -246,6 +203,7 @@ class AyahShareCard extends StatelessWidget {
     required this.content,
     required this.plan,
     required this.style,
+    this.frame = ShareFrame.stars,
     this.index = 0,
     this.count = 1,
   });
@@ -262,7 +220,7 @@ class AyahShareCard extends StatelessWidget {
       child: SizedBox(
         width: shareCardWidth,
         child: CustomPaint(
-          painter: ShareFramePainter(c),
+          painter: ShareFramePainter(c, frame),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(
               _padH,
@@ -441,24 +399,6 @@ class _BodyTitle extends StatelessWidget {
   }
 }
 
-/// The eight-pointed star (two squares, one turned an eighth) that Islamic
-/// geometric work is built on - the same figure as «۞».
-Path eightPointStar(Offset centre, double radius, {double turn = 0}) {
-  final inner = radius * 0.7654; // where the two squares cross
-  final path = Path();
-  for (var i = 0; i < 16; i++) {
-    final r = i.isEven ? radius : inner;
-    final a = turn + i * math.pi / 8;
-    final pt = centre + Offset(math.cos(a) * r, math.sin(a) * r);
-    if (i == 0) {
-      path.moveTo(pt.dx, pt.dy);
-    } else {
-      path.lineTo(pt.dx, pt.dy);
-    }
-  }
-  return path..close();
-}
-
 class _StarPainter extends CustomPainter {
   final Color color;
   const _StarPainter(this.color);
@@ -511,149 +451,12 @@ class _CartouchePainter extends CustomPainter {
   bool shouldRepaint(_CartouchePainter old) => old.c != c;
 }
 
-/// The frame: a ground with a faint lattice of eight-pointed stars, a gold
-/// double border holding a chain of stars and diamonds, and a medallion at
-/// each corner.
-class ShareFramePainter extends CustomPainter {
-  final SharePalette c;
-  const ShareFramePainter(this.c);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final full = Offset.zero & size;
-    canvas.drawRect(
-      full,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [c.top, c.bottom],
-        ).createShader(full),
-    );
-
-    // The lattice: stars on a square grid, a small diamond between four.
-    final lattice = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1
-      ..color = c.gold.withValues(alpha: 0.075);
-    const step = 60.0;
-    canvas.save();
-    canvas.clipRect(full.deflate(44));
-    for (var y = 44.0 + step / 2; y < size.height; y += step) {
-      for (var x = step / 2; x < size.width + step; x += step) {
-        canvas.drawPath(eightPointStar(Offset(x, y), 19), lattice);
-        canvas.drawPath(
-          eightPointStar(
-            Offset(x + step / 2, y + step / 2),
-            7,
-            turn: math.pi / 8,
-          ),
-          lattice,
-        );
-      }
-    }
-    canvas.restore();
-
-    final line = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = c.gold;
-    final outer = full.deflate(16);
-    final inner = full.deflate(46);
-    final band = Path()
-      ..fillType = PathFillType.evenOdd
-      ..addRRect(RRect.fromRectAndRadius(outer, const Radius.circular(10)))
-      ..addRRect(RRect.fromRectAndRadius(inner, const Radius.circular(4)));
-    canvas.drawPath(band, Paint()..color = c.band);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(outer, const Radius.circular(10)),
-      line..strokeWidth = 2.4,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(outer.deflate(5), const Radius.circular(7)),
-      line..strokeWidth = 0.9,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(inner, const Radius.circular(4)),
-      line..strokeWidth = 1.6,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(inner.deflate(6), const Radius.circular(2)),
-      line
-        ..strokeWidth = 0.7
-        ..color = c.gold.withValues(alpha: 0.55),
-    );
-
-    // The chain in the band: a star, a diamond, a star...
-    final fill = Paint()..color = c.gold;
-    final dim = Paint()..color = c.gold.withValues(alpha: 0.6);
-    const mid = 31.0; // the band's centre line, from the card's edge
-    void run(Offset from, Offset to) {
-      final length = (to - from).distance;
-      final n = (length / 30).floor();
-      for (var i = 1; i < n; i++) {
-        final at = Offset.lerp(from, to, i / n)!;
-        if (i.isEven) {
-          canvas.drawPath(eightPointStar(at, 5.2), fill);
-        } else {
-          canvas.drawPath(
-            Path()
-              ..moveTo(at.dx, at.dy - 3.4)
-              ..lineTo(at.dx + 3.4, at.dy)
-              ..lineTo(at.dx, at.dy + 3.4)
-              ..lineTo(at.dx - 3.4, at.dy)
-              ..close(),
-            dim,
-          );
-        }
-      }
-    }
-
-    const corner = 46.0;
-    final w = size.width;
-    final h = size.height;
-    run(const Offset(corner, mid), Offset(w - corner, mid));
-    run(Offset(corner, h - mid), Offset(w - corner, h - mid));
-    run(const Offset(mid, corner), Offset(mid, h - corner));
-    run(Offset(w - mid, corner), Offset(w - mid, h - corner));
-
-    // Corner medallions.
-    for (final at in [
-      const Offset(corner, corner),
-      Offset(w - corner, corner),
-      Offset(corner, h - corner),
-      Offset(w - corner, h - corner),
-    ]) {
-      canvas.drawCircle(at, 30, Paint()..color = c.bottom);
-      canvas.drawCircle(
-        at,
-        30,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.6
-          ..color = c.gold,
-      );
-      canvas.drawPath(eightPointStar(at, 24), Paint()..color = c.band);
-      canvas.drawPath(
-        eightPointStar(at, 24),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.5
-          ..color = c.gold,
-      );
-      canvas.drawPath(eightPointStar(at, 11, turn: math.pi / 8), fill);
-      canvas.drawCircle(at, 3.2, Paint()..color = c.bottom);
-    }
-  }
-
-  @override
-  bool shouldRepaint(ShareFramePainter old) => old.c != c;
-}
-
 /// Draws every card of [content] off screen and returns the PNGs, in order.
 Future<List<Uint8List>> renderShareCards(
   BuildContext context, {
   required ShareContent content,
   required ShareStyle style,
+  ShareFrame frame = ShareFrame.stars,
 }) async {
   final plans = planShare(content, SharePalette.of(style));
   final overlay = Overlay.of(context, rootOverlay: true);
@@ -674,6 +477,7 @@ Future<List<Uint8List>> renderShareCards(
               content: content,
               plan: plans[i],
               style: style,
+              frame: frame,
               index: i,
               count: plans.length,
             ),
@@ -709,12 +513,14 @@ Future<bool> shareAyahAsImages(
   BuildContext context, {
   required ShareContent content,
   required ShareStyle style,
+  ShareFrame frame = ShareFrame.stars,
 }) async {
   try {
     final pngs = await renderShareCards(
       context,
       content: content,
       style: style,
+      frame: frame,
     );
     final dir = await getTemporaryDirectory();
     final safeRef = content.fileTag.replaceAll(RegExp('[^0-9A-Za-z]+'), '_');

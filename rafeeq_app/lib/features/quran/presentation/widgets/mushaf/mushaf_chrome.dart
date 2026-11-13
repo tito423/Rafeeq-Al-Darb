@@ -189,56 +189,57 @@ class MushafChrome extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // The surah and juz ride INSIDE the panel in every
-                            // mode. They used to hang below it as two badges on
-                            // printings without a printed header, and there they
-                            // came down onto the first line of the page:
-                            // «ارفعهم لفوق شوية بحيث مش يغطوا على حاجة من نص
-                            // القرآن». One header line costs less than a row
-                            // of badges plus its gap.
-                            ...[
-                              _Header(
-                                mt: mt,
-                                surahName: surahName,
-                                juzNumber: juzNumber,
-                                pageNumber: pageNumber,
-                              ),
-                              Divider(
-                                height: 1,
-                                thickness: 1,
-                                color: onGlass.withValues(alpha: 0.10),
-                              ),
-                            ],
-                            // The actions are `ToolbarAction`s, which colour
-                            // themselves from the ambient `ColorScheme`. Over the
-                            // glass that would be the app's scheme, not the
-                            // page's — black icons on a charcoal mushaf. This
-                            // hands them the page's ink instead.
-                            Theme(
-                              data: Theme.of(context).copyWith(
-                                colorScheme: Theme.of(context).colorScheme
-                                    .copyWith(
-                                      onSurface: onGlass,
-                                      onSurfaceVariant: onGlass.withValues(
-                                        alpha: 0.75,
-                                      ),
+                        child: _oneRow(context)
+                            ? _row(context, onGlass)
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // The surah and juz ride INSIDE the panel in every
+                                  // mode. They used to hang below it as two badges on
+                                  // printings without a printed header, and there they
+                                  // came down onto the first line of the page:
+                                  // «ارفعهم لفوق شوية بحيث مش يغطوا على حاجة من نص
+                                  // القرآن». One header line costs less than a row
+                                  // of badges plus its gap.
+                                  ...[
+                                    _Header(
+                                      mt: mt,
+                                      surahName: surahName,
+                                      juzNumber: juzNumber,
+                                      pageNumber: pageNumber,
                                     ),
+                                    Divider(
+                                      height: 1,
+                                      thickness: 1,
+                                      color: onGlass.withValues(alpha: 0.10),
+                                    ),
+                                  ],
+                                  // The actions are `ToolbarAction`s, which colour
+                                  // themselves from the ambient `ColorScheme`. Over the
+                                  // glass that would be the app's scheme, not the
+                                  // page's — black icons on a charcoal mushaf. This
+                                  // hands them the page's ink instead.
+                                  Theme(
+                                    data: Theme.of(context).copyWith(
+                                      colorScheme: Theme.of(context).colorScheme
+                                          .copyWith(
+                                            onSurface: onGlass,
+                                            onSurfaceVariant: onGlass
+                                                .withValues(alpha: 0.75),
+                                          ),
+                                    ),
+                                    // Held to [_actionsHeight]: the strip's own
+                                    // `FittedBox` then takes the captioned buttons
+                                    // down to fit. The page shrinks by every pixel
+                                    // of this panel (`ChromeFit`) - «صغر حجم الشريط
+                                    // اللي فوق» (owner, 2026-10-19).
+                                    child: SizedBox(
+                                      height: _actionsHeight,
+                                      child: Center(child: actions),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              // Held to [_actionsHeight]: the strip's own
-                              // `FittedBox` then takes the captioned buttons
-                              // down to fit. The page shrinks by every pixel
-                              // of this panel (`ChromeFit`) - «صغر حجم الشريط
-                              // اللي فوق» (owner, 2026-10-19).
-                              child: SizedBox(
-                                height: _actionsHeight,
-                                child: Center(child: actions),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                   ),
@@ -247,6 +248,66 @@ class MushafChrome extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// Sideways (or any window under 500 dp tall) the panel is ONE row:
+  /// surah at the start, the actions, juz at the end. Two rows there were
+  /// ~76 of a phone's ~390 dp, and with the tab bar the page kept half the
+  /// screen: «البارات اللي فوق وتحت بتاكل شاشة المصحف» (owner, 2026-11-13).
+  static bool _oneRow(BuildContext context) =>
+      MediaQuery.orientationOf(context) == Orientation.landscape ||
+      MediaQuery.sizeOf(context).height < 500;
+
+  Widget _row(BuildContext context, Color onGlass) {
+    final surah = surahName;
+    final juz = juzNumber;
+    return SizedBox(
+      height: _actionsHeight,
+      child: Row(
+        children: [
+          if (surah != null)
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.sizeOf(context).width * 0.2,
+              ),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(start: 14, end: 6),
+                child: Text(
+                  surah,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: 14,
+                    height: 1.4,
+                    color: mt.ink,
+                  ),
+                ),
+              ),
+            ),
+          Expanded(
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: Theme.of(context).colorScheme.copyWith(
+                  onSurface: onGlass,
+                  onSurfaceVariant: onGlass.withValues(alpha: 0.75),
+                ),
+              ),
+              child: Center(child: actions),
+            ),
+          ),
+          if (juz != null)
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 6),
+              child: _Pill(
+                mt: mt,
+                text: '${'quran.juz'.tr()} ${arabicPageNumber(juz)}',
+              ),
+            ),
+        ],
       ),
     );
   }

@@ -30,27 +30,25 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Owner batch 2026-11-13 noon (code done, analyze clean, NOT yet all seen):
-(a) rub' plate rewritten (`rub_margin_mark.dart`): printed Madinah shape
-(lobed dome + flat base for quarters, both ends for hizb/juz; text as print
-`madina_hafs` p.5/7/9/11/22 - the print DOES carry the hizb number, kept),
-slides in from the outer edge (odd page right, even left), out after N s,
-re-shows on every return (horizontal pager listener). Display sheet row
-«زخرفة الربع والحزب» إيقاف/2/3/5/8 ث (`rub_plate_provider.dart`, 7 langs).
-SEE on emulator: shape, slide, return-to-page, sheet row, text mode.
-(b) home day mode: `MosqueBackdrop` photo now multiplied (was veiling text);
-sunan names 24 + hairline outline. Title measured full ink; names: see.
-(c) share card: «…» Qur'an words in KFGQPCHafs (were body font bold, marks
-broken, owner's 18:63 i'rab card). SEE a shared i'rab card.
-Then flutter test, HANDOVER line, commit. No release without the owner.
-NEW owner orders (2026-11-13 ~12:40), after (a)-(c):
-(d) rub'/hizb plate MORE beautiful than the printed one: look at real
-ornamented mushaf margin marks online, design a finer one (still the
-printed wording).
-(e) share sheet: more ornament frames and more colour themes.
-(f) LANDSCAPE: top/bottom bars eat the mushaf screen ("مقززة بصريا"); fix
-every reading mode in every orientation for phones AND tablets
-(see memory every-screen-every-orientation, TRAPS on orientation).
+Owner batch 2026-11-13 noon, side session (uncommitted edits checkpointed
+~13:40; analyze clean, 1474 tests passed before the last 3 small edits).
+SEEN on API 24: (a) plate slides in from the edge and re-shows on return;
+(b) sunan names 24 + outline, day text readable. (d) plate redrawn as an
+illuminated medallion (gold ground, lapis rule + rays, rosette, finial,
+paper panel, printed wording) - seen once: number spilled under the panel
+and rays too heavy -> FIXED in code (body +0.34w, text centred in panel,
+rays thinner), NOT yet rebuilt/seen. (e) 8 colours (swatches) + 5 frames
+(stars/interlace/arches/braid/plain), `share_frame.dart`, 7 langs, test
+`share_frame_painter_test` - NOT yet seen on device. (f) landscape: chrome
+is ONE row (surah · actions · juz), ChromeFit no longer shrinks a scrolling
+page (padding instead), bookmark caption fixed, badge margin 48 dp - text
+and printed seen in landscape before the last 3 fixes; reading layout,
+tablet (`wm size 1600x2560` + `wm density 320`) NOT seen.
+DO: rebuild x64 (alone - TRAPS #54), install, see plate, share sheet
+(i'rab card «…» in KFGQPCHafs = item c), landscape text/printed/reading,
+tablet both ways; flutter test; HANDOVER line; `.\cp.bat`. No release.
+Emulator rotation: set BOTH `accelerometer_rotation 0` and
+`user_rotation`; something resets the first to 1.
 
 ## Standing owner orders (still open)
 
@@ -75,6 +73,7 @@ every reading mode in every orientation for phones AND tablets
 
 ## Log (newest first)
 
+- 2026-11-13 ~13:40 (d)(e)(f) coded, partly seen (see Next step); checkpoint, no release.
 - 2026-11-13 ~12:00 rub' strip removed; printed-style plate centred over the page 3 s when the page is on screen (printed + text, seen API 24); analyze/test clean; NOT released (owner's word needed).
 - 2026-11-13 ~01:45 v4.4.0 released: printed rub' strip moved into the left margin; English tasbeeh/adhkar seen; emulator back to Arabic + light theme.
 - 2026-11-13 ~00:45 six-item Android batch done + seen (see Current task); analyze clean; commit pending release word.
