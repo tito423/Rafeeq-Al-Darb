@@ -65,11 +65,11 @@ class _AyahRow extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Text(
-                        shapeQuranForDisplay(bodyOf(ayah)),
-                        textAlign: TextAlign.right,
-                        textDirection: TextDirection.rtl,
+                      // A leading «۞» is the cards layout's medallion.
+                      child: RubMarkedText(
+                        text: shapeQuranForDisplay(bodyOf(ayah)),
                         style: textStyle,
+                        layout: QuranTextLayout.cards,
                       ),
                     ),
                   ),

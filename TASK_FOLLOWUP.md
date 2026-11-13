@@ -4,7 +4,7 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — owner's 11-item UI batch from a real phone (2026-11-13 ~21:50)
+## Current task — owner's 11-item UI batch: DONE in code, seen on API 24, NOT released
 
 Shots (owner's phone, mostly LANDSCAPE, dark theme): `docs/owner_shots/2026-11-13_batch/01..12.jpg`.
 Owner's words are in the session log; items (his numbering):
@@ -32,11 +32,10 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Do the 11-item batch above, item by item (cheap first: 7, 1, 8, 2, 3, 9;
-then 5/6/10/11 together in `rub_margin_mark.dart` + the three text layouts).
-After each item: analyze, emulator screenshot, log line, checkpoint.
-Badges-fade polish (b07a9def) done, unreleased. NO release until the owner says so. Emulator rotation: `adb emu rotate` (user_rotation does nothing on
-API 24). Emulator lags: a screenshot can be stale.
+Batch done (HANDOVER top row). Waiting for the owner: his look on a real
+phone, and his word for a release. Unseen: real phone, dark theme for the
+medallions, the Shamela/Dorar strip collapsing (debug build hides it), a
+tablet AVD. Emulator: `adb emu rotate` to rotate; screenshots via Bash.
 
 ## Standing owner orders (still open)
 
@@ -61,6 +60,7 @@ API 24). Emulator lags: a screenshot can be stale.
 
 ## Log (newest first)
 
+- 2026-11-13 ~22:50 11-item batch done: tasbeeh reset, adhkar row scrolls, library strips collapse on phones, sideways prayer card hugs content, sunan names, More groups as pages, inline medallion per text layout + plate on tap; seen API 24; 1476 tests; not released.
 - 2026-11-13 ~21:50 owner sent 11-item UI batch (shots in docs/owner_shots/2026-11-13_batch); recorded; handed to a fresh session (context 180k).
 - 2026-11-13 ~20:50 reading-layout juz/page badges fade while text scrolls (`scroll_quiet_overlay.dart`); seen API 24 portrait+landscape; analyze clean, 1474 tests; NOT released.
 - 2026-11-13 ~17:30 RELEASED v4.5.2 (tag 58c7f888): the owner's medallions on the text mushaf.

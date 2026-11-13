@@ -66,6 +66,12 @@ void moreSettingsLifetimeTests({
   tearDown(() => container.dispose());
 
   Future<void> show(WidgetTester tester, String language) async {
+    // An upright phone: there a group opens in place, which is what these
+    // tests follow. Three a row (>= 600 dp wide) it opens as its own page
+    // (`MoreGroupPage`, test/more_group_page_test.dart).
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,

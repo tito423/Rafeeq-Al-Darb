@@ -127,12 +127,13 @@ Map<int, int> planKashida({
   double fill = 0.9,
   int maxPerSlot = 3,
 }) {
-  TextPainter laid(Map<int, int> plan, TextAlign align) => TextPainter(
-        text: spanFor(plan),
-        textDirection: TextDirection.rtl,
-        textAlign: align,
-        textScaler: textScaler,
-      )
+  TextPainter laid(Map<int, int> plan, TextAlign align) =>
+      TextPainter(
+          text: spanFor(plan),
+          textDirection: TextDirection.rtl,
+          textAlign: align,
+          textScaler: textScaler,
+        )
         ..setPlaceholderDimensions(placeholders)
         ..layout(maxWidth: width);
   double widthOf(String s) {
@@ -163,14 +164,18 @@ Map<int, int> planKashida({
   for (var li = 0; li < lines.length - 1; li++) {
     final line = lines[li];
     final pos = original.getPositionForOffset(
-        Offset(width / 2, line.baseline - line.ascent / 2));
+      Offset(width / 2, line.baseline - line.ascent / 2),
+    );
     final range = original.getLineBoundary(pos);
-    final here = slots
-        .where((s) => s.offset > range.start && s.offset < range.end)
-        .toList()
-      ..sort((a, b) => a.rank != b.rank
-          ? a.rank.compareTo(b.rank)
-          : a.word.compareTo(b.word));
+    final here =
+        slots
+            .where((s) => s.offset > range.start && s.offset < range.end)
+            .toList()
+          ..sort(
+            (a, b) => a.rank != b.rank
+                ? a.rank.compareTo(b.rank)
+                : a.word.compareTo(b.word),
+          );
     order.add(here);
     final n = ((width - line.width) * fill / kashida).floor();
     count.add(here.isEmpty ? 0 : n.clamp(0, here.length * maxPerSlot));
@@ -244,7 +249,8 @@ List<int> lineStarts(TextPainter painter, String text) {
   final out = <int>[];
   for (final line in painter.computeLineMetrics().skip(1)) {
     final pos = painter.getPositionForOffset(
-        Offset(painter.width / 2, line.baseline - line.ascent / 2));
+      Offset(painter.width / 2, line.baseline - line.ascent / 2),
+    );
     final start = painter.getLineBoundary(pos).start;
     out.add(start - tatweel.allMatches(text.substring(0, start)).length);
   }
@@ -260,6 +266,7 @@ Map<int, int> planParagraphKashida({
   required TextStyle style,
   required Size marker,
   TextScaler textScaler = TextScaler.noScaling,
+  TextStyle? rubMarkStyle,
 }) {
   final dims = [
     for (var i = 0; i < texts.length; i++)
@@ -274,8 +281,20 @@ Map<int, int> planParagraphKashida({
     final children = <InlineSpan>[];
     var base = 0;
     for (final t in texts) {
+      final run = applyKashida(t, base, plan);
+      // A leading «۞» is laid out exactly as the page draws it (wider, for
+      // the medallion in its place - see `rub_inline_medallion.dart`).
       children
-        ..add(TextSpan(text: applyKashida(t, base, plan)))
+        ..add(
+          rubMarkStyle != null && run.startsWith('۞')
+              ? TextSpan(
+                  children: [
+                    TextSpan(text: '۞', style: rubMarkStyle),
+                    TextSpan(text: run.substring(1)),
+                  ],
+                )
+              : TextSpan(text: run),
+        )
         ..add(const WidgetSpan(child: SizedBox.shrink()));
       base += t.length + 1;
     }

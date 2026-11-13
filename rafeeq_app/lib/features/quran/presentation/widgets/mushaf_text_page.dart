@@ -16,6 +16,7 @@ import '../../data/text_layout_provider.dart';
 import 'mushaf/ayah_marker.dart';
 import 'mushaf/ayah_wash_painter.dart';
 import 'mushaf/continuous_mushaf_view.dart';
+import 'mushaf/rub_inline_medallion.dart';
 import 'mushaf/rub_margin_mark.dart';
 import 'mushaf_frame_painter.dart';
 

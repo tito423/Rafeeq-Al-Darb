@@ -163,6 +163,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
       style: style,
       marker: Size(side + 4, side),
       textScaler: scaler,
+      rubMarkStyle: rubMarkStyle(style),
     );
     _plan = (key, plan);
     return plan;
@@ -196,6 +197,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
     final ranges = <(int, int, int)>[];
     final markers = <FlowingMarker>[];
     final rubMarks = <(int, RubInfo)>[];
+    final inlineMarks = <int>[];
     final side = AyahMarker.sizeFor(bare: widget.bare);
     var offset = 0;
 
@@ -215,15 +217,17 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
       final text = applyKashida(source, plainBase, plan);
       plainBase += source.length + 1;
 
+      // The wash is `AyahWashPainter` (own glyph boxes); only ink here. A
+      // leading «۞» is drawn as the layout's medallion (rub_inline_medallion).
       spans.add(
-        TextSpan(
-          text: text,
-          // The wash is `AyahWashPainter` (own glyph boxes); only ink here.
-          style: isPlaying
+        rubMarkedSpan(
+          text,
+          isPlaying
               ? widget.textStyle.copyWith(color: widget.mt.inkOnHighlight)
               : widget.textStyle,
         ),
       );
+      if (text.startsWith(rubElHizbMark)) inlineMarks.add(offset);
       ranges.add((offset, offset + text.length, i));
       if (widget.rubGutter > 0 && bodyOf(ayah).startsWith(rubElHizbMark)) {
         final info = widget.rubAt?.call(ayah);
@@ -263,46 +267,66 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
         final ayah = _ayahAt(d.localPosition);
         if (ayah != null) widget.onAyahLongPress(ayah);
       },
-      child: CustomPaint(
-        painter: AyahWashPainter(
-          textKey: _textKey,
-          color: widget.mt.highlightPlaying,
-          range: [
-            for (final r in ranges)
-              if (r.$3 == widget.playingIndex) (r.$1, r.$2 - 1),
-          ].firstOrNull,
-        ),
-        foregroundPainter: FlowingMarkersPainter(
-          textKey: _textKey,
-          markers: markers,
-          mt: widget.mt,
-          bare: widget.bare,
-          baseStyle: DefaultTextStyle.of(context).style,
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Text.rich(
-              TextSpan(children: spans),
-              key: _textKey,
-              textAlign: TextAlign.justify,
-              textDirection: TextDirection.rtl,
-            ),
-            // The printed quarter plate, centred over the page for 3 s.
-            if (rubMarks.isNotEmpty)
-              Positioned.fill(
-                child: RubPlateOverlay(
-                  key: _plateKey,
-                  textKey: _textKey,
-                  marks: rubMarks,
-                  edge: widget.rubGutter,
-                  page: widget.ayahs.first.pageNumber,
-                  mt: widget.mt,
-                  baseStyle: DefaultTextStyle.of(context).style,
-                ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Consumer(
+            builder: (context, ref, child) => CustomPaint(
+              foregroundPainter: RubInlineMedallionPainter(
+                textKey: _textKey,
+                offsets: inlineMarks,
+                image:
+                    ref
+                        .watch(rubMedallionsProvider)
+                        .valueOrNull?[rubMedallionFor(
+                      widget.bare
+                          ? QuranTextLayout.reading
+                          : QuranTextLayout.page,
+                    )],
               ),
-          ],
-        ),
+              child: child,
+            ),
+            child: CustomPaint(
+              painter: AyahWashPainter(
+                textKey: _textKey,
+                color: widget.mt.highlightPlaying,
+                range: [
+                  for (final r in ranges)
+                    if (r.$3 == widget.playingIndex) (r.$1, r.$2 - 1),
+                ].firstOrNull,
+              ),
+              foregroundPainter: FlowingMarkersPainter(
+                textKey: _textKey,
+                markers: markers,
+                mt: widget.mt,
+                bare: widget.bare,
+                baseStyle: DefaultTextStyle.of(context).style,
+              ),
+              child: Text.rich(
+                TextSpan(children: spans),
+                key: _textKey,
+                textAlign: TextAlign.justify,
+                textDirection: TextDirection.rtl,
+              ),
+            ),
+          ),
+          // The quarter plate, on a tap on the medallion only, and over the
+          // ayah numbers too (owner, 2026-11-13: the numbers showed through
+          // it). It no longer comes by itself: it covered the words.
+          if (rubMarks.isNotEmpty)
+            Positioned.fill(
+              child: RubPlateOverlay(
+                key: _plateKey,
+                textKey: _textKey,
+                marks: rubMarks,
+                edge: widget.rubGutter,
+                page: widget.ayahs.first.pageNumber,
+                mt: widget.mt,
+                baseStyle: DefaultTextStyle.of(context).style,
+                auto: false,
+              ),
+            ),
+        ],
       ),
     );
   }

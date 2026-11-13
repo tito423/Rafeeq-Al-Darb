@@ -34,11 +34,15 @@ class _CollapseOnScrollState extends State<CollapseOnScroll> {
 
   bool _onScroll(ScrollNotification n) {
     if (n.metrics.axis != Axis.vertical) return false;
-    if (n.metrics.pixels <= n.metrics.minScrollExtent) {
-      _show(true);
-    } else if (n is UserScrollNotification) {
+    // The direction first: a drag down from the very top reports `reverse`
+    // while the list is still at 0, and the at-the-top rule below ate it
+    // (seen on API 24 - the strips never left).
+    if (n is UserScrollNotification) {
       if (n.direction == ScrollDirection.reverse) _show(false);
       if (n.direction == ScrollDirection.forward) _show(true);
+    } else if (n is ScrollUpdateNotification &&
+        n.metrics.pixels <= n.metrics.minScrollExtent) {
+      _show(true);
     }
     return false;
   }

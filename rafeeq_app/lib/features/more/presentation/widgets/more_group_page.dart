@@ -36,6 +36,10 @@ class MoreGroupPage extends StatelessWidget {
             child: PairedColumn(
               columns: width >= 1100 ? 3 : 2,
               columnGap: 16,
+              // Some groups hand over one child holding several cards; a
+              // single card beside it was stretched into a tall empty slab
+              // («عن التطبيق», API 24 sideways).
+              equalHeights: false,
               children: children,
             ),
           ),

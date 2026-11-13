@@ -132,6 +132,10 @@ class RubPlateOverlay extends ConsumerStatefulWidget {
   final MushafTheme mt;
   final TextStyle baseStyle;
 
+  /// Plays by itself when a mark comes into view; false = only on a tap
+  /// ([RubPlateOverlayState.show]).
+  final bool auto;
+
   const RubPlateOverlay({
     super.key,
     required this.textKey,
@@ -140,6 +144,7 @@ class RubPlateOverlay extends ConsumerStatefulWidget {
     required this.page,
     required this.mt,
     required this.baseStyle,
+    this.auto = true,
   });
 
   @override
@@ -197,7 +202,7 @@ class RubPlateOverlayState extends ConsumerState<RubPlateOverlay>
 
   /// Plays the plate of the first not-yet-shown mark whose line is in view.
   void _check() {
-    if (!pageInFront) return;
+    if (!pageInFront || !widget.auto) return;
     final p = _paragraph;
     if (p == null) {
       _queueCheck();
@@ -334,6 +339,7 @@ class PrintedRubPlateState extends ConsumerState<PrintedRubPlate>
 class _PlatePainter extends CustomPainter {
   final Animation<double> slide;
   final RubInfo info;
+
   /// The owner's medallions (text mushaf only); null = the printed plate.
   final List<ui.Image>? medallions;
   final bool rtl;
@@ -368,7 +374,12 @@ class _PlatePainter extends CustomPainter {
     final _Plate plate = medal == null
         ? _PrintedPlate(info, (screenW * 0.16).clamp(52.0, 80.0), mt, baseStyle)
         : _MedallionPlate(
-            info, (screenW * 0.30).clamp(96.0, 136.0), medal, rtl, baseStyle);
+            info,
+            (screenW * 0.30).clamp(96.0, 136.0),
+            medal,
+            rtl,
+            baseStyle,
+          );
     final w = plate.width;
     var area = Offset.zero & size;
     final within = visible();
@@ -666,11 +677,13 @@ abstract class _Plate {
 /// emptied so the words are written here in the reader's language.
 final rubMedallionsProvider = FutureProvider<List<ui.Image>>((ref) async {
   const names = ['hizb', 'quarter', 'half', 'three_quarters'];
-  return Future.wait(names.map((n) async {
-    final data = await rootBundle.load('assets/rub_medallions/$n.png');
-    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
-    return (await codec.getNextFrame()).image;
-  }));
+  return Future.wait(
+    names.map((n) async {
+      final data = await rootBundle.load('assets/rub_medallions/$n.png');
+      final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+      return (await codec.getNextFrame()).image;
+    }),
+  );
 });
 
 /// A medallion [width] wide with two lines in its navy centre: the quarter
@@ -736,16 +749,27 @@ class _MedallionPlate implements _Plate {
       Rect.fromCenter(center: centre, width: width, height: width),
       Paint()..filterQuality = FilterQuality.medium,
     );
-    final total = _lines.fold(0.0, (s, tp) => s + tp.height * _fit(tp));
+    // Centred by the letters, not by the line boxes: AmiriQuran keeps tall
+    // room above its letters for the marks, so box-centred words sat low in
+    // the disc (owner's phone, 2026-11-13: «النص جواها نازل لتحت»). Each
+    // line gets 1.15 of its size; an Arabic letter's body is centred about
+    // 0.22 of the size above the baseline.
+    double sizeOf(TextPainter tp) =>
+        (tp.text!.style!.fontSize ?? 12) * _fit(tp);
+    final total = _lines.fold(0.0, (s, tp) => s + sizeOf(tp) * 1.15);
     var y = centre.dy - total / 2;
     for (final tp in _lines) {
       final s = _fit(tp);
+      final size = sizeOf(tp);
+      final baseline =
+          tp.computeDistanceToActualBaseline(TextBaseline.alphabetic) * s;
+      final baselineY = y + size * 1.15 / 2 + size * 0.22;
       canvas.save();
-      canvas.translate(centre.dx - tp.width * s / 2, y);
+      canvas.translate(centre.dx - tp.width * s / 2, baselineY - baseline);
       canvas.scale(s);
       tp.paint(canvas, Offset.zero);
       canvas.restore();
-      y += tp.height * s;
+      y += size * 1.15;
     }
   }
 
