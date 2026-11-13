@@ -16,6 +16,9 @@ class _AyahRow extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onPlayTap;
 
+  /// The quarter this ayah opens, when the mushaf prints «۞» on it.
+  final RubInfo? rub;
+
   const _AyahRow({
     super.key,
     required this.ayah,
@@ -25,6 +28,7 @@ class _AyahRow extends StatelessWidget {
     required this.onLongPress,
     this.onTap,
     this.onPlayTap,
+    this.rub,
   });
 
   @override
@@ -71,6 +75,10 @@ class _AyahRow extends StatelessWidget {
                         style: textStyle,
                         layout: QuranTextLayout.cards,
                         paper: mt.paper,
+                        mt: mt,
+                        rub: rub,
+                        page: ayah.pageNumber,
+                        onOtherTap: onTap,
                       ),
                     ),
                   ),

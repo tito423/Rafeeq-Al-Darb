@@ -385,7 +385,10 @@ class _PlatePainter extends CustomPainter {
     final within = visible();
     if (within != null && within.overlaps(area)) area = area.intersect(within);
     final half = plate.height / 2 + plate.rays * 2;
-    final y = area.height <= plate.height
+    // `<= half * 2`, not `<= plate.height`: in between, the clamp's lower
+    // bound passed its upper one and threw, and the plate was never drawn -
+    // a card (100 dp) is just that size (cards layout, API 24).
+    final y = area.height <= half * 2
         ? area.center.dy
         : y0.clamp(area.top + half, area.bottom - half);
     // In from the page's outer edge, a little past its rest, then settles.

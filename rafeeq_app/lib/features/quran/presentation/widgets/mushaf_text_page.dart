@@ -567,6 +567,10 @@ class _MushafTextPageState extends ConsumerState<MushafTextPage> {
                             onLongPress: () =>
                                 widget.onAyahLongPress(widget.ayahs[i]),
                             onTap: _tapPage,
+                            rub: rubIndex?.markAt(
+                              widget.ayahs[i].surahId,
+                              widget.ayahs[i].ayahNumber,
+                            ),
                             onPlayTap: widget.onPlayTap != null
                                 ? () => widget.onPlayTap!(widget.ayahs[i])
                                 : null,

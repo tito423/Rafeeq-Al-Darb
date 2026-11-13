@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/mushaf_theme.dart';
 import '../../../data/rub_el_hizb.dart';
 import '../../../data/text_layout_provider.dart';
-import 'rub_margin_mark.dart' show rubMedallionsProvider;
+import 'rub_margin_mark.dart'
+    show RubPlateOverlay, RubPlateOverlayState, rubMedallionsProvider;
 
 /// The owner's medallion drawn IN PLACE OF the «۞» in the text mushaf.
 ///
@@ -163,13 +165,20 @@ class RubInlineMedallionPainter extends CustomPainter {
 }
 
 /// A plain ayah text (the cards layout) whose «۞» is the layout's
-/// medallion.
+/// medallion. With [rub] it also carries the quarter plate, exactly as the
+/// flowing layouts do: by itself when the card comes into view, and again
+/// on a tap on the medallion (v4.6.0 shipped without either here - the
+/// owner found it). Any other tap is [onOtherTap], the page's own.
 class RubMarkedText extends ConsumerStatefulWidget {
   final String text;
   final TextStyle style;
   final QuranTextLayout layout;
   final TextAlign textAlign;
   final Color paper;
+  final MushafTheme? mt;
+  final RubInfo? rub;
+  final int page;
+  final VoidCallback? onOtherTap;
 
   const RubMarkedText({
     super.key,
@@ -177,6 +186,10 @@ class RubMarkedText extends ConsumerStatefulWidget {
     required this.style,
     required this.layout,
     required this.paper,
+    this.mt,
+    this.rub,
+    this.page = 1,
+    this.onOtherTap,
     this.textAlign = TextAlign.right,
   });
 
@@ -186,6 +199,17 @@ class RubMarkedText extends ConsumerStatefulWidget {
 
 class _RubMarkedTextState extends ConsumerState<RubMarkedText> {
   final GlobalKey _key = GlobalKey();
+  final GlobalKey<RubPlateOverlayState> _plateKey = GlobalKey();
+
+  /// Is [local] on the medallion (the sign's box, a little enlarged)?
+  bool _onMedallion(Offset local) {
+    final ro = _key.currentContext?.findRenderObject();
+    if (ro is! RenderParagraph || !ro.hasSize) return false;
+    final b = ro.getBoxesForSelection(
+      const TextSelection(baseOffset: 0, extentOffset: 1),
+    );
+    return b.isNotEmpty && b.first.toRect().inflate(10).contains(local);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +221,7 @@ class _RubMarkedTextState extends ConsumerState<RubMarkedText> {
     );
     if (!widget.text.startsWith(rubElHizbMark)) return text;
     final images = ref.watch(rubMedallionsProvider).valueOrNull;
-    return CustomPaint(
+    final marked = CustomPaint(
       foregroundPainter: RubInlineMedallionPainter(
         textKey: _key,
         offsets: const [0],
@@ -206,6 +230,32 @@ class _RubMarkedTextState extends ConsumerState<RubMarkedText> {
         heart: medallionHearts[rubMedallionFor(widget.layout)],
       ),
       child: text,
+    );
+    final rub = widget.rub;
+    final mt = widget.mt;
+    if (rub == null || mt == null) return marked;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapUp: (d) => _onMedallion(d.localPosition)
+          ? _plateKey.currentState?.show(0)
+          : widget.onOtherTap?.call(),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          marked,
+          Positioned.fill(
+            child: RubPlateOverlay(
+              key: _plateKey,
+              textKey: _key,
+              marks: [(0, rub)],
+              edge: 0,
+              page: widget.page,
+              mt: mt,
+              baseStyle: DefaultTextStyle.of(context).style,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

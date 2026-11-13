@@ -317,9 +317,9 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
               ),
             ),
           ),
-          // The quarter plate, on a tap on the medallion only, and over the
-          // ayah numbers too (owner, 2026-11-13: the numbers showed through
-          // it). It no longer comes by itself: it covered the words.
+          // The quarter plate: by itself when its line comes into view (the
+          // owner's setting, «تظهر لوحدها»), again on a tap on the
+          // medallion, and over the ayah numbers (they showed through it).
           if (rubMarks.isNotEmpty)
             Positioned.fill(
               child: RubPlateOverlay(
@@ -330,7 +330,6 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
                 page: widget.ayahs.first.pageNumber,
                 mt: widget.mt,
                 baseStyle: DefaultTextStyle.of(context).style,
-                auto: false,
               ),
             ),
         ],

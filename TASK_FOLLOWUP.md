@@ -4,20 +4,22 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — owner's 11-item UI batch: DONE, RELEASED v4.6.0
+## Current task — Quran hub + Prayer hub pages (owner, 2026-11-14 ~00:00)
 
-Shots (owner's phone, mostly LANDSCAPE, dark theme): `docs/owner_shots/2026-11-13_batch/01..12.jpg`.
-Owner's words are in the session log; items (his numbering):
-1. Adhkar (01): the two «استمع لأذكار الصباح/المساء» bars are pinned - make them scroll with the page.
-2. Home (03/04): the prayer card/strip is too big, eats the page; shrink it to its content, above all in landscape.
-3. Home (03/04): surah-virtue titles (سورة البقرة…) too big, overlapping the text under them; fix.
-5/6. Text mushaf (05/06): the rub'/hizb medallion plate has an ayah-number badge showing inside it and its label sits low; centre the label; marks must draw ON TOP of the text (z-order), any rule otherwise is to be changed.
-7. Tasbeeh (07): remove the trash (delete) button; the button next to the vibration one (reset ↻) takes over its job.
-8. Library (08): the top strips (الدرر السنية / المكتبة الشاملة + tabs) eat the screen: scroll with the page on small phones, may stay fixed on large tablets - decide what is right.
-9. More (09): cards in landscape are terrible (narrow card, text wrapped word per line); redesign the layout for landscape, logical and beautiful.
-10. Text mushaf portrait (10/11/12): the medallion overlapping the text looks very bad.
-11. Owner: pick THREE of the four medallions (`assets/rub_medallions/` quarter/half/three_quarters/hizb) and put them IN PLACE OF the quarter marks in the TEXT mushaf - one medallion per text layout (page / cards / reading), each layout always uses its own one. Owner asked for confirmation he was understood: confirmed in chat with this reading (marks sit where the ۞/✻ quarter sign is, not floating over ayahs). This also answers 10.
-(No item 4 in the owner's message.) All 7 languages for any new string; seen on emulator in portrait + landscape (+ a large/tablet AVD for 8/9).
+Owner: «عايزك تعمل صفحة جديدة للقرآن يكون فيها كل حاجة تخصه أقدر أروح منها
+للختمة وأي حاجة تخصه بشكل جميل وروعة بصفتك خبير، وكمان عايزك تحطلي للصفحة
+دي خلفية مسجد إسلامي هادية جميلة، وكذلك قسم الصلاة».
+Plan (decided): the Quran tab opens a HUB (calm mosque photo backdrop, like
+`core/widgets/mosque_backdrop.dart`): a big «متابعة القراءة / افتح المصحف»
+card on top, then grouped cards for everything Quran: khatma, bookmarks,
+topic search, recitation player (quran_audio), continuous recitation,
+tajweed, hifz, selected surahs, sunan of the surahs, translations/tafsir,
+mushaf editions/display. Jumps from elsewhere (`quranJumpProvider`,
+tab requests) must still land IN the mushaf. Same for the Prayer tab: a hub
+on a mosque backdrop (times card, adhan settings, timings adjust, qibla,
+fasting, tasbih reminder...). 7 languages for every new string; check
+portrait + landscape + tour anchors (TourAnchor) still resolve.
+First fixed (unreleased): the medallion misses - see HANDOVER top row.
 
 ## Windows GPU (windows-gpu session)
 
@@ -32,10 +34,11 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-No open owner request. v4.6.0 out (HANDOVER top row). Waiting for the
-owner's look on his phone. Unseen: real phone, dark theme for the
-medallions/separators, the Shamela/Dorar strip collapsing, a tablet AVD.
-Emulator: `adb emu rotate`; screenshots via Bash.
+Build the Quran hub and Prayer hub (Current task). Start by reading how
+`AppShell` hosts the tabs and who pushes into `QuranScreen`
+(grep `quranJumpProvider`, `AppTab.quran`, `TourAnchor`). Verify EVERY
+related path (memory: verify-every-related-path). No release without the
+owner's word.
 
 ## Standing owner orders (still open)
 
@@ -60,6 +63,7 @@ Emulator: `adb emu rotate`; screenshots via Bash.
 
 ## Log (newest first)
 
+- 2026-11-14 ~00:20 v4.6.0 misses fixed: plate auto again, cards plate (tap + auto; painter clamp crash); seen API 24 all layouts; not released. Next: Quran + Prayer hubs.
 - 2026-11-13 ~23:35 RELEASED v4.6.0 (tag 05f58765) on the owner's «طلع اصدار».
 - 2026-11-13 ~23:00 medallion heart filled with paper; reading-layout ayah separators = scalloped ring, number centred; line-start medallion fixed; seen API 24; 1476 tests; not released.
 - 2026-11-13 ~22:50 11-item batch done: tasbeeh reset, adhkar row scrolls, library strips collapse on phones, sideways prayer card hugs content, sunan names, More groups as pages, inline medallion per text layout + plate on tap; seen API 24; 1476 tests; not released.
