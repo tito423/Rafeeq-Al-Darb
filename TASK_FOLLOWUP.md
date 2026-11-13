@@ -4,13 +4,20 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — owner's medallions on the text mushaf: DONE, RELEASED v4.5.2
+## Current task — owner's 11-item UI batch from a real phone (2026-11-13 ~21:50)
 
-Owner (2026-11-13) sent four illuminated medallions for the TEXT mushaf's
-quarter/hizb plate. Cut into `assets/rub_medallions/`, drawn by
-`_MedallionPlate` in `rub_margin_mark.dart`; printed mushaf unchanged.
-Seen on API 24 (light/dark, portrait/landscape, ar/ur/ru). Released in
-v4.5.2 (tag 58c7f888, versionCode 124) on the owner's «انشر». Details: HANDOVER top row.
+Shots (owner's phone, mostly LANDSCAPE, dark theme): `docs/owner_shots/2026-11-13_batch/01..12.jpg`.
+Owner's words are in the session log; items (his numbering):
+1. Adhkar (01): the two «استمع لأذكار الصباح/المساء» bars are pinned - make them scroll with the page.
+2. Home (03/04): the prayer card/strip is too big, eats the page; shrink it to its content, above all in landscape.
+3. Home (03/04): surah-virtue titles (سورة البقرة…) too big, overlapping the text under them; fix.
+5/6. Text mushaf (05/06): the rub'/hizb medallion plate has an ayah-number badge showing inside it and its label sits low; centre the label; marks must draw ON TOP of the text (z-order), any rule otherwise is to be changed.
+7. Tasbeeh (07): remove the trash (delete) button; the button next to the vibration one (reset ↻) takes over its job.
+8. Library (08): the top strips (الدرر السنية / المكتبة الشاملة + tabs) eat the screen: scroll with the page on small phones, may stay fixed on large tablets - decide what is right.
+9. More (09): cards in landscape are terrible (narrow card, text wrapped word per line); redesign the layout for landscape, logical and beautiful.
+10. Text mushaf portrait (10/11/12): the medallion overlapping the text looks very bad.
+11. Owner: pick THREE of the four medallions (`assets/rub_medallions/` quarter/half/three_quarters/hizb) and put them IN PLACE OF the quarter marks in the TEXT mushaf - one medallion per text layout (page / cards / reading), each layout always uses its own one. Owner asked for confirmation he was understood: confirmed in chat with this reading (marks sit where the ۞/✻ quarter sign is, not floating over ayahs). This also answers 10.
+(No item 4 in the owner's message.) All 7 languages for any new string; seen on emulator in portrait + landscape (+ a large/tablet AVD for 8/9).
 
 ## Windows GPU (windows-gpu session)
 
@@ -25,8 +32,10 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-No open owner request. Badges-fade polish done (unreleased, see HANDOVER
-top row). Unverified: real phone. NO release until the owner says so. Emulator rotation: `adb emu rotate` (user_rotation does nothing on
+Do the 11-item batch above, item by item (cheap first: 7, 1, 8, 2, 3, 9;
+then 5/6/10/11 together in `rub_margin_mark.dart` + the three text layouts).
+After each item: analyze, emulator screenshot, log line, checkpoint.
+Badges-fade polish (b07a9def) done, unreleased. NO release until the owner says so. Emulator rotation: `adb emu rotate` (user_rotation does nothing on
 API 24). Emulator lags: a screenshot can be stale.
 
 ## Standing owner orders (still open)
@@ -52,6 +61,7 @@ API 24). Emulator lags: a screenshot can be stale.
 
 ## Log (newest first)
 
+- 2026-11-13 ~21:50 owner sent 11-item UI batch (shots in docs/owner_shots/2026-11-13_batch); recorded; handed to a fresh session (context 180k).
 - 2026-11-13 ~20:50 reading-layout juz/page badges fade while text scrolls (`scroll_quiet_overlay.dart`); seen API 24 portrait+landscape; analyze clean, 1474 tests; NOT released.
 - 2026-11-13 ~17:30 RELEASED v4.5.2 (tag 58c7f888): the owner's medallions on the text mushaf.
 - 2026-11-13 ~17:00 owner's medallions on the text mushaf: cut (Python), wired, seen on API 24; not released.
