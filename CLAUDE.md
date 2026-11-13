@@ -58,6 +58,10 @@ repo `tito423/Rafeeq-Al-Darb`, APK on GitHub Releases. **Reply in Arabic**
 - **Tokens**: read files by section (offset/limit, grep), never whole big
   files; long builds/tests run in the background, their logs read with
   `tail`/`grep`; past ~200k context hand off to a new session.
+- **New session on order** (owner, 2026-11-13): any order to open a new
+  session, remotely from the phone or not, is done at once and in full —
+  checkpoint, `start_session` "user_asked", highest permission mode — no
+  questions.
 - **Sessions** start from the phone (cloud) or locally; never check or report
   Remote Control. A cloud session reaches the laptop through the runner repo
   `tito423/rafeeq-control` (`gh workflow run run.yml -R tito423/rafeeq-control
