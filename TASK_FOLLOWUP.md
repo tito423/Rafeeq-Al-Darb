@@ -4,13 +4,13 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — owner's medallions on the text mushaf: DONE, unreleased
+## Current task — owner's medallions on the text mushaf: DONE, RELEASED v4.5.2
 
 Owner (2026-11-13) sent four illuminated medallions for the TEXT mushaf's
 quarter/hizb plate. Cut into `assets/rub_medallions/`, drawn by
 `_MedallionPlate` in `rub_margin_mark.dart`; printed mushaf unchanged.
-Seen on API 24 (light/dark, portrait/landscape, ar/ur/ru). Last release
-v4.5.1 (tag 1e754c59) does NOT have them. Details: HANDOVER top row.
+Seen on API 24 (light/dark, portrait/landscape, ar/ur/ru). Released in
+v4.5.2 (tag 58c7f888, versionCode 124) on the owner's «انشر». Details: HANDOVER top row.
 
 ## Windows GPU (windows-gpu session)
 
@@ -32,8 +32,8 @@ API 24). Emulator lags: a screenshot can be stale.
 
 ## Standing owner orders (still open)
 
-- NO release without the owner's word. Last published: v4.5.1
-  (2026-11-13, versionCode 123).
+- NO release without the owner's word. Last published: v4.5.2
+  (2026-11-13, versionCode 124).
 - `scripts/own_irab/SPECIALIST_SAMPLE.csv`: 300 words for a human grammarian;
   the app may not call the i'rab «معتمد» before that result.
 - Hourly autorun `own-irab-autorun` stays DISABLED.
@@ -53,6 +53,7 @@ API 24). Emulator lags: a screenshot can be stale.
 
 ## Log (newest first)
 
+- 2026-11-13 ~17:30 RELEASED v4.5.2 (tag 58c7f888): the owner's medallions on the text mushaf.
 - 2026-11-13 ~17:00 owner's medallions on the text mushaf: cut (Python), wired, seen on API 24; not released.
 - 2026-11-13 ~15:55 checked printed mushaf landscape + fr/es/pt/ru/ur (plate, Display row) on API 24: all right; fixed + seen landscape home labels (sunrise cut, quick-access mid-word split); RELEASED v4.5.1 (tag 1e754c59).
 - 2026-11-13 ~14:50 checked v4.5.0 myself on API 24: plate in English+dark (½ Hizb 12, illuminated, slides, leaves), landscape text mode fine; FIXED landscape full-screen mushaf: bottom tab bar floated over the page with the chrome (5 of 15 lines left) - now hidden when wide (`app_shell.dart`), seen. Unreleased. Still unseen: printed mode landscape, fr/es/pt/ru/ur, real phone. Emulator rotate: `adb emu rotate` (settings user_rotation did nothing on API 24).
