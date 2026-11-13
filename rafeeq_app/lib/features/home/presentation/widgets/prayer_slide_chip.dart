@@ -84,13 +84,18 @@ class PrayerSlideChip extends StatelessWidget {
           children: [
             Icon(icon, size: 18, color: filled ? ink : hero.accent(color)),
             const SizedBox(height: 4),
-            Text(
-              label,
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: ink,
+            // Scaled down like the time below: «Lever du soleil» was cut to
+            // «Lever du» on the narrower landscape slide (API 24, 2026-11-13).
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: ink,
+                ),
               ),
             ),
             const SizedBox(height: 3),

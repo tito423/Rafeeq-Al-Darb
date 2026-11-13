@@ -78,7 +78,11 @@ class WorshipQuickLinks extends StatelessWidget {
             LayoutBuilder(builder: (context, box) {
               // Five a row: three full rows on a phone; wider screens keep
               // five a row too, so fifteen never leaves a short last row.
-              const cols = 5;
+              // Three a row when five would be too narrow for one word
+              // (the landscape home card, ~49 dp a tile: «Récitations»
+              // could not fit even scaled down, API 24, 2026-11-13);
+              // fifteen still fills every row.
+              final cols = box.maxWidth / 5 >= 64 ? 5 : 3;
               final w = box.maxWidth / cols;
               return Wrap(
                 children: [
@@ -149,15 +153,58 @@ class _Tile extends StatelessWidget {
             child: Icon(link.icon, color: link.color, size: 26),
           ),
           const SizedBox(height: 6),
-          Text(
-            link.labelKey.tr(),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          _NoSplitLabel(
+            text: link.labelKey.tr(),
             style: theme.textTheme.labelMedium?.copyWith(height: 1.25),
           ),
         ]),
       ),
     );
+  }
+}
+
+/// A two-line tile label that never breaks inside a word: when the longest
+/// word is wider than the tile, the whole label is scaled down until it
+/// fits. On the landscape home the tiles are narrow and «Recitations»,
+/// «Mémoriser», «Tajweed» were split as «Recitati / ons» (API 24,
+/// 2026-11-13).
+class _NoSplitLabel extends StatelessWidget {
+  const _NoSplitLabel({required this.text, this.style});
+
+  final String text;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, box) {
+      final scaler = MediaQuery.textScalerOf(context);
+      final dir = Directionality.of(context);
+      var widest = 0.0;
+      for (final word in text.split(RegExp(r'\s+'))) {
+        if (word.isEmpty) continue;
+        final p = TextPainter(
+          text: TextSpan(text: word, style: style),
+          textDirection: dir,
+          textScaler: scaler,
+          maxLines: 1,
+        )..layout();
+        if (p.width > widest) widest = p.width;
+        p.dispose();
+      }
+      final shrink = widest > box.maxWidth && widest > 0
+          ? (box.maxWidth / widest).clamp(0.6, 1.0)
+          : 1.0;
+      final base = style?.fontSize ?? 12;
+      return Text(
+        text,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: (style ?? const TextStyle()).copyWith(
+          // A hair under the exact fit so rounding never re-splits the word.
+          fontSize: shrink < 1 ? base * shrink * 0.98 : base,
+        ),
+      );
+    });
   }
 }
