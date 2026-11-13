@@ -419,6 +419,8 @@
     "recite_return_hint": "Pendant la récitation continue, si vous tournez la page loin du verset surligné, le moushaf y revient seul après ce délai.",
     "recite_return_off": "Désactivé",
     "recite_return_s": "{} s",
+    "rub_plate": "Cartouche du quart et du hizb",
+    "rub_plate_hint": "Apparaît sur le côté de la page où commence un quart ou un hizb, comme dans le mushaf imprimé, puis disparaît.",
     "bookmarks_title": "Signets",
     "bm_this_page": "Cette page ({})",
     "bm_kind_reading": "Lecture",

@@ -8,6 +8,8 @@
 /// quote_backgrounds.json); nothing new is fetched.
 library;
 
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 abstract final class MosquePhotos {
@@ -71,19 +73,112 @@ class MosqueBackdrop extends StatelessWidget {
           child: IgnorePointer(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(radius),
-              child: Opacity(
-                opacity: dark ? 0.16 : 0.12,
-                child: Image.asset(
-                  photo,
-                  fit: BoxFit.cover,
-                  cacheWidth: 900,
-                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
-                ),
-              ),
+              // Day: the photo lay OVER the card at 12 %, so it veiled every
+              // word too (owner, 2026-11-13: «الخط باهت … ألوانها قريبة
+              // لخلفيات الكروت»). Multiplied in, it can only darken: the pale
+              // card takes the photo's texture, dark ink stays as dark.
+              child: dark
+                  ? Opacity(
+                      opacity: 0.16,
+                      child: Image.asset(
+                        photo,
+                        fit: BoxFit.cover,
+                        cacheWidth: 900,
+                        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                      ),
+                    )
+                  : _MultiplyPhoto(photo: photo, strength: 0.16),
             ),
           ),
         ),
       ],
     );
   }
+}
+
+/// [photo] painted with [BlendMode.multiply] at [strength] over what is
+/// already drawn beneath it.
+class _MultiplyPhoto extends StatefulWidget {
+  final String photo;
+  final double strength;
+  const _MultiplyPhoto({required this.photo, required this.strength});
+
+  @override
+  State<_MultiplyPhoto> createState() => _MultiplyPhotoState();
+}
+
+class _MultiplyPhotoState extends State<_MultiplyPhoto> {
+  ImageStream? _stream;
+  ImageInfo? _info;
+  late final ImageStreamListener _listener = ImageStreamListener(
+    (info, _) {
+      if (!mounted) return;
+      setState(() {
+        _info?.dispose();
+        _info = info;
+      });
+    },
+    onError: (_, _) {},
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resolve();
+  }
+
+  @override
+  void didUpdateWidget(_MultiplyPhoto old) {
+    super.didUpdateWidget(old);
+    if (old.photo != widget.photo) _resolve();
+  }
+
+  void _resolve() {
+    final stream = ResizeImage(
+      AssetImage(widget.photo),
+      width: 900,
+    ).resolve(createLocalImageConfiguration(context));
+    if (stream.key == _stream?.key) return;
+    _stream?.removeListener(_listener);
+    _stream = stream..addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    _stream?.removeListener(_listener);
+    _info?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final image = _info?.image;
+    if (image == null) return const SizedBox.expand();
+    return CustomPaint(
+      size: Size.infinite,
+      painter: _MultiplyPainter(image, widget.strength),
+    );
+  }
+}
+
+class _MultiplyPainter extends CustomPainter {
+  final ui.Image image;
+  final double strength;
+  _MultiplyPainter(this.image, this.strength);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    paintImage(
+      canvas: canvas,
+      rect: Offset.zero & size,
+      image: image,
+      fit: BoxFit.cover,
+      opacity: strength,
+      blendMode: BlendMode.multiply,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_MultiplyPainter old) =>
+      old.image != image || old.strength != strength;
 }

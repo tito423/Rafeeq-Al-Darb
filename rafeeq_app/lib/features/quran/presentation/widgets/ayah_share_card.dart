@@ -324,12 +324,25 @@ class AyahShareCard extends StatelessWidget {
     var at = 0;
     for (final m in RegExp('«[^»]*»').allMatches(text)) {
       if (m.start > at) spans.add(TextSpan(text: text.substring(at, m.start)));
-      spans.add(
-        TextSpan(
-          text: m.group(0),
-          style: TextStyle(color: c.gold, fontWeight: FontWeight.w700),
-        ),
-      );
+      // The quoted words are Qur'an in Uthmani spelling: in the body font,
+      // bolded, their marks (ۥ ٰ ۡ) broke apart (owner's shared 18:63 card,
+      // 2026-11-13). They take the mushaf font, as the ayah does; the
+      // guillemets stay in the body font, which has them.
+      final quote = TextStyle(color: c.gold, fontWeight: FontWeight.w700);
+      final inner = m.group(0)!;
+      spans
+        ..add(TextSpan(text: '«', style: quote))
+        ..add(
+          TextSpan(
+            text: inner.substring(1, inner.length - 1),
+            style: TextStyle(
+              fontFamily: 'KFGQPCHafs',
+              letterSpacing: 0,
+              color: c.gold,
+            ),
+          ),
+        )
+        ..add(TextSpan(text: '»', style: quote));
       at = m.end;
     }
     if (at < text.length) spans.add(TextSpan(text: text.substring(at)));

@@ -33,6 +33,7 @@ import '../../../../../core/utils/digits.dart';
 import '../../../../tutorial/data/tutorial_anchors.dart';
 import '../../../data/page_turn_provider.dart';
 import '../../../data/recite_return_provider.dart';
+import '../../../data/rub_plate_provider.dart';
 import '../../../data/text_layout_provider.dart';
 import '../mushaf_theme_picker.dart';
 import 'auto_scroll_speed_bar.dart';
@@ -270,6 +271,7 @@ class _SheetState extends ConsumerState<_QuranDisplaySheet> {
                 },
               ),
             const _ReciteReturnRow(),
+            const _RubPlateRow(),
             // «اختيار المصاحف في خيارات المصاحف في القرآن مالهاش لازمة» -
             // the sheet it opened listed one printing with a tick beside it.
             // What is left under this heading is the only choice there is:
@@ -491,8 +493,51 @@ class _ReciteReturnRow extends ConsumerWidget {
   const _ReciteReturnRow();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final value = ref.watch(reciteReturnProvider);
+  Widget build(BuildContext context, WidgetRef ref) => _SecondsRow(
+    icon: Icons.my_location_rounded,
+    title: 'quran.recite_return'.tr(),
+    hint: 'quran.recite_return_hint'.tr(),
+    choices: reciteReturnChoices,
+    value: ref.watch(reciteReturnProvider),
+    onSet: (s) => ref.read(reciteReturnProvider.notifier).set(s),
+  );
+}
+
+/// «زخرفة الربع والحزب»: hidden, or shown 2 / 3 / 5 / 8 s at the side of a
+/// page that carries «۞» ([rubPlateSecondsProvider]).
+class _RubPlateRow extends ConsumerWidget {
+  const _RubPlateRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => _SecondsRow(
+    icon: Icons.auto_awesome_mosaic_outlined,
+    title: 'quran.rub_plate'.tr(),
+    hint: 'quran.rub_plate_hint'.tr(),
+    choices: rubPlateChoices,
+    value: ref.watch(rubPlateSecondsProvider),
+    onSet: (s) => ref.read(rubPlateSecondsProvider.notifier).set(s),
+  );
+}
+
+/// A titled row of «إيقاف / N ث» choices.
+class _SecondsRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String hint;
+  final List<int> choices;
+  final int value;
+  final ValueChanged<int> onSet;
+  const _SecondsRow({
+    required this.icon,
+    required this.title,
+    required this.hint,
+    required this.choices,
+    required this.value,
+    required this.onSet,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final lang = context.locale.languageCode;
     return Padding(
@@ -502,20 +547,17 @@ class _ReciteReturnRow extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.my_location_rounded, color: goldText(context)),
+              Icon(icon, color: goldText(context)),
               const SizedBox(width: 16),
               Expanded(
-                child: Text(
-                  'quran.recite_return'.tr(),
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+                child: Text(title, style: Theme.of(context).textTheme.bodyLarge),
               ),
             ],
           ),
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 40, top: 2),
             child: Text(
-              'quran.recite_return_hint'.tr(),
+              hint,
               style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
             ),
           ),
@@ -526,7 +568,7 @@ class _ReciteReturnRow extends ConsumerWidget {
               spacing: 6,
               runSpacing: 6,
               children: [
-                for (final s in reciteReturnChoices)
+                for (final s in choices)
                   ChoiceChip(
                     label: Text(
                       s == 0
@@ -538,8 +580,7 @@ class _ReciteReturnRow extends ConsumerWidget {
                     ),
                     selected: value == s,
                     selectedColor: AppColors.gold.withValues(alpha: 0.22),
-                    onSelected: (_) =>
-                        ref.read(reciteReturnProvider.notifier).set(s),
+                    onSelected: (_) => onSet(s),
                   ),
               ],
             ),

@@ -632,7 +632,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
     return PrintedRubPlate(
       key: _plateKey,
       marks: marks,
-      pageWidth: w,
+      page: widget.page,
       mt: resolveMushafTheme(ref.watch(mushafThemeProvider), theme.brightness),
       baseStyle: DefaultTextStyle.of(context).style,
     );

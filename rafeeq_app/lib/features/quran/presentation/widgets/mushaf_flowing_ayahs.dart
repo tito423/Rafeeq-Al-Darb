@@ -296,6 +296,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
                   textKey: _textKey,
                   marks: rubMarks,
                   edge: widget.rubGutter,
+                  page: widget.ayahs.first.pageNumber,
                   mt: widget.mt,
                   baseStyle: DefaultTextStyle.of(context).style,
                 ),

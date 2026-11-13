@@ -104,6 +104,10 @@ class _SurahRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final nameStyle = Theme.of(context).textTheme.titleSmall?.copyWith(
+      fontFamily: 'AmiriQuran',
+      fontSize: 24,
+    );
     final theme = Theme.of(context);
     return InkWell(
       onTap: onOpen,
@@ -113,11 +117,27 @@ class _SurahRow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              name.isEmpty ? '…' : name,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontFamily: 'AmiriQuran',
-              ),
+            // Owner, 2026-11-13: «كبّر أسماء السور … وخليها بولد». AmiriQuran
+            // has no bold face (w700 drew the same thin strokes, seen on
+            // API 24), so the name is thickened by a hairline outline of its
+            // own ink under the fill.
+            Stack(
+              children: [
+                Text(
+                  name.isEmpty ? '…' : name,
+                  style: nameStyle?.copyWith(
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 1.1
+                      ..strokeJoin = StrokeJoin.round
+                      ..color = theme.colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  name.isEmpty ? '…' : name,
+                  style: nameStyle?.copyWith(color: theme.colorScheme.onSurface),
+                ),
+              ],
             ),
             const SizedBox(height: 2),
             Text(
@@ -125,7 +145,7 @@ class _SurahRow extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ],

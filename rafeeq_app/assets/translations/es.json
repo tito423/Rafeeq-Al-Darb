@@ -419,6 +419,8 @@
     "recite_return_hint": "Durante la recitación continua, si pasas de página lejos de la aleya resaltada, el mus-haf vuelve a ella solo tras este tiempo.",
     "recite_return_off": "Desactivado",
     "recite_return_s": "{} s",
+    "rub_plate": "Cartela del cuarto y del hizb",
+    "rub_plate_hint": "Aparece al costado de la página donde empieza un cuarto o un hizb, como en el mushaf impreso, y luego se va.",
     "bookmarks_title": "Marcadores",
     "bm_this_page": "Esta página ({})",
     "bm_kind_reading": "Lectura",

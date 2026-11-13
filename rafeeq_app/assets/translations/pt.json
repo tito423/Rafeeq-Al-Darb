@@ -419,6 +419,8 @@
     "recite_return_hint": "Durante a recitação contínua, se virar a página para longe do versículo destacado, o mus-haf volta a ele sozinho após este tempo.",
     "recite_return_off": "Desligado",
     "recite_return_s": "{} s",
+    "rub_plate": "Cartela do quarto e do hizb",
+    "rub_plate_hint": "Aparece ao lado da página onde começa um quarto ou um hizb, como no mushaf impresso, e depois sai.",
     "bookmarks_title": "Marcadores",
     "bm_this_page": "Esta página ({})",
     "bm_kind_reading": "Leitura",
