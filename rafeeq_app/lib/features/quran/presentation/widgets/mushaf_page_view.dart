@@ -623,7 +623,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
         if (first == null || r.top < first.top) first = r;
       }
       if (first == null) continue;
-      // The «۞» line's own height: the strip stands in the left margin there.
+      // The «۞» line's own height: the plate is centred level with it.
       final under = Offset(first.center.dx, first.center.dy);
       final c = fit == null ? under : fit.apply(under);
       marks.add((c.dy * h, info));
@@ -641,7 +641,7 @@ class _MushafPageViewState extends ConsumerState<MushafPageView> {
   void _tapAt(TapUpDetails d, double width, double height) {
     final rub = _rubMarkAt(d.localPosition, width, height);
     if (rub != null) {
-      // The plate shows again for 2 s (owner, 2026-11-12).
+      // The plate shows again for 3 s (owner, 2026-11-13).
       _plateKey.currentState?.show();
       return;
     }

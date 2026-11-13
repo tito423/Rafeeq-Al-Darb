@@ -288,7 +288,7 @@ class _FlowingAyahsState extends State<_FlowingAyahs> {
               textAlign: TextAlign.justify,
               textDirection: TextDirection.rtl,
             ),
-            // A strip in the gap between lines, so it covers no word.
+            // The printed quarter plate, centred over the page for 3 s.
             if (rubMarks.isNotEmpty)
               Positioned.fill(
                 child: RubPlateOverlay(

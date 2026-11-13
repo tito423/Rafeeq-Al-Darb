@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
@@ -7,17 +6,17 @@ import 'package:flutter/rendering.dart' show RenderParagraph;
 import '../../../data/mushaf_theme.dart';
 import '../../../data/rub_el_hizb.dart';
 
-/// The quarter plate of the printed mushaf, shown as a narrow translucent
-/// overlay at the page's left edge, level with the line that carries «۞»
-/// (owner, 2026-11-12: the margin gutter narrowed the whole text column, so
-/// the text has its full width back and the plate only visits).
+/// The quarter plate of the printed mushaf, shown for [rubPlateHold] as the
+/// printed plate itself (pointed head and foot, words stacked), centred on
+/// the page level with the line that carries «۞». The strip laid between the
+/// lines or in the margin is gone (owner, 2026-11-13: it looked bad there).
 ///
 /// It fades in when the «۞» line first scrolls into view, fades out after
 /// [rubPlateHold], and a tap on the «۞» ([RubPlateOverlayState.show]) shows it
 /// again. The shape and the wording are read off the Madinah printing of 1428
 /// AH (pages 5, 7, 9 and 22): a plate with a pointed head and foot, a pale
 /// ground and a dark outline, the words stacked - «ربع / الحزب / ١».
-const Duration rubPlateHold = Duration(seconds: 2);
+const Duration rubPlateHold = Duration(seconds: 3);
 
 class RubPlateOverlay extends StatefulWidget {
   /// The paragraph the marks are in.
@@ -53,8 +52,10 @@ class RubPlateOverlayState extends State<RubPlateOverlay>
   final Set<int> _seen = {};
   Timer? _hide;
   ScrollPosition? _pos;
+  bool _onScreen = true;
   int? _current;
   bool _checkQueued = false;
+  Timer? _retry;
 
   RenderParagraph? get _paragraph {
     final ro = widget.textKey.currentContext?.findRenderObject();
@@ -69,7 +70,21 @@ class RubPlateOverlayState extends State<RubPlateOverlay>
       _pos?.removeListener(_queueCheck);
       _pos = pos?..addListener(_queueCheck);
     }
-    _queueCheck();
+    // A hidden tab (IndexedStack) reports Visibility.of == false: the plate
+    // waits for the page to be really on screen, and shows again on every
+    // return.
+    _onScreen = Visibility.of(context);
+    _visibilityChanged();
+  }
+
+  void _visibilityChanged() {
+    if (_onScreen) {
+      _queueCheck();
+    } else {
+      _seen.clear();
+      _hide?.cancel();
+      _fade.value = 0;
+    }
   }
 
   @override
@@ -81,6 +96,7 @@ class RubPlateOverlayState extends State<RubPlateOverlay>
   @override
   void dispose() {
     _pos?.removeListener(_queueCheck);
+    _retry?.cancel();
     _hide?.cancel();
     _fade.dispose();
     super.dispose();
@@ -98,6 +114,14 @@ class RubPlateOverlayState extends State<RubPlateOverlay>
   /// Shows the plate of the first not-yet-shown mark whose line is inside
   /// the scrollable's viewport.
   void _check() {
+    if (!_onScreen) return;
+    if (!_onScreenSideways(context)) {
+      _retry?.cancel();
+      _retry = Timer(const Duration(milliseconds: 300), () {
+        if (mounted) _queueCheck();
+      });
+      return;
+    }
     final p = _paragraph;
     if (p == null) {
       _queueCheck();
@@ -152,9 +176,21 @@ class RubPlateOverlayState extends State<RubPlateOverlay>
           mt: widget.mt,
           baseStyle: widget.baseStyle,
           fade: _fade,
+          visible: _visibleRect,
         ),
       ),
     );
+  }
+
+  /// The part of this overlay the scrollable's viewport shows, in the
+  /// overlay's own coordinates: the plate is kept inside it.
+  Rect? _visibleRect() {
+    final vp = Scrollable.maybeOf(context)?.context.findRenderObject();
+    final me = context.findRenderObject();
+    if (vp is! RenderBox || me is! RenderBox || !vp.hasSize || !me.hasSize) {
+      return null;
+    }
+    return me.globalToLocal(vp.localToGlobal(Offset.zero)) & vp.size;
   }
 }
 
@@ -166,6 +202,7 @@ class _RubPlatePainter extends CustomPainter {
   final MushafTheme mt;
   final TextStyle baseStyle;
   final Animation<double> fade;
+  final Rect? Function() visible;
 
   _RubPlatePainter({
     required this.textKey,
@@ -175,11 +212,12 @@ class _RubPlatePainter extends CustomPainter {
     required this.mt,
     required this.baseStyle,
     required this.fade,
+    required this.visible,
   }) : super(repaint: fade);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final alpha = Curves.easeOut.transform(fade.value) * 0.92;
+    final alpha = Curves.easeOut.transform(fade.value);
     if (alpha <= 0) return;
     final ro = textKey.currentContext?.findRenderObject();
     if (ro is! RenderParagraph || !ro.hasSize) return;
@@ -188,16 +226,16 @@ class _RubPlatePainter extends CustomPainter {
     );
     if (boxes.isEmpty) return;
     final line = boxes.first.toRect();
-    canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, alpha));
-    paintRubStrip(
+    paintFloatingRubPlate(
       canvas,
-      left: 3,
-      centreY: line.bottom,
+      size: size,
+      lineY: line.center.dy,
+      within: visible(),
+      alpha: alpha,
       lines: info.marginLines,
       mt: mt,
       baseStyle: baseStyle,
     );
-    canvas.restore();
   }
 
   @override
@@ -217,6 +255,7 @@ void paintRubPlate(
   required List<String> lines,
   required MushafTheme mt,
   required TextStyle baseStyle,
+  bool shadow = false,
 }) {
   final inner = width - 8;
   final painters = <TextPainter>[];
@@ -269,10 +308,13 @@ void paintRubPlate(
 
   canvas.save();
   canvas.translate(centre.dx, centre.dy);
+  if (shadow) {
+    canvas.drawShadow(plate, const Color(0xFF000000), 3, false);
+  }
   canvas.drawPath(
     plate,
     Paint()
-      ..color = Color.alphaBlend(mt.gold.withValues(alpha: 0.16), mt.paper),
+      ..color = Color.alphaBlend(mt.gold.withValues(alpha: 0.22), mt.paper),
   );
   canvas.drawPath(
     plate,
@@ -327,27 +369,54 @@ class PrintedRubPlateState extends State<PrintedRubPlate>
     duration: const Duration(milliseconds: 350),
   );
   Timer? _hide;
-  bool _auto = false;
+  bool _onScreen = true;
+  bool _shown = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_auto && widget.marks.isNotEmpty) {
-      _auto = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) show();
-      });
-    }
+    // A hidden tab (IndexedStack) reports Visibility.of == false: the plate
+    // waits for the page to be really on screen, and shows again on every
+    // return.
+    _onScreen = Visibility.of(context);
+    _visibilityChanged();
   }
 
   @override
   void didUpdateWidget(PrintedRubPlate oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!_auto && widget.marks.isNotEmpty) didChangeDependencies();
+    _visibilityChanged();
+  }
+
+  void _visibilityChanged() {
+    final on = _onScreen;
+    if (!on) {
+      _shown = false;
+      _retry?.cancel();
+      _hide?.cancel();
+      _fade.value = 0;
+      return;
+    }
+    if (_shown || widget.marks.isEmpty) return;
+    _shown = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showWhenTurnedTo());
+  }
+
+  Timer? _retry;
+
+  void _showWhenTurnedTo() {
+    if (!mounted || !_onScreen) return;
+    if (_onScreenSideways(context)) {
+      show();
+    } else {
+      _retry?.cancel();
+      _retry = Timer(const Duration(milliseconds: 300), _showWhenTurnedTo);
+    }
   }
 
   @override
   void dispose() {
+    _retry?.cancel();
     _hide?.cancel();
     _fade.dispose();
     super.dispose();
@@ -396,31 +465,18 @@ class _PrintedPlatePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final alpha = Curves.easeOut.transform(fade.value) * 0.88;
+    final alpha = Curves.easeOut.transform(fade.value);
     if (alpha <= 0) return;
-    // The printed lines are justified edge to edge and their gaps are only a
-    // few pixels, so a horizontal strip always touched some word (2026-11-13,
-    // page 222). The paper's own left margin (ink-free, >= 4.37% of the page
-    // width, measured on madinah_qc pages 22 and 221-229) is the one place that
-    // is clear: the strip stands upright inside it, level with the «۞» line.
-    final t = (size.width * 0.032).clamp(7.0, 14.0);
     for (final (y, info) in marks) {
-      canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, alpha));
-      canvas.save();
-      canvas.translate(size.width * 0.003 + t / 2, y);
-      canvas.rotate(-math.pi / 2);
-      paintRubStrip(
+      paintFloatingRubPlate(
         canvas,
-        left: 0,
-        centreY: 0,
+        size: size,
+        lineY: y,
+        alpha: alpha,
         lines: info.marginLines,
         mt: mt,
         baseStyle: baseStyle,
-        scale: t / 17.0,
-        centred: true,
       );
-      canvas.restore();
-      canvas.restore();
     }
   }
 
@@ -429,63 +485,52 @@ class _PrintedPlatePainter extends CustomPainter {
       old.marks != marks || old.width != width || old.mt != mt;
 }
 
-/// The quarter plate as a one-line strip with pointed ends, [left] from the
-/// page edge and centred on [centreY]. It is laid in the gap BETWEEN two text
-/// lines, so it never covers a word (owner, 2026-11-12).
-void paintRubStrip(
+/// The printed plate, about twice its printed size, centred across [size]
+/// and level with the «۞» line at [lineY] (kept inside [size]), on a soft
+/// shadow so it reads as lying over the page for its few seconds.
+void paintFloatingRubPlate(
   Canvas canvas, {
-  required double left,
-  required double centreY,
+  required Size size,
+  required double lineY,
+  Rect? within,
+  required double alpha,
   required List<String> lines,
   required MushafTheme mt,
   required TextStyle baseStyle,
-  double scale = 1,
-
-  /// Centre the strip on [left] (not start it there): for a rotated canvas.
-  bool centred = false,
 }) {
-  final tp = TextPainter(
-    text: TextSpan(
-      text: lines.join(' · '),
-      style: baseStyle.copyWith(
-        fontFamily: 'AmiriQuran',
-        letterSpacing: 0,
-        fontSize: 11.5 * scale,
-        height: 1.0,
-        fontWeight: FontWeight.w600,
-        color: mt.ink,
-      ),
-    ),
-    textDirection: TextDirection.rtl,
-    maxLines: 1,
-  )..layout();
-  final h = 17.0 * scale;
-  final w = tp.width + 22 * scale;
-  final tip = h / 2;
-  final r = Rect.fromLTWH(centred ? left - w / 2 : left, centreY - h / 2, w, h);
-  final path = Path()
-    ..moveTo(r.left, r.center.dy)
-    ..lineTo(r.left + tip, r.top)
-    ..lineTo(r.right - tip, r.top)
-    ..lineTo(r.right, r.center.dy)
-    ..lineTo(r.right - tip, r.bottom)
-    ..lineTo(r.left + tip, r.bottom)
-    ..close();
-  canvas.drawPath(
-    path,
-    Paint()..color = Color.alphaBlend(mt.gold.withValues(alpha: 0.2), mt.paper),
-  );
-  canvas.drawPath(
-    path,
-    Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.1
-      ..strokeJoin = StrokeJoin.round
-      ..color = mt.gold,
-  );
-  tp.paint(
+  const plateWidth = 48.0;
+  final scale = (size.width * 0.2 / plateWidth).clamp(1.3, 2.0);
+  // Half the plate's height at scale 1, generous: 3 lines + head and foot.
+  final half = (lines.length * 16.0 / 2 + plateWidth * 0.34 + 6) * scale;
+  var area = Offset.zero & size;
+  if (within != null && within.overlaps(area)) area = area.intersect(within);
+  final y = area.height <= half * 2
+      ? area.center.dy
+      : lineY.clamp(area.top + half, area.bottom - half);
+  canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, alpha));
+  canvas.save();
+  canvas.translate(size.width / 2, y);
+  canvas.scale(scale);
+  paintRubPlate(
     canvas,
-    Offset(r.left + (w - tp.width) / 2, r.center.dy - tp.height / 2),
+    centre: Offset.zero,
+    width: plateWidth,
+    lines: lines,
+    mt: mt,
+    baseStyle: baseStyle,
+    shadow: true,
   );
-  tp.dispose();
+  canvas.restore();
+  canvas.restore();
+}
+
+/// Whether [context]'s box stands in the middle of the screen sideways. The
+/// mushaf's PageView builds the next page before it is turned to; a plate
+/// shown there would spend its seconds off screen.
+bool _onScreenSideways(BuildContext context) {
+  final ro = context.findRenderObject();
+  if (ro is! RenderBox || !ro.hasSize || !ro.attached) return false;
+  final x = ro.localToGlobal(ro.size.center(Offset.zero)).dx;
+  final w = MediaQuery.sizeOf(context).width;
+  return x > w * 0.25 && x < w * 0.75;
 }
