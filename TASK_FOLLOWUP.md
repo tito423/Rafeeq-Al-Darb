@@ -4,18 +4,13 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — Android batch of six owner requests (2026-11-13): DONE, RELEASED v4.4.0
+## Current task — owner batch (a)-(f) + release: DONE, RELEASED v4.5.0
 
-Seen on emulator-5554 (API 24, Arabic): (1) mushaf quarter plate = narrow
-strip in the gap under the «۞» line at the page edge, text full width, fades
-in on first view / out after 2 s, tap «۞» shows it again - text mode AND
-printed madinah_qc (the page image has only the in-line ornament, no plate);
-(2) tasbeeh reset-counter button + vibration tap (vibrate call NOT felt:
-emulator has no vibrator); (3) adhkar last card centred (portrait; landscape
-3x3 needs nothing); (4) heads-up adhan now SOUNDS (native MediaPlayer started,
-alarm stream) - was silent by design; (5)+(6) khatma reminder pills + 12-hour
-ص/م in pills, picker and menu subtitle. Not seen: non-Arabic languages, real
-phone, printed plate on landscape. Printed strip fixed (upright in left margin) and released as v4.4.0 (owner's word 2026-11-13).
+v4.5.0 (versionCode 122) published 2026-11-13 on the owner's word «انشر»; tag
+17acb716 = master. Seen on emulator-5554 API 24 before release: landscape
+reading layout, dark plate/home/sunan/share, English Display row + share
+sheet; fixed + seen: share «آية ٥٥» (was clock-like «٥:٥٥»), «Juz ٦» pill.
+Details: HANDOVER row «RELEASED v4.5.0».
 
 ## Windows GPU (windows-gpu session)
 
@@ -30,18 +25,17 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Owner batch 2026-11-13 (a)-(f): DONE and seen on emulator-5554 API 24
-Arabic (HANDOVER row ~14:00): plate medallion (text + printed), sunan card,
-share sheet 8 colours x 5 frames + i'rab quotes in Hafs, landscape one-row
-chrome (text + printed), tablet 1600x2560/320 both ways. analyze clean,
-1474 tests passed. NOT seen: reading (continuous) layout sideways, dark
-theme, other languages, real phone. NO release until the owner says so.
+No open owner request. Unverified: fr/es/pt/ru/ur, real phone, printed
+plate in landscape. Possible polish (not asked): reading layout badges
+float over scrolling text. NO release until the owner says so.
 Emulator rotation: set BOTH `accelerometer_rotation 0` and `user_rotation`.
+Emulator lags: a screenshot can be stale, so a tap can land on a moved
+button (two khatma wirds got marked this way, test data 14->16).
 
 ## Standing owner orders (still open)
 
-- NO release without the owner's word. Last published: v4.4.0
-  (2026-11-13, versionCode 121).
+- NO release without the owner's word. Last published: v4.5.0
+  (2026-11-13, versionCode 122).
 - `scripts/own_irab/SPECIALIST_SAMPLE.csv`: 300 words for a human grammarian;
   the app may not call the i'rab «معتمد» before that result.
 - Hourly autorun `own-irab-autorun` stays DISABLED.
@@ -57,7 +51,7 @@ Emulator rotation: set BOTH `accelerometer_rotation 0` and `user_rotation`.
   a device.
 - Adhan retry fix: API 36 only. Per-ABI APKs: ARM phone pending.
 - «إشعار منبثق فقط» heads-up not seen on Android 8+.
-- Emulator Rafeeq_Audit_API24 left in ENGLISH UI, card mode «elapsed».
+- Emulator Rafeeq_Audit_API24 left in ENGLISH UI, DARK theme, card mode «elapsed».
 
 ## Log (newest first)
 
