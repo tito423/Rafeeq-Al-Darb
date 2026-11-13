@@ -2947,5 +2947,21 @@
     "mabni": "indeclinable (mabnī)",
     "hidden": "pronombre implícito",
     "positional": "por posición"
+  },
+  "quran_hub": {
+    "title": "El Sagrado Corán",
+    "open_mushaf": "Abrir el Mushaf",
+    "open_mushaf_sub": "Sigue leyendo donde lo dejaste, con la escritura que elijas",
+    "khatma_sub": "Tu plan de jatma, porciones diarias y recordatorios",
+    "sciences_sub": "Tafsir, gramática y ciencias de cada aleya",
+    "section_read": "Lectura y jatma",
+    "section_learn": "Escuchar y aprender",
+    "section_surahs": "Suras con virtudes"
+  },
+  "prayer_hub": {
+    "today": "Horarios de oración de hoy",
+    "next": "Siguiente",
+    "location_sub": "La ciudad para la que se calculan los horarios",
+    "backgrounds_sub": "La imagen que aparece con el adhan"
   }
 }

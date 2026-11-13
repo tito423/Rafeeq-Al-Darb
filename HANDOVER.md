@@ -6,6 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
+| **UNRELEASED 2026-11-14 Quran + Prayer pages** | Owner: «صفحة جديدة للقرآن … أروح منها للختمة وأي حاجة تخصه … خلفية مسجد هادية … وكذلك قسم الصلاة». Quran tab = `QuranTab` (`quran_tab.dart`): `QuranHubScreen` over the kept-alive `QuranScreen` (IndexedStack, `quranHubShownProvider`). Hub on `MosquePageBackdrop` (new, Vakil mosque, theme wash 0.72-0.86): «افتح المصحف», continue-reading + khatma cards, khatma screen, Quran sciences, recitation player, tajweed, hifz, selected surahs + sunan. Mushaf comes forward on any `quranJumpRequestProvider` (khatma, continue reading, assistant) and while the tour runs; back or a second tap on the Quran tab returns to the hub; the mushaf acts off-screen under the hub (immersive + nav-bar hide gated). Prayer tab (`qibla_screen.dart`) on the Blue Mosque backdrop with new `PrayerHubSections` (today's six times, next one marked; adhan settings, adjustments, prayer location, adhan backgrounds); tour anchors kept. Also: `core/utils/system_bars.dart` - API 24 ignored edgeToEdge and the bars stayed hidden after leaving a full-screen mushaf. 7 languages (`quran_hub.*`, `prayer_hub.*`). Seen on API 24: hub portrait/landscape, ar + en, hub->mushaf->back, re-tap tab, khatma jump, Prayer portrait/landscape, bars restored. 1476 tests pass. NOT seen: the guided tour through the Quran chapter, dark theme, real phone. Not released. |
 | **UNRELEASED 2026-11-14 (after v4.6.0) medallion fixes** | Owner found two misses in v4.6.0: the quarter plate no longer showed by itself (I had made it tap-only - restored: `RubPlateOverlay` auto again in page/reading), and in the CARDS layout a tap on the medallion did nothing. Cards now carry the plate (`RubMarkedText` gets `rub`/`mt`/`page`, auto + tap). Root cause of the cards plate never drawing: `_PlatePainter` clamped y with lower > upper when the area (a 100 dp card) was between plate height and plate+rays, threw in paint - fixed (`<= half * 2`). Seen on API 24: page / cards / reading x (by itself, on tap), reading landscape by itself. 1476 tests pass. Not released. |
 | **RELEASED v4.6.0 2026-11-13** | https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v4.6.0 - APK https://github.com/tito423/Rafeeq-Al-Darb/releases/download/v4.6.0/RafeeqAlDarb-v4.6.0.apk 318,478,219 B, sha256 a5cd5a85...233dffbe = GitHub digest, range 206; tag 05f58765 = HEAD = origin/master at publish; versionCode 125; build_github_release.bat (ORT 1.28.2 arm64/armv7/x86_64 checked) with the trap-61 truststore. Contents: the owner's 11-item UI batch + follow-up (rows below). v4.5.2 + tag deleted; v3.87.0 and content-* kept. NOT seen: real phone, dark theme. |
 | **UNRELEASED 2026-11-13 follow-up** | Owner: «بلاش القلب الغامق» - the inline quarter medallion's navy heart is filled with the page's paper (`medallionHearts` radii). «غيّر فواصل الآيات … وخد بالك من محاذاة النص جواها» - the reading layout's plain gold disc is now a scalloped ring (12 lobes, paper centre, hairline inner ring, `paintScallopMarker` in `ayah_marker.dart`), gold number centred by its digits' body. Also fixed: a medallion at a line's START was not drawn (its enlarged box reached into the line above; neighbours are now judged on the next word's line). Seen on API 24 portrait (reading + page). 1476 tests pass. Not released. |
@@ -2592,9 +2593,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-11-14 00:23 — IN PROGRESS — resume here**
+**2026-11-14 00:46 — IN PROGRESS — resume here**
 
-Medallion fixes: plate shows by itself again, cards plate on tap and auto (painter clamp crash); Quran/Prayer hub task recorded
+Quran hub page and Prayer page on mosque backdrops, 7 languages, system bars restore on API 24; seen on API 24, 1476 tests pass
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

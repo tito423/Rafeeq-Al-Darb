@@ -15,10 +15,11 @@ import '../../../../core/services/manual_location.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/hero_surface.dart';
 import '../../../../core/utils/digits.dart';
+import '../../../../core/widgets/mosque_backdrop.dart' show MosquePhotos;
+import '../../../../core/widgets/mosque_page_backdrop.dart';
 import '../../../../core/widgets/two_pane_scroll.dart';
-import '../../../adhan/presentation/screens/adhan_settings_screen.dart';
-import '../../../adhan/presentation/screens/prayer_adjustments_screen.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
+import '../widgets/prayer_hub_sections.dart';
 
 /// P3‑16 — a real Qibla compass, the star feature of the new "الصلاة" tab.
 /// "روعه بصريا... باحترافية شديدة جدا" (owner: should look genuinely
@@ -195,29 +196,31 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     _screenActive =
         tabActive &&
         WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+    // One page for the prayer on a calm mosque photograph (owner,
+    // 2026-11-14): the compass, today's times and every prayer setting.
     return Scaffold(
-      appBar: AppBar(title: Text('nav.prayer'.tr())),
-      body: SafeArea(
-        // Sideways: the compass on one side, its settings on the other.
-        child: TwoPaneScroll(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          gap: 14,
-          start: [
-            TutorialAnchor(
-              id: TourAnchor.qiblaCompass,
-              child: _buildCompassCard(context),
-            ),
-          ],
-          end: [
-            const TutorialAnchor(
-              id: TourAnchor.adhanSettings,
-              child: _AdhanSettingsLink(),
-            ),
-            const TutorialAnchor(
-              id: TourAnchor.prayerAdjustments,
-              child: _PrayerAdjustmentsLink(),
-            ),
-          ],
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text('nav.prayer'.tr()),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: MosquePageBackdrop(
+        photo: MosquePhotos.blueMosque,
+        child: SafeArea(
+          // Sideways: the compass on one side, the rest on the other.
+          child: TwoPaneScroll(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            gap: 14,
+            start: [
+              TutorialAnchor(
+                id: TourAnchor.qiblaCompass,
+                child: _buildCompassCard(context),
+              ),
+            ],
+            end: const [PrayerHubSections()],
+          ),
         ),
       ),
     );
@@ -745,54 +748,4 @@ class _DialPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _DialPainter oldDelegate) =>
       oldDelegate.accent != accent;
-}
-
-/// Sits directly under the Adhan-settings card: everything that decides *when*
-/// a prayer is, as opposed to how it is announced.
-class _PrayerAdjustmentsLink extends StatelessWidget {
-  const _PrayerAdjustmentsLink();
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      child: ListTile(
-        leading: Icon(Icons.tune_rounded, color: goldText(context)),
-        title: Text('prayer.adjustments'.tr()),
-        subtitle: Text(
-          'prayer.adjustments_hint'.tr(),
-          style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => const PrayerAdjustmentsScreen(),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AdhanSettingsLink extends StatelessWidget {
-  const _AdhanSettingsLink();
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      child: ListTile(
-        leading: Icon(Icons.campaign_outlined, color: goldText(context)),
-        title: Text('prayer.adhan_settings'.tr()),
-        subtitle: Text(
-          'qibla.adhan_settings_hint'.tr(),
-          style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12),
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const AdhanSettingsScreen()),
-        ),
-      ),
-    );
-  }
 }

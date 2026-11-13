@@ -18,3 +18,9 @@ final quranFullScreenProvider = StateProvider<bool>((ref) => false);
 /// «العرض». The bar is laid over the page (`extendBody`), so showing it does
 /// not re-lay out the mushaf.
 final quranChromeShownProvider = StateProvider<bool>((ref) => false);
+
+/// The Quran tab shows its hub (`QuranHubScreen`) rather than the mushaf.
+/// Owner, 2026-11-14: «صفحة جديدة للقرآن يكون فيها كل حاجة تخصه». The
+/// mushaf stays alive under the hub, so while the hub is up it must act as
+/// if its tab were not on screen (immersive mode, the hidden nav bar).
+final quranHubShownProvider = StateProvider<bool>((ref) => true);

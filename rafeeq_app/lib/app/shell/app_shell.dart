@@ -28,7 +28,7 @@ import '../../features/qibla/presentation/screens/qibla_screen.dart';
 import '../../features/quran/data/mushaf_edition.dart';
 import '../../features/quran/data/mushaf_page_service.dart';
 import '../../features/quran/data/quran_fullscreen_provider.dart';
-import '../../features/quran/presentation/screens/quran_screen.dart';
+import '../../features/quran/presentation/screens/quran_tab.dart';
 import '../../features/quran_audio/data/quran_audio_library.dart';
 import '../../features/settings/data/focus_mode_provider.dart';
 import '../../features/settings/data/reader_name_provider.dart';
@@ -94,6 +94,16 @@ class _AppShellState extends ConsumerState<AppShell>
     // P3‑47: keep the active-tab signal in sync so kept-alive tabs (e.g. the
     // Qibla compass) can pause their sensor work when they aren't showing.
     ref.read(activeTabProvider.notifier).state = index;
+  }
+
+  /// A tap on a tab button. On the Quran tab while in the mushaf it goes
+  /// back to the tab's own page, the way a second tap on a tab returns to
+  /// its start in most apps.
+  void _onTabTapped(int index) {
+    if (index == AppTab.quran && _index == AppTab.quran) {
+      ref.read(quranHubShownProvider.notifier).state = true;
+    }
+    _goTo(index);
   }
 
   @override
@@ -275,7 +285,7 @@ class _AppShellState extends ConsumerState<AppShell>
     // what every one of these screens needs to stay in sync.
     final screens = [
       HomeScreen(onNavigate: (t) => _goTo(t, tab: t)),
-      const QuranScreen(),
+      const QuranTab(),
       const QiblaScreen(),
       const AzkarScreen(),
       const TasbeehScreen(),
@@ -305,8 +315,13 @@ class _AppShellState extends ConsumerState<AppShell>
     // with no bottom-nav button — reaches the screen at all.
     final shown = focus?.tab ?? _index;
 
+    // Not over the Quran hub: the mushaf under it keeps its full-screen
+    // flag, and the hub has the nav bar like any page.
     final fullScreen =
-        ref.watch(quranFullScreenProvider) && shown == AppTab.quran;
+        ref.watch(quranFullScreenProvider) &&
+        shown == AppTab.quran &&
+        (!ref.watch(quranHubShownProvider) ||
+            ref.watch(tutorialRunningProvider));
     // In full screen the tabs come back with the page's floating controls
     // (a page tap) — otherwise a reader who reopened the app onto a
     // full-screen mushaf had no way to any other tab. See
@@ -374,7 +389,8 @@ class _AppShellState extends ConsumerState<AppShell>
     // TV), or an expanded width (a large tablet upright, >= 840 dp). A
     // medium tablet held upright keeps the bottom bar - its height is not
     // short. Breakpoints: `ScreenClass`.
-    final sideways = (ScreenClass.wide(context) ||
+    final sideways =
+        (ScreenClass.wide(context) ||
             MediaQuery.sizeOf(context).width >= ScreenClass.expandedWidth) &&
         !fullScreen &&
         focus == null;
@@ -405,6 +421,11 @@ class _AppShellState extends ConsumerState<AppShell>
         }
         if (focus != null) {
           ref.read(focusModeProvider.notifier).leave();
+          return;
+        }
+        // In the mushaf, back is the way to the Quran tab's own page first.
+        if (_index == AppTab.quran && !ref.read(quranHubShownProvider)) {
+          ref.read(quranHubShownProvider.notifier).state = true;
           return;
         }
         setState(() => _index = AppTab.home);
@@ -438,7 +459,7 @@ class _AppShellState extends ConsumerState<AppShell>
                       SideTabs(
                         tabs: tabs,
                         selectedIndex: _index,
-                        onSelect: _goTo,
+                        onSelect: _onTabTapped,
                         selectedIcon: _PopIcon.new,
                       ),
                       const VerticalDivider(width: 1),
@@ -450,10 +471,8 @@ class _AppShellState extends ConsumerState<AppShell>
                       Expanded(
                         child: MediaQuery.removePadding(
                           context: context,
-                          removeLeft:
-                              Directionality.of(context).name == 'ltr',
-                          removeRight:
-                              Directionality.of(context).name == 'rtl',
+                          removeLeft: Directionality.of(context).name == 'ltr',
+                          removeRight: Directionality.of(context).name == 'rtl',
                           child: tabStack,
                         ),
                       ),
@@ -517,7 +536,7 @@ class _AppShellState extends ConsumerState<AppShell>
                         // تحت», 2026-10-19) and made the app-wide size on
                         // 2026-10-23 so the bar no longer jumps between tabs.
                         selectedIndex: _index,
-                        onDestinationSelected: _goTo,
+                        onDestinationSelected: _onTabTapped,
                         labelBehavior:
                             NavigationDestinationLabelBehavior.alwaysShow,
                         // «اعملي أنيميشن جميل في شكل … أيقونات الشريط الرئيسي السفلي».

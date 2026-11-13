@@ -10,6 +10,7 @@ import '../../../../app/shell/tab_request_provider.dart';
 import '../../../../core/db/models.dart';
 import '../../../../core/services/ayah_audio_service.dart';
 import '../../../../core/utils/stable_insets.dart';
+import '../../../../core/utils/system_bars.dart';
 import '../../../../core/widgets/error_retry.dart';
 import '../../../../core/widgets/recitation_failure_snackbar.dart';
 import '../../../downloads/data/reciters_provider.dart';
@@ -350,16 +351,23 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     final mode = on ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge;
     if (_appliedUiMode == mode) return;
     _appliedUiMode = mode;
-    SystemChrome.setEnabledSystemUIMode(mode);
+    on ? SystemChrome.setEnabledSystemUIMode(mode) : showSystemBars();
   }
 
   /// True while this tab is the one being shown.
-  bool get _isActiveTab => ref.read(activeTabProvider) == AppTab.quran;
+  bool get _isActiveTab =>
+      ref.read(activeTabProvider) == AppTab.quran && !_underHub;
+
+  /// The tab's own page is over the mushaf (`QuranTab`): act as off screen.
+  bool get _underHub =>
+      ref.read(quranHubShownProvider) && !ref.read(tutorialRunningProvider);
 
   /// Re-applies (or lifts) the immersive mode for the tab that is now on
   /// screen. Called from `build`'s `ref.listen`.
   void _syncImmersiveToTab(int tab) {
-    _applyImmersive(tab == AppTab.quran && _pageFillScreen && !_chromeVisible);
+    _applyImmersive(
+      tab == AppTab.quran && !_underHub && _pageFillScreen && !_chromeVisible,
+    );
   }
 
   /// Auto-scroll belongs to the reading layout only, and turning it on
@@ -552,7 +560,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // away while full-screen, and that the rest of the app is not left locked
     // to portrait by the image mushaf's lock.
     _appliedUiMode = null;
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    showSystemBars();
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     super.dispose();
   }
@@ -645,6 +653,10 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
     // The immersive mode is process-wide and follows the tab on screen. See
     // `_applyImmersive` for the flicker this was.
     ref.listen<int>(activeTabProvider, (_, tab) => _syncImmersiveToTab(tab));
+    ref.listen<bool>(
+      quranHubShownProvider,
+      (_, _) => _syncImmersiveToTab(ref.read(activeTabProvider)),
+    );
     // Auto-scroll is the reading layout's alone; choosing another layout
     // ends it.
     ref.listen<QuranTextLayout>(quranTextLayoutProvider, (_, layout) {

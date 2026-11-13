@@ -4,7 +4,7 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — Quran hub + Prayer hub pages (owner, 2026-11-14 ~00:00)
+## Current task — Quran hub + Prayer hub pages: DONE, seen on API 24, NOT released
 
 Owner: «عايزك تعمل صفحة جديدة للقرآن يكون فيها كل حاجة تخصه أقدر أروح منها
 للختمة وأي حاجة تخصه بشكل جميل وروعة بصفتك خبير، وكمان عايزك تحطلي للصفحة
@@ -34,11 +34,10 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Build the Quran hub and Prayer hub (Current task). Start by reading how
-`AppShell` hosts the tabs and who pushes into `QuranScreen`
-(grep `quranJumpProvider`, `AppTab.quran`, `TourAnchor`). Verify EVERY
-related path (memory: verify-every-related-path). No release without the
-owner's word.
+Hubs + medallion fixes done (HANDOVER top two rows), unreleased. Waiting for
+the owner's look / word for a release. Unseen: guided tour through the Quran
+chapter with the hub, dark theme, real phone. Emulator left Arabic, light,
+portrait, text layout «reading».
 
 ## Standing owner orders (still open)
 
@@ -63,6 +62,7 @@ owner's word.
 
 ## Log (newest first)
 
+- 2026-11-14 ~00:50 Quran hub + Prayer page on mosque backdrops, bars-restore fix for API 24; seen API 24 (ar/en, portrait/landscape, all jumps); 1476 tests; not released.
 - 2026-11-14 ~00:20 v4.6.0 misses fixed: plate auto again, cards plate (tap + auto; painter clamp crash); seen API 24 all layouts; not released. Next: Quran + Prayer hubs.
 - 2026-11-13 ~23:35 RELEASED v4.6.0 (tag 05f58765) on the owner's «طلع اصدار».
 - 2026-11-13 ~23:00 medallion heart filled with paper; reading-layout ayah separators = scalloped ring, number centred; line-start medallion fixed; seen API 24; 1476 tests; not released.
