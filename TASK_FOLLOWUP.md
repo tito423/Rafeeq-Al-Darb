@@ -4,13 +4,13 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — landscape check + release: DONE, RELEASED v4.5.1
+## Current task — owner's medallions on the text mushaf: DONE, unreleased
 
-v4.5.1 (versionCode 123) published 2026-11-13 on the owner's word; tag
-1e754c59 = master. In it: landscape mushaf without the tab bar over the
-page; landscape home labels (sunrise slide, quick-access grid) no longer
-cut/split. Seen on API 24 in fr/es/pt/ru/ur. Details: HANDOVER row
-«RELEASED v4.5.1».
+Owner (2026-11-13) sent four illuminated medallions for the TEXT mushaf's
+quarter/hizb plate. Cut into `assets/rub_medallions/`, drawn by
+`_MedallionPlate` in `rub_margin_mark.dart`; printed mushaf unchanged.
+Seen on API 24 (light/dark, portrait/landscape, ar/ur/ru). Last release
+v4.5.1 (tag 1e754c59) does NOT have them. Details: HANDOVER top row.
 
 ## Windows GPU (windows-gpu session)
 
@@ -53,6 +53,7 @@ API 24). Emulator lags: a screenshot can be stale.
 
 ## Log (newest first)
 
+- 2026-11-13 ~17:00 owner's medallions on the text mushaf: cut (Python), wired, seen on API 24; not released.
 - 2026-11-13 ~15:55 checked printed mushaf landscape + fr/es/pt/ru/ur (plate, Display row) on API 24: all right; fixed + seen landscape home labels (sunrise cut, quick-access mid-word split); RELEASED v4.5.1 (tag 1e754c59).
 - 2026-11-13 ~14:50 checked v4.5.0 myself on API 24: plate in English+dark (½ Hizb 12, illuminated, slides, leaves), landscape text mode fine; FIXED landscape full-screen mushaf: bottom tab bar floated over the page with the chrome (5 of 15 lines left) - now hidden when wide (`app_shell.dart`), seen. Unreleased. Still unseen: printed mode landscape, fr/es/pt/ru/ur, real phone. Emulator rotate: `adb emu rotate` (settings user_rotation did nothing on API 24).
 - 2026-11-13 ~12:00 rub' strip removed; printed-style plate centred over the page 3 s when the page is on screen (printed + text, seen API 24); analyze/test clean; NOT released (owner's word needed).

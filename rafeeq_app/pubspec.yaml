@@ -189,6 +189,7 @@ flutter:
     - assets/prayer_backgrounds/
     - assets/data/mushaf/
     - assets/mushaf_covers/
+    - assets/rub_medallions/
     - assets/data/catalogs/
     # The Hadeeth Encyclopaedia, all seven language packs, bundled (3.17.0).
     - assets/data/hadeethenc/

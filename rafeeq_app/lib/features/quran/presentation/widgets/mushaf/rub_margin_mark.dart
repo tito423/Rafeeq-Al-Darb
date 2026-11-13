@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/mushaf_theme.dart';
@@ -249,11 +252,14 @@ class RubPlateOverlayState extends ConsumerState<RubPlateOverlay>
         ? null
         : widget.marks.where((m) => m.$1 == current).firstOrNull?.$2;
     if (info == null) return const SizedBox.shrink();
+    final medallions = ref.watch(rubMedallionsProvider).valueOrNull;
     return IgnorePointer(
       child: CustomPaint(
         foregroundPainter: _PlatePainter(
           slide: slide,
           info: info,
+          medallions: medallions,
+          rtl: Directionality.of(context) == TextDirection.rtl,
           lineY: () {
             final p = _paragraph;
             return p == null ? null : _lineOf(p, current!)?.center.dy;
@@ -328,6 +334,9 @@ class PrintedRubPlateState extends ConsumerState<PrintedRubPlate>
 class _PlatePainter extends CustomPainter {
   final Animation<double> slide;
   final RubInfo info;
+  /// The owner's medallions (text mushaf only); null = the printed plate.
+  final List<ui.Image>? medallions;
+  final bool rtl;
   final double? Function() lineY;
   final Rect? Function() visible;
   final double edge;
@@ -338,6 +347,8 @@ class _PlatePainter extends CustomPainter {
   _PlatePainter({
     required this.slide,
     required this.info,
+    this.medallions,
+    this.rtl = true,
     required this.lineY,
     required this.visible,
     required this.edge,
@@ -353,8 +364,12 @@ class _PlatePainter extends CustomPainter {
     final y0 = lineY();
     if (y0 == null) return;
     final screenW = size.width + edge * 2;
-    final w = (screenW * 0.16).clamp(52.0, 80.0);
-    final plate = _PrintedPlate(info, w, mt, baseStyle);
+    final medal = medallions?[info.part];
+    final _Plate plate = medal == null
+        ? _PrintedPlate(info, (screenW * 0.16).clamp(52.0, 80.0), mt, baseStyle)
+        : _MedallionPlate(
+            info, (screenW * 0.30).clamp(96.0, 136.0), medal, rtl, baseStyle);
+    final w = plate.width;
     var area = Offset.zero & size;
     final within = visible();
     if (within != null && within.overlaps(area)) area = area.intersect(within);
@@ -381,14 +396,17 @@ class _PlatePainter extends CustomPainter {
   @override
   bool shouldRepaint(_PlatePainter old) =>
       old.info != info ||
+      old.medallions != medallions ||
+      old.rtl != rtl ||
       old.edge != edge ||
       old.right != right ||
       old.mt != mt;
 }
 
 /// The plate as printed, [width] wide, laid out once per paint.
-class _PrintedPlate {
+class _PrintedPlate implements _Plate {
   final RubInfo info;
+  @override
   final double width;
   final MushafTheme mt;
   final List<TextPainter> _lines = [];
@@ -432,6 +450,7 @@ class _PrintedPlate {
   }
 
   double get _body => _textHeight + width * 0.34;
+  @override
   double get height => _body + _dome + (_bothEnds ? _dome : 0);
 
   /// The lobed dome over [top], from x = -w to w, its finial at top - [d].
@@ -480,6 +499,7 @@ class _PrintedPlate {
       foot.transform(Matrix4.diagonal3Values(-1, 1, 1).storage);
 
   /// How far the blue rays stand out of the outline.
+  @override
   double get rays => width * 0.065;
 
   /// Lapis of the illuminated manuscripts; lighter on a dark page so it is
@@ -491,6 +511,7 @@ class _PrintedPlate {
   /// after the gilt marginal medallions of Ottoman and Timurid copies
   /// (gold ground, lapis rule, thin blue rays round the edge, a rosette and
   /// a finial): the same dome-over-base shape and the printed wording.
+  @override
   void paint(Canvas canvas, Offset centre) {
     canvas.save();
     canvas.translate(centre.dx, centre.dy);
@@ -620,6 +641,115 @@ class _PrintedPlate {
     canvas.restore();
   }
 
+  @override
+  void dispose() {
+    for (final tp in _lines) {
+      tp.dispose();
+    }
+  }
+}
+
+/// What [_PlatePainter] needs of a plate, drawn or image.
+abstract class _Plate {
+  double get width;
+  double get height;
+  double get rays;
+  void paint(Canvas canvas, Offset centre);
+  void dispose();
+}
+
+/// The owner's four medallions for the TEXT mushaf (owner, 2026-11-13:
+/// «تستخدمها في النصي بدل الموجودة»), indexed by [RubInfo.part]: 0 the
+/// eight-point star (a hizb or a juz opens), 1 the circle (quarter), 2 the
+/// flower (half), 3 the twelve-point star (three quarters). Cut from his
+/// sheet by `scripts/rub_medallions/build_rub_medallions.py`, centres
+/// emptied so the words are written here in the reader's language.
+final rubMedallionsProvider = FutureProvider<List<ui.Image>>((ref) async {
+  const names = ['hizb', 'quarter', 'half', 'three_quarters'];
+  return Future.wait(names.map((n) async {
+    final data = await rootBundle.load('assets/rub_medallions/$n.png');
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    return (await codec.getNextFrame()).image;
+  }));
+});
+
+/// A medallion [width] wide with two lines in its navy centre: the quarter
+/// word over «الحزب ١٢» (or «الحزب» / «١٢», «الجزء ٢» / «الحزب ٣»).
+class _MedallionPlate implements _Plate {
+  final RubInfo info;
+  @override
+  final double width;
+  final ui.Image image;
+  final List<TextPainter> _lines = [];
+  late final double _disc;
+
+  /// Centre-disc radius over the image side, per [RubInfo.part], as the
+  /// build script printed it.
+  static const _discs = [0.2065, 0.2329, 0.2170, 0.2031];
+  static const _gold = Color(0xFFF3D484);
+
+  _MedallionPlate(
+    this.info,
+    this.width,
+    this.image,
+    bool rtl,
+    TextStyle baseStyle,
+  ) {
+    _disc = width * _discs[info.part] * 2;
+    final m = info.marginLines;
+    final lines = m.length == 3 ? [m[0], '${m[1]} ${m[2]}'] : m;
+    for (var i = 0; i < lines.length; i++) {
+      _lines.add(
+        TextPainter(
+          text: TextSpan(
+            text: lines[i],
+            style: baseStyle.copyWith(
+              fontFamily: 'AmiriQuran',
+              letterSpacing: 0,
+              fontSize: _disc * (i == 0 ? 0.34 : 0.3),
+              height: 1.3,
+              fontWeight: FontWeight.w700,
+              color: _gold,
+              shadows: const [Shadow(blurRadius: 2, color: Color(0x99000000))],
+            ),
+          ),
+          textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
+          maxLines: 1,
+        )..layout(),
+      );
+    }
+  }
+
+  double _fit(TextPainter tp) => math.min(1, _disc * 0.84 / tp.width);
+
+  @override
+  double get height => width;
+
+  @override
+  double get rays => width * 0.02;
+
+  @override
+  void paint(Canvas canvas, Offset centre) {
+    canvas.drawImageRect(
+      image,
+      Offset.zero & Size(image.width.toDouble(), image.height.toDouble()),
+      Rect.fromCenter(center: centre, width: width, height: width),
+      Paint()..filterQuality = FilterQuality.medium,
+    );
+    final total = _lines.fold(0.0, (s, tp) => s + tp.height * _fit(tp));
+    var y = centre.dy - total / 2;
+    for (final tp in _lines) {
+      final s = _fit(tp);
+      canvas.save();
+      canvas.translate(centre.dx - tp.width * s / 2, y);
+      canvas.scale(s);
+      tp.paint(canvas, Offset.zero);
+      canvas.restore();
+      y += tp.height * s;
+    }
+  }
+
+  @override
   void dispose() {
     for (final tp in _lines) {
       tp.dispose();

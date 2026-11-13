@@ -1247,3 +1247,16 @@ report scripts/out/adhkar_verify.json):
   decision of 2026-10-02 (archive.org is slow), credited on Sources.
 - Turned away after transcription: Hassan Saleh, Muhammad Jibreel (morning
   and evening could not be told apart), Yahya Hawwa (incomplete morning).
+
+## 2026-11-13 — quarter / hizb medallions on the text mushaf
+
+`rafeeq_app/assets/rub_medallions/{quarter,half,three_quarters,hizb}.png`
+(384 px, 178-238 KB each) are cut from one image the owner sent in chat on
+2026-11-13 and asked for on the text mushaf («تستخدمها في النصي بدل
+الموجودة»). The sheet is kept as supplied at
+`scripts/rub_medallions/owner_source_2026-11-13.jpg` (2752x1536); the cut is
+`scripts/rub_medallions/build_rub_medallions.py`. Only the four large
+medallions of its top row are used; the background is made transparent and
+the centre's baked-in Arabic words are painted over in the centre's own navy,
+because the app writes the words in the reader's language. The ornament
+itself is not redrawn. The sheet names no artist; the app claims none.
