@@ -4,7 +4,7 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — owner's 11-item UI batch: DONE in code, seen on API 24, NOT released
+## Current task — owner's 11-item UI batch: DONE, RELEASED v4.6.0
 
 Shots (owner's phone, mostly LANDSCAPE, dark theme): `docs/owner_shots/2026-11-13_batch/01..12.jpg`.
 Owner's words are in the session log; items (his numbering):
@@ -32,15 +32,15 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Batch done (HANDOVER top row). Waiting for the owner: his look on a real
-phone, and his word for a release. Unseen: real phone, dark theme for the
-medallions, the Shamela/Dorar strip collapsing (debug build hides it), a
-tablet AVD. Emulator: `adb emu rotate` to rotate; screenshots via Bash.
+No open owner request. v4.6.0 out (HANDOVER top row). Waiting for the
+owner's look on his phone. Unseen: real phone, dark theme for the
+medallions/separators, the Shamela/Dorar strip collapsing, a tablet AVD.
+Emulator: `adb emu rotate`; screenshots via Bash.
 
 ## Standing owner orders (still open)
 
-- NO release without the owner's word. Last published: v4.5.2
-  (2026-11-13, versionCode 124).
+- NO release without the owner's word. Last published: v4.6.0
+  (2026-11-13, versionCode 125).
 - `scripts/own_irab/SPECIALIST_SAMPLE.csv`: 300 words for a human grammarian;
   the app may not call the i'rab «معتمد» before that result.
 - Hourly autorun `own-irab-autorun` stays DISABLED.
@@ -60,6 +60,7 @@ tablet AVD. Emulator: `adb emu rotate` to rotate; screenshots via Bash.
 
 ## Log (newest first)
 
+- 2026-11-13 ~23:35 RELEASED v4.6.0 (tag 05f58765) on the owner's «طلع اصدار».
 - 2026-11-13 ~23:00 medallion heart filled with paper; reading-layout ayah separators = scalloped ring, number centred; line-start medallion fixed; seen API 24; 1476 tests; not released.
 - 2026-11-13 ~22:50 11-item batch done: tasbeeh reset, adhkar row scrolls, library strips collapse on phones, sideways prayer card hugs content, sunan names, More groups as pages, inline medallion per text layout + plate on tap; seen API 24; 1476 tests; not released.
 - 2026-11-13 ~21:50 owner sent 11-item UI batch (shots in docs/owner_shots/2026-11-13_batch); recorded; handed to a fresh session (context 180k).
