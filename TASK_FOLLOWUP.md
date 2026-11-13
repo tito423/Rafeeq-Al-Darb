@@ -4,7 +4,7 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — Quran hub + Prayer hub pages: DONE, seen on API 24, NOT released
+## Current task — Quran hub + Prayer hub pages: DONE, RELEASED v4.7.0
 
 Owner: «عايزك تعمل صفحة جديدة للقرآن يكون فيها كل حاجة تخصه أقدر أروح منها
 للختمة وأي حاجة تخصه بشكل جميل وروعة بصفتك خبير، وكمان عايزك تحطلي للصفحة
@@ -34,15 +34,14 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Hubs + medallion fixes done (HANDOVER top two rows), unreleased. Waiting for
-the owner's look / word for a release. Unseen: guided tour through the Quran
-chapter with the hub, dark theme, real phone. Emulator left Arabic, light,
-portrait, text layout «reading».
+No open owner request. v4.7.0 out (HANDOVER top row). Waiting for the
+owner's look on his phone. Unseen: real phone, the detailed tour walked
+through. Emulator left Arabic, light, portrait, layout «reading».
 
 ## Standing owner orders (still open)
 
-- NO release without the owner's word. Last published: v4.6.0
-  (2026-11-13, versionCode 125).
+- NO release without the owner's word. Last published: v4.7.0
+  (2026-11-14, versionCode 126).
 - `scripts/own_irab/SPECIALIST_SAMPLE.csv`: 300 words for a human grammarian;
   the app may not call the i'rab «معتمد» before that result.
 - Hourly autorun `own-irab-autorun` stays DISABLED.
@@ -62,6 +61,7 @@ portrait, text layout «reading».
 
 ## Log (newest first)
 
+- 2026-11-14 ~01:20 tested dark theme + quick tour on API 24, then RELEASED v4.7.0 (tag 28bbb8aa) on the owner's «جرب وبعدين ابني. انشر».
 - 2026-11-14 ~00:50 Quran hub + Prayer page on mosque backdrops, bars-restore fix for API 24; seen API 24 (ar/en, portrait/landscape, all jumps); 1476 tests; not released.
 - 2026-11-14 ~00:20 v4.6.0 misses fixed: plate auto again, cards plate (tap + auto; painter clamp crash); seen API 24 all layouts; not released. Next: Quran + Prayer hubs.
 - 2026-11-13 ~23:35 RELEASED v4.6.0 (tag 05f58765) on the owner's «طلع اصدار».
