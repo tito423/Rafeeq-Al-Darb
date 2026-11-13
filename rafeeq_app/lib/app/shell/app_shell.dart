@@ -467,7 +467,13 @@ class _AppShellState extends ConsumerState<AppShell>
             // fixed 68px height. Pinning the text scale stops a device font-size
             // setting from making that worse, and is the only part of this that a
             // user setting could otherwise break.
-            bottomNavigationBar: (fullScreen && !navOverPage) || sideways
+            // Sideways and full screen (the mushaf), the bar no longer floats
+            // over the page with the chrome: with the top row it left ~5 of
+            // 15 lines (owner, 2026-11-13, «الشرايط اللي فوق وتحت واكلة
+            // الشاشة»; seen on API 24 at 1920x1080). Back still goes home.
+            bottomNavigationBar:
+                (fullScreen && (!navOverPage || ScreenClass.wide(context))) ||
+                    sideways
                 ? null
                 : focus != null
                 ? const _FocusModeBar()
