@@ -30,25 +30,13 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Owner batch 2026-11-13 noon, side session (uncommitted edits checkpointed
-~13:40; analyze clean, 1474 tests passed before the last 3 small edits).
-SEEN on API 24: (a) plate slides in from the edge and re-shows on return;
-(b) sunan names 24 + outline, day text readable. (d) plate redrawn as an
-illuminated medallion (gold ground, lapis rule + rays, rosette, finial,
-paper panel, printed wording) - seen once: number spilled under the panel
-and rays too heavy -> FIXED in code (body +0.34w, text centred in panel,
-rays thinner), NOT yet rebuilt/seen. (e) 8 colours (swatches) + 5 frames
-(stars/interlace/arches/braid/plain), `share_frame.dart`, 7 langs, test
-`share_frame_painter_test` - NOT yet seen on device. (f) landscape: chrome
-is ONE row (surah · actions · juz), ChromeFit no longer shrinks a scrolling
-page (padding instead), bookmark caption fixed, badge margin 48 dp - text
-and printed seen in landscape before the last 3 fixes; reading layout,
-tablet (`wm size 1600x2560` + `wm density 320`) NOT seen.
-DO: rebuild x64 (alone - TRAPS #54), install, see plate, share sheet
-(i'rab card «…» in KFGQPCHafs = item c), landscape text/printed/reading,
-tablet both ways; flutter test; HANDOVER line; `.\cp.bat`. No release.
-Emulator rotation: set BOTH `accelerometer_rotation 0` and
-`user_rotation`; something resets the first to 1.
+Owner batch 2026-11-13 (a)-(f): DONE and seen on emulator-5554 API 24
+Arabic (HANDOVER row ~14:00): plate medallion (text + printed), sunan card,
+share sheet 8 colours x 5 frames + i'rab quotes in Hafs, landscape one-row
+chrome (text + printed), tablet 1600x2560/320 both ways. analyze clean,
+1474 tests passed. NOT seen: reading (continuous) layout sideways, dark
+theme, other languages, real phone. NO release until the owner says so.
+Emulator rotation: set BOTH `accelerometer_rotation 0` and `user_rotation`.
 
 ## Standing owner orders (still open)
 
@@ -73,6 +61,7 @@ Emulator rotation: set BOTH `accelerometer_rotation 0` and
 
 ## Log (newest first)
 
+- 2026-11-13 ~14:10 (a)-(f) seen on API 24 incl. tablet; committed, no release.
 - 2026-11-13 ~13:40 (d)(e)(f) coded, partly seen (see Next step); checkpoint, no release.
 - 2026-11-13 ~12:00 rub' strip removed; printed-style plate centred over the page 3 s when the page is on screen (printed + text, seen API 24); analyze/test clean; NOT released (owner's word needed).
 - 2026-11-13 ~01:45 v4.4.0 released: printed rub' strip moved into the left margin; English tasbeeh/adhkar seen; emulator back to Arabic + light theme.

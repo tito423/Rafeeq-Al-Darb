@@ -6,6 +6,7 @@ Cline, or any other).
 
 | | |
 |---|---|
+| **UPDATE 2026-11-13 ~14:00 (plate, share, landscape; unreleased)** | (d) rub' plate redrawn as an illuminated marginal medallion after Ottoman/Timurid gilt hizb marks: gold ground, lapis rule and rays, 8-petal rosette, finial, paper panel, printed wording kept (`_PrintedPlate` in `rub_margin_mark.dart`). (e) share card: 8 colours as swatches (+maroon, turquoise, ivory, sand, charcoal) x 5 frames (stars, interlace, arches, braid, plain) in `share_frame.dart`, 7 langs, `share_frame_painter_test`. (f) landscape mushaf: chrome is one row (surah, actions, juz) when landscape or < 500 dp tall; `ChromeFit(scrolls:)` pads a scrolling page instead of shrinking it to 55%; bookmark caption made compact; page badge margin 48 dp. Seen emulator-5554 API 24 Arabic: plate (portrait text), share sheet (i'rab card, quoted words in KFGQPCHafs = item c), maroon x 4 frames, landscape text + printed with/without chrome, tablet 1600x2560/320 both ways. Not seen: reading (continuous) layout sideways, printed plate in landscape, dark theme, other languages, real phone. |
 | **UPDATE 2026-11-13 ~12:00 (rub' plate, unreleased)** | Owner: strip between lines/in margin looked bad. Removed (`paintRubStrip` gone); now the printed Madinah plate (pointed head/foot, words stacked, opaque, shadow) is drawn centred on the page level with the «۞» line, kept inside the visible area, for 3 s (`rubPlateHold`), text + printed modes. Shows only when the page is really on screen: `Visibility.of` (IndexedStack hidden tab) and page centred sideways (PageView pre-builds the next page); again on every return; tap on «۞» re-shows. Seen on emulator-5554 API 24 Arabic: printed p.222 open + page turns, text p.117 open + turn back, gone after 3 s. Not seen: landscape, dark theme, other languages, real phone. |
 | **RELEASED v4.4.0 2026-11-13** | https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v4.4.0 - versionCode 121; build_github_release.bat, installed -r on Rafeeq_Audit_API24, version 4.4.0 seen. In it: rub'/hizb strip fading in the page margin (text + printed; on the PRINTED page it now stands upright in the ink-free left margin, >=4.37% of width on madinah_qc pages 22/221-223/227-229, seen portrait), tasbeeh reset + vibration tap, adhkar last card centred (seen English), heads-up adhan now sounds, khatma reminder chips, 12-hour ص/م. NOT seen: real phone, landscape strip, khatma in English, fr/es/pt/ru/ur, vibration felt. v4.3.0 + tag deleted; v3.87.0 and content-* kept. |
 | **RELEASED v4.3.0 2026-11-12** | https://github.com/tito423/Rafeeq-Al-Darb/releases/tag/v4.3.0 - tag 7630abac = master at publish; RafeeqAlDarb-v4.3.0.apk 317,335,030 B, range 206; versionCode 120; build_github_release.bat, installed -r on Rafeeq_Audit_API24. In it: prayer card holds 30 calculated days and rebuilds itself daily with the app closed (PrayerCardJob, seen after a +35-day clock jump); card + adhan follow the phone (LocationFollow, seen Dubai->Cairo); «location all the time» on the permissions page (7 languages); i'rab group B parts 5-7. analyze clean, 1472 tests. v4.2.0 + tag deleted; v3.87.0 and content-* kept. NOT seen: Android 10+ «Allow all the time» screen, a real phone. |
@@ -2583,9 +2584,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-11-13 13:13 — IN PROGRESS — resume here**
+**2026-11-13 13:25 — COMPLETE**
 
-Rub' plate as illuminated medallion, share card 8 colours x 5 frames (7 langs), landscape mushaf: one-row chrome, scrolling page padded not shrunk
+Owner batch (a)-(f) seen on API 24: plate number spacing, landscape badge margin, docs
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last

@@ -412,7 +412,8 @@ class _PrintedPlate {
               fontFamily: 'AmiriQuran',
               letterSpacing: 0,
               fontSize: size,
-              height: 1.15,
+              // The number stands clear of the long «ب» above it.
+              height: digits.hasMatch(lines[i]) ? 1.7 : 1.15,
               fontWeight: FontWeight.w600,
               color: mt.ink,
             ),
