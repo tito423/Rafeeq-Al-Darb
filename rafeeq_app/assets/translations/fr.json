@@ -998,7 +998,7 @@
     "every_hours": "Toutes les {} heures",
     "calc_method": "Méthode de calcul",
     "adjustments": "Réglage des horaires et de la date",
-    "adjustments_hint": "Méthode de calcul, correction manuelle de la date hégirienne et des horaires",
+    "adjustments_hint": "Lieu, méthode de calcul, correction manuelle de la date hégirienne et des horaires",
     "hijri_adjust": "Date hégirienne",
     "hijri_adjust_desc": "La date hégirienne dépend de l'observation de la lune et peut différer d'un jour du calcul. Ajustez-la à ce qui est annoncé chez vous.",
     "times_adjust": "Réglage des horaires de prière",
@@ -2952,16 +2952,8 @@
     "title": "Le Saint Coran",
     "open_mushaf": "Ouvrir le Mushaf",
     "open_mushaf_sub": "Reprenez là où vous vous êtes arrêté, dans l’écriture de votre choix",
-    "khatma_sub": "Votre plan de khatma, portions quotidiennes et rappels",
     "sciences_sub": "Tafsir, grammaire et sciences de chaque verset",
-    "section_read": "Lecture et khatma",
     "section_learn": "Écoute et apprentissage",
     "section_surahs": "Sourates aux mérites"
-  },
-  "prayer_hub": {
-    "today": "Horaires de prière du jour",
-    "next": "Prochaine",
-    "location_sub": "La ville pour laquelle les horaires sont calculés",
-    "backgrounds_sub": "L’image affichée avec l’adhan"
   }
 }

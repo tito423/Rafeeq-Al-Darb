@@ -698,3 +698,14 @@ DONE 2026-11-12 ~23:00 (step 3): «الموقع طوال الوقت» row on the
 - 2026-11-12 3e112254 group B part 3: 92 fixes applied after Opus read 94.
 - 2026-11-13 ~14:10 (a)-(f) seen on API 24 incl. tablet; committed, no release.
 - 2026-11-13 ~13:40 (d)(e)(f) coded, partly seen (see Next step); checkpoint, no release.
+
+- 2026-11-13 ~17:00 owner's medallions on the text mushaf: cut (Python), wired, seen on API 24; not released.
+- 2026-11-13 ~15:55 checked printed mushaf landscape + fr/es/pt/ru/ur (plate, Display row) on API 24: all right; fixed + seen landscape home labels (sunrise cut, quick-access mid-word split); RELEASED v4.5.1 (tag 1e754c59).
+- 2026-11-13 ~14:50 checked v4.5.0 myself on API 24: plate in English+dark (½ Hizb 12, illuminated, slides, leaves), landscape text mode fine; FIXED landscape full-screen mushaf: bottom tab bar floated over the page with the chrome (5 of 15 lines left) - now hidden when wide (`app_shell.dart`), seen. Unreleased. Still unseen: printed mode landscape, fr/es/pt/ru/ur, real phone. Emulator rotate: `adb emu rotate` (settings user_rotation did nothing on API 24).
+- 2026-11-13 ~12:00 rub' strip removed; printed-style plate centred over the page 3 s when the page is on screen (printed + text, seen API 24); analyze/test clean; NOT released (owner's word needed).
+- 2026-11-13 ~01:45 v4.4.0 released: printed rub' strip moved into the left margin; English tasbeeh/adhkar seen; emulator back to Arabic + light theme.
+- 2026-11-13 ~00:45 six-item Android batch done + seen (see Current task); analyze clean; commit pending release word.
+- 2026-11-12 ~23:30 token trim: .gitignore for scratch (git status 82 -> 0 lines), this file cut 126 -> 45 lines, cheap agents in `.claude/agents/`.
+- 2026-11-12 ~23:20 v4.3.0 released (card forever + LocationFollow + background-location permission).
+- 2026-11-12 ~21:15 6a8627eb card rebuilds itself daily (PrayerCardJob), seen +35 days.
+- 2026-11-12 ~20:10 i'rab group B closed (parts 5-7 seen on API-24).

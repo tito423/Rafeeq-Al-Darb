@@ -67,7 +67,7 @@ class TutorialEntryCard extends ConsumerWidget {
                       backgroundColor: accent,
                       foregroundColor: Colors.white,
                     ),
-                    onPressed: () => _start(ref, TutorialMode.quick),
+                    onPressed: () => _start(context, ref, TutorialMode.quick),
                     icon: const Icon(Icons.bolt_rounded, size: 18),
                     label: Text('tutorial.quick_tour'.tr()),
                   ),
@@ -75,7 +75,7 @@ class TutorialEntryCard extends ConsumerWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => _start(ref, TutorialMode.detailed),
+                    onPressed: () => _start(context, ref, TutorialMode.detailed),
                     icon: const Icon(Icons.list_alt_rounded, size: 18),
                     label: Text('tutorial.detailed_tour'.tr()),
                   ),
@@ -114,7 +114,11 @@ class TutorialEntryCard extends ConsumerWidget {
   }
 }
 
-void _start(WidgetRef ref, TutorialMode mode) {
+/// The card sits on a page pushed from More («الأدوات»), and the tour is
+/// drawn by the shell under it: back to the shell first, or the tour runs
+/// hidden behind that page until the reader presses back (2026-11-14).
+void _start(BuildContext context, WidgetRef ref, TutorialMode mode) {
+  Navigator.of(context).popUntil((r) => r.isFirst);
   ref.read(tutorialModeProvider.notifier).state = mode;
   ref.read(tutorialRunningProvider.notifier).state = true;
 }

@@ -998,7 +998,7 @@
     "every_minutes": "Every {} minutes",
     "every_hours": "Every {} hours",
     "adjustments": "Times & date adjustment",
-    "adjustments_hint": "Calculation method, and manual Hijri date and prayer time corrections",
+    "adjustments_hint": "Location, calculation method, and manual Hijri date and prayer time corrections",
     "hijri_adjust": "Hijri date",
     "hijri_adjust_desc": "The Hijri date is set by moon sighting and can differ by a day from any calculation. Adjust it to match what your locality announced.",
     "times_adjust": "Prayer time adjustment",
@@ -2952,16 +2952,8 @@
     "title": "The Holy Quran",
     "open_mushaf": "Open the Mushaf",
     "open_mushaf_sub": "Read on from where you stopped, in the script you choose",
-    "khatma_sub": "Your khatma plan, daily portions and reminders",
     "sciences_sub": "Tafsir, grammar and the sciences of each verse",
-    "section_read": "Reading and khatma",
     "section_learn": "Listening and learning",
     "section_surahs": "Surahs with a virtue"
-  },
-  "prayer_hub": {
-    "today": "Today's prayer times",
-    "next": "Next",
-    "location_sub": "The city the prayer times are calculated for",
-    "backgrounds_sub": "The picture shown with the adhan"
   }
 }

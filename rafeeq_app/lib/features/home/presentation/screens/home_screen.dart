@@ -21,13 +21,10 @@ import '../../../../core/widgets/remote_tap.dart';
 import '../../../../core/widgets/two_pane_scroll.dart';
 import '../../../adhan/data/prayer_adjustments_provider.dart';
 import '../../../hadith_daily/presentation/daily_hadith_card.dart';
-import '../../../khatma/presentation/khatma_card.dart';
+import '../../../khatma/presentation/khatma_card.dart' show HomeNavigate;
 import '../../../quotes/presentation/widgets/home_quote_card.dart';
-import '../../../quran/presentation/widgets/continue_reading_card.dart';
 import '../../../settings/data/reader_name_provider.dart';
 import '../../../settings/presentation/widgets/reader_name_sheet.dart';
-import '../../../sunan_suwar/presentation/selected_surahs_card.dart';
-import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../data/clock_settings_provider.dart';
 import '../../data/on_this_day_repository.dart';
@@ -132,7 +129,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // itself so it fits the height whole; the header card opens
                 // the other column instead.
                 if (!twoPane) const _HeaderCard(),
-                // The four cards the guided tour stops on, each wrapped so it
+                // The cards the guided tour stops on, each wrapped so it
                 // can say where it is rather than describing it from a
                 // distance. TutorialAnchor costs one GlobalKey and nothing
                 // else - it does not rebuild and does not know the tour is
@@ -152,36 +149,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   photo: MosquePhotos.blueMosque,
                   child: WorshipQuickLinks(),
                 ),
-                // P3‑4: split out of KhatmaCard's own "اقرأ اليوم" nudge —
-                // the reference shows a "متابعة القراءة" bookmark-style card
-                // ("where you left off") as its own thing, separate from the
-                // khatma daily-goal card below it. Renders nothing when
-                // there's no real last-read page yet (see its own doc).
-                const TutorialAnchor(
-                  id: TourAnchor.continueReading,
-                  child: MosqueBackdrop(
-                    photo: MosquePhotos.meknes,
-                    child: ContinueReadingCard(),
-                  ),
-                ),
-                const TutorialAnchor(
-                  id: TourAnchor.khatmaCard,
-                  child: MosqueBackdrop(
-                    photo: MosquePhotos.vakil,
-                    child: KhatmaCard(),
-                  ),
-                ),
-                const TutorialAnchor(
-                  id: TourAnchor.sunanCard,
-                  child: MosqueBackdrop(
-                    photo: MosquePhotos.alMuizz,
-                    child: SunanSuwarCard(),
-                  ),
-                ),
-                const MosqueBackdrop(
-                  photo: MosquePhotos.suleymaniye,
-                  child: SelectedSurahsCard(),
-                ),
+                // Home is the greeting, the prayers, the quick access and
+                // the day's quote and hadith, nothing else (owner,
+                // 2026-11-14): continue reading, the khatma and the surah
+                // cards live once, on the Quran tab's page.
                 // «حط كارت مقولة اليوم … في الشاشة الرئيسية فوق حديث
                 // اليوم». It draws nothing at all when the setting is off.
                 const TutorialAnchor(

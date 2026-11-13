@@ -9,11 +9,11 @@ import '../../../../core/widgets/mosque_page_backdrop.dart';
 import '../../../../core/widgets/paired_list_view.dart';
 import '../../../hifz/presentation/hifz_screen.dart';
 import '../../../khatma/presentation/khatma_card.dart';
-import '../../../khatma/presentation/khatma_screen.dart';
 import '../../../quran_audio/presentation/quran_audio_screen.dart';
 import '../../../sunan_suwar/presentation/selected_surahs_card.dart';
 import '../../../sunan_suwar/presentation/sunan_suwar_card.dart';
 import '../../../tajweed/presentation/screens/tajweed_levels_screen.dart';
+import '../../../tutorial/data/tutorial_anchors.dart';
 import '../../data/quran_fullscreen_provider.dart';
 import '../widgets/continue_reading_card.dart';
 import 'sciences_pack_screen.dart';
@@ -24,7 +24,7 @@ import 'sciences_pack_screen.dart';
 /// هادية جميلة»).
 ///
 /// Top to bottom: the way into the mushaf (where the reader stopped, or
-/// simply open it), the khatma, then what is listened to and learned, then
+/// simply open it), the khatma, then what is read, listened to and learned, then
 /// the surahs with a virtue. Sideways the cards go two a row.
 class QuranHubScreen extends ConsumerWidget {
   const QuranHubScreen({super.key});
@@ -70,27 +70,19 @@ class QuranHubScreen extends ConsumerWidget {
                     ref.read(quranHubShownProvider.notifier).state = false,
               ),
               const SizedBox(height: 12),
+              // The khatma once only: its own card carries the progress and
+              // opens the khatma screen (owner, 2026-11-14: «ختمة متكررة»).
               const PairedColumn(
                 columnGap: 16,
                 equalHeights: false,
-                children: [ContinueReadingCard(), KhatmaCard()],
-              ),
-              heading('quran_hub.section_read'),
-              PairedColumn(
-                columnGap: 16,
                 children: [
-                  IslamicActionCard(
-                    icon: Icons.flag_outlined,
-                    title: 'khatma.title'.tr(),
-                    subtitle: 'quran_hub.khatma_sub'.tr(),
-                    onTap: () => _push(context, const KhatmaScreen()),
+                  TutorialAnchor(
+                    id: TourAnchor.continueReading,
+                    child: ContinueReadingCard(),
                   ),
-                  IslamicActionCard(
-                    icon: Icons.auto_stories_outlined,
-                    accent: AppColors.info,
-                    title: 'quran.sciences_pack'.tr(),
-                    subtitle: 'quran_hub.sciences_sub'.tr(),
-                    onTap: () => _push(context, const SciencesPackScreen()),
+                  TutorialAnchor(
+                    id: TourAnchor.khatmaCard,
+                    child: KhatmaCard(),
                   ),
                 ],
               ),
@@ -98,6 +90,13 @@ class QuranHubScreen extends ConsumerWidget {
               PairedColumn(
                 columnGap: 16,
                 children: [
+                  IslamicActionCard(
+                    icon: Icons.auto_stories_outlined,
+                    accent: AppColors.info,
+                    title: 'quran.sciences_pack'.tr(),
+                    subtitle: 'quran_hub.sciences_sub'.tr(),
+                    onTap: () => _push(context, const SciencesPackScreen()),
+                  ),
                   IslamicActionCard(
                     icon: Icons.library_music_outlined,
                     accent: AppColors.primarySoft,
@@ -125,7 +124,13 @@ class QuranHubScreen extends ConsumerWidget {
               const PairedColumn(
                 columnGap: 16,
                 equalHeights: false,
-                children: [SelectedSurahsCard(), SunanSuwarCard()],
+                children: [
+                  SelectedSurahsCard(),
+                  TutorialAnchor(
+                    id: TourAnchor.sunanCard,
+                    child: SunanSuwarCard(),
+                  ),
+                ],
               ),
             ],
           ),

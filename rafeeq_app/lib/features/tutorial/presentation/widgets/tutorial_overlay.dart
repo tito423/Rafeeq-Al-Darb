@@ -138,6 +138,9 @@ class _TutorialOverlayState extends ConsumerState<TutorialOverlay>
   /// Open chapter [i]'s tab, then measure its target once that tab has had a
   /// frame to lay itself out.
   void _enter(int i) {
+    // Before the tab switch, so a tab that shows one of two pages (the
+    // Quran tab's page or its mushaf) builds the right one at once.
+    ref.read(tutorialAnchorProvider.notifier).state = _chapters[i].anchor;
     widget.onGoToTab(_chapters[i].tab);
     // A stop about a pushed screen draws that screen under the tour; the
     // next stop takes it away. Rebuilt only when that changes.

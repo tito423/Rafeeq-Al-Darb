@@ -58,6 +58,11 @@ bool shouldAutoShowTutorial(WidgetRef ref) =>
 /// every way in sets it — the automatic first run, «تشغيل الآن» in المزيد.
 final tutorialRunningProvider = StateProvider<bool>((ref) => false);
 
+/// The `TourAnchor` id the tour is framing now, or null between stops
+/// and once it ends. `QuranTab` reads it to show the Quran page, not the
+/// mushaf, for the stops on that page's cards.
+final tutorialAnchorProvider = StateProvider<String?>((ref) => null);
+
 /// The single way out, wherever it is triggered from: the last chapter,
 /// «تخطّي», or the system back gesture that `AppShell` routes in. "Seen" is
 /// recorded however the reader leaves, because the question is "has this ever
@@ -65,6 +70,7 @@ final tutorialRunningProvider = StateProvider<bool>((ref) => false);
 void endTutorial(WidgetRef ref) {
   markTutorialSeen(ref.read(sharedPrefsProvider));
   ref.read(tutorialRunningProvider.notifier).state = false;
+  ref.read(tutorialAnchorProvider.notifier).state = null;
 }
 
 /// «ممكن تحط دليل تعامل مع التطبيق بحيث يبقى واحد سريع والتاني تفصيلي».

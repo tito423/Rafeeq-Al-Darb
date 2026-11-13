@@ -118,27 +118,6 @@ const tutorialChapters = <TutorialChapter>[
     anchor: TourAnchor.homeSlides,
   ),
   TutorialChapter(
-    'continue_reading',
-    AppTab.home,
-    Icons.bookmark_rounded,
-    AppColors.gold,
-    anchor: TourAnchor.continueReading,
-  ),
-  TutorialChapter(
-    'khatma',
-    AppTab.home,
-    Icons.auto_stories_rounded,
-    _libraryTeal,
-    anchor: TourAnchor.khatmaCard,
-  ),
-  TutorialChapter(
-    'sunan_card',
-    AppTab.home,
-    Icons.menu_book_rounded,
-    _azkarGreen,
-    anchor: TourAnchor.sunanCard,
-  ),
-  TutorialChapter(
     'quote_card',
     AppTab.home,
     Icons.auto_awesome_rounded,
@@ -156,6 +135,29 @@ const tutorialChapters = <TutorialChapter>[
   // ── Qur'an ──────────────────────────────────────────────────────────────
   // The five display options live in the «العرض» sheet: each stop opens the
   // sheet and frames its own option inside it.
+  // The Quran page's own cards come first, on the page itself (they
+  // left Home on 2026-11-14); `QuranTab` shows the page for these stops.
+  TutorialChapter(
+    'continue_reading',
+    AppTab.quran,
+    Icons.bookmark_rounded,
+    AppColors.gold,
+    anchor: TourAnchor.continueReading,
+  ),
+  TutorialChapter(
+    'khatma',
+    AppTab.quran,
+    Icons.auto_stories_rounded,
+    _libraryTeal,
+    anchor: TourAnchor.khatmaCard,
+  ),
+  TutorialChapter(
+    'sunan_card',
+    AppTab.quran,
+    Icons.menu_book_rounded,
+    _azkarGreen,
+    anchor: TourAnchor.sunanCard,
+  ),
   TutorialChapter(
     'quran_layout',
     AppTab.quran,

@@ -2594,9 +2594,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-11-14 01:20 — IN PROGRESS — resume here**
+**2026-11-14 03:37 — IN PROGRESS — resume here**
 
-docs: v4.7.0 released (tag 28bbb8aa), handover + followup
+Home/Quran/Prayer pages: remove repeated cards (owner 2026-11-14), tour stops follow the cards, tour no longer starts hidden behind the Tools page; seen API 24 portrait+landscape, 1476 tests
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
