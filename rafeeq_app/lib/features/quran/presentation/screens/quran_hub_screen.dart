@@ -58,81 +58,88 @@ class QuranHubScreen extends ConsumerWidget {
       body: MosquePageBackdrop(
         photo: MosquePhotos.vakil,
         child: SafeArea(
-          child: ListView(
+          // Built whole, not lazily: a ListView left the last card (the
+          // sunan surahs) unbuilt below the fold, so the guided tour found
+          // no anchor there and skipped its stop (2026-11-14 capture).
+          // The page is a dozen cards, so building them all costs nothing.
+          child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
-            children: [
-              // The way in: the mushaf itself, first and largest.
-              IslamicActionCard(
-                icon: Icons.menu_book_rounded,
-                title: 'quran_hub.open_mushaf'.tr(),
-                subtitle: 'quran_hub.open_mushaf_sub'.tr(),
-                onTap: () =>
-                    ref.read(quranHubShownProvider.notifier).state = false,
-              ),
-              const SizedBox(height: 12),
-              // The khatma once only: its own card carries the progress and
-              // opens the khatma screen (owner, 2026-11-14: «ختمة متكررة»).
-              const PairedColumn(
-                columnGap: 16,
-                equalHeights: false,
-                children: [
-                  TutorialAnchor(
-                    id: TourAnchor.continueReading,
-                    child: ContinueReadingCard(),
-                  ),
-                  TutorialAnchor(
-                    id: TourAnchor.khatmaCard,
-                    child: KhatmaCard(),
-                  ),
-                ],
-              ),
-              heading('quran_hub.section_learn'),
-              PairedColumn(
-                columnGap: 16,
-                children: [
-                  IslamicActionCard(
-                    icon: Icons.auto_stories_outlined,
-                    accent: AppColors.info,
-                    title: 'quran.sciences_pack'.tr(),
-                    subtitle: 'quran_hub.sciences_sub'.tr(),
-                    onTap: () => _push(context, const SciencesPackScreen()),
-                  ),
-                  IslamicActionCard(
-                    icon: Icons.library_music_outlined,
-                    accent: AppColors.primarySoft,
-                    title: 'quran_audio.title'.tr(),
-                    subtitle: 'quran_audio.subtitle'.tr(),
-                    onTap: () => _push(context, const QuranAudioScreen()),
-                  ),
-                  IslamicActionCard(
-                    icon: Icons.record_voice_over_outlined,
-                    accent: AppColors.primarySoft,
-                    title: 'tajweed.title'.tr(),
-                    subtitle: 'tajweed.card_subtitle'.tr(),
-                    onTap: () => _push(context, const TajweedLevelsScreen()),
-                  ),
-                  IslamicActionCard(
-                    icon: Icons.school_outlined,
-                    accent: AppColors.primarySoft,
-                    title: 'hifz.title'.tr(),
-                    subtitle: 'hifz.card_subtitle'.tr(),
-                    onTap: () => _push(context, const HifzScreen()),
-                  ),
-                ],
-              ),
-              heading('quran_hub.section_surahs'),
-              const PairedColumn(
-                columnGap: 16,
-                equalHeights: false,
-                children: [
-                  SelectedSurahsCard(),
-                  TutorialAnchor(
-                    id: TourAnchor.sunanCard,
-                    child: SunanSuwarCard(),
-                  ),
-                ],
-              ),
-            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // The way in: the mushaf itself, first and largest.
+                IslamicActionCard(
+                  icon: Icons.menu_book_rounded,
+                  title: 'quran_hub.open_mushaf'.tr(),
+                  subtitle: 'quran_hub.open_mushaf_sub'.tr(),
+                  onTap: () =>
+                      ref.read(quranHubShownProvider.notifier).state = false,
+                ),
+                const SizedBox(height: 12),
+                // The khatma once only: its own card carries the progress and
+                // opens the khatma screen (owner, 2026-11-14: «ختمة متكررة»).
+                const PairedColumn(
+                  columnGap: 16,
+                  equalHeights: false,
+                  children: [
+                    TutorialAnchor(
+                      id: TourAnchor.continueReading,
+                      child: ContinueReadingCard(),
+                    ),
+                    TutorialAnchor(
+                      id: TourAnchor.khatmaCard,
+                      child: KhatmaCard(),
+                    ),
+                  ],
+                ),
+                heading('quran_hub.section_learn'),
+                PairedColumn(
+                  columnGap: 16,
+                  children: [
+                    IslamicActionCard(
+                      icon: Icons.auto_stories_outlined,
+                      accent: AppColors.info,
+                      title: 'quran.sciences_pack'.tr(),
+                      subtitle: 'quran_hub.sciences_sub'.tr(),
+                      onTap: () => _push(context, const SciencesPackScreen()),
+                    ),
+                    IslamicActionCard(
+                      icon: Icons.library_music_outlined,
+                      accent: AppColors.primarySoft,
+                      title: 'quran_audio.title'.tr(),
+                      subtitle: 'quran_audio.subtitle'.tr(),
+                      onTap: () => _push(context, const QuranAudioScreen()),
+                    ),
+                    IslamicActionCard(
+                      icon: Icons.record_voice_over_outlined,
+                      accent: AppColors.primarySoft,
+                      title: 'tajweed.title'.tr(),
+                      subtitle: 'tajweed.card_subtitle'.tr(),
+                      onTap: () => _push(context, const TajweedLevelsScreen()),
+                    ),
+                    IslamicActionCard(
+                      icon: Icons.school_outlined,
+                      accent: AppColors.primarySoft,
+                      title: 'hifz.title'.tr(),
+                      subtitle: 'hifz.card_subtitle'.tr(),
+                      onTap: () => _push(context, const HifzScreen()),
+                    ),
+                  ],
+                ),
+                heading('quran_hub.section_surahs'),
+                const PairedColumn(
+                  columnGap: 16,
+                  equalHeights: false,
+                  children: [
+                    SelectedSurahsCard(),
+                    TutorialAnchor(
+                      id: TourAnchor.sunanCard,
+                      child: SunanSuwarCard(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

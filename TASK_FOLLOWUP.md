@@ -20,9 +20,10 @@ moved stops now on AppTab.quran; `tutorialAnchorProvider` makes QuranTab
 show its page for them (seen: stop 8 frames the khatma card there). Also
 fixed: tour started from «المزيد ← الأدوات» ran hidden behind that page.
 Unused keys prayer_hub.*, quran_hub.section_read/khatma_sub dropped.
-LEFT: the tour PHOTOS (assets/tour/<lang>/*.webp) still show the old Home
-and Prayer page -> retake with scripts/capture_tour.py (release capture
-build, kills a running emulator: trap 24).
+Tour PHOTOS retaken 2026-11-14 ~04:50 (capture_tour.py --fresh, 7 langs x
+42 = 294). The first run skipped sunan_card: the Quran page was a lazy
+ListView, the last card unbuilt below the fold, so the tour (users too)
+skipped that stop -> page is now SingleChildScrollView+Column; retaken.
 
 ## Windows GPU (windows-gpu session)
 
@@ -37,11 +38,8 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Retake the tour photos: build the capture APK (capture_tour.py header),
-sign, boot Rafeeq_Audit_API24, install, start the quick tour, run the
-script; check continue_reading/khatma/sunan_card/adhan_settings/
-prayer_adjustments pictures in ar+en; analyze/test; checkpoint. No release
-without the owner's word.
+Nothing pending in this task. Wait for the owner (release only on their
+word: the no-repeats change + new tour photos are unreleased).
 
 ## Standing owner orders (still open)
 
@@ -66,6 +64,7 @@ without the owner's word.
 
 ## Log (newest first)
 
+- 2026-11-14 ~04:55 tour photos retaken in 7 langs (294 pictures); Quran page built whole so the tour no longer skips the sunan card; looked at continue_reading/khatma/sunan_card/adhan_settings/prayer_adjustments ar+en; analyze clean, 1476 tests; NOT released.
 - 2026-11-14 ~03:40 repeats removed (Home/Quran/Prayer pages), tour stops moved + hidden-tour fix; seen API 24 portrait/landscape; analyze clean, 1476 tests; tour photos pending; NOT released.
 - 2026-11-14 ~01:20 tested dark theme + quick tour on API 24, then RELEASED v4.7.0 (tag 28bbb8aa) on the owner's «جرب وبعدين ابني. انشر».
 - 2026-11-14 ~00:50 Quran hub + Prayer page on mosque backdrops, bars-restore fix for API 24; seen API 24 (ar/en, portrait/landscape, all jumps); 1476 tests; not released.
