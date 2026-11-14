@@ -1,0 +1,28 @@
+  missing on everyayah: Menshawi_32kbps 112:2
+  missing on everyayah: Menshawi_32kbps 112:3
+
+=== fastconformer ===
+ours     clean    words 750: 685 (91.3%)  0.027 s/s   husary 97%  alafasy 91%  minshawi 95%  banna 95%  abdulbasit 94%  sudais 76%
+ours     lowpass  words 750: 728 (97.1%)  0.027 s/s   husary 97%  alafasy 98%  minshawi 98%  banna 94%  abdulbasit 98%  sudais 98%
+ours     band     words 750: 728 (97.1%)  0.027 s/s   husary 97%  alafasy 98%  minshawi 98%  banna 95%  abdulbasit 98%  sudais 97%
+heldout  clean    words 494: 468 (94.7%)  0.028 s/s   alalaqimy 95%  rifai 95%  menshawi32 93%  sahlyassin 95%
+heldout  lowpass  words 494: 470 (95.1%)  0.028 s/s   alalaqimy 98%  rifai 97%  menshawi32 92%  sahlyassin 94%
+heldout  band     words 494: 469 (94.9%)  0.028 s/s   alalaqimy 98%  rifai 95%  menshawi32 92%  sahlyassin 94%
+  hard: phone-like band (husary 18:1)          11/11
+  hard: phone-like band (banna 2:255)          48/50
+  hard: stopped after 12 s (husary 2:255)      9/50
+  hard: WRONG ayah: 112:1 against 18:1         1/11
+  hard: WRONG ayah: 67:1 against 2:255         1/50
+
+=== quran_small ===
+ours     clean    words 750: 743 (99.1%)  0.018 s/s   husary 100%  alafasy 100%  minshawi 100%  banna 94%  abdulbasit 100%  sudais 100%
+ours     lowpass  words 750: 743 (99.1%)  0.018 s/s   husary 100%  alafasy 100%  minshawi 100%  banna 94%  abdulbasit 100%  sudais 100%
+ours     band     words 750: 743 (99.1%)  0.018 s/s   husary 100%  alafasy 100%  minshawi 100%  banna 94%  abdulbasit 100%  sudais 100%
+heldout  clean    words 494: 491 (99.4%)  0.018 s/s   alalaqimy 100%  rifai 100%  menshawi32 97%  sahlyassin 100%
+heldout  lowpass  words 494: 491 (99.4%)  0.019 s/s   alalaqimy 100%  rifai 100%  menshawi32 97%  sahlyassin 100%
+heldout  band     words 494: 491 (99.4%)  0.018 s/s   alalaqimy 100%  rifai 100%  menshawi32 97%  sahlyassin 100%
+  hard: phone-like band (husary 18:1)          11/11
+  hard: phone-like band (banna 2:255)          50/50
+  hard: stopped after 12 s (husary 2:255)      7/50
+  hard: WRONG ayah: 112:1 against 18:1         1/11
+  hard: WRONG ayah: 67:1 against 2:255         1/50

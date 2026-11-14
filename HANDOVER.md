@@ -2596,9 +2596,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-11-14 06:08 — IN PROGRESS — resume here**
+**2026-11-14 06:49 — IN PROGRESS — resume here**
 
-docs: v4.8.0 released (tag 9aebff14), handover + followup
+tasmee model check: Abdou/quran-asr-small (MIT, 36 MB int8) vs current NVIDIA FastConformer on 4 reciters held out of its training: 99.4% vs 94.7% words, same on the phone band; not switched yet
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
