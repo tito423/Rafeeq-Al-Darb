@@ -31,8 +31,12 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Publish v4.9.0 (pubspec 4.9.0+128): build_github_release.bat, delete
-v4.8.0 release+tag, Arabic notes, tag SHA == HEAD, links to the owner.
+Publish v4.9.0: APK is BUILT and seen on API 24
+(rafeeq_app/build/app/outputs/flutter-apk/RafeeqAlDarb-v4.9.0.apk, sha
+bd5958ed…); the permission classifier refused `gh release delete v4.8.0` +
+`gh release create v4.9.0` (order relayed by another session). On the
+owner's word here: delete v4.8.0 (--cleanup-tag), create v4.9.0 --target
+master --notes-file docs/release_notes/v4.9.0.md, tag SHA == HEAD, links.
 
 ## Standing owner orders (still open)
 
@@ -57,6 +61,7 @@ v4.8.0 release+tag, Arabic notes, tag SHA == HEAD, links to the owner.
 
 ## Log (newest first)
 
+- 2026-11-14 ~14:55 v4.9.0 release APK built (Flutter 3.47.7 must be on PATH for the .bat - the first run took C:\Users\Asus\flutter 3.38.7 and failed), installed on API 24, works; publish refused by the permission classifier, waiting for the owner.
 - 2026-11-14 ~14:45 tasmee switched to quran-asr-small (owner «كمل وانشر»): R2 asr/quran_small_v1 + mirror + LICENSE, Sources/CONTENT-LICENSES, 7 langs; seen API 24 (download, decode 9/9, panel, Sources); analyze clean, 1495 tests; releasing v4.9.0.
 - 2026-11-14 ~06:50 owner asked for a better tasmee model: Abdou/quran-asr-small (MIT, int8 36 MB, sherpa zipformer-CTC) measured vs current NVIDIA FastConformer on 4 reciters held out of its training: 99.4% vs 94.7-95.1% words, phone band 99.4 vs 94.9; scripts/asr_quran_small_2026-11-14.txt. Not switched yet (needs owner's go).
 - 2026-11-14 ~06:10 RELEASED v4.8.0 (tag 9aebff14, versionCode 127) on the owner's «طلع اصدار»; v4.7.0 release+tag deleted; release APK seen on API 24 (4.8.0, Quran page, «ادعم التطبيق»); asset 318,236,555 B, range request 206.
