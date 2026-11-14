@@ -1329,6 +1329,7 @@
   },
   "about": {
     "src_fastconformer_ar": "Rafeeq’s «sharper Arabic hearing» model: NVIDIA’s Arabic FastConformer under CC BY 4.0, exported to ONNX (OpenVoiceOS) and quantised to int8 for sherpa-onnx (krut42); an optional download that runs on the device with no internet.",
+    "src_quran_asr_small": "The tasmee’ model: quran-asr-small by Abdou under MIT, a small Conformer-CTC trained on Quran recitation, quantised to int8 for sherpa-onnx; an optional download that runs on the device with no internet.",
     "src_adhkar_ayat": "The Qur’an in every dhikr, and Surahs As-Sajdah and Al-Mulk in the sleep adhkar, recited by Mishary Alafasy",
     "src_adhkar_tts": "The rest of every dhikr’s text in an AI-generated voice, each dhikr read once",
     "blurb": "Rafeeq Al-Darb is a complete Islamic app built on trustworthy sources that are freely available to developers. Every mushaf, every translation and every adhan recording was verified at its source before it was added, and every source is listed for you to check. The figures on this page are counted from the app’s own content as you open it — none of them is typed by hand.",

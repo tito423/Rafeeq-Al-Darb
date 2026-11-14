@@ -441,7 +441,7 @@ class _SurahRecitationPackTileState
   }
 }
 
-/// «نموذج التسميع»: the Quran-tuned whisper-tiny model, through
+/// «نموذج التسميع»: the Quran recogniser (quran-asr-small), through
 /// [TasmeeEngine.startDownload] - byte count and SHA-256 checked before it
 /// counts as installed. The state is the engine's, so this row and the
 /// tasmee panel show the same download.

@@ -180,11 +180,13 @@ void main() {
     expect(words.where((w) => !RegExp('[ء-ي]').hasMatch(w)), isEmpty);
   });
 
-  test('the recogniser is the Arabic FastConformer pack, sized and hashed', () {
-    // Measured to beat whisper-tiny on 750 words (tasmee_engine.dart).
-    expect(tasmeeDownloadBytes, RafeeqVoicePack.accurate.totalBytes);
-    expect(tasmeeDownloadBytes, 173888072 + 12858);
-    for (final f in RafeeqVoicePack.accurate.files) {
+  test('the recogniser is the quran-asr-small pack, sized and hashed', () {
+    // Measured to beat the FastConformer on held-out reciters
+    // (tasmee_engine.dart, 2026-11-14).
+    expect(tasmeeDownloadBytes, RafeeqVoicePack.tasmee.totalBytes);
+    expect(tasmeeDownloadBytes, 36081762 + 180);
+    for (final f in RafeeqVoicePack.tasmee.files) {
+      expect(f.url, contains('/asr/quran_small_v1/'));
       expect(f.sha256, hasLength(64));
       expect(f.url, startsWith('https://'));
     }

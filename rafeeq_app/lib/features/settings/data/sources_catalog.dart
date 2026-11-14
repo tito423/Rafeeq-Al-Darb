@@ -133,6 +133,14 @@ final sourceGroups = <(String, List<SourceEntry>)>[
         'https://huggingface.co/nvidia/stt_ar_fastconformer_hybrid_large_pcd_v1.0',
         'about.src_fastconformer_ar',
       ),
+      // The tasmee' recogniser (2026-11-14), MIT - the licence asks that
+      // the copyright notice travel with the model; it is on the model card
+      // this entry links to. See CONTENT-LICENSES.md.
+      const SourceEntry(
+        'quran-asr-small — Abdou (MIT)',
+        'https://huggingface.co/Abdou/quran-asr-small',
+        'about.src_quran_asr_small',
+      ),
       const SourceEntry(
         'Silero VAD',
         'https://github.com/snakers4/silero-vad',

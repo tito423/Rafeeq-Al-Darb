@@ -30,6 +30,16 @@ AR = os.path.join(SRC, "fastconformer_ar")
 AR_FILES = {
     f"asr/rafeeq_ar_v1/{n}": os.path.join(AR, n) for n in ("model.int8.onnx", "tokens.txt")
 }
+# The tasmee' recogniser (2026-11-14, owner: «كمل وانشر»): Abdou/quran-asr-small
+# (MIT), a 33M Conformer-CTC trained on Quran recitation, int8, loaded by
+# sherpa-onnx as a zipformer CTC model. 99.4% words against FastConformer's
+# 94.7% on four reciters held out of its training
+# (scripts/asr_quran_small_2026-11-14.txt).
+#     py -3 scripts/publish_rafeeq_voice_pack.py quran
+QURAN = os.path.join(SRC, "quran_asr_small")
+QURAN_FILES = {
+    f"asr/quran_small_v1/{n}": os.path.join(QURAN, n) for n in ("model.int8.onnx", "tokens.txt")
+}
 FILES = {
     "asr/rafeeq_v1/model.int8.onnx": os.path.join(OMNI, "model.int8.onnx"),
     "asr/rafeeq_v1/tokens.txt": os.path.join(OMNI, "tokens.txt"),
@@ -52,7 +62,7 @@ def main():
     r2 = r2_client()
     out = os.path.join(HERE, "out", "rafeeq_voice_pack")
     os.makedirs(out, exist_ok=True)
-    files = {"ar": AR_FILES}.get(
+    files = {"ar": AR_FILES, "quran": QURAN_FILES}.get(
         (sys.argv[1:] or [""])[0], FILES)
     for key, path in files.items():
         size = os.path.getsize(path)

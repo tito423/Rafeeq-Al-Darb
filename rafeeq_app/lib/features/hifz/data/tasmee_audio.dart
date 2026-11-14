@@ -33,6 +33,10 @@ Float32List wavSamples(Uint8List bytes) {
 /// `lowpass=f=3400`; this very formula gave 97.5 %. The high-pass, the
 /// volume and the 8 kHz round trip did not matter (90.9 / 92.0 / 97.2 -
 /// the round trip only because it low-passes too).
+///
+/// Kept for quran-asr-small (2026-11-14): it scored 99.4 % of the held-out
+/// words with and without this filter, so the filter costs it nothing and
+/// still keeps the phone band and a clean recording alike.
 Float32List lowPass3400(Float32List x) {
   const fc = 3400.0, fs = 16000.0, q = 0.7071;
   const w0 = 2 * math.pi * fc / fs;

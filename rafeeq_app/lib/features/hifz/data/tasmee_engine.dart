@@ -1,23 +1,27 @@
 /// «التسميع»: listening to a recitation and saying which words were missed.
 ///
-/// THE RECOGNISER (since 2026-09-30): NVIDIA's Arabic FastConformer CTC,
-/// int8, through sherpa-onnx - the same file as Rafeeq's «دقة أعلى في
-/// العربية» pack (`RafeeqVoicePack.accurate`), so it is downloaded once for
-/// both. It runs **on the device, offline**.
+/// THE RECOGNISER (since 2026-11-14): Abdou's quran-asr-small (MIT), a
+/// 33M-parameter Conformer-CTC trained on Quran recitation, int8, loaded by
+/// sherpa-onnx as a zipformer CTC model (`RafeeqVoicePack.tasmee`, 36 MB).
+/// It runs **on the device, offline**.
 ///
-/// WHY IT REPLACED tarteel whisper-tiny-ar-quran (whisper.cpp), measured on
-/// the same 750 words, six reciters (scripts/asr_candidates_2026-09-30.txt,
-/// fc_band_cause_2026-09-30.txt):
+/// WHY IT REPLACED NVIDIA's Arabic FastConformer (which «رفيق» still uses,
+/// as general Arabic), measured with the same audio and scoring
+/// (scripts/measure_asr_quran_small.py, asr_quran_small_2026-11-14.txt):
 ///
-///  * clean recordings: tiny 89.3 %, FastConformer 91.3 %, and 97.5 % after
-///    the 3.4 kHz low-pass `tasmee_audio.dart` applies (al-Minshawi 79 -> 98,
-///    as-Sudais 81 -> 98);
-///  * through a phone / Bluetooth-headset band: tiny 84.9 %, FastConformer
-///    97.1 %; al-Banna's 2:255 on that band: tiny 3/50, FastConformer 48/50 -
-///    the owner's «ميكروفون السماعة» case;
-///  * 6 times faster (0.025 s per second of audio against 0.156 on the PC);
+///  * four EveryAyah reciters its card names as held out of its training,
+///    494 words: 99.4 % clean, low-passed and through a phone band, against
+///    FastConformer's 94.7 / 95.1 / 94.9 %;
+///  * the six reciters the app was measured on (probably in its training):
+///    99.1 %, against 97.1 % low-passed;
+///  * al-Banna's 2:255 on the phone band: 50/50 (FastConformer 48/50);
+///  * faster (0.018 s per second of audio against 0.027 on the PC) and a
+///    fifth of the download (36 MB against 174 MB);
 ///  * a recitation stopped half-way and the wrong ayah still show up as a
-///    plain drop in matched words (9/50, 1/11, 1/50), as with tiny.
+///    plain drop in matched words, as before.
+///
+/// NOT measured: ordinary readers' voices (only professional reciters), and
+/// a real phone's microphone.
 ///
 ///  * **tajweed is not checked.** A wrong madd or a missed ghunnah is not a
 ///    wrong WORD, and nothing here would catch it. The screen must say so.
@@ -36,8 +40,8 @@ import '../../assistant/data/rafeeq_voice_pack.dart';
 import 'hifz_mask.dart';
 import 'tasmee_audio.dart';
 
-/// What the recogniser costs to download: the Arabic FastConformer pack.
-int get tasmeeDownloadBytes => RafeeqVoicePack.accurate.totalBytes;
+/// What the recogniser costs to download.
+int get tasmeeDownloadBytes => RafeeqVoicePack.tasmee.totalBytes;
 
 /// How long one recitation may run - a cap, so a forgotten «stop» does not
 /// fill the disk. Al-Baqarah 255 runs 60 s (48/50 words on the headset band).
@@ -68,7 +72,7 @@ class TasmeeEngine {
   TasmeeEngine._();
   static final TasmeeEngine instance = TasmeeEngine._();
 
-  final _pack = RafeeqVoicePack.accurate;
+  final _pack = RafeeqVoicePack.tasmee;
 
   /// The pack's own progress and state, so every button that offers the
   /// recogniser - here, the onboarding, the downloads panel, Rafeeq's
@@ -127,7 +131,7 @@ class TasmeeEngine {
   //
   // The worker is stopped by a message, never killed: the recogniser holds
   // the model in native memory that nothing frees but `free()` (sherpa_onnx
-  // 1.13.8 has no finalizer), and a killed isolate would leave ~170 MB
+  // 1.13.8 has no finalizer), and a killed isolate would leave the model (~40 MB)
   // behind on every recitation. The final decode after «stop» goes to the
   // same worker, so two copies of the model are never loaded at once.
 
@@ -141,24 +145,26 @@ class TasmeeEngine {
   bool get liveRunning => _liveSend != null;
 
   Future<void> startLive() => _liveStarting ??= () async {
-        if (!await isInstalled()) return;
-        final dir = (await _pack.dir()).path;
-        final recv = ReceivePort();
-        final ready = Completer<SendPort>();
-        final exited = ReceivePort();
-        recv.listen((m) {
-          if (m is SendPort) {
-            ready.complete(m);
-          } else if (m is (int, String)) {
-            _pending.remove(m.$1)?.complete(m.$2);
-          }
-        });
-        _liveRecv = recv;
-        await Isolate.spawn(_liveMain, (recv.sendPort, dir),
-            onExit: exited.sendPort);
-        unawaited(exited.first.then((_) => _liveGone(recv, exited)));
-        _liveSend = await ready.future;
-      }();
+    if (!await isInstalled()) return;
+    final dir = (await _pack.dir()).path;
+    final recv = ReceivePort();
+    final ready = Completer<SendPort>();
+    final exited = ReceivePort();
+    recv.listen((m) {
+      if (m is SendPort) {
+        ready.complete(m);
+      } else if (m is (int, String)) {
+        _pending.remove(m.$1)?.complete(m.$2);
+      }
+    });
+    _liveRecv = recv;
+    await Isolate.spawn(_liveMain, (
+      recv.sendPort,
+      dir,
+    ), onExit: exited.sendPort);
+    unawaited(exited.first.then((_) => _liveGone(recv, exited)));
+    _liveSend = await ready.future;
+  }();
 
   void _liveGone(ReceivePort recv, ReceivePort exited) {
     exited.close();
@@ -236,19 +242,23 @@ class TasmeeEngine {
     });
   }
 
-  static so.OfflineRecognizer _recognizer(String dir) =>
-      so.OfflineRecognizer(so.OfflineRecognizerConfig(
-        model: so.OfflineModelConfig(
-          nemoCtc: so.OfflineNemoEncDecCtcModelConfig(
-              model: p.join(dir, 'model.int8.onnx')),
-          tokens: p.join(dir, 'tokens.txt'),
-          numThreads: 2,
-          debug: false,
+  static so.OfflineRecognizer _recognizer(String dir) => so.OfflineRecognizer(
+    so.OfflineRecognizerConfig(
+      model: so.OfflineModelConfig(
+        zipformerCtc: so.OfflineZipformerCtcModelConfig(
+          model: p.join(dir, 'model.int8.onnx'),
         ),
-      ));
+        tokens: p.join(dir, 'tokens.txt'),
+        numThreads: 2,
+        debug: false,
+      ),
+    ),
+  );
 
   static so.OfflineRecognizerResult _run(
-      so.OfflineRecognizer rec, Float32List x) {
+    so.OfflineRecognizer rec,
+    Float32List x,
+  ) {
     final y = lowPass3400(x);
     // A quarter second of silence either side, as the measurement fed it.
     final padded = Float32List(y.length + 12000)..setAll(4000, y);

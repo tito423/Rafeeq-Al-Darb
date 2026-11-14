@@ -30,7 +30,8 @@ class ContentMirrors {
   /// domain), r2.dev stays in the chain as the next host after
   /// the domain — the same bucket by another road — so moving to the domain
   /// adds a source instead of swapping one.
-  static const r2DevBase = 'https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev';
+  static const r2DevBase =
+      'https://pub-39dbef68a1a845d5ba669b43a59516b9.r2.dev';
 
   static const Map<String, List<String>> githubReleases = {
     'content-mirror': [
@@ -44,6 +45,7 @@ class ContentMirrors {
       'asr/whisper-tiny-ar-quran/',
       'asr/rafeeq_v1/',
       'asr/rafeeq_ar_v1/',
+      'asr/quran_small_v1/',
       'tts/supertonic3_ar_v1/',
       'ruqyah/',
       'images/backgrounds/',
@@ -69,11 +71,14 @@ class ContentMirrors {
     // URL (their provenance) but copied to the bucket byte for byte by
     // scripts/mirror_background_images.py: the bucket and its mirrors
     // first, Unsplash itself last (audit 2026-09-24, C1).
-    final photo = RegExp(r'^https://images\.unsplash\.com/(photo-[0-9a-f-]+)')
-        .firstMatch(url);
+    final photo = RegExp(
+      r'^https://images\.unsplash\.com/(photo-[0-9a-f-]+)',
+    ).firstMatch(url);
     if (photo != null) {
       return [
-        ...of('${AppConfig.contentBaseUrl}/images/backgrounds/${photo.group(1)}.jpg'),
+        ...of(
+          '${AppConfig.contentBaseUrl}/images/backgrounds/${photo.group(1)}.jpg',
+        ),
         url,
       ];
     }

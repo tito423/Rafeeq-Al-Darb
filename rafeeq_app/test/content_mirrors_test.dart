@@ -9,7 +9,11 @@ import 'package:rafeeq_app/features/assistant/data/rafeeq_voice_pack.dart';
 /// same list: a folder the app believes mirrored but the script never
 /// uploads is a fallback that 404s exactly when it is needed.
 void main() {
-  for (final file in [...voicePackFiles, ...accuratePackFiles]) {
+  for (final file in [
+    ...voicePackFiles,
+    ...accuratePackFiles,
+    ...tasmeePackFiles,
+  ]) {
     test(
       'assistant pack ${file.folder}/${file.name} falls back when R2 fails',
       () async {

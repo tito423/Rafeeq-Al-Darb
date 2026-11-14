@@ -1329,6 +1329,7 @@
   },
   "about": {
     "src_fastconformer_ar": "El modelo «oído más fino en árabe» de Rafeeq: FastConformer árabe de NVIDIA bajo CC BY 4.0, exportado a ONNX (OpenVoiceOS) y cuantizado a int8 para sherpa-onnx (krut42); descarga opcional que funciona en el dispositivo sin internet.",
+    "src_quran_asr_small": "El modelo de recitación (tasmī‘): quran-asr-small de Abdou bajo licencia MIT, un Conformer-CTC pequeño entrenado con recitación del Corán, cuantizado a int8 para sherpa-onnx; descarga opcional que funciona en el dispositivo sin internet.",
     "src_adhkar_ayat": "El Corán en cada dhikr, y las suras As-Sajda y Al-Mulk en los adhkar antes de dormir, recitados por Mishary Alafasy",
     "src_adhkar_tts": "El resto del texto de cada dhikr con una voz generada por IA, cada dhikr leído una vez",
     "blurb": "Rafeeq Al-Darb es una aplicación islámica completa, construida sobre fuentes fiables y de libre acceso para desarrolladores. Cada mushaf, cada traducción y cada adhan se verificó en su fuente antes de añadirse, y todas las fuentes están indicadas. Las cifras de esta página se cuentan del propio contenido de la aplicación, no se escriben a mano.",

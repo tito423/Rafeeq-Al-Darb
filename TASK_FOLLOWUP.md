@@ -4,26 +4,19 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — no repeats: Home / Quran page / Prayer page (RELEASED v4.8.0)
+## Current task — tasmee' on quran-asr-small (v4.9.0)
 
-Owner 2026-11-14 ~03:00: «ختمة متكررة … مواقيت الصلاة وكمان موقع الصلاة
-متكرر … الرئيسية يبقى فيها مقولة اليوم وحديث اليوم والوصول السريع وكارت
-الصلوات والترحيب … وكمّل اللي ناقص وانتبه للتدوير والأورينتيشن».
-Done + seen API 24 portrait/landscape: Home = greeting, prayer card, quick
-access, quote, hadith (continue reading, khatma, sunan, selected surahs
-moved off — they are on the Quran page). Quran page: the second «ختمة»
-action card removed (KhatmaCard stays), sciences pack joined
-«الاستماع والتعلّم». Prayer page: today's times card (Home has it), the
-location card (first row of «ضبط المواقيت»; hint now says so, 7 langs) and
-the adhan-pictures card (inside adhan settings) removed. Tour: the three
-moved stops now on AppTab.quran; `tutorialAnchorProvider` makes QuranTab
-show its page for them (seen: stop 8 frames the khatma card there). Also
-fixed: tour started from «المزيد ← الأدوات» ran hidden behind that page.
-Unused keys prayer_hub.*, quran_hub.section_read/khatma_sub dropped.
-Tour PHOTOS retaken 2026-11-14 ~04:50 (capture_tour.py --fresh, 7 langs x
-42 = 294). The first run skipped sunan_card: the Quran page was a lazy
-ListView, the last card unbuilt below the fold, so the tour (users too)
-skipped that stop -> page is now SingleChildScrollView+Column; retaken.
+Owner 2026-11-14 «كمل وانشر» (relayed by the parent session) after the
+model check: tasmee' now uses Abdou/quran-asr-small (MIT, 36 MB int8,
+sherpa zipformer-CTC) from R2 `asr/quran_small_v1/` (+ content-mirror,
+LICENSE.txt beside it; all range-checked 206, sha matches). «رفيق» keeps
+the FastConformer. Sources entry + CONTENT-LICENSES, 7 languages.
+test/tasmee_quran_small_test.dart = real model output (4 held-out
+reciters, phone band) through the Dart compare: all >= 90%, wrong ayah
+< 35%. Seen API 24: integration_test/tasmee_quran_small_test.dart (R2
+download 24 s, 0.5-0.7 s a decode, 67:1 9/9, live path too), downloads
+row «36.1 MB» then ✓, tasmee panel start/stop (emulator has no mic: 0/4),
+Sources entry. NOT seen: a real phone microphone, ordinary readers.
 
 ## Windows GPU (windows-gpu session)
 
@@ -38,8 +31,8 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Nothing pending. v4.8.0 published 2026-11-14 (tag 9aebff14). Wait for the
-owner's next order.
+Publish v4.9.0 (pubspec 4.9.0+128): build_github_release.bat, delete
+v4.8.0 release+tag, Arabic notes, tag SHA == HEAD, links to the owner.
 
 ## Standing owner orders (still open)
 
@@ -64,6 +57,7 @@ owner's next order.
 
 ## Log (newest first)
 
+- 2026-11-14 ~14:45 tasmee switched to quran-asr-small (owner «كمل وانشر»): R2 asr/quran_small_v1 + mirror + LICENSE, Sources/CONTENT-LICENSES, 7 langs; seen API 24 (download, decode 9/9, panel, Sources); analyze clean, 1495 tests; releasing v4.9.0.
 - 2026-11-14 ~06:50 owner asked for a better tasmee model: Abdou/quran-asr-small (MIT, int8 36 MB, sherpa zipformer-CTC) measured vs current NVIDIA FastConformer on 4 reciters held out of its training: 99.4% vs 94.7-95.1% words, phone band 99.4 vs 94.9; scripts/asr_quran_small_2026-11-14.txt. Not switched yet (needs owner's go).
 - 2026-11-14 ~06:10 RELEASED v4.8.0 (tag 9aebff14, versionCode 127) on the owner's «طلع اصدار»; v4.7.0 release+tag deleted; release APK seen on API 24 (4.8.0, Quran page, «ادعم التطبيق»); asset 318,236,555 B, range request 206.
 - 2026-11-14 ~04:55 tour photos retaken in 7 langs (294 pictures); Quran page built whole so the tour no longer skips the sunan card; looked at continue_reading/khatma/sunan_card/adhan_settings/prayer_adjustments ar+en; analyze clean, 1476 tests; NOT released.

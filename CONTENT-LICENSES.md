@@ -1165,6 +1165,17 @@ R2 `asr/rafeeq_ar_v1/` + content-mirror, optional download. Attribution on
 the Sources screen with a link to NVIDIA's card, as CC BY requires.
 whisper-turbo (MIT) was tried the same day and withdrawn for speed; its
 hosted copies were deleted.
+Since 2026-11-14 the tasmee' no longer uses this model (below); «رفيق» does.
+
+**نموذج التسميع — Abdou/quran-asr-small, MIT («Copyright (c) 2026 Abdou»).**
+huggingface.co/Abdou/quran-asr-small (card and LICENSE read 2026-11-14, repo
+last modified 2026-11-13): a 33M Conformer-CTC trained on Quran recitation
+(card's datasets: tarteel-ai/tlog, IqraEval/Iqra_train; paper DOI
+10.5281/zenodo.23761691). Its own `model.int8.onnx` (36,081,762 B, sha256
+88f9df29…) and `tokens.txt`, unmodified, hosted on R2 `asr/quran_small_v1/`
++ content-mirror, with the licence text beside them as `LICENSE.txt`, as MIT
+requires. Optional download. Credited on the Sources screen with a link to
+the card.
 
 ## Kids corner — prophet stories (videos), recorded 2026-10-01
 

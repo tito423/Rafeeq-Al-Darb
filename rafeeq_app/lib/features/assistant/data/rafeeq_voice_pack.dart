@@ -14,8 +14,12 @@ import 'voice_pack_http.dart';
 
 /// One file of «رفيق»'s voice pack, as it is on the bucket.
 class VoicePackFile {
-  const VoicePackFile(this.name, this.bytes, this.sha256,
-      {this.folder = 'rafeeq_v1'});
+  const VoicePackFile(
+    this.name,
+    this.bytes,
+    this.sha256, {
+    this.folder = 'rafeeq_v1',
+  });
   final String name;
   final int bytes;
   final String sha256;
@@ -33,12 +37,21 @@ class VoicePackFile {
 /// scripts/publish_rafeeq_voice_pack.py; every file range-checked 206 on R2
 /// and on the content-mirror release.
 const voicePackFiles = <VoicePackFile>[
-  VoicePackFile('model.int8.onnx', 365841453,
-      'e3042b2f3b3ef0af2211bf99d2b4bf94a21f5ac0e9898827e7dd6d003a860e91'),
-  VoicePackFile('tokens.txt', 90630,
-      '7d99997ef207ff14c2cfe825f2aa037528ea250113cc3c6392bfe49326884ba6'),
-  VoicePackFile('silero_vad.onnx', 2313101,
-      '6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396'),
+  VoicePackFile(
+    'model.int8.onnx',
+    365841453,
+    'e3042b2f3b3ef0af2211bf99d2b4bf94a21f5ac0e9898827e7dd6d003a860e91',
+  ),
+  VoicePackFile(
+    'tokens.txt',
+    90630,
+    '7d99997ef207ff14c2cfe825f2aa037528ea250113cc3c6392bfe49326884ba6',
+  ),
+  VoicePackFile(
+    'silero_vad.onnx',
+    2313101,
+    '6b99cbfd39246b6706f98ec13c7c50c6b299181f2474fa05cbc8046acc274396',
+  ),
 ];
 
 int get voicePackBytes => voicePackFiles.fold(0, (s, f) => s + f.bytes);
@@ -54,12 +67,42 @@ int get voicePackBytes => voicePackFiles.fold(0, (s, f) => s + f.bytes);
 /// in 0.1 s. Arabic only, so it is used when the app is in Arabic, in place
 /// of the base model (rafeeq_ear.dart).
 const accuratePackFiles = <VoicePackFile>[
-  VoicePackFile('model.int8.onnx', 173888072,
-      '714fc79628cff1916194337117579167b32385dcaf70d4b525805f4fdf07913f',
-      folder: 'rafeeq_ar_v1'),
-  VoicePackFile('tokens.txt', 12858,
-      '9b938381a19a69bb279cdcfc299419f25a049ea1de192e0d10317274a0f20074',
-      folder: 'rafeeq_ar_v1'),
+  VoicePackFile(
+    'model.int8.onnx',
+    173888072,
+    '714fc79628cff1916194337117579167b32385dcaf70d4b525805f4fdf07913f',
+    folder: 'rafeeq_ar_v1',
+  ),
+  VoicePackFile(
+    'tokens.txt',
+    12858,
+    '9b938381a19a69bb279cdcfc299419f25a049ea1de192e0d10317274a0f20074',
+    folder: 'rafeeq_ar_v1',
+  ),
+];
+
+/// The tasmee' recogniser (2026-11-14; owner: «كمل وانشر»): Abdou's
+/// quran-asr-small (MIT), a 33M-parameter Conformer-CTC trained on Quran
+/// recitation, int8, loaded by sherpa-onnx as a zipformer CTC model
+/// (huggingface.co/Abdou/quran-asr-small). On four EveryAyah reciters held
+/// out of its training it got 99.4 % of 494 words where the FastConformer
+/// above got 94.7 %, the same through a phone band, and runs faster
+/// (scripts/asr_quran_small_2026-11-14.txt). Quran only, so «رفيق» keeps
+/// the FastConformer. Uploaded by publish_rafeeq_voice_pack.py quran; both
+/// files range-checked 206 on R2 and the content-mirror release.
+const tasmeePackFiles = <VoicePackFile>[
+  VoicePackFile(
+    'model.int8.onnx',
+    36081762,
+    '88f9df290d57b8890275d79187b77515aeeb12626a42bc76cbd0f8bfcaff00f0',
+    folder: 'quran_small_v1',
+  ),
+  VoicePackFile(
+    'tokens.txt',
+    180,
+    '75b53814499cee84a07c7b7a318524d30bcaf84273c0f8b28a04176023e8c74f',
+    folder: 'quran_small_v1',
+  ),
 ];
 
 /// «رفيق» works only with this pack on the phone - owner, 2026-09-27: «لو
@@ -71,8 +114,10 @@ class RafeeqVoicePack {
   static final instance = RafeeqVoicePack._(voicePackFiles, 'rafeeq_voice_v1');
 
   /// The optional higher-accuracy pack ([accuratePackFiles]).
-  static final accurate =
-      RafeeqVoicePack._(accuratePackFiles, 'rafeeq_ar_v1');
+  static final accurate = RafeeqVoicePack._(accuratePackFiles, 'rafeeq_ar_v1');
+
+  /// The tasmee' recogniser ([tasmeePackFiles]).
+  static final tasmee = RafeeqVoicePack._(tasmeePackFiles, 'quran_small_v1');
 
   final List<VoicePackFile> files;
   final String _folder;
@@ -117,59 +162,63 @@ class RafeeqVoicePack {
 
   /// Starts the download, or joins the one running.
   Future<void> download() => _inFlight ??= () async {
-        debugPrint('rafeeq voice pack: download started');
-        _cancel = CancelToken();
-        progress.value = 0;
-        try {
-          final d = await dir();
-          await d.create(recursive: true);
-          var done = 0;
-          for (final f in files) {
-            final path = p.join(d.path, f.name);
-            if (File('$path$_verified').existsSync() &&
-                File(path).existsSync() &&
-                await File(path).length() == f.bytes) {
-              done += f.bytes;
-              continue;
-            }
-            final tmp = '$path.part';
-            await ContentMirrors.fetchFirst<void>(f.url, (url) async {
-              // A whole file left by an interrupted install is checked, not
-              // fetched again (366 MB).
-              final left = File(tmp);
-              if (!(left.existsSync() && await left.length() == f.bytes)) {
-                await _dio.download(url, tmp,
-                  cancelToken: _cancel,
-                  onReceiveProgress: (got, _) =>
-                      progress.value = (done + got) / totalBytes);
-              }
-              final got = await File(tmp).length();
-              final hash = await _sha256(tmp);
-              if (got != f.bytes || hash != f.sha256) {
-                await File(tmp).delete();
-                throw StateError('${f.name}: $got bytes, sha256 $hash');
-              }
-            });
-            if (File(path).existsSync()) await File(path).delete();
-            await File(tmp).rename(path);
-            await File('$path$_verified').writeAsString(f.sha256);
-            done += f.bytes;
-            progress.value = done / totalBytes;
-          }
-          installed.value = true;
-        } finally {
-          progress.value = null;
-          _cancel = null;
-          _inFlight = null;
+    debugPrint('rafeeq voice pack: download started');
+    _cancel = CancelToken();
+    progress.value = 0;
+    try {
+      final d = await dir();
+      await d.create(recursive: true);
+      var done = 0;
+      for (final f in files) {
+        final path = p.join(d.path, f.name);
+        if (File('$path$_verified').existsSync() &&
+            File(path).existsSync() &&
+            await File(path).length() == f.bytes) {
+          done += f.bytes;
+          continue;
         }
-      }();
+        final tmp = '$path.part';
+        await ContentMirrors.fetchFirst<void>(f.url, (url) async {
+          // A whole file left by an interrupted install is checked, not
+          // fetched again (366 MB).
+          final left = File(tmp);
+          if (!(left.existsSync() && await left.length() == f.bytes)) {
+            await _dio.download(
+              url,
+              tmp,
+              cancelToken: _cancel,
+              onReceiveProgress: (got, _) =>
+                  progress.value = (done + got) / totalBytes,
+            );
+          }
+          final got = await File(tmp).length();
+          final hash = await _sha256(tmp);
+          if (got != f.bytes || hash != f.sha256) {
+            await File(tmp).delete();
+            throw StateError('${f.name}: $got bytes, sha256 $hash');
+          }
+        });
+        if (File(path).existsSync()) await File(path).delete();
+        await File(tmp).rename(path);
+        await File('$path$_verified').writeAsString(f.sha256);
+        done += f.bytes;
+        progress.value = done / totalBytes;
+      }
+      installed.value = true;
+    } finally {
+      progress.value = null;
+      _cancel = null;
+      _inFlight = null;
+    }
+  }();
 
   /// Static on purpose: a closure made inside [download] would carry this
   /// object (its Dio, its notifiers) into the isolate, and they cannot be
   /// sent - the first download on emulator-5554 got all 366 MB and then
   /// failed right here.
-  static Future<String> _sha256(String path) => Isolate.run(() async =>
-      (await sha256.bind(File(path).openRead()).first).toString());
+  static Future<String> _sha256(String path) => Isolate.run(
+    () async => (await sha256.bind(File(path).openRead()).first).toString(),
+  );
 
   void cancel() {
     debugPrintStack(

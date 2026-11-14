@@ -197,7 +197,7 @@ void tasmeeRecordingLifetimeTests({Future<void> Function()? screenshotReady}) {
       ),
     );
     await ticks(tester);
-    RafeeqVoicePack.accurate.installed.value = true;
+    RafeeqVoicePack.tasmee.installed.value = true;
     await tester.pump();
   }
 
@@ -224,7 +224,7 @@ void tasmeeRecordingLifetimeTests({Future<void> Function()? screenshotReady}) {
       messenger.setMockMethodCallHandler(MethodChannel(name), null);
     }
     PathProviderPlatform.instance = oldPaths;
-    RafeeqVoicePack.accurate.installed.value = false;
+    RafeeqVoicePack.tasmee.installed.value = false;
     dir.deleteSync(recursive: true);
   }
 
