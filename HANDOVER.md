@@ -2595,9 +2595,9 @@ Licence CC BY-NC-ND (non-commercial — fine for this sideloaded app).
 ## Current work in progress
 
 <!-- WIP:START -->
-**2026-11-14 05:05 — IN PROGRESS — resume here**
+**2026-11-14 06:07 — IN PROGRESS — resume here**
 
-Tour photos retaken in 7 languages (294, capture_tour.py --fresh) for the no-repeats layout; Quran page built whole (SingleChildScrollView) because the lazy ListView left the sunan card unbuilt and the tour skipped its stop; seen API 24 portrait+landscape, 1476 tests
+v4.8.0+127: no repeats between Home/Quran/Prayer pages, tour photos retaken in 7 languages, tour no longer skips the sunan card; release APK seen on API 24
 
 _Uncommitted at the time of writing: see `git status`. If this says
 IN PROGRESS, the previous session likely ran out of quota here — read the last
