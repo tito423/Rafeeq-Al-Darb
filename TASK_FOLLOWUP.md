@@ -32,11 +32,11 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 ## Next step (exact)
 
 Publish v4.9.0: APK is BUILT and seen on API 24
-(rafeeq_app/build/app/outputs/flutter-apk/RafeeqAlDarb-v4.9.0.apk, sha
+(rafeeq_app/build/app/outputs/flutter-apk/RafeeqAlDarb-v5.0.0.apk, sha
 bd5958ed…); the permission classifier refused `gh release delete v4.8.0` +
 `gh release create v4.9.0` (order relayed by another session). On the
 owner's word here: delete v4.8.0 (--cleanup-tag), create v4.9.0 --target
-master --notes-file docs/release_notes/v4.9.0.md, tag SHA == HEAD, links.
+master --notes-file docs/release_notes/v5.0.0.md, tag SHA == HEAD, links.
 
 ## Standing owner orders (still open)
 
