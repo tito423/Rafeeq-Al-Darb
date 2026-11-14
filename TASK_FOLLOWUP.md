@@ -4,7 +4,7 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — no repeats: Home / Quran page / Prayer page (unreleased)
+## Current task — no repeats: Home / Quran page / Prayer page (RELEASED v4.8.0)
 
 Owner 2026-11-14 ~03:00: «ختمة متكررة … مواقيت الصلاة وكمان موقع الصلاة
 متكرر … الرئيسية يبقى فيها مقولة اليوم وحديث اليوم والوصول السريع وكارت
@@ -38,13 +38,13 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Nothing pending in this task. Wait for the owner (release only on their
-word: the no-repeats change + new tour photos are unreleased).
+Nothing pending. v4.8.0 published 2026-11-14 (tag 9aebff14). Wait for the
+owner's next order.
 
 ## Standing owner orders (still open)
 
-- NO release without the owner's word. Last published: v4.7.0
-  (2026-11-14, versionCode 126).
+- NO release without the owner's word. Last published: v4.8.0
+  (2026-11-14, versionCode 127).
 - `scripts/own_irab/SPECIALIST_SAMPLE.csv`: 300 words for a human grammarian;
   the app may not call the i'rab «معتمد» before that result.
 - Hourly autorun `own-irab-autorun` stays DISABLED.
@@ -64,6 +64,7 @@ word: the no-repeats change + new tour photos are unreleased).
 
 ## Log (newest first)
 
+- 2026-11-14 ~06:10 RELEASED v4.8.0 (tag 9aebff14, versionCode 127) on the owner's «طلع اصدار»; v4.7.0 release+tag deleted; release APK seen on API 24 (4.8.0, Quran page, «ادعم التطبيق»); asset 318,236,555 B, range request 206.
 - 2026-11-14 ~04:55 tour photos retaken in 7 langs (294 pictures); Quran page built whole so the tour no longer skips the sunan card; looked at continue_reading/khatma/sunan_card/adhan_settings/prayer_adjustments ar+en; analyze clean, 1476 tests; NOT released.
 - 2026-11-14 ~03:40 repeats removed (Home/Quran/Prayer pages), tour stops moved + hidden-tour fix; seen API 24 portrait/landscape; analyze clean, 1476 tests; tour photos pending; NOT released.
 - 2026-11-14 ~01:20 tested dark theme + quick tour on API 24, then RELEASED v4.7.0 (tag 28bbb8aa) on the owner's «جرب وبعدين ابني. انشر».
