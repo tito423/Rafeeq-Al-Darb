@@ -182,7 +182,7 @@ Before local Flutter commands, select it in that PowerShell session:
 `. .\scripts\flutter_env.ps1` (then change into `rafeeq_app`). Windows denied
 changing the machine PATH, so its default still selects the preserved
 `C:\Users\Asus\flutter` 3.38.7. Do not use that default for this checkout.
-The old SDK stays available for the 3.87 rollback checkout. Another host can
+The old SDK stays available for checking out 3.87 (commit 6563e3e7; APK kept in E:\My Projects\Rafeeq-Backups). Another host can
 set `RAFEEQ_FLUTTER_SDK` to its matching SDK directory. Gradle8.14,
 AGP8.11.1 and Kotlin2.2.20 remain pinned: the unchanged signed universal and
 both native suites pass, but the new Flutter SDK warns about their future
@@ -377,8 +377,9 @@ A change is done when **all** of these hold:
 - One release at a time. The owner wants the repo clean: «كل حاجة تبقى على
   نضافة». Delete the previous release **and its tag** before publishing the new
   one, unless told otherwise. **Two standing exceptions, never deleted:**
-  `v3.87.0` (the restore point since 2026-10-13, RESTORE.md; the owner had
-  v3.51.0 deleted: «سيب ٣.٨٧ وامسح ٣.٥١») and the `content-mirror`,
+  `v5.0.0` (the restore point since 2026-11-14, RESTORE.md; the owner had
+  v3.87.0 deleted with v4.8.0: «امسح وامسح اللي كنا حطينه احتياطي وسمي ده
+  5.0.0 وثبته بعد كدة نقطة رجوع»; earlier v3.51.0: «سيب ٣.٨٧ وامسح ٣.٥١») and the `content-mirror`,
   `content-mushaf`, `content-surah` prereleases — the GitHub copy of the R2
   content that the app falls back to (`ContentMirrors`); deleting them breaks
   every fallback download.

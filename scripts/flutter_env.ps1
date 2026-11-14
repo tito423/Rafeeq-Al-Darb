@@ -1,5 +1,5 @@
 # Select the project's verified SDK in this PowerShell session.
-# The previous SDK remains installed for the 3.87 rollback checkout.
+# The previous SDK remains installed for checking out 3.87 (commit 6563e3e7; v5.0.0 is the restore point now).
 $ErrorActionPreference = 'Stop'
 $taskRepo = Split-Path -Parent $PSScriptRoot
 $taskExpected = (Get-Content -LiteralPath "$taskRepo\.flutter-version" -Raw).Trim()

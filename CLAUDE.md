@@ -76,7 +76,7 @@ repo `tito423/Rafeeq-Al-Darb`, APK on GitHub Releases. **Reply in Arabic**
 - **Done** = `flutter analyze lib test` clean, `flutter test` passes, seen on
   the emulator, `HANDOVER.md` updated, committed and pushed.
 - **Releases only when the owner asks.** One release at a time (delete the old
-  release and tag), except `v3.87.0` and the `content-mirror`,
+  release and tag), except `v5.0.0` (restore point) and the `content-mirror`,
   `content-mushaf`, `content-surah` prereleases — never delete those. Build
   with `build_github_release.bat` only; support link is «دعم التطبيق», never
   «تبرع». Bump `pubspec.yaml` version; `--target master`; Arabic notes; verify

@@ -4,7 +4,7 @@ Keep this file SHORT (under 60 lines): every session loads it whole. Newest
 log line on top; past ~10 lines move the oldest to
 `docs/history/TASK_FOLLOWUP_archive_2026-10-13_to_2026-11-12.md`. Times Dubai.
 
-## Current task — tasmee' on quran-asr-small (v4.9.0)
+## Current task — tasmee' on quran-asr-small (RELEASED v5.0.0, restore point)
 
 Owner 2026-11-14 «كمل وانشر» (relayed by the parent session) after the
 model check: tasmee' now uses Abdou/quran-asr-small (MIT, 36 MB int8,
@@ -31,17 +31,13 @@ Remaining visible load = PrayerCountdown seconds roll (owner-designed) at
 
 ## Next step (exact)
 
-Publish v4.9.0: APK is BUILT and seen on API 24
-(rafeeq_app/build/app/outputs/flutter-apk/RafeeqAlDarb-v5.0.0.apk, sha
-bd5958ed…); the permission classifier refused `gh release delete v4.8.0` +
-`gh release create v4.9.0` (order relayed by another session). On the
-owner's word here: delete v4.8.0 (--cleanup-tag), create v4.9.0 --target
-master --notes-file docs/release_notes/v5.0.0.md, tag SHA == HEAD, links.
+Nothing pending. v5.0.0 published 2026-11-14 (tag 30cbea32), the new
+restore point. Wait for the owner's next order.
 
 ## Standing owner orders (still open)
 
-- NO release without the owner's word. Last published: v4.8.0
-  (2026-11-14, versionCode 127).
+- NO release without the owner's word. Last published: v5.0.0
+  (2026-11-14, versionCode 128) = the restore point (never deleted).
 - `scripts/own_irab/SPECIALIST_SAMPLE.csv`: 300 words for a human grammarian;
   the app may not call the i'rab «معتمد» before that result.
 - Hourly autorun `own-irab-autorun` stays DISABLED.
@@ -61,6 +57,7 @@ master --notes-file docs/release_notes/v5.0.0.md, tag SHA == HEAD, links.
 
 ## Log (newest first)
 
+- 2026-11-14 ~15:40 RELEASED v5.0.0 (tag 30cbea32) on the owner's «امسح وامسح اللي كنا حطينه احتياطي وسمي ده 5.0.0 وثبته بعد كدة نقطة رجوع»: v4.8.0 + v3.87.0 deleted (3.87 APK kept locally), v5.0.0 = restore point in RESTORE/CLAUDE/publish_release.ps1.
 - 2026-11-14 ~14:55 v4.9.0 release APK built (Flutter 3.47.7 must be on PATH for the .bat - the first run took C:\Users\Asus\flutter 3.38.7 and failed), installed on API 24, works; publish refused by the permission classifier, waiting for the owner.
 - 2026-11-14 ~14:45 tasmee switched to quran-asr-small (owner «كمل وانشر»): R2 asr/quran_small_v1 + mirror + LICENSE, Sources/CONTENT-LICENSES, 7 langs; seen API 24 (download, decode 9/9, panel, Sources); analyze clean, 1495 tests; releasing v4.9.0.
 - 2026-11-14 ~06:50 owner asked for a better tasmee model: Abdou/quran-asr-small (MIT, int8 36 MB, sherpa zipformer-CTC) measured vs current NVIDIA FastConformer on 4 reciters held out of its training: 99.4% vs 94.7-95.1% words, phone band 99.4 vs 94.9; scripts/asr_quran_small_2026-11-14.txt. Not switched yet (needs owner's go).

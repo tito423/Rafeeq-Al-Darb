@@ -6,7 +6,7 @@
 #   2. stops the emulator (TRAPS 24) and builds with build_github_release.bat
 #      (signed, with the support link; TRAPS 75 for the cmd/chcp form) -
 #      skipped when dist\RafeeqAlDarb-v<Version>.apk already exists;
-#   3. deletes every other app release + tag EXCEPT v3.87.0 and content-*;
+#   3. deletes every other app release + tag EXCEPT v5.0.0 (restore point) and content-*;
 #   4. creates v<Version> from master with the APK and the Arabic notes
 #      (skipped when it already exists, so a rerun finishes a half release);
 #   5. checks the tag SHA = HEAD and the asset sha256 = the local APK.
@@ -40,7 +40,7 @@ if (-not (Test-Path $apk)) {
 }
 $localSha = (Get-FileHash $apk -Algorithm SHA256).Hash.ToLower()
 
-$keep = @('v3.87.0', 'content-mirror', 'content-mushaf', 'content-surah', "v$Version")
+$keep = @('v5.0.0', 'content-mirror', 'content-mushaf', 'content-surah', "v$Version")
 $tags = @(gh release list -R $repo --limit 50 --json tagName --jq '.[].tagName')
 foreach ($t in $tags) {
     if ($keep -notcontains $t) { gh release delete $t -R $repo --yes --cleanup-tag }
